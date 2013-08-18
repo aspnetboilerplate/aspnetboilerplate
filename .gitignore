@@ -2,6 +2,9 @@
 [Bb]in/
 [Oo]bj/
 
+# Logs
+Logs/
+
 # mstest test results
 TestResults
 
