@@ -1,0 +1,19 @@
+Done
+- Domain driven design infrastructure
+  - Entities
+  - Repositories
+  - Services
+  - Unit of work
+- ORM integration (Nhibernate)
+  - Fluent mapping
+- Dependency Injection (Castle Windsor)
+  - Bootstrapping
+  - Web API
+  - Log4Net integration and configuration
+
+Fixes:
+- Check if there is a better way to register WebAPI to Castle Windsor.
+
+Features:
+- Localization
+- Exception handling in Controllers and ApiControllers
