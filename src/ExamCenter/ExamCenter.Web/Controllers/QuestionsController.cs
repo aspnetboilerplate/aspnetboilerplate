@@ -22,6 +22,11 @@ namespace ExamCenter.Web.Controllers
         [UnitOfWork]
         public virtual IEnumerable<Question> Get()
         {
+            //validation
+            //throwing appropriate messages
+            //logging
+            //exception handling
+
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
             return _questionService.GetAllQuestions();
         }

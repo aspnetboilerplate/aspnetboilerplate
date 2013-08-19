@@ -66,7 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Dependency\Installers\NHibernateInstaller.cs" />
-    <Compile Include="Data\NhUnitOfWorkInterceptor.cs" />
+    <Compile Include="Data\Dependency\Installers\NHibernateUnitOfWorkRegistrer.cs" />
+    <Compile Include="Data\Dependency\Interceptors\NhUnitOfWorkInterceptor.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

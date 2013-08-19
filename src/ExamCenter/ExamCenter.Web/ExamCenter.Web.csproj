@@ -134,7 +134,9 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Global.asax" />
-    <None Include="log4net.config" />
+    <None Include="log4net.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />

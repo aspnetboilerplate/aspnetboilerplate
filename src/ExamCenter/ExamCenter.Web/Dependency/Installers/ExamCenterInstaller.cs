@@ -2,11 +2,13 @@
 using System.Web.Http;
 using System.Web.Mvc;
 using Abp.Localization;
+using Abp.Web.Dependency.Interceptors;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using ExamCenter.Data.Repositories.NHibernate;
 using ExamCenter.Services.Impl;
+using Castle.DynamicProxy;
 
 namespace ExamCenter.Web.Dependency.Installers
 {

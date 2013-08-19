@@ -89,8 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AbpApiController.cs" />
+    <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
-    <Compile Include="Dependency\Installers\LoggerInstaller.cs" />
+    <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
