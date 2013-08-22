@@ -29,9 +29,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{76AA2897-D756-415C-A0CB-D00E90061FFF}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\Backlog.txt = Docs\Backlog.txt
+		Docs\Tools.txt = Docs\Tools.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamCenter.Localization", "ExamCenter\ExamCenter.Localization\ExamCenter.Localization.csproj", "{53E3C760-B365-4D43-8B70-70A34CF22ED0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamCenter.WebSpa", "ExamCenter\ExamCenter.WebSpa\ExamCenter.WebSpa.csproj", "{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +70,10 @@ Global
 		{53E3C760-B365-4D43-8B70-70A34CF22ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53E3C760-B365-4D43-8B70-70A34CF22ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53E3C760-B365-4D43-8B70-70A34CF22ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,5 +87,6 @@ Global
 		{14754E90-96E2-4C25-AB71-B946ADE21163} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 		{89714409-E64F-4439-909A-415867494D16} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 		{53E3C760-B365-4D43-8B70-70A34CF22ED0} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
+		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 	EndGlobalSection
 EndGlobal

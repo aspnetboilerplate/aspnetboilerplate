@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdpException.cs" />
+    <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
     <Compile Include="Data\UnitOfWorkAttribute.cs" />

@@ -1,0 +1,22 @@
+Used tools/libraries:
+
+- Server side
+  + ASP.NET Web API
+    + AttributeRouting (think again!)
+  + Castle Windsor (Dependency Injection Container)
+    + Logging facility for Log4Net
+  + NHibernate (Object-Relational Mapping)
+    + NHibernate Fluent Mapping
+  + Log4Net (Logging)
+- Client side
+  - jQuery
+  - Twitter bootstrap
+  - Drupal?
+  - Require.js
+  - Knockout.js
+
+
+
+NOTE:
+'+' means 'used'
+'-' means 'will be used'
