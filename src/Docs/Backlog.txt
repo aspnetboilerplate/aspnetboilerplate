@@ -4,9 +4,9 @@ Done
   - Repositories
   - Services
   - Unit of work
-- ORM integration (Nhibernate)
+- ORM integration
   - Fluent mapping
-- Dependency Injection (Castle Windsor)
+- Dependency Injection
   - Bootstrapping
   - Web API
   - Log4Net integration and configuration
