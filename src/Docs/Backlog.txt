@@ -20,4 +20,16 @@ Features:
 
 
 TODO:
+- Make Web API routing working (test AttributeRouting properly)
+- Install tweeter bootstrap
+- Prepare simple layout and index page
+- Make authentication & authorization system works with controllers and web api controllers
+- Make user management system
+- Make role management system
 - JS&CSS Minimization and bundle (learn best practices!)
+
+
+--------------------------
+
+- Application site
+- Public site with administration
