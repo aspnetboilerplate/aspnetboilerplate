@@ -9,11 +9,12 @@ Used tools/libraries:
     + NHibernate Fluent Mapping
   + Log4Net (Logging)
 - Client side
-  - jQuery
+  + Modernizr
+  + jQuery
+  + Knockout.js
   - Twitter bootstrap
-  - Drupal?
   - Require.js
-  - Knockout.js
+  - Drupal?
 
 
 

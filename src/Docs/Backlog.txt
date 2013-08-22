@@ -17,3 +17,7 @@ Fixes:
 Features:
 - Localization
 - Exception handling in Controllers and ApiControllers
+
+
+TODO:
+- JS&CSS Minimization and bundle (learn best practices!)

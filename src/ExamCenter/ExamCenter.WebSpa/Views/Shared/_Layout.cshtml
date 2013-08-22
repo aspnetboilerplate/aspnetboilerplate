@@ -1,25 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
 
     <title>@ViewBag.Title</title>
-
-@*    <link rel="stylesheet" type="text/css" href="~/Content/themes/base/jquery.ui.all.css" />
-    <link rel="stylesheet" type="text/css" href="~/Content/themes/metroblue/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />*@
-
+    
     @RenderSection("styles", required: false)
+    
+    @Scripts.Render("~/scripts/modernizr")
 
 </head>
 <body>
     layout başı
+    
     @RenderBody()
+    
     layout sonu!
-@*    <script type="text/javascript" src="~/Scripts/modernizr-2.6.2.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-1.9.0.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery-ui-1.10.0.js"></script>*@
+
+    @Scripts.Render("~/scripts/baselibs")
+
     @RenderSection("scripts", required: false)
 
 </body>
