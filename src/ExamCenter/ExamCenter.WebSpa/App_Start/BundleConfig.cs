@@ -13,13 +13,20 @@ namespace ExamCenter.Web.App_Start
             AddDefaultIgnorePatterns(bundles.IgnoreList);
 
             bundles.Add(
+                new StyleBundle("~/styles/basestyles")
+                    .Include("~/Content/bootstrap/bootstrap.css")
+                    .Include("~/Content/bootstrap/bootstrap-theme.css")
+                );
+
+            bundles.Add(
                 new ScriptBundle("~/Scripts/modernizr")
-                    .Include("~/Scripts/modernizr-{version}.js"));
+                    .Include("~/Scripts/modernizr-{version}.js")); //TODO: Use minimized
 
             bundles.Add(
               new ScriptBundle("~/Scripts/baselibs")
-                .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version}
-                .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version}
+                .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
+                .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
+                .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
               );
 
             //bundles.Add(

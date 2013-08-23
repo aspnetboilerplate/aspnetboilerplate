@@ -31,5 +31,7 @@ TODO:
 
 --------------------------
 
-- Application site
-- Public site with administration
+Authorization
+- Anonymous pages -> can see public pages
+- Application pages -> can use application
+- Administration pages -> can change site behaivour

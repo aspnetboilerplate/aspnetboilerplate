@@ -19,7 +19,7 @@ namespace ExamCenter.Web.Api
             _questionService = questionService;
         }
 
-        [GET("Questions")]
+        [GET("Questionsss")]
         [UnitOfWork]
         public virtual IEnumerable<Question> Get()
         {

@@ -3,20 +3,50 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@ViewBag.Title</title>
-    
+
+    @Styles.Render("~/styles/basestyles")
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="@Url.Content("~/Scripts/libs/html5shiv.js")"></script>
+      <script src="@Url.Content("~/Scripts/libs/respond.min.js")"></script>
+    <![endif]-->
+
     @RenderSection("styles", required: false)
-    
+
     @Scripts.Render("~/scripts/modernizr")
 
 </head>
 <body>
-    layout başı
-    
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Exam Center!</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Exams</a></li>
+                <li><a href="#">Questions</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+
     @RenderBody()
-    
+
     layout sonu!
 
     @Scripts.Render("~/scripts/baselibs")
