@@ -19,17 +19,12 @@ Features:
 - Exception handling in Controllers and ApiControllers
 
 TODO:
-- Move Abp.Data.Migrations to Data folder or NHibernate to root folder!
-- Migration System
-- NHibernate Auto Mapping!
-- Make Web API routing working (test AttributeRouting properly)
-- Install tweeter bootstrap
-- Prepare simple layout and index page
+- Migration System -> Can find a simple way? Or inheritance? Or type safety (no strings!)
+- NHibernate Auto Mapping! -> Can find a simple way? Or inheritance? Or type safety (no strings!)
 - Make authentication & authorization system works with controllers and web api controllers
 - Make user management system
 - Make role management system
-- JS&CSS Minimization and bundle (learn best practices!)
-
+- JS&CSS Minimization and bundle (best practices!)
 
 --------------------------
 

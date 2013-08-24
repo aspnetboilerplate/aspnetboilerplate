@@ -63,7 +63,7 @@ namespace ExamCenter.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Hello World!.
         /// </summary>
-        internal static string HelloWorld {
+        internal static string Hello_World {
             get {
                 return ResourceManager.GetString("HelloWorld", resourceCulture);
             }

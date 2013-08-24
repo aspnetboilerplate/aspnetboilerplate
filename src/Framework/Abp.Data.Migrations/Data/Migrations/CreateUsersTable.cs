@@ -13,6 +13,14 @@ namespace Abp.Data.Migrations
 
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(30).NotNullable();
+
+            Insert.IntoTable("Users").Row(
+                new
+                    {
+                        EmailAddress = "admin@aspnetboilerplate.com",
+                        Password = "123"
+                    }
+                );
         }
 
         public override void Down()
