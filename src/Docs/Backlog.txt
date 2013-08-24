@@ -18,8 +18,8 @@ Features:
 - Localization
 - Exception handling in Controllers and ApiControllers
 
-
 TODO:
+- Migration System!
 - Make Web API routing working (test AttributeRouting properly)
 - Install tweeter bootstrap
 - Prepare simple layout and index page
@@ -35,3 +35,14 @@ Authorization
 - Anonymous pages -> can see public pages
 - Application pages -> can use application
 - Administration pages -> can change site behaivour
+
+--------------------------
+Basic Roles
+- superuser: Manages cloud users and see cloud pages!
+- Account -> single account for an application
+  - users
+    - application admin: Manages user-templates, users, settings etc.
+    - application user: Uses application
+
+Cloud
+- Application (per Account)

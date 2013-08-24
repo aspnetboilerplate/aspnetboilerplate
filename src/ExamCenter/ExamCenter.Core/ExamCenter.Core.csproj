@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Repositories\IQuestionRepository.cs" />
+    <Compile Include="Entities\AnsweringType.cs" />
+    <Compile Include="Entities\ExperienceDegree.cs" />
     <Compile Include="Entities\Question.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IQuestionService.cs" />

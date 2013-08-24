@@ -34,6 +34,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamCenter.Localization", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamCenter.WebSpa", "ExamCenter\ExamCenter.WebSpa\ExamCenter.WebSpa.csproj", "{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB", "DB", "{D9F8E60C-59B0-41A8-A807-51C36AFBA066}"
+	ProjectSection(SolutionItems) = preProject
+		ExamCenter\DB\ExamCenterDb.txt = ExamCenter\DB\ExamCenterDb.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,5 +86,6 @@ Global
 		{89714409-E64F-4439-909A-415867494D16} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 		{53E3C760-B365-4D43-8B70-70A34CF22ED0} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 		{CCEABE39-97DF-4ABF-AE8F-72B0CE66EC84} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
+		{D9F8E60C-59B0-41A8-A807-51C36AFBA066} = {555CA95B-61A5-4483-996E-DABA8A2AB503}
 	EndGlobalSection
 EndGlobal

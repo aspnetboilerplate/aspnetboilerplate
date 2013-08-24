@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Optimization;
 
 namespace ExamCenter.Web.App_Start
@@ -14,20 +11,23 @@ namespace ExamCenter.Web.App_Start
 
             bundles.Add(
                 new StyleBundle("~/styles/basestyles")
+                    .Include("~/Content/utils/ie10fix.css")                    
                     .Include("~/Content/bootstrap/bootstrap.css")
                     .Include("~/Content/bootstrap/bootstrap-theme.css")
+                    .Include("~/Content/app/main.css")
                 );
 
             bundles.Add(
                 new ScriptBundle("~/Scripts/modernizr")
-                    .Include("~/Scripts/modernizr-{version}.js")); //TODO: Use minimized
+                    .Include("~/Scripts/modernizr-{version}.js") //TODO: Use minimized
+                );
 
             bundles.Add(
-              new ScriptBundle("~/Scripts/baselibs")
-                .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
-                .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
-                .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
-              );
+                new ScriptBundle("~/Scripts/baselibs")
+                    .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
+                );
 
             //bundles.Add(
             // new StyleBundle("~/Content/css")

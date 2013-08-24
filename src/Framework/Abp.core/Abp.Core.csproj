@@ -43,6 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Core\Account.cs" />
+    <Compile Include="Entities\IAudited.cs" />
+    <Compile Include="Entities\ICreationAudited.cs" />
+    <Compile Include="Entities\IModificationAudited.cs" />
+    <Compile Include="Entities\Core\User.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
