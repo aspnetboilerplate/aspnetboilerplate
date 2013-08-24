@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Abp.Entities
 {
     /// <summary>
@@ -14,5 +16,10 @@ namespace Abp.Entities
         /// Password of the user.
         /// </summary>
         public virtual string Password { get; set; }
+
+        /// <summary>
+        /// List of all accounts of this user.
+        /// </summary>
+        public virtual IList<Account> Accounts { get; set; }
     }
 }

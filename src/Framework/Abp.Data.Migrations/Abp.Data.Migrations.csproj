@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Migrations\CreateAccountsTable.cs" />
+    <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\CreateUsersTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

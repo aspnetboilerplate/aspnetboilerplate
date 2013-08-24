@@ -7,7 +7,7 @@ using FluentMigrator;
 
 namespace Abp.Data.Migrations
 {
-    [Migration(20130824)]
+    [Migration(2013082401)]
     public class CreateUsersTable : Migration
     {
         public override void Up()
@@ -15,7 +15,7 @@ namespace Abp.Data.Migrations
             Create.Table("Users")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
-                .WithColumn("Password").AsString(100).NotNullable();
+                .WithColumn("Password").AsString(30).NotNullable();
         }
 
         public override void Down()
