@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-namespace ExamCenter.Data.Migrations
+namespace ExamCenter.Data.Migrations.V20130824
 {
     [Migration(2013082401)]
-    public class CreateQuestionsTable : Migration
+    public class _01_CreateQuestionsTable : Migration
     {
         public override void Up()
         {

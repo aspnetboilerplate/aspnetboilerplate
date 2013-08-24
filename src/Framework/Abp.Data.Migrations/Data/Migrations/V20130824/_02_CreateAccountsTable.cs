@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-namespace Abp.Data.Migrations
+namespace Abp.Data.Migrations.V20130824
 {
     [Migration(2013082402)]
-    public class CreateAccountsTable : Migration
+    public class _02_CreateAccountsTable : Migration
     {
         public override void Up()
         {
