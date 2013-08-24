@@ -63,7 +63,7 @@
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Data\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
+    <ProjectReference Include="..\..\Framework\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
       <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
       <Name>Abp.Data.NHibernate</Name>
     </ProjectReference>

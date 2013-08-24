@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp.core\Abp.Core.csproj">
+    <ProjectReference Include="..\Abp.core\Abp.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>

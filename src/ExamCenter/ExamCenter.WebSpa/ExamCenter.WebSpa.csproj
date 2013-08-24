@@ -227,13 +227,13 @@
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
+      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
+      <Name>Abp.Data.NHibernate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Abp.Web\Abp.Web.csproj">
       <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
       <Name>Abp.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Data\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
-      <Project>{ce9fea93-be42-442b-a7ff-a53922099f64}</Project>
-      <Name>Abp.Data.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExamCenter.Core\ExamCenter.Core.csproj">
       <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
