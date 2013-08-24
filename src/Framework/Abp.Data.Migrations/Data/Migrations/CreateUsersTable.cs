@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentMigrator;
+﻿using FluentMigrator;
 
 namespace Abp.Data.Migrations
 {
@@ -13,7 +8,9 @@ namespace Abp.Data.Migrations
         public override void Up()
         {
             Create.Table("Users")
+
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(30).NotNullable();
         }

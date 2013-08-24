@@ -4,10 +4,10 @@ using Castle.DynamicProxy;
 using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
 
-namespace Abp.Data
+namespace Abp.Data.Dependency.Interceptors
 {
     /// <summary>
-    /// This interceptor is used to manage transactions.
+    /// This interceptor is used to manage database connection and transactions.
     /// </summary>
     public class NhUnitOfWorkInterceptor : IInterceptor
     {

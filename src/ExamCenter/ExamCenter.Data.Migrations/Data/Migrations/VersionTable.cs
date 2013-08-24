@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.VersionTableInfo;
 
-namespace Abp.Data.Migrations
+namespace ExamCenter.Data.Migrations
 {
     [VersionTableMetaData]
     public class VersionTable : DefaultVersionTableMetaData
@@ -9,7 +9,7 @@ namespace Abp.Data.Migrations
         {
             get
             {
-                return "AbpCoreVersionInfo";
+                return "ExamCenterVersionInfo";
             }
         }
     }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Abp.Entities;
 using NHibernate;
@@ -18,7 +20,9 @@ namespace Abp.Data.Repositories.NHibernate
         protected ISession Session { get { return NhUnitOfWork.Current.Session; } }
 
         /// <summary>
-        /// Used to get a IQueryable that is used to retrive object from entire table.
+        /// Used to get a IQueryable that is used to retrive entities from entire table.
+        /// UnitOfWork attrbute must be used to be able to call this method since this method
+        /// returns IQueryable and it requires open database connection to use it.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
         public IQueryable<TEntity> GetAll()
@@ -27,7 +31,29 @@ namespace Abp.Data.Repositories.NHibernate
         }
 
         /// <summary>
-        /// Gets an entity.
+        /// Used to get all entities.
+        /// </summary>
+        /// <returns>List of all entities</returns>
+        public IList<TEntity> GetAllList()
+        {
+            return GetAll().ToList();
+        }
+
+        /// <summary>
+        /// Used to run a query over entire entities.
+        /// UnitOfWork attribute is not always necessery (as opposite to <see cref="GetAll"/>)
+        /// if <see cref="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
+        /// </summary>
+        /// <typeparam name="T">Type of return value of this method</typeparam>
+        /// <param name="queryMethod">This method is used to query over entities</param>
+        /// <returns>Query result</returns>
+        public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
+        {
+            return queryMethod(Session.Query<TEntity>());
+        }
+
+        /// <summary>
+        /// Gets an entity with given primary key.
         /// </summary>
         /// <param name="key">Primary key of the entity to get</param>
         /// <returns>Entity</returns>

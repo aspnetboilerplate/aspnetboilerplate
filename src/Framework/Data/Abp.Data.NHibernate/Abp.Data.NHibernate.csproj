@@ -68,8 +68,12 @@
     <Compile Include="Data\Dependency\Installers\NHibernateInstaller.cs" />
     <Compile Include="Data\Dependency\Installers\NHibernateUnitOfWorkRegistrer.cs" />
     <Compile Include="Data\Dependency\Interceptors\NhUnitOfWorkInterceptor.cs" />
+    <Compile Include="Data\Repositories\NHibernate\Core\NhAccountRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUnitOfWork.cs" />
+    <Compile Include="Data\Repositories\NHibernate\Core\NhUserRepository.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\AccountMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

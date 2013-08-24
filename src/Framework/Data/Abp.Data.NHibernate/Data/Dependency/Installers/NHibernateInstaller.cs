@@ -1,5 +1,5 @@
 using System;
-using Castle.Core;
+using Abp.Data.Dependency.Interceptors;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -7,6 +7,9 @@ using NHibernate;
 
 namespace Abp.Data.Dependency.Installers
 {
+    /// <summary>
+    /// This class installs base NHibernate components.
+    /// </summary>
     public class NHibernateInstaller : IWindsorInstaller
     {
         private readonly Func<ISessionFactory> _sessionFactoryCreator;

@@ -1,11 +1,21 @@
 using System;
+using Abp.Entities.Core;
 
 namespace Abp.Entities
 {
+    /// <summary>
+    /// This interface is implemented by entities which's modification informations (who and when modified) must be stored.
+    /// </summary>
     public interface IModificationAudited
     {
-        DateTime? LastModificationDate { get; set; }
+        /// <summary>
+        /// The last time of modification.
+        /// </summary>
+        DateTime? LastModificationTime { get; set; }
 
+        /// <summary>
+        /// Last modifier user for this entity.
+        /// </summary>
         User LastModifier { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Abp.Entities;
 
@@ -26,6 +28,22 @@ namespace Abp.Data.Repositories
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
         IQueryable<TEntity> GetAll();
+
+        /// <summary>
+        /// Used to get all entities.
+        /// </summary>
+        /// <returns>List of all entities</returns>
+        IList<TEntity> GetAllList();
+
+        /// <summary>
+        /// Used to run a query over entire entities.
+        /// UnitOfWork attribute is not always necessery (as opposite to <see cref="GetAll"/>)
+        /// if <see cref="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
+        /// </summary>
+        /// <typeparam name="T">Type of return value of this method</typeparam>
+        /// <param name="queryMethod">This method is used to query over entities</param>
+        /// <returns>Query result</returns>
+        T Query<T>(Func<IQueryable<TEntity>, T> queryMethod);
 
         /// <summary>
         /// Gets an entity with given primary key.

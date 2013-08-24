@@ -19,6 +19,7 @@ Features:
 - Exception handling in Controllers and ApiControllers
 
 TODO:
+- Move Abp.Data.Migrations to Data folder or NHibernate to root folder!
 - Migration System
 - NHibernate Auto Mapping!
 - Make Web API routing working (test AttributeRouting properly)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Data;
 using ExamCenter.Data.Repositories;
 using ExamCenter.Entities;
 
@@ -14,6 +15,7 @@ namespace ExamCenter.Services.Impl
             _questionRepository = questionRepository;
         }
 
+        [UnitOfWork]
         public IList<Question> GetAllQuestions()
         {
             return _questionRepository.GetAll().ToList();

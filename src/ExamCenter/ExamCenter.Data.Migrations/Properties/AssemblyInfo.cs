@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.Data.NHibernate")]
+[assembly: AssemblyTitle("ExamCenter.Data.Migrations")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.Data.NHibernate")]
+[assembly: AssemblyProduct("ExamCenter.Data.Migrations")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("90f7ae5d-e00a-4854-b753-94d53bf0d87c")]
+[assembly: Guid("752031e7-a295-4194-adaf-d51742146252")]
 
 // Version information for an assembly consists of the following four values:
 //

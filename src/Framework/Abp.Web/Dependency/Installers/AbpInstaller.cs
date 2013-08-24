@@ -5,6 +5,7 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Abp.Web.Controllers;
 
 namespace Abp.Web.Dependency.Installers
 {
@@ -16,7 +17,10 @@ namespace Abp.Web.Dependency.Installers
             container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
 
             //Interceptors
-            container.Register(Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient);
+            container.Register(
+                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient,
+                Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
+                );
         }
     }
 }

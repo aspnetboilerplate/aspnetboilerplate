@@ -1,7 +1,7 @@
-﻿namespace Abp.Entities
+﻿namespace Abp.Entities.Core
 {
     /// <summary>
-    /// Represents a cloud account.
+    /// Represents an account. An account is used in the cloud to identify a seperated application in the system.
     /// </summary>
     public class Account : AuditedEntity<int>
     {

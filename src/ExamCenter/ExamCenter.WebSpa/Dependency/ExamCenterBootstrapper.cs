@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Data.Dependency.Installers;
 using Abp.Web.Startup;
 using Castle.Windsor.Installer;
@@ -8,7 +7,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 
-namespace ExamCenter.Web.App_Start
+namespace ExamCenter.Web.Dependency
 {
     public class ExamCenterBootstrapper : AbpBootstrapper
     {

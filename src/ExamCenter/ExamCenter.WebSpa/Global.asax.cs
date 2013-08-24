@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using ExamCenter.Web.App_Start;
+using ExamCenter.Web.Dependency;
 using ExamCenter.WebSpa;
 
 namespace ExamCenter.Web

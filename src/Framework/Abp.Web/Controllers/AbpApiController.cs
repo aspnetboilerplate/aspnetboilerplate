@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Localization;
+using Castle.Core.Logging;
 
 namespace Abp.Web.Controllers
 {
-    public class AbpApiController : ApiController
+    public abstract class AbpApiController : ApiController
     {
+        public ILogger Logger { get; set; }
+
         public ILocalizationManager LocalizationManager
         {
             get { return _localizationManager; }

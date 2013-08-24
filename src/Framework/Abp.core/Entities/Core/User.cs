@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Entities
+namespace Abp.Entities.Core
 {
     /// <summary>
     /// Represents a user in entire system.

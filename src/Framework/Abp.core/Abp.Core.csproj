@@ -43,11 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Account.cs" />
+    <Compile Include="Data\Repositories\Core\IAccountRepository.cs" />
+    <Compile Include="Data\Repositories\Core\IUserRepository.cs" />
+    <Compile Include="Entities\AuditedEntity.cs" />
+    <Compile Include="Entities\Core\Account.cs" />
     <Compile Include="Entities\IAudited.cs" />
     <Compile Include="Entities\ICreationAudited.cs" />
     <Compile Include="Entities\IModificationAudited.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\Core\User.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
@@ -58,7 +61,9 @@
     <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Core\Impl\UserService.cs" />
     <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\Core\IUserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
