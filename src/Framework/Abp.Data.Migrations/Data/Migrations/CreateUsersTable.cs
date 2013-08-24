@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FluentMigrator;
+
+namespace Abp.Data.Migrations
+{
+    [Migration(20130824)]
+    public class CreateUsersTable : Migration
+    {
+        public override void Up()
+        {
+            Create.Table("Users")
+                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithColumn("EmailAddress").AsString(100).NotNullable()
+                .WithColumn("Password").AsString(100).NotNullable();
+        }
+
+        public override void Down()
+        {
+            Delete.Table("Users");
+        }
+    }
+}

@@ -1,4 +1,4 @@
-namespace Abp.Entities.Core
+namespace Abp.Entities
 {
     /// <summary>
     /// Represents a user in entire system.
