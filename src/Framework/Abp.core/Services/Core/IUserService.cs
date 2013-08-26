@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Abp.Entities.Core;
+using Abp.Services.Core.Dto;
 
 namespace Abp.Services.Core
 {
@@ -12,6 +13,6 @@ namespace Abp.Services.Core
         /// NOTE: this is for test purpose!
         /// </summary>
         /// <returns></returns>
-        IList<User> GetAllUsers();
+        IList<UserDto> GetAllUsers();
     }
 }

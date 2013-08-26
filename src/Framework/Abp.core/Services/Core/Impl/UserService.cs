@@ -4,6 +4,7 @@ using Abp.Data;
 using Abp.Data.Repositories;
 using Abp.Data.Repositories.Core;
 using Abp.Entities.Core;
+using Abp.Services.Core.Dto;
 
 namespace Abp.Services.Core.Impl
 {
@@ -23,9 +24,9 @@ namespace Abp.Services.Core.Impl
         /// NOTE: this is for test purpose!
         /// </summary>
         /// <returns>List of all users</returns>
-        public IList<User> GetAllUsers()
+        public IList<UserDto> GetAllUsers()
         {
-            return _userRepository.Query(q => q.ToList()); //Can be used _userRepository.GetAllList();
+            return _userRepository.Query(q => q.ToList()).MapIList<UserDto, User>();
         }
     }
 }

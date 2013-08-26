@@ -6,19 +6,24 @@ Done
   - Unit of work
 - ORM integration
   - Fluent mapping
+- Database migrations
 - Dependency Injection
   - Bootstrapping
   - Web API
   - Log4Net integration and configuration
 
+-------------------------------------------------------------------------------------------------
+
 Fixes:
 - Check if there is a better way to register WebAPI to Castle Windsor.
+- Implement best practices for guard clauses
 
-Features:
+Improvements:
 - Localization
-- Exception handling in Controllers and ApiControllers
 
 TODO:
+- Make auto mapping system easier to use and standard to implement!
+- Exception handling in Controllers and ApiControllers
 - Make authentication & authorization system works with controllers and web api controllers
 - Make user management system
 - Make role management system

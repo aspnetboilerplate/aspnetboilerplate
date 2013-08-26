@@ -38,6 +38,10 @@
     <Reference Include="AttributeRouting.Web.Http">
       <HintPath>..\..\packages\AttributeRouting.Core.Http.3.5.6\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=2.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
@@ -95,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AbpApiController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\Core\UserController.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
@@ -103,11 +107,16 @@
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
+    <Compile Include="Startup\AutoMappingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp.core\Abp.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
+      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
+      <Name>Abp.Data.NHibernate</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

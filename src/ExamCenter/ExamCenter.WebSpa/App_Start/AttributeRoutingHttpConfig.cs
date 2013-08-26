@@ -1,9 +1,12 @@
 using System.Web.Http;
+using Abp.Web.Controllers;
 using AttributeRouting.Web.Http.WebHost;
+using ExamCenter.Web.App_Start;
+using System.Reflection;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(ExamCenter.WebSpa.AttributeRoutingHttpConfig), "Start")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof(AttributeRoutingHttpConfig), "Start")]
 
-namespace ExamCenter.WebSpa 
+namespace ExamCenter.Web.App_Start 
 {
     public static class AttributeRoutingHttpConfig
 	{
@@ -13,6 +16,7 @@ namespace ExamCenter.WebSpa
 			// To debug routes locally using the built in ASP.NET development server, go to /routes.axd
 
             routes.MapHttpAttributeRoutes();
+            routes.MapHttpAttributeRoutes(c => c.AddRoutesFromAssembly(Assembly.GetAssembly(typeof(AbpApiController))));
 		}
 
         public static void Start() 

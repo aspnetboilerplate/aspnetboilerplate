@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Abp.Data;
-using Abp.Entities;
 using Abp.Entities.Core;
-using Abp.Services;
 using Abp.Services.Core;
+using Abp.Services.Core.Dto;
 using AttributeRouting.Web.Http;
 
-namespace Abp.Web.Controllers
+namespace Abp.Web.Controllers.Core
 {
     public class UserApiController : AbpApiController
     {
@@ -23,7 +18,7 @@ namespace Abp.Web.Controllers
 
         [GET("Users/List")]
         [UnitOfWork]
-        public virtual IEnumerable<User> Get()
+        public virtual IEnumerable<UserDto> Get()
         {
             //validation
             //throwing appropriate messages
