@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace Abp.Data.Migrations.V20130824
+namespace Abp.Data.Migrations.Core.V20130824
 {
     [Migration(2013082401)]
     public class _01_CreateUsersTable : Migration

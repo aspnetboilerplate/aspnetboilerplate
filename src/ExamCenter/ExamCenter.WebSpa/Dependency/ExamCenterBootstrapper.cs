@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Data.Dependency.Installers;
+using Abp.Entities.NHibernate.Mappings.Core;
 using Abp.Web.Startup;
 using Castle.Windsor.Installer;
 using ExamCenter.Entities.NHibernate.Mappings;
@@ -32,7 +33,10 @@ namespace ExamCenter.Web.Dependency
             //ConfigurationManager.ConnectionStrings["ExamCenterDb"].ConnectionString;
             return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
-                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(QuestionMap))))
+                .Mappings(
+                    m => m.FluentMappings
+                             .AddFromAssembly(Assembly.GetAssembly(typeof (QuestionMap)))
+                             .AddFromAssembly(Assembly.GetAssembly(typeof (UserMap))))
                 .BuildSessionFactory();
         }
     }

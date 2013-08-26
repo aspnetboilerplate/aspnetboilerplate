@@ -72,8 +72,10 @@
     <Compile Include="Data\Repositories\NHibernate\NhRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Data\Repositories\NHibernate\Core\NhUserRepository.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\AccountMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\UserMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\Core\AccountMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\Core\UserMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

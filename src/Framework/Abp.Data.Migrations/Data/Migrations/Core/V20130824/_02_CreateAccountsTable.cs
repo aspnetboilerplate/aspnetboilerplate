@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
-
-namespace Abp.Data.Migrations.V20130824
+using Abp.Data.Migrations;
+namespace Abp.Data.Migrations.Core.V20130824
 {
     [Migration(2013082402)]
     public class _02_CreateAccountsTable : Migration
@@ -14,11 +14,7 @@ namespace Abp.Data.Migrations.V20130824
                 .WithColumn("CompanyName").AsString(100).NotNullable()
                 .WithColumn("OwnerUserId").AsInt32().NotNullable().ForeignKey("Users", "Id")
 
-                .WithColumn("CreationDate").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
-                .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("Users", "Id")
-                
-                .WithColumn("LastModificationDate").AsDateTime().Nullable()
-                .WithColumn("LastModifierUserId").AsInt32().Nullable().ForeignKey("Users", "Id");
+                .WithAuditColumns();
            
             Insert.IntoTable("Accounts").Row(
                 new

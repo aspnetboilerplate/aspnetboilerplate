@@ -44,12 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Migrations\V20130824\_02_CreateAccountsTable.cs" />
-    <Compile Include="Data\Migrations\VersionTable.cs" />
-    <Compile Include="Data\Migrations\V20130824\_01_CreateUsersTable.cs" />
+    <Compile Include="Data\Migrations\Core\V20130824\_02_CreateAccountsTable.cs" />
+    <Compile Include="Data\Migrations\Core\VersionTable.cs" />
+    <Compile Include="Data\Migrations\Core\V20130824\_01_CreateUsersTable.cs" />
+    <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.core\Abp.Core.csproj">
+      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
+      <Name>Abp.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="RunMigrations.bat" />

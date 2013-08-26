@@ -1,19 +1,15 @@
 ﻿using Abp.Entities.Core;
 using FluentNHibernate.Mapping;
 
-namespace Abp.Entities.NHibernate.Mappings
+namespace Abp.Entities.NHibernate.Mappings.Core
 {
-    public class UserMap : ClassMap<User>
+    public class UserMap : EntityMap<User, int>
     {
         public UserMap()
+            : base("Users")
         {
-            Table("Users");
-
-            Id(x => x.Id);
-
             Map(x => x.EmailAddress);
             Map(x => x.Password);
-
             HasMany(x => x.Accounts).Inverse().Cascade.All();
         }
     }

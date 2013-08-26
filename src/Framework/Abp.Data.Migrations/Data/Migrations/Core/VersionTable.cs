@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.VersionTableInfo;
 
-namespace Abp.Data.Migrations
+namespace Abp.Data.Migrations.Core
 {
     [VersionTableMetaData]
     public class VersionTable : DefaultVersionTableMetaData
