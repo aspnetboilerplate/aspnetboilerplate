@@ -5,7 +5,7 @@ namespace Abp.Entities.Core
     /// <summary>
     /// Represents a user in entire system.
     /// </summary>
-    public class User : Entity<int>
+    public class User : Entity
     {
         /// <summary>
         /// Email address of the user.

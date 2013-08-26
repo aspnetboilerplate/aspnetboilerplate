@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an account. An account is used in the cloud to identify a seperated application in the system.
     /// </summary>
-    public class Account : AuditedEntity<int>
+    public class Account : AuditedEntity
     {
         /// <summary>
         /// Company name

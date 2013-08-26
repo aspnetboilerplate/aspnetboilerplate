@@ -37,4 +37,9 @@ namespace Abp.Entities
             CreationTime = DateTime.Now;
         }
     }
+
+    public abstract class AuditedEntity : AuditedEntity<int>
+    {
+        
+    }
 }

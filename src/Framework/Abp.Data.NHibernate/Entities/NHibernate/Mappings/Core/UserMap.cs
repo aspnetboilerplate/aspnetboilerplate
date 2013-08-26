@@ -3,7 +3,7 @@ using FluentNHibernate.Mapping;
 
 namespace Abp.Entities.NHibernate.Mappings.Core
 {
-    public class UserMap : EntityMap<User, int>
+    public class UserMap : EntityMap<User>
     {
         public UserMap()
             : base("Users")

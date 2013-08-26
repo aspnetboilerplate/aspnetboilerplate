@@ -1,13 +1,17 @@
-﻿using System;
-using Abp.Entities;
+﻿using Abp.Entities;
 
 namespace ExamCenter.Entities
 {
     /// <summary>
     /// An question that is used in an exam.
     /// </summary>
-    public class Question : AuditedEntity<int>
+    public class Question : AuditedEntity, IHasTenant
     {
+        /// <summary>
+        /// The account which this entity is belong to.
+        /// </summary>
+        public virtual int AccountId { get; set; }
+
         /// <summary>
         /// Question text.
         /// </summary>

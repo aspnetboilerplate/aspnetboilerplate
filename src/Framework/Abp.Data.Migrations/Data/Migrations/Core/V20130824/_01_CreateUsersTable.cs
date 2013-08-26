@@ -8,9 +8,7 @@ namespace Abp.Data.Migrations.Core.V20130824
         public override void Up()
         {
             Create.Table("Users")
-
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(30).NotNullable();
 

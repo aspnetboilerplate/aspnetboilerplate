@@ -19,9 +19,6 @@ Features:
 - Exception handling in Controllers and ApiControllers
 
 TODO:
-- ENTITY MAPPINGS!!!
-- Migration System -> Can find a simple way? Or inheritance? Or type safety (no strings!)
-- NHibernate Auto Mapping! -> Can find a simple way? Or inheritance? Or type safety (no strings!)
 - Make authentication & authorization system works with controllers and web api controllers
 - Make user management system
 - Make role management system

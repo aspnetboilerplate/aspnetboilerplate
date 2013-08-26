@@ -35,4 +35,16 @@ namespace Abp.Entities.NHibernate.Mappings
             }
         }
     }
+
+    /// <summary>
+    /// A shortcut of <see cref="EntityMap{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    /// <typeparam name="TEntity">Entity map</typeparam>
+    public abstract class EntityMap<TEntity> : EntityMap<TEntity, int> where TEntity : IEntity<int>
+    {
+        protected EntityMap(string tableName) : base(tableName)
+        {
+
+        }
+    }
 }

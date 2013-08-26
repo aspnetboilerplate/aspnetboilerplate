@@ -9,15 +9,12 @@ namespace ExamCenter.Data.Migrations.V20130824
         public override void Up()
         {
             Create.Table("Questions")
-
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-
                 .WithColumn("QuestionText").AsString(2000).NotNullable()
                 .WithColumn("AnsweringType").AsInt32().NotNullable()
                 .WithColumn("EstimatedAnsweringTime").AsInt32().Nullable()
                 .WithColumn("ExperienceDegree").AsInt32().Nullable()
                 .WithColumn("RightAnswerText").AsString(1000).Nullable()
-
                 .WithAuditColumns();
         }
 

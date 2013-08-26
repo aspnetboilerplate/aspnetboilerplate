@@ -11,4 +11,12 @@ namespace Abp.Entities
         /// </summary>
         TPrimaryKey Id { get; set; }
     }
+
+    /// <summary>
+    /// A shortcut of <see cref="IEntity{TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    public interface IEntity : IEntity<int>
+    {
+
+    }
 }

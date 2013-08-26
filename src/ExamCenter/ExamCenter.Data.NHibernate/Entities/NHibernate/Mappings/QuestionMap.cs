@@ -2,7 +2,7 @@
 
 namespace ExamCenter.Entities.NHibernate.Mappings
 {
-    public class QuestionMap : EntityMap<Question, int>
+    public class QuestionMap : EntityMap<Question>
     {
         public QuestionMap()
             : base("Questions")
