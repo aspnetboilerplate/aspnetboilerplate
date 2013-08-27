@@ -10,6 +10,7 @@ namespace ExamCenter.Data.Migrations.V20130824
         {
             Create.Table("Questions")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("Tenants", "Id")
                 .WithColumn("QuestionText").AsString(2000).NotNullable()
                 .WithColumn("AnsweringType").AsInt32().NotNullable()
                 .WithColumn("EstimatedAnsweringTime").AsInt32().Nullable()

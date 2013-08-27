@@ -7,6 +7,7 @@ namespace ExamCenter.Entities.NHibernate.Mappings
         public QuestionMap()
             : base("Questions")
         {
+            References(x => x.Tenant).Column("TenantId");
             Map(x => x.QuestionText);
             Map(x => x.AnsweringType).CustomType<AnsweringType>();
             Map(x => x.EstimatedAnsweringTime);

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Data;
+using Abp.Services.Core.Impl;
 using ExamCenter.Data.Repositories;
 using ExamCenter.Entities;
+using ExamCenter.Services.Dto;
 
 namespace ExamCenter.Services.Impl
 {
@@ -16,9 +18,9 @@ namespace ExamCenter.Services.Impl
         }
 
         [UnitOfWork]
-        public IList<Question> GetAllQuestions()
+        public IList<QuestionDto> GetAllQuestions()
         {
-            return _questionRepository.GetAll().ToList();
+            return _questionRepository.Query(q => q.ToList()).MapIList<Question, QuestionDto>();
         }
     }
 }

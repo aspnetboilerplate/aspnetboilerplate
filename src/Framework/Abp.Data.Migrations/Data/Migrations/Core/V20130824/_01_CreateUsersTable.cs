@@ -9,6 +9,8 @@ namespace Abp.Data.Migrations.Core.V20130824
         {
             Create.Table("Users")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithColumn("Name").AsString(30).NotNullable()
+                .WithColumn("Surname").AsString(30).NotNullable()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(30).NotNullable();
 

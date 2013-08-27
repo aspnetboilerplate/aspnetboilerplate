@@ -5,6 +5,7 @@ using AttributeRouting.Web.Http;
 using Castle.Core.Logging;
 using ExamCenter.Entities;
 using ExamCenter.Services;
+using ExamCenter.Services.Dto;
 
 namespace ExamCenter.Web.Api
 {
@@ -21,7 +22,7 @@ namespace ExamCenter.Web.Api
 
         [GET("Questionsss")]
         [UnitOfWork]
-        public virtual IEnumerable<Question> Get()
+        public virtual IEnumerable<QuestionDto> Get()
         {
             //validation
             //throwing appropriate messages

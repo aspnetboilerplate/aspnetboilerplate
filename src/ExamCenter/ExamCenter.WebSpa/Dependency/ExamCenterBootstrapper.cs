@@ -25,6 +25,7 @@ namespace ExamCenter.Web.Dependency
 
             WindsorContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
             WindsorContainer.Install(FromAssembly.This());
+            AutoMappingManager.Map();
         }
 
         private static ISessionFactory CreateNhSessionFactory()

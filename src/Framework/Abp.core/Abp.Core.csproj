@@ -71,6 +71,8 @@
     <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Core\Dto\AuditedEntityDto.cs" />
+    <Compile Include="Services\Core\Dto\EntityDto.cs" />
     <Compile Include="Services\Core\Impl\AutoMapExtensions.cs" />
     <Compile Include="Services\Core\Impl\UserService.cs" />
     <Compile Include="Services\Core\Dto\UserDto.cs" />

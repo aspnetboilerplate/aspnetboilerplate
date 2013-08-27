@@ -1,4 +1,6 @@
-﻿namespace Abp.Entities.Core
+﻿using System;
+
+namespace Abp.Entities.Core
 {
     /// <summary>
     /// Represents a tenant account. A tenant is used in the cloud to identify a seperated application in the system.
@@ -14,5 +16,17 @@
         /// Tenant owner.
         /// </summary>
         public virtual User Owner { get; set; }
+
+        #region Static properties
+
+        [ThreadStatic]
+        private static Tenant _current;
+        public static Tenant Current
+        {
+            get { return new Tenant { Id = 1 }; }
+            set { _current = value; }
+        }
+
+        #endregion
     }
 }

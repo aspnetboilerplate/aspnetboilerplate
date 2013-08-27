@@ -1,3 +1,5 @@
+using Abp.Entities.Core;
+
 namespace Abp.Entities
 {
     /// <summary>
@@ -8,6 +10,6 @@ namespace Abp.Entities
         /// <summary>
         /// The tenant account which this entity is belong to.
         /// </summary>
-        int TenantId { get; set; }
+        Tenant Tenant { get; set; }
     }
 }

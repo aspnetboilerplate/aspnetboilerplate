@@ -172,6 +172,7 @@
     <Compile Include="Api\QuestionsController.cs" />
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Dependency\AutoMappingManager.cs" />
     <Compile Include="Dependency\ExamCenterBootstrapper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Dependency\Installers\ExamCenterInstaller.cs" />

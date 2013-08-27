@@ -8,6 +8,16 @@ namespace Abp.Entities.Core
     public class User : Entity
     {
         /// <summary>
+        /// Name of the user.
+        /// </summary>
+        public virtual string Name { get; set; }
+
+        /// <summary>
+        /// Surname of the user.
+        /// </summary>
+        public virtual string Surname { get; set; }
+
+        /// <summary>
         /// Email address of the user.
         /// </summary>
         public virtual string EmailAddress { get; set; }

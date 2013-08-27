@@ -3,12 +3,17 @@
     /// <summary>
     /// Simple User DTO class.
     /// </summary>
-    public class UserDto
+    public class UserDto : EntityDto
     {
         /// <summary>
-        /// Id of the user.
+        /// Name of the user.
         /// </summary>
-        public int Id { get; set; }
+        public virtual string Name { get; set; }
+
+        /// <summary>
+        /// Surname of the user.
+        /// </summary>
+        public virtual string Surname { get; set; }
 
         /// <summary>
         /// Email address of the user.

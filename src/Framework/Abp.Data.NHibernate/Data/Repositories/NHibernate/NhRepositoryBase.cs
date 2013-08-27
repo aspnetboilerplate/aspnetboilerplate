@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Entities;
+using Abp.Entities.Core;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -27,7 +28,15 @@ namespace Abp.Data.Repositories.NHibernate
         /// <returns>IQueryable to be used to select entities from database</returns>
         public IQueryable<TEntity> GetAll()
         {
-            return Session.Query<TEntity>();
+            var allEntities = Session.Query<TEntity>();
+
+            //TODO: Move this code out of repository!
+            if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
+            {
+                allEntities = allEntities.Cast<IHasTenant>().Where(entity => entity.Tenant.Id == Tenant.Current.Id).Cast<TEntity>();
+            }
+
+            return allEntities;
         }
 
         /// <summary>
@@ -49,7 +58,8 @@ namespace Abp.Data.Repositories.NHibernate
         /// <returns>Query result</returns>
         public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
         {
-            return queryMethod(Session.Query<TEntity>());
+            var x = queryMethod(GetAll());
+            return x;
         }
 
         /// <summary>

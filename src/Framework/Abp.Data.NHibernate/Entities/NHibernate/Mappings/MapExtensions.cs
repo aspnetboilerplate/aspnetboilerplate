@@ -24,7 +24,7 @@ namespace Abp.Entities.NHibernate.Mappings
         public static void MapCreationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
         {
             mapping.Map(x => (x as ICreationAudited).CreationTime);
-            mapping.References(x => (x as ICreationAudited).Creator).Column("CreatorUserId");
+            mapping.References(x => (x as ICreationAudited).Creator).Column("CreatorUserId").LazyLoad(Laziness.Proxy);
         }
 
         /// <summary>

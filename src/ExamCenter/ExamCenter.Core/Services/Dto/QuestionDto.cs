@@ -1,18 +1,10 @@
-﻿using Abp.Entities;
-using Abp.Entities.Core;
+﻿using Abp.Services.Core.Dto;
+using ExamCenter.Entities;
 
-namespace ExamCenter.Entities
+namespace ExamCenter.Services.Dto
 {
-    /// <summary>
-    /// An question that is used in an exam.
-    /// </summary>
-    public class Question : AuditedEntity, IHasTenant
+    public class QuestionDto : AuditedEntityDto
     {
-        /// <summary>
-        /// The tenant account which this entity is belong to.
-        /// </summary>
-        public virtual Tenant Tenant { get; set; }
-
         /// <summary>
         /// Question text.
         /// </summary>
@@ -37,5 +29,10 @@ namespace ExamCenter.Entities
         /// If <see cref="AnsweringType"/> is FreeText, this can be used to enter the right answer
         /// </summary>
         public virtual string RightAnswerText { get; set; }
+
+        /// <summary>
+        /// Creator user's name of this entity.
+        /// </summary>
+        public virtual string CreatorName { get; set; }
     }
 }
