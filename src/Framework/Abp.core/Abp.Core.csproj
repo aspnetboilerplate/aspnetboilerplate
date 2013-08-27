@@ -52,10 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Repositories\Core\IAccountRepository.cs" />
+    <Compile Include="Data\Repositories\Core\ITenantRepository.cs" />
     <Compile Include="Data\Repositories\Core\IUserRepository.cs" />
     <Compile Include="Entities\AuditedEntity.cs" />
-    <Compile Include="Entities\Core\Account.cs" />
+    <Compile Include="Entities\Core\Tenant.cs" />
     <Compile Include="Entities\IAudited.cs" />
     <Compile Include="Entities\ICreationAudited.cs" />
     <Compile Include="Entities\IHasTenant.cs" />

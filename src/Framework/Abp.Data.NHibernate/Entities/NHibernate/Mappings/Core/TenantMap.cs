@@ -2,10 +2,10 @@ using Abp.Entities.Core;
 
 namespace Abp.Entities.NHibernate.Mappings.Core
 {
-    public class AccountMap : EntityMap<Account>
+    public class TenantMap : EntityMap<Tenant>
     {
-        public AccountMap()
-            : base("Accounts")
+        public TenantMap()
+            : base("Tenants")
         {
             Map(x => x.CompanyName);
             References(x => x.Owner).Column("OwnerUserId");

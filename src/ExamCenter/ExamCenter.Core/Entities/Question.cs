@@ -8,9 +8,9 @@ namespace ExamCenter.Entities
     public class Question : AuditedEntity, IHasTenant
     {
         /// <summary>
-        /// The account which this entity is belong to.
+        /// The tenant account which this entity is belong to.
         /// </summary>
-        public virtual int AccountId { get; set; }
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// Question text.

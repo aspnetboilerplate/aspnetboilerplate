@@ -10,7 +10,7 @@ namespace Abp.Entities.NHibernate.Mappings.Core
         {
             Map(x => x.EmailAddress);
             Map(x => x.Password);
-            HasMany(x => x.Accounts).Inverse().Cascade.All();
+            HasMany(x => x.Tenancies).Inverse().Cascade.All();
         }
     }
 }

@@ -1,10 +1,13 @@
 namespace Abp.Entities
 {
+    /// <summary>
+    /// Implemented by entities those has a tenant.
+    /// </summary>
     public interface IHasTenant
     {
         /// <summary>
-        /// The account which this entity is belong to.
+        /// The tenant account which this entity is belong to.
         /// </summary>
-        int AccountId { get; set; }
+        int TenantId { get; set; }
     }
 }

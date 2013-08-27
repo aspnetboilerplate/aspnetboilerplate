@@ -18,8 +18,8 @@ namespace Abp.Entities.Core
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// List of all accounts of this user.
+        /// List of all tenant accounts of this user.
         /// </summary>
-        public virtual IList<Account> Accounts { get; set; }
+        public virtual IList<Tenant> Tenancies { get; set; }
     }
 }

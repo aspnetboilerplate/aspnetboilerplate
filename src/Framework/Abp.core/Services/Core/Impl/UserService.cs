@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Abp.Data;
 using Abp.Data.Repositories;
 using Abp.Data.Repositories.Core;
@@ -18,15 +19,17 @@ namespace Abp.Services.Core.Impl
         public UserService(IUserRepository questionRepository)
         {
             _userRepository = questionRepository;
+            //Thread.CurrentPrincipal
         }
 
         /// <summary>
         /// NOTE: this is for test purpose!
         /// </summary>
         /// <returns>List of all users</returns>
+        //[AbpAuthorize(Features="")]
         public IList<UserDto> GetAllUsers()
         {
-            return _userRepository.Query(q => q.ToList()).MapIList<UserDto, User>();
+            return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();
         }
     }
 }

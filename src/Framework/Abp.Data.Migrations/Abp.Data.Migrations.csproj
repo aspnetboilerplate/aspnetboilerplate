@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Migrations\Core\V20130824\_02_CreateAccountsTable.cs" />
+    <Compile Include="Data\Migrations\Core\V20130824\_02_CreateTenantsTable.cs" />
     <Compile Include="Data\Migrations\Core\VersionTable.cs" />
     <Compile Include="Data\Migrations\Core\V20130824\_01_CreateUsersTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />

@@ -1,9 +1,9 @@
 ﻿namespace Abp.Entities.Core
 {
     /// <summary>
-    /// Represents an account. An account is used in the cloud to identify a seperated application in the system.
+    /// Represents a tenant account. A tenant is used in the cloud to identify a seperated application in the system.
     /// </summary>
-    public class Account : AuditedEntity
+    public class Tenant : AuditedEntity
     {
         /// <summary>
         /// Company name
@@ -11,7 +11,7 @@
         public virtual string CompanyName { get; set; }
 
         /// <summary>
-        /// Owner of this account.
+        /// Tenant owner.
         /// </summary>
         public virtual User Owner { get; set; }
     }

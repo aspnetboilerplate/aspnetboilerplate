@@ -7,7 +7,7 @@ namespace Abp.Services.Core.Impl
     /// </summary>
     public static class AutoMapExtensions
     {
-        public static IList<TD> MapIList<TD, TS>(this IList<TS> items)
+        public static IList<TD> MapIList<TS, TD>(this IList<TS> items)
         {
             return AutoMapper.Mapper.Map<IList<TD>>(items); //TODO: ???            
         }
