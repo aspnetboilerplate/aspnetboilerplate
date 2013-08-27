@@ -23,7 +23,7 @@ namespace Abp.Entities.Core
         private static Tenant _current;
         public static Tenant Current
         {
-            get { return new Tenant { Id = 1 }; }
+            get { return _current ?? new Tenant { Id = 1 }; } //TODO: Remove dummy entity
             set { _current = value; }
         }
 

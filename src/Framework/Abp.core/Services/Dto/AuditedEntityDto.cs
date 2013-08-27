@@ -1,6 +1,7 @@
 using System;
+using Abp.Services.Core.Dto;
 
-namespace Abp.Services.Core.Dto
+namespace Abp.Services.Dto
 {
     public abstract class AuditedEntityDto<TPrimaryKey> : EntityDto<TPrimaryKey>
     {

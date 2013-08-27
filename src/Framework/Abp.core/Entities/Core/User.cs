@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Abp.Entities.Core
@@ -31,5 +32,13 @@ namespace Abp.Entities.Core
         /// List of all tenant accounts of this user.
         /// </summary>
         public virtual IList<Tenant> Tenancies { get; set; }
+
+        [ThreadStatic]
+        private static User _current;
+        public static User Current
+        {
+            get { return _current ?? new User { Id = 1 }; } //TODO: Remove dummy entity
+            set { _current = value; }
+        }
     }
 }

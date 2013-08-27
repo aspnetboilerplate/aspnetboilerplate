@@ -1,4 +1,6 @@
-﻿namespace Abp.Services.Core.Dto
+﻿using Abp.Services.Dto;
+
+namespace Abp.Services.Core.Dto
 {
     /// <summary>
     /// Simple User DTO class.

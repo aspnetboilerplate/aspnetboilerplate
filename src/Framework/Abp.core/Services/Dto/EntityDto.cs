@@ -1,4 +1,4 @@
-namespace Abp.Services.Core.Dto
+namespace Abp.Services.Dto
 {
     public abstract class EntityDto<TPrimaryKey>
     {

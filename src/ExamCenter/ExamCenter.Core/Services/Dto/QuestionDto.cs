@@ -1,4 +1,5 @@
 ﻿using Abp.Services.Core.Dto;
+using Abp.Services.Dto;
 using ExamCenter.Entities;
 
 namespace ExamCenter.Services.Dto
