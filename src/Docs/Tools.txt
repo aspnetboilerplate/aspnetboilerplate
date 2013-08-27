@@ -2,13 +2,14 @@ Used tools/libraries:
 
 - Server side
   + ASP.NET Web API
-    + AttributeRouting (think again!)
+    + AttributeRouting
   + Castle Windsor (Dependency Injection Container)
     + Logging facility for Log4Net
   + NHibernate (Object-Relational Mapping)
     + NHibernate Fluent Mapping
   + FluentMigrator (database migrations)
   + Log4Net (Logging)
+  + AutoMapper
 - Client side
   + Modernizr
   + jQuery
