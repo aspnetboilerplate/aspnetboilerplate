@@ -23,10 +23,16 @@ Improvements:
 
 TODO:
 - Make auto mapping system easier to use and standard to implement!
+- Implement IService interception
+  - Authorization checks
+  - Transactions? (implemented by UnitOfWork interceptor already, so?)
+  - DTO Validations and checks?
+  - Exception handling?
 - Exception handling in Controllers and ApiControllers
 - Make authentication & authorization system works with controllers and web api controllers
 - Make user management system
 - Make role management system
+- Make Tenant system and Cloud!
 - JS&CSS Minimization and bundle (best practices!)
 - Usage logging (detailed auditing)
 
@@ -76,7 +82,7 @@ ROLES
 
 
 ----------------------------
-- Cloud or Not Cloud option! If we don't want to cloud, we can use the default single tenant (application)
+- **** Cloud or Not Cloud option! If we don't want to cloud, we can use the default single tenant (application) ****
 
 ????:
 - Windows single sign on support?
