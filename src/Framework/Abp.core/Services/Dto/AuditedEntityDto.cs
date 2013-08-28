@@ -13,7 +13,7 @@ namespace Abp.Services.Dto
         /// <summary>
         /// Creator user's id for this entity.
         /// </summary>
-        public virtual int? CreatorId { get; set; }
+        public virtual int? CreatorUserId { get; set; }
 
         /// <summary>
         /// Last modification date of this entity.
@@ -23,7 +23,7 @@ namespace Abp.Services.Dto
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
-        public virtual int? LastModifierId { get; set; }
+        public virtual int? LastModifierUserId { get; set; }
     }
 
     public abstract class AuditedEntityDto : AuditedEntityDto<int>

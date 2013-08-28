@@ -34,6 +34,6 @@ namespace ExamCenter.Services.Dto
         /// <summary>
         /// Creator user's name of this entity.
         /// </summary>
-        public virtual string CreatorName { get; set; }
+        public virtual string CreatorUserName { get; set; }
     }
 }

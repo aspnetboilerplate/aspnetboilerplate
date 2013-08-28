@@ -9,7 +9,7 @@ namespace Abp.Data.Migrations.Core
         {
             get
             {
-                return "AbpCoreVersionInfo";
+                return "AbpVersionInfo";
             }
         }
     }

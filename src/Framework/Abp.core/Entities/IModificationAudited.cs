@@ -16,6 +16,6 @@ namespace Abp.Entities
         /// <summary>
         /// Last modifier user for this entity.
         /// </summary>
-        User LastModifier { get; set; }
+        User LastModifierUser { get; set; }
     }
 }

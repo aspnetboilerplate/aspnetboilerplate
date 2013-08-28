@@ -5,7 +5,7 @@ namespace ExamCenter.Entities.NHibernate.Mappings
     public class QuestionMap : EntityMap<Question>
     {
         public QuestionMap()
-            : base("Questions")
+            : base("EcQuestions")
         {
             References(x => x.Tenant).Column("TenantId");
             Map(x => x.QuestionText);

@@ -26,7 +26,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// returns IQueryable and it requires open database connection to use it.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
-        public IQueryable<TEntity> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             var allEntities = Session.Query<TEntity>();
 
@@ -43,7 +43,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// Used to get all entities.
         /// </summary>
         /// <returns>List of all entities</returns>
-        public IList<TEntity> GetAllList()
+        public virtual IList<TEntity> GetAllList()
         {
             return GetAll().ToList();
         }
@@ -56,7 +56,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// <typeparam name="T">Type of return value of this method</typeparam>
         /// <param name="queryMethod">This method is used to query over entities</param>
         /// <returns>Query result</returns>
-        public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
+        public virtual T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
         {
             var x = queryMethod(GetAll());
             return x;
@@ -67,7 +67,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// </summary>
         /// <param name="key">Primary key of the entity to get</param>
         /// <returns>Entity</returns>
-        public TEntity Get(TPrimaryKey key)
+        public virtual TEntity Get(TPrimaryKey key)
         {
             return Session.Get<TEntity>(key);
         }
@@ -76,7 +76,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>
-        public void Insert(TEntity entity)
+        public virtual void Insert(TEntity entity)
         {
             Session.Save(entity);
         }
@@ -85,7 +85,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// Updates an existing entity.
         /// </summary>
         /// <param name="entity">Entity</param>
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             Session.Update(entity);
         }
@@ -93,8 +93,17 @@ namespace Abp.Data.Repositories.NHibernate
         /// <summary>
         /// Deletes an entity.
         /// </summary>
+        /// <param name="entity">Entity to be deleted</param>
+        public virtual void Delete(TEntity entity)
+        {
+            Session.Delete(entity);
+        }
+
+        /// <summary>
+        /// Deletes an entity.
+        /// </summary>
         /// <param name="id">Id of the entity</param>
-        public void Delete(TPrimaryKey id)
+        public virtual void Delete(TPrimaryKey id)
         {
             Session.Delete(Session.Load<TEntity>(id));
         }

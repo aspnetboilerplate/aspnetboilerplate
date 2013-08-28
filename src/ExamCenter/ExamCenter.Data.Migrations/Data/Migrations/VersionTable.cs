@@ -9,7 +9,7 @@ namespace ExamCenter.Data.Migrations
         {
             get
             {
-                return "ExamCenterVersionInfo";
+                return "EcVersionInfo";
             }
         }
     }

@@ -17,7 +17,7 @@ namespace ExamCenter.Services.Impl
             _questionRepository = questionRepository;
         }
 
-        [UnitOfWork]
+        //[UnitOfWork]
         public IList<QuestionDto> GetAllQuestions()
         {
             return _questionRepository.Query(q => q.ToList()).MapIList<Question, QuestionDto>();

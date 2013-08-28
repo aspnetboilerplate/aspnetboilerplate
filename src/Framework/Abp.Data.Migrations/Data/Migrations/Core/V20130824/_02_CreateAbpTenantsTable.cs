@@ -3,17 +3,17 @@ using Abp.Data.Migrations;
 namespace Abp.Data.Migrations.Core.V20130824
 {
     [Migration(2013082402)]
-    public class _02_CreateTenantsTable : Migration
+    public class _02_CreateAbpTenantsTable : Migration
     {
         public override void Up()
         {
-            Create.Table("Tenants")
+            Create.Table("AbpTenants")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("CompanyName").AsString(100).NotNullable()
-                .WithColumn("OwnerUserId").AsInt32().NotNullable().ForeignKey("Users", "Id")
+                .WithColumn("OwnerUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
                 .WithAuditColumns();
 
-            Insert.IntoTable("Tenants").Row(
+            Insert.IntoTable("AbpTenants").Row(
                 new
                     {
                         CompanyName = "Default",
@@ -25,7 +25,7 @@ namespace Abp.Data.Migrations.Core.V20130824
 
         public override void Down()
         {
-            Delete.Table("Tenants");
+            Delete.Table("AbpTenants");
         }
     }
 }

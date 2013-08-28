@@ -23,18 +23,22 @@ Improvements:
 
 TODO:
 - Make auto mapping system easier to use and standard to implement!
-- Implement IService interception
+- Service interceptions
   - Authorization checks
   - Transactions? (implemented by UnitOfWork interceptor already, so?)
   - DTO Validations and checks?
   - Exception handling?
+- Repository interceptors
+  - Tenancy filter
+  - Write history/log
+  - Set Audit properties
+- Use NHibernate L2? caching
 - Exception handling in Controllers and ApiControllers
-- Make authentication & authorization system works with controllers and web api controllers
-- Make user management system
-- Make role management system
-- Make Tenant system and Cloud!
+- User management system
+- Role (user templates) management system
+- Tenant system and Cloud!
 - JS&CSS Minimization and bundle (best practices!)
-- Usage logging (detailed auditing)
+- Usage logging/history (detailed auditing)
 
 --------------------------
 

@@ -6,7 +6,7 @@ namespace Abp.Entities.NHibernate.Mappings.Core
     public class UserMap : EntityMap<User>
     {
         public UserMap()
-            : base("Users")
+            : base("AbpUsers")
         {
             Map(x => x.Name);
             Map(x => x.Surname);

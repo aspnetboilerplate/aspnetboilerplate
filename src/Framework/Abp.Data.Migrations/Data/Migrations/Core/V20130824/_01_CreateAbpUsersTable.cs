@@ -3,20 +3,22 @@
 namespace Abp.Data.Migrations.Core.V20130824
 {
     [Migration(2013082401)]
-    public class _01_CreateUsersTable : Migration
+    public class _01_CreateAbpUsersTable : Migration
     {
         public override void Up()
         {
-            Create.Table("Users")
+            Create.Table("AbpUsers")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("Name").AsString(30).NotNullable()
                 .WithColumn("Surname").AsString(30).NotNullable()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(30).NotNullable();
 
-            Insert.IntoTable("Users").Row(
+            Insert.IntoTable("AbpUsers").Row(
                 new
                     {
+                        Name = "System",
+                        Surname = "Admin",
                         EmailAddress = "admin@aspnetboilerplate.com",
                         Password = "123"
                     }
@@ -25,7 +27,7 @@ namespace Abp.Data.Migrations.Core.V20130824
 
         public override void Down()
         {
-            Delete.Table("Users");
+            Delete.Table("AbpUsers");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Abp.Data.Migrations
         {
             return table
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
-                .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("Users", "Id");
+                .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Abp.Data.Migrations
         {
             return table
                 .WithColumn("LastModificationTime").AsDateTime().Nullable()
-                .WithColumn("LastModifierUserId").AsInt32().Nullable().ForeignKey("Users", "Id");
+                .WithColumn("LastModifierUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id");
         }
     }
 }

@@ -16,6 +16,6 @@ namespace Abp.Entities
         /// <summary>
         /// Creator of this entity.
         /// </summary>
-        User Creator { get; set; }
+        User CreatorUser { get; set; }
     }
 }

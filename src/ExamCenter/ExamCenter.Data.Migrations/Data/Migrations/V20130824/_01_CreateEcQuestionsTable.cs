@@ -4,13 +4,13 @@ using FluentMigrator;
 namespace ExamCenter.Data.Migrations.V20130824
 {
     [Migration(2013082401)]
-    public class _01_CreateQuestionsTable : Migration
+    public class _01_CreateEcQuestionsTable : Migration
     {
         public override void Up()
         {
-            Create.Table("Questions")
+            Create.Table("EcQuestions")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("Tenants", "Id")
+                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
                 .WithColumn("QuestionText").AsString(2000).NotNullable()
                 .WithColumn("AnsweringType").AsInt32().NotNullable()
                 .WithColumn("EstimatedAnsweringTime").AsInt32().Nullable()
@@ -21,7 +21,7 @@ namespace ExamCenter.Data.Migrations.V20130824
 
         public override void Down()
         {
-            Delete.Table("Questions");
+            Delete.Table("EcQuestions");
         }
     }
 }

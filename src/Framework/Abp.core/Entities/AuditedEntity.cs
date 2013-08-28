@@ -17,7 +17,7 @@ namespace Abp.Entities
         /// <summary>
         /// Creator user of this entity.
         /// </summary>
-        public virtual User Creator { get; set; }
+        public virtual User CreatorUser { get; set; }
 
         /// <summary>
         /// Last modification date of this entity.
@@ -27,14 +27,14 @@ namespace Abp.Entities
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
-        public virtual User LastModifier { get; set; }
+        public virtual User LastModifierUser { get; set; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AuditedEntity()
         {
-            CreationTime = DateTime.Now;
+            CreationTime = DateTime.Now; //TODO: Set this property in the interceptor or somewhere else since it may break ORM system!
         }
     }
 

@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Abp.Data;
-using Abp.Data.Repositories;
 using Abp.Data.Repositories.Core;
 using Abp.Entities.Core;
 using Abp.Services.Core.Dto;

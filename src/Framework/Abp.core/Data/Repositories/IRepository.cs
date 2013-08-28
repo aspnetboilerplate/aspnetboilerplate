@@ -67,6 +67,12 @@ namespace Abp.Data.Repositories
         /// <summary>
         /// Deletes an entity.
         /// </summary>
+        /// <param name="entity">Entity to be deleted</param>
+        void Delete(TEntity entity);
+
+        /// <summary>
+        /// Deletes an entity by primary key.
+        /// </summary>
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
     }
