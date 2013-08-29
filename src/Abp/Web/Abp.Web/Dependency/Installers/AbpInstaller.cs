@@ -30,7 +30,7 @@ namespace Abp.Web.Dependency.Installers
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(NhUserRepository))).InSameNamespaceAs<NhUserRepository>().WithService.DefaultInterfaces().LifestyleTransient(),
 
                 //All services
-                Classes.FromAssembly(Assembly.GetAssembly(typeof(IService))).InSameNamespaceAs<UserService>().WithService.DefaultInterfaces().LifestyleTransient(),
+                Classes.FromAssembly(Assembly.GetAssembly(typeof(UserService))).InSameNamespaceAs<UserService>().WithService.DefaultInterfaces().LifestyleTransient(),
 
                 //All api controllers
                 Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
