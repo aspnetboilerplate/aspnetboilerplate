@@ -40,6 +40,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web", "Abp\Web\Abp.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamCenter.Data", "ExamCenter\ExamCenter.Data\ExamCenter.Data.csproj", "{89714409-E64F-4439-909A-415867494D16}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{13D8409E-67C8-4E50-BA6E-243E0FFBDE2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseRecreater", "Tools\DatabaseRecreater\DatabaseRecreater.csproj", "{2A2B16B2-3072-47C8-A9EF-254B87F94EE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +82,10 @@ Global
 		{89714409-E64F-4439-909A-415867494D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89714409-E64F-4439-909A-415867494D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89714409-E64F-4439-909A-415867494D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2B16B2-3072-47C8-A9EF-254B87F94EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2B16B2-3072-47C8-A9EF-254B87F94EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2B16B2-3072-47C8-A9EF-254B87F94EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2B16B2-3072-47C8-A9EF-254B87F94EE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,5 +102,6 @@ Global
 		{CE9FEA93-BE42-442B-A7FF-A53922099F64} = {06D58859-D2A9-473D-AB07-75343F38E477}
 		{2C221D3B-5F54-4C5B-8082-318636415132} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{71962F97-5E4B-465C-9A21-2153D31992CF} = {2CC919D1-FF25-406D-B4CB-C9FCFF934440}
+		{2A2B16B2-3072-47C8-A9EF-254B87F94EE6} = {13D8409E-67C8-4E50-BA6E-243E0FFBDE2E}
 	EndGlobalSection
 EndGlobal
