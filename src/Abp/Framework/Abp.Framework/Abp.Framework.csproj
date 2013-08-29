@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53E3C760-B365-4D43-8B70-70A34CF22ED0}</ProjectGuid>
+    <ProjectGuid>{2C221D3B-5F54-4C5B-8082-318636415132}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExamCenter</RootNamespace>
-    <AssemblyName>ExamCenter.Localization</AssemblyName>
+    <RootNamespace>Abp</RootNamespace>
+    <AssemblyName>Abp.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,26 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Localization\Resources\AppTexts.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AppTexts.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Localization\Resources\ResourcesLocalizationManager.cs" />
+    <Compile Include="Data\IUnitOfWork.cs" />
+    <Compile Include="Data\Repositories\IRepository.cs" />
+    <Compile Include="Data\UnitOfWorkAttribute.cs" />
+    <Compile Include="Data\UnitOfWorkHelper.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Localization\Resources\AppTexts.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppTexts.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Localization\Resources\AppTexts.tr.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Core\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
+    <Compile Include="Services\Dto\EntityDto.cs" />
+    <Compile Include="Services\IService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

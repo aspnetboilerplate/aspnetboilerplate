@@ -240,25 +240,29 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Abp.core\Abp.Core.csproj">
+    <ProjectReference Include="..\..\Abp\Core\Abp.Core.Data\Abp.Core.Data.csproj">
+      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
+      <Name>Abp.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Core\Abp.Core\Abp.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Abp.Data.NHibernate\Abp.Data.NHibernate.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Data.NHibernate</Name>
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Framework\Abp.Framework.csproj">
+      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Name>Abp.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Abp.Web\Abp.Web.csproj">
-      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
+    <ProjectReference Include="..\..\Abp\Web\Abp.Web\Abp.Web.csproj">
+      <Project>{71962F97-5E4B-465C-9A21-2153D31992CF}</Project>
       <Name>Abp.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExamCenter.Core\ExamCenter.Core.csproj">
       <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
       <Name>ExamCenter.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExamCenter.Data.NHibernate\ExamCenter.Data.NHibernate.csproj">
-      <Project>{89714409-e64f-4439-909a-415867494d16}</Project>
-      <Name>ExamCenter.Data.NHibernate</Name>
+    <ProjectReference Include="..\ExamCenter.Data\ExamCenter.Data.csproj">
+      <Project>{89714409-E64F-4439-909A-415867494D16}</Project>
+      <Name>ExamCenter.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExamCenter.Localization\ExamCenter.Localization.csproj">
       <Project>{53e3c760-b365-4d43-8b70-70a34cf22ed0}</Project>

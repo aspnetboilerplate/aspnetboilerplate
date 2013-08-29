@@ -1,2 +1,0 @@
-..\..\packages\FluentMigrator.Tools.1.1.1.0\tools\AnyCPU\40\Migrate.exe /connection "Server=localhost; Database=ExamCenter; Trusted_Connection=True;" /db sqlserver /target "bin\Debug\Abp.Data.Migrations.dll"
-pause
