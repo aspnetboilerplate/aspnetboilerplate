@@ -76,4 +76,13 @@ namespace Abp.Data.Repositories
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
     }
+
+    /// <summary>
+    /// A shortcut of <see cref="IRepository{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    public interface IRepository<TEntity> : IRepository<TEntity, int> where TEntity : IEntity<int>
+    {
+
+    }
 }

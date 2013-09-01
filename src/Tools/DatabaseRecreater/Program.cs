@@ -15,7 +15,7 @@ namespace DatabaseRecreater
 
         static void Main(string[] args)
         {
-            var dbName = "ExamCenter";
+            var dbName = "Taskever";
 
             if (IsDatabaseExists(dbName))
             {
@@ -75,7 +75,7 @@ namespace DatabaseRecreater
         private static void RunMigrations()
         {
             RunMigration(@"..\..\..\..\Abp\Core\Abp.Core.Data\");
-            RunMigration(@"..\..\..\..\ExamCenter\ExamCenter.Data\");
+            RunMigration(@"..\..\..\..\Taskever\Taskever.Data\");
         }
 
         private static void RunMigration(string directory)
