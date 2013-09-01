@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using Abp.Data.Repositories;
+using Abp.Data.Repositories.NHibernate;
 using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -21,6 +23,10 @@ namespace Taskever.Web.Dependency.Installers
 
                 //All Web Api Controllers
                 Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient(),
+
+                //Generic repositories
+                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
 
                 //All repoistories
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(NhTaskRepository))).InSameNamespaceAs<NhTaskRepository>().WithService.DefaultInterfaces().LifestyleTransient(),

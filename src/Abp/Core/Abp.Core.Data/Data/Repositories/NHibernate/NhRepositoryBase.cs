@@ -9,11 +9,20 @@ using NHibernate.Linq;
 namespace Abp.Data.Repositories.NHibernate
 {
     /// <summary>
+    /// A shortcut of <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public class NhRepositoryBase<TEntity> : NhRepositoryBase<TEntity, int>, IRepository<TEntity> where TEntity : IEntity<int>
+    {
+        
+    }
+
+    /// <summary>
     /// Base class for all repositories those uses NHibernate.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : IEntity<TPrimaryKey>
+    public class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : IEntity<TPrimaryKey>
     {
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
@@ -58,8 +67,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// <returns>Query result</returns>
         public virtual T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
         {
-            var x = queryMethod(GetAll());
-            return x;
+            return queryMethod(GetAll());
         }
 
         /// <summary>
@@ -112,6 +120,44 @@ namespace Abp.Data.Repositories.NHibernate
         public virtual void Delete(TPrimaryKey id)
         {
             Session.Delete(Session.Load<TEntity>(id));
+        }
+
+        /// <summary>
+        /// Gets count of all entities in this repository.
+        /// </summary>
+        /// <returns>Count of entities</returns>
+        public int Count()
+        {
+            return GetAll().Count();
+        }
+
+        /// <summary>
+        /// Gets count of all entities in this repository.
+        /// </summary>
+        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <returns>Count of entities</returns>
+        public int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
+        {
+            return queryMethod(GetAll()).Count();            
+        }
+
+        /// <summary>
+        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// </summary>
+        /// <returns>Count of entities</returns>
+        public long LongCount()
+        {
+            return GetAll().LongCount();
+        }
+
+        /// <summary>
+        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// </summary>
+        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <returns>Count of entities</returns>
+        public long LongCount(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
+        {
+            return queryMethod(GetAll()).LongCount();
         }
     }
 }

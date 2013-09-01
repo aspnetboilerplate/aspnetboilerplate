@@ -12,9 +12,9 @@ namespace Abp.Services.Core.Impl
             return AutoMapper.Mapper.Map<IList<TD>>(items); //TODO: ???            
         }
 
-        public static TD MapTo<TD>(this object obj)
+        public static T MapTo<T>(this object obj)
         {
-            return AutoMapper.Mapper.Map<TD>(obj);
+            return AutoMapper.Mapper.Map<T>(obj);
         }
     }
 }

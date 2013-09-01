@@ -33,11 +33,8 @@ namespace Taskever.Web.Api
 
         public virtual HttpResponseMessage Post(TaskDto task)
         {
-            _questionService.Insert(task);
-
-            var response = Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
-
-            return response;
+            _questionService.Create(task);
+            return Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
         }
     }
 }

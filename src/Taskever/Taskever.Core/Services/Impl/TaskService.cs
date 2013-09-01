@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Data.Repositories;
 using Abp.Services.Core.Impl;
-using Taskever.Data.Repositories;
 using Taskever.Entities;
 using Taskever.Services.Dto;
 
@@ -9,23 +9,22 @@ namespace Taskever.Services.Impl
 {
     public class TaskService : ITaskService
     {
-        private readonly ITaskRepository _questionRepository;
+        private readonly IRepository<Task> _taskRepository;
 
-        public TaskService(ITaskRepository questionRepository)
+        public TaskService(IRepository<Task> taskRepository)
         {
-            _questionRepository = questionRepository;
+            _taskRepository = taskRepository;
         }
 
-        //[UnitOfWork]
         public IList<TaskDto> GetAllTasks()
         {
-            return _questionRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
+            return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }
 
-        public void Insert(TaskDto task)
+        public void Create(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
-            _questionRepository.Insert(taskEntity);
+            _taskRepository.Insert(taskEntity);
             task.Id = taskEntity.Id;
         }
     }
