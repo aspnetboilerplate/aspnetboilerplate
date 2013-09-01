@@ -14,6 +14,8 @@ namespace ExamCenter.Web.App_Start
                     .Include("~/Content/utils/ie10fix.css")                    
                     .Include("~/Content/bootstrap/bootstrap.css")
                     .Include("~/Content/bootstrap/bootstrap-theme.css")
+                    .Include("~/Content/font-awesome.min.css")
+                    .Include("~/Content/durandal.css")
                     .Include("~/Content/app/main.css")
                 );
 
@@ -25,8 +27,8 @@ namespace ExamCenter.Web.App_Start
             bundles.Add(
                 new ScriptBundle("~/Scripts/baselibs")
                     .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
-                    .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
                 );
 
             //bundles.Add(

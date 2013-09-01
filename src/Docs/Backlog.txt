@@ -50,19 +50,28 @@ Authorization
 --------------------------
 PAGES
 - CLOUD Administrating 
-  - Pages those are over tenant accounts and to manage account system etc.. (authenticated & authorized)
-    - ex: list of tenant accounts page
+
+  - Seperated SPA application
+    - Pages those are over tenant accounts and to manage account system etc.. (authenticated & authorized)
+      - ex: list of tenant accounts page
+
   - public pages (authenticated but not authorized)
     - ex: Pages to create tenant accounts by logged in users!
+
   - anaonymous pages (not authenticated)
     - ex: Pages those describes the system to all internet users
+
 - APPLICATIN Pages (An Tenant account perspective) (can be entered by a subdomain or sub-folder (www.ABC.com/companyname or companyname.ABC.com?)
-  - Pages to use and manage the application (authenticated & authorized)
-    - ex: user authorization page, a page to use application
-  - public pages (authenticated but not authorized)
-    - pages those are seen by all logged in tenant users
-  - anaonymous pages (not authenticated)
-    - Pages those describes the system to all internet users
+
+  - Seperated SPA application
+    - Pages to use and manage the application (authenticated & authorized)
+      - ex: user authorization page, a page to use application
+    - public pages (authenticated but not authorized)
+      - pages those are seen by all logged in tenant users
+  
+  - Not SPA pages
+    - anaonymous pages (not authenticated)
+      - Pages those describes the system to all internet users
 
 Membership models
 - To be a member of CLOUD (to create an tenant account)
