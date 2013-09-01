@@ -15,7 +15,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function (sy
     system.debug(true);
     //>>excludeEnd("build");
 
-    app.title = 'Exam Center';
+    app.title = 'Task Ever';
 
     app.configurePlugins({
         router: true,

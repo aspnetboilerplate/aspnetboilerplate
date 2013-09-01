@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Taskever.WebSpa
+namespace Taskever.Web.App_Start
 {
     public class FilterConfig
     {

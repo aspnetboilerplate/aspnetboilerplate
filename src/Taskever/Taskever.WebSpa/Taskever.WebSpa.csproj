@@ -188,10 +188,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\secondpage.js" />
-    <Content Include="App\viewmodels\home.js" />
+    <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
     <Content Include="App\views\secondpage.html" />
-    <Content Include="App\views\home.html" />
+    <Content Include="App\views\tasks.html" />
     <Content Include="App\views\shell.html" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\font-awesome-ie7.css" />
@@ -272,6 +272,8 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Abp\App\" />
+    <Folder Include="App\models\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

@@ -51,8 +51,11 @@
     <EmbeddedResource Include="Localization\Resources\AppTexts.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AppTexts.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Localization\Resources\AppTexts.tr.resx" />
+    <EmbeddedResource Include="Localization\Resources\AppTexts.tr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Core\Abp.Core\Abp.Core.csproj">

@@ -5,6 +5,7 @@ using AttributeRouting.Web.Http;
 using Castle.Core.Logging;
 using Taskever.Services;
 using Taskever.Services.Dto;
+using System.Threading;
 
 namespace Taskever.Web.Api
 {
@@ -17,7 +18,7 @@ namespace Taskever.Web.Api
             _questionService = questionService;
         }
 
-        [GET("Questionsss")]
+        [GET("Mytasks")]
         [UnitOfWork]
         public virtual IEnumerable<TaskDto> Get()
         {
@@ -25,6 +26,7 @@ namespace Taskever.Web.Api
             //throwing appropriate messages
             //logging
             //exception handling
+            Thread.Sleep(1000);
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
             return _questionService.GetAllTasks();
         }
