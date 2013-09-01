@@ -193,6 +193,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App\main.js" />
+    <Content Include="App\models\dtos.js" />
+    <Content Include="App\remoteServices\taskService.js" />
     <Content Include="App\viewmodels\secondpage.js" />
     <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
@@ -246,6 +248,8 @@
     <Content Include="Scripts\durandal\transitions\entrance.js" />
     <Content Include="Scripts\durandal\viewEngine.js" />
     <Content Include="Scripts\durandal\viewLocator.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
     <Content Include="weyland-config.js" />
     <Content Include="Content\font\fontawesome-webfont.woff" />
     <Content Include="Content\font\fontawesome-webfont.ttf" />
@@ -280,7 +284,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\App\" />
-    <Folder Include="App\models\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

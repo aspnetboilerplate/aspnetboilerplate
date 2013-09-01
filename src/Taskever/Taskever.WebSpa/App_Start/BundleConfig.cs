@@ -26,9 +26,10 @@ namespace Taskever.Web.App_Start
 
             bundles.Add(
                 new ScriptBundle("~/Scripts/baselibs")
+                    .Include("~/Scripts/json2.min.js")
                     .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
-                    .Include("~/Scripts/bootstrap.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/bootstrap.js") //TODO: Use minimized
                 );
 
             //bundles.Add(

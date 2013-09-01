@@ -28,6 +28,7 @@ namespace Taskever.Web.Api
             //logging
             //exception handling
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
+            Thread.Sleep(800);
             return _questionService.GetAllTasks();
         }
 
