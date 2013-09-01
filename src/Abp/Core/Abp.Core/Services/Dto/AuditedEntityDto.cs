@@ -24,6 +24,14 @@ namespace Abp.Services.Dto
         /// Last modifier user of this entity.
         /// </summary>
         public virtual int? LastModifierUserId { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected AuditedEntityDto()
+        {
+            CreationTime = DateTime.Now;
+        }
     }
 
     public abstract class AuditedEntityDto : AuditedEntityDto<int>

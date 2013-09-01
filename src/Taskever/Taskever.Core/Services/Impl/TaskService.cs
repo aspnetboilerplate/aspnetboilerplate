@@ -21,5 +21,12 @@ namespace Taskever.Services.Impl
         {
             return _questionRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }
+
+        public void Insert(TaskDto task)
+        {
+            var taskEntity = task.MapTo<Task>();
+            _questionRepository.Insert(taskEntity);
+            task.Id = taskEntity.Id;
+        }
     }
 }

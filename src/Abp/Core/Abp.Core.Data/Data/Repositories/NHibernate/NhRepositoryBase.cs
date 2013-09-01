@@ -78,6 +78,12 @@ namespace Abp.Data.Repositories.NHibernate
         /// <param name="entity">Entity</param>
         public virtual void Insert(TEntity entity)
         {
+            //TODO: Move this code out of repository!
+            if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
+            {
+                entity.As<IHasTenant>().Tenant = Tenant.Current;
+            }
+
             Session.Save(entity);
         }
 

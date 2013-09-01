@@ -4,10 +4,16 @@
             <h3 class="panel-title">My tasks</h3>
         </div>
         <div class="panel-body">
-            <p class="loading-message">Loading...</p>
+            <p id="loading-message" style="display: none">Loading...</p>
             <ul class="list-group" data-bind="foreach: tasks">
-                <li class="list-group-item" data-bind="html: title"></li>
+                <li class="list-group-item">
+                    <h4 data-bind="html: title"></h4>
+                    <p data-bind="html: description"></p>
+                </li>
             </ul>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-primary" data-bind="click:showTaskCreateDialog">+ Create new task</button>
         </div>
     </div>
 </section>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using Abp.Data;
 using Abp.Web.Controllers;
 using AttributeRouting.Web.Http;
@@ -26,9 +27,17 @@ namespace Taskever.Web.Api
             //throwing appropriate messages
             //logging
             //exception handling
-            Thread.Sleep(1000);
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
             return _questionService.GetAllTasks();
+        }
+
+        public virtual HttpResponseMessage Post(TaskDto task)
+        {
+            _questionService.Insert(task);
+
+            var response = Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
+
+            return response;
         }
     }
 }

@@ -196,6 +196,7 @@
     <Content Include="App\viewmodels\secondpage.js" />
     <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
+    <Content Include="App\views\createTask.html" />
     <Content Include="App\views\secondpage.html" />
     <Content Include="App\views\tasks.html" />
     <Content Include="App\views\shell.html" />

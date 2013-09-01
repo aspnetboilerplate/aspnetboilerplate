@@ -7,7 +7,7 @@ namespace Taskever.Web.Dependency
     {
         public static void Map()
         {
-            AutoMapper.Mapper.CreateMap<Task, TaskDto>();
+            AutoMapper.Mapper.CreateMap<Task, TaskDto>().ReverseMap();
                 //.ForMember(dm => dm.LastModifierUserId, expression => expression.MapFrom(d => d.LastModifier.Id));
         }
     }
