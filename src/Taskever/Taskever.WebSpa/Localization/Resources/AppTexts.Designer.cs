@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Taskever.Localization.Resources {
+namespace Taskever.Web.Localization.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Taskever.Localization.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Taskever.Localization.Resources.AppTexts", typeof(AppTexts).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Taskever.Web.Localization.Resources.AppTexts", typeof(AppTexts).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

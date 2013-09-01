@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Abp.Localization;
 
-namespace Taskever.Localization.Resources
+namespace Taskever.Web.Localization.Resources
 {
     public class ResourcesLocalizationManager : ILocalizationManager
     {
