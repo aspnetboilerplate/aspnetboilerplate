@@ -195,6 +195,7 @@
     <Content Include="App\main.js" />
     <Content Include="App\models\dtos.js" />
     <Content Include="App\remoteServices\taskService.js" />
+    <Content Include="Abp\abp.js" />
     <Content Include="App\viewmodels\secondpage.js" />
     <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
@@ -250,6 +251,8 @@
     <Content Include="Scripts\durandal\viewLocator.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="weyland-config.js" />
     <Content Include="Content\font\fontawesome-webfont.woff" />
     <Content Include="Content\font\fontawesome-webfont.ttf" />
@@ -283,7 +286,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abp\App\" />
+    <Folder Include="Abp\Core\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ namespace Taskever.Services
 {
     public interface ITaskService :IService
     {
-        IList<TaskDto> GetAllTasks();
+        IList<TaskDto> GetMyTasks();
 
         void Create(TaskDto task);
     }

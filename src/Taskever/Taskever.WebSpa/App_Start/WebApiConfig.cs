@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace Taskever.Web.App_Start
 {
@@ -14,7 +15,9 @@ namespace Taskever.Web.App_Start
             );
 
             config.Formatters.Clear();
-            config.Formatters.Add(new JsonMediaTypeFormatter());
+            var formatter = new JsonMediaTypeFormatter();
+            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.Add(formatter);
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Taskever.Web.App_Start;
 using Taskever.Web.Dependency;
-using Taskever.WebSpa;
 
 namespace Taskever.Web
 {

@@ -22,6 +22,8 @@ Improvements:
 - Localization
 
 TODO:
+- Automatic Web API (rest) creation
+  - Automatic service layer creation on the client side (javascript) (creating from service class?)
 - Make auto mapping system easier to use and standard to implement!
 - Service interceptions
   - Authorization checks

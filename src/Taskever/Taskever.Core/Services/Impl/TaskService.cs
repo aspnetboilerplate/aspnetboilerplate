@@ -16,7 +16,7 @@ namespace Taskever.Services.Impl
             _taskRepository = taskRepository;
         }
 
-        public IList<TaskDto> GetAllTasks()
+        public IList<TaskDto> GetMyTasks()
         {
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }

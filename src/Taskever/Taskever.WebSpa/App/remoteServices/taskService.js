@@ -1,38 +1,24 @@
-﻿define(['jquery', 'models/dtos'], function ($, dtos) {
+﻿define(['jquery', 'knockout', 'abp/abp'], function ($, ko, abp) {
 
-    var getTasks = function() {
-        var defer = $.Deferred();
-        
-        $.ajax({
+    var getTasks = function (tasks) {
+        return abp.ajax({
             url: '/api/Tasks',
-            dataType: 'json',
-            type: 'GET',
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.Message) {
-                    defer.reject();
-                    return;
-                }
-
-                var tasks = [];
-                for (var i = 0; i < data.length; i++) {
-                    var task = new dtos.TaskDto();
-                    task.title(data[i].Title);
-                    task.description(data[i].Description);
-                    tasks.push(task);
-                }
-
-                defer.resolve(tasks);
-            },
-            error : function () {
-                defer.reject();
-            }
+            type: 'GET'
+        }).then(function(data) {
+            ko.mapping.fromJS(data, tasks);
         });
+    };
 
-        return defer.promise();
+    var createTask = function(task) {
+        return abp.ajax({
+            url: '/api/Tasks',
+            type: 'POST',
+            data: JSON.stringify(task)
+        });
     };
     
     return {
-        getTasks: getTasks
+        getTasks: getTasks,
+        createTask: createTask
     };
 });
