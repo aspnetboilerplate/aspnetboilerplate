@@ -4,7 +4,7 @@
         var defer = $.Deferred();
         
         $.ajax({
-            url: '/api/Ta2sks',
+            url: '/api/Tasks',
             dataType: 'json',
             type: 'GET',
             contentType: 'application/json',
