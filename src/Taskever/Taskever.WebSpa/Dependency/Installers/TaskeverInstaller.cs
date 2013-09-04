@@ -7,7 +7,9 @@ using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Taskever.Services;
 using Taskever.Services.Impl;
+using Taskever.Web.Api;
 
 namespace Taskever.Web.Dependency.Installers
 {
@@ -33,9 +35,11 @@ namespace Taskever.Web.Dependency.Installers
                 //All services
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(TaskService))).InSameNamespaceAs<TaskService>().WithService.DefaultInterfaces().LifestyleTransient(),
 
+                //Component.For(typeof(AbpServiceApiController<ITaskService>)).Proxy.AdditionalInterfaces(typeof(ITaskService)).Interceptors<AbpServiceApiControllerInterceptor>(),
+
                 //Localization manager
                 Component.For<ILocalizationManager>().ImplementedBy<NullLocalizationManager>().LifestyleSingleton()
-                
+
                 );
         }
     }

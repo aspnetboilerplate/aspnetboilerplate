@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -7,36 +8,51 @@ using Abp.Data;
 using Abp.Web.Controllers;
 using AttributeRouting.Web.Http;
 using Castle.Core.Logging;
+using Castle.DynamicProxy;
 using Taskever.Services;
 using Taskever.Services.Dto;
 using System.Threading;
+using Abp.Services;
 
 namespace Taskever.Web.Api
 {
     #region Test purposes 
 
-    public class TestSelector : IHttpControllerSelector
-    {
-        public HttpControllerDescriptor SelectController(HttpRequestMessage request)
-        {
-            return null;            
-        }
+   //public class TestSelector : IHttpControllerSelector
+    //{
+    //    public HttpControllerDescriptor SelectController(HttpRequestMessage request)
+    //    {
+    //        return null;            
+    //    }
 
-        public IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
-        {
-            return null;
-        }
-    }
+    //    public IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
+    //    {
+    //        return null;
+    //    }
+    //}
 
-    public class TaskServiceController : AbpServiceApiController<ITaskService>
-    {
+    //public class TaskServiceController : AbpServiceApiController<ITaskService>
+    //{
         
-    }
+    //}
 
-    public class AbpServiceApiController<T>
-    {
+    //public class AbpServiceApiController<TService> : AbpApiController where TService : IService
+    //{
+    //    private readonly TService _service;
 
-    }
+    //    public AbpServiceApiController(TService service)
+    //    {
+    //        _service = service;
+    //    }
+    //}
+
+    //public class AbpServiceApiControllerInterceptor : IInterceptor
+    //{
+    //    public void Intercept(IInvocation invocation)
+    //    {
+    //        invocation.Proceed();
+    //    }
+    //}
 
     #endregion
 
@@ -48,7 +64,7 @@ namespace Taskever.Web.Api
         {
             _questionService = questionService;
         }
-
+        
         [GET("Mytasks")]
         public virtual IEnumerable<TaskDto> Get()
         {
