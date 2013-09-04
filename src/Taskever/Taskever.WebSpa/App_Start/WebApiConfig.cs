@@ -14,6 +14,11 @@ namespace Taskever.Web.App_Start
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "AbpServiceApi",
+                routeTemplate: "api/services/{serviceName}/{methodName}"
+                );
+
             config.Formatters.Clear();
             var formatter = new JsonMediaTypeFormatter();
             formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

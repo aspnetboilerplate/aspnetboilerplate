@@ -16,12 +16,12 @@ namespace Taskever.Services.Impl
             _taskRepository = taskRepository;
         }
 
-        public IList<TaskDto> GetMyTasks()
+        public virtual IList<TaskDto> GetMyTasks()
         {
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }
 
-        public void Create(TaskDto task)
+        public virtual void Create(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
             _taskRepository.Insert(taskEntity);

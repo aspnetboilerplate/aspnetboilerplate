@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Taskever.Web.Api;
 using Taskever.Web.App_Start;
 using Taskever.Web.Dependency;
 
@@ -24,8 +27,9 @@ namespace Taskever.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             _bootstrapper = new TaskeverBootstrapper();
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new Selector(GlobalConfiguration.Configuration));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpControllerActionSelector());
             _bootstrapper.Initialize();
-
         }
 
         protected void Application_End(object sender, EventArgs e)
