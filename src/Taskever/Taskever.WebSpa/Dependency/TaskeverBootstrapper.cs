@@ -1,18 +1,32 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Data.Dependency.Installers;
 using Abp.Entities.NHibernate.Mappings.Core;
+using Abp.Services;
 using Abp.Web.Startup;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor.Installer;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using Taskever.Entities.NHibernate.Mappings;
+using Taskever.Web.Api;
 using AutoMappingManager = Taskever.Web.Dependency.AutoMappingManager;
 
 namespace Taskever.Web.Dependency
 {
     public class TaskeverBootstrapper : AbpBootstrapper
     {
+        public void Map<T>() where T : IService
+        {
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            proxyGenerator.CreateClassProxy(typeof (AbpServiceApiController), new [] {typeof (T)});
+
+            WindsorContainer.Register(
+                //Component.For()
+                );
+        }
+
         protected override void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
         {
             base.ComponentRegistered(key, handler);

@@ -13,50 +13,11 @@ using Taskever.Services;
 using Taskever.Services.Dto;
 using System.Threading;
 using Abp.Services;
+using System.Web;
 
 namespace Taskever.Web.Api
 {
-    #region Test purposes 
-
-   //public class TestSelector : IHttpControllerSelector
-    //{
-    //    public HttpControllerDescriptor SelectController(HttpRequestMessage request)
-    //    {
-    //        return null;            
-    //    }
-
-    //    public IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
-    //    {
-    //        return null;
-    //    }
-    //}
-
-    //public class TaskServiceController : AbpServiceApiController<ITaskService>
-    //{
-        
-    //}
-
-    //public class AbpServiceApiController<TService> : AbpApiController where TService : IService
-    //{
-    //    private readonly TService _service;
-
-    //    public AbpServiceApiController(TService service)
-    //    {
-    //        _service = service;
-    //    }
-    //}
-
-    //public class AbpServiceApiControllerInterceptor : IInterceptor
-    //{
-    //    public void Intercept(IInvocation invocation)
-    //    {
-    //        invocation.Proceed();
-    //    }
-    //}
-
-    #endregion
-
-    public class TasksController : AbpApiController
+    public class TasksController : AbpApiController, ITaskService
     {
         private readonly ITaskService _questionService;
 
@@ -66,7 +27,7 @@ namespace Taskever.Web.Api
         }
         
         [GET("Mytasks")]
-        public virtual IEnumerable<TaskDto> Get()
+        public virtual IList<TaskDto> GetMyTasks()
         {
             //validation
             //throwing appropriate messages
@@ -77,12 +38,12 @@ namespace Taskever.Web.Api
             return _questionService.GetMyTasks(); //api/TaskService/GetMyTasks
         }
 
-        public virtual HttpResponseMessage Post(TaskDto task)
+        public virtual void Create(TaskDto task)
         {
             //api/task/getAllTasks
             //api/task/create
             _questionService.Create(task);
-            return Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
+            //return Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
         }
     }
 }

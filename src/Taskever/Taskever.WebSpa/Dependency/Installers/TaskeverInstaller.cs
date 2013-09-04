@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
 using Abp.Data.Repositories;
 using Abp.Data.Repositories.NHibernate;
 using Abp.Localization;
+using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -35,7 +37,7 @@ namespace Taskever.Web.Dependency.Installers
                 //All services
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(TaskService))).InSameNamespaceAs<TaskService>().WithService.DefaultInterfaces().LifestyleTransient(),
 
-                //Component.For(typeof(AbpServiceApiController<ITaskService>)).Proxy.AdditionalInterfaces(typeof(ITaskService)).Interceptors<AbpServiceApiControllerInterceptor>(),
+                //Component.For(typeof(AbpServiceApiController)),
 
                 //Localization manager
                 Component.For<ILocalizationManager>().ImplementedBy<NullLocalizationManager>().LifestyleSingleton()
