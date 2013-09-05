@@ -42,7 +42,6 @@
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
     <Compile Include="Data\UnitOfWorkAttribute.cs" />
-    <Compile Include="Data\UnitOfWorkHelper.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
@@ -51,7 +50,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Dto\EntityDto.cs" />
     <Compile Include="Services\IService.cs" />
-    <Compile Include="Utils\Extensions\DictionaryExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

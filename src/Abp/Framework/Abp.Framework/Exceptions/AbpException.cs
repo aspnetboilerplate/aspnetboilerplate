@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Abp.Exceptions
 {
     /// <summary>
     /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
-    /// TODO: Implement serialization.
     /// </summary>
+    [Serializable]
     public class AbpException : Exception
     {
         /// <summary>
-        /// Creates a new AbpException.
+        /// Contstructor.
         /// </summary>
         public AbpException()
         {
@@ -17,7 +18,16 @@ namespace Abp.Exceptions
         }
 
         /// <summary>
-        /// Creates a new AbpException.
+        /// Contstructor for serializing.
+        /// </summary>
+        public AbpException(SerializationInfo serializationInfo, StreamingContext context)
+            : base(serializationInfo, context)
+        {
+
+        }
+
+        /// <summary>
+        /// Contstructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpException(string message)
@@ -27,7 +37,7 @@ namespace Abp.Exceptions
         }
 
         /// <summary>
-        /// Creates a new AbpException.
+        /// Contstructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>

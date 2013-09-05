@@ -12,6 +12,10 @@ namespace Abp.Localization
         /// Gets singleton instance.
         /// </summary>
         public static NullLocalizationManager Instance { get { return InnerInstance; } }
+
+        /// <summary>
+        /// Singleton NullLocalizationManager instance.
+        /// </summary>
         private static readonly NullLocalizationManager InnerInstance = new NullLocalizationManager();
 
         public string GetString(string name)

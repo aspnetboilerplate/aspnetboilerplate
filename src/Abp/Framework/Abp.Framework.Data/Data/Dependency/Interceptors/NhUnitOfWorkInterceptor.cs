@@ -29,7 +29,7 @@ namespace Abp.Data.Dependency.Interceptors
         public void Intercept(IInvocation invocation)
         {
             //If there is a running transaction, just run the method
-            if (NhUnitOfWork.Current != null || !RequiresDbConnection(invocation.MethodInvocationTarget))
+            if (NhUnitOfWork.Current != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
             {
                 invocation.Proceed();
                 return;
@@ -63,21 +63,6 @@ namespace Abp.Data.Dependency.Interceptors
             {
                 NhUnitOfWork.Current = null;
             }
-        }
-
-        private static bool RequiresDbConnection(MethodInfo methodInfo)
-        {
-            if (UnitOfWorkHelper.HasUnitOfWorkAttribute(methodInfo))
-            {
-                return true;
-            }
-
-            if (UnitOfWorkHelper.IsRepositoryMethod(methodInfo))
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

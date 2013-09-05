@@ -25,7 +25,7 @@ namespace Taskever.Web.Dependency
             Abp.Web.Startup.AutoMappingManager.Map();
             AutoMappingManager.Map();
             
-            DynamicControllerMapper.Map<ITaskService>(); //TODO: where to write?
+            DynamicControllerGenerator.GenerateFor<ITaskService>(); //TODO: where to write?
         }
 
         protected override void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

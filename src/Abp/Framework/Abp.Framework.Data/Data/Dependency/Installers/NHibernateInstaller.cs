@@ -9,6 +9,7 @@ namespace Abp.Data.Dependency.Installers
 {
     /// <summary>
     /// This class installs base NHibernate components.
+    /// TODO: Make sessionFactoryCreator mechanism better!
     /// </summary>
     public class NHibernateInstaller : IWindsorInstaller
     {

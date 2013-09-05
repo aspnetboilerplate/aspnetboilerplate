@@ -28,7 +28,7 @@ namespace Abp.Web.Startup
         {
             IocContainer = new WindsorContainer();
             IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
-            DynamicControllerMapper.IocContainer = IocContainer;
+            DynamicControllerGenerator.IocContainer = IocContainer;
         }
 
         public void Initialize()
@@ -36,7 +36,7 @@ namespace Abp.Web.Startup
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpControllerActionSelector());
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
             
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocContainer.Kernel));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(IocContainer));

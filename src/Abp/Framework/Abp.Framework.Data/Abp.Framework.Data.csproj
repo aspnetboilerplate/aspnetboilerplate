@@ -64,6 +64,7 @@
     <Compile Include="Data\Dependency\Interceptors\NhUnitOfWorkInterceptor.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUnitOfWork.cs" />
+    <Compile Include="Data\UnitOfWorkHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

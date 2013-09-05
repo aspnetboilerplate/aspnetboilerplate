@@ -1,6 +1,14 @@
 namespace Abp.Entities
 {
     /// <summary>
+    /// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    public abstract class Entity : Entity<int>
+    {
+
+    }
+
+    /// <summary>
     /// Basic implementation of IEntity interface.
     /// An entity can inherit this class of directly implement to IEntity interface.
     /// </summary>
@@ -11,13 +19,5 @@ namespace Abp.Entities
         /// Unique identifier for this entity.
         /// </summary>
         public virtual TPrimaryKey Id { get; set; }
-    }
-
-    /// <summary>
-    /// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (Int32).
-    /// </summary>
-    public abstract class Entity : Entity<int>
-    {
-
     }
 }

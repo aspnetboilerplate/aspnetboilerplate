@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Utils.Extensions
+namespace Abp.Web.Utils.Extensions
 {
     /// <summary>
     /// Extension methods for Dictionary.
     /// </summary>
-    public static class DictionaryExtensions //TODO: Internal?
+    internal static class DictionaryExtensions
     {
         /// <summary>
         /// This method is used to try to get a value in a dictionary if it does exists.

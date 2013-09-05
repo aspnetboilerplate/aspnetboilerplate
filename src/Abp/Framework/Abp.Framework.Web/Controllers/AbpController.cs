@@ -5,6 +5,9 @@ using Castle.Core.Logging;
 
 namespace Abp.Web.Controllers
 {
+    /// <summary>
+    /// Base class for all MVC Controllers in Abp system.
+    /// </summary>
     public abstract class AbpController : Controller
     {
         /// <summary>

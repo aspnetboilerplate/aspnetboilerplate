@@ -6,7 +6,7 @@ using Abp.Entities;
 namespace Abp.Data.Repositories
 {
     /// <summary>
-    /// This interface must be implemented by all repositories to identify them.
+    /// This interface must be implemented by all repositories to identify them by convention.
     /// Implement generic version instead of this one.
     /// </summary>
     public interface IRepository
@@ -85,12 +85,30 @@ namespace Abp.Data.Repositories
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
 
+        /// <summary>
+        /// Gets count of all entities in this repository.
+        /// </summary>
+        /// <returns>Count of entities</returns>
         int Count();
 
+        /// <summary>
+        /// Gets count of all entities in this repository.
+        /// </summary>
+        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <returns>Count of entities</returns>
         int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod);
 
+        /// <summary>
+        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// </summary>
+        /// <returns>Count of entities</returns>
         long LongCount();
 
+        /// <summary>
+        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// </summary>
+        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <returns>Count of entities</returns>
         long LongCount(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod);
     }
 }

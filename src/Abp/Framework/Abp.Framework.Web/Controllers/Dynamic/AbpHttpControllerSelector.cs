@@ -2,7 +2,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Utils.Extensions;
+using Abp.Web.Utils.Extensions;
+
 namespace Abp.Web.Controllers.Dynamic
 {
     /// <summary>
@@ -18,6 +19,11 @@ namespace Abp.Web.Controllers.Dynamic
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// This method is called by Web API system to select the controller for this request.
+        /// </summary>
+        /// <param name="request">Request object</param>
+        /// <returns>The controller to be used</returns>
         public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
             if (request != null)

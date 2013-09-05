@@ -5,10 +5,31 @@ using Abp.Data.Repositories;
 namespace Abp.Data
 {
     /// <summary>
-    /// A simple helper class to simplify unit of work process.
+    /// A helper class to simplify unit of work process.
+    /// TODO: Remove statics and use this class in DI.
     /// </summary>
-    public static class UnitOfWorkHelper
+    internal static class UnitOfWorkHelper
     {
+        /// <summary>
+        /// Determines if given method is a UnitOfWork method.
+        /// </summary>
+        /// <param name="methodInfo">Method information</param>
+        /// <returns>True if should perform unit of work</returns>
+        public static bool ShouldPerformUnitOfWork(MethodInfo methodInfo)
+        {
+            if (HasUnitOfWorkAttribute(methodInfo))
+            {
+                return true;
+            }
+
+            if (IsRepositoryMethod(methodInfo))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Returns true if given method is a member of a repository class.
         /// </summary>

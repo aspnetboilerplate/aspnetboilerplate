@@ -109,11 +109,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AbpApiController.cs" />
-    <Compile Include="Controllers\Dynamic\AbpControllerActionSelector.cs" />
+    <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiControllerInterceptor.cs" />
     <Compile Include="Controllers\Dynamic\AbpHttpControllerSelector.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicControllerMapper.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicControllerInfo.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicControllerManager.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicControllerGenerator.cs" />
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
@@ -122,6 +124,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\RouteConfig.cs" />
+    <Compile Include="Utils\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Utils\Extensions\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

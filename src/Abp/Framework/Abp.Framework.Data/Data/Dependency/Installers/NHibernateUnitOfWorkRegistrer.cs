@@ -22,6 +22,7 @@ namespace Abp.Data.Dependency.Installers
             else if (handler.ComponentModel.Implementation.GetMethods().Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
             {
                 //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
+                //TODO: Intecept only UnitOfWork methods, not other methods!
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(NhUnitOfWorkInterceptor)));
             }
         }
