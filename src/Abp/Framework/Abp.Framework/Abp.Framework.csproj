@@ -45,6 +45,7 @@
     <Compile Include="Data\UnitOfWorkHelper.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
