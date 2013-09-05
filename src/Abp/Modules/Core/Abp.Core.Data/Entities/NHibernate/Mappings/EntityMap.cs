@@ -1,8 +1,22 @@
 ﻿using System;
+using Abp.Entities;
 using FluentNHibernate.Mapping;
 
-namespace Abp.Entities.NHibernate.Mappings
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
+    /// <summary>
+    /// A shortcut of <see cref="EntityMap{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    /// <typeparam name="TEntity">Entity map</typeparam>
+    public abstract class EntityMap<TEntity> : EntityMap<TEntity, int> where TEntity : IEntity<int>
+    {
+        protected EntityMap(string tableName)
+            : base(tableName)
+        {
+
+        }
+    }
+
     /// <summary>
     /// This class is base class to map entities to database tables.
     /// </summary>
@@ -33,18 +47,6 @@ namespace Abp.Entities.NHibernate.Mappings
             {
                 this.MapModificationAuditColumns();
             }
-        }
-    }
-
-    /// <summary>
-    /// A shortcut of <see cref="EntityMap{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
-    /// </summary>
-    /// <typeparam name="TEntity">Entity map</typeparam>
-    public abstract class EntityMap<TEntity> : EntityMap<TEntity, int> where TEntity : IEntity<int>
-    {
-        protected EntityMap(string tableName) : base(tableName)
-        {
-
         }
     }
 }

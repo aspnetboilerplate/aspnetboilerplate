@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Web.Http;
-using Abp.Data.Repositories.NHibernate.Core;
+using Abp.Modules.Core.Data.Repositories.NHibernate;
+using Abp.Modules.Core.Services.Impl;
 using Abp.Services;
-using Abp.Services.Core.Impl;
 using Abp.Web.Dependency.Interceptors;
 using Castle.Core;
 using Castle.Facilities.Logging;

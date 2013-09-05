@@ -1,7 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Data.Dependency.Installers;
-using Abp.Entities.NHibernate.Mappings.Core;
+using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using Abp.Web.Controllers.Dynamic;
 using Abp.Web.Startup;
 using Castle.Windsor.Installer;
@@ -22,7 +21,7 @@ namespace Taskever.Web.Dependency
             IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
             IocContainer.Install(FromAssembly.This());
 
-            Abp.Web.Startup.AutoMappingManager.Map();
+            Abp.Startup.AutoMappingManager.Map();
             AutoMappingManager.Map();
             
             DynamicControllerGenerator.GenerateFor<ITaskService>(); //TODO: where to write?

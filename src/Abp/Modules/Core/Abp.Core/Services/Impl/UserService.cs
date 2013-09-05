@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Data.Repositories;
-using Abp.Data.Repositories.Core;
-using Abp.Entities.Core;
-using Abp.Services.Core.Dto;
+using Abp.Modules.Core.Data.Repositories;
+using Abp.Modules.Core.Entities.Core;
+using Abp.Modules.Core.Services.Dto;
 
-namespace Abp.Services.Core.Impl
+namespace Abp.Modules.Core.Services.Impl
 {
     /// <summary>
     /// Implementation of IUserService interface.
@@ -17,14 +16,12 @@ namespace Abp.Services.Core.Impl
         public UserService(IUserRepository questionRepository)
         {
             _userRepository = questionRepository;
-            //Thread.CurrentPrincipal
         }
 
         /// <summary>
         /// NOTE: this is for test purpose!
         /// </summary>
         /// <returns>List of all users</returns>
-        //[AbpAuthorize(Features="")]
         public IList<UserDto> GetAllUsers()
         {
             return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();

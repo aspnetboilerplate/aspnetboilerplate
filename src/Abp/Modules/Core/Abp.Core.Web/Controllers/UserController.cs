@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Abp.Data;
-using Abp.Entities.Core;
-using Abp.Services.Core;
-using Abp.Services.Core.Dto;
+using Abp.Modules.Core.Services;
+using Abp.Modules.Core.Services.Dto;
+using Abp.Web.Controllers;
 using AttributeRouting.Web.Http;
 
-namespace Abp.Web.Controllers.Core
+namespace Abp.Modules.Core.Controllers
 {
     public class UserApiController : AbpApiController
     {

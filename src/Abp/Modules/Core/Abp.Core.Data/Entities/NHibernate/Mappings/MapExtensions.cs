@@ -1,6 +1,6 @@
 using FluentNHibernate.Mapping;
 
-namespace Abp.Entities.NHibernate.Mappings
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     /// <summary>
     /// This class is used to make mapping easier for standart columns.

@@ -1,6 +1,6 @@
-using Abp.Entities.Core;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Entities
+namespace Abp.Modules.Core.Entities
 {
     /// <summary>
     /// Implemented by entities those has a tenant.

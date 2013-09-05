@@ -1,7 +1,8 @@
 using System;
-using Abp.Entities.Core;
+using Abp.Entities;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Entities
+namespace Abp.Modules.Core.Entities
 {
     /// <summary>
     /// This class can be used to simplify implementing IAudited.

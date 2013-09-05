@@ -1,4 +1,4 @@
-﻿using Abp.Entities.NHibernate.Mappings;
+﻿using Abp.Modules.Core.Entities.NHibernate.Mappings;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {

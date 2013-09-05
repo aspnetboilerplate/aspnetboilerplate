@@ -1,8 +1,8 @@
-﻿using Abp.Entities;
+﻿using Abp.Modules.Core.Entities;
 using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 
-namespace Abp.Data.Migrations
+namespace Abp.Modules.Core.Data.Migrations
 {
     /// <summary>
     /// This class is an extension for migration system to make easier to some common tasks.

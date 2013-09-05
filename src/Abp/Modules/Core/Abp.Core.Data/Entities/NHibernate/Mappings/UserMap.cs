@@ -1,7 +1,6 @@
-﻿using Abp.Entities.Core;
-using FluentNHibernate.Mapping;
+﻿using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Entities.NHibernate.Mappings.Core
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     public class UserMap : EntityMap<User>
     {

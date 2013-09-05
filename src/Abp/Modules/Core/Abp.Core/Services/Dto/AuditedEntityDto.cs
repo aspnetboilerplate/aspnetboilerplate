@@ -1,8 +1,13 @@
 using System;
-using Abp.Services.Core.Dto;
+using Abp.Services.Dto;
 
-namespace Abp.Services.Dto
+namespace Abp.Modules.Core.Services.Dto
 {
+    public abstract class AuditedEntityDto : AuditedEntityDto<int>
+    {
+
+    }
+
     public abstract class AuditedEntityDto<TPrimaryKey> : EntityDto<TPrimaryKey>
     {
         /// <summary>
@@ -32,10 +37,5 @@ namespace Abp.Services.Dto
         {
             CreationTime = DateTime.Now;
         }
-    }
-
-    public abstract class AuditedEntityDto : AuditedEntityDto<int>
-    {
-
     }
 }

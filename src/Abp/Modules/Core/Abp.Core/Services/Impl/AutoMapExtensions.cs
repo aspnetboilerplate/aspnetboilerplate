@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Services.Core.Impl
+namespace Abp.Modules.Core.Services.Impl
 {
     /// <summary>
     /// TODO: It's not so good to be depended to a mapping library!

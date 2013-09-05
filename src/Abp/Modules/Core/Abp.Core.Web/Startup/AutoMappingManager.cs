@@ -1,7 +1,7 @@
-﻿using Abp.Entities.Core;
-using Abp.Services.Core.Dto;
+﻿using Abp.Modules.Core.Entities.Core;
+using Abp.Modules.Core.Services.Dto;
 
-namespace Abp.Web.Startup
+namespace Abp.Startup
 {
     public static class AutoMappingManager
     {

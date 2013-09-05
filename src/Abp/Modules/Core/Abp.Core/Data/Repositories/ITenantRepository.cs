@@ -1,6 +1,7 @@
-using Abp.Entities.Core;
+using Abp.Data.Repositories;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Data.Repositories.Core
+namespace Abp.Modules.Core.Data.Repositories
 {
     /// <summary>
     /// Used to perform <see cref="Tenant"/> related database operations.

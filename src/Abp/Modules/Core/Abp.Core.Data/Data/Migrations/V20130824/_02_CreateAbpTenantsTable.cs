@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
-using Abp.Data.Migrations;
-namespace Abp.Data.Migrations.Core.V20130824
+
+namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
     [Migration(2013082402)]
     public class _02_CreateAbpTenantsTable : Migration

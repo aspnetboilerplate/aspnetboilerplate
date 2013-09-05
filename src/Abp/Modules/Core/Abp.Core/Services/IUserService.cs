@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Abp.Entities.Core;
-using Abp.Services.Core.Dto;
+using Abp.Modules.Core.Services.Dto;
+using Abp.Services;
 
-namespace Abp.Services.Core
+namespace Abp.Modules.Core.Services
 {
     /// <summary>
     /// Used to perform User related operations.

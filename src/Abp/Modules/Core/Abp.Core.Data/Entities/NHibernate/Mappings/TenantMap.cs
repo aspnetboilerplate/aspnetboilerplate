@@ -1,6 +1,6 @@
-using Abp.Entities.Core;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Entities.NHibernate.Mappings.Core
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     public class TenantMap : EntityMap<Tenant>
     {

@@ -121,6 +121,7 @@
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
+    <Compile Include="Modules\asd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\RouteConfig.cs" />

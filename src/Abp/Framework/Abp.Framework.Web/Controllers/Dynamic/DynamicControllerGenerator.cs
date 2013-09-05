@@ -24,18 +24,18 @@ namespace Abp.Web.Controllers.Dynamic
         public static void GenerateFor<T>(string controllerName = null)
         {
             IocContainer.Register(
-                
+
                 Component.For<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient(),
-                
-                Component.For<AbpDynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] {typeof (T)}).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
-                
+
+                Component.For<AbpDynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
+
                 );
 
             DynamicControllerManager.RegisterServiceController(
                 new DynamicControllerInfo
                     {
                         Name = controllerName ?? GetControllerName<T>(),
-                        Type = typeof (AbpDynamicApiController<T>)
+                        Type = typeof(AbpDynamicApiController<T>)
                     });
         }
 
@@ -46,8 +46,17 @@ namespace Abp.Web.Controllers.Dynamic
         /// <returns>Controller name</returns>
         private static string GetControllerName<T>()
         {
-            var name = typeof(T).Name.ToFirstCharacterLower();
-            if(name.EndsWith("Service") && name.Length > 7)
+            var type = typeof(T);
+            var name = type.Name;
+
+            //Skip I letter for interface names
+            if (name.Length > 1 && type.IsInterface)
+            {
+                name = name.Substring(1);
+            }
+
+            //Remove "Service" from end as convention
+            if (name.EndsWith("Service") && name.Length > 7)
             {
                 name = name.Substring(0, name.Length - 7);
             }

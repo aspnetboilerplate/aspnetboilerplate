@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Abp.Entities;
 
-namespace Abp.Entities.Core
+namespace Abp.Modules.Core.Entities.Core
 {
     /// <summary>
     /// Represents a user in entire system.

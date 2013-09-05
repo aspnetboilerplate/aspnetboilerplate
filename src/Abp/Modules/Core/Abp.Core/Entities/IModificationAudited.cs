@@ -1,7 +1,7 @@
 using System;
-using Abp.Entities.Core;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Entities
+namespace Abp.Modules.Core.Entities
 {
     /// <summary>
     /// This interface is implemented by entities which's modification informations (who and when modified) must be stored.

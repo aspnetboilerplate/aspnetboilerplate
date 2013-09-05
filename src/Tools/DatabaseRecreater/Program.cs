@@ -74,7 +74,7 @@ namespace DatabaseRecreater
 
         private static void RunMigrations()
         {
-            RunMigration(@"..\..\..\..\Abp\Core\Abp.Core.Data\");
+            RunMigration(@"..\..\..\..\Abp\Modules\Core\Abp.Core.Data\");
             RunMigration(@"..\..\..\..\Taskever\Taskever.Data\");
         }
 

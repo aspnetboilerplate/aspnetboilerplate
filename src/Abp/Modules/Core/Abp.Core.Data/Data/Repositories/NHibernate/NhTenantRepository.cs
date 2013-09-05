@@ -1,7 +1,7 @@
-using Abp.Data.Repositories.Core;
-using Abp.Entities.Core;
+using Abp.Data.Repositories.NHibernate;
+using Abp.Modules.Core.Entities.Core;
 
-namespace Abp.Data.Repositories.NHibernate.Core
+namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
     /// <summary>
     /// Implements <see cref="ITenantRepository"/> for NHibernate.

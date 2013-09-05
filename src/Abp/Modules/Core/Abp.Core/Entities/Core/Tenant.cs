@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Entities.Core
+namespace Abp.Modules.Core.Entities.Core
 {
     /// <summary>
     /// Represents a tenant account. A tenant is used in the cloud to identify a seperated application in the system.

@@ -7,7 +7,7 @@
     <ProjectGuid>{2A1CA060-4E83-440D-8CE3-0436748F33BB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp</RootNamespace>
+    <RootNamespace>Abp.Modules.Core</RootNamespace>
     <AssemblyName>Abp.Core.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -96,9 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
-    <Compile Include="Controllers\Core\UserController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup\AbpCoreModule.cs" />
     <Compile Include="Startup\AutoMappingManager.cs" />
   </ItemGroup>
   <ItemGroup>
