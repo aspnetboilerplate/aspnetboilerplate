@@ -55,8 +55,8 @@
     <Compile Include="Data\Repositories\ITenantRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Entities\AuditedEntity.cs" />
-    <Compile Include="Entities\Core\Tenant.cs" />
-    <Compile Include="Entities\Core\User.cs" />
+    <Compile Include="Entities\Tenant.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\IAudited.cs" />
     <Compile Include="Entities\ICreationAudited.cs" />
     <Compile Include="Entities\IHasTenant.cs" />

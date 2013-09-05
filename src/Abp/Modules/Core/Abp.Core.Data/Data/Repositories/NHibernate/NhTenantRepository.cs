@@ -1,5 +1,5 @@
 using Abp.Data.Repositories.NHibernate;
-using Abp.Modules.Core.Entities.Core;
+using Abp.Modules.Core.Entities;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {

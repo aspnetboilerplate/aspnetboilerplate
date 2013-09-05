@@ -13,6 +13,7 @@ using Abp.Web.Controllers.Dynamic;
 using Abp.Web.Dependency;
 using Abp.Web.Dependency.Installers;
 using Abp.Web.Dependency.Interceptors;
+using Abp.Web.Modules;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -20,24 +21,34 @@ using Castle.Windsor.Installer;
 
 namespace Abp.Web.Startup
 {
-    public abstract class AbpBootstrapper : IDisposable
+    public class AbpBootstrapper : IDisposable
     {
         protected WindsorContainer IocContainer { get; private set; }
 
-        protected AbpBootstrapper()
+        public AbpBootstrapper()
         {
             IocContainer = new WindsorContainer();
             IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
             DynamicControllerGenerator.IocContainer = IocContainer;
+            AbpModuleManager.Instance.IocContainer = IocContainer;
         }
 
         public void Initialize()
+        {
+            var initializationContext = new AbpInitializationContext(IocContainer);
+            AbpModuleManager.Instance.PreInitializeModules(initializationContext);
+            InitializeCore();
+            AbpModuleManager.Instance.InitializeModules(initializationContext);
+            AbpModuleManager.Instance.PostInitializeModules(initializationContext);
+        }
+
+        public void InitializeCore()
         {
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
-            
+
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocContainer.Kernel));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(IocContainer));
 

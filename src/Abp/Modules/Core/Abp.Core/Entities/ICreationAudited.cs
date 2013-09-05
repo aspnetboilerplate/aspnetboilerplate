@@ -1,5 +1,4 @@
 using System;
-using Abp.Modules.Core.Entities.Core;
 
 namespace Abp.Modules.Core.Entities
 {

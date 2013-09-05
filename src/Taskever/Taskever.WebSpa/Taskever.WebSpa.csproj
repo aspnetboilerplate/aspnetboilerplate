@@ -171,10 +171,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\TasksController.cs" />
+    <Compile Include="App_Start\AbpModuleInitializer.cs" />
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\TaskeverModule.cs" />
     <Compile Include="Dependency\AutoMappingManager.cs" />
-    <Compile Include="Dependency\TaskeverBootstrapper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Dependency\Installers\TaskeverInstaller.cs" />
     <Compile Include="Global.asax.cs">

@@ -17,6 +17,7 @@ namespace Abp.Web.Controllers.Dynamic
         /// <returns>Controller info</returns>
         public static DynamicControllerInfo FindServiceController(string controllerName)
         {
+            //TODO: Find case insensitive match!
             DynamicControllerInfo controllerInfo;
             return DynamicTypes.TryGetValue(controllerName, out controllerInfo) ? controllerInfo : null;
         }
@@ -27,6 +28,7 @@ namespace Abp.Web.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public static void RegisterServiceController(DynamicControllerInfo controllerInfo)
         {
+            //TODO: Register case insensitive!
             DynamicTypes[controllerInfo.Name] = controllerInfo;
         }
     }

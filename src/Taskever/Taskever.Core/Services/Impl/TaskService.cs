@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Data.Repositories;
+using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Impl;
 using Taskever.Entities;
 using Taskever.Services.Dto;
@@ -24,6 +25,7 @@ namespace Taskever.Services.Impl
         public virtual void Create(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
+            taskEntity.Tenant = Tenant.Current;
             _taskRepository.Insert(taskEntity);
             task.Id = taskEntity.Id;
         }

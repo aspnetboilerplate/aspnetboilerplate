@@ -19,11 +19,11 @@ namespace Taskever.Web.Api
 {
     public class TasksController : AbpApiController, ITaskService
     {
-        private readonly ITaskService _questionService;
+        private readonly ITaskService _taskService;
 
-        public TasksController(ITaskService questionService)
+        public TasksController(ITaskService taskService)
         {
-            _questionService = questionService;
+            _taskService = taskService;
         }
         
         [GET("Mytasks")]
@@ -35,14 +35,14 @@ namespace Taskever.Web.Api
             //exception handling
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
             //Thread.Sleep(800);
-            return _questionService.GetMyTasks(); //api/TaskService/GetMyTasks
+            return _taskService.GetMyTasks(); //api/TaskService/GetMyTasks
         }
 
         public virtual void Create(TaskDto task)
         {
             //api/task/getAllTasks
             //api/task/create
-            _questionService.Create(task);
+            _taskService.Create(task);
             //return Request.CreateResponse(System.Net.HttpStatusCode.Created, task);
         }
     }

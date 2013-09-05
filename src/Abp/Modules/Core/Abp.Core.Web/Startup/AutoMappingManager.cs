@@ -1,4 +1,4 @@
-﻿using Abp.Modules.Core.Entities.Core;
+﻿using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Dto;
 
 namespace Abp.Startup

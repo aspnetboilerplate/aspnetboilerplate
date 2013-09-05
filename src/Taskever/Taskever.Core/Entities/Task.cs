@@ -1,5 +1,4 @@
 ﻿using Abp.Modules.Core.Entities;
-using Abp.Modules.Core.Entities.Core;
 
 namespace Taskever.Entities
 {

@@ -1,28 +1,33 @@
 ﻿using System.Reflection;
 using System.Web.Http;
+using Abp.Data.Repositories;
+using Abp.Data.Repositories.NHibernate;
 using Abp.Modules.Core.Data.Repositories.NHibernate;
 using Abp.Modules.Core.Services.Impl;
-using Abp.Services;
-using Abp.Web.Dependency.Interceptors;
-using Castle.Core;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Abp.Web.Controllers;
 
-namespace Abp.Web.Dependency.Installers
+namespace Abp.Modules.Core.Dependency.Installers
 {
     public class AbpInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //Log4Net
-            container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
-
             //Interceptors
             container.Register(
 
+                //All MVC controllers
+                //Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient(),
+
+                //All Web Api Controllers
+                Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient(),
+
+                //Generic repositories
+                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
+                
                 //All repoistories //TODO: Web is dependent to NHibernate now!!!
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(NhUserRepository))).InSameNamespaceAs<NhUserRepository>().WithService.DefaultInterfaces().LifestyleTransient(),
 

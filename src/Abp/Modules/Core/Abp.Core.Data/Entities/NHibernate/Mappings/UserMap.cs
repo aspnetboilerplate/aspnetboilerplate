@@ -1,6 +1,4 @@
-﻿using Abp.Modules.Core.Entities.Core;
-
-namespace Abp.Modules.Core.Entities.NHibernate.Mappings
+﻿namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     public class UserMap : EntityMap<User>
     {

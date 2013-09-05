@@ -23,17 +23,11 @@ namespace Taskever.Web.Dependency.Installers
                 //All Web Api Controllers
                 Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient(),
 
-                //Generic repositories
-                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
-                Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
-
                 //All repoistories //TODO: Make a custom repository example
                 //Classes.FromAssembly(Assembly.GetAssembly(typeof(NhTaskRepository))).InSameNamespaceAs<NhTaskRepository>().WithService.DefaultInterfaces().LifestyleTransient(),
 
                 //All services
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(TaskService))).InSameNamespaceAs<TaskService>().WithService.DefaultInterfaces().LifestyleTransient(),
-
-                //Component.For(typeof(AbpServiceApiController)),
 
                 //Localization manager
                 Component.For<ILocalizationManager>().ImplementedBy<NullLocalizationManager>().LifestyleSingleton()

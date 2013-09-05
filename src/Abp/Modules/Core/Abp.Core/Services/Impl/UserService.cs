@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Modules.Core.Data.Repositories;
-using Abp.Modules.Core.Entities.Core;
+using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Dto;
 
 namespace Abp.Modules.Core.Services.Impl

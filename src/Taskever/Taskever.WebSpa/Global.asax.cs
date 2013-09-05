@@ -7,9 +7,11 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Abp.Web.Controllers;
 using Abp.Web.Controllers.Dynamic;
+using Abp.Web.Startup;
 using Taskever.Web.Api;
 using Taskever.Web.App_Start;
 using Taskever.Web.Dependency;
+using RouteConfig = Taskever.Web.App_Start.RouteConfig;
 
 namespace Taskever.Web
 {
@@ -17,7 +19,7 @@ namespace Taskever.Web
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        private TaskeverBootstrapper _bootstrapper;
+        private AbpBootstrapper _bootstrapper;
 
         protected void Application_Start()
         {
@@ -26,7 +28,7 @@ namespace Taskever.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            _bootstrapper = new TaskeverBootstrapper();
+            _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }
 

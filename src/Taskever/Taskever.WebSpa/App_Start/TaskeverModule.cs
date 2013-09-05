@@ -1,36 +1,42 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Abp.Data.Dependency.Installers;
 using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using Abp.Web.Controllers.Dynamic;
-using Abp.Web.Startup;
+using Abp.Web.Modules;
 using Castle.Windsor.Installer;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using Taskever.Entities.NHibernate.Mappings;
 using Taskever.Services;
+using Taskever.Web.Dependency;
 
-namespace Taskever.Web.Dependency
+namespace Taskever.Web.App_Start
 {
-    public class TaskeverBootstrapper : AbpBootstrapper
+    [AbpModule("Taskever", Dependencies = new[] { "Abp.Modules.Core" })]
+    public class TaskeverModule : AbpModule
     {
-        protected override void RegisterInstallers()
+        public override void PreInitialize(AbpInitializationContext initializationContext)
         {
-            base.RegisterInstallers();
-
-            IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
-            IocContainer.Install(FromAssembly.This());
-
-            Abp.Startup.AutoMappingManager.Map();
-            AutoMappingManager.Map();
-            
-            DynamicControllerGenerator.GenerateFor<ITaskService>(); //TODO: where to write?
+            base.PreInitialize(initializationContext);
+            initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
         }
 
-        protected override void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
+        public override void Initialize(AbpInitializationContext initializationContext)
         {
-            base.ComponentRegistered(key, handler);
+            base.Initialize(initializationContext);
 
+            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
+            initializationContext.IocContainer.Install(FromAssembly.This());
+
+            AutoMappingManager.Map();
+
+            DynamicControllerGenerator.GenerateFor<ITaskService>(); //TODO: where to write?
+
+        }
+
+        protected void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
+        {
             NHibernateUnitOfWorkRegistrer.ComponentRegistered(key, handler);
         }
 
