@@ -87,11 +87,6 @@ namespace Taskever.Web.Api
                 IHttpRouteData routeData = request.GetRouteData();
                 if (routeData != null)
                 {
-                    if (routeData.Route.RouteTemplate == "")
-                    {
-
-                    }
-
                     string serviceName;
                     if (routeData.Values.TryGetValue("serviceName", out serviceName))
                     {
