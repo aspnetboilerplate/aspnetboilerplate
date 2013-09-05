@@ -62,8 +62,6 @@
     <Compile Include="Entities\IHasTenant.cs" />
     <Compile Include="Entities\IModificationAudited.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
-    <Compile Include="Localization\ILocalizationManager.cs" />
-    <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Services\Core\Impl\AutoMapExtensions.cs" />
