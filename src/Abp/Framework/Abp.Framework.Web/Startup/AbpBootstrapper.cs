@@ -42,7 +42,6 @@ namespace Abp.Web.Startup
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(IocContainer));
 
             RegisterInstallers();
-            AutoMappingManager.Map();
         }
         
         protected virtual void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

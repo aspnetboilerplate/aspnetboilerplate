@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Entities;
-using Abp.Entities.Core;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -40,10 +39,10 @@ namespace Abp.Data.Repositories.NHibernate
             var allEntities = Session.Query<TEntity>();
 
             //TODO: Move this code out of repository!
-            if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
-            {
-                allEntities = allEntities.Cast<IHasTenant>().Where(entity => entity.Tenant.Id == Tenant.Current.Id).Cast<TEntity>();
-            }
+            //if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
+            //{
+            //    allEntities = allEntities.Cast<IHasTenant>().Where(entity => entity.Tenant.Id == Tenant.Current.Id).Cast<TEntity>();
+            //}
 
             return allEntities;
         }
@@ -87,10 +86,10 @@ namespace Abp.Data.Repositories.NHibernate
         public virtual void Insert(TEntity entity)
         {
             //TODO: Move this code out of repository!
-            if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
-            {
-                entity.As<IHasTenant>().Tenant = Tenant.Current;
-            }
+            //if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
+            //{
+            //    entity.As<IHasTenant>().Tenant = Tenant.Current;
+            //}
 
             Session.Save(entity);
         }

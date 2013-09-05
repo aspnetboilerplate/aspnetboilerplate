@@ -22,7 +22,9 @@ namespace Taskever.Web.Dependency
             IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
             IocContainer.Install(FromAssembly.This());
 
+            Abp.Web.Startup.AutoMappingManager.Map();
             AutoMappingManager.Map();
+            
             DynamicControllerMapper.Map<ITaskService>(); //TODO: where to write?
         }
 

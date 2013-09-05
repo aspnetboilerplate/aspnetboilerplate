@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{89714409-E64F-4439-909A-415867494D16}</ProjectGuid>
+    <ProjectGuid>{B333D942-7600-4191-80E3-923A6144DF4F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Taskever</RootNamespace>
-    <AssemblyName>Taskever.Data</AssemblyName>
+    <RootNamespace>Abp</RootNamespace>
+    <AssemblyName>Abp.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -22,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,22 +32,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+      <HintPath>..\..\..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="FluentNHibernate">
-      <HintPath>..\..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\..\..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,34 +52,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Migrations\V20130901\_01_CreateTeTasksTable.cs" />
-    <Compile Include="Data\Migrations\VersionTable.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\TaskMap.cs" />
+    <Compile Include="Data\Repositories\Core\ITenantRepository.cs" />
+    <Compile Include="Data\Repositories\Core\IUserRepository.cs" />
+    <Compile Include="Entities\AuditedEntity.cs" />
+    <Compile Include="Entities\Core\Tenant.cs" />
+    <Compile Include="Entities\Core\User.cs" />
+    <Compile Include="Entities\IAudited.cs" />
+    <Compile Include="Entities\ICreationAudited.cs" />
+    <Compile Include="Entities\IHasTenant.cs" />
+    <Compile Include="Entities\IModificationAudited.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Repositories\NHibernate\" />
+    <Compile Include="Services\Dto\AuditedEntityDto.cs" />
+    <Compile Include="Services\Core\Impl\AutoMapExtensions.cs" />
+    <Compile Include="Services\Core\Impl\UserService.cs" />
+    <Compile Include="Services\Core\Dto\UserDto.cs" />
+    <Compile Include="Services\Core\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="RunMigrations.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Framework\Abp.Framework.csproj">
+    <ProjectReference Include="..\..\..\Framework\Abp.Framework\Abp.Framework.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Core.Data\Abp.Core.Data.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Core.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Taskever.Core\Taskever.Core.csproj">
-      <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
-      <Name>Taskever.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

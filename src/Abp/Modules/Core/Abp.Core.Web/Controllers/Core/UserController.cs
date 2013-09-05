@@ -16,7 +16,7 @@ namespace Abp.Web.Controllers.Core
             _userService = userService;
         }
 
-        [GET("Users/List")]
+        [GET("Users/List")] //NOTE: For test, remove it
         [UnitOfWork]
         public virtual IEnumerable<UserDto> Get()
         {

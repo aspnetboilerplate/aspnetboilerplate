@@ -23,17 +23,11 @@ namespace Abp.Web.Dependency.Installers
             //Interceptors
             container.Register(
 
-                //ApiController interceptor
-                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient,
-
                 //All repoistories //TODO: Web is dependent to NHibernate now!!!
                 Classes.FromAssembly(Assembly.GetAssembly(typeof(NhUserRepository))).InSameNamespaceAs<NhUserRepository>().WithService.DefaultInterfaces().LifestyleTransient(),
 
                 //All services
-                Classes.FromAssembly(Assembly.GetAssembly(typeof(UserService))).InSameNamespaceAs<UserService>().WithService.DefaultInterfaces().LifestyleTransient(),
-
-                //All api controllers
-                Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
+                Classes.FromAssembly(Assembly.GetAssembly(typeof(UserService))).InSameNamespaceAs<UserService>().WithService.DefaultInterfaces().LifestyleTransient()
 
                 );
         }

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</ProjectGuid>
+    <ProjectGuid>{47853DCA-C058-42F4-B020-E9AC659C9204}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
-    <AssemblyName>Abp.Core.Data</AssemblyName>
+    <AssemblyName>Abp.Framework.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -23,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +30,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
@@ -54,7 +51,6 @@
       <HintPath>..\..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,33 +62,18 @@
     <Compile Include="Data\Dependency\Installers\NHibernateInstaller.cs" />
     <Compile Include="Data\Dependency\Installers\NHibernateUnitOfWorkRegistrer.cs" />
     <Compile Include="Data\Dependency\Interceptors\NhUnitOfWorkInterceptor.cs" />
-    <Compile Include="Data\Migrations\Core\V20130824\_01_CreateAbpUsersTable.cs" />
-    <Compile Include="Data\Migrations\Core\V20130824\_02_CreateAbpTenantsTable.cs" />
-    <Compile Include="Data\Migrations\Core\VersionTable.cs" />
-    <Compile Include="Data\Migrations\MigrationExtensions.cs" />
-    <Compile Include="Data\Repositories\NHibernate\Core\NhTenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUnitOfWork.cs" />
-    <Compile Include="Data\Repositories\NHibernate\Core\NhUserRepository.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\Core\TenantMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\Core\UserMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="RunMigrations.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Abp.Framework\Abp.Framework.csproj">
+    <ProjectReference Include="..\Abp.Framework\Abp.Framework.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -112,34 +112,28 @@
     <Compile Include="Controllers\Dynamic\AbpControllerActionSelector.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiControllerInterceptor.cs" />
-    <Compile Include="Controllers\Core\UserController.cs" />
     <Compile Include="Controllers\Dynamic\AbpHttpControllerSelector.cs" />
     <Compile Include="Controllers\Dynamic\DynamicControllerMapper.cs" />
+    <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
-    <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
-    <Compile Include="Startup\AutoMappingManager.cs" />
     <Compile Include="Startup\RouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Abp.Core.Data\Abp.Core.Data.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Core.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Abp.Framework\Abp.Framework.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Core\Abp.Core\Abp.Core.csproj">
+      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
+      <Name>Abp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

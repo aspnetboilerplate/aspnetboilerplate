@@ -46,13 +46,13 @@
     <Compile Include="Services\Impl\TaskService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Core\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Framework\Abp.Framework.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Core\Abp.Core.csproj">
+      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
+      <Name>Abp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
