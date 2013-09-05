@@ -5,6 +5,8 @@ using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Abp.Web.Controllers;
+using Abp.Web.Controllers.Dynamic;
 using Taskever.Web.Api;
 using Taskever.Web.App_Start;
 using Taskever.Web.Dependency;
@@ -20,15 +22,11 @@ namespace Taskever.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             _bootstrapper = new TaskeverBootstrapper();
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new Selector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpControllerActionSelector());
             _bootstrapper.Initialize();
         }
 

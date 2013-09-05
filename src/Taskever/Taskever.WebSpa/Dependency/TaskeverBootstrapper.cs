@@ -2,38 +2,28 @@
 using System.Reflection;
 using Abp.Data.Dependency.Installers;
 using Abp.Entities.NHibernate.Mappings.Core;
-using Abp.Services;
+using Abp.Web.Controllers.Dynamic;
 using Abp.Web.Startup;
-using Castle.DynamicProxy;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor.Installer;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using Taskever.Entities.NHibernate.Mappings;
 using Taskever.Services;
-using Taskever.Services.Impl;
-using Taskever.Web.Api;
-using AutoMappingManager = Taskever.Web.Dependency.AutoMappingManager;
 
 namespace Taskever.Web.Dependency
 {
     public class TaskeverBootstrapper : AbpBootstrapper
     {
-        public static Type TaskServiceType { get; set; }
-
-        public void Map<T>() where T : IService
+        protected override void RegisterInstallers()
         {
-            //var dpb = new Castle.DynamicProxy.DefaultProxyBuilder();
-            //var options = new ProxyGenerationOptions();
+            base.RegisterInstallers();
 
-            //var cls = dpb.CreateClassProxyType(typeof(AbpServiceApiController), new Type[] { typeof(T) }, options);
-            WindsorContainer.Register(
-                Component.For<AbpServiceApiControllerInterceptor<T>>().LifestyleTransient(),
-                Component.For<AbpServiceApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpServiceApiControllerInterceptor<T>>().LifestyleTransient()
-                );
+            IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
+            IocContainer.Install(FromAssembly.This());
 
-            //TaskServiceType = cls;
+            AutoMappingManager.Map();
+            DynamicControllerMapper.Map<ITaskService>(); //TODO: where to write?
         }
 
         protected override void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
@@ -41,17 +31,6 @@ namespace Taskever.Web.Dependency
             base.ComponentRegistered(key, handler);
 
             NHibernateUnitOfWorkRegistrer.ComponentRegistered(key, handler);
-        }
-
-        protected override void RegisterInstallers()
-        {
-            base.RegisterInstallers();
-
-            WindsorContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
-            WindsorContainer.Install(FromAssembly.This());
-            AutoMappingManager.Map();
-
-            Map<ITaskService>(); //!!!
         }
 
         private static ISessionFactory CreateNhSessionFactory()

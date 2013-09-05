@@ -8,21 +8,6 @@ namespace Taskever.Web.App_Start
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "AbpServiceApi",
-                routeTemplate: "api/services/{serviceName}/{methodName}"
-                );
-
-            config.Formatters.Clear();
-            var formatter = new JsonMediaTypeFormatter();
-            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            config.Formatters.Add(formatter);
         }
     }
 }

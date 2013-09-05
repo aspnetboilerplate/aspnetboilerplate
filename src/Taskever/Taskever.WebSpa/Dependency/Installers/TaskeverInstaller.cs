@@ -1,17 +1,13 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
 using Abp.Data.Repositories;
 using Abp.Data.Repositories.NHibernate;
 using Abp.Localization;
-using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Taskever.Services;
 using Taskever.Services.Impl;
-using Taskever.Web.Api;
 
 namespace Taskever.Web.Dependency.Installers
 {

@@ -64,9 +64,16 @@
       <Private>True</Private>
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -102,7 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AbpApiController.cs" />
+    <Compile Include="Controllers\Dynamic\AbpControllerActionSelector.cs" />
+    <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />
+    <Compile Include="Controllers\Dynamic\AbpDynamicApiControllerInterceptor.cs" />
     <Compile Include="Controllers\Core\UserController.cs" />
+    <Compile Include="Controllers\Dynamic\AbpHttpControllerSelector.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicControllerMapper.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
@@ -111,6 +123,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\AutoMappingManager.cs" />
+    <Compile Include="Startup\RouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
