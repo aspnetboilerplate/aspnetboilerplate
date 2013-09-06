@@ -24,6 +24,8 @@ Improvements:
 TODO:
 - Automatic Web API (rest) creation
   - Automatic service layer creation on the client side (javascript) (creating from service class?)
+- Bundle service call infrastructure!
+  - JS prepare requests, run all bundle request, runs all on server and returns bundle response
 - Make auto mapping system easier to use and standard to implement!
 - Service interceptions
   - Authorization checks
