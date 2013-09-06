@@ -3,7 +3,6 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Abp.Web.Controllers;
 
 namespace Abp.Web.Dependency.Installers
 {
@@ -18,10 +17,10 @@ namespace Abp.Web.Dependency.Installers
             container.Register(
 
                 //ApiController interceptor
-                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient,
+                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient
 
-                //All api controllers
-                Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
+                //All api controllers //TODO ???
+                //Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
 
                 );
         }
