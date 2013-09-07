@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Exceptions;
 using Abp.Modules;
-using Castle.Facilities.Logging;
 using Castle.Windsor;
 
 namespace Abp.Startup

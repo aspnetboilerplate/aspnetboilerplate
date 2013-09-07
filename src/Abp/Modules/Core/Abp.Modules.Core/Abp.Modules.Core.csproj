@@ -42,6 +42,14 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\..\..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -67,6 +75,9 @@
     <Compile Include="Services\Impl\UserService.cs" />
     <Compile Include="Services\Dto\UserDto.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Startup\AbpCoreModule.cs" />
+    <Compile Include="Startup\AutoMappingManager.cs" />
+    <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -77,6 +88,7 @@
       <Name>Abp.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

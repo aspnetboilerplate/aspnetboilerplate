@@ -1,27 +1,14 @@
-﻿using System.Reflection;
-using Abp.Data;
-using Abp.Modules.Core.Entities.NHibernate.Mappings;
-using Abp.Startup;
-using Castle.Windsor.Installer;
+﻿using Abp.Modules.Core.Dependency.Installers;
 
 namespace Abp.Modules.Core
 {
-    [AbpModule("Abp.Modules.Core", Dependencies = new [] { "Abp.Data" })]
+    [AbpModule("Abp.Modules.Core.Web", Dependencies = new[] { "Abp.Data", "Abp.Web", "Abp.Modules.Core", "Abp.Modules.Core.Data" })]
     public class AbpCoreModule : AbpModule
     {
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
-        {
-            base.PreInitialize(initializationContext);
-            initializationContext.GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(UserMap)))); //TODO: Remove this to Core.Data and remove fluent nhibernate dependency?
-        }
-
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-
-            initializationContext.IocContainer.Install(FromAssembly.This());
-
-            AutoMappingManager.Map();
+            initializationContext.IocContainer.Install(new AbpInstaller());
         }
     }
 }

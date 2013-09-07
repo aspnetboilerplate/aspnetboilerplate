@@ -19,4 +19,4 @@ Taskever application module
 - "Taskever.WebSpa" (Dependencies: "Abp.Core", "Abp.Data", "Abp.Web", "Abp.Modules.Core", "Abp.Modules.Core.Data", "Abp.Modules.Core.Web", "Taskever.Core", "Taskever.Data")
 
 
-
+!!! Think how to achive module dependencies???

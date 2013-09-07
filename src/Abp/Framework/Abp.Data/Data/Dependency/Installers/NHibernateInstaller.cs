@@ -1,5 +1,7 @@
 using System;
 using Abp.Data.Dependency.Interceptors;
+using Abp.Data.Repositories;
+using Abp.Data.Repositories.NHibernate;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -29,8 +31,12 @@ namespace Abp.Data.Dependency.Installers
                 Component.For<ISessionFactory>().UsingFactoryMethod(_sessionFactoryCreator).LifeStyle.Singleton,
 
                 //Unitofwork interceptor
-                Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient
+                Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient,
 
+                //Generic repositories
+                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
+                
                 );
         }
     }

@@ -112,7 +112,6 @@
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbpCoreModule.cs" />
-    <Compile Include="Startup\AutoMappingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
