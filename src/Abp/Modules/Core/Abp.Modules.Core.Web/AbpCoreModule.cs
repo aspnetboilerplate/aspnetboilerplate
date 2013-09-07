@@ -9,13 +9,13 @@ namespace Abp.Modules.Core
     [AbpModule("Abp.Modules.Core", Dependencies = new [] { "Abp.Data" })]
     public class AbpCoreModule : AbpModule
     {
-        public override void PreInitialize(AbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(UserMap)))); //TODO: Remove this to Core.Data and remove fluent nhibernate dependency?
+            initializationContext.GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(UserMap)))); //TODO: Remove this to Core.Data and remove fluent nhibernate dependency?
         }
 
-        public override void Initialize(AbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
 

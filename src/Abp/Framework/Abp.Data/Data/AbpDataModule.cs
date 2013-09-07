@@ -27,13 +27,13 @@ namespace Abp.Data
             _mappings.Add(mapping);
         }
 
-        public override void PreInitialize(AbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
             initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
         }
 
-        public override void Initialize(AbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!

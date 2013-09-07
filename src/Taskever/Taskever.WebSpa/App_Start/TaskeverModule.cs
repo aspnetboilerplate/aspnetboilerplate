@@ -12,13 +12,13 @@ namespace Taskever.Web.App_Start
     [AbpModule("Taskever", Dependencies = new[] { "Abp.Modules.Core" })]
     public class TaskeverModule : AbpModule
     {
-        public override void PreInitialize(AbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(TaskMap))));
+            initializationContext.GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(TaskMap))));
         }
 
-        public override void Initialize(AbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(FromAssembly.This());

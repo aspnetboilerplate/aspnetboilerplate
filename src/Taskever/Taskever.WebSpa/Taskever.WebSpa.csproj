@@ -171,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\TasksController.cs" />
-    <Compile Include="App_Start\AbpModuleInitializer.cs" />
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\TaskeverModule.cs" />
@@ -233,6 +232,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\app\main.less" />
     <Content Include="Content\toastr.less" />
+    <None Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\durandal\activator.js" />
     <Content Include="Scripts\durandal\app.js" />

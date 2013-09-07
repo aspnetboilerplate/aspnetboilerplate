@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Abp.Web.Controllers;
-using Abp.Web.Controllers.Dynamic;
-using Abp.Web.Startup;
-using Taskever.Web.Api;
+using Abp.Startup;
 using Taskever.Web.App_Start;
-using Taskever.Web.Dependency;
 using RouteConfig = Taskever.Web.App_Start.RouteConfig;
 
 namespace Taskever.Web

@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpWebModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />
@@ -116,13 +117,12 @@
     <Compile Include="Controllers\Dynamic\DynamicControllerInfo.cs" />
     <Compile Include="Controllers\Dynamic\DynamicControllerManager.cs" />
     <Compile Include="Controllers\Dynamic\DynamicControllerGenerator.cs" />
-    <Compile Include="Dependency\Installers\AbpInstaller.cs" />
+    <Compile Include="Dependency\Installers\AbpWebInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\RouteConfig.cs" />
     <Compile Include="Utils\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
