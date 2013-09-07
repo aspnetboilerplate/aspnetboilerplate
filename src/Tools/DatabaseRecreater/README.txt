@@ -1,0 +1,1 @@
+﻿This is a temporary project for easily drop & re-creating database.

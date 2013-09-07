@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp.Modules.Core</RootNamespace>
-    <AssemblyName>Abp.Core.Web</AssemblyName>
+    <AssemblyName>Abp.Modules.Core.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
@@ -106,25 +106,25 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\Abp.Framework.Data\Abp.Framework.Data.csproj">
-      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
-      <Name>Abp.Framework.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Framework.Web\Abp.Framework.Web.csproj">
-      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
-      <Name>Abp.Framework.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Framework\Abp.Framework.csproj">
+    <ProjectReference Include="..\..\..\Framework\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Abp.Core.Data\Abp.Core.Data.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Core.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Abp.Data\Abp.Data.csproj">
+      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
+      <Name>Abp.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Abp.Web\Abp.Web.csproj">
+      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
+      <Name>Abp.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
+      <Project>{ce9fea93-be42-442b-a7ff-a53922099f64}</Project>
+      <Name>Abp.Modules.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Modules.Core\Abp.Modules.Core.csproj">
+      <Project>{b333d942-7600-4191-80e3-923a6144df4f}</Project>
+      <Name>Abp.Modules.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

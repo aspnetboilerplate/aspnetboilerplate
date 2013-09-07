@@ -67,17 +67,17 @@
     <None Include="RunMigrations.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Framework\Abp.Framework.csproj">
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Core.Data\Abp.Core.Data.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Core.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Core\Abp.Core.csproj">
-      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
+      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
+      <Name>Abp.Modules.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
+      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
+      <Name>Abp.Modules.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Taskever.Core\Taskever.Core.csproj">
       <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
