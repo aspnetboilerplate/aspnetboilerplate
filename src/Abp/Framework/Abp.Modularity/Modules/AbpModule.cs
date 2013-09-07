@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Abp.Web.Modules
+﻿namespace Abp.Modules
 {
     public abstract class AbpModule
     {
+        protected T GetModule<T>() where T : AbpModule
+        {
+            return (T) AbpModuleManager.Instance.Modules[AbpModuleHelper.GetModuleName<T>()];
+        }
+
         /// <summary>
         /// What can be done in this method:
         /// - Make things those must be done before dependency registers.

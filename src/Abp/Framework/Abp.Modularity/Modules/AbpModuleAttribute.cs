@@ -1,5 +1,6 @@
 using System;
-namespace Abp.Web.Modules
+
+namespace Abp.Modules
 {
     public class AbpModuleAttribute : Attribute
     {

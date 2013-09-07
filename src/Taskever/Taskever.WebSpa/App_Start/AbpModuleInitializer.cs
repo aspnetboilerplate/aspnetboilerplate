@@ -1,5 +1,5 @@
-﻿using Abp.Modules.Core;
-using Abp.Web.Modules;
+﻿using Abp.Modules;
+using Abp.Modules.Core;
 using Taskever.Web.App_Start;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(AbpModuleRegistrer), "RegisterModules")]
