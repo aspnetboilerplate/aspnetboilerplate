@@ -73,10 +73,6 @@
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp.Modularity\Abp.Modularity.csproj">
-      <Project>{24bfbcce-fe4c-4b0b-b9fc-5770b78711a7}</Project>
-      <Name>Abp.Modularity</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

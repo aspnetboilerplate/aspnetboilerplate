@@ -126,10 +126,6 @@
       <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
       <Name>Abp.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Modularity\Abp.Modularity.csproj">
-      <Project>{24BFBCCE-FE4C-4B0B-B9FC-5770B78711A7}</Project>
-      <Name>Abp.Modularity</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp.Web\Abp.Web.csproj">
       <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
       <Name>Abp.Web</Name>
