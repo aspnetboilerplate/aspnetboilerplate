@@ -11,7 +11,7 @@ namespace Abp.Web.Modules
 
         private static readonly AbpModuleManager _instance = new AbpModuleManager();
 
-        internal WindsorContainer IocContainer { get; set; }
+        public WindsorContainer IocContainer { get; set; }
 
         private AbpModuleManager()
         {
@@ -23,7 +23,7 @@ namespace Abp.Web.Modules
             Modules.Add(module);
         }
 
-        internal void PreInitializeModules(AbpInitializationContext initializationContext)
+        public void PreInitializeModules(AbpInitializationContext initializationContext)
         {
             foreach (var module in Modules)
             {
@@ -31,7 +31,7 @@ namespace Abp.Web.Modules
             }
         }
 
-        internal void InitializeModules(AbpInitializationContext initializationContext)
+        public void InitializeModules(AbpInitializationContext initializationContext)
         {
             foreach (var module in Modules)
             {
@@ -39,7 +39,7 @@ namespace Abp.Web.Modules
             }
         }
 
-        internal void PostInitializeModules(AbpInitializationContext initializationContext)
+        public void PostInitializeModules(AbpInitializationContext initializationContext)
         {
             foreach (var module in Modules)
             {
@@ -52,7 +52,7 @@ namespace Abp.Web.Modules
     {
         public WindsorContainer IocContainer { get; private set; }
 
-        internal AbpInitializationContext(WindsorContainer iocContainer)
+        public AbpInitializationContext(WindsorContainer iocContainer)
         {
             IocContainer = iocContainer;
         }

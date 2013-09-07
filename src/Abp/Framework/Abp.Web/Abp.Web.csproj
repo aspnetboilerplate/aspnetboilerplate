@@ -121,9 +121,6 @@
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
-    <Compile Include="Modules\AbpModule.cs" />
-    <Compile Include="Modules\AbpModuleAttribute.cs" />
-    <Compile Include="Modules\AbpModuleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\RouteConfig.cs" />
@@ -137,6 +134,10 @@
     <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Modularity\Abp.Modularity.csproj">
+      <Project>{24BFBCCE-FE4C-4B0B-B9FC-5770B78711A7}</Project>
+      <Name>Abp.Modularity</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
