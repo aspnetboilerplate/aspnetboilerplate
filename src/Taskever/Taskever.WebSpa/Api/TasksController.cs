@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
-using Abp.Data;
+﻿using System.Collections.Generic;
 using Abp.Web.Controllers;
 using AttributeRouting.Web.Http;
-using Castle.Core.Logging;
-using Castle.DynamicProxy;
 using Taskever.Services;
 using Taskever.Services.Dto;
-using System.Threading;
-using Abp.Services;
-using System.Web;
 
 namespace Taskever.Web.Api
 {
