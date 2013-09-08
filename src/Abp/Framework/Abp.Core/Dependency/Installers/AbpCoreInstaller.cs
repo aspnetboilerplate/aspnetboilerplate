@@ -1,10 +1,11 @@
 ﻿using Abp.Modules;
+using Abp.Modules.Loading;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Startup
+namespace Abp.Dependency.Installers
 {
     public class AbpCoreInstaller : IWindsorInstaller
     {

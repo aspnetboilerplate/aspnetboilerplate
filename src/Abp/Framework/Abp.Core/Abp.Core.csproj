@@ -67,12 +67,15 @@
     <Compile Include="Modules\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />
+    <Compile Include="Modules\Loading\AbpModuleDependencyExplorer.cs" />
+    <Compile Include="Modules\Loading\AbpModuleDependencySorter.cs" />
     <Compile Include="Modules\AbpModuleHelper.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
-    <Compile Include="Modules\AbpModuleLoader.cs" />
+    <Compile Include="Modules\Loading\AbpModuleInitializer.cs" />
+    <Compile Include="Modules\Loading\AbpModuleLoader.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
-    <Compile Include="Startup\AbpInstaller.cs" />
+    <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
     <Compile Include="Utils\Helpers\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Dto\EntityDto.cs" />

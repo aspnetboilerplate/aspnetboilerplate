@@ -5,24 +5,24 @@ namespace Abp.Modules
 {
     public class AbpModuleInfo
     {
-        public AbpModule ModuleInstance { get; set; }
-
-        public Type ModuleType { get; set; }
-
-        public AbpModuleAttribute ModuleAttribute { get; set; }
-
         public string Name { get { return ModuleAttribute.Name; } }
 
-        public IList<AbpModuleInfo> DependentModules { get; private set; } //TODO: This must be read only from outside of Abp.
+        public AbpModule Instance { get; set; }
+
+        public Type Type { get; set; }
+
+        public AbpModuleAttribute ModuleAttribute { get; set; }
+        
+        public IDictionary<string, AbpModuleInfo> Dependencies { get; private set; } //TODO: This must be read only from outside of Abp.
 
         public AbpModuleInfo()
         {
-            DependentModules = new List<AbpModuleInfo>();
+            Dependencies = new Dictionary<string, AbpModuleInfo>();
         }
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}]", Name, ModuleType.FullName);
+            return string.Format("{0} [{1}]", Name, Type.FullName);
         }
     }
 }

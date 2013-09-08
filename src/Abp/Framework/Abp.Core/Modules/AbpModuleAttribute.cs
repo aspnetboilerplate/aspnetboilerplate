@@ -11,6 +11,7 @@ namespace Abp.Modules
         public AbpModuleAttribute(string name)
         {
             Name = name;
+            Dependencies = new string[] {};
         }
     }
 }

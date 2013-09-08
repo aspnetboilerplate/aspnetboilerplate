@@ -4,7 +4,7 @@ using Abp.Utils.Helpers;
 
 namespace Abp.Modules
 {
-    public static class AbpModuleHelper
+    internal static class AbpModuleHelper
     {
         public static bool IsAbpModule(Type type)
         {

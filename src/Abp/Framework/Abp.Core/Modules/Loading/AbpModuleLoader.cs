@@ -4,9 +4,9 @@ using Abp.Exceptions;
 using Abp.Utils.Helpers;
 using Castle.Core.Logging;
 
-namespace Abp.Modules
+namespace Abp.Modules.Loading
 {
-    public class AbpModuleLoader
+    internal class AbpModuleLoader
     {
         public ILogger Logger { get; set; }
 
@@ -50,9 +50,9 @@ namespace Abp.Modules
 
             return new AbpModuleInfo
                        {
-                           ModuleType = type,
+                           Type = type,
                            ModuleAttribute = ReflectionHelper.GetSingleAttribute<AbpModuleAttribute>(type),
-                           ModuleInstance = (AbpModule) Activator.CreateInstance(type, new object[] {})
+                           Instance = (AbpModule) Activator.CreateInstance(type, new object[] {})
                        };
         }
     }

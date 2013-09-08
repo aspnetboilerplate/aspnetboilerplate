@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Dependency.Installers;
 using Abp.Exceptions;
 using Abp.Modules;
+using Abp.Modules.Loading;
 using Castle.Windsor;
 
 namespace Abp.Startup
@@ -21,14 +23,13 @@ namespace Abp.Startup
         public void Initialize()
         {
             IocContainer.Install(new AbpCoreInstaller());
-
-            var initializationContext = new AbpInitializationContext(this);
-
             LoadModules();
-
-            PreInitializeModules(initializationContext);
-            InitializeModules(initializationContext);
-            PostInitializeModules(initializationContext);
+            new AbpModuleDependencyExplorer().SetDependencies(Modules);
+            var sortedModules = new AbpModuleDependencySorter().SortByDependency(Modules);
+            var initializer = new AbpModuleInitializer(sortedModules, new AbpInitializationContext(this));
+            initializer.PreInitializeModules();
+            initializer.InitializeModules();
+            initializer.PostInitializeModules();
         }
 
         public void Dispose()
@@ -42,33 +43,6 @@ namespace Abp.Startup
         private void LoadModules()
         {
             Modules = IocContainer.Resolve<AbpModuleLoader>().LoadModules();
-        }
-
-        private void PreInitializeModules(IAbpInitializationContext initializationContext)
-        {
-            //TODO initialize in order to dependencies
-            foreach (var module in Modules.Values)
-            {
-                module.ModuleInstance.PreInitialize(initializationContext);
-            }
-        }
-
-        private void InitializeModules(IAbpInitializationContext initializationContext)
-        {
-            //TODO initialize in order to dependencies
-            foreach (var module in Modules.Values)
-            {
-                module.ModuleInstance.Initialize(initializationContext);
-            }
-        }
-
-        private void PostInitializeModules(IAbpInitializationContext initializationContext)
-        {
-            //TODO initialize in order to dependencies
-            foreach (var module in Modules.Values)
-            {
-                module.ModuleInstance.PostInitialize(initializationContext);
-            }
         }
 
         #region AbpInitializationContext class
@@ -86,13 +60,13 @@ namespace Abp.Startup
 
             public TModule GetModule<TModule>() where TModule : AbpModule
             {
-                var module = _abpBootstrapper.Modules.Values.FirstOrDefault(m => m.ModuleType == typeof(TModule));
+                var module = _abpBootstrapper.Modules.Values.FirstOrDefault(m => m.Type == typeof(TModule));
                 if (module == null)
                 {
                     throw new AbpException("Can not find module for " + typeof(TModule).FullName);
                 }
 
-                return (TModule)module.ModuleInstance;
+                return (TModule)module.Instance;
             }
         }
 
