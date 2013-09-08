@@ -7,7 +7,7 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// Used to generate dynamic api controllers for arbitrary types.
     /// TODO: Is is true to make static? Use in DI for extensibility?
     /// </summary>
-    public static class DynamicControllerGenerator
+    public static class DynamicApiControllerGenerator
     {
         /// <summary>
         /// Reference to current Ioc container.
@@ -21,19 +21,12 @@ namespace Abp.WebApi.Controllers.Dynamic
         public static void GenerateFor<T>(string controllerName = null)
         {
             IocContainer.Register(
-
                 Component.For<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient(),
-
                 Component.For<AbpDynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
-
                 );
 
-            DynamicControllerManager.RegisterServiceController(
-                new DynamicControllerInfo
-                    {
-                        Name = controllerName ?? GetControllerName<T>(),
-                        Type = typeof(AbpDynamicApiController<T>)
-                    });
+            var controllerInfo = new DynamicApiControllerInfo(controllerName ?? GetControllerName<T>(), typeof (AbpDynamicApiController<T>), typeof (T));
+            DynamicApiControllerManager.RegisterServiceController(controllerInfo);
         }
 
         /// <summary>

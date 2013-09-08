@@ -13,7 +13,7 @@ namespace Taskever.Web.Startup
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new TaskeverWebInstaller());
             
-            DynamicControllerGenerator.GenerateFor<ITaskService>();
+            DynamicApiControllerGenerator.GenerateFor<ITaskService>();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Web.Http.Controllers;
+using Abp.Exceptions;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -14,11 +15,18 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <returns>Action to be used</returns>
         public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
-            //TODO: Implement real logic!!!
-            object serviceName;
-            if (controllerContext.ControllerDescriptor.Properties.TryGetValue("servicemethod", out  serviceName))
+            object controllerInfoObj;
+            if (controllerContext.ControllerDescriptor.Properties.TryGetValue("AbpDynamicApiControllerInfo", out  controllerInfoObj))
             {
-                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerContext.Controller.GetType().GetMethod("GetMyTasks"));
+                var controllerInfo = (DynamicApiControllerInfo)controllerInfoObj;
+                var methodName = (string)controllerContext.RouteData.Values["methodName"];
+
+                if (!controllerInfo.Methods.ContainsKey(methodName))
+                {
+                    throw new AbpException("There is no action defined for api controller " + controllerInfo.Name);
+                }
+
+                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Methods[methodName]);
             }
 
             return base.SelectAction(controllerContext);

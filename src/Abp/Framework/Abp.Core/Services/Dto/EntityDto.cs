@@ -12,7 +12,7 @@ namespace Abp.Services.Dto
     /// This base class can be used to simplify defining an entity based DTO.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key</typeparam>
-    public abstract class EntityDto<TPrimaryKey>
+    public abstract class EntityDto<TPrimaryKey> : IDto
     {
         /// <summary>
         /// Id of the entity.

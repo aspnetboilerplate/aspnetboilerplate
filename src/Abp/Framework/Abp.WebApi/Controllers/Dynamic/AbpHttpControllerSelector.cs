@@ -34,11 +34,11 @@ namespace Abp.WebApi.Controllers.Dynamic
                     string serviceName;
                     if (routeData.Values.TryGetValue("serviceName", out serviceName))
                     {
-                        var controllerInfo = DynamicControllerManager.FindServiceController(serviceName);
+                        var controllerInfo = DynamicApiControllerManager.FindServiceController(serviceName);
                         if (controllerInfo != null)
                         {
                             var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
-                            desc.Properties["servicemethod"] = true;
+                            desc.Properties["AbpDynamicApiControllerInfo"] = controllerInfo;
                             return desc;
                         }
                     }

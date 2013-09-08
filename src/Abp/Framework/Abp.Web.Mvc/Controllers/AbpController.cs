@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Abp.Localization;
 using Castle.Core.Logging;
 
-namespace Abp.Web.Controllers
+namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
     /// Base class for all MVC Controllers in Abp system.

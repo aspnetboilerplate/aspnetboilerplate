@@ -24,7 +24,7 @@ namespace Abp.WebApi.Startup
         {
             base.Initialize(initializationContext);  
 
-            DynamicControllerGenerator.IocContainer = initializationContext.IocContainer;
+            DynamicApiControllerGenerator.IocContainer = initializationContext.IocContainer;
 
             RouteConfig.Register(GlobalConfiguration.Configuration);
 

@@ -6,19 +6,19 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// This class is used to store dynamic controller informations.
     /// TODO: Use some cache object instead of dictionary?
     /// </summary>
-    internal static class DynamicControllerManager
+    internal static class DynamicApiControllerManager
     {
-        private static readonly ConcurrentDictionary<string, DynamicControllerInfo> DynamicTypes = new ConcurrentDictionary<string, DynamicControllerInfo>();
+        private static readonly ConcurrentDictionary<string, DynamicApiControllerInfo> DynamicTypes = new ConcurrentDictionary<string, DynamicApiControllerInfo>();
 
         /// <summary>
         /// Searches and returns a dynamic api controller for given name
         /// </summary>
         /// <param name="controllerName">Name of the controller</param>
         /// <returns>Controller info</returns>
-        public static DynamicControllerInfo FindServiceController(string controllerName)
+        public static DynamicApiControllerInfo FindServiceController(string controllerName)
         {
             //TODO: Find case insensitive match!
-            DynamicControllerInfo controllerInfo;
+            DynamicApiControllerInfo controllerInfo;
             return DynamicTypes.TryGetValue(controllerName, out controllerInfo) ? controllerInfo : null;
         }
 
@@ -26,7 +26,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// Registers given controller info to be found later.
         /// </summary>
         /// <param name="controllerInfo">Controller info</param>
-        public static void RegisterServiceController(DynamicControllerInfo controllerInfo)
+        public static void RegisterServiceController(DynamicApiControllerInfo controllerInfo)
         {
             //TODO: Register case insensitive!
             DynamicTypes[controllerInfo.Name] = controllerInfo;

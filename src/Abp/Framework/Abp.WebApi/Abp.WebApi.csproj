@@ -73,9 +73,9 @@
     <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiControllerInterceptor.cs" />
     <Compile Include="Controllers\Dynamic\AbpHttpControllerSelector.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicControllerInfo.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicControllerManager.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicControllerGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicApiControllerInfo.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicApiControllerManager.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicApiControllerGenerator.cs" />
     <Compile Include="Dependency\Installers\AbpWebApiInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />
