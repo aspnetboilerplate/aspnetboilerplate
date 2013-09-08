@@ -27,6 +27,8 @@ namespace Abp.WebApi.Controllers.Dynamic
 
             var controllerInfo = new DynamicApiControllerInfo(controllerName ?? GetControllerName<T>(), typeof (AbpDynamicApiController<T>), typeof (T));
             DynamicApiControllerManager.RegisterServiceController(controllerInfo);
+
+            //TODO: Return a configurator to be able to configure controller and methods
         }
 
         /// <summary>

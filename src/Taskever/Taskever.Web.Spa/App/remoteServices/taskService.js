@@ -1,11 +1,9 @@
 ﻿define(['jquery', 'knockout', 'abp/abp'], function ($, ko, abp) {
 
-    var getTasks = function (tasks) {
+    var getTasks = function () {
         return abp.ajax({
             url: '/api/services/Task/GetMyTasks',
             type: 'GET'
-        }).then(function(data) {
-            ko.mapping.fromJS(data, tasks);
         });
     };
 
@@ -16,9 +14,20 @@
             data: JSON.stringify(task)
         });
     };
+
+    var deleteTask = function (taskId) {
+        return abp.ajax({
+            url: '/api/services/Task/Delete',
+            type: 'GET',
+            data: {
+                taskId: taskId
+            }
+        });
+    };
     
     return {
         getTasks: getTasks,
-        createTask: createTask
+        createTask: createTask,
+        deleteTask: deleteTask
     };
 });

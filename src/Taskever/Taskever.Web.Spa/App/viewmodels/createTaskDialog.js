@@ -5,9 +5,10 @@
 
     vm.prototype.saveNewTask = function () {
         var that = this;
-        taskService.createTask(ko.toJS(that.task)).then(function () {
-            dialogs.close(that, that.task);
-        });
+        taskService.createTask(ko.mapping.toJS(that.task))
+            .then(function() {
+                dialogs.close(that, that.task);
+            });
     };
 
     return vm;

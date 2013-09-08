@@ -6,8 +6,9 @@
         <div class="panel-body">
             <ul class="list-group" data-bind="foreach: tasks">
                 <li class="list-group-item">
-                    <h4 data-bind="html: title"></h4>
+                    <h4>[<span data-bind="html: id"></span>]<span data-bind="html: title"></span></h4>
                     <p data-bind="html: description"></p>
+                    <button type="button" class="btn btn-default" data-bind="click:$parent.deleteTask">Delete this task</button>                    
                 </li>
             </ul>
         </div>

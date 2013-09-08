@@ -8,6 +8,8 @@ namespace Taskever.Services
     {
         IList<TaskDto> GetMyTasks();
 
-        void Create(TaskDto task);
+        TaskDto Create(TaskDto task);
+
+        void Delete(int taskId);
     }
 }

@@ -67,6 +67,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
+    <Compile Include="Controllers\Dynamic\HttpVerb.cs" />
     <Compile Include="Startup\AbpWebModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />

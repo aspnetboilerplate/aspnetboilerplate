@@ -26,7 +26,7 @@ namespace Abp.WebApi.Controllers.Dynamic
                     throw new AbpException("There is no action defined for api controller " + controllerInfo.Name);
                 }
 
-                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Methods[methodName]);
+                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Methods[methodName].Method);
             }
 
             return base.SelectAction(controllerContext);

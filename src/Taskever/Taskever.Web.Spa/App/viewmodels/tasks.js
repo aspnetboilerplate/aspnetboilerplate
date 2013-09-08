@@ -5,13 +5,25 @@
         tasks: tasks,
 
         activate: function () {
-            taskService.getTasks(tasks);
+            taskService.getTasks(tasks)
+                .then(function(data) {
+                    ko.mapping.fromJS(data, tasks);
+                });
         },
 
         showTaskCreateDialog: function () {
-            dialogs.show('viewmodels/createTaskDialog').then(function (data) {
-                tasks.push(data);
-            });
+            dialogs.show('viewmodels/createTaskDialog')
+                .then(function(data) {
+                    tasks.push(data);
+                });
+        },
+        
+        deleteTask: function (item) {
+            console.log(item);
+            taskService.deleteTask(item.id())
+                .then(function() {
+                    tasks.remove(item);
+                });
         }
     };
 });

@@ -22,12 +22,19 @@ namespace Taskever.Services.Impl
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }
 
-        public virtual void Create(TaskDto task)
+        public virtual TaskDto Create(TaskDto task)
         {
+            //TODO: Automatically set Tenant and Creator User informations, bu where?
             var taskEntity = task.MapTo<Task>();
             taskEntity.Tenant = Tenant.Current;
             _taskRepository.Insert(taskEntity);
             task.Id = taskEntity.Id;
+            return task;
+        }
+
+        public void Delete(int taskId)
+        {
+            _taskRepository.Delete(taskId);
         }
     }
 }

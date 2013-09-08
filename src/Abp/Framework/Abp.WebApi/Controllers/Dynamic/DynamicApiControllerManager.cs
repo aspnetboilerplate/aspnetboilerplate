@@ -28,7 +28,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public static void RegisterServiceController(DynamicApiControllerInfo controllerInfo)
         {
-            //TODO: Register case insensitive!
+            //TODO: Register case insensitive?
             DynamicTypes[controllerInfo.Name] = controllerInfo;
         }
     }

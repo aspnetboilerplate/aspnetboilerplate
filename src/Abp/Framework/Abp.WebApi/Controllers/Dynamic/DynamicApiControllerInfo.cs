@@ -21,14 +21,14 @@ namespace Abp.WebApi.Controllers.Dynamic
 
         public Type ProxiedType { get; private set; }
 
-        public IDictionary<string, MethodInfo> Methods { get; private set; }
+        public IDictionary<string, DynamicApiMethodInfo> Methods { get; private set; }
 
         public DynamicApiControllerInfo(string name, Type type, Type proxiedType)
         {
             Name = name;
             Type = type;
             ProxiedType = proxiedType;
-            Methods = new Dictionary<string, MethodInfo>();
+            Methods = new Dictionary<string, DynamicApiMethodInfo>();
             CacheMethods();
         }
 
@@ -41,8 +41,31 @@ namespace Abp.WebApi.Controllers.Dynamic
                     throw new ApplicationException("This service can not be proxied dynamically since it contains more than one definition for method " + method.Name);
                 }
 
-                Methods[method.Name] = method;
+                var apiMethodInfo = new DynamicApiMethodInfo(method) {Verb = FindHttpVerb(method)};
+
+                Methods[method.Name] = apiMethodInfo;
             }
+        }
+
+        private HttpVerb FindHttpVerb(MethodInfo methodInfo)
+        {
+            var methodName = methodInfo.Name;
+            if(methodName.StartsWith("Get"))
+            {
+                return HttpVerb.Get;
+            }
+            
+            if (methodName.StartsWith("Put") || methodName.StartsWith("Update"))
+            {
+                return HttpVerb.Put;                
+            }
+
+            if (methodName.StartsWith("Delete") || methodName.StartsWith("Remove"))
+            {
+                return HttpVerb.Delete;
+            }
+
+            return HttpVerb.Post;
         }
     }
 }
