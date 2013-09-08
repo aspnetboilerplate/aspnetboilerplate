@@ -36,6 +36,7 @@ TODO:
   - Tenancy filter
   - Write history/log
   - Set Audit properties
+  - Set current tenant/user
 
 - Use NHibernate L2? caching
 

@@ -1,5 +1,8 @@
 namespace Abp.Modules
 {
+    /// <summary>
+    /// A module must implement this interface generally by inheriting <see cref="AbpModule"/> class.
+    /// </summary>
     public interface IAbpModule
     {
         /// <summary>
@@ -22,5 +25,10 @@ namespace Abp.Modules
         /// </summary>
         /// <param name="initializationContext"> </param>
         void PostInitialize(IAbpInitializationContext initializationContext);
+
+        /// <summary>
+        /// This method is called when the system is being shutdown.
+        /// </summary>
+        void Shutdown();
     }
 }

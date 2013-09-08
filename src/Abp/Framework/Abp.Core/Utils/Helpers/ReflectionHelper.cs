@@ -5,7 +5,7 @@ namespace Abp.Utils.Helpers
     /// <summary>
     /// This class is used to perform some common reflection related operations.
     /// </summary>
-    public static class ReflectionHelper
+    internal static class ReflectionHelper
     {
         /// <summary>
         /// Gets a single attrbiute for a member.

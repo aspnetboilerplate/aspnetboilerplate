@@ -44,12 +44,6 @@ namespace Abp.Modules.Loading
 
                     modules[moduleInfo.Name] = moduleInfo;
                     Logger.Debug("Loaded module: " + moduleInfo);
-                    var referencedAssemblies = moduleInfo.Type.Assembly.GetReferencedAssemblies();
-                    Logger.DebugFormat("Dependenct Assemmlies: {0}", referencedAssemblies.Length);
-                    foreach (var assemblyName in referencedAssemblies)
-                    {
-                        Logger.Debug(assemblyName.FullName);
-                    }
                 }
             }
 
@@ -71,7 +65,7 @@ namespace Abp.Modules.Loading
                        {
                            Type = type,
                            ModuleAttribute = ReflectionHelper.GetSingleAttribute<AbpModuleAttribute>(type),
-                           Instance = (AbpModule) Activator.CreateInstance(type, new object[] {})
+                           Instance = (IAbpModule) Activator.CreateInstance(type, new object[] {})
                        };
         }
     }

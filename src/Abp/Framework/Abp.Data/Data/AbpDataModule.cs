@@ -42,8 +42,8 @@ namespace Abp.Data
 
         private ISessionFactory CreateNhSessionFactory()
         {
+            //TODO: Move this to the application!
             var connStr = "Server=localhost; Database=Taskever; Trusted_Connection=True;";
-            //ConfigurationManager.ConnectionStrings["TaskeverDb"].ConnectionString;
             return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
                 .Mappings(m =>
