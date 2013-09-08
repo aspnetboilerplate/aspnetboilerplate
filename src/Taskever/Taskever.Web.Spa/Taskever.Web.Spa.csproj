@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Taskever.Web</RootNamespace>
-    <AssemblyName>Taskever.WebSpa</AssemblyName>
+    <AssemblyName>Taskever.Web.Spa</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -170,13 +170,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\TasksController.cs" />
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\TaskeverModule.cs" />
-    <Compile Include="Dependency\AutoMappingManager.cs" />
+    <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Dependency\Installers\TaskeverInstaller.cs" />
+    <Compile Include="Dependency\Installers\TaskeverWebSpaInstaller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -191,7 +189,6 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App\main.js" />
     <Content Include="App\models\dtos.js" />
     <Content Include="App\remoteServices\taskService.js" />
@@ -287,7 +284,6 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abp\Core\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +330,10 @@
     <ProjectReference Include="..\Taskever.Data\Taskever.Data.csproj">
       <Project>{89714409-E64F-4439-909A-415867494D16}</Project>
       <Name>Taskever.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taskever.Web\Taskever.Web.csproj">
+      <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>
+      <Name>Taskever.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

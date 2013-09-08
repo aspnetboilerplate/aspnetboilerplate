@@ -7,10 +7,9 @@ using Abp.Web.Controllers.Dynamic;
 using Abp.Web.Dependency;
 using Abp.Web.Dependency.Installers;
 using Abp.Web.Dependency.Interceptors;
-using Abp.Web.Startup;
 using Castle.Core;
 
-namespace Abp.Web
+namespace Abp.Web.Startup
 {
     [AbpModule("Abp.Web")]
     public class AbpWebModule : AbpModule
@@ -37,6 +36,7 @@ namespace Abp.Web
 
             initializationContext.IocContainer.Install(new AbpWebInstaller());
         }
+
         protected virtual void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
         {
             if (handler.ComponentModel.Implementation.IsSubclassOf(typeof(ApiController))) //TODO: Is that right?

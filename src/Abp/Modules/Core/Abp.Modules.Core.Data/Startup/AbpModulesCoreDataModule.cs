@@ -5,8 +5,8 @@ using Abp.Modules.Core.Startup.Dependency;
 
 namespace Abp.Modules.Core.Startup
 {
-    [AbpModule("Abp.Modules.Core.Data")]
-    public class AbpCoreDataModule : AbpModule
+    [AbpModule("Abp.Modules.Core.Data", Dependencies = new[] { "Abp.Data", "Abp.Modules.Core" })]
+    public class AbpModulesCoreDataModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {

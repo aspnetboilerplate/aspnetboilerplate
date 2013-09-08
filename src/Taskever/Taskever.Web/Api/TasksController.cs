@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Abp.Web.Controllers;
-using AttributeRouting.Web.Http;
 using Taskever.Services;
 using Taskever.Services.Dto;
 
@@ -15,7 +14,6 @@ namespace Taskever.Web.Api
             _taskService = taskService;
         }
         
-        [GET("Mytasks")]
         public virtual IList<TaskDto> GetMyTasks()
         {
             //validation

@@ -111,7 +111,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Dependency\Installers\AbpInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AbpCoreModule.cs" />
+    <Compile Include="Startup\AbpModulesCoreWebModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

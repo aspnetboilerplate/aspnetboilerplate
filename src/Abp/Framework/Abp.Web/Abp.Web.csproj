@@ -108,7 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbpWebModule.cs" />
+    <Compile Include="Startup\AbpWebModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
     <Compile Include="Controllers\Dynamic\AbpDynamicApiController.cs" />

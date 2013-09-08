@@ -74,7 +74,7 @@
     <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup\AbpCoreDataModule.cs" />
+    <Compile Include="Startup\AbpModulesCoreDataModule.cs" />
     <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>

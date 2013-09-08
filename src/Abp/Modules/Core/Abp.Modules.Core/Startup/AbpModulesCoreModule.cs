@@ -3,7 +3,7 @@
 namespace Abp.Modules.Core.Startup
 {
     [AbpModule("Abp.Modules.Core")]
-    public class AbpCoreModule : AbpModule
+    public class AbpModulesCoreModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
