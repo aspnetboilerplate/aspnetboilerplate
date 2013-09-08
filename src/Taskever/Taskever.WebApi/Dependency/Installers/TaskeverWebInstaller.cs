@@ -9,12 +9,13 @@ namespace Taskever.Web.Dependency.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
+            //TODO: Write a custom Web API to be a sample?
+            //container.Register(
 
                 //All Web Api Controllers
-                Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient()
+                //Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient()
 
-                );
+                //);
         }
     }
 }
