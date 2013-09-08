@@ -10,13 +10,15 @@
         var mopts = $.extend({}, defaultOpts, opts);
         $.ajax(mopts)
             .then(function (data) {
-                if (data.Message) {
-                    defer.reject();
-                    return;
-                }
+                if (data) {
+                    if (data.Message) {
+                        defer.reject();
+                        return;
+                    }
 
-                if (mopts.processData) {
-                    data = mopts.processData(data);
+                    if (mopts.processData) {
+                        data = mopts.processData(data);
+                    }
                 }
 
                 defer.resolve(data);

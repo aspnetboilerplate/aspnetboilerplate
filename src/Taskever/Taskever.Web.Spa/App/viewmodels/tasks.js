@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'durandal/app', 'models/dtos', 'remoteServices/taskService'], function ($, ko, app, dtos, taskService) {
+﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'models/dtos', 'remoteServices/taskService'], function ($, ko, app, dialogs, dtos, taskService) {
     var tasks = ko.mapping.fromJS([]);
 
     return {
@@ -9,16 +9,8 @@
         },
 
         showTaskCreateDialog: function () {
-            app.showDialog({
-                viewUrl: 'views/createTask',
-                saveNewTask: this.saveNewTask
-            });
-        },
-        
-        saveNewTask: function () {
-            taskService.createTask({
-                title: 'teeest title!!',
-                description: 'my descriptionnnnnn'
+            dialogs.show('viewmodels/createTaskDialog').then(function (data) {
+                tasks.push(data);
             });
         }
     };

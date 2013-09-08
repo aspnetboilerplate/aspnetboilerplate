@@ -176,10 +176,11 @@
     <Content Include="App\models\dtos.js" />
     <Content Include="App\remoteServices\taskService.js" />
     <Content Include="Abp\abp.js" />
+    <Content Include="App\viewmodels\createTaskDialog.js" />
     <Content Include="App\viewmodels\secondpage.js" />
     <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
-    <Content Include="App\views\createTask.html" />
+    <Content Include="App\views\createTaskDialog.html" />
     <Content Include="App\views\secondpage.html" />
     <Content Include="App\views\tasks.html" />
     <Content Include="App\views\shell.html" />
