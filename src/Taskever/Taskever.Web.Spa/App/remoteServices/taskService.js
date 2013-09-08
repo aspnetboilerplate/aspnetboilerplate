@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'abp/abp'], function ($, ko, abp) {
+﻿define(['jquery', 'abp/abp'], function ($, abp) {
 
     var getTasks = function () {
         return abp.ajax({

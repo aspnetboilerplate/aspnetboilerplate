@@ -1,5 +1,4 @@
-﻿using Abp.Modules;
-using Abp.Modules.Loading;
+﻿using Abp.Modules.Loading;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;

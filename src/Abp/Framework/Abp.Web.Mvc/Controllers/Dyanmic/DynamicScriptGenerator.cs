@@ -7,21 +7,25 @@ namespace Abp.Web.Mvc.Controllers.Dyanmic
 {
     public class DynamicScriptGenerator
     {
-        public DynamicScriptGenerator()
-        {
-
-        }
-
         public string GenerateFor(Type type)
         {
             var script = new StringBuilder();
-            script.AppendLine("define(['jquery', 'knockout', 'abp/abp'], function ($, ko, abp) {");
+            script.AppendLine("define(['jquery', 'abp/abp'], function ($, abp) {");
 
-            foreach (var methodInfo in type.GetMethods())
+            var methods = type.GetMethods();
+            foreach (var methodInfo in methods)
             {
                 AppendMethod(script, methodInfo);
                 script.AppendLine();
             }
+
+            script.AppendLine("    return {");
+            for (int i = 0; i < methods.Length; i++)
+            {
+                var methodInfo = methods[i];
+                script.AppendLine("        " + methodInfo.Name + ": " + methodInfo.Name + (i < methods.Length - 1 ? "," : ""));
+            }
+            script.AppendLine("    };");
 
             script.AppendLine("});");
 

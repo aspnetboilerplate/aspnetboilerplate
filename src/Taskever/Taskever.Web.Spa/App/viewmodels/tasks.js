@@ -13,8 +13,10 @@
 
         showTaskCreateDialog: function () {
             dialogs.show('viewmodels/createTaskDialog')
-                .then(function(data) {
-                    tasks.push(data);
+                .then(function (data) {
+                    if (data) {
+                        tasks.push(data);
+                    }
                 });
         },
         

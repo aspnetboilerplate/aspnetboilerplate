@@ -28,8 +28,7 @@ namespace Taskever.Services.Impl
             var taskEntity = task.MapTo<Task>();
             taskEntity.Tenant = Tenant.Current;
             _taskRepository.Insert(taskEntity);
-            task.Id = taskEntity.Id;
-            return task;
+            return taskEntity.MapTo<TaskDto>();
         }
 
         public void Delete(int taskId)

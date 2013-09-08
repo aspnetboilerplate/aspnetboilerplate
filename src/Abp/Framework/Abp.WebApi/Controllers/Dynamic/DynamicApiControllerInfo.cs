@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
-    /// Used to store controller type and name.
+    /// Used to store controller informations.
     /// </summary>
     internal class DynamicApiControllerInfo
     {
@@ -19,8 +19,14 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// </summary>
         public Type Type { get; private set; }
 
+        /// <summary>
+        /// Proxied type.
+        /// </summary>
         public Type ProxiedType { get; private set; }
 
+        /// <summary>
+        /// All methods of the controller.
+        /// </summary>
         public IDictionary<string, DynamicApiMethodInfo> Methods { get; private set; }
 
         public DynamicApiControllerInfo(string name, Type type, Type proxiedType)
