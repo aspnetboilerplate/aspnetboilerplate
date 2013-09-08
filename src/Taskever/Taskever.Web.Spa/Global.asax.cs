@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
 using Abp.Startup;
-using Taskever.Web.App_Start;
-using RouteConfig = Taskever.Web.App_Start.RouteConfig;
 
 namespace Taskever.Web
 {
@@ -16,11 +11,6 @@ namespace Taskever.Web
 
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-
             _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }

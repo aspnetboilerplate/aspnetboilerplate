@@ -22,7 +22,7 @@ namespace Abp.Modules.Loading
                 {
                     continue;
                 }
-                
+                 
                 foreach (var dependencyModuleName in module.ModuleAttribute.Dependencies)
                 {
                     //Check if there is a module with this name

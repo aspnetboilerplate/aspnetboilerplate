@@ -44,18 +44,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting">
-      <HintPath>..\..\packages\AttributeRouting.Core.3.5.6\lib\net40\AttributeRouting.dll</HintPath>
-    </Reference>
-    <Reference Include="AttributeRouting.Web">
-      <HintPath>..\..\packages\AttributeRouting.Core.Web.3.5.6\lib\net40\AttributeRouting.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="AttributeRouting.Web.Http">
-      <HintPath>..\..\packages\AttributeRouting.Core.Http.3.5.6\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="AttributeRouting.Web.Http.WebHost">
-      <HintPath>..\..\packages\AttributeRouting.WebApi.3.5.6\lib\net40\AttributeRouting.Web.Http.WebHost.dll</HintPath>
-    </Reference>
     <Reference Include="AutoMapper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
@@ -161,18 +149,13 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="WebActivator, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <HintPath>..\..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
+    <Compile Include="Startup\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Dependency\Installers\TaskeverWebSpaInstaller.cs" />
     <Compile Include="Global.asax.cs">
@@ -307,17 +290,13 @@
       <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
       <Name>Abp.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Web\Abp.Web.csproj">
-      <Project>{71962F97-5E4B-465C-9A21-2153D31992CF}</Project>
-      <Name>Abp.Web</Name>
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Web.Mvc\Abp.Web.Mvc.csproj">
+      <Project>{78FC0C9B-C5A9-4900-9A46-A8F544AC5343}</Project>
+      <Name>Abp.Web.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
       <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
       <Name>Abp.Modules.Core.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Web\Abp.Modules.Core.Web.csproj">
-      <Project>{2A1CA060-4E83-440D-8CE3-0436748F33BB}</Project>
-      <Name>Abp.Modules.Core.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
@@ -331,9 +310,9 @@
       <Project>{89714409-E64F-4439-909A-415867494D16}</Project>
       <Name>Taskever.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Taskever.Web\Taskever.Web.csproj">
+    <ProjectReference Include="..\Taskever.WebApi\Taskever.WebApi.csproj">
       <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>
-      <Name>Taskever.Web</Name>
+      <Name>Taskever.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

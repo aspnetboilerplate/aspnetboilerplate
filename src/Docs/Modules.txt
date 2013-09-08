@@ -1,22 +1,19 @@
-Dll dependencies
-
 Framework
 =======================================
-- "Abp.Core" (no dependencies)
-- "Abp.Data" (Dependencies: "Abp.Core")
-- "Abp.Web" (Dependencies: "Abp.Core")
+- "Abp.Core"
+- "Abp.Data"
+- "Abp.WebApi"
+- "Abp.Web.Mvc"
 
 Core module
 =======================================
-- "Abp.Modules.Core" (Dependencies: "Abp.Core")
-- "Abp.Modules.Core.Data" (Dependencies: "Abp.Core", "Abp.Data", "Abp.Modules.Core")
-- "Abp.Modules.Core.Web" (Dependencies: "Abp.Core", "Abp.Data", "Abp.Web", "Abp.Modules.Core", "Abp.Modules.Core.Data")
+- "Abp.Modules.Core"
+- "Abp.Modules.Core.Data"
+- "Abp.Modules.Core.WebApi"
 
 Taskever application module
 =======================================
-- "Taskever.Core" (Dependencies: "Abp.Core", "Abp.Modules.Core")
-- "Taskever.Data" (Dependencies: "Abp.Core", "Abp.Data", "Abp.Modules.Core", "Abp.Modules.Core.Data", "Taskever.Core")
-- "Taskever.WebSpa" (Dependencies: "Abp.Core", "Abp.Data", "Abp.Web", "Abp.Modules.Core", "Abp.Modules.Core.Data", "Abp.Modules.Core.Web", "Taskever.Core", "Taskever.Data")
-
-
-!!! Think how to achive module dependencies???
+- "Taskever.Core"
+- "Taskever.Data"
+- "Taskever.WebApi"
+- "Taskever.Web.Spa"
