@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
-namespace Abp.Web.Utils.Extensions
+namespace Abp.Utils.Extensions
 {
     /// <summary>
     /// Extension methods for Dictionary.

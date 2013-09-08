@@ -13,23 +13,18 @@ namespace Abp.Startup
     {
         protected WindsorContainer IocContainer { get; private set; }
 
-        protected IDictionary<string, AbpModuleInfo> Modules { get; set; } //TODO: Make readyonly and dictionary?
+        protected IDictionary<string, AbpModuleInfo> Modules { get; set; }
 
         public AbpBootstrapper()
         {
             IocContainer = new WindsorContainer();
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             IocContainer.Install(new AbpCoreInstaller());
             LoadModules();
-            new AbpModuleDependencyExplorer().SetDependencies(Modules);
-            var sortedModules = new AbpModuleDependencySorter().SortByDependency(Modules);
-            var initializer = new AbpModuleInitializer(sortedModules, new AbpInitializationContext(this));
-            initializer.PreInitializeModules();
-            initializer.InitializeModules();
-            initializer.PostInitializeModules();
+            InitializeModules();
         }
 
         public void Dispose()
@@ -43,6 +38,16 @@ namespace Abp.Startup
         private void LoadModules()
         {
             Modules = IocContainer.Resolve<AbpModuleLoader>().LoadModules();
+        }
+
+        private void InitializeModules()
+        {
+            new AbpModuleDependencyExplorer().SetDependencies(Modules);
+            var sortedModules = new AbpModuleDependencySorter().SortByDependency(Modules);
+            var initializer = new AbpModuleInitializer(sortedModules, new AbpInitializationContext(this));
+            initializer.PreInitializeModules();
+            initializer.InitializeModules();
+            initializer.PostInitializeModules();
         }
 
         #region AbpInitializationContext class

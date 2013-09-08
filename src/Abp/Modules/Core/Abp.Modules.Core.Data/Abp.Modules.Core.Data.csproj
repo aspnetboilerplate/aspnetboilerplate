@@ -91,7 +91,7 @@
       <Name>Abp.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abp.Modules.Core\Abp.Modules.Core.csproj">
-      <Project>{b333d942-7600-4191-80e3-923a6144df4f}</Project>
+      <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Modules.Core</Name>
     </ProjectReference>
   </ItemGroup>

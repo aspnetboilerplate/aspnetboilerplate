@@ -121,17 +121,9 @@
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Data\Abp.Data.csproj">
-      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
-      <Name>Abp.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp.Web\Abp.Web.csproj">
       <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
       <Name>Abp.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
-      <Project>{ce9fea93-be42-442b-a7ff-a53922099f64}</Project>
-      <Name>Abp.Modules.Core.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{b333d942-7600-4191-80e3-923a6144df4f}</Project>

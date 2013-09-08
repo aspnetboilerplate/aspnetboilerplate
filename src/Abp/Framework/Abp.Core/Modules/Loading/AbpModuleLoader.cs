@@ -6,30 +6,49 @@ using Castle.Core.Logging;
 
 namespace Abp.Modules.Loading
 {
+    /// <summary>
+    /// This class is used to load all modules in the system.
+    /// </summary>
     internal class AbpModuleLoader
     {
+        /// <summary>
+        /// Reference to the logger.
+        /// </summary>
         public ILogger Logger { get; set; }
 
+        /// <summary>
+        /// Loads all modules.
+        /// </summary>
+        /// <returns>All modules</returns>
         public Dictionary<string, AbpModuleInfo> LoadModules()
         {
             Logger.Debug("Loading Abp modules...");
 
             var modules = new Dictionary<string, AbpModuleInfo>();
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (AbpModuleHelper.IsAbpModule(type))
+                    if (!AbpModuleHelper.IsAbpModule(type))
                     {
-                        var moduleInfo = CreateModuleInfo(type);
-                        if (modules.ContainsKey(moduleInfo.Name))
-                        {
-                            Logger.Warn("Module is loaded before! " + type.FullName);
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        modules[moduleInfo.Name] = moduleInfo;
-                        Logger.Debug("Loaded module: " + moduleInfo);
+                    var moduleInfo = CreateModuleInfo(type);
+                    if (modules.ContainsKey(moduleInfo.Name))
+                    {
+                        Logger.Warn("Module is loaded before: " + type.FullName);
+                        continue;
+                    }
+
+                    modules[moduleInfo.Name] = moduleInfo;
+                    Logger.Debug("Loaded module: " + moduleInfo);
+                    var referencedAssemblies = moduleInfo.Type.Assembly.GetReferencedAssemblies();
+                    Logger.DebugFormat("Dependenct Assemmlies: {0}", referencedAssemblies.Length);
+                    foreach (var assemblyName in referencedAssemblies)
+                    {
+                        Logger.Debug(assemblyName.FullName);
                     }
                 }
             }

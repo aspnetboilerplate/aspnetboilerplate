@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Web.Utils.Extensions;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
 namespace Abp.Web.Controllers.Dynamic

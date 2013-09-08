@@ -22,7 +22,7 @@ namespace Abp.Web.Startup
 
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(initializationContext);  
 
             DynamicControllerGenerator.IocContainer = initializationContext.IocContainer;
 

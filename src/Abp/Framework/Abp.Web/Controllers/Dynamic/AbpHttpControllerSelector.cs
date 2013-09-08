@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Web.Utils.Extensions;
+using Abp.Utils.Extensions;
 
 namespace Abp.Web.Controllers.Dynamic
 {
