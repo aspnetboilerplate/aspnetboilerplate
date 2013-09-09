@@ -55,21 +55,21 @@ namespace Abp.WebApi.Controllers.Dynamic
 
         private HttpVerb FindHttpVerb(MethodInfo methodInfo)
         {
-            var methodName = methodInfo.Name;
-            if (methodName.StartsWith("Get"))
-            {
-                return HttpVerb.Get;
-            }
+            //var methodName = methodInfo.Name;
+            //if (methodName.StartsWith("Get"))
+            //{
+            //    return HttpVerb.Get;
+            //}
 
-            if (methodName.StartsWith("Put") || methodName.StartsWith("Update"))
-            {
-                return HttpVerb.Put;
-            }
+            //if (methodName.StartsWith("Put") || methodName.StartsWith("Update"))
+            //{
+            //    return HttpVerb.Put;
+            //}
 
-            if (methodName.StartsWith("Delete") || methodName.StartsWith("Remove"))
-            {
-                return HttpVerb.Delete;
-            }
+            //if (methodName.StartsWith("Delete") || methodName.StartsWith("Remove"))
+            //{
+            //    return HttpVerb.Delete;
+            //}
 
             return HttpVerb.Post;
         }

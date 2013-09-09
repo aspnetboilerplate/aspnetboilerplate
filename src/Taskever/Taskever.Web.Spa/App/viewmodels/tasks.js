@@ -5,7 +5,7 @@
         tasks: tasks,
 
         activate: function () {
-            taskService.getTasks(tasks)
+            taskService.getMyTasks(tasks)
                 .then(function(data) {
                     ko.mapping.fromJS(data, tasks);
                 });

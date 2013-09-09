@@ -53,22 +53,22 @@ namespace Abp.Web.Mvc.Controllers.Dyanmic
             if (parameters.Length > 0)
             {
                 script.AppendLine(",");
-                if (methodInfo.Verb == HttpVerb.Get || methodInfo.Verb == HttpVerb.Delete)
-                {
-                    script.AppendLine("            data: {");
+                //if (methodInfo.Verb == HttpVerb.Get || methodInfo.Verb == HttpVerb.Delete)
+                //{
+                //    script.AppendLine("            data: {");
 
-                    for (var i = 0; i < parameters.Length; i++)
-                    {
-                        var parameterInfo = parameters[i];
-                        script.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
-                    }
+                //    for (var i = 0; i < parameters.Length; i++)
+                //    {
+                //        var parameterInfo = parameters[i];
+                //        script.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
+                //    }
 
-                    script.AppendLine("            }");
-                }
-                else if (methodInfo.Verb == HttpVerb.Post || methodInfo.Verb == HttpVerb.Put)
-                {
+                //    script.AppendLine("            }");
+                //}
+                //else if (methodInfo.Verb == HttpVerb.Post || methodInfo.Verb == HttpVerb.Put)
+                //{
                     script.AppendLine("            data: JSON.stringify(" + parameters[0].Name.ToCamelCase() + ")");
-                }
+                //}
             }
             else
             {

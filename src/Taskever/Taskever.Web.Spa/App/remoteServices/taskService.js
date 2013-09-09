@@ -1,33 +1,67 @@
-﻿define(['jquery', 'abp/abp'], function ($, abp) {
+﻿//define(['jquery', 'abp/abp'], function ($, abp) {
 
-    var getTasks = function () {
+//    var getTasks = function () {
+//        return abp.ajax({
+//            url: '/api/services/Task/GetMyTasks',
+//            type: 'GET'
+//        });
+//    };
+
+//    var createTask = function(task) {
+//        return abp.ajax({
+//            url: '/api/services/Task/Create',
+//            type: 'POST',
+//            data: JSON.stringify(task)
+//        });
+//    };
+
+//    var deleteTask = function (taskId) {
+//        return abp.ajax({
+//            url: '/api/services/Task/Delete',
+//            type: 'GET',
+//            data: {
+//                taskId: taskId
+//            }
+//        });
+//    };
+    
+//    return {
+//        getTasks: getTasks,
+//        createTask: createTask,
+//        deleteTask: deleteTask
+//    };
+//});
+define(['jquery', 'abp/abp'], function ($, abp) {
+
+    var getMyTasks = function() {
         return abp.ajax({
-            url: '/api/services/Task/GetMyTasks',
-            type: 'GET'
+            url: '/api/services/task/getMyTasks',
+            type: 'POST'
         });
     };
 
-    var createTask = function(task) {
+    var create = function(task) {
         return abp.ajax({
-            url: '/api/services/Task/Create',
+            url: '/api/services/task/create',
             type: 'POST',
             data: JSON.stringify(task)
         });
     };
 
-    var deleteTask = function (taskId) {
+    var deleteTask = function(taskId) {
         return abp.ajax({
-            url: '/api/services/Task/Delete',
+            url: '/api/services/task/delete',
             type: 'GET',
             data: {
-                taskId: taskId
+                 taskId: taskId
             }
         });
     };
-    
+
     return {
-        getTasks: getTasks,
-        createTask: createTask,
+        getMyTasks: getMyTasks,
+        create: create,
         deleteTask: deleteTask
     };
+
 });

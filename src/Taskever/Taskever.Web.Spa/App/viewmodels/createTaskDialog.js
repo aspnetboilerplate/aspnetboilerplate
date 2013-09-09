@@ -5,7 +5,7 @@
 
     vm.prototype.saveNewTask = function () {
         var that = this;
-        taskService.createTask(ko.mapping.toJS(that.task))
+        taskService.create(ko.mapping.toJS(that.task))
             .then(function(data) {
                 dialogs.close(that, ko.mapping.fromJS(data));
             });
