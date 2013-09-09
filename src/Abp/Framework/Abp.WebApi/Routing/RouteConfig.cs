@@ -5,7 +5,7 @@ using Newtonsoft.Json.Serialization;
 namespace Abp.WebApi.Routing
 {
     public static class RouteConfig
-    { 
+    {
         public static void Register(HttpConfiguration config)
         {
             //Dynamic Web APIs

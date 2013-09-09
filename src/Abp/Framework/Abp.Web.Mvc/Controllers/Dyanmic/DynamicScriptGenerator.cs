@@ -2,44 +2,75 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Abp.WebApi.Controllers.Dynamic;
+using Abp.Utils.Extensions;
 
 namespace Abp.Web.Mvc.Controllers.Dyanmic
 {
-    public class DynamicScriptGenerator
+    internal class DynamicScriptGenerator
     {
-        public string GenerateFor(Type type)
+        public string GenerateFor(DynamicApiControllerInfo controllerInfo)
         {
             var script = new StringBuilder();
+            
+            //Module dependencies and start
             script.AppendLine("define(['jquery', 'abp/abp'], function ($, abp) {");
+            script.AppendLine();
 
-            var methods = type.GetMethods();
-            foreach (var methodInfo in methods)
+            //all methods
+            foreach (var methodInfo in controllerInfo.Methods.Values)
             {
-                AppendMethod(script, methodInfo);
+                AppendMethod(script, controllerInfo, methodInfo);
                 script.AppendLine();
             }
 
+            //Return value of the module
             script.AppendLine("    return {");
-            for (int i = 0; i < methods.Length; i++)
+            
+            var methodNo = 0;
+            foreach (var methodInfo in controllerInfo.Methods.Values)
             {
-                var methodInfo = methods[i];
-                script.AppendLine("        " + methodInfo.Name + ": " + methodInfo.Name + (i < methods.Length - 1 ? "," : ""));
+                script.AppendLine("        " + methodInfo.Name.ToCamelCase() + ": " + methodInfo.Name.ToCamelCase() + ((methodNo++) < (controllerInfo.Methods.Count - 1) ? "," : ""));
             }
-            script.AppendLine("    };");
 
+            script.AppendLine("    };");
+            script.AppendLine();
+
+            //Module end
             script.AppendLine("});");
 
             return script.ToString();
         }
 
-        private void AppendMethod(StringBuilder script, MethodInfo methodInfo)
+        private void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiMethodInfo methodInfo)
         {
-            script.AppendLine("    var " + methodInfo.Name + " = function(" + GenerateMethodParams(methodInfo) + ")");
+            script.AppendLine("    var " + methodInfo.Name.ToCamelCase() + " = function(" + GenerateMethodParams(methodInfo.Method) + ")");
             script.AppendLine("        return abp.ajax({");
-            script.AppendLine("            url: '/api/services/Task/" + methodInfo.Name + "',");
-            script.AppendLine("            type: 'GET'");
+            script.AppendLine("            url: '/api/services/" + controllerInfo.Name.ToCamelCase() + "/" + methodInfo.Name.ToCamelCase() + "',");
+            script.Append("            type: '" + methodInfo.Verb.ToString().ToUpper() + "'");
+
+            var parameters = methodInfo.Method.GetParameters();
+            if (parameters.Length > 0 && methodInfo.Verb == HttpVerb.Get || methodInfo.Verb == HttpVerb.Delete)
+            {
+                script.AppendLine(",");
+                script.AppendLine("            data: {");
+
+                for (var i = 0; i < parameters.Length; i++)
+                {
+                    var parameterInfo = parameters[i];
+                    script.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
+                }
+
+                script.AppendLine("            }");
+            }
+            else
+            {
+                script.AppendLine();
+            }
+
+
             script.AppendLine("        });");
-            script.AppendLine("    }");
+            script.AppendLine("    };");
         }
 
         private string GenerateMethodParams(MethodInfo methodInfo)
@@ -50,7 +81,7 @@ namespace Abp.Web.Mvc.Controllers.Dyanmic
                 return "";
             }
 
-            return string.Join(", ", parameters.Select(prm => prm.Name));
+            return string.Join(", ", parameters.Select(prm => prm.Name.ToCamelCase()));
         }
     }
 }

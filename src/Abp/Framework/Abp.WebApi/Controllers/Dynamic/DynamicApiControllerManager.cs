@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -8,7 +8,12 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// </summary>
     internal static class DynamicApiControllerManager
     {
-        private static readonly ConcurrentDictionary<string, DynamicApiControllerInfo> DynamicTypes = new ConcurrentDictionary<string, DynamicApiControllerInfo>();
+        private static readonly IDictionary<string, DynamicApiControllerInfo> DynamicTypes;
+
+        static DynamicApiControllerManager()
+        {
+            DynamicTypes = new Dictionary<string, DynamicApiControllerInfo>();
+        }
 
         /// <summary>
         /// Searches and returns a dynamic api controller for given name

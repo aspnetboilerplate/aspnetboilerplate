@@ -47,7 +47,7 @@ namespace Abp.WebApi.Controllers.Dynamic
                     throw new ApplicationException("This service can not be proxied dynamically since it contains more than one definition for method " + method.Name);
                 }
 
-                var apiMethodInfo = new DynamicApiMethodInfo(method) {Verb = FindHttpVerb(method)};
+                var apiMethodInfo = new DynamicApiMethodInfo(method.Name, method, FindHttpVerb(method));
 
                 Methods[method.Name] = apiMethodInfo;
             }
@@ -56,14 +56,14 @@ namespace Abp.WebApi.Controllers.Dynamic
         private HttpVerb FindHttpVerb(MethodInfo methodInfo)
         {
             var methodName = methodInfo.Name;
-            if(methodName.StartsWith("Get"))
+            if (methodName.StartsWith("Get"))
             {
                 return HttpVerb.Get;
             }
-            
+
             if (methodName.StartsWith("Put") || methodName.StartsWith("Update"))
             {
-                return HttpVerb.Put;                
+                return HttpVerb.Put;
             }
 
             if (methodName.StartsWith("Delete") || methodName.StartsWith("Remove"))

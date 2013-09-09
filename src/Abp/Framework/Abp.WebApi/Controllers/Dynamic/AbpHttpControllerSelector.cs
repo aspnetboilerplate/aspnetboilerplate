@@ -34,7 +34,7 @@ namespace Abp.WebApi.Controllers.Dynamic
                     string serviceName;
                     if (routeData.Values.TryGetValue("serviceName", out serviceName))
                     {
-                        var controllerInfo = DynamicApiControllerManager.FindServiceController(serviceName);
+                        var controllerInfo = DynamicApiControllerManager.FindServiceController(serviceName.ToPascalCase());
                         if (controllerInfo != null)
                         {
                             var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
