@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{76AA2897-D756-415C-A0CB-D00E90061FFF}"
 	ProjectSection(SolutionItems) = preProject
+		Docs\AbpOverwiev.docx = Docs\AbpOverwiev.docx
 		Docs\Backlog.txt = Docs\Backlog.txt
 		Docs\Modules.txt = Docs\Modules.txt
 		Docs\Tools.txt = Docs\Tools.txt
