@@ -6,7 +6,10 @@ using Castle.Windsor;
 
 namespace Abp.Dependency.Installers
 {
-    public class AbpCoreInstaller : IWindsorInstaller
+    /// <summary>
+    /// Registers dependencies for core (this) assembly.
+    /// </summary>
+    internal class AbpCoreInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
