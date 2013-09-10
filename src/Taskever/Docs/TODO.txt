@@ -1,0 +1,31 @@
+Layout
+-------------------------
+- Left: My tasks
+- Middle: Pages
+- Right: My friends
+
+Pages
+-------------------------
+- Home page: View latest events for all friends
+    Events from me (?)
+    Event from fallowed friends
+- User page
+    - Default: Events from this person
+	- Tasks (todo list)
+	- Completed tasks (in a few days by history)
+
+Entities
+------------------------
+Task (private, protected, public)
+
+In the future
+------------------------
+- Projects (private, public)
+
+- Project page
+    - Default: Events from this project
+	- Tasks (todo list)
+	- Completed tasks (in a few days by history)
+
+Mention: @halil
+Project: $projectName

@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Data.Repositories;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Impl;
+using Abp.Services.Dto;
 using Taskever.Entities;
 using Taskever.Services.Dto;
 
@@ -22,7 +23,7 @@ namespace Taskever.Services.Impl
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
         }
 
-        public virtual TaskDto Create(TaskDto task)
+        public virtual TaskDto CreateTask(TaskDto task)
         {
             //TODO: Automatically set Tenant and Creator User informations, bu where?
             var taskEntity = task.MapTo<Task>();
@@ -31,9 +32,9 @@ namespace Taskever.Services.Impl
             return taskEntity.MapTo<TaskDto>();
         }
 
-        public void Delete(int taskId)
+        public virtual void DeleteTask(EntityDto entity)
         {
-            _taskRepository.Delete(taskId);
+            _taskRepository.Delete(entity.Id);
         }
     }
 }

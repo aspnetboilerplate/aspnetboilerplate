@@ -299,6 +299,10 @@
       <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
       <Name>Abp.Modules.Core.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.WebApi\Abp.Modules.Core.WebApi.csproj">
+      <Project>{2a1ca060-4e83-440d-8ce3-0436748f33bb}</Project>
+      <Name>Abp.Modules.Core.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Modules.Core</Name>

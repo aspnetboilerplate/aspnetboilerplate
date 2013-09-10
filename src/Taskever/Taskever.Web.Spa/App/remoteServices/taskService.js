@@ -33,34 +33,32 @@
 //});
 define(['jquery', 'abp/abp'], function ($, abp) {
 
-    var getMyTasks = function() {
+    var getMyTasks = function () {
         return abp.ajax({
             url: '/api/services/task/getMyTasks',
             type: 'POST'
         });
     };
 
-    var create = function(task) {
+    var createTask = function (task) {
         return abp.ajax({
-            url: '/api/services/task/create',
+            url: '/api/services/task/createTask',
             type: 'POST',
             data: JSON.stringify(task)
         });
     };
 
-    var deleteTask = function(taskId) {
+    var deleteTask = function (entity) {
         return abp.ajax({
-            url: '/api/services/task/delete',
-            type: 'GET',
-            data: {
-                 taskId: taskId
-            }
+            url: '/api/services/task/deleteTask',
+            type: 'POST',
+            data: JSON.stringify(entity)
         });
     };
 
     return {
         getMyTasks: getMyTasks,
-        create: create,
+        createTask: createTask,
         deleteTask: deleteTask
     };
 

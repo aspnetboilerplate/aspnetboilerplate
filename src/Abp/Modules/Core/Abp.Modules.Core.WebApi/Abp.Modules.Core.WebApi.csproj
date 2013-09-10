@@ -89,8 +89,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\UserApiController.cs" />
-    <Compile Include="Dependency\Installers\AbpInstaller.cs" />
+    <Compile Include="Api\UsersController.cs" />
+    <Compile Include="Dependency\Installers\AbpCoreModuleWebApiInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreWebModule.cs" />
   </ItemGroup>

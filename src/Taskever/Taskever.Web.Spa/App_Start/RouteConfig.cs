@@ -17,6 +17,12 @@ namespace Taskever.Web.App_Start
                 defaults: new { id = RouteParameter.Optional }
                 );
 
+            ////TODO: Remove later!!!
+            routes.MapHttpRoute(
+                name: "DefaultApiTest",
+                routeTemplate: "rpc/{controller}/{action}"
+                );
+
             //ASP.NET MVC Route Config
             routes.MapRoute(
                 name: "Default",

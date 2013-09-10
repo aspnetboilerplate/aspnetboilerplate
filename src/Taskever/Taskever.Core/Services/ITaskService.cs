@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Abp.Services;
+using Abp.Services.Dto;
 using Taskever.Services.Dto;
 
 namespace Taskever.Services
@@ -8,8 +9,8 @@ namespace Taskever.Services
     {
         IList<TaskDto> GetMyTasks();
 
-        TaskDto Create(TaskDto task);
-
-        void Delete(int taskId);
+        TaskDto CreateTask(TaskDto task);
+         
+        void DeleteTask(EntityDto entity);
     }
 }

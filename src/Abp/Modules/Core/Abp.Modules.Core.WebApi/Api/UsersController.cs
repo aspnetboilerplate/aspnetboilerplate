@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Web.Http;
 using Abp.Modules.Core.Services;
 using Abp.Modules.Core.Services.Dto;
 using Abp.WebApi.Controllers;
 
 namespace Abp.Modules.Core.Api
 {
-    public class UserApiController : AbpApiController
+    public class UsersController : AbpApiController
     {
         private readonly IUserService _userService;
 
-        public UserApiController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
@@ -22,6 +23,11 @@ namespace Abp.Modules.Core.Api
             //exception handling
             Logger.Info(L("GetAllQuestions_Method_Is_Called"));
             return _userService.GetAllUsers();
+        }
+
+        public int TestMethod(int a)
+        {
+            return 5 + a;
         }
     }
 }
