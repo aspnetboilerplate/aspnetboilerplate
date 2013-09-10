@@ -20,4 +20,5 @@ Used tools/libraries:
 Tools/libraries those are usefull
 -----------------------------------------------------
 - Server side
+  - FluentValidation
   - AttributeRouting

@@ -22,16 +22,25 @@ Improvements:
 - Localization
 
 TODO:
+
 - Automatic Web API (rest) creation
-  - Automatic service layer creation on the client side (javascript) (creating from service class?)
+  - Automatic Web API creation on server side
+  - Automatic service layer creation on the client side (javascript) (creating from service class)
+  - Automatic create all DTO objects in javascript (as knockout objects optionally?)
+
 - Bundle service call infrastructure!
   - JS prepare requests, run all bundle request, runs all on server and returns bundle response
+
 - Make auto mapping system easier to use and standard to implement!
+- Make use of NHibernate auto mapping
+- Make use of validation!
+
 - Service interceptions
   - Authorization checks
   - Transactions? (implemented by UnitOfWork interceptor already, so?)
   - DTO Validations and checks?
   - Exception handling?
+
 - Repository interceptors
   - Tenancy filter
   - Write history/log
@@ -39,23 +48,19 @@ TODO:
   - Set current tenant/user
 
 - Use NHibernate L2? caching
-
 - Exception handling in Controllers and ApiControllers
+- JS&CSS Minimization and bundle (best practices!)
+
 
 - User management system
 - Role (user templates) management system
 - Tenant system and Cloud!
-
-- JS&CSS Minimization and bundle (best practices!)
-
 - Usage logging/history (detailed auditing)
 
-
-- Authentication
+- Authentication notes
   - Preventing Cross-Site Request Forgery (CSRF) 
-  - External Authentication Services
+  - External Authentication Services (twitter, facebook etc.)
   - OAuth???
-- Authorization
 
 --------------------------
 

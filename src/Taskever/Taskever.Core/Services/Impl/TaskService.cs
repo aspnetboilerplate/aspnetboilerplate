@@ -25,10 +25,14 @@ namespace Taskever.Services.Impl
 
         public virtual TaskDto CreateTask(TaskDto task)
         {
-            //TODO: Automatically set Tenant and Creator User informations, bu where?
             var taskEntity = task.MapTo<Task>();
+
+            //TODO: Automatically set Tenant and Creator User informations, bu where?
             taskEntity.Tenant = Tenant.Current;
+            taskEntity.CreatorUser = User.Current;
+
             _taskRepository.Insert(taskEntity);
+
             return taskEntity.MapTo<TaskDto>();
         }
 
