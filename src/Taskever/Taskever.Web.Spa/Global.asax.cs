@@ -11,6 +11,7 @@ namespace Taskever.Web
 
         protected void Application_Start()
         {
+            //TODO: Make a new assembly Abp.Web and create a HttpApplication class to make it there and dont write these code here!
             _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }
@@ -26,6 +27,11 @@ namespace Taskever.Web
         }
 
         protected void Session_End(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
         {
 
         }
