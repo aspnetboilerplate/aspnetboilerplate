@@ -1,11 +1,9 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Abp.WebApi.Controllers.Dynamic;
 using Abp.Utils.Extensions;
 
-namespace Abp.Web.Mvc.Controllers.Dyanmic
+namespace Abp.WebApi.Controllers.Dynamic
 {
     internal class DynamicScriptGenerator
     {

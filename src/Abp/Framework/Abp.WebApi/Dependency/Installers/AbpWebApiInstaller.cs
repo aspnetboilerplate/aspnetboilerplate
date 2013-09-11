@@ -1,4 +1,5 @@
-﻿using Abp.WebApi.Dependency.Interceptors;
+﻿using Abp.WebApi.Controllers;
+using Abp.WebApi.Dependency.Interceptors;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -13,10 +14,10 @@ namespace Abp.WebApi.Dependency.Installers
             container.Register(
 
                 //ApiController interceptor
-                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient
+                Component.For<AbpApiControllerInterceptor>().LifeStyle.Transient,
 
                 //All api controllers //TODO ???
-                //Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
+                Classes.FromThisAssembly().BasedOn<AbpApiController>().LifestyleTransient()
 
                 );
         }

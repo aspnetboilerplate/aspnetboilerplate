@@ -4,7 +4,8 @@
         'durandal': '../Scripts/durandal',
         'plugins': '../Scripts/durandal/plugins',
         'transitions': '../Scripts/durandal/transitions',
-        'abp': '../Abp/'
+        'abp': '../Abp',
+        'services': '/api/serviceproxies'
     }
 });
 

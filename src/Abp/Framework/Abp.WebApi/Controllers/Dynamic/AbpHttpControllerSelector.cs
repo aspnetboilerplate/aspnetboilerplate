@@ -29,6 +29,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             if (request != null)
             {
                 var routeData = request.GetRouteData();
+                //routeData.Route.
                 if (routeData != null)
                 {
                     string serviceName;

@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Net.Http.Formatting;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Modules;
@@ -8,6 +9,7 @@ using Abp.WebApi.Dependency.Installers;
 using Abp.WebApi.Dependency.Interceptors;
 using Abp.WebApi.Routing;
 using Castle.Core;
+using Newtonsoft.Json.Serialization;
 
 namespace Abp.WebApi.Startup
 {
@@ -28,10 +30,17 @@ namespace Abp.WebApi.Startup
 
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+            var formatter = new JsonMediaTypeFormatter();
+            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+            GlobalConfiguration.Configuration.Formatters.Clear();
+            GlobalConfiguration.Configuration.Formatters.Add(formatter);
+            GlobalConfiguration.Configuration.Formatters.Add(new PlainTextFormatter());
+
+
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(initializationContext.IocContainer));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
 
             initializationContext.IocContainer.Install(new AbpWebApiInstaller());
         }

@@ -68,7 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
+    <Compile Include="Controllers\Dynamic\DynamicScriptGenerator.cs" />
     <Compile Include="Controllers\Dynamic\HttpVerb.cs" />
+    <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
+    <Compile Include="Controllers\Dynamic\ServiceProxyGenerateController.cs" />
     <Compile Include="Startup\AbpWebModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
