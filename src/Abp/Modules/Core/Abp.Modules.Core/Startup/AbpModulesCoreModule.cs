@@ -1,4 +1,5 @@
-﻿using Abp.Modules.Core.Startup.Dependency;
+﻿using Abp.Modules.Core.Services.Dto.Mappings;
+using Abp.Modules.Core.Startup.Dependency;
 
 namespace Abp.Modules.Core.Startup
 {
@@ -9,7 +10,7 @@ namespace Abp.Modules.Core.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new AbpCoreModuleDependencyInstaller());
-            AutoMappingManager.Map();
+            DtoMapper.Map();
         }
     }
 }

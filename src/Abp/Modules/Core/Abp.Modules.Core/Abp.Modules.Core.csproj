@@ -76,7 +76,7 @@
     <Compile Include="Services\Dto\UserDto.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Startup\AbpModulesCoreModule.cs" />
-    <Compile Include="Startup\AutoMappingManager.cs" />
+    <Compile Include="Services\Dto\Mappings\DtoMapper.cs" />
     <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
