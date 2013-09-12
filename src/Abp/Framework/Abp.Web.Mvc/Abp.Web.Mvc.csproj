@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AbpController.cs" />
-    <Compile Include="Controllers\Dyanmic\AbpWebApiJsGenerateController.cs" />
     <Compile Include="Dependency\Installers\AbpWebInstaller.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,10 +98,6 @@
     <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Abp.WebApi\Abp.WebApi.csproj">
-      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
-      <Name>Abp.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
