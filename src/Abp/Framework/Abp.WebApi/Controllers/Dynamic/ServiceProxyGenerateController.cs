@@ -12,7 +12,6 @@ namespace Abp.WebApi.Controllers.Dynamic
     {
         public HttpResponseMessage Get(string name)
         {
-            //TODO: Define a special route for this as '/api/serviceproxies/serviceName' ?
             var controllerInfo = DynamicApiControllerManager.FindServiceController(name.ToPascalCase());
             if (controllerInfo == null)
             {

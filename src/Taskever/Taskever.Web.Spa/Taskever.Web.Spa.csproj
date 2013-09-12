@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\Test.cs" />
     <Compile Include="Startup\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Dependency\Installers\TaskeverWebSpaInstaller.cs" />
@@ -257,7 +258,9 @@
     <Content Include="Scripts\text.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

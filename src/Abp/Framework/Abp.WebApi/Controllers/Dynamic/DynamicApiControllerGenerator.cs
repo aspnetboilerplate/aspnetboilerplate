@@ -28,7 +28,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             var controllerInfo = new DynamicApiControllerInfo(controllerName ?? GetControllerName<T>(), typeof (AbpDynamicApiController<T>), typeof (T));
             DynamicApiControllerManager.RegisterServiceController(controllerInfo);
 
-            //TODO: Return a configurator to be able to configure controller and methods
+            //TODO: Return a configurator to be able to configure controller and methods. User can want to set Http Verb for each method!
         }
 
         /// <summary>
