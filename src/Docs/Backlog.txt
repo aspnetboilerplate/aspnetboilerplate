@@ -4,6 +4,8 @@ Done
   - Repositories
   - Services
   - Unit of work
+  - DTO (Data transfer objects)
+    - DTO auto mappings
 - ORM integration
   - Fluent mapping
 - Database migrations
@@ -13,27 +15,23 @@ Done
   - Log4Net integration and configuration
 
 -------------------------------------------------------------------------------------------------
+Primary TODO:
+- Create WebApi proxy and Javascript proxy for GET, PUT and DELETE operations also.
+- Auto create DTO objects (plain & knockout)
+- Make use of NHibernate auto mapping
+- Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
+- Server side validation
+- Client side validation
+- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
+- Implement best practices for guard clauses?
+- Localization improvement
 
-Fixes:
-- Check if there is a better way to register WebAPI to Castle Windsor.
-- Implement best practices for guard clauses
+-------------------------------------------------------------------------------------------------
+- Specification pattern?
 
-Improvements:
-- Localization
+-------------------------------------------------------------------------------------------------
 
 TODO:
-
-- Automatic Web API (rest) creation
-  - Automatic Web API creation on server side
-  - Automatic service layer creation on the client side (javascript) (creating from service class)
-  - Automatic create all DTO objects in javascript (as knockout objects optionally?)
-
-- Bundle service call infrastructure!
-  - JS prepare requests, run all bundle request, runs all on server and returns bundle response
-
-- Make auto mapping system easier to use and standard to implement!
-- Make use of NHibernate auto mapping
-- Make use of validation!
 
 - Service interceptions
   - Authorization checks
@@ -50,7 +48,6 @@ TODO:
 - Use NHibernate L2? caching
 - Exception handling in Controllers and ApiControllers
 - JS&CSS Minimization and bundle (best practices!)
-
 
 - User management system
 - Role (user templates) management system

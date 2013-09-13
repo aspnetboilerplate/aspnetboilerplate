@@ -13,9 +13,7 @@ define('jquery', function () { return jQuery; });
 define('knockout', ko);
 
 define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function (system, app, viewLocator) {
-    //>>excludeStart("build", true);
-    system.debug(true);
-    //>>excludeEnd("build");
+    system.debug(true); //TODO: remove in production code
 
     app.title = 'Task Ever';
 
