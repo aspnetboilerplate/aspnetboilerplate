@@ -1,5 +1,3 @@
-using Abp.Entities;
-
 namespace Abp.Modules.Core.Entities
 {
     /// <summary>

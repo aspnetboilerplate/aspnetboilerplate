@@ -1,4 +1,5 @@
 using System;
+using Abp.Modules.Core.Entities;
 using Abp.Services.Dto;
 
 namespace Abp.Modules.Core.Services.Dto
@@ -8,6 +9,10 @@ namespace Abp.Modules.Core.Services.Dto
 
     }
 
+    /// <summary>
+    /// This class can be inherited for simple Dto objects those are used for entities those implement <see cref="IAudited"/> interface.
+    /// </summary>
+    /// <typeparam name="TPrimaryKey"></typeparam>
     public abstract class AuditedEntityDto<TPrimaryKey> : EntityDto<TPrimaryKey>
     {
         /// <summary>

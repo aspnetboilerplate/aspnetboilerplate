@@ -18,10 +18,11 @@ Done
 
 -------------------------------------------------------------------------------------------------
 Primary TODO:
-- Create WebApi proxy and Javascript proxy for GET, PUT and DELETE operations also.
++ Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
+
 - Auto create DTO objects (plain & knockout)
-- Make use of NHibernate auto mapping
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
+- Make use of NHibernate auto mapping
 - Server side validation
 - Client side validation
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!

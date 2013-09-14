@@ -1,5 +1,4 @@
 ﻿using Abp.Modules.Core.Services.Dto;
-using Abp.Services.Dto;
 
 namespace Taskever.Services.Dto
 {

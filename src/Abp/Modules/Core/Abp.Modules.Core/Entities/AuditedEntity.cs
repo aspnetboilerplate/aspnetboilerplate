@@ -4,9 +4,17 @@ using Abp.Entities;
 namespace Abp.Modules.Core.Entities
 {
     /// <summary>
+    /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (Int32).
+    /// </summary>
+    public abstract class AuditedEntity : AuditedEntity<int>
+    {
+
+    }
+
+    /// <summary>
     /// This class can be used to simplify implementing IAudited.
     /// </summary>
-    /// <typeparam name="TPrimaryKey"></typeparam>
+    /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     public abstract class AuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, IAudited
     {
         /// <summary>
@@ -36,10 +44,5 @@ namespace Abp.Modules.Core.Entities
         {
             CreationTime = DateTime.Now; //TODO: Set this property in the interceptor or somewhere else since it may break ORM system!
         }
-    }
-
-    public abstract class AuditedEntity : AuditedEntity<int>
-    {
-        
     }
 }
