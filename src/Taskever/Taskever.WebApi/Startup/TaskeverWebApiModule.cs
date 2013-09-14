@@ -1,5 +1,6 @@
 using Abp.Modules;
 using Abp.WebApi.Controllers.Dynamic;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 using Taskever.Services;
 using Taskever.Web.Dependency.Installers;
 
@@ -12,8 +13,15 @@ namespace Taskever.Web.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new TaskeverWebInstaller());
-            
-            DynamicApiControllerGenerator.GenerateFor<ITaskService>();
+            CreateWebApiProxiesForServices();
+        }
+
+        private void CreateWebApiProxiesForServices()
+        {
+            BuildApiController
+                .For<ITaskService>()//.WithControllerName("Tasking")
+                .ForMethod("DeleteTask").WithActionName("DeleteTask").WithVerb(HttpVerb.Get)
+                .Build();
         }
     }
 }

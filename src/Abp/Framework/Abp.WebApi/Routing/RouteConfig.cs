@@ -11,7 +11,7 @@ namespace Abp.WebApi.Routing
             //Dynamic Web APIs
             config.Routes.MapHttpRoute(
                 name: "AbpDynamicWebApi",
-                routeTemplate: "api/services/{serviceName}/{methodName}"
+                routeTemplate: "api/services/{serviceName}/{action}"
                 );
 
             //Dynamic Web API proxies

@@ -9,10 +9,12 @@ Done
 - ORM integration
   - Fluent mapping
 - Database migrations
+- Logging
 - Dependency Injection
-  - Bootstrapping
-  - Web API
-  - Log4Net integration and configuration
+- Web layer
+  - Dynamic service WebApi creation
+- Client
+  - Dynamic service proxy generation
 
 -------------------------------------------------------------------------------------------------
 Primary TODO:

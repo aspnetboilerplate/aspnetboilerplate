@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Modules;
 using Abp.WebApi.Controllers.Dynamic;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 using Abp.WebApi.Dependency;
 using Abp.WebApi.Dependency.Installers;
 using Abp.WebApi.Dependency.Interceptors;
@@ -26,7 +27,7 @@ namespace Abp.WebApi.Startup
         {
             base.Initialize(initializationContext);  
 
-            DynamicApiControllerGenerator.IocContainer = initializationContext.IocContainer;
+            BuildApiController.IocContainer = initializationContext.IocContainer;
 
             RouteConfig.Register(GlobalConfiguration.Configuration);
 

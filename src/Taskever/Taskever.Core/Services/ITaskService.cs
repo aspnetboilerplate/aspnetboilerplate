@@ -11,6 +11,6 @@ namespace Taskever.Services
 
         TaskDto CreateTask(TaskDto task);
          
-        void DeleteTask(EntityDto entity);
+        void DeleteTask(int taskId);
     }
 }

@@ -5,7 +5,7 @@ using System.Web.Http.ModelBinding;
 namespace Abp.WebApi.Controllers.Dynamic
 {
     [Flags]
-    internal enum HttpVerb
+    public enum HttpVerb
     {
         Get,
         Post,

@@ -67,9 +67,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Dynamic\Builders\DynamicApiHelper.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\DynamicApiBuildContext.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\DynamicApiControllerMethodBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
     <Compile Include="Controllers\Dynamic\DynamicScriptGenerator.cs" />
     <Compile Include="Controllers\Dynamic\HttpVerb.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerMethodBuilder.cs" />
     <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
     <Compile Include="Controllers\Dynamic\ServiceProxyGenerateController.cs" />
     <Compile Include="Startup\AbpWebModule.cs" />
@@ -80,7 +86,7 @@
     <Compile Include="Controllers\Dynamic\AbpHttpControllerSelector.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiControllerInfo.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiControllerManager.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiControllerGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\BuildApiController.cs" />
     <Compile Include="Dependency\Installers\AbpWebApiInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Dependency\WindsorCompositionRoot.cs" />

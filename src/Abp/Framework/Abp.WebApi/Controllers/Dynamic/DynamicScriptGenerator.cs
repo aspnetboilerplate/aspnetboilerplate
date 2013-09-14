@@ -16,7 +16,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             script.AppendLine();
 
             //all methods
-            foreach (var methodInfo in controllerInfo.Methods.Values)
+            foreach (var methodInfo in controllerInfo.Actions.Values)
             {
                 AppendMethod(script, controllerInfo, methodInfo);
                 script.AppendLine();
@@ -26,9 +26,9 @@ namespace Abp.WebApi.Controllers.Dynamic
             script.AppendLine("    return {");
 
             var methodNo = 0;
-            foreach (var methodInfo in controllerInfo.Methods.Values)
+            foreach (var methodInfo in controllerInfo.Actions.Values)
             {
-                script.AppendLine("        " + methodInfo.Name.ToCamelCase() + ": " + methodInfo.Name.ToCamelCase() + ((methodNo++) < (controllerInfo.Methods.Count - 1) ? "," : ""));
+                script.AppendLine("        " + methodInfo.ActionName.ToCamelCase() + ": " + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
             }
 
             script.AppendLine("    };");
@@ -40,33 +40,33 @@ namespace Abp.WebApi.Controllers.Dynamic
             return script.ToString();
         }
 
-        private void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiMethodInfo methodInfo)
+        private void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
-            script.AppendLine("    var " + methodInfo.Name.ToCamelCase() + " = function(" + GenerateMethodParams(methodInfo.Method) + ") {");
+            script.AppendLine("    var " + methodInfo.ActionName.ToCamelCase() + " = function(" + GenerateMethodParams(methodInfo.Method) + ") {");
             script.AppendLine("        return abp.ajax({");
-            script.AppendLine("            url: '/api/services/" + controllerInfo.Name.ToCamelCase() + "/" + methodInfo.Name.ToCamelCase() + "',");
+            script.AppendLine("            url: '/api/services/" + controllerInfo.Name.ToCamelCase() + "/" + methodInfo.ActionName.ToCamelCase() + "',");
             script.Append("            type: '" + methodInfo.Verb.ToString().ToUpper() + "'");
 
             var parameters = methodInfo.Method.GetParameters();
             if (parameters.Length > 0)
             {
                 script.AppendLine(",");
-                //if (methodInfo.Verb == HttpVerb.Get || methodInfo.Verb == HttpVerb.Delete)
-                //{
-                //    script.AppendLine("            data: {");
+                if (methodInfo.Verb == HttpVerb.Get || methodInfo.Verb == HttpVerb.Delete)
+                {
+                    script.AppendLine("            data: {");
 
-                //    for (var i = 0; i < parameters.Length; i++)
-                //    {
-                //        var parameterInfo = parameters[i];
-                //        script.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
-                //    }
+                    for (var i = 0; i < parameters.Length; i++)
+                    {
+                        var parameterInfo = parameters[i];
+                        script.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
+                    }
 
-                //    script.AppendLine("            }");
-                //}
-                //else if (methodInfo.Verb == HttpVerb.Post || methodInfo.Verb == HttpVerb.Put)
-                //{
+                    script.AppendLine("            }");
+                }
+                else if (methodInfo.Verb == HttpVerb.Post || methodInfo.Verb == HttpVerb.Put)
+                {
                     script.AppendLine("            data: JSON.stringify(" + parameters[0].Name.ToCamelCase() + ")");
-                //}
+                }
             }
             else
             {

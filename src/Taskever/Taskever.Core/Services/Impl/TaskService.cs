@@ -36,9 +36,9 @@ namespace Taskever.Services.Impl
             return taskEntity.MapTo<TaskDto>();
         }
 
-        public virtual void DeleteTask(EntityDto entity)
+        public virtual void DeleteTask(int taskId)
         {
-            _taskRepository.Delete(entity.Id);
+            _taskRepository.Delete(taskId);
         }
     }
 }

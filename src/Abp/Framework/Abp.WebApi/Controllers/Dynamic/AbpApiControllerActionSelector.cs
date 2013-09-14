@@ -16,20 +16,33 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <returns>Action to be used</returns>
         public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
-            //TODO: If method is not supplied, try to guess the method by Http Verb and parameters!
+            //TODO: If method is not supplied, try to guess the method by Http Verb and parameters ?
 
             object controllerInfoObj;
             if (controllerContext.ControllerDescriptor.Properties.TryGetValue("AbpDynamicApiControllerInfo", out  controllerInfoObj))
             {
-                var controllerInfo = (DynamicApiControllerInfo)controllerInfoObj;
-                var methodName = ((string)controllerContext.RouteData.Values["methodName"]).ToPascalCase();
-
-                if (!controllerInfo.Methods.ContainsKey(methodName))
+                //Get controller information which is selected by AbpHttpControllerSelector.
+                var controllerInfo = controllerInfoObj as DynamicApiControllerInfo;
+                if (controllerInfo == null)
                 {
-                    throw new AbpException("There is no action " + methodName + " defined for api controller " + controllerInfo.Name);
+                    throw new AbpException("AbpDynamicApiControllerInfo in ControllerDescriptor.Properties is not a " + typeof(DynamicApiControllerInfo).FullName + " class.");
                 }
 
-                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Methods[methodName].Method);
+                //Get action name
+                var actionName = (controllerContext.RouteData.Values["action"] as string);
+                if (string.IsNullOrWhiteSpace(actionName))
+                {
+                    throw new AbpException("There is no action specified.");
+                }
+
+                //Get action information
+                actionName = (controllerContext.RouteData.Values["action"] as string).ToPascalCase();
+                if (!controllerInfo.Actions.ContainsKey(actionName))
+                {
+                    throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.Name);
+                }
+                
+                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
             }
 
             return base.SelectAction(controllerContext);

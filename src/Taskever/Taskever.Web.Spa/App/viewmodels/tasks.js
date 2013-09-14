@@ -22,7 +22,7 @@
         
         deleteTask: function (item) {
             console.log(item);
-            taskService.deleteTask({ id: item.id() })
+            taskService.deleteTask(item.id())
                 .then(function() {
                     tasks.remove(item);
                 });
