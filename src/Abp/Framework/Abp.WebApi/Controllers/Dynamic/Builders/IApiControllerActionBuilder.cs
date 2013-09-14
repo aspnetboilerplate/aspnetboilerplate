@@ -30,6 +30,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Tells builder to not create action for this method.
         /// </summary>
+        /// <returns>Controller builder</returns>
         IApiControllerBuilder<T> DontCreateAction();
 
         /// <summary>

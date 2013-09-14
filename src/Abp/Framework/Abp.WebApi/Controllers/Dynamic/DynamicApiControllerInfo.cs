@@ -11,7 +11,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Controller type.
@@ -31,10 +31,12 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
+        /// <param name="name">Name of the controller</param>
         /// <param name="type">Controller type</param>
         /// <param name="proxiedType">Proxied type</param>
-        public DynamicApiControllerInfo(Type type, Type proxiedType)
+        public DynamicApiControllerInfo(string name, Type type, Type proxiedType)
         {
+            Name = name;
             Type = type;
             ProxiedType = proxiedType;
             Actions = new Dictionary<string, DynamicApiActionInfo>();

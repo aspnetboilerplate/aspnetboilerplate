@@ -47,7 +47,12 @@
                 return HttpVerb.Delete;
             }
 
-            return HttpVerb.Post;
+            return GetDefaultHttpVerb();
+        }
+
+        public static HttpVerb GetDefaultHttpVerb()
+        {
+            return HttpVerb.Get;
         }
     }
 }

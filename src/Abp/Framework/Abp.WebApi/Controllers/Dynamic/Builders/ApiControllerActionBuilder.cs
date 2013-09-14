@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
@@ -12,9 +14,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private readonly ApiControllerBuilder<T> _controllerBuilder;
 
         /// <summary>
-        /// The action which is being defined.
+        /// Underlying proxying method.
         /// </summary>
-        public DynamicApiActionInfo ActionInfo { get; private set; }
+        private readonly MethodInfo _methodInfo;
+
+        /// <summary>
+        /// Selected Http verd.
+        /// </summary>
+        private HttpVerb? _verb;
+
+        /// <summary>
+        /// Selected action name
+        /// </summary>
+        private string _actionName;
 
         /// <summary>
         /// A flag to set if no action will be created for this method.
@@ -25,15 +37,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
         /// </summary>
         /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
-        /// <param name="methodName">Name of the method which is being defined</param>
-        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, string methodName)
+        /// <param name="methodInfo"> </param>
+        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
         {
             _controllerBuilder = apiControllerBuilder;
-            ActionInfo = new DynamicApiActionInfo(methodName, typeof(T).GetMethod(methodName));
-            if(_controllerBuilder.UsingConventions)
-            {
-                ActionInfo.Verb = DynamicApiHelper.GetConventionalVerbForMethodName(methodName); //TODO: Remove dublicate code!
-            }
+            _methodInfo = methodInfo;
         }
 
         /// <summary>
@@ -43,7 +51,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> WithVerb(HttpVerb verb)
         {
-            ActionInfo.Verb = verb;
+            _verb = verb;
             return this;
         }
 
@@ -54,7 +62,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public IApiControllerActionBuilder<T> WithActionName(string name)
         {
-            ActionInfo.ActionName = name;
+            _actionName = name;
             return this;
         }
 
@@ -67,7 +75,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             return _controllerBuilder.ForMethod(methodName);
         }
-
+        
+        /// <summary>
+        /// Tells builder to not create action for this method.
+        /// </summary>
+        /// <returns>Controller builder</returns>
         public IApiControllerBuilder<T> DontCreateAction()
         {
             DontCreate = true;
@@ -81,6 +93,27 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public void Build()
         {
             _controllerBuilder.Build();
+        }
+
+        /// <summary>
+        /// Builds <see cref="DynamicApiActionInfo"/> object for this configuration.
+        /// </summary>
+        /// <returns></returns>
+        public DynamicApiActionInfo BuildActionInfo()
+        {
+            if (string.IsNullOrWhiteSpace(_actionName))
+            {
+                _actionName = _methodInfo.Name;
+            }
+
+            if (_verb == null)
+            {
+                _verb = _controllerBuilder.UsingConventions
+                            ? DynamicApiHelper.GetConventionalVerbForMethodName(_actionName)
+                            : DynamicApiHelper.GetDefaultHttpVerb();
+            }
+
+            return new DynamicApiActionInfo(_actionName, _verb.Value, _methodInfo);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Abp.WebApi.Startup
         {
             base.Initialize(initializationContext);  
 
-            BuildApiController.IocContainer = initializationContext.IocContainer;
+            ApiControllerBuilder.IocContainer = initializationContext.IocContainer;
 
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
@@ -37,8 +37,7 @@ namespace Abp.WebApi.Startup
             GlobalConfiguration.Configuration.Formatters.Clear();
             GlobalConfiguration.Configuration.Formatters.Add(formatter);
             GlobalConfiguration.Configuration.Formatters.Add(new PlainTextFormatter());
-
-
+            
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(initializationContext.IocContainer));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
