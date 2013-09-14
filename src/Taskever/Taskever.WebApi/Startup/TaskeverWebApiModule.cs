@@ -1,5 +1,4 @@
 using Abp.Modules;
-using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Taskever.Services;
 using Taskever.Web.Dependency.Installers;
@@ -19,8 +18,7 @@ namespace Taskever.Web.Startup
         private void CreateWebApiProxiesForServices()
         {
             BuildApiController
-                .For<ITaskService>()//.WithControllerName("Tasking")
-                .ForMethod("DeleteTask").WithActionName("DeleteTask").WithVerb(HttpVerb.Get)
+                .For<ITaskService>().UseConventions() //TODO: must UseConventions be more general insted of controller builder?
                 .Build();
         }
     }

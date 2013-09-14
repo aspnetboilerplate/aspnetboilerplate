@@ -28,6 +28,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IApiControllerActionBuilder<T> ForMethod(string methodName);
 
         /// <summary>
+        /// Tells builder to not create action for this method.
+        /// </summary>
+        IApiControllerBuilder<T> DontCreateAction();
+
+        /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>

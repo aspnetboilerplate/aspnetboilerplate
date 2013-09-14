@@ -68,14 +68,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiHelper.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\DynamicApiBuildContext.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\DynamicApiControllerMethodBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicScriptGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\HttpVerb.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\ActionScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\ControllerScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\HttpDeleteActionScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\HttpGetActionScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\HttpPostActionScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\HttpPutActionScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\HttpVerbExtensions.cs" />
+    <Compile Include="Controllers\HttpVerb.cs" />
     <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerMethodBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
     <Compile Include="Controllers\Dynamic\ServiceProxyGenerateController.cs" />
     <Compile Include="Startup\AbpWebModule.cs" />

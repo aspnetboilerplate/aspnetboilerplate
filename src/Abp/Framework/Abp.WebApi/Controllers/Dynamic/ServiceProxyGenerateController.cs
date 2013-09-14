@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
 using Abp.Utils.Extensions;
+using Abp.WebApi.Controllers.Dynamic.Scripting;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -19,7 +20,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             }
 
             //TODO: Caching script generation!
-            var script = new DynamicScriptGenerator().GenerateFor(controllerInfo);
+            var script = new ControllerScriptProxyGenerator().GenerateFor(controllerInfo);
             
             HttpResponseMessage response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");

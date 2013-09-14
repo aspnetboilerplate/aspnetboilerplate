@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -8,22 +9,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// <typeparam name="T">The of the proxied object</typeparam>
     internal class ApiControllerBuilder<T> : IApiControllerBuilder<T>
     {
-        /// <summary>
-        /// Build context.
-        /// </summary>
-        private readonly DynamicApiBuildContext _context;
 
         /// <summary>
         /// Building controller info object.
         /// </summary>
         private readonly DynamicApiControllerInfo _controllerInfo;
 
+        private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
+
+        public bool UsingConventions { get; private set; }
+
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
         public ApiControllerBuilder()
         {
-            _context = new DynamicApiBuildContext();
+            _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
             _controllerInfo = new DynamicApiControllerInfo(typeof(AbpDynamicApiController<T>), typeof(T));
         }
 
@@ -34,7 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
-            return new ApiControllerActionBuilder<T>(this, _context, methodName);
+            return _actionBuilders[methodName] = new ApiControllerActionBuilder<T>(this, methodName);
         }
 
         /// <summary>
@@ -61,19 +62,40 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (_context.CustomizedMethods.ContainsKey(method.Name))
+                DynamicApiActionInfo actionInfo;
+                if (_actionBuilders.ContainsKey(method.Name))
                 {
-                    var actionName = _context.CustomizedMethods[method.Name].ActionName;
-                    _controllerInfo.Actions[actionName] = _context.CustomizedMethods[method.Name];
+                    var actionBuilder = _actionBuilders[method.Name];
+                    if(actionBuilder.DontCreate)
+                    {
+                        continue;
+                    }
+
+                    actionInfo = actionBuilder.ActionInfo;
                 }
                 else
                 {
-                    var apiMethodInfo = new DynamicApiActionInfo(method.Name, method);
-                    _controllerInfo.Actions[method.Name] = apiMethodInfo;
+                    actionInfo = new DynamicApiActionInfo(method.Name, method);
+                    if (UsingConventions)
+                    {
+                        actionInfo.Verb = DynamicApiHelper.GetConventionalVerbForMethodName(method.Name);
+                    }
                 }
+
+                _controllerInfo.Actions[actionInfo.ActionName] = actionInfo;
             }
 
             DynamicApiControllerManager.RegisterServiceController(_controllerInfo);
+        }
+
+        /// <summary>
+        /// Used to tell builder to use conventions for api.
+        /// </summary>
+        /// <returns>Controller builder</returns>
+        public IApiControllerBuilder<T> UseConventions()
+        {
+            UsingConventions = true;
+            return this;
         }
     }
 }

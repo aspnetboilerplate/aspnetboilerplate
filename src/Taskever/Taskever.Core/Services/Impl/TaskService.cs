@@ -27,12 +27,24 @@ namespace Taskever.Services.Impl
         {
             var taskEntity = task.MapTo<Task>();
 
-            //TODO: Automatically set Tenant and Creator User informations, bu where?
+            //TODO: Automatically set Tenant and Creator User informations!?
             taskEntity.Tenant = Tenant.Current;
             taskEntity.CreatorUser = User.Current;
 
             _taskRepository.Insert(taskEntity);
 
+            return taskEntity.MapTo<TaskDto>();
+        }
+
+        public TaskDto UpdateTask(TaskDto task)
+        {
+            var taskEntity = task.MapTo<Task>();
+
+            //TODO: Automatically set Tenant and Creator User informations!?
+            taskEntity.Tenant = Tenant.Current;
+            taskEntity.LastModifierUser = User.Current;
+
+            _taskRepository.Update(taskEntity);
             return taskEntity.MapTo<TaskDto>();
         }
 

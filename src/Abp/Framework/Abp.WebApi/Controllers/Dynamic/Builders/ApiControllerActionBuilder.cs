@@ -14,20 +14,26 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// The action which is being defined.
         /// </summary>
-        private readonly DynamicApiActionInfo _methodInfo;
+        public DynamicApiActionInfo ActionInfo { get; private set; }
+
+        /// <summary>
+        /// A flag to set if no action will be created for this method.
+        /// </summary>
+        public bool DontCreate { get; private set; }
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
         /// </summary>
         /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
-        /// <param name="context">Reference to the current context</param>
         /// <param name="methodName">Name of the method which is being defined</param>
-        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, DynamicApiBuildContext context, string methodName)
+        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, string methodName)
         {
             _controllerBuilder = apiControllerBuilder;
-
-            _methodInfo = new DynamicApiActionInfo(methodName, typeof(T).GetMethod(methodName));
-            context.CustomizedMethods[methodName] = _methodInfo;
+            ActionInfo = new DynamicApiActionInfo(methodName, typeof(T).GetMethod(methodName));
+            if(_controllerBuilder.UsingConventions)
+            {
+                ActionInfo.Verb = DynamicApiHelper.GetConventionalVerbForMethodName(methodName); //TODO: Remove dublicate code!
+            }
         }
 
         /// <summary>
@@ -37,7 +43,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> WithVerb(HttpVerb verb)
         {
-            _methodInfo.Verb = verb;
+            ActionInfo.Verb = verb;
             return this;
         }
 
@@ -48,7 +54,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public IApiControllerActionBuilder<T> WithActionName(string name)
         {
-            _methodInfo.ActionName = name;
+            ActionInfo.ActionName = name;
             return this;
         }
 
@@ -60,6 +66,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
             return _controllerBuilder.ForMethod(methodName);
+        }
+
+        public IApiControllerBuilder<T> DontCreateAction()
+        {
+            DontCreate = true;
+            return _controllerBuilder;
         }
 
         /// <summary>

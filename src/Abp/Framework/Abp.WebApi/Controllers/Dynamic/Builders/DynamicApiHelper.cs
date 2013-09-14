@@ -3,7 +3,7 @@
     /// <summary>
     /// A helper class for dynamic api controllers.
     /// </summary>
-    internal class DynamicApiHelper
+    internal static class DynamicApiHelper
     {
         /// <summary>
         /// Gets conventional controller name for given type.
@@ -28,6 +28,26 @@
             }
 
             return name;
+        }
+
+        public static HttpVerb GetConventionalVerbForMethodName(string methodName)
+        {
+            if (methodName.StartsWith("Get"))
+            {
+                return HttpVerb.Get;
+            }
+
+            if (methodName.StartsWith("Update") || methodName.StartsWith("Put"))
+            {
+                return HttpVerb.Put;
+            }
+
+            if (methodName.StartsWith("Delete") || methodName.StartsWith("Remove"))
+            {
+                return HttpVerb.Delete;
+            }
+
+            return HttpVerb.Post;
         }
     }
 }

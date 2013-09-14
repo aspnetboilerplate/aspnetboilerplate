@@ -25,5 +25,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// This method must be called at last of the build operation.
         /// </summary>
         void Build();
+
+        /// <summary>
+        /// Used to tell builder to use conventions for api.
+        /// </summary>
+        /// <returns>Controller builder</returns>
+        IApiControllerBuilder<T> UseConventions();
     }
 }
