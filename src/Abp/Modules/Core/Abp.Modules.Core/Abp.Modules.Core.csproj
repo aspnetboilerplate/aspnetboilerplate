@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\AuthorizeAttribute.cs" />
     <Compile Include="Data\Repositories\ITenantRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Entities\AuditedEntity.cs" />

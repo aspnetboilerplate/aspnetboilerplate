@@ -49,6 +49,9 @@ Modules.Core
   - Mvc actions
     - Authorization upon features
 
+------------------------------------
+Request -> Set User.Current (from authentication) -> Set Tenant.Current (from session) -> Set Edition.Current (of tenant) -> Authorization (feature based) -> Execute request -> Handle exceptions -> Response
+
 -------------------------------------------------------------------------------------------------
 - Specification pattern?
 

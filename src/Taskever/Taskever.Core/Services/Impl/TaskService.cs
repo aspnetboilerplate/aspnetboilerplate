@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Authorization;
 using Abp.Data.Repositories;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Impl;
@@ -18,6 +19,7 @@ namespace Taskever.Services.Impl
             _taskRepository = taskRepository;
         }
 
+        [AbpAuthorize(Features = "GetOwnTasks")]
         public virtual IList<TaskDto> GetMyTasks()
         {
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();

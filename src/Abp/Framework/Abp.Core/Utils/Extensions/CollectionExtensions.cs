@@ -5,7 +5,7 @@ namespace Abp.Utils.Extensions
     /// <summary>
     /// Extension methods for Collections.
     /// </summary>
-    internal static class CollectionExtensions
+    public static class CollectionExtensions
     {
         /// <summary>
         /// Checks whatever given collection object is null or has no item.

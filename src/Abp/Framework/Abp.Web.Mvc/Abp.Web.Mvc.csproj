@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\AbpMvcAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\Installers\AbpWebInstaller.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />

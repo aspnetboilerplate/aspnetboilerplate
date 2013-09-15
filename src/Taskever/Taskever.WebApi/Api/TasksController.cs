@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Modules.Core.Services;
+﻿using System.Collections.Generic;
+using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers;
 using Taskever.Services;
 using Taskever.Services.Dto;
@@ -19,6 +15,7 @@ namespace Taskever.Web.Api
             _taskService = taskService;
         }
 
+        [AbpWebApiAuthorize]
         public IEnumerable<TaskDto> GetTasks()
         {
             return _taskService.GetMyTasks();
