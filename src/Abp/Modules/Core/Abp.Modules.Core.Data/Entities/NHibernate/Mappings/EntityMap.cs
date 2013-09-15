@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Entities;
+using Abp.Modules.Core.Entities.Utils;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
@@ -37,6 +38,11 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 
             Table(tableName);
             Id(x => x.Id);
+
+            if (typeof(IHasTenant).IsAssignableFrom(typeof(TEntity)))
+            {
+                this.MapTenantColumn();
+            }
 
             if (typeof(ICreationAudited).IsAssignableFrom(typeof(TEntity)))
             {

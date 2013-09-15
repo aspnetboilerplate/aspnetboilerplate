@@ -7,7 +7,7 @@ namespace Taskever.Web.Controllers
     [AbpMvcAuthorize]
     public class HomeController : AbpController
     {
-        [AbpMvcAuthorize(Features = "TestFeature")]
+        //[AbpMvcAuthorize(Features = "TestFeature")]
         public ActionResult Index()
         {
             var user = System.Web.HttpContext.Current.User;

@@ -1,3 +1,4 @@
+using Abp.Modules.Core.Entities.Utils;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
@@ -24,7 +25,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public static void MapCreationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
         {
             mapping.Map(x => (x as ICreationAudited).CreationTime);
-            mapping.References(x => (x as ICreationAudited).CreatorUser).Column("CreatorUserId").LazyLoad(Laziness.Proxy);
+            mapping.References(x => (x as ICreationAudited).CreatorUser).Column("CreatorUserId").LazyLoad();
         }
 
         /// <summary>
@@ -34,7 +35,16 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public static void MapModificationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
         {
             mapping.Map(x => (x as IModificationAudited).LastModificationTime);
-            mapping.References(x => (x as IModificationAudited).LastModifierUser).Column("LastModifierUserId");
+            mapping.References(x => (x as IModificationAudited).LastModifierUser).Column("LastModifierUserId").LazyLoad();
+        }
+
+        /// <summary>
+        /// Maps Tenant column. See <see cref="IHasTenant"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapTenantColumn<TEntity>(this ClassMap<TEntity> mapping)
+        {
+            mapping.References(x => (x as IHasTenant).Tenant).Column("TenantId").LazyLoad();
         }
     }
 }

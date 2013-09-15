@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Modules.Core.Entities.Utils;
 
 namespace Abp.Modules.Core.Entities
 {
@@ -19,6 +20,9 @@ namespace Abp.Modules.Core.Entities
 
         #region Static properties
 
+        /// <summary>
+        /// Reference to the current Tenant account of current user.
+        /// </summary>
         [ThreadStatic]
         private static Tenant _current;
         public static Tenant Current

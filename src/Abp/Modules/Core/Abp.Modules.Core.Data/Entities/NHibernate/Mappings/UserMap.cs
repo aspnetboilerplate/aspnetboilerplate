@@ -1,4 +1,6 @@
-﻿namespace Abp.Modules.Core.Entities.NHibernate.Mappings
+﻿using FluentNHibernate.Mapping;
+
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     public class UserMap : EntityMap<User>
     {
@@ -9,7 +11,8 @@
             Map(x => x.Surname);
             Map(x => x.EmailAddress);
             Map(x => x.Password);
-            HasMany(x => x.Tenancies).Inverse().Cascade.All();
+            HasMany(x => x.Tenancies).Inverse().Cascade.All().LazyLoad();
+            HasMany(x => x.TenantMemberships).Inverse().Cascade.All().LazyLoad();
         }
     }
 }

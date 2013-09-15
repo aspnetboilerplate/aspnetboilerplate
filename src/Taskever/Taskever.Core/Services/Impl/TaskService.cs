@@ -19,7 +19,7 @@ namespace Taskever.Services.Impl
             _taskRepository = taskRepository;
         }
 
-        [AbpAuthorize(Features = "GetOwnTasks")]
+        //[AbpCoreAuthorize(Features = "GetOwnTasks")]
         public virtual IList<TaskDto> GetMyTasks()
         {
             return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();

@@ -4,11 +4,11 @@ using Abp.Utils.Extensions;
 
 namespace Abp.Authorization
 {
-    public class AbpAuthorizeAttribute : Attribute
+    public class AbpCoreAuthorizeAttribute : Attribute
     {
         public string[] Features { get; set; }
 
-        public AbpAuthorizeAttribute()
+        public AbpCoreAuthorizeAttribute()
         {
             Features = new string[0];
         }

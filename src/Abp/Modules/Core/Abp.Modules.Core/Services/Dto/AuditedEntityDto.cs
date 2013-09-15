@@ -1,5 +1,6 @@
 using System;
 using Abp.Modules.Core.Entities;
+using Abp.Modules.Core.Entities.Utils;
 using Abp.Services.Dto;
 
 namespace Abp.Modules.Core.Services.Dto

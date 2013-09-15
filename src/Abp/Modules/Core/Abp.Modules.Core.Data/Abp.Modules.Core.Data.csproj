@@ -65,11 +65,17 @@
   <ItemGroup>
     <Compile Include="Data\Migrations\V20130824\_01_CreateAbpUsersTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_02_CreateAbpTenantsTable.cs" />
+    <Compile Include="Data\Migrations\V20130915\_01_CreateRolesTable.cs" />
+    <Compile Include="Data\Migrations\V20130915\_02_CreateTenantUsersTable.cs" />
+    <Compile Include="Data\Migrations\V20130915\_03_CreateUserRolesTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhTenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserRepository.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\RoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\TenantMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\TenantUserMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />

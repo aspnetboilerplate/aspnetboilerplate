@@ -30,10 +30,18 @@ namespace Abp.Modules.Core.Entities
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// List of all tenant accounts of this user.
+        /// List of all owned tenant accounts of this user.
         /// </summary>
         public virtual IList<Tenant> Tenancies { get; set; }
 
+        /// <summary>
+        /// List of all tenant memberships of this user.
+        /// </summary>
+        public virtual IList<TenantUser> TenantMemberships { get; set; }
+
+        /// <summary>
+        /// Reference to the current User account.
+        /// </summary>
         [ThreadStatic]
         private static User _current;
         public static User Current

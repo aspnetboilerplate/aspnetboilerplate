@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Modules.Core.Entities
+namespace Abp.Modules.Core.Entities.Utils
 {
     /// <summary>
     /// This interface is implemented by entities which's creation informations (who and when created) must be stored.

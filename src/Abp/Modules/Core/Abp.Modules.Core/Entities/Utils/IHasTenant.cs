@@ -1,4 +1,4 @@
-namespace Abp.Modules.Core.Entities
+namespace Abp.Modules.Core.Entities.Utils
 {
     /// <summary>
     /// Implemented by entities those has a tenant.

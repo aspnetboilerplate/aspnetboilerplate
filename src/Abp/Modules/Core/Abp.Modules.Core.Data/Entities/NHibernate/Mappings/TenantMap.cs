@@ -6,7 +6,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             : base("AbpTenants")
         {
             Map(x => x.CompanyName);
-            References(x => x.Owner).Column("OwnerUserId");
+            References(x => x.Owner).Column("OwnerUserId").LazyLoad(); //TODO: Create a IHasOwner interface?
         }
     }
 }
