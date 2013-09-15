@@ -19,6 +19,7 @@ Done
 -------------------------------------------------------------------------------------------------
 Primary TODO:
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
+  - Will be tested with different count and type of parameters.
 
 - Auto create DTO objects (plain & knockout)
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
@@ -28,6 +29,25 @@ Primary TODO:
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Implement best practices for guard clauses?
 - Localization improvement
+
+-------------------------------------------------------------------------------------------------
+Modules.Core
+- Tenant
+  - Edition: Premium edition, Standart edition... so on.
+- Edition
+- Feature system
+  - Dependent features
+  - Child features
+  - Pages, general features
+- Client side
+  - Show application according to tenant edition (Get features for current tenant edition/application-role/user-authorization-template (dynamic roles)/user)
+    - Menu customization
+	- In-page customization
+- Server side
+  - Web api actions
+    - Authorization upon features
+  - Mvc actions
+    - Authorization upon features
 
 -------------------------------------------------------------------------------------------------
 - Specification pattern?

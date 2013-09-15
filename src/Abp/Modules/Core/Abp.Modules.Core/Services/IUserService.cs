@@ -9,10 +9,8 @@ namespace Abp.Modules.Core.Services
     /// </summary>
     public interface IUserService : IService
     {
-        /// <summary>
-        /// NOTE: this is for test purpose!
-        /// </summary>
-        /// <returns></returns>
         IList<UserDto> GetAllUsers();
+
+        UserDto GetUserOrNull(string emailAddress, string password);
     }
 }

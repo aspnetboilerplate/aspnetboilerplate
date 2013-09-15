@@ -14,6 +14,11 @@ namespace Abp.Modules.Core.Services.Impl
 
         public static T MapTo<T>(this object obj)
         {
+            if (obj == null)
+            {
+                return default(T);
+            }
+
             return AutoMapper.Mapper.Map<T>(obj);
         }
     }

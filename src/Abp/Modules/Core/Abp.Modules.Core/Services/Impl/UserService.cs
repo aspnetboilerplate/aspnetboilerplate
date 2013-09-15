@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Exceptions;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Dto;
@@ -18,13 +19,15 @@ namespace Abp.Modules.Core.Services.Impl
             _userRepository = questionRepository;
         }
 
-        /// <summary>
-        /// NOTE: this is for test purpose!
-        /// </summary>
-        /// <returns>List of all users</returns>
         public IList<UserDto> GetAllUsers()
         {
             return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();
+        }
+
+        public UserDto GetUserOrNull(string emailAddress, string password)
+        {
+            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password));
+            return userEntity.MapTo<UserDto>();
         }
     }
 }

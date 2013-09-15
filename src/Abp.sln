@@ -57,6 +57,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{CFEC2229-4
 		Taskever\Docs\TODO.txt = Taskever\Docs\TODO.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Modules.Core.Web.Mvc", "Abp\Modules\Core\Abp.Modules.Core.Web.Mvc\Abp.Modules.Core.Web.Mvc.csproj", "{5C377732-2DBC-43C2-B9E5-009BD460FCE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{0C8B3E9F-3BA5-4F0C-A6F2-9436EC8314B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C8B3E9F-3BA5-4F0C-A6F2-9436EC8314B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C8B3E9F-3BA5-4F0C-A6F2-9436EC8314B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C377732-2DBC-43C2-B9E5-009BD460FCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C377732-2DBC-43C2-B9E5-009BD460FCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C377732-2DBC-43C2-B9E5-009BD460FCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C377732-2DBC-43C2-B9E5-009BD460FCE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,5 +138,6 @@ Global
 		{B333D942-7600-4191-80E3-923A6144DF4F} = {CAB3BBE0-3BCD-4581-A2F0-C175CCBAC45F}
 		{CE9FEA93-BE42-442B-A7FF-A53922099F64} = {CAB3BBE0-3BCD-4581-A2F0-C175CCBAC45F}
 		{2A1CA060-4E83-440D-8CE3-0436748F33BB} = {CAB3BBE0-3BCD-4581-A2F0-C175CCBAC45F}
+		{5C377732-2DBC-43C2-B9E5-009BD460FCE9} = {CAB3BBE0-3BCD-4581-A2F0-C175CCBAC45F}
 	EndGlobalSection
 EndGlobal

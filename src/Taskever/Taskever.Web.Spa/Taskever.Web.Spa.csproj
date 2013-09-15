@@ -156,6 +156,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Test.cs" />
+    <Compile Include="Areas\Abp\AbpAreaRegistration.cs" />
+    <Compile Include="Areas\Abp\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Abp\Models\LoginModel.cs" />
     <Compile Include="Startup\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Dependency\Installers\TaskeverWebSpaInstaller.cs" />
@@ -177,11 +180,15 @@
     <Content Include="App\models\dtos.js" />
     <Content Include="App\remoteServices\taskService.js" />
     <Content Include="Abp\abp.js" />
+    <Content Include="App\viewmodels\home.js" />
     <Content Include="App\viewmodels\createTaskDialog.js" />
+    <Content Include="App\viewmodels\friendlist.js" />
     <Content Include="App\viewmodels\secondpage.js" />
     <Content Include="App\viewmodels\tasks.js" />
     <Content Include="App\viewmodels\shell.js" />
+    <Content Include="App\views\home.html" />
     <Content Include="App\views\createTaskDialog.html" />
+    <Content Include="App\views\friendlist.html" />
     <Content Include="App\views\secondpage.html" />
     <Content Include="App\views\tasks.html" />
     <Content Include="App\views\shell.html" />
@@ -214,6 +221,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\app\main.less" />
     <Content Include="Content\toastr.less" />
+    <Content Include="Areas\Abp\Views\Web.config" />
+    <Content Include="Areas\Abp\Views\Account\Login.cshtml" />
     <None Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\durandal\activator.js" />
@@ -271,6 +280,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Abp\Views\Shared\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +311,10 @@
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
       <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
       <Name>Abp.Modules.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Web.Mvc\Abp.Modules.Core.Web.Mvc.csproj">
+      <Project>{5c377732-2dbc-43c2-b9e5-009bd460fce9}</Project>
+      <Name>Abp.Modules.Core.Web.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.WebApi\Abp.Modules.Core.WebApi.csproj">
       <Project>{2a1ca060-4e83-440d-8ce3-0436748f33bb}</Project>

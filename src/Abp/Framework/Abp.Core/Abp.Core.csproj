@@ -62,6 +62,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
+    <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Modules\AbpInitializationContext.cs" />

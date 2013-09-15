@@ -17,7 +17,11 @@
             </div>
         </div>
     </div>
-    <div data-bind="router: { /*transition: 'entrance', cacheViews: true*/ }" class="container"></div>
+    <div class="container">
+        <div data-bind="compose: 'viewmodels/tasks'"></div>
+        <div data-bind="router: { /*transition: 'entrance', cacheViews: true*/ }"></div>
+        <div data-bind="compose: 'viewmodels/friendlist'"></div>
+    </div>
 </div>
 <div id="footer">
     <div class="container">

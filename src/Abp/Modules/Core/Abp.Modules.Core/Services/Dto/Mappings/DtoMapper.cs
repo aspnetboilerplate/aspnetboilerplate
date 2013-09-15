@@ -6,7 +6,7 @@ namespace Abp.Modules.Core.Services.Dto.Mappings
     {
         public static void Map()
         {
-            AutoMapper.Mapper.CreateMap<User, UserDto>(); //TODO: Move to Abp.Modules.Core!
+            AutoMapper.Mapper.CreateMap<User, UserDto>();
         }
     }
 }

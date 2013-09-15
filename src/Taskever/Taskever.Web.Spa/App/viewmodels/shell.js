@@ -3,7 +3,7 @@
         router: router,
         activate: function () {
             router.map([
-                { route: '', title: 'First page', moduleId: 'viewmodels/tasks', nav: true },
+                { route: '', title: 'First page', moduleId: 'viewmodels/home', nav: true },
                 { route: 'secondpage', title: 'second page', moduleId: 'viewmodels/secondpage', nav: true }
             ]).buildNavigationModel();
 
