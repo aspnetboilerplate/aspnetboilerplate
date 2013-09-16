@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Application\Edition.cs" />
     <Compile Include="Application\Feature.cs" />
+    <Compile Include="Application\NullEdition.cs" />
     <Compile Include="Authorization\AuthorizeAttribute.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />

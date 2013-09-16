@@ -27,5 +27,11 @@ namespace Abp.Modules.Core.Entities
         /// Static roles can be used programmatically.
         /// </summary>
         public virtual bool IsStatic { get; set; }
+
+        /// <summary>
+        /// Is this role frozen (can not edit it's features).
+        /// Only static (see <see cref="IsStatic"/>) roles can be frozen!
+        /// </summary>
+        public virtual bool IsFrozen { get; set; }
     }
 }

@@ -16,7 +16,15 @@ Pages
 
 Entities
 ------------------------
-Task (private, protected, public)
+Task
+- Protection: private (only me and creator), protected (only me, creator and my friends), public (everybody)
+- Title
+- Description
+- Priority
+
+- Deadline?
+- EstimatedTime?
+- WorkTime?
 
 In the future
 ------------------------

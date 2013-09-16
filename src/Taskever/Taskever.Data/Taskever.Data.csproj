@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Migrations\V20130916\_01_CreateTeTasksTable.cs" />
     <Compile Include="Data\Migrations\V20130901\_01_CreateTeTasksTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Entities\NHibernate\Mappings\TaskMap.cs" />

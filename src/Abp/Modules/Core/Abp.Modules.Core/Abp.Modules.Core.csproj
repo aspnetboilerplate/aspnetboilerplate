@@ -61,6 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\AuthorizeAttribute.cs" />
+    <Compile Include="Authorization\Roles\ApplicationOwner.cs" />
+    <Compile Include="Authorization\Roles\ApplicationUser.cs" />
+    <Compile Include="Authorization\Roles\BasicRoles.cs" />
+    <Compile Include="Authorization\Roles\ApplicationRole.cs" />
+    <Compile Include="Authorization\Roles\StaticRole.cs" />
     <Compile Include="Data\Repositories\ITenantRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Entities\TenantMembershipStatus.cs" />

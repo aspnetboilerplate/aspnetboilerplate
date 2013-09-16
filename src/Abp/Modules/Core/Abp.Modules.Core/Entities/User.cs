@@ -38,16 +38,5 @@ namespace Abp.Modules.Core.Entities
         /// List of all tenant memberships of this user.
         /// </summary>
         public virtual IList<TenantUser> TenantMemberships { get; set; }
-
-        /// <summary>
-        /// Reference to the current User account.
-        /// </summary>
-        [ThreadStatic]
-        private static User _current;
-        public static User Current
-        {
-            get { return _current ?? new User { Id = 1 }; } //TODO: Remove dummy entity
-            set { _current = value; }
-        }
     }
 }

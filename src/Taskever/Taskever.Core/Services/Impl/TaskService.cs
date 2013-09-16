@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Authorization;
 using Abp.Data.Repositories;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Impl;
-using Abp.Services.Dto;
 using Taskever.Entities;
 using Taskever.Services.Dto;
 
@@ -31,7 +29,7 @@ namespace Taskever.Services.Impl
 
             //TODO: Automatically set Tenant and Creator User informations!?
             taskEntity.Tenant = Tenant.Current;
-            taskEntity.CreatorUser = User.Current;
+            taskEntity.CreatorUser = new User { Id = 1 }; //TODO: Get User from current principal?
 
             _taskRepository.Insert(taskEntity);
 
@@ -44,7 +42,7 @@ namespace Taskever.Services.Impl
 
             //TODO: Automatically set Tenant and Creator User informations!?
             taskEntity.Tenant = Tenant.Current;
-            taskEntity.LastModifierUser = User.Current;
+            taskEntity.LastModifierUser = new User { Id = 1 }; //TODO: Get User from current principal?
 
             _taskRepository.Update(taskEntity);
             return taskEntity.MapTo<TaskDto>();

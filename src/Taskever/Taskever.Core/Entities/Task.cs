@@ -22,5 +22,12 @@ namespace Taskever.Entities
         /// Task description.
         /// </summary>
         public virtual string Description { get; set; }
+
+        public virtual TaskPriority Priority { get; set; }
+
+        public Task()
+        {
+            Priority = TaskPriority.Normal;
+        }
     }
 }
