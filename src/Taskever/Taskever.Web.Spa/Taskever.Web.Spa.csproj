@@ -176,9 +176,10 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Content Include="App\images\task_complete.png" />
+    <Content Include="App\images\task_add.png" />
     <Content Include="App\main.js" />
     <Content Include="App\models\dtos.js" />
-    <Content Include="App\remoteServices\taskService.js" />
     <Content Include="Abp\abp.js" />
     <Content Include="App\viewmodels\home.js" />
     <Content Include="App\viewmodels\createTaskDialog.js" />

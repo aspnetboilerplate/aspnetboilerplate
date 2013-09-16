@@ -20,6 +20,6 @@ namespace Abp.Modules.Core.Services.Dto
         /// <summary>
         /// Email address of the user.
         /// </summary>
-        public string EmailAddress { get; set; }
+        public virtual string EmailAddress { get; set; }
     }
 }

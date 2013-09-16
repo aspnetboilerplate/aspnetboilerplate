@@ -3,8 +3,8 @@
         <div class="panel-heading">
             <h3 class="panel-title">My friends</h3>
         </div>
-        <div class="panel-body">
-            Arkadaş listem!
-        </div>
+        <ul class="list-group" data-bind="foreach: friends">
+            <li class="list-group-item" data-bind="html: name() + ' ' + surname()"></li>
+        </ul>
     </div>
 </section>

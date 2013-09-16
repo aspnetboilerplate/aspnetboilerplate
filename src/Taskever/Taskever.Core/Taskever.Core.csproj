@@ -48,10 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Friendship.cs" />
+    <Compile Include="Entities\FriendshipStatus.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\TaskPriority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Dto\TaskDto.cs" />
+    <Compile Include="Services\Impl\FriendshipService.cs" />
+    <Compile Include="Services\IFriendshipService.cs" />
     <Compile Include="Services\ITaskService.cs" />
     <Compile Include="Services\Impl\TaskService.cs" />
     <Compile Include="Services\Dto\DtoMapper.cs" />

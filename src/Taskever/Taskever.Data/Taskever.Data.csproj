@@ -64,7 +64,9 @@
   <ItemGroup>
     <Compile Include="Data\Migrations\V20130916\_01_CreateTeTasksTable.cs" />
     <Compile Include="Data\Migrations\V20130901\_01_CreateTeTasksTable.cs" />
+    <Compile Include="Data\Migrations\V20130916\_02_CreateFriendshipTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\FriendshipMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\TaskMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverDataModule.cs" />

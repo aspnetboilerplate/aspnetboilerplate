@@ -47,6 +47,11 @@
                 return HttpVerb.Delete;
             }
 
+            if (methodName.StartsWith("Create") || methodName.StartsWith("Post"))
+            {
+                return HttpVerb.Post;
+            }
+
             return GetDefaultHttpVerb();
         }
 

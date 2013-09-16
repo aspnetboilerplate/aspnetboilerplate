@@ -9,7 +9,7 @@ namespace Taskever.Entities.NHibernate.Mappings
         {
             Map(x => x.Title).Not.Nullable();
             Map(x => x.Description).Nullable();
-            Map(x => x.Priority).CustomType<TaskPriority>().Nullable();
+            Map(x => x.Priority).CustomType<TaskPriority>().Not.Nullable();
         }
     }
 }

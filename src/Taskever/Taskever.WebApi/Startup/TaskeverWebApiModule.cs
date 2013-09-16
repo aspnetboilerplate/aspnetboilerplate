@@ -17,9 +17,8 @@ namespace Taskever.Web.Startup
 
         private void CreateWebApiProxiesForServices()
         {
-            BuildApiController
-                .For<ITaskService>().UseConventions() //TODO: must UseConventions be more general insted of controller builder?
-                .Build();
+            BuildApiController.For<ITaskService>().UseConventions().Build(); //TODO: must UseConventions be more general insted of controller builder?
+            BuildApiController.For<IFriendshipService>().UseConventions().Build();
         }
     }
 }

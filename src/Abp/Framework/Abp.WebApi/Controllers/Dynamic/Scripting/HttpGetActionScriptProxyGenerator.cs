@@ -9,7 +9,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 @"            url: '{url}',
             type: '{type}',
             data: {
-                {getParams}
+{getParams}
             }";
 
         public HttpGetActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
@@ -34,8 +34,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             for (var i = 0; i < parameters.Length; i++)
             {
                 var parameterInfo = parameters[i];
-                sb.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() +
-                              (i < parameters.Length - 1 ? "," : ""));
+                sb.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
             }
             return sb.ToString();
         }
