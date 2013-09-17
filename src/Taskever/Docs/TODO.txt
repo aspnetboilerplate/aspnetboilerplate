@@ -37,3 +37,16 @@ In the future
 
 Mention: @halil
 Project: $projectName
+
+=================================================================================
+TODO:
+- Home
+  - Events
+- Person page
+  - Events
+  - Active tasks
+  - Completed tasks
+- Friendship
+  - Add a new friend dialog
+  - Show waiting friend requests
+  - Remove a friend

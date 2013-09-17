@@ -120,12 +120,12 @@ PAGES
 
 Membership models
 - To be a member of CLOUD (to create an tenant account)
-  - Private membership (can only added by administrator of the application (tenant account))
+  - Private membership (can only added by administrator of the application (tenant account), no register page)
   - Sign up by invitation (authorized users of a tenant account can send invitations).
   - Sign up publicly
+  - Validations/Confirmations (optionally)
+	- With email validation
     - With admin confirmation
-	- With email confirmation
-	- Without any confirmation
 - To be a member of an APPLICATION (Tenant account)
   - Private membership (can only added by administrator of the application (tenant account))
   - Sign up by invitation (authorized users of tenant can send invitations).
