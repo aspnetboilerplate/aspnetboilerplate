@@ -50,3 +50,4 @@ TODO:
   - Add a new friend dialog
   - Show waiting friend requests
   - Remove a friend
+- Adding comment to a task -> Maybe we can develop a more general-purpose commenting module?
