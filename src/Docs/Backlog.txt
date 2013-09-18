@@ -144,3 +144,50 @@ ROLES
 
 ????:
 - Windows single sign on support?
+
+======================================================================================================================
+
+Web project folder structure:
+-----------------------------
+- App_Start
+- Areas
+  - Abp
+    - Views (maybe)
+  - Taskever
+    - Views
+	- Models
+	- Controllers
+- Content (third party contents installed via Nuget)
+- Dependency (dependency injection codes)
+- Spa
+  - Abp
+    - Framework
+    - Modules
+	  - Core
+  - Taskever
+    - Home SPA
+      - viewmodels
+	  - views
+	  - models
+	- Admin SPA
+	  -
+- Scripts (third party scripts installed via Nuget)
+- Resources
+  - Abp
+    - images
+	- scripts
+	- styles
+  - Taskever
+    - images
+	- scripts
+	- styles
+
+ROUTES:
+---------
+- ASP.NET MVC Pages
+  - /{areaName}/{controller}/{action}
+- Web api
+  - /api/{controller}/{id}
+- Dynamic service api
+  - /api/services/{serviceName}/{action}
+  - /api/serviceproxies/{serviceName}.js
