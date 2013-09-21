@@ -1,8 +1,11 @@
 ﻿using System.Globalization;
 using Abp.Localization;
 
-namespace Taskever.Web.Localization.Resources
+namespace Taskever.Localization.Resources
 {
+    /// <summary>
+    /// TODO: Install dependency!
+    /// </summary>
     public class ResourcesLocalizationManager : ILocalizationManager
     {
         public string GetString(string name)

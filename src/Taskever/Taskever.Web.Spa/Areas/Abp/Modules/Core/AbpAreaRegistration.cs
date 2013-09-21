@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace Taskever.Web.Areas.Abp
+namespace Taskever.Web.Areas.Abp.Modules.Core
 {
     public class AbpAreaRegistration : AreaRegistration
     {
@@ -8,7 +8,7 @@ namespace Taskever.Web.Areas.Abp
         {
             get
             {
-                return "Abp";
+                return "Abp/Modules/Core";
             }
         }
 

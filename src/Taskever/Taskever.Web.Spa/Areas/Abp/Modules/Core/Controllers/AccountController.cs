@@ -1,10 +1,10 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
 using Abp.Exceptions;
-using Taskever.Web.Areas.Abp.Models;
 using Abp.Web.Mvc.Controllers;
+using Taskever.Web.Areas.Abp.Modules.Core.Models;
 
-namespace Taskever.Web.Areas.Abp.Controllers
+namespace Taskever.Web.Areas.Abp.Modules.Core.Controllers
 {
     public class AccountController : AbpController
     {
@@ -24,7 +24,7 @@ namespace Taskever.Web.Areas.Abp.Controllers
                 }
 
                 FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
-                return Redirect("/"); //TODO: Implement Return URL!
+                return Redirect("/Taskever"); //TODO: Implement Return URL!
             }
 
             return View();

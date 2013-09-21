@@ -14,7 +14,7 @@ namespace Taskever.Web.App_Start
 
             bundles.Add(
                 new StyleBundle("~/styles/basestyles")
-                    .Include("~/Content/utils/ie10fix.css")                    
+                    .Include("~/Abp/Framework/styles/utils/ie10fix.css")
                     .Include("~/Content/bootstrap/bootstrap.css")
                     .Include("~/Content/bootstrap/bootstrap-theme.css")
                     .Include("~/Content/font-awesome.min.css")

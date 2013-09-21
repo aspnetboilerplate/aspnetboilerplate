@@ -106,7 +106,7 @@ PAGES
   - anaonymous pages (not authenticated)
     - ex: Pages those describes the system to all internet users
 
-- APPLICATIN Pages (An Tenant account perspective) (can be entered by a subdomain or sub-folder (www.ABC.com/companyname or companyname.ABC.com?)
+- APPLICATIN Pages (An Tenant account perspective) (can be entered by a subdomain or sub-folder (www.ABC.com/tenantname or tenantname.ABC.com?)
 
   - Seperated SPA application
     - Pages to use and manage the application (authenticated & authorized)

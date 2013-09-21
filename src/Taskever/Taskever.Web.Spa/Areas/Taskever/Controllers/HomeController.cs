@@ -2,7 +2,7 @@
 using Abp.Web.Mvc.Authorization;
 using Abp.Web.Mvc.Controllers;
 
-namespace Taskever.Web.Controllers
+namespace Taskever.Web.Areas.Taskever.Controllers
 {
     [AbpMvcAuthorize]
     public class HomeController : AbpController

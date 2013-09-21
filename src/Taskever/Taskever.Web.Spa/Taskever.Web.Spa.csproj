@@ -156,43 +156,38 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Test.cs" />
-    <Compile Include="Areas\Abp\AbpAreaRegistration.cs" />
-    <Compile Include="Areas\Abp\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Abp\Models\LoginModel.cs" />
-    <Compile Include="Startup\TaskeverWebSpaModule.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Dependency\Installers\TaskeverWebSpaInstaller.cs" />
+    <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
+    <Compile Include="Areas\Abp\Modules\Core\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Abp\Modules\Core\Models\LoginModel.cs" />
+    <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
+    <Compile Include="Areas\Taskever\TaskeverAreaRegistration.cs" />
+    <Compile Include="Areas\Taskever\Controllers\HomeController.cs" />
+    <Compile Include="App_Start\Dependency\Installers\TaskeverWebSpaInstaller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Localization\Resources\AppTexts.Designer.cs">
-      <DependentUpon>AppTexts.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Localization\Resources\ResourcesLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Content Include="App\images\task_complete.png" />
-    <Content Include="App\images\task_add.png" />
-    <Content Include="App\main.js" />
-    <Content Include="App\models\dtos.js" />
-    <Content Include="Abp\abp.js" />
-    <Content Include="App\viewmodels\home.js" />
-    <Content Include="App\viewmodels\createTaskDialog.js" />
-    <Content Include="App\viewmodels\friendlist.js" />
-    <Content Include="App\viewmodels\secondpage.js" />
-    <Content Include="App\viewmodels\tasks.js" />
-    <Content Include="App\viewmodels\shell.js" />
-    <Content Include="App\views\home.html" />
-    <Content Include="App\views\createTaskDialog.html" />
-    <Content Include="App\views\friendlist.html" />
-    <Content Include="App\views\secondpage.html" />
-    <Content Include="App\views\tasks.html" />
-    <Content Include="App\views\shell.html" />
+    <Content Include="App\_Common\images\task_complete.png" />
+    <Content Include="App\_Common\images\task_add.png" />
+    <Content Include="App\Main\main.js" />
+    <Content Include="App\Main\models\dtos.js" />
+    <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="App\Main\viewmodels\home.js" />
+    <Content Include="App\Main\viewmodels\createTaskDialog.js" />
+    <Content Include="App\Main\viewmodels\friendlist.js" />
+    <Content Include="App\Main\viewmodels\secondpage.js" />
+    <Content Include="App\Main\viewmodels\tasks.js" />
+    <Content Include="App\Main\viewmodels\shell.js" />
+    <Content Include="App\Main\views\home.html" />
+    <Content Include="App\Main\views\createTaskDialog.html" />
+    <Content Include="App\Main\views\friendlist.html" />
+    <Content Include="App\Main\views\secondpage.html" />
+    <Content Include="App\Main\views\tasks.html" />
+    <Content Include="App\Main\views\shell.html" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\font-awesome-ie7.css" />
     <Content Include="Content\font-awesome-ie7.min.css" />
@@ -204,7 +199,7 @@
     <Content Include="Content\images\ios-startup-image-portrait.png" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
-    <Content Include="Content\utils\ie10fix.css" />
+    <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <Content Include="Content\bootstrap\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\bootstrap.css" />
@@ -222,8 +217,9 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\app\main.less" />
     <Content Include="Content\toastr.less" />
-    <Content Include="Areas\Abp\Views\Web.config" />
-    <Content Include="Areas\Abp\Views\Account\Login.cshtml" />
+    <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
+    <Content Include="Areas\Abp\Modules\Core\Views\Account\Login.cshtml" />
+    <Content Include="Areas\Taskever\Views\Web.config" />
     <None Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\durandal\activator.js" />
@@ -252,7 +248,7 @@
     <Content Include="Content\font\fontawesome-webfont.eot" />
     <Content Include="Content\font\FontAwesome.otf" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="js\ie10fix.js" />
+    <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
@@ -277,28 +273,36 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Abp\Views\Shared\" />
-    <Folder Include="Models\" />
+    <Folder Include="Abp\Modules\Core\images\" />
+    <Folder Include="Abp\Modules\Core\models\" />
+    <Folder Include="Abp\Modules\Core\scripts\" />
+    <Folder Include="Abp\Modules\Core\styles\" />
+    <Folder Include="Abp\Modules\Core\viewmodels\" />
+    <Folder Include="Abp\Modules\Core\views\" />
+    <Folder Include="App\Main\images\" />
+    <Folder Include="App\Main\scripts\" />
+    <Folder Include="App\Main\styles\" />
+    <Folder Include="Areas\Abp\Modules\Core\Views\Shared\" />
+    <Folder Include="Areas\Taskever\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Areas\Taskever\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Taskever\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Taskever\Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Data\Abp.Data.csproj">
@@ -337,16 +341,6 @@
       <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>
       <Name>Taskever.WebApi</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Localization\Resources\AppTexts.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppTexts.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Localization\Resources\AppTexts.tr.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

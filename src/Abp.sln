@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{76AA2897-D
 		Docs\Backlog.txt = Docs\Backlog.txt
 		Docs\Modules.txt = Docs\Modules.txt
 		Docs\Tools.txt = Docs\Tools.txt
+		Docs\WebProject Layout.txt = Docs\WebProject Layout.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}"

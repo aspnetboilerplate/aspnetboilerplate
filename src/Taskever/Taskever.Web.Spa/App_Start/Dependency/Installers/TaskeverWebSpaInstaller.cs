@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Taskever.Web.Dependency.Installers
+namespace Taskever.Web.App_Start.Dependency.Installers
 {
     public class TaskeverWebSpaInstaller : IWindsorInstaller
     {
