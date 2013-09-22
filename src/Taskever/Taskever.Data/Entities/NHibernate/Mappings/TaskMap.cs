@@ -9,7 +9,9 @@ namespace Taskever.Entities.NHibernate.Mappings
         {
             Map(x => x.Title).Not.Nullable();
             Map(x => x.Description).Nullable();
+            References(x => x.AssignedUser).Column("AssignedUserId").LazyLoad();
             Map(x => x.Priority).CustomType<TaskPriority>().Not.Nullable();
+            Map(x => x.State).CustomType<TaskState>().Not.Nullable();
         }
     }
 }

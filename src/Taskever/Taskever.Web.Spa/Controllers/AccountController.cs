@@ -3,7 +3,7 @@ using System.Web.Security;
 using Abp.Exceptions;
 using Abp.Modules.Core.Authorization;
 using Abp.Web.Mvc.Controllers;
-using Taskever.Web.Areas.Abp.Modules.Core.Models;
+using Taskever.Web.Models;
 
 namespace Taskever.Web.Controllers
 {

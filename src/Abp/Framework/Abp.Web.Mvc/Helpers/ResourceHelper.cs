@@ -12,6 +12,11 @@ namespace Abp.Web.Mvc.Helpers
     {
         public static IHtmlString IncludeScript(this HtmlHelper html, string url)
         {
+            if (url.StartsWith("~"))
+            {
+                url = url.Substring(1);
+            }
+
             return html.Raw("<script src=\"" + url + "\" type=\"text/javascript\"></script>");
         }
     }

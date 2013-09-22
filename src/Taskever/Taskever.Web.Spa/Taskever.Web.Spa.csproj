@@ -174,6 +174,9 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Content Include="App\Main\images\hikalkan.jpg" />
+    <Content Include="App\Main\viewmodels\user.js" />
+    <Content Include="App\Main\views\user.html" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
@@ -286,7 +289,6 @@
     <Folder Include="Abp\Modules\Core\styles\" />
     <Folder Include="Abp\Modules\Core\viewmodels\" />
     <Folder Include="Abp\Modules\Core\views\" />
-    <Folder Include="App\Main\images\" />
     <Folder Include="App\Main\scripts\" />
     <Folder Include="App\Main\styles\" />
   </ItemGroup>

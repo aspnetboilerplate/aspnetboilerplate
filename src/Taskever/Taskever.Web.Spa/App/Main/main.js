@@ -1,4 +1,5 @@
-﻿requirejs.config({
+﻿//TODO: Move to framework?
+requirejs.config({
     paths: {
         'text': '../../Scripts/text',
         'durandal': '../../Scripts/durandal',

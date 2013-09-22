@@ -11,7 +11,7 @@ namespace Taskever.Entities
         /// <summary>
         /// The tenant account which this entity is belong to.
         /// </summary>
-        public virtual Tenant Tenant { get; set; }
+        public virtual Tenant Tenant { get; set; } 
 
         /// <summary>
         /// Task title.
@@ -23,7 +23,11 @@ namespace Taskever.Entities
         /// </summary>
         public virtual string Description { get; set; }
 
+        public virtual User AssignedUser { get; set; }
+
         public virtual TaskPriority Priority { get; set; }
+
+        public virtual TaskState State { get; set; }
 
         public Task()
         {

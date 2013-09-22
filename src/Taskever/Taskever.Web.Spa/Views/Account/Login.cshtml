@@ -1,99 +1,82 @@
-﻿@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    @*<link rel="shortcut icon" href="../../assets/ico/favicon.png">*@
-
-    <title>Signin Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="@Url.Content("/Content/bootstrap/bootstrap.min.css")" rel="stylesheet">
-    <link href="@Url.Content("/Content/bootstrap/bootstrap-theme.min.css")" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <style>
-        body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #eee;
-        }
-
-        .form-signin {
-            max-width: 330px;
-            padding: 15px;
-            margin: 0 auto;
-        }
-
-            .form-signin .form-signin-heading,
-            .form-signin .checkbox {
-                margin-bottom: 10px;
-            }
-
-            .form-signin .checkbox {
-                font-weight: normal;
-            }
-
-            .form-signin .form-control {
-                position: relative;
-                font-size: 16px;
-                height: auto;
-                padding: 10px;
-                -webkit-box-sizing: border-box;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-            }
-
-                .form-signin .form-control:focus {
-                    z-index: 2;
-                }
-
-            .form-signin input[type="text"] {
-                margin-bottom: -1px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            .form-signin input[type="password"] {
-                margin-bottom: 10px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-    </style>
-@*    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="../../assets/js/html5shiv.js"></script>
-      <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->*@
-</head>
-
-<body>
-
-    <div class="container">
-
-        <form class="form-signin" method="POST">
-            <h2 class="form-signin-heading">Please sign in</h2>
-            <input type="text" name="EmailAddress" class="form-control" placeholder="Email address" autofocus>
-            <input type="password" name="Password" class="form-control" placeholder="Password">
-            <label class="checkbox">
-                <input type="checkbox" name="RememberMe" value="true">
-                Remember me
-            </label>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
-
+﻿<div id="wrap">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Taskever</a>
+            </div>
+        </div>
     </div>
-    <!-- /container -->
+    <div class="container">
+        <div class="row">
+            <section class="col-md-8 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">What is Taskever</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>Taskever is free a social network that is used to manage tasks. Here, a few key features of Taskever:</p>
+                        <ul>
+                            <li>Create and manage your own tasks</li>
+                            <li>Show taks of your friends</li>
+                            <li>Assign tasks to your friends</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="col-md-4 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Login</h3>
+                    </div>
+                    <div class="panel-body">
 
+                        <form role="form" action="@Url.Action("Login")" method="POST">
+                            <div class="form-group">
+                                <input type="email" name="EmailAddress" class="form-control" id="LoginEmailAddress" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="Password" class="form-control" id="LoginPassword" placeholder="Password">
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="RememberMe">
+                                    Remember me
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-</body>
-</html>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Register</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" name="Name" class="form-control" id="RegisterName" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="Surname" class="form-control" id="RegisterSurname" placeholder="Enter your surname">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="EmailAddress" class="form-control" id="RegisterEmailAddress" placeholder="Enter email">
+                            </div>
+                            <button type="submit" class="btn btn-default">Register</button>
+                        </form>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <div class="container">
+        <p class="text-muted">
+            Designed and developed by <a href="http://www.halilibrahimkalkan.com">Halil İbrahim Kalkan</a> and <a href="http://www.google.com">İsmail Çağdaş</a>.
+        </p>
+    </div>
+</div>

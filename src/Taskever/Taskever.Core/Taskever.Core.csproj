@@ -52,6 +52,7 @@
     <Compile Include="Entities\FriendshipStatus.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\TaskPriority.cs" />
+    <Compile Include="Entities\TaskState.cs" />
     <Compile Include="Localization\Resources\AppTexts.Designer.cs">
       <DependentUpon>AppTexts.resx</DependentUpon>
       <AutoGen>True</AutoGen>
