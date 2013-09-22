@@ -51,12 +51,12 @@ cloud system (seperated web project?)
   - Application specific pages
     - Describes the system
     - Used to be a tenant (Abp makes a template?)
+	- Used to see all tenancies and so on...
     - Login (to SPA) page (Abp makes a template)
     - ...
 
 application (seperated web project?)
 - SPA: Contains administration & user pages
-  - My tenancies
   - Change tenancy
 - MPA
   - Describes the application

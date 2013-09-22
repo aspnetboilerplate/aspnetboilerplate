@@ -149,6 +149,10 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\WebActivator.1.0.0.0\lib\WebActivator.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <HintPath>..\..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
     </Reference>
@@ -157,11 +161,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Test.cs" />
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
-    <Compile Include="Areas\Abp\Modules\Core\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Abp\Modules\Core\Models\LoginModel.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
-    <Compile Include="Areas\Taskever\TaskeverAreaRegistration.cs" />
-    <Compile Include="Areas\Taskever\Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="App_Start\Dependency\Installers\TaskeverWebSpaInstaller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,10 +207,10 @@
     <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\bootstrap.css" />
     <Content Include="Content\bootstrap\bootstrap.min.css" />
-    <Content Include="Content\app\main.css">
+    <Content Include="App\_Common\styles\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
-    <Content Include="Content\app\main.min.css">
+    <Content Include="App\_Common\styles\main.min.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
@@ -215,11 +218,12 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\app\main.less" />
+    <Content Include="App\_Common\styles\main.less" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
-    <Content Include="Areas\Abp\Modules\Core\Views\Account\Login.cshtml" />
-    <Content Include="Areas\Taskever\Views\Web.config" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\Home\Index.cshtml" />
     <None Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\durandal\activator.js" />
@@ -285,20 +289,15 @@
     <Folder Include="App\Main\images\" />
     <Folder Include="App\Main\scripts\" />
     <Folder Include="App\Main\styles\" />
-    <Folder Include="Areas\Abp\Modules\Core\Views\Shared\" />
-    <Folder Include="Areas\Taskever\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Taskever\Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Taskever\Views\Shared\_Layout.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Taskever\Views\_ViewStart.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">

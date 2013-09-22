@@ -19,7 +19,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Content/bootstrap/bootstrap-theme.css")
                     .Include("~/Content/font-awesome.min.css")
                     .Include("~/Content/durandal.css")
-                    .Include("~/Content/app/main.css")
+                    .Include("~/App/_Common/styles/main.css")
                 );
 
             bundles.Add(

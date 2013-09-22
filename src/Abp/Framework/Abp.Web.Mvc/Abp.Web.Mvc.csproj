@@ -89,6 +89,7 @@
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Dependency\Installers\AbpWebInstaller.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
+    <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebApplication.cs" />
     <Compile Include="Startup\AbpWebMvcModule.cs" />

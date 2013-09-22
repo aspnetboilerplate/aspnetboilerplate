@@ -1,5 +1,4 @@
-﻿@using System.Web.Optimization
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -22,29 +21,16 @@
       <script src="@Url.Content("~/Scripts/libs/html5shiv.js")"></script>
       <script src="@Url.Content("~/Scripts/libs/respond.min.js")"></script>
     <![endif]-->
-    
-    @RenderSection("styles", required: false)
-    
-    <script type="text/javascript">
-        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-            var msViewportStyle = document.createElement("style");
-            var mq = "@@-ms-viewport{width:auto!important}";
-            msViewportStyle.appendChild(document.createTextNode(mq));
-            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
-        }
-    </script>
 
+    @RenderSection("styles", required: false)
+
+    @Html.IncludeScript("~/Abp/Framework/scripts/utils/ie10fix.js");
     @Scripts.Render("~/scripts/modernizr")
 </head>
 <body>
-    <div id="applicationHost">
-        @RenderBody()
-    </div>
+    @RenderBody()
 
     @Scripts.Render("~/scripts/baselibs")
-    
-    <script src="~/Scripts/require.js" data-main="/App/Main/main"></script>
-    
     @RenderSection("scripts", required: false)
 </body>
 </html>
