@@ -24,6 +24,17 @@ Primary TODO:
 - Auto create DTO objects (plain & knockout)
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
 - Make use of NHibernate auto mapping
+- Authrization system
+  - Authentication
+  - Edition system
+  - Feature system
+  - Authroization for
+    - Js viewmodels
+	- Mvc controllers
+	- Mvc views
+	- Web api controllers
+	- Service methods
+- Using razor for durandal views
 - Server side validation
 - Client side validation
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Abp.Data.Repositories;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Services.Impl;
@@ -17,10 +18,10 @@ namespace Taskever.Services.Impl
             _taskRepository = taskRepository;
         }
 
-        //[AbpCoreAuthorize(Features = "GetOwnTasks")]
         public virtual IList<TaskDto> GetMyTasks()
         {
-            return _taskRepository.Query(q => q.ToList()).MapIList<Task, TaskDto>();
+            //var currentUserId = Thread.CurrentPrincipal.Identity.Name
+            return _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == 1).ToList()).MapIList<Task, TaskDto>();
         }
 
         public virtual TaskDto CreateTask(TaskDto task)
