@@ -43,12 +43,6 @@ namespace Abp.Authorization
 
         protected virtual bool IsCurrentEditionDefinedOneOfTheFeatures()
         {
-            if (Edition.Current == null)
-            {
-                //TODO: Throw exception?
-                return false;
-            }
-
             if (Features.IsNullOrEmpty())
             {
                 return true;

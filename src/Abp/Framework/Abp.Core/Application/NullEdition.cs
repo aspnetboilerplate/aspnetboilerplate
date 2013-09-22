@@ -2,11 +2,11 @@ namespace Abp.Application
 {
     public sealed class NullEdition : Edition
     {
-        private static readonly NullEdition _instance = new NullEdition();
         public static NullEdition Instance
         {
             get { return _instance; }
         }
+        private static readonly NullEdition _instance = new NullEdition();
 
         public NullEdition()
             : base("NullEdition")
