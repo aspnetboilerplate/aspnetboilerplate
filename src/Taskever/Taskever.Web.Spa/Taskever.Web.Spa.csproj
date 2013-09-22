@@ -176,7 +176,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Content Include="App\Main\images\hikalkan.jpg" />
     <Content Include="App\Main\viewmodels\user.js" />
+    <Content Include="App\Main\viewmodels\userCurrentTasks.js" />
     <Content Include="App\Main\views\user.html" />
+    <Content Include="App\Main\views\userCurrentTasks.html" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
