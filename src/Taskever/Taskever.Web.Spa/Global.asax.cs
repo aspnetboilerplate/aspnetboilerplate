@@ -4,6 +4,5 @@ namespace Taskever.Web
 {
     public class TaskeverMvcApplication : AbpWebApplication
     {
-
     }
 }

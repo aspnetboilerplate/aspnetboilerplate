@@ -59,7 +59,9 @@
     <Compile Include="Application\Edition.cs" />
     <Compile Include="Application\Feature.cs" />
     <Compile Include="Application\NullEdition.cs" />
-    <Compile Include="Authorization\AuthorizeAttribute.cs" />
+    <Compile Include="Authorization\AbpIdentity.cs" />
+    <Compile Include="Authorization\AbpPrincipal.cs" />
+    <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
     <Compile Include="Data\UnitOfWorkAttribute.cs" />
