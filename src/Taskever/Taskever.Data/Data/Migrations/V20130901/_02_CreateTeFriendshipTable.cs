@@ -2,8 +2,8 @@ using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20130916
 {
-    [Migration(2013091602)]
-    public class _02_CreateFriendshipTable : Migration
+    [Migration(2013090102)]
+    public class _02_CreateTeFriendshipTable : Migration
     {
         public override void Up()
         {

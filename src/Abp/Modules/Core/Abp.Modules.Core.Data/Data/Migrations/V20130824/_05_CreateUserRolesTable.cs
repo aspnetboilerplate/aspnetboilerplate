@@ -1,10 +1,9 @@
-using Abp.Modules.Core.Entities;
 using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20130915
+namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
-    [Migration(2013091503)]
-    public class _03_CreateUserRolesTable : Migration
+    [Migration(2013082405)]
+    public class _05_CreateAbpUserRolesTable : Migration
     {
         public override void Up()
         {

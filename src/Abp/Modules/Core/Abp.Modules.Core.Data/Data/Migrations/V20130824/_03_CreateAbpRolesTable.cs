@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20130915
+namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
-    [Migration(2013091501)]
-    public class _01_CreateRolesTable : Migration
+    [Migration(2013082403)]
+    public class _03_CreateAbpRolesTable : Migration
     {
         public override void Up()
         {
@@ -13,6 +13,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20130915
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("DisplayName").AsString(100).NotNullable()
                 .WithColumn("IsStatic").AsBoolean().NotNullable().WithDefaultValue(false)
+                .WithColumn("IsFrozen").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithAuditColumns();
 
             Insert.IntoTable("AbpRoles").Row(

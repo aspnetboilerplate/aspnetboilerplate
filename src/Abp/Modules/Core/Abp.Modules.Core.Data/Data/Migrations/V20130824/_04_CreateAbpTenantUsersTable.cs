@@ -1,10 +1,10 @@
 using Abp.Modules.Core.Entities;
 using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20130915
+namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
-    [Migration(2013091502)]
-    public class _02_CreateTenantUsersTable : Migration
+    [Migration(2013082404)]
+    public class _04_CreateAbpTenantUsersTable : Migration
     {
         public override void Up()
         {
