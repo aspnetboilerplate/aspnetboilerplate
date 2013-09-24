@@ -1,4 +1,5 @@
 using Abp.Modules;
+using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Taskever.Services;
 using Taskever.Web.Dependency.Installers;
@@ -17,8 +18,18 @@ namespace Taskever.Web.Startup
 
         private void CreateWebApiProxiesForServices()
         {
-            BuildApiController.For<ITaskService>().UseConventions().Build(); //TODO: must UseConventions be more general insted of controller builder?
-            BuildApiController.For<IFriendshipService>().UseConventions().Build();
+            //TODO: must UseConventions be more general insted of controller builder?
+
+            BuildApiController
+                .For<ITaskService>().WithControllerName("task") 
+                .UseConventions()
+                .ForMethod("GetTasksOfUser").WithVerb(HttpVerb.Post)
+                .Build(); 
+
+            BuildApiController
+                .For<IFriendshipService>()
+                .UseConventions()
+                .Build();
         }
     }
 }

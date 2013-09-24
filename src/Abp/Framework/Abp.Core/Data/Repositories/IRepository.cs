@@ -62,6 +62,13 @@ namespace Abp.Data.Repositories
         TEntity Get(TPrimaryKey key);
 
         /// <summary>
+        /// Gets an entity with given primary key.
+        /// </summary>
+        /// <param name="key">Primary key of the entity to get</param>
+        /// <returns>Entity or null</returns>
+        TEntity GetOrNull(TPrimaryKey key);
+
+        /// <summary>
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>

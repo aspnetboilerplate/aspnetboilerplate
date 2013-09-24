@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
+using Abp.Authorization;
 using Abp.Startup;
 
 namespace Abp.Web.Mvc.Startup
@@ -18,18 +19,17 @@ namespace Abp.Web.Mvc.Startup
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            //var authCookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];
-            //if (authCookie == null)
-            //{
-            //    return;
-            //}
+            var authCookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (authCookie == null)
+            {
+                return;
+            }
 
-            //var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-            //var roles = authTicket.UserData.Split(new[] { '|' });
-            //var userIdentity = new GenericIdentity(authTicket.Name);
-            //var userPrincipal = new GenericPrincipal(userIdentity, roles);
-
-            //Context.User = userPrincipal;
+            var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+            var userIdentity = new AbpIdentity();
+            userIdentity.DeserializeFromString(authTicket.UserData);
+            var userPrincipal = new AbpPrincipal(userIdentity);
+            Context.User = userPrincipal;
         }
 
         protected virtual void Application_PostAuthorizeRequest(object sender, EventArgs e)

@@ -1,3 +1,4 @@
+using System;
 using System.Security.Principal;
 
 namespace Abp.Authorization
@@ -8,30 +9,36 @@ namespace Abp.Authorization
 
         public string Name { get; private set; }
 
-        public string ShortName { get; private set; }
-
-        public string FullName { get; private set; }
-
-        public string EmailAddress { get; private set; }
-
         public string AuthenticationType { get; private set; }
 
         public bool IsAuthenticated { get; private set; }
 
-        private AbpIdentity()
+        public AbpIdentity()
         {
             AuthenticationType = "abp";
             IsAuthenticated = false;
         }
 
-        public AbpIdentity(int userId, string name, string shortName, string fullName, string emailAddress)
+        public AbpIdentity(int userId, string name)
             : this()
         {
             UserId = userId;
             Name = name;
-            ShortName = shortName;
-            FullName = fullName;
-            EmailAddress = emailAddress;
+            IsAuthenticated = true;
+        }
+
+        public string SerializeToString()
+        {
+            return string.Join("|", new[] { UserId.ToString(), Name, AuthenticationType });
+        }
+
+        public void DeserializeFromString(string str)
+        {
+            var splitted = str.Split('|');
+            UserId = Convert.ToInt32(splitted[0]);
+            Name = splitted[1];
+            AuthenticationType = splitted[2];
+            IsAuthenticated = true;
         }
     }
 }

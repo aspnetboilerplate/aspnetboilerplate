@@ -21,6 +21,7 @@ Primary TODO:
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
   - Will be tested with different count and type of parameters.
 
+- Create IDomainService & IApplicationService interfaces!
 - Auto create DTO objects (plain & knockout)
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
 - Make use of NHibernate auto mapping

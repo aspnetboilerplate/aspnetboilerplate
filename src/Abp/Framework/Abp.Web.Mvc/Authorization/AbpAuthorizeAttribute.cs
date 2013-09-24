@@ -2,11 +2,11 @@
 
 namespace Abp.Web.Mvc.Authorization
 {
-    public class AbpMvcAuthorizeAttribute : AuthorizeAttribute
+    public class AbpAuthorizeAttribute : AuthorizeAttribute
     {
         public string[] Features { get; set; }
 
-        public AbpMvcAuthorizeAttribute()
+        public AbpAuthorizeAttribute()
         {
             Features = new string[0];            
         }

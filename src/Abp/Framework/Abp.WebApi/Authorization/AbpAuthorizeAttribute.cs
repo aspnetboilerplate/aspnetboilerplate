@@ -2,11 +2,11 @@
 
 namespace Abp.WebApi.Authorization
 {
-    public class AbpWebApiAuthorizeAttribute : AuthorizeAttribute
+    public class AbpAuthorizeAttribute : AuthorizeAttribute
     {
         public string[] Features { get; set; }
 
-        public AbpWebApiAuthorizeAttribute()
+        public AbpAuthorizeAttribute()
         {
             Features = new string[0];            
         }

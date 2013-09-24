@@ -13,5 +13,7 @@ namespace Abp.Modules.Core.Services
         IList<UserDto> GetAllUsers();
 
         UserDto GetUserOrNull(string emailAddress, string password);
+
+        UserDto GetUser(int userId);
     }
 }

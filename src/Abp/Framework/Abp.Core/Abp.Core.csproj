@@ -82,6 +82,8 @@
     <Compile Include="Modules\Loading\AbpModuleLoader.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Services\Dto\IDto.cs" />
+    <Compile Include="Services\Dto\IInputDto.cs" />
+    <Compile Include="Services\Dto\IOutputDto.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
     <Compile Include="Utils\Extensions\CollectionExtensions.cs" />

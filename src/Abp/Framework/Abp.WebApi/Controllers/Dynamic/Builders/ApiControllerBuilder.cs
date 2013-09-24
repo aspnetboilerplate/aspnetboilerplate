@@ -3,6 +3,7 @@ using System.Reflection;
 using Abp.Exceptions;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -93,6 +94,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             if (string.IsNullOrWhiteSpace(_controllerName))
             {
                 _controllerName = UsingConventions ? DynamicApiHelper.GetConventionalControllerName<T>() : typeof (T).Name;
+            }
+            else
+            {
+                _controllerName = _controllerName.ToPascalCase();
             }
 
             var controllerInfo = new DynamicApiControllerInfo(_controllerName, typeof(AbpDynamicApiController<T>), typeof(T));

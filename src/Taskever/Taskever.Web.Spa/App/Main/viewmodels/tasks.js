@@ -5,9 +5,9 @@
         tasks: tasks,
 
         activate: function () {
-            taskService.getMyTasks(tasks)
+            taskService.getTasksOfUser({userId : 1})
                 .then(function(data) {
-                    ko.mapping.fromJS(data, tasks);
+                    ko.mapping.fromJS(data.tasks, tasks);
                 });
         },
 

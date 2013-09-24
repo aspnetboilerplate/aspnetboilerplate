@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Abp.Authorization;
 using Abp.Entities;
 
 namespace Abp.Modules.Core.Entities
@@ -38,5 +40,27 @@ namespace Abp.Modules.Core.Entities
         /// List of all tenant memberships of this user.
         /// </summary>
         public virtual IList<TenantUser> TenantMemberships { get; set; }
+
+        /// <summary>
+        /// Gets current user id.
+        /// </summary>
+        public static int CurrentUserId
+        {
+            get
+            {
+                if (Thread.CurrentPrincipal == null)
+                {
+                    throw new ApplicationException("Thread.CurrentPrincipal is null!");
+                }
+
+                var identity = Thread.CurrentPrincipal.Identity as AbpIdentity;
+                if (identity == null)
+                {
+                    throw new ApplicationException("Thread.CurrentPrincipal.Identity is not type of AbpIdentity!");
+                }
+
+                return identity.UserId;
+            }
+        }
     }
 }

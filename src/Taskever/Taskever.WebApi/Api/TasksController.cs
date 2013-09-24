@@ -15,7 +15,7 @@ namespace Taskever.Web.Api
             _taskService = taskService;
         }
 
-        [AbpWebApiAuthorize]
+        [AbpAuthorize]
         public IEnumerable<TaskDto> GetTasks()
         {
             return _taskService.GetMyTasks();

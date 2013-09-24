@@ -60,9 +60,13 @@
     </Compile>
     <Compile Include="Localization\Resources\ResourcesLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Dto\GetTasksOfUserOutputDto.cs" />
     <Compile Include="Services\Dto\TaskDto.cs" />
     <Compile Include="Services\Impl\FriendshipService.cs" />
     <Compile Include="Services\IFriendshipService.cs" />
+    <Compile Include="Services\Dto\GetTasksOfUserInput.cs" />
+    <Compile Include="Services\ITaskPrivilegeService.cs" />
+    <Compile Include="Services\Impl\TaskPrivilegeService.cs" />
     <Compile Include="Services\ITaskService.cs" />
     <Compile Include="Services\Impl\TaskService.cs" />
     <Compile Include="Services\Dto\DtoMapper.cs" />

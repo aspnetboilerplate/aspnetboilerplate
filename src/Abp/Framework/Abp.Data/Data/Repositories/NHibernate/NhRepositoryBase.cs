@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Entities;
+using Abp.Exceptions;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -11,9 +12,9 @@ namespace Abp.Data.Repositories.NHibernate
     /// A shortcut of <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public class NhRepositoryBase<TEntity> : NhRepositoryBase<TEntity, int>, IRepository<TEntity> where TEntity : IEntity<int>
+    public class NhRepositoryBase<TEntity> : NhRepositoryBase<TEntity, int>, IRepository<TEntity> where TEntity : class, IEntity<int>
     {
-        
+
     }
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace Abp.Data.Repositories.NHibernate
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : IEntity<TPrimaryKey>
+    public class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
@@ -75,6 +76,22 @@ namespace Abp.Data.Repositories.NHibernate
         /// <param name="key">Primary key of the entity to get</param>
         /// <returns>Entity</returns>
         public virtual TEntity Get(TPrimaryKey key)
+        {
+            var entity = GetOrNull(key);
+            if (entity == null)
+            {
+                throw new AbpException("Threre is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + key);
+            }
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Gets an entity with given primary key.
+        /// </summary>
+        /// <param name="key">Primary key of the entity to get</param>
+        /// <returns>Entity or null</returns>
+        public TEntity GetOrNull(TPrimaryKey key)
         {
             return Session.Get<TEntity>(key);
         }
@@ -137,7 +154,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// <returns>Count of entities</returns>
         public int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
         {
-            return queryMethod(GetAll()).Count();            
+            return queryMethod(GetAll()).Count();
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Authorization;
@@ -29,6 +30,17 @@ namespace Abp.Modules.Core.Services.Impl
         {
             var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password));
             return userEntity.MapTo<UserDto>();
+        }
+
+        public UserDto GetUser(int userId)
+        {
+            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.Id == userId));
+            if (userEntity == null)
+            {
+                throw new ApplicationException("Can not find user with id = " + userId);
+            }
+
+            return userId.MapTo<UserDto>();
         }
     }
 }
