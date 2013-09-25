@@ -5,7 +5,7 @@ using Taskever.Services.Dto;
 
 namespace Taskever.Services
 {
-    public interface ITaskService :IService
+    public interface ITaskService :IAppService
     {
         IList<TaskDto> GetMyTasks();
 

@@ -8,7 +8,7 @@ namespace Abp.Modules.Core.Services
     /// <summary>
     /// Used to perform User related operations.
     /// </summary>
-    public interface IUserService : IService
+    public interface IUserService : IAppService
     {
         IList<UserDto> GetAllUsers();
 

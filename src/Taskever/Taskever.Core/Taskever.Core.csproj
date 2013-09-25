@@ -65,8 +65,8 @@
     <Compile Include="Services\Impl\FriendshipService.cs" />
     <Compile Include="Services\IFriendshipService.cs" />
     <Compile Include="Services\Dto\GetTasksOfUserInput.cs" />
-    <Compile Include="Services\ITaskPrivilegeService.cs" />
-    <Compile Include="Services\Impl\TaskPrivilegeService.cs" />
+    <Compile Include="Domain\Services\ITaskPrivilegeService.cs" />
+    <Compile Include="Domain\Services\Impl\TaskPrivilegeService.cs" />
     <Compile Include="Services\ITaskService.cs" />
     <Compile Include="Services\Impl\TaskService.cs" />
     <Compile Include="Services\Dto\DtoMapper.cs" />

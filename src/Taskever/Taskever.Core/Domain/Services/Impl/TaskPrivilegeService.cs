@@ -2,7 +2,7 @@ using System.Linq;
 using Abp.Data.Repositories;
 using Taskever.Entities;
 
-namespace Taskever.Services.Impl
+namespace Taskever.Domain.Services.Impl
 {
     public class TaskPrivilegeService : ITaskPrivilegeService
     {

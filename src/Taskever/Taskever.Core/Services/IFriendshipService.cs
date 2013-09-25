@@ -4,7 +4,7 @@ using Abp.Services;
 
 namespace Taskever.Services
 {
-    public interface IFriendshipService : IService
+    public interface IFriendshipService : IAppService
     {
         IList<UserDto> GetMyFriends();
     }

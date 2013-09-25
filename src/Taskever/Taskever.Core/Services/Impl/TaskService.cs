@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Abp.Data.Repositories;
-using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Entities;
-using Abp.Modules.Core.Services;
 using Abp.Modules.Core.Services.Impl;
+using Taskever.Domain.Services;
 using Taskever.Entities;
 using Taskever.Services.Dto;
 
