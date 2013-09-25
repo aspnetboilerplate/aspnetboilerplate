@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Abp.Data;
+using Abp.Data.Startup;
 using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using Abp.Modules.Core.Startup.Dependency;
-using Abp.Startup;
 
 namespace Abp.Modules.Core.Startup
 {

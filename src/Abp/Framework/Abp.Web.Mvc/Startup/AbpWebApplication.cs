@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Principal;
-using System.Web;
 using System.Web.Security;
 using Abp.Authorization;
 using Abp.Startup;

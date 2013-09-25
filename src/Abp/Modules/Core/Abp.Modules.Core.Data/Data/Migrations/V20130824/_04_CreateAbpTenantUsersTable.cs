@@ -1,3 +1,4 @@
+using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Entities;
 using FluentMigrator;
 

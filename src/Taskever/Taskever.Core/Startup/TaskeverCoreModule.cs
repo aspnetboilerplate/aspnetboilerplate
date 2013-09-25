@@ -1,5 +1,5 @@
 using Abp.Modules;
-using Taskever.Services.Dto;
+using Taskever.Application.Services.Dto;
 
 namespace Taskever.Startup
 {

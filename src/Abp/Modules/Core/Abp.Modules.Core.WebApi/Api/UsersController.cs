@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Http;
-using Abp.Modules.Core.Services;
-using Abp.Modules.Core.Services.Dto;
+using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Application.Services.Dto;
 using Abp.WebApi.Controllers;
 
 namespace Abp.Modules.Core.Api

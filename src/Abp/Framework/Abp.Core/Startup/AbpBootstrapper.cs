@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Authorization;
 using Abp.Dependency.Installers;
 using Abp.Exceptions;
 using Abp.Modules;

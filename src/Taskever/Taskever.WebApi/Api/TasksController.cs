@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers;
+using Taskever.Application.Services.Dto;
 using Taskever.Services;
-using Taskever.Services.Dto;
 
 namespace Taskever.Web.Api
 {

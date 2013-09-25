@@ -1,6 +1,6 @@
 using System.Linq;
 using Abp.Data.Repositories;
-using Taskever.Entities;
+using Taskever.Domain.Entities;
 
 namespace Taskever.Domain.Services.Impl
 {

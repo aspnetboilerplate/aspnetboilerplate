@@ -48,11 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Friendship.cs" />
-    <Compile Include="Entities\FriendshipStatus.cs" />
-    <Compile Include="Entities\Task.cs" />
-    <Compile Include="Entities\TaskPriority.cs" />
-    <Compile Include="Entities\TaskState.cs" />
+    <Compile Include="Domain\Entities\Friendship.cs" />
+    <Compile Include="Domain\Entities\FriendshipStatus.cs" />
+    <Compile Include="Domain\Entities\Task.cs" />
+    <Compile Include="Domain\Entities\TaskPriority.cs" />
+    <Compile Include="Domain\Entities\TaskState.cs" />
     <Compile Include="Localization\Resources\AppTexts.Designer.cs">
       <DependentUpon>AppTexts.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -60,16 +60,16 @@
     </Compile>
     <Compile Include="Localization\Resources\ResourcesLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Dto\GetTasksOfUserOutputDto.cs" />
-    <Compile Include="Services\Dto\TaskDto.cs" />
-    <Compile Include="Services\Impl\FriendshipService.cs" />
-    <Compile Include="Services\IFriendshipService.cs" />
-    <Compile Include="Services\Dto\GetTasksOfUserInput.cs" />
+    <Compile Include="Application\Services\Dto\GetTasksOfUserOutputDto.cs" />
+    <Compile Include="Application\Services\Dto\TaskDto.cs" />
+    <Compile Include="Application\Services\Impl\FriendshipService.cs" />
+    <Compile Include="Application\Services\IFriendshipService.cs" />
+    <Compile Include="Application\Services\Dto\GetTasksOfUserInput.cs" />
     <Compile Include="Domain\Services\ITaskPrivilegeService.cs" />
     <Compile Include="Domain\Services\Impl\TaskPrivilegeService.cs" />
-    <Compile Include="Services\ITaskService.cs" />
-    <Compile Include="Services\Impl\TaskService.cs" />
-    <Compile Include="Services\Dto\DtoMapper.cs" />
+    <Compile Include="Application\Services\ITaskService.cs" />
+    <Compile Include="Application\Services\Impl\TaskService.cs" />
+    <Compile Include="Application\Services\Dto\DtoMapper.cs" />
     <Compile Include="Startup\TaskeverCoreModule.cs" />
   </ItemGroup>
   <ItemGroup>

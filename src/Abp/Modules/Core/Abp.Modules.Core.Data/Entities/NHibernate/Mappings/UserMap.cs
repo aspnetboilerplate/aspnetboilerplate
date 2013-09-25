@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+﻿using Abp.Modules.Core.Domain.Entities;
+using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {

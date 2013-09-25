@@ -1,3 +1,5 @@
+using Abp.Modules.Core.Domain.Entities;
+
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
     public class RoleMap : EntityMap<Role>

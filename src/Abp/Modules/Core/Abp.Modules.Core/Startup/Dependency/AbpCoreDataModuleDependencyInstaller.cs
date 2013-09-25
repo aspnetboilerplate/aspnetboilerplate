@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Abp.Modules.Core.Services.Impl;
+using Abp.Modules.Core.Application.Services.Impl;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;

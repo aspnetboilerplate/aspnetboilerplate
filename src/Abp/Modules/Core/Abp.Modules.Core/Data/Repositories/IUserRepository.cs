@@ -1,5 +1,5 @@
 ﻿using Abp.Data.Repositories;
-using Abp.Modules.Core.Entities;
+using Abp.Modules.Core.Domain.Entities;
 
 namespace Abp.Modules.Core.Data.Repositories
 {

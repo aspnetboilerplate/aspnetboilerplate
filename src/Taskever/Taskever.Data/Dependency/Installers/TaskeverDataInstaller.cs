@@ -3,8 +3,8 @@ using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Taskever.Application.Services.Impl;
 using Taskever.Domain.Services.Impl;
-using Taskever.Services.Impl;
 
 namespace Taskever.Dependency.Installers
 {

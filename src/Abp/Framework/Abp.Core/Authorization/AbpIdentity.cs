@@ -3,6 +3,7 @@ using System.Security.Principal;
 
 namespace Abp.Authorization
 {
+    //TODO: Inherit from GenericIdentity
     public class AbpIdentity : IIdentity
     {
         public int UserId { get; private set; }
