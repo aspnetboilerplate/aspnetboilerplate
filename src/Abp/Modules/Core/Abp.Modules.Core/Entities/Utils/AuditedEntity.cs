@@ -1,5 +1,5 @@
 using System;
-using Abp.Entities;
+using Abp.Domain.Entities;
 
 namespace Abp.Modules.Core.Entities.Utils
 {

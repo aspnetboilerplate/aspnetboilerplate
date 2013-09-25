@@ -1,4 +1,4 @@
-﻿using Abp.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Modules.Core.Entities;
 using Abp.Modules.Core.Entities.Utils;
 

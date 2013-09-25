@@ -1,4 +1,4 @@
-namespace Abp.Application
+namespace Abp.Application.Editions
 {
     public sealed class NullEdition : Edition
     {

@@ -56,17 +56,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Edition.cs" />
-    <Compile Include="Application\Feature.cs" />
-    <Compile Include="Application\NullEdition.cs" />
+    <Compile Include="Application\Editions\Edition.cs" />
+    <Compile Include="Application\Features\Feature.cs" />
+    <Compile Include="Application\Editions\NullEdition.cs" />
     <Compile Include="Authorization\AbpIdentity.cs" />
     <Compile Include="Authorization\AbpPrincipal.cs" />
     <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />
-    <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
-    <Compile Include="Data\UnitOfWorkAttribute.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Data\Uow\IUnitOfWork.cs" />
+    <Compile Include="Data\Uow\UnitOfWorkAttribute.cs" />
+    <Compile Include="Data\Uow\UnitOfWorkHelper.cs" />
+    <Compile Include="Domain\Entities\Entity.cs" />
+    <Compile Include="Domain\Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
@@ -81,9 +82,9 @@
     <Compile Include="Modules\Loading\AbpModuleInitializer.cs" />
     <Compile Include="Modules\Loading\AbpModuleLoader.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
-    <Compile Include="Services\Dto\IDto.cs" />
-    <Compile Include="Services\Dto\IInputDto.cs" />
-    <Compile Include="Services\Dto\IOutputDto.cs" />
+    <Compile Include="Application\Services\Dto\IDto.cs" />
+    <Compile Include="Application\Services\Dto\IInputDto.cs" />
+    <Compile Include="Application\Services\Dto\IOutputDto.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
@@ -92,8 +93,8 @@
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Helpers\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Dto\EntityDto.cs" />
-    <Compile Include="Services\IAppService.cs" />
+    <Compile Include="Application\Services\Dto\EntityDto.cs" />
+    <Compile Include="Application\Services\IApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

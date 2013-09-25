@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using Abp.Application.Services;
 using Abp.Modules.Core.Services.Dto;
-using Abp.Services;
 
 namespace Taskever.Services
 {
-    public interface IFriendshipService : IAppService
+    public interface IFriendshipService : IApplicationService
     {
         IList<UserDto> GetMyFriends();
     }

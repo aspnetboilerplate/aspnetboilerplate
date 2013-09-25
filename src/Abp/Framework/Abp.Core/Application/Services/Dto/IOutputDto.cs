@@ -1,4 +1,4 @@
-namespace Abp.Services.Dto
+namespace Abp.Application.Services.Dto
 {
     public interface IOutputDto : IDto
     {

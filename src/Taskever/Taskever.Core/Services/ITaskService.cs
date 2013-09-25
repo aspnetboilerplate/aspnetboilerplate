@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using Abp.Services;
-using Abp.Services.Dto;
+using Abp.Application.Services;
 using Taskever.Services.Dto;
 
 namespace Taskever.Services
 {
-    public interface ITaskService :IAppService
+    public interface ITaskService :IApplicationService
     {
         IList<TaskDto> GetMyTasks();
 

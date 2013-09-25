@@ -1,4 +1,4 @@
-namespace Abp.Entities
+namespace Abp.Domain.Entities
 {
     /// <summary>
     /// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (Int32).

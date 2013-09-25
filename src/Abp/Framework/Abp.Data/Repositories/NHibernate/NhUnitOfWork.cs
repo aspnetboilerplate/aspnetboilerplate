@@ -1,4 +1,5 @@
 using System;
+using Abp.Data.Uow;
 using NHibernate;
 
 namespace Abp.Data.Repositories.NHibernate

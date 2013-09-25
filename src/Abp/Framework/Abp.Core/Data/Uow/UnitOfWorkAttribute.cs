@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Data
+namespace Abp.Data.Uow
 {
     /// <summary>
     /// This attribute is used to indicate that declaring method is transactional (atomic).

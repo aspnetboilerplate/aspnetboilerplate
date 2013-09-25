@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using Abp.Data.Repositories;
 
-namespace Abp.Data
+namespace Abp.Data.Uow
 {
     /// <summary>
     /// A helper class to simplify unit of work process.

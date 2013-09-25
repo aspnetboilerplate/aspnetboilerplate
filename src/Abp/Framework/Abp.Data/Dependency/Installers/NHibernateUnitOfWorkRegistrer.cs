@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Abp.Data.Dependency.Interceptors;
+using Abp.Data.Uow;
 using Castle.Core;
 
 namespace Abp.Data.Dependency.Installers

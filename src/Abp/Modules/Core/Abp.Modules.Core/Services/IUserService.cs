@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using Abp.Authorization;
+using Abp.Application.Services;
 using Abp.Modules.Core.Services.Dto;
-using Abp.Services;
 
 namespace Abp.Modules.Core.Services
 {
     /// <summary>
     /// Used to perform User related operations.
     /// </summary>
-    public interface IUserService : IAppService
+    public interface IUserService : IApplicationService
     {
         IList<UserDto> GetAllUsers();
 

@@ -1,5 +1,6 @@
 ﻿using Abp.Application;
 using System;
+using Abp.Application.Editions;
 using Abp.Utils.Extensions;
 using System.Linq;
 using System.Threading;

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Data.Repositories.NHibernate;
+using Abp.Data.Uow;
 using Castle.DynamicProxy;
 using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;

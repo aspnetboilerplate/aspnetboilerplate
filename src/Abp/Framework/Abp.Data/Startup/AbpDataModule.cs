@@ -6,7 +6,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 
-namespace Abp.Data
+namespace Abp.Startup
 {
     [AbpModule("Abp.Data")]
     public class AbpDataModule : AbpModule

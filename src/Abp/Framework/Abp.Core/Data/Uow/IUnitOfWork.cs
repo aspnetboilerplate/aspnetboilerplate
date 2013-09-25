@@ -1,4 +1,4 @@
-namespace Abp.Data
+namespace Abp.Data.Uow
 {
     /// <summary>
     /// Represents a transactional job.

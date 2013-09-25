@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Application
+namespace Abp.Application.Features
 {
     /// <summary>
     /// Represents a feture of the application that can be authorized.

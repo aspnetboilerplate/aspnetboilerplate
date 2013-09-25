@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Entities;
+using Abp.Domain.Entities;
 
 namespace Abp.Data.Repositories
 {

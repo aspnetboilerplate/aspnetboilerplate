@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Application.Features;
 
-namespace Abp.Application
+namespace Abp.Application.Editions
 {
     /// <summary>
     /// Represents an edition of the application.

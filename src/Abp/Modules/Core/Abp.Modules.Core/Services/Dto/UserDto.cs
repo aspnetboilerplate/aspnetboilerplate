@@ -1,4 +1,4 @@
-﻿using Abp.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 
 namespace Abp.Modules.Core.Services.Dto
 {

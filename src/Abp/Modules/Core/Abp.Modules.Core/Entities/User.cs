@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Abp.Authorization;
-using Abp.Entities;
+using Abp.Domain.Entities;
 
 namespace Abp.Modules.Core.Entities
 {
