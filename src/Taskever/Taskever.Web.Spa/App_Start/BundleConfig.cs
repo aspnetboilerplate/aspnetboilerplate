@@ -15,7 +15,7 @@ namespace Taskever.Web.App_Start
             bundles.Add(
                 new StyleBundle("~/styles/basestyles")
                     .Include("~/Abp/Framework/styles/utils/ie10fix.css")
-                    .Include("~/Content/bootstrap/bootstrap.metro.min.css")
+                    .Include("~/Content/bootstrap/bootstrap.metro.min.css") //TODO: Currently testing metro bootstrap
                     //.Include("~/Content/bootstrap/bootstrap-theme.css")
                     .Include("~/Content/font-awesome.min.css")
                     .Include("~/Content/durandal.css")
@@ -34,6 +34,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout.mapping-latest.js")
                     .Include("~/Scripts/bootstrap.js") //TODO: Use minimized
+                    .Include("~/Scripts/jquery.validate.min.js")
                 );
         }
 

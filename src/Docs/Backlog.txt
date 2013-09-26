@@ -18,6 +18,8 @@ Done
 
 -------------------------------------------------------------------------------------------------
 Primary TODO:
+- Make login page fully ajax-based
+
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
   - Will be tested with different count and type of parameters.
 
@@ -41,6 +43,7 @@ Primary TODO:
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Implement best practices for guard clauses?
 - Localization improvement
+- Develop ASP.NET MVC Widget System!
 
 -------------------------------------------------------------------------------------------------
 Modules.Core
