@@ -7,6 +7,10 @@
                     minlength: 3
                 }
             }
+            //TODO: errorPlacement: function (error, element) {
+                //$(element).tooltipster('update', $(error).text());
+                //$(element).tooltipster('show');
+           //}
         });
 
         $("#RegisterForm").validate({

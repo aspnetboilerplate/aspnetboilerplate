@@ -18,7 +18,12 @@ Done
 
 -------------------------------------------------------------------------------------------------
 Primary TODO:
+
+- Make validation messages nicer!
 - Make login page fully ajax-based
+
+
+
 
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
   - Will be tested with different count and type of parameters.
