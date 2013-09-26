@@ -2,7 +2,7 @@
 using Abp.Application.Services;
 using Taskever.Application.Services.Dto;
 
-namespace Taskever.Services
+namespace Taskever.Application.Services
 {
     public interface ITaskService :IApplicationService
     {

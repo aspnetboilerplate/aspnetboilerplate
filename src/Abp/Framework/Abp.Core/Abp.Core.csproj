@@ -59,6 +59,7 @@
     <Compile Include="Application\Editions\Edition.cs" />
     <Compile Include="Application\Features\Feature.cs" />
     <Compile Include="Application\Editions\NullEdition.cs" />
+    <Compile Include="Application\Services\Dto\IDoubleWayDto.cs" />
     <Compile Include="Authorization\AbpIdentity.cs" />
     <Compile Include="Authorization\AbpPrincipal.cs" />
     <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />

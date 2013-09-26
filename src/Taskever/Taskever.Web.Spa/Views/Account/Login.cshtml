@@ -43,7 +43,7 @@
                                     Remember me
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
+                            <button type="submit" class="btn btn-default">Login</button>
                         </form>
 
                     </div>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="panel-body">
 
-                        <form role="form">
+                        <form role="form" action="@Url.Action("Register")" method="POST">
                             <div class="form-group">
                                 <input type="text" name="Name" class="form-control" id="RegisterName" placeholder="Enter your name">
                             </div>
@@ -63,6 +63,12 @@
                             </div>
                             <div class="form-group">
                                 <input type="email" name="EmailAddress" class="form-control" id="RegisterEmailAddress" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="Password" class="form-control" id="RegisterPassword" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="PasswordRepeat" class="form-control" id="RegisterPasswordRepeat" placeholder="Password (repeat)">
                             </div>
                             <button type="submit" class="btn btn-default">Register</button>
                         </form>

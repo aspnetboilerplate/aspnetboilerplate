@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Services\Dto\RegisterUserDto.cs" />
     <Compile Include="Authorization\AuthorizeAttribute.cs" />
     <Compile Include="Authorization\Roles\ApplicationOwner.cs" />
     <Compile Include="Authorization\Roles\ApplicationUser.cs" />

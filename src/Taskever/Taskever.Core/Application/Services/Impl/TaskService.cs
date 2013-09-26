@@ -7,7 +7,6 @@ using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Services;
-using Taskever.Services;
 
 namespace Taskever.Application.Services.Impl
 {

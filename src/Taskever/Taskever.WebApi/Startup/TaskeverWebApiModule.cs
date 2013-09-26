@@ -1,7 +1,7 @@
 using Abp.Modules;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic.Builders;
-using Taskever.Services;
+using Taskever.Application.Services;
 using Taskever.Web.Dependency.Installers;
 
 namespace Taskever.Web.Startup

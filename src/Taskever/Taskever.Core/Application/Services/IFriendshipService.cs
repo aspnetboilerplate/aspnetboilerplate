@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Abp.Application.Services;
 using Abp.Modules.Core.Application.Services.Dto;
 
-namespace Taskever.Services
+namespace Taskever.Application.Services
 {
     public interface IFriendshipService : IApplicationService
     {

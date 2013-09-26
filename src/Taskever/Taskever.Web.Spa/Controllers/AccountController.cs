@@ -5,6 +5,7 @@ using System.Web.Security;
 using Abp.Authorization;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Authorization;
 using Abp.Web.Mvc.Controllers;
 using Taskever.Web.Models;
@@ -53,6 +54,12 @@ namespace Taskever.Web.Controllers
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
+        }
+
+        public ActionResult Register(RegisterUserDto registerUserDto)
+        {
+            _userService.RegisterUser(registerUserDto);
+            return Login(new LoginModel {EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password});
         }
     }
 }

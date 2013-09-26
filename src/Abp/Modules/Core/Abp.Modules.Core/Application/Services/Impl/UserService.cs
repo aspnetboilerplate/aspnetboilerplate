@@ -40,5 +40,10 @@ namespace Abp.Modules.Core.Application.Services.Impl
 
             return userId.MapTo<UserDto>();
         }
+
+        public void RegisterUser(RegisterUserDto registerUserDto)
+        {
+            _userRepository.Insert(registerUserDto.MapTo<User>());
+        }
     }
 }

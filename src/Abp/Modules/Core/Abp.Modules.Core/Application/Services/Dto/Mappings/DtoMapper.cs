@@ -6,7 +6,8 @@ namespace Abp.Modules.Core.Application.Services.Dto.Mappings
     {
         public static void Map()
         {
-            AutoMapper.Mapper.CreateMap<User, UserDto>();
+            AutoMapper.Mapper.CreateMap<User, UserDto>().ReverseMap();
+            AutoMapper.Mapper.CreateMap<RegisterUserDto, User>();
         }
     }
 }

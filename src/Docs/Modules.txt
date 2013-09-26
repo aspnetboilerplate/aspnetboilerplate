@@ -17,3 +17,13 @@ Taskever application module
 - "Taskever.Data"
 - "Taskever.WebApi"
 - "Taskever.Web.Spa"
+
+------------------------------------------------------------------
+
+Dll's of a project:
+
+- Project.Core
+- Project.Infrastructure
+- Project.Application
+- Project.Api
+- Project.Web.Mvc
