@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -29,24 +30,62 @@ namespace Taskever.Web.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
+                if (ModelState.IsValid)
                 {
-                    throw new UserFriendlyException("No user name or password!");
+                    if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
+                    {
+                        throw new UserFriendlyException("No user name or password!");
+                    }
+
+                    //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
+                    var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
+                    var identity = new AbpIdentity(user.Id, user.EmailAddress);
+                    var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
+                    var encTicket = FormsAuthentication.Encrypt(authTicket);
+                    var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                    Response.Cookies.Add(faCookie);
+                    return Redirect("/"); //TODO: Implement Return URL!
                 }
 
-                //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
-                var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
-                var identity = new AbpIdentity(user.Id, user.EmailAddress);
-                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
-                var encTicket = FormsAuthentication.Encrypt(authTicket);
-                var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                Response.Cookies.Add(faCookie);
-                return Redirect("/"); //TODO: Implement Return URL!
+                return View();
             }
+            catch (Exception ex)
+            {
+                return View("_Error", new ErrorModel(ex.Message));
+            }
+        }
 
-            return View();
+        [HttpPost]
+        public JsonResult LoginAjax(LoginModel loginModel)
+        {
+            Thread.Sleep(5000);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
+                    {
+                        throw new UserFriendlyException("No user name or password!");
+                    }
+
+                    //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
+                    var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
+                    var identity = new AbpIdentity(user.Id, user.EmailAddress);
+                    var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
+                    var encTicket = FormsAuthentication.Encrypt(authTicket);
+                    var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                    Response.Cookies.Add(faCookie);
+                    return Json(new { Success = true });
+                }
+
+                return Json(new { Success = false, Error = new ErrorModel("Your form is invalid!") });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Error = new ErrorModel(ex.Message) });
+            }
         }
 
         [AbpAuthorize]
@@ -59,7 +98,7 @@ namespace Taskever.Web.Controllers
         public ActionResult Register(RegisterUserDto registerUserDto)
         {
             _userService.RegisterUser(registerUserDto);
-            return Login(new LoginModel {EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password});
+            return Login(new LoginModel { EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password });
         }
     }
 }

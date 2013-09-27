@@ -163,6 +163,7 @@
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
+    <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
@@ -230,6 +231,13 @@
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Images\busy.gif" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Images\loading_black.gif" />
+    <Content Include="Scripts\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery.blockUI.min.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="ViewResources\Account\Login.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -294,6 +302,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Widgets\LoginBox\LoginBox.cshtml" />
     <Content Include="Widgets\Web.config" />
+    <Content Include="Views\Shared\_Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />

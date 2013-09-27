@@ -25,7 +25,7 @@
                 </div>
             </section>
             <section class="col-md-4 col-sm-12">
-                <div class="panel panel-default">
+                <div class="panel panel-default" id="LoginFormPanelBody">
                     <div class="panel-heading">
                         <h3 class="panel-title">Login</h3>
                     </div>
@@ -79,12 +79,14 @@
 <div id="footer">
     <div class="container">
         <p class="text-muted">
-            Designed and developed by <a href="http://www.halilibrahimkalkan.com">Halil İbrahim Kalkan</a> and <a href="http://www.google.com">İsmail Çağdaş</a>.
+            Designed and developed by <a href="http://www.halilibrahimkalkan.com">Halil İbrahim Kalkan</a>.
         </p>
     </div>
 </div>
 @section scripts
 {
+    @Html.IncludeScript(Url.Content("~/Scripts/jquery.form.min.js"))
+    @Html.IncludeScript(Url.Content("~/Scripts/jquery.blockUI.min.js"))
     <script src="~/Scripts/require.js" data-main="/ViewResources/main.js"></script>
     <script>
         require(['/ViewResources/Account/Login.js']);

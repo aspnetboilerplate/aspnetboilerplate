@@ -13,9 +13,19 @@ Used tools/libraries:
   + Modernizr
   + jQuery
   + Knockout.js
+    + Knockout.mapping
   + Twitter bootstrap
   + Require.js
   + Durandal
+  + jQuery Form PlugIn
+  + jQuery Validation
+  + jQuery BlockUI
+  + json2
+
+  + FontAwesome ?
+  + toastr ?
+
+  - others?
 
 Tools/libraries those are usefull
 -----------------------------------------------------
