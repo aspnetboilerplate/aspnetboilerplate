@@ -51,7 +51,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Register</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="RegisterFormPanelBody">
                         <form id="RegisterForm" role="form" action="@Url.Action("Register")" method="POST">
                             <div class="form-group">
                                 <input type="text" maxlength="30" name="Name" class="form-control" id="RegisterName" placeholder="Enter your name" required>
@@ -85,8 +85,6 @@
 </div>
 @section scripts
 {
-    @Html.IncludeScript(Url.Content("~/Scripts/jquery.form.min.js"))
-    @Html.IncludeScript(Url.Content("~/Scripts/jquery.blockUI.min.js"))
     <script src="~/Scripts/require.js" data-main="/ViewResources/main.js"></script>
     <script>
         require(['/ViewResources/Account/Login.js']);

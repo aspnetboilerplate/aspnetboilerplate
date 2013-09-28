@@ -28,37 +28,7 @@ namespace Taskever.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginModel loginModel)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
-                    {
-                        throw new UserFriendlyException("No user name or password!");
-                    }
-
-                    //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
-                    var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
-                    var identity = new AbpIdentity(user.Id, user.EmailAddress);
-                    var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
-                    var encTicket = FormsAuthentication.Encrypt(authTicket);
-                    var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                    Response.Cookies.Add(faCookie);
-                    return Redirect("/"); //TODO: Implement Return URL!
-                }
-
-                return View();
-            }
-            catch (Exception ex)
-            {
-                return View("_Error", new ErrorModel(ex.Message));
-            }
-        }
-
-        [HttpPost]
-        public JsonResult LoginAjax(LoginModel loginModel)
+        public JsonResult Login(LoginModel loginModel)
         {
             Thread.Sleep(5000);
             try
@@ -77,14 +47,21 @@ namespace Taskever.Web.Controllers
                     var encTicket = FormsAuthentication.Encrypt(authTicket);
                     var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                     Response.Cookies.Add(faCookie);
-                    return Json(new { Success = true });
+
+                    return Json(new AbpAjaxResult(true) { TargetUrl = "/" });
                 }
 
-                return Json(new { Success = false, Error = new ErrorModel("Your form is invalid!") });
+                return Json(new AbpAjaxResult(new ErrorModel("Your form is invalid!")));
+            }
+            catch (UserFriendlyException ex)
+            {
+                //TODO: log ex as warning
+                return Json(new AbpAjaxResult(new ErrorModel(ex.Message)));
             }
             catch (Exception ex)
             {
-                return Json(new { Success = false, Error = new ErrorModel(ex.Message) });
+                //TODO: log ex as Error
+                return Json(new AbpAjaxResult(new ErrorModel("System error!")));
             }
         }
 
@@ -95,7 +72,8 @@ namespace Taskever.Web.Controllers
             return RedirectToAction("Login");
         }
 
-        public ActionResult Register(RegisterUserDto registerUserDto)
+        [HttpPost]
+        public JsonResult Register(RegisterUserDto registerUserDto)
         {
             _userService.RegisterUser(registerUserDto);
             return Login(new LoginModel { EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password });

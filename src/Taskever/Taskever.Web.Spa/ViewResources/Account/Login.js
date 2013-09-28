@@ -1,15 +1,8 @@
 ﻿define(["jquery"], function ($) {
 
-    $.blockUI.defaults.css = {};
-
-    $.blockUI.defaults.overlayCSS = {
-        backgroundColor: '#000',
-        opacity: 0.6,
-        cursor: 'wait'
-    };
-
-
     $(function () {
+
+        //Login form
 
         $("#LoginForm").validate({
             rules: {
@@ -19,26 +12,11 @@
             }
         });
         
-        $("#LoginForm").ajaxForm({
-            beforeSubmit: function () {
-                $("#LoginFormPanelBody").block({
-                    message: '<div style=""><img src="/Images/loading.gif" /></div>'
-                });
-            },
-            url: '/Account/LoginAjax',
-            method: 'POST',
-            success: function (data) {
-                if (data.Success == false) {
-                    alert(data.Error.Message);
-                    return;
-                }
-
-                location.href = '/';
-            },
-            complete: function () {
-                $("#LoginFormPanelBody").unblock();
-            }
+        $("#LoginForm").abpAjaxForm({
+            blockUI: '#LoginFormPanelBody'
         });
+
+        //Registration form
 
         $("#RegisterForm").validate({
             rules: {
@@ -49,6 +27,10 @@
                     equalTo: "#RegisterPassword"
                 }
             }
+        });
+
+        $("#RegisterForm").abpAjaxForm({
+            blockUI: '#RegisterFormPanelBody'
         });
 
     });

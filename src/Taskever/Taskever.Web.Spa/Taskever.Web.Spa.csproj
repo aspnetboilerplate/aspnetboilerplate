@@ -163,6 +163,7 @@
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
+    <Compile Include="Models\AbpJsonResultObject.cs" />
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -177,6 +178,7 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="App\Main\images\hikalkan.jpg" />
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\userCurrentTasks.js" />
@@ -186,7 +188,7 @@
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
     <Content Include="App\Main\models\dtos.js" />
-    <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="Abp\Framework\scripts\abp.jquery.js" />
     <Content Include="App\Main\viewmodels\home.js" />
     <Content Include="App\Main\viewmodels\createTaskDialog.js" />
     <Content Include="App\Main\viewmodels\friendlist.js" />
@@ -232,7 +234,7 @@
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
-    <Content Include="Images\loading.gif" />
+    <Content Include="Abp\Framework\images\loading.gif" />
     <Content Include="Images\loading_black.gif" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI.min.js" />

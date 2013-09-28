@@ -35,6 +35,14 @@ namespace Taskever.Web.App_Start
                     .Include("~/Scripts/knockout.mapping-latest.js")
                     .Include("~/Scripts/bootstrap.js") //TODO: Use minimized
                     .Include("~/Scripts/jquery.validate.min.js")
+                    .Include("~/Scripts/jquery.form.min.js")
+                    .Include("~/Scripts/jquery.blockUI.min.js")
+                );
+
+            bundles.Add(
+                new ScriptBundle("~/Scripts/abp")
+                    .Include("~/abp/framework/scripts/abp.js")
+                    .Include("~/abp/framework/scripts/abp.jquery.js")
                 );
         }
 

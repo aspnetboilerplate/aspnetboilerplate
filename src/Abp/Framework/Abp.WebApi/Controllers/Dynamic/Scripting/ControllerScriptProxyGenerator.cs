@@ -12,7 +12,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             var script = new StringBuilder();
 
             //Module dependencies and start
-            script.AppendLine("define(['jquery', 'abp/Framework/scripts/abp'], function ($, abp) {");
+            script.AppendLine("define(['jquery'], function ($) {");
 
             //all methods
             foreach (var methodInfo in controllerInfo.Actions.Values)
