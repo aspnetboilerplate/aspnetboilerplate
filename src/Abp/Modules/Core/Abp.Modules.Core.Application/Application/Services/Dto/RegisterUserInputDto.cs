@@ -1,6 +1,6 @@
 namespace Abp.Modules.Core.Application.Services.Dto
 {
-    public class RegisterUserDto
+    public class RegisterUserInputDto
     {
         public string Name { get; set; }
         

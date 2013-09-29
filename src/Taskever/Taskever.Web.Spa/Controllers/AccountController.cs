@@ -74,7 +74,7 @@ namespace Taskever.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult Register(RegisterUserDto registerUserDto)
+        public JsonResult Register(RegisterUserInputDto registerUserDto)
         {
             _userService.RegisterUser(registerUserDto);
             return Login(new LoginModel { EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password });

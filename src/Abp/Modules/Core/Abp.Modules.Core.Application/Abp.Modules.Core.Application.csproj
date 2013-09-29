@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\Mappings\DtoMapper.cs" />
-    <Compile Include="Application\Services\Dto\RegisterUserDto.cs" />
+    <Compile Include="Application\Services\Dto\RegisterUserInputDto.cs" />
     <Compile Include="Application\Services\Dto\UserDto.cs" />
     <Compile Include="Application\Services\Impl\AutoMapExtensions.cs" />
     <Compile Include="Application\Services\Impl\UserService.cs" />

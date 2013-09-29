@@ -27,14 +27,14 @@ namespace Taskever.Application.Services.Impl
             return _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == 1).ToList()).MapIList<Task, TaskDto>();
         }
 
-        public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput args) //TODO: did not worked with GET, why?
+        public virtual GetTasksOfUserOutputDto GetTasksOfUser(GetTasksOfUserInputDto args) //TODO: did not worked with GET, why?
         {
             if (!_taskPrivilegeService.CanSeeTasksOfUser(User.CurrentUserId, args.UserId))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }
 
-            return new GetTasksOfUserOutput
+            return new GetTasksOfUserOutputDto
                        {
                            Tasks = _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == args.UserId).ToList()).MapIList<Task, TaskDto>()
                        };
