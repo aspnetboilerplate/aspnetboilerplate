@@ -98,6 +98,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Abp.Application\Abp.Application.csproj">
+      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
+      <Name>Abp.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>

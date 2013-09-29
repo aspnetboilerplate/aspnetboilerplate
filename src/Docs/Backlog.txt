@@ -19,11 +19,30 @@ Done
 -------------------------------------------------------------------------------------------------
 Primary TODO:
 
-- Make validation messages nicer!
-- Make login page fully ajax-based
++ Make login page fully ajax-based
+- Server side validation
+- Feature-based authorization
+  - Tenant-specific feature?
+  - Edition features (Standart edition, Premium edition v.s.)
+  - User membership features (Gold member, Standart member v.s.)
+  - Roles, role-features (static roles)
+  - User-specific features
+  - User-feature-template
 
-
-
+- Checking a feature
+  - Find current USER, current TENANCY of user, current EDITION of the tenant
+  - EDITION has this feature -- or TENANT has special-privilege for this?
+	- no: ERROR!
+    - yes
+	  - any of ROLEs of the USER has this feature (single or multiple role?)
+	    - yes
+		  - USER has special-deny for this
+		    - yes: ERROR!
+			- no: OK!
+		- no
+		  - USER has special-privilege for this
+		    - yes: OK
+			- no: ERROR!
 
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
   - Will be tested with different count and type of parameters.
@@ -49,6 +68,7 @@ Primary TODO:
 - Implement best practices for guard clauses?
 - Localization improvement
 - Develop ASP.NET MVC Widget System!
+- Make validation messages nicer!
 
 -------------------------------------------------------------------------------------------------
 Modules.Core

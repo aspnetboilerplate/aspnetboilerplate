@@ -305,6 +305,7 @@
     <Content Include="Widgets\LoginBox\LoginBox.cshtml" />
     <Content Include="Widgets\Web.config" />
     <Content Include="Views\Shared\_Error.cshtml" />
+    <Content Include="Widgets\LoginBox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />
@@ -326,6 +327,10 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Application\Abp.Application.csproj">
+      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
+      <Name>Abp.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">
       <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp.Core</Name>

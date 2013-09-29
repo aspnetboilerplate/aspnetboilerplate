@@ -56,13 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Editions\Edition.cs" />
-    <Compile Include="Application\Features\Feature.cs" />
-    <Compile Include="Application\Editions\NullEdition.cs" />
-    <Compile Include="Application\Services\Dto\IDoubleWayDto.cs" />
-    <Compile Include="Authorization\AbpIdentity.cs" />
-    <Compile Include="Authorization\AbpPrincipal.cs" />
-    <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
     <Compile Include="Data\Uow\IUnitOfWork.cs" />
     <Compile Include="Data\Uow\UnitOfWorkAttribute.cs" />
@@ -83,9 +76,6 @@
     <Compile Include="Modules\Loading\AbpModuleInitializer.cs" />
     <Compile Include="Modules\Loading\AbpModuleLoader.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
-    <Compile Include="Application\Services\Dto\IDto.cs" />
-    <Compile Include="Application\Services\Dto\IInputDto.cs" />
-    <Compile Include="Application\Services\Dto\IOutputDto.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
@@ -94,8 +84,6 @@
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Helpers\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Application\Services\Dto\EntityDto.cs" />
-    <Compile Include="Application\Services\IApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
