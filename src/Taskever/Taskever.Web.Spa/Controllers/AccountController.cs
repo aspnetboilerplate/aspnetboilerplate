@@ -31,7 +31,7 @@ namespace Taskever.Web.Controllers
         [HttpPost]
         public JsonResult Login(LoginModel loginModel)
         {
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
             try
             {
                 if (ModelState.IsValid)
