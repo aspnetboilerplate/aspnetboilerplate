@@ -56,10 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Repositories\IRepository.cs" />
-    <Compile Include="Data\Uow\IUnitOfWork.cs" />
-    <Compile Include="Data\Uow\UnitOfWorkAttribute.cs" />
-    <Compile Include="Data\Uow\UnitOfWorkHelper.cs" />
+    <Compile Include="Domain\Repositories\IRepository.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkAttribute.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />
     <Compile Include="Domain\Entities\Entity.cs" />
     <Compile Include="Domain\Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
@@ -77,6 +77,8 @@
     <Compile Include="Modules\Loading\AbpModuleLoader.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
+    <Compile Include="Security\AbpIdentity.cs" />
+    <Compile Include="Security\AbpPrincipal.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
     <Compile Include="Utils\Extensions\CollectionExtensions.cs" />

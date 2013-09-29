@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Security;
 using Abp.Authorization;
+using Abp.Security;
 using Abp.Startup;
 
 namespace Abp.Web.Mvc.Startup

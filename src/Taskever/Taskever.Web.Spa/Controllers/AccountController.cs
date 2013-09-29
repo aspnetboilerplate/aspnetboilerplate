@@ -7,8 +7,9 @@ using Abp.Authorization;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Application.Services.Dto;
-using Abp.Modules.Core.Authorization;
+using Abp.Security;
 using Abp.Web.Mvc.Controllers;
+using Abp.Web.Mvc.Models;
 using Taskever.Web.Models;
 
 namespace Taskever.Web.Controllers
@@ -65,7 +66,7 @@ namespace Taskever.Web.Controllers
             }
         }
 
-        [AbpAuthorize]
+        [Abp.Modules.Core.Authorization.AbpAuthorize]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();

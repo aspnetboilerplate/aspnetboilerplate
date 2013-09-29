@@ -1,5 +1,5 @@
 using System.Linq;
-using Abp.Data.Repositories;
+using Abp.Domain.Repositories;
 using Taskever.Domain.Entities;
 
 namespace Taskever.Domain.Services.Impl

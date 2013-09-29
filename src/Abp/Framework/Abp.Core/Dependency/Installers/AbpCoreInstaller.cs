@@ -1,4 +1,5 @@
 ﻿using Abp.Modules.Loading;
+using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -13,8 +14,11 @@ namespace Abp.Dependency.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
+            //TODO: Move log4net configuration to somewhere else!
+
             container.AddFacility<LoggingFacility>(f => f.UseLog4Net().WithConfig("log4net.config"));
-            
+
+            //TODO: Don't use DI for this class?
             container.Register(
                 Component.For<AbpModuleLoader>().LifestyleSingleton()
                 );

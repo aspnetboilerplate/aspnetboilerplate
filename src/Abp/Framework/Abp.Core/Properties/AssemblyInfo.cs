@@ -13,8 +13,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("Abp.Data")]
-[assembly: InternalsVisibleTo("Abp.WebApi")]
+[assembly: InternalsVisibleTo("Abp.Infrastructure.Data.NHibernate")]
+[assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -163,9 +163,6 @@
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
-    <Compile Include="Models\AbpJsonResultObject.cs" />
-    <Compile Include="Models\ErrorModel.cs" />
-    <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -335,41 +332,53 @@
       <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Data\Abp.Data.csproj">
-      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
-      <Name>Abp.Data</Name>
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Infrastructure.Data.NHibernate\Abp.Infrastructure.Data.NHibernate.csproj">
+      <Project>{47853dca-c058-42f4-b020-e9ac659c9204}</Project>
+      <Name>Abp.Infrastructure.Data.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Framework\Abp.Web.Api\Abp.Web.Api.csproj">
+      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
+      <Name>Abp.Web.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Framework\Abp.Web.Mvc\Abp.Web.Mvc.csproj">
       <Project>{78FC0C9B-C5A9-4900-9A46-A8F544AC5343}</Project>
       <Name>Abp.Web.Mvc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Data\Abp.Modules.Core.Data.csproj">
-      <Project>{CE9FEA93-BE42-442B-A7FF-A53922099F64}</Project>
-      <Name>Abp.Modules.Core.Data</Name>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Application\Abp.Modules.Core.Application.csproj">
+      <Project>{C543BB79-F01D-4FE6-89CB-A38BD8B255FD}</Project>
+      <Name>Abp.Modules.Core.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Infrastructure.Data.NHibernate\Abp.Modules.Core.Infrastructure.Data.NHibernate.csproj">
+      <Project>{ce9fea93-be42-442b-a7ff-a53922099f64}</Project>
+      <Name>Abp.Modules.Core.Infrastructure.Data.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Web.Api\Abp.Modules.Core.Web.Api.csproj">
+      <Project>{2a1ca060-4e83-440d-8ce3-0436748f33bb}</Project>
+      <Name>Abp.Modules.Core.Web.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Web.Mvc\Abp.Modules.Core.Web.Mvc.csproj">
       <Project>{5c377732-2dbc-43c2-b9e5-009bd460fce9}</Project>
       <Name>Abp.Modules.Core.Web.Mvc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.WebApi\Abp.Modules.Core.WebApi.csproj">
-      <Project>{2a1ca060-4e83-440d-8ce3-0436748f33bb}</Project>
-      <Name>Abp.Modules.Core.WebApi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Modules.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taskever.Application\Taskever.Application.csproj">
+      <Project>{7a28a996-b52e-422d-b7ee-fc20b5c8c9d4}</Project>
+      <Name>Taskever.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Taskever.Core\Taskever.Core.csproj">
       <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
       <Name>Taskever.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Taskever.Data\Taskever.Data.csproj">
-      <Project>{89714409-E64F-4439-909A-415867494D16}</Project>
-      <Name>Taskever.Data</Name>
+    <ProjectReference Include="..\Taskever.Infrastructure.Data.NHibernate\Taskever.Infrastructure.Data.NHibernate.csproj">
+      <Project>{89714409-e64f-4439-909a-415867494d16}</Project>
+      <Name>Taskever.Infrastructure.Data.NHibernate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Taskever.WebApi\Taskever.WebApi.csproj">
+    <ProjectReference Include="..\Taskever.Web.Api\Taskever.Web.Api.csproj">
       <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>
-      <Name>Taskever.WebApi</Name>
+      <Name>Taskever.Web.Api</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

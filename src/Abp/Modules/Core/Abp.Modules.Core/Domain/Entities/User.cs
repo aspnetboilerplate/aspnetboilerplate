@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Abp.Authorization;
 using Abp.Domain.Entities;
+using Abp.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
 {

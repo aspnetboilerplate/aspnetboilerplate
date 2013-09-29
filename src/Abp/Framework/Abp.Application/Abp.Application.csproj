@@ -49,8 +49,6 @@
     <Compile Include="Application\Services\Dto\IOutputDto.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />
-    <Compile Include="Authorization\AbpIdentity.cs" />
-    <Compile Include="Authorization\AbpPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
