@@ -1,0 +1,25 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Register</h3>
+    </div>
+    <div class="panel-body" id="RegisterFormPanelBody">
+        <form id="RegisterForm" role="form" action="@Url.Action("Register")" method="POST">
+            <div class="form-group">
+                <input type="text" maxlength="30" name="Name" class="form-control" id="RegisterName" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <input type="text" maxlength="30" name="Surname" class="form-control" id="RegisterSurname" placeholder="Enter your surname" required>
+            </div>
+            <div class="form-group">
+                <input type="email" maxlength="100" name="EmailAddress" class="form-control" id="RegisterEmailAddress" placeholder="Enter email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" maxlength="30" name="Password" class="form-control" id="RegisterPassword" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <input type="password" maxlength="30" name="PasswordRepeat" class="form-control" id="RegisterPasswordRepeat" placeholder="Password (repeat)" required>
+            </div>
+            <button type="submit" class="btn btn-default">Register</button>
+        </form>
+    </div>
+</div>

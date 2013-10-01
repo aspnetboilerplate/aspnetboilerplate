@@ -162,6 +162,7 @@
     <Compile Include="App_Start\Test.cs" />
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DurandalViewController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
@@ -179,8 +180,8 @@
     <Content Include="App\Main\images\hikalkan.jpg" />
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\userCurrentTasks.js" />
-    <Content Include="App\Main\views\user.html" />
-    <Content Include="App\Main\views\userCurrentTasks.html" />
+    <None Include="App\Main\views\user.cshtml" />
+    <None Include="App\Main\views\userCurrentTasks.cshtml" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
@@ -192,12 +193,12 @@
     <Content Include="App\Main\viewmodels\friends.js" />
     <Content Include="App\Main\viewmodels\tasks.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
-    <Content Include="App\Main\views\home.html" />
-    <Content Include="App\Main\views\createTaskDialog.html" />
-    <Content Include="App\Main\views\friendlist.html" />
-    <Content Include="App\Main\views\friends.html" />
-    <Content Include="App\Main\views\tasks.html" />
-    <Content Include="App\Main\views\layout.html" />
+    <None Include="App\Main\views\home.cshtml" />
+    <None Include="App\Main\views\createTaskDialog.cshtml" />
+    <None Include="App\Main\views\friendlist.cshtml" />
+    <None Include="App\Main\views\friends.cshtml" />
+    <None Include="App\Main\views\tasks.cshtml" />
+    <None Include="App\Main\views\layout.cshtml" />
     <Content Include="Content\bootstrap\bootstrap.metro.min.css" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\font-awesome-ie7.css" />
@@ -229,6 +230,7 @@
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
+    <Content Include="App\Main\Web.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
     <Content Include="Abp\Framework\images\loading.gif" />
@@ -303,6 +305,9 @@
     <Content Include="Widgets\Web.config" />
     <Content Include="Views\Shared\_Error.cshtml" />
     <Content Include="Widgets\LoginBox.cshtml" />
+    <Content Include="Views\Account\_RegisterPanel.cshtml" />
+    <Content Include="Views\Account\_LoginPanel.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />
