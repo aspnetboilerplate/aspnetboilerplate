@@ -15,8 +15,9 @@ Done
   - Dynamic service WebApi creation
 - Client
   - Dynamic service proxy generation
-
+  
 -------------------------------------------------------------------------------------------------
+
 Primary TODO:
 
 + Make login page fully ajax-based
