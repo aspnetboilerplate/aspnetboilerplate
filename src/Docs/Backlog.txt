@@ -34,6 +34,8 @@ Primary TODO:
 	  - Exception handling
 	  - Authorization
 
+- Client-side validation-object generator for DTO's.
+
 - Feature-based authorization
   - Tenant-specific feature?
   - Edition features (Standart edition, Premium edition v.s.)

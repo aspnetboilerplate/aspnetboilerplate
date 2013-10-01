@@ -7,12 +7,12 @@ namespace Abp.Exceptions
     /// This exception type is directly shown to the user.
     /// </summary>
     [Serializable]
-    public class UserFriendlyException : Exception
+    public class AbpUserFriendlyException : AbpException
     {
         /// <summary>
         /// Contstructor.
         /// </summary>
-        public UserFriendlyException()
+        public AbpUserFriendlyException()
         {
 
         }
@@ -20,7 +20,7 @@ namespace Abp.Exceptions
         /// <summary>
         /// Contstructor for serializing.
         /// </summary>
-        public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
+        public AbpUserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
 
@@ -30,7 +30,7 @@ namespace Abp.Exceptions
         /// Contstructor.
         /// </summary>
         /// <param name="message">Exception message</param>
-        public UserFriendlyException(string message)
+        public AbpUserFriendlyException(string message)
             : base(message)
         {
 
@@ -41,7 +41,7 @@ namespace Abp.Exceptions
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
-        public UserFriendlyException(string message, Exception innerException)
+        public AbpUserFriendlyException(string message, Exception innerException)
             : base(message, innerException)
         {
 

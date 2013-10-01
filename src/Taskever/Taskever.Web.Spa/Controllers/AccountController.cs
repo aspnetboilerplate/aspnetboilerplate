@@ -38,7 +38,7 @@ namespace Taskever.Web.Controllers
                 {
                     if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
                     {
-                        throw new UserFriendlyException("No user name or password!");
+                        throw new AbpUserFriendlyException("No user name or password!");
                     }
 
                     //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
@@ -54,7 +54,7 @@ namespace Taskever.Web.Controllers
 
                 return Json(new AbpAjaxResult(new ErrorModel("Your form is invalid!")));
             }
-            catch (UserFriendlyException ex)
+            catch (AbpUserFriendlyException ex)
             {
                 //TODO: log ex as warning
                 return Json(new AbpAjaxResult(new ErrorModel(ex.Message)));
