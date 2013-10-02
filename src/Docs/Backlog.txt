@@ -22,8 +22,9 @@ Primary TODO:
 
 + Make login page fully ajax-based
 
-- User .cshtml views as durandal views -> OK
-  - Find a proper way of placing a view to another folder than Views\<ControllerName>\...
+- Change email to user-name login!
+
++ User .cshtml views as durandal views -> OK
 
 Move AccountController, DurandalViewController and other needed controllers to base classes in the Abp framework!
 

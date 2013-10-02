@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using Abp.Modules.Core.Domain.Entities.Utils;
+using Abp.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
 {
@@ -21,14 +23,25 @@ namespace Abp.Modules.Core.Domain.Entities
         #region Static properties
 
         /// <summary>
-        /// Reference to the current Tenant account of current user.
+        /// Gets current tenant id.
         /// </summary>
-        [ThreadStatic]
-        private static Tenant _current;
-        public static Tenant Current
+        public static int CurrentTenantId
         {
-            get { return _current ?? new Tenant { Id = 1 }; } //TODO: Remove dummy entity
-            set { _current = value; }
+            get
+            {
+                if (Thread.CurrentPrincipal == null)
+                {
+                    throw new ApplicationException("Thread.CurrentPrincipal is null!");
+                }
+
+                var identity = Thread.CurrentPrincipal.Identity as AbpIdentity;
+                if (identity == null)
+                {
+                    throw new ApplicationException("Thread.CurrentPrincipal.Identity is not type of AbpIdentity!");
+                }
+
+                return identity.TenantId;
+            }
         }
 
         #endregion

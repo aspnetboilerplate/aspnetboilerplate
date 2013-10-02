@@ -8,7 +8,7 @@ namespace Taskever.Application.Services
     {
         IList<TaskDto> GetMyTasks();
 
-        GetTasksOfUserOutputDto GetTasksOfUser(GetTasksOfUserInputDto args);
+        GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput args);
 
         TaskDto CreateTask(TaskDto task);
 

@@ -43,7 +43,7 @@ namespace Taskever.Web.Controllers
 
                     //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
                     var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
-                    var identity = new AbpIdentity(user.Id, user.EmailAddress);
+                    var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
                     var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
                     var encTicket = FormsAuthentication.Encrypt(authTicket);
                     var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);

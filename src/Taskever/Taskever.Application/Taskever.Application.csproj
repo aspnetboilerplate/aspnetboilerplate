@@ -54,8 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Services\Dto\DtoMapper.cs" />
-    <Compile Include="Application\Services\Dto\GetTasksOfUserInputDto.cs" />
-    <Compile Include="Application\Services\Dto\GetTasksOfUserOutputDto.cs" />
+    <Compile Include="Application\Services\Dto\GetTasksOfUserInput.cs" />
+    <Compile Include="Application\Services\Dto\GetTasksOfUserOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />

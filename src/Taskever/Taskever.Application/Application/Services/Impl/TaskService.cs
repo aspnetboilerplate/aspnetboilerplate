@@ -27,26 +27,27 @@ namespace Taskever.Application.Services.Impl
             return _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == 1).ToList()).MapIList<Task, TaskDto>();
         }
 
-        public virtual GetTasksOfUserOutputDto GetTasksOfUser(GetTasksOfUserInputDto args) //TODO: did not worked with GET, why?
+        public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput args) //TODO: did not worked with GET, why?
         {
             if (!_taskPrivilegeService.CanSeeTasksOfUser(User.CurrentUserId, args.UserId))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }
 
-            return new GetTasksOfUserOutputDto
+            return new GetTasksOfUserOutput
                        {
-                           Tasks = _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == args.UserId).ToList()).MapIList<Task, TaskDto>()
+                           Tasks = _taskRepository.Query(q => q.Where(task => task.Tenant.Id == Tenant.CurrentTenantId && task.AssignedUser.Id == args.UserId).ToList()).MapIList<Task, TaskDto>()
                        };
         }
 
         public virtual TaskDto CreateTask(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
-
+            
             //TODO: Automatically set Tenant and Creator User informations!?
-            taskEntity.Tenant = Tenant.Current;
+            taskEntity.Tenant = new Tenant {Id = Tenant.CurrentTenantId};
             taskEntity.CreatorUser = new User { Id = User.CurrentUserId };
+            taskEntity.AssignedUser = new User { Id = User.CurrentUserId };
 
             _taskRepository.Insert(taskEntity);
 
@@ -58,7 +59,7 @@ namespace Taskever.Application.Services.Impl
             var taskEntity = task.MapTo<Task>();
 
             //TODO: Automatically set Tenant and Creator User informations!?
-            taskEntity.Tenant = Tenant.Current;
+            taskEntity.Tenant = new Tenant { Id = Tenant.CurrentTenantId };
             taskEntity.CreatorUser = new User { Id = User.CurrentUserId };
 
             _taskRepository.Update(taskEntity);

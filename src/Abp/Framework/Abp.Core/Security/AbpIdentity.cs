@@ -6,6 +6,8 @@ namespace Abp.Security
     //TODO: Inherit from GenericIdentity and move this class out of Core!
     public class AbpIdentity : IIdentity
     {
+        public int TenantId { get; set; }
+
         public int UserId { get; private set; }
 
         public string Name { get; private set; }
@@ -20,9 +22,10 @@ namespace Abp.Security
             IsAuthenticated = false;
         }
 
-        public AbpIdentity(int userId, string name)
+        public AbpIdentity(int tenantId, int userId, string name)
             : this()
         {
+            TenantId = tenantId;
             UserId = userId;
             Name = name;
             IsAuthenticated = true;
@@ -30,15 +33,16 @@ namespace Abp.Security
 
         public string SerializeToString()
         {
-            return string.Join("|", new[] { UserId.ToString(), Name, AuthenticationType });
+            return string.Join("|", new[] { TenantId.ToString(), UserId.ToString(), Name, AuthenticationType });
         }
 
         public void DeserializeFromString(string str)
         {
             var splitted = str.Split('|');
-            UserId = Convert.ToInt32(splitted[0]);
-            Name = splitted[1];
-            AuthenticationType = splitted[2];
+            TenantId = Convert.ToInt32(splitted[0]);
+            UserId = Convert.ToInt32(splitted[1]);
+            Name = splitted[2];
+            AuthenticationType = splitted[3];
             IsAuthenticated = true;
         }
     }
