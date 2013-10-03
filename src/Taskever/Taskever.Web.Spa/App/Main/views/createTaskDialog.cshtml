@@ -5,15 +5,41 @@
     <div class="modal-body">
 
         <form role="form">
+
             <div class="form-group">
-                <label for="TaskTitle">Title</label>
-                <input type="text" class="form-control" id="TaskTitle" placeholder="Enter title" data-bind="value: task.title">
+                <label for="NewTaskTitle">Title</label>
+                <input type="text" class="form-control" id="NewTaskTitle" placeholder="Enter title" data-bind="value: task.title">
             </div>
+
             <div class="form-group">
-                <label for="TaskDescription">Description</label>
-                <textarea class="form-control" id="TaskDescription" placeholder="Enter description here" data-bind="value: task.description"></textarea>
+                <label for="NewTaskDescription">Description</label>
+                <textarea class="form-control" id="NewTaskDescription" placeholder="Enter description here" data-bind="value: task.description"></textarea>
             </div>
-            <button type="submit" class="btn btn-default" data-bind="click:saveNewTask">Submit</button>
+
+            <div class="form-group">
+                <label for="NewTaskPriority">Priority</label>
+                <!-- TODO: Get from enumaration -->
+                <select id="NewTaskPriority" class="form-control" data-bind="value: task.priority">
+                    <option value="1">Low</option>
+                    <option value="2">BelowNormal</option>
+                    <option value="3">Normal</option>
+                    <option value="4">AboveNormal</option>
+                    <option value="5">High</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="NewTaskPriority">Assign to</label>
+                <select id="NewTaskAssignedUserId" class="form-control" data-bind="value: task.assignedUserId">
+                    <option data-bind="value: currentUser.id, text: 'Me (' + currentUser.name() + ')'"></option>
+                    <!-- ko foreach: users -->
+                    <option data-bind="value: id, html: name() + ' ' + surname()"></option>
+                    <!-- /ko -->
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-default" data-bind="click: saveNewTask">Submit</button>
+
         </form>
 
     </div>

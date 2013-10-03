@@ -12,6 +12,7 @@ namespace Taskever.Data.Migrations.V20130916
                 .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
                 .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("FriendUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
+                .WithColumn("CanAssignTask").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("Status").AsByte().NotNullable().WithDefaultValue(0); //FriendshipStatus.WaitingForApproval
         }
 

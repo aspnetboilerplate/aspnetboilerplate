@@ -54,11 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Services\Dto\DtoMapper.cs" />
-    <Compile Include="Application\Services\Dto\GetTasksOfUserInput.cs" />
-    <Compile Include="Application\Services\Dto\GetTasksOfUserOutput.cs" />
+    <Compile Include="Application\Services\Dto\TaskService\GetTasksOfUserInput.cs" />
+    <Compile Include="Application\Services\Dto\TaskService\GetTasksOfUserOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
+    <Compile Include="Application\Services\Dto\FriendshipService\GetMyFriendsInput.cs" />
     <Compile Include="Application\Services\Impl\TaskService.cs" />
     <Compile Include="Application\Services\ITaskService.cs" />
     <Compile Include="Dependency\Installers\TaskeverDataInstaller.cs" />

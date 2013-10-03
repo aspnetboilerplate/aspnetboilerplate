@@ -29,6 +29,7 @@ namespace Taskever.Web.Startup
             BuildApiController
                 .For<IFriendshipService>()
                 .UseConventions()
+                .ForMethod("GetMyFriends").WithVerb(HttpVerb.Post)
                 .Build();
         }
     }

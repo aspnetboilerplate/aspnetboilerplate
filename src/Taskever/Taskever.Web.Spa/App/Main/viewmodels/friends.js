@@ -5,7 +5,7 @@
         friends: friends,
 
         activate: function () {
-            friendshipService.getMyFriends()
+            friendshipService.getMyFriends({})
                 .then(function (data) {
                     ko.mapping.fromJS(data, friends);
                 });

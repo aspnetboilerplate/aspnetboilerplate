@@ -15,6 +15,11 @@ namespace Taskever.Domain.Entities
         
         public virtual User Friend { get; set; }
 
+        /// <summary>
+        /// Can <see cref="Friend"/> assign tasks to the <see cref="User"/>
+        /// </summary>
+        public virtual bool CanAssignTask { get; set; }
+
         public virtual FriendshipStatus Status { get; set; }
     }
 }

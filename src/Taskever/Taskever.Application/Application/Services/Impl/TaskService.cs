@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto;
+using Taskever.Application.Services.Dto.TaskService;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Services;
 
@@ -47,7 +48,7 @@ namespace Taskever.Application.Services.Impl
             //TODO: Automatically set Tenant and Creator User informations!?
             taskEntity.Tenant = new Tenant {Id = Tenant.CurrentTenantId};
             taskEntity.CreatorUser = new User { Id = User.CurrentUserId };
-            taskEntity.AssignedUser = new User { Id = User.CurrentUserId };
+            taskEntity.AssignedUser = new User { Id = task.AssignedUserId }; //TODO: Error occured on assign to current user!
 
             _taskRepository.Insert(taskEntity);
 

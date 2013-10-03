@@ -178,6 +178,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="App\Main\images\hikalkan.jpg" />
+    <Content Include="App\Main\session.js" />
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\userCurrentTasks.js" />
     <None Include="App\Main\views\user.cshtml" />

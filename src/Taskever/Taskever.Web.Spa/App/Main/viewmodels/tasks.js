@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'models/dtos', 'services/task'], function ($, ko, app, dialogs, dtos, taskService) {
+﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'models/dtos', 'services/task', 'session'], function ($, ko, app, dialogs, dtos, taskService, session) {
     var tasks = ko.mapping.fromJS([]);
 
     return {
@@ -15,7 +15,9 @@
             dialogs.show('viewmodels/createTaskDialog')
                 .then(function (data) {
                     if (data) {
-                        tasks.push(data);
+                        if (data.assignedUserId == session.getCurrentUser().id) {
+                            tasks.push(data);
+                        }
                     }
                 });
         },
