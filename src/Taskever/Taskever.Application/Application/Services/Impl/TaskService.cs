@@ -14,11 +14,15 @@ namespace Taskever.Application.Services.Impl
     public class TaskService : ITaskService
     {
         private readonly IRepository<Task> _taskRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
+        private readonly IRepository<User> _userRepository;
         private readonly ITaskPrivilegeService _taskPrivilegeService;
 
-        public TaskService(IRepository<Task> taskRepository, ITaskPrivilegeService taskPrivilegeService)
+        public TaskService(IRepository<Task> taskRepository, IRepository<Tenant> tenantRepository, IRepository<User> userRepository, ITaskPrivilegeService taskPrivilegeService)
         {
             _taskRepository = taskRepository;
+            _tenantRepository = tenantRepository;
+            _userRepository = userRepository;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
@@ -44,11 +48,11 @@ namespace Taskever.Application.Services.Impl
         public virtual TaskDto CreateTask(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
-            
+
             //TODO: Automatically set Tenant and Creator User informations!?
-            taskEntity.Tenant = new Tenant {Id = Tenant.CurrentTenantId};
-            taskEntity.CreatorUser = new User { Id = User.CurrentUserId };
-            taskEntity.AssignedUser = new User { Id = task.AssignedUserId }; //TODO: Error occured on assign to current user!
+            taskEntity.Tenant = _tenantRepository.Load(Tenant.CurrentTenantId);
+            taskEntity.CreatorUser = _userRepository.Load(User.CurrentUserId);
+            taskEntity.AssignedUser = _userRepository.Load(task.AssignedUserId); //TODO: Error occured on assign to current user!
 
             _taskRepository.Insert(taskEntity);
 

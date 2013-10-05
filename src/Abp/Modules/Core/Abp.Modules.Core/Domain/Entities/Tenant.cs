@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Abp.Modules.Core.Domain.Entities.Utils;
+using Abp.Domain.Entities;
 using Abp.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
@@ -8,17 +8,22 @@ namespace Abp.Modules.Core.Domain.Entities
     /// <summary>
     /// Represents a tenant account. A tenant is used in the cloud to identify a seperated application in the system.
     /// </summary>
-    public class Tenant : AuditedEntity
+    public class Tenant : Entity
     {
         /// <summary>
-        /// Company name
+        /// Company name of the tenant.
         /// </summary>
         public virtual string CompanyName { get; set; }
 
         /// <summary>
-        /// Tenant owner.
+        /// Subdomain for this tenant.
         /// </summary>
-        public virtual User Owner { get; set; }
+        public virtual string Subdomain { get; set; }
+
+        /// <summary>
+        /// Creation time of this tenant.
+        /// </summary>
+        public virtual DateTime CreationTime { get; set; }
 
         #region Static properties
 

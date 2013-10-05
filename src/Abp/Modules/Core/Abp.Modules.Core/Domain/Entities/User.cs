@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Abp.Domain.Entities;
+using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
@@ -9,8 +10,13 @@ namespace Abp.Modules.Core.Domain.Entities
     /// <summary>
     /// Represents a user in entire system.
     /// </summary>
-    public class User : Entity
+    public class User : Entity, IHasTenant
     {
+        /// <summary>
+        /// Tenant of this role.
+        /// </summary>
+        public virtual Tenant Tenant { get; set; }
+
         /// <summary>
         /// Name of the user.
         /// </summary>
@@ -32,14 +38,9 @@ namespace Abp.Modules.Core.Domain.Entities
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// List of all owned tenant accounts of this user.
+        /// Is this user owner of the <see cref="Tenant"/>.
         /// </summary>
-        public virtual IList<Tenant> Tenancies { get; set; }
-
-        /// <summary>
-        /// List of all tenant memberships of this user.
-        /// </summary>
-        public virtual IList<TenantUser> TenantMemberships { get; set; }
+        public virtual bool IsTenantOwner { get; set; }
 
         /// <summary>
         /// Gets current user id.

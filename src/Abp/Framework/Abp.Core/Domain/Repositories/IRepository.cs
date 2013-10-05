@@ -69,6 +69,13 @@ namespace Abp.Domain.Repositories
         TEntity GetOrNull(TPrimaryKey key);
 
         /// <summary>
+        /// Creates an entity with given primary key without database access.
+        /// </summary>
+        /// <param name="key">Primary key of the entity to load</param>
+        /// <returns>Entity</returns>
+        TEntity Load(TPrimaryKey key);
+
+        /// <summary>
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>

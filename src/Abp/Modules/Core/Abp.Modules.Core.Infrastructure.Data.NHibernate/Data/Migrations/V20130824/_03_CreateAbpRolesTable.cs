@@ -19,7 +19,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
             Insert.IntoTable("AbpRoles").Row(
                 new
                     {
-                        TenantId = 1,
+                        TenantId = "1",
                         Name = "Admin",
                         DisplayName = "Admin"
                     }

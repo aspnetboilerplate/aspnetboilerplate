@@ -30,11 +30,7 @@
 
             <div class="form-group">
                 <label for="NewTaskPriority">Assign to</label>
-                <select id="NewTaskAssignedUserId" class="form-control" data-bind="value: task.assignedUserId">
-                    <option data-bind="value: currentUser.id, text: 'Me (' + currentUser.name() + ')'"></option>
-                    <!-- ko foreach: users -->
-                    <option data-bind="value: id, html: name() + ' ' + surname()"></option>
-                    <!-- /ko -->
+                <select id="NewTaskAssignedUserId" class="form-control" data-bind="value: task.assignedUserId, options: users, optionsText: function (item) { return item.name() + ' ' + item.surname(); }, optionsValue: function (item) { return item.id(); }">
                 </select>
             </div>
 

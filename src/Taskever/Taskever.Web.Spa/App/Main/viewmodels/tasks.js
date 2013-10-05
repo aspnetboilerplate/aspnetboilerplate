@@ -15,7 +15,7 @@
             dialogs.show('viewmodels/createTaskDialog')
                 .then(function (data) {
                     if (data) {
-                        if (data.assignedUserId == session.getCurrentUser().id) {
+                        if (data.assignedUserId() == session.getCurrentUser().id()) {
                             tasks.push(data);
                         }
                     }

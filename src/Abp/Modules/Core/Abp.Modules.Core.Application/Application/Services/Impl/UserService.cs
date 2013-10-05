@@ -13,10 +13,12 @@ namespace Abp.Modules.Core.Application.Services.Impl
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITenantRepository _tenantRepository;
 
-        public UserService(IUserRepository questionRepository)
+        public UserService(IUserRepository questionRepository, ITenantRepository tenantRepository)
         {
             _userRepository = questionRepository;
+            _tenantRepository = tenantRepository;
         }
 
         public IList<UserDto> GetAllUsers()
@@ -43,7 +45,9 @@ namespace Abp.Modules.Core.Application.Services.Impl
 
         public void RegisterUser(RegisterUserInputDto registerUserDto)
         {
-            _userRepository.Insert(registerUserDto.MapTo<User>());
+            var userEntity = registerUserDto.MapTo<User>();
+            userEntity.Tenant = _tenantRepository.Load(1); //TODO: Get from subdomain or ?
+            _userRepository.Insert(userEntity);
         }
     }
 }

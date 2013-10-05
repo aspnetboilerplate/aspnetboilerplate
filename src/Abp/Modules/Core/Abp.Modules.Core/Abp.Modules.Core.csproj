@@ -56,7 +56,6 @@
     <Compile Include="Data\Repositories\ITenantRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Domain\Entities\TenantMembershipStatus.cs" />
-    <Compile Include="Domain\Entities\TenantUser.cs" />
     <Compile Include="Domain\Entities\UserRole.cs" />
     <Compile Include="Domain\Entities\Utils\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Role.cs" />

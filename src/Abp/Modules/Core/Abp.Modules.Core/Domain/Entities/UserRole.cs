@@ -5,13 +5,8 @@ namespace Abp.Modules.Core.Domain.Entities
     /// <summary>
     /// Represents role record of a user.
     /// </summary>
-    public class UserRole : CreationAuditedEntity, IHasTenant
+    public class UserRole : CreationAuditedEntity
     {
-        /// <summary>
-        /// Tenant.
-        /// </summary>
-        public virtual Tenant Tenant { get; set; }
-
         /// <summary>
         /// User.
         /// </summary>

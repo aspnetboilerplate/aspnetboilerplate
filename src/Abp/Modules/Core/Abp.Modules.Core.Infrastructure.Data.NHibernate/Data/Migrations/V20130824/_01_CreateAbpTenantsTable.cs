@@ -2,23 +2,22 @@
 
 namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
-    [Migration(2013082402)]
-    public class _02_CreateAbpTenantsTable : Migration
+    [Migration(2013082401)]
+    public class _01_CreateAbpTenantsTable : Migration
     {
         public override void Up()
         {
             Create.Table("AbpTenants")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("CompanyName").AsString(100).NotNullable()
-                .WithColumn("OwnerUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
-                .WithAuditColumns();
+                .WithColumn("Subdomain").AsString(50).NotNullable()
+                .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
 
             Insert.IntoTable("AbpTenants").Row(
                 new
                     {
                         CompanyName = "Default",
-                        OwnerUserId = 1,
-                        CreatorUserId = 1
+                        Subdomain = "default"
                     }
                 );
         }

@@ -63,11 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Migrations\V20130824\_01_CreateAbpUsersTable.cs" />
-    <Compile Include="Data\Migrations\V20130824\_02_CreateAbpTenantsTable.cs" />
+    <Compile Include="Data\Migrations\V20130824\_02_CreateAbpUsersTable.cs" />
+    <Compile Include="Data\Migrations\V20130824\_01_CreateAbpTenantsTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_03_CreateAbpRolesTable.cs" />
-    <Compile Include="Data\Migrations\V20130824\_04_CreateAbpTenantUsersTable.cs" />
-    <Compile Include="Data\Migrations\V20130824\_05_CreateUserRolesTable.cs" />
+    <Compile Include="Data\Migrations\V20130824\_04_CreateAbpUserRolesTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhTenantRepository.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\TenantMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\TenantUserMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />

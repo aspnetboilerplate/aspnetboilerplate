@@ -2,7 +2,8 @@
 
     var MyUserModel = function() {
         this.id = ko.observable(1);
-        this.name = ko.observable('halilibrahimkalkan');
+        this.name = ko.observable('system');
+        this.surname = ko.observable('administrator');
     };
 
     var currentUser = new MyUserModel();

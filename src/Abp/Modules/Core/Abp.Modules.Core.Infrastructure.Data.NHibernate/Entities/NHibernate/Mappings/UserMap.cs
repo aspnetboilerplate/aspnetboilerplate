@@ -1,5 +1,4 @@
 ﻿using Abp.Modules.Core.Domain.Entities;
-using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
@@ -12,8 +11,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.Surname);
             Map(x => x.EmailAddress);
             Map(x => x.Password);
-            HasMany(x => x.Tenancies).Inverse().Cascade.All().LazyLoad();
-            HasMany(x => x.TenantMemberships).Inverse().Cascade.All().LazyLoad();
+            Map(x => x.IsTenantOwner);
         }
     }
 }

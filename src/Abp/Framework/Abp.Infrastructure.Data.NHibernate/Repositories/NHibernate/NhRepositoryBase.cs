@@ -98,6 +98,16 @@ namespace Abp.Data.Repositories.NHibernate
         }
 
         /// <summary>
+        /// Creates an entity with given primary key without database access.
+        /// </summary>
+        /// <param name="key">Primary key of the entity to load</param>
+        /// <returns>Entity</returns>
+        public TEntity Load(TPrimaryKey key)
+        {
+            return Session.Load<TEntity>(key);
+        }
+
+        /// <summary>
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>
