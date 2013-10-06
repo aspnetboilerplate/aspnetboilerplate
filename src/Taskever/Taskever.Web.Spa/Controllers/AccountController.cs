@@ -10,6 +10,7 @@ using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Security;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;
+using Castle.Core.Logging;
 using Taskever.Web.Models;
 
 namespace Taskever.Web.Controllers
@@ -62,6 +63,7 @@ namespace Taskever.Web.Controllers
             catch (Exception ex)
             {
                 //TODO: log ex as Error
+                Logger.Error(ex.Message, ex);
                 return Json(new AbpAjaxResult(new ErrorModel("System error!")));
             }
         }

@@ -1,19 +1,54 @@
 ﻿using System.Reflection;
 using Abp.Data.Startup;
-using Abp.Modules.Core.Entities.NHibernate.Mappings;
+using Abp.Domain.Repositories;
+using Abp.Modules.Core.Data.Repositories.Interceptors;
+using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Modules.Core.Startup.Dependency;
+using Castle.Core;
+using Castle.MicroKernel;
+using Castle.Windsor;
 
 namespace Abp.Modules.Core.Startup
 {
     [AbpModule("Abp.Modules.Core.Infrastructure.Data.NHibernate", Dependencies = new[] { "Abp.Infrastructure.Data.NHibernate" })]
     public class AbpModulesCoreDataModule : AbpModule
     {
+        private WindsorContainer IocContainer { get; set; }
+
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
+            IocContainer = initializationContext.IocContainer;
+
+            initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+
             initializationContext.GetModule<AbpDataModule>().AddMapping(
-                m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(UserMap)))
-                ); //TODO: Remove this to Core.Data and remove fluent nhibernate dependency?
+                m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly())
+                ); //TODO: Move this to Core.Data and remove fluent nhibernate dependency?
+        }
+
+        private void ComponentRegistered(string key, IHandler handler)
+        {
+            if (typeof(IRepository).IsAssignableFrom(handler.ComponentModel.Implementation))
+            {
+                foreach (var implementedInterface in handler.ComponentModel.Implementation.GetInterfaces())
+                {
+                    if (implementedInterface.Name == "IRepository`2" && implementedInterface.IsGenericType && implementedInterface.GenericTypeArguments.Length == 2)
+                    {
+                        var typeArgs = implementedInterface.GenericTypeArguments;
+                        if ((typeof(IHasTenant)).IsAssignableFrom(typeArgs[0]))
+                        {
+                            var genType = (typeof(MultiTenancyInterceptor<,>)).MakeGenericType(typeArgs[0], typeArgs[1]);
+                            //IocContainer.Register(Component.For(handler.ComponentModel.Implementation).Interceptors(genType));
+                            handler.ComponentModel.Interceptors.Add(new InterceptorReference(genType));
+                        }
+                        if (typeof(ICreationAudited).IsAssignableFrom(typeArgs[0]) || typeof(IModificationAudited).IsAssignableFrom(typeArgs[0]))
+                        {
+                            handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditInterceptor)));
+                        }
+                    }
+                }
+            }
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)

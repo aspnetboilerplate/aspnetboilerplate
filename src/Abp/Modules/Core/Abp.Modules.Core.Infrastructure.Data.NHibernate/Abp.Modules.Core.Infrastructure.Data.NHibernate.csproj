@@ -69,6 +69,8 @@
     <Compile Include="Data\Migrations\V20130824\_04_CreateAbpUserRolesTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
+    <Compile Include="Data\Repositories\Interceptors\AuditInterceptor.cs" />
+    <Compile Include="Data\Repositories\Interceptors\MultiTenancyInterceptor.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhTenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserRepository.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />

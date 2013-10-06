@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Domain.Repositories;
 using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Impl;
+using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.FriendshipService;
 using Taskever.Domain.Entities;
@@ -11,11 +12,11 @@ namespace Taskever.Application.Services.Impl
 {
     public class FriendshipService : IFriendshipService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
 
         private readonly IRepository<Friendship> _friendshipRepository;
 
-        public FriendshipService(IRepository<User> userRepository, IRepository<Friendship> friendshipRepository)
+        public FriendshipService(IUserRepository userRepository, IRepository<Friendship> friendshipRepository)
         {
             _userRepository = userRepository;
             _friendshipRepository = friendshipRepository;

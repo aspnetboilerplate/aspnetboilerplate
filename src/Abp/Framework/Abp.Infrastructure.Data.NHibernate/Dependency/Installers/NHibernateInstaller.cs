@@ -34,7 +34,7 @@ namespace Abp.Data.Dependency.Installers
                 Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient,
 
                 //Generic repositories
-                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
                 Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
                 
                 );

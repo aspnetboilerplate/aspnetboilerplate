@@ -1,5 +1,5 @@
-﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'models/dtos', 'services/task', 'services/friendship', 'session'],
-    function($, ko, app, dialogs, dtos, taskService, friendshipService, session) {
+﻿define(["jquery", "knockout", 'plugins/dialog', 'models/dtos', 'services/task', 'services/friendship', 'session'],
+    function($, ko, dialogs, dtos, taskService, friendshipService, session) {
         var ctor = function() {
             this.task = new dtos.TaskDto();
             this.users = ko.mapping.fromJS([]);
