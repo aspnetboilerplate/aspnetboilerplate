@@ -91,6 +91,8 @@ Move AccountController, DurandalViewController and other needed controllers to b
 - Develop ASP.NET MVC Widget System!
 - Make validation messages nicer!
 
+- Think on Assembly versioning!
+
 -------------------------------------------------------------------------------------------------
 Modules.Core
 - Tenant
