@@ -25,5 +25,5 @@ Dll's of a project:
 - Project.Core
 - Project.Infrastructure
 - Project.Application
-- Project.Api
+- Project.Web.Api
 - Project.Web.Mvc
