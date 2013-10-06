@@ -19,9 +19,13 @@ namespace Abp.Startup
 
         private IDictionary<string, AbpModuleInfo> Modules { get; set; }
 
-        public AbpBootstrapper()
+        private readonly AbpInitializationContext _initializationContext;
+
+        public AbpBootstrapper(string applicationDirectory)
         {
             IocContainer = new WindsorContainer();
+            _initializationContext = new AbpInitializationContext(this);
+            _initializationContext.ApplicationDirectory = applicationDirectory;
         }
 
         public virtual void Initialize()
@@ -53,7 +57,7 @@ namespace Abp.Startup
             new AbpModuleDependencyExplorer().SetDependencies(Modules);
             var sortedModules = new AbpModuleDependencySorter().SortByDependency(Modules);
 
-            var initializer = new AbpModuleInitializer(sortedModules, new AbpInitializationContext(this));
+            var initializer = new AbpModuleInitializer(sortedModules, _initializationContext);
             initializer.PreInitializeModules();
             initializer.InitializeModules();
             initializer.PostInitializeModules();
@@ -64,6 +68,8 @@ namespace Abp.Startup
         private class AbpInitializationContext : IAbpInitializationContext
         {
             public WindsorContainer IocContainer { get { return _abpBootstrapper.IocContainer; } }
+            
+            public string ApplicationDirectory { get; set; }
 
             private readonly AbpBootstrapper _abpBootstrapper;
 

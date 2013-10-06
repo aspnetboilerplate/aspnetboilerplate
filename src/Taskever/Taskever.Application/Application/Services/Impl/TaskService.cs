@@ -7,6 +7,7 @@ using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.TaskService;
+using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Services;
 
@@ -14,40 +15,34 @@ namespace Taskever.Application.Services.Impl
 {
     public class TaskService : ITaskService
     {
-        private readonly IRepository<Task> _taskRepository;
+        private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITaskPrivilegeService _taskPrivilegeService;
 
-        public TaskService(IRepository<Task> taskRepository, IUserRepository userRepository, ITaskPrivilegeService taskPrivilegeService)
+        public TaskService(ITaskRepository taskRepository, IUserRepository userRepository, ITaskPrivilegeService taskPrivilegeService)
         {
             _taskRepository = taskRepository;
             _userRepository = userRepository;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
-        public virtual IList<TaskDto> GetMyTasks()
+        public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput input)
         {
-            return _taskRepository.Query(q => q.Where(task => task.AssignedUser.Id == 1).ToList()).MapIList<Task, TaskDto>();
-        }
-
-        public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput args) //TODO: did not worked with GET, why?
-        {
-            if (!_taskPrivilegeService.CanSeeTasksOfUser(User.CurrentUserId, args.UserId))
+            if (!_taskPrivilegeService.CanSeeTasksOfUser(User.CurrentUserId, input.UserId))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }
 
+            var tasks = _taskRepository.Query(query => query.Where(task => task.AssignedUser.Id == input.UserId).ToList());
             return new GetTasksOfUserOutput
                        {
-                           Tasks = _taskRepository.Query(q => q.Where(task => task.Tenant.Id == Tenant.CurrentTenantId && task.AssignedUser.Id == args.UserId).ToList()).MapIList<Task, TaskDto>()
+                           Tasks = tasks.MapIList<Task, TaskDto>()
                        };
         }
 
         public virtual TaskDto CreateTask(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
-            //TODO: Automatically set Creator User informations!?
-            //taskEntity.CreatorUser = _userRepository.Load(User.CurrentUserId);
             taskEntity.AssignedUser = _userRepository.Load(task.AssignedUserId);
             _taskRepository.Insert(taskEntity);
             return taskEntity.MapTo<TaskDto>();

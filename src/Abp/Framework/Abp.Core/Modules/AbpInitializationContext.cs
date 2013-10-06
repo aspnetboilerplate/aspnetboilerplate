@@ -12,6 +12,8 @@ namespace Abp.Modules
         /// </summary>
         WindsorContainer IocContainer { get; }
 
+        string ApplicationDirectory { get; }
+
         /// <summary>
         /// Gets a reference to a module instance.
         /// </summary>

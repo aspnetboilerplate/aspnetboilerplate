@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using Abp.Data.Dependency.Interceptors;
 using Abp.Data.Repositories.NHibernate;
 using Abp.Domain.Repositories;
@@ -16,10 +18,12 @@ namespace Abp.Data.Dependency.Installers
     public class NHibernateInstaller : IWindsorInstaller
     {
         private readonly Func<ISessionFactory> _sessionFactoryCreator;
+        private readonly string _applicationDirectory;
 
-        public NHibernateInstaller(Func<ISessionFactory> sessionFactoryCreator)
+        public NHibernateInstaller(Func<ISessionFactory> sessionFactoryCreator, string applicationDirectory)
         {
             _sessionFactoryCreator = sessionFactoryCreator;
+            _applicationDirectory = applicationDirectory;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -34,9 +38,11 @@ namespace Abp.Data.Dependency.Installers
                 Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient,
 
                 //Generic repositories
-                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
-                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
-                
+                Component.For(typeof(IRepository<>), typeof(NhRepositoryBase<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<,>), typeof(NhRepositoryBase<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
+
+                Classes.FromAssemblyInDirectory(new AssemblyFilter(_applicationDirectory)).BasedOn<IRepository>().WithServiceDefaultInterfaces().LifestyleTransient().WithServiceSelf().LifestyleTransient()
+
                 );
         }
     }

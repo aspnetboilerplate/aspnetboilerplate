@@ -39,7 +39,6 @@ namespace Abp.Modules.Core.Startup
                         if ((typeof(IHasTenant)).IsAssignableFrom(typeArgs[0]))
                         {
                             var genType = (typeof(MultiTenancyInterceptor<,>)).MakeGenericType(typeArgs[0], typeArgs[1]);
-                            //IocContainer.Register(Component.For(handler.ComponentModel.Implementation).Interceptors(genType));
                             handler.ComponentModel.Interceptors.Add(new InterceptorReference(genType));
                         }
                         if (typeof(ICreationAudited).IsAssignableFrom(typeArgs[0]) || typeof(IModificationAudited).IsAssignableFrom(typeArgs[0]))

@@ -32,7 +32,7 @@ namespace Abp.Data.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
+            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory, initializationContext.ApplicationDirectory)); // TODO: Move register event handler out and install below!
         }
 
         protected void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

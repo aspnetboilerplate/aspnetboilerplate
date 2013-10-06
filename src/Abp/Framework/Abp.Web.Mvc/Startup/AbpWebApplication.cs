@@ -12,7 +12,7 @@ namespace Abp.Web.Mvc.Startup
 
         protected virtual void Application_Start()
         {
-            _bootstrapper = new AbpBootstrapper();
+            _bootstrapper = new AbpBootstrapper(Server.MapPath("bin"));
             _bootstrapper.Initialize();
         }
 

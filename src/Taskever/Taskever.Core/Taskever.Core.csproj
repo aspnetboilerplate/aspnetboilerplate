@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repositories\ITaskRepository.cs" />
     <Compile Include="Domain\Entities\Friendship.cs" />
     <Compile Include="Domain\Entities\FriendshipStatus.cs" />
     <Compile Include="Domain\Entities\Task.cs" />
@@ -74,9 +75,7 @@
       <Name>Abp.Modules.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Repositories\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Localization\Resources\AppTexts.resx">
       <Generator>ResXFileCodeGenerator</Generator>

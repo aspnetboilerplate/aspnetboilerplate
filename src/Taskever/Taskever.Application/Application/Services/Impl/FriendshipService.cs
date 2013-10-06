@@ -17,7 +17,7 @@ namespace Taskever.Application.Services.Impl
         private readonly IRepository<Friendship> _friendshipRepository;
 
         public FriendshipService(IUserRepository userRepository, IRepository<Friendship> friendshipRepository)
-        {
+        { 
             _userRepository = userRepository;
             _friendshipRepository = friendshipRepository;
         }
