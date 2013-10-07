@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
@@ -9,6 +10,7 @@ using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.TaskService;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Entities.EventHistories;
 using Taskever.Domain.Services;
 
 namespace Taskever.Application.Services.Impl
@@ -17,12 +19,15 @@ namespace Taskever.Application.Services.Impl
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEventHistoryRepository _eventHistoryRepository;
+
         private readonly ITaskPrivilegeService _taskPrivilegeService;
 
-        public TaskService(ITaskRepository taskRepository, IUserRepository userRepository, ITaskPrivilegeService taskPrivilegeService)
+        public TaskService(ITaskRepository taskRepository, IUserRepository userRepository, IEventHistoryRepository eventHistoryRepository, ITaskPrivilegeService taskPrivilegeService)
         {
             _taskRepository = taskRepository;
             _userRepository = userRepository;
+            _eventHistoryRepository = eventHistoryRepository;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
@@ -40,11 +45,21 @@ namespace Taskever.Application.Services.Impl
                        };
         }
 
+        [UnitOfWork]
         public virtual TaskDto CreateTask(TaskDto task)
         {
             var taskEntity = task.MapTo<Task>();
             taskEntity.AssignedUser = _userRepository.Load(task.AssignedUserId);
             _taskRepository.Insert(taskEntity);
+
+            var history = new CreateAndAssignEventHistoryFormatter(
+                User.CurrentUserId,
+                taskEntity.Id,
+                task.AssignedUserId
+                ).CreateEventHistory();
+
+            _eventHistoryRepository.Insert(history);
+
             return taskEntity.MapTo<TaskDto>();
         }
 

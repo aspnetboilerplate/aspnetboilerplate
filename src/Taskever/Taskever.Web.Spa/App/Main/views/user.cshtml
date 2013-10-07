@@ -8,22 +8,23 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <ul class="nav nav-tabs" id="myTab">
+            <ul class="nav nav-pills" id="myTab">
                 <li class="active"><a href="#home">Events</a></li>
                 <li><a href="#profile">Current tasks</a></li>
                 <li><a href="#messages">Completed tasks</a></li>
             </ul>
-
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
-                    <ul class="list-group">
+                    <ul class="list-group" style="margin-top: 10px;">
                         <li class="list-group-item">
-                            <img src="/App/_Common/images/task_complete.png" width="16" height="16" style="margin-right: 4px" /><b>Ahmet</b> "<i>Engin Bey'in emailini cevapla</i>" görevini tamamladı. <i class="text-muted">5 dk önce.</i></li>
+                            <img src="/App/_Common/images/task_complete.png" width="16" height="16" style="margin-right: 4px" /><b>Ahmet</b> "<i>Engin Bey'in emailini cevapla</i>" görevini tamamladı. <i class="text-muted">5 dk önce.</i>
+                        </li>
                         <li class="list-group-item">
-                            <img src="/App/_Common/images/task_add.png" width="16" height="16" style="margin-right: 4px" /><b>Halil</b>, <b>İsmail</b> kullanıcısına "<i>Sosyal Medya Projesi için Demo kurulumu</i>" görevini atadı. <i class="text-muted">12 saat önce.</i></li>
+                            <img src="/App/_Common/images/task_add.png" width="16" height="16" style="margin-right: 4px" /><b>Halil</b>, <b>İsmail</b> kullanıcısına "<i>Sosyal Medya Projesi için Demo kurulumu</i>" görevini atadı. <i class="text-muted">12 saat önce.</i>
+                        </li>
                     </ul>
                 </div>
-                <div class="tab-pane" id="profile" data-bind="compose:'viewmodels/userCurrentTasks'"></div>
+                <div class="tab-pane" id="profile" data-bind="compose: 'viewmodels/userCurrentTasks'"></div>
                 <div class="tab-pane" id="messages">completed...</div>
             </div>
         </div>

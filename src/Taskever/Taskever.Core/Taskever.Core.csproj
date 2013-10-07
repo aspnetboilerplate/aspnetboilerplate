@@ -41,7 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Repositories\IEventHistoryRepository.cs" />
     <Compile Include="Data\Repositories\ITaskRepository.cs" />
+    <Compile Include="Domain\Entities\EventHistories\CreateAndAssignEventHistoryFormatter.cs" />
+    <Compile Include="Domain\Entities\EventHistories\EventHistory.cs" />
+    <Compile Include="Domain\Entities\EventHistories\EventHistoryFormatter.cs" />
+    <Compile Include="Domain\Entities\EventHistories\EventHistoryType.cs" />
     <Compile Include="Domain\Entities\Friendship.cs" />
     <Compile Include="Domain\Entities\FriendshipStatus.cs" />
     <Compile Include="Domain\Entities\Task.cs" />

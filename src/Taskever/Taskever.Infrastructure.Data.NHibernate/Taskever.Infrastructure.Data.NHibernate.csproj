@@ -64,8 +64,11 @@
   <ItemGroup>
     <Compile Include="Data\Migrations\V20130901\_01_CreateTeTasksTable.cs" />
     <Compile Include="Data\Migrations\V20130901\_02_CreateTeFriendshipTable.cs" />
+    <Compile Include="Data\Migrations\V20131007\_01_CreateTeTasksTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
+    <Compile Include="Data\Repositories\NHibernate\NhEventHistoryRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhTaskRepository.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\EventHistoryMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\FriendshipMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\TaskMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
