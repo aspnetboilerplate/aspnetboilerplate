@@ -10,7 +10,7 @@ namespace Taskever.Dependency.Installers
         {
             container.Register(
 
-                //All repoistories //TODO: Make a custom repository example
+                //All repoistories //TODO: Make a custom repository example. No need now!
                 //Classes.FromAssembly(Assembly.GetAssembly(typeof(NhTaskRepository))).InSameNamespaceAs<NhTaskRepository>().WithService.DefaultInterfaces().LifestyleTransient(),
 
                 );

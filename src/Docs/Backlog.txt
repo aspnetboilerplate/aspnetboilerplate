@@ -23,7 +23,7 @@ Primary TODO:
 + Make login page fully ajax-based
 + User .cshtml views as durandal views -> OK
 
-- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention!
+- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
 
 Move AccountController, DurandalViewController and other needed controllers to base classes in the Abp framework!
 

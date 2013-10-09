@@ -57,6 +57,8 @@
     <Compile Include="Application\Services\Dto\TaskService\GetTasksOfUserInput.cs" />
     <Compile Include="Application\Services\Dto\TaskService\GetTasksOfUserOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
+    <Compile Include="Application\Services\Impl\ActivityService.cs" />
+    <Compile Include="Application\Services\IActivityService.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
     <Compile Include="Application\Services\Dto\FriendshipService\GetMyFriendsInput.cs" />

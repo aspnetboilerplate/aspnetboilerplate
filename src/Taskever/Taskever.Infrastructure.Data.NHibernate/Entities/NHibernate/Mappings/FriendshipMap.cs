@@ -10,6 +10,7 @@ namespace Taskever.Entities.NHibernate.Mappings
         {
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Friend).Column("FriendUserId").LazyLoad();
+            Map(x => x.FallowActivities).Column("FallowActivities");
             Map(x => x.CanAssignTask).Column("CanAssignTask");
             Map(x => x.Status).CustomType<FriendshipStatus>().Not.Nullable();
         }

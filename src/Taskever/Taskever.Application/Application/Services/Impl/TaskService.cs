@@ -9,22 +9,24 @@ using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.TaskService;
 using Taskever.Data.Repositories;
+using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
-using Taskever.Domain.Entities.EventHistories;
 using Taskever.Domain.Services;
 
 namespace Taskever.Application.Services.Impl
 {
     public class TaskService : ITaskService
     {
+        private readonly IActivityService _eventHistoryService;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IEventHistoryRepository _eventHistoryRepository;
+        private readonly IActivityRepository _eventHistoryRepository;
 
         private readonly ITaskPrivilegeService _taskPrivilegeService;
 
-        public TaskService(ITaskRepository taskRepository, IUserRepository userRepository, IEventHistoryRepository eventHistoryRepository, ITaskPrivilegeService taskPrivilegeService)
+        public TaskService(IActivityService eventHistoryService,ITaskRepository taskRepository, IUserRepository userRepository, IActivityRepository eventHistoryRepository, ITaskPrivilegeService taskPrivilegeService)
         {
+            _eventHistoryService = eventHistoryService;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
             _eventHistoryRepository = eventHistoryRepository;
@@ -51,14 +53,14 @@ namespace Taskever.Application.Services.Impl
             var taskEntity = task.MapTo<Task>();
             taskEntity.AssignedUser = _userRepository.Load(task.AssignedUserId);
             _taskRepository.Insert(taskEntity);
-
-            var history = new CreateAndAssignEventHistoryFormatter(
-                User.CurrentUserId,
-                taskEntity.Id,
-                task.AssignedUserId
-                ).CreateEventHistory();
-
-            _eventHistoryRepository.Insert(history);
+            
+            _eventHistoryService.AddActivity(
+                new CreateTaskActivityData(
+                    User.CurrentUserId,
+                    taskEntity.Id,
+                    task.AssignedUserId
+                    )
+                );
 
             return taskEntity.MapTo<TaskDto>();
         }
