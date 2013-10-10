@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Abp.Application.Services;
 using Abp.Modules.Core.Application.Services.Dto;
-using Taskever.Application.Services.Dto.FriendshipService;
+using Taskever.Application.Services.Dto.Friendships;
 
 namespace Taskever.Application.Services
 {

@@ -43,6 +43,11 @@ namespace Abp.Modules.Core.Domain.Entities
         public virtual bool IsTenantOwner { get; set; }
 
         /// <summary>
+        /// Gets Name and Surname joined by space.
+        /// </summary>
+        public virtual string NameAndSurname { get { return Name + " " + Surname; } }
+
+        /// <summary>
         /// Gets current user id.
         /// </summary>
         public static int CurrentUserId

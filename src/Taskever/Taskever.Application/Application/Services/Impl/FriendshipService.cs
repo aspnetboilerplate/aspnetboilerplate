@@ -5,7 +5,7 @@ using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
-using Taskever.Application.Services.Dto.FriendshipService;
+using Taskever.Application.Services.Dto.Friendships;
 using Taskever.Domain.Entities;
 
 namespace Taskever.Application.Services.Impl

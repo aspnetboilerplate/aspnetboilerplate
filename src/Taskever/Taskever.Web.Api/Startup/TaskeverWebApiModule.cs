@@ -16,9 +16,10 @@ namespace Taskever.Web.Startup
             CreateWebApiProxiesForServices();
         }
 
-        private void CreateWebApiProxiesForServices()
+        private static void CreateWebApiProxiesForServices()
         {
             //TODO: must UseConventions be more general insted of controller builder?
+            //TODO: must be able to exclude/include all methods option
 
             BuildApiController
                 .For<ITaskService>().WithControllerName("task") 
@@ -31,6 +32,13 @@ namespace Taskever.Web.Startup
                 .UseConventions()
                 .ForMethod("GetMyFriends").WithVerb(HttpVerb.Post)
                 .Build();
+
+            BuildApiController
+                .For<IUserActivityService>()
+                .UseConventions()
+                .ForMethod("GetFallowedActivities").WithVerb(HttpVerb.Post)
+                .Build();
+
         }
     }
 }
