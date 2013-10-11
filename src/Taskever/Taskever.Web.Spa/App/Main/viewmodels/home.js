@@ -1,4 +1,4 @@
-﻿define(['durandal/app', 'services/userActivity'], function (app, userActivityService) {
+﻿define(['durandal/app', 'services/userActivity', 'durandal/composition'], function (app, userActivityService, composition) {
     var activities = ko.mapping.fromJS([]);
 
     return {

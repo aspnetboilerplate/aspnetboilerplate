@@ -1,7 +1,29 @@
+Primary TODO:
+
++ Make login page fully ajax-based
++ Use .cshtml views as durandal views -> OK
+
+- Make durandal views working for all .cshtml files in /App
+- Move AccountController, DurandalViewController and other needed controllers to base classes in the Abp framework!
+
+- Auto create DTO objects (plain and/or knockout ?)
+
+- Make use of NHibernate auto mapping
+
+- Client-side validation-object generator for DTO's.
+- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
+- Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
+- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
+- Test & Use NHibernate L2? caching
+- Exception handling in Controllers and ApiControllers
+- JS&CSS Minimization and bundle (best practices!)
+
+--------------------------------------------------------------------------------------------------
+
 - Domain driven design infrastructure
   - Entities
   - Repositories
-  - Services
+  - Domain And Application Services
   - Unit of work
   - DTO (Data transfer objects)
     - DTO auto mappings
@@ -17,15 +39,6 @@
   
 -------------------------------------------------------------------------------------------------
 
-Primary TODO:
-
-+ Make login page fully ajax-based
-+ User .cshtml views as durandal views -> OK
-
-- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
-
-Move AccountController, DurandalViewController and other needed controllers to base classes in the Abp framework!
-
 - Server side interceptions
 	- Application service
 	  + DTO Validation
@@ -39,7 +52,6 @@ Move AccountController, DurandalViewController and other needed controllers to b
 	  - Exception handling
 	  - Authorization
 
-- Client-side validation-object generator for DTO's.
 
 - Feature-based authorization
   - Tenant-specific feature?
@@ -67,10 +79,6 @@ Move AccountController, DurandalViewController and other needed controllers to b
 + Create WebApi proxy and Javascript proxy for GET, POST, PUT and DELETE operations.
   - Will be tested with different count and type of parameters.
 
-- Create IDomainService & IApplicationService interfaces!
-- Auto create DTO objects (plain & knockout)
-- Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
-- Make use of NHibernate auto mapping
 - Authrization system
   - Authentication
   - Edition system
@@ -81,10 +89,6 @@ Move AccountController, DurandalViewController and other needed controllers to b
 	- Mvc views
 	- Web api controllers
 	- Service methods
-- Using razor for durandal views
-- Server side validation
-- Client side validation
-- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Implement best practices for guard clauses?
 - Localization improvement
 - Develop ASP.NET MVC Widget System!
@@ -132,10 +136,6 @@ TODO:
   - Write history/log
   - Set Audit properties
   - Set current tenant/user
-
-- Use NHibernate L2? caching
-- Exception handling in Controllers and ApiControllers
-- JS&CSS Minimization and bundle (best practices!)
 
 - User management system
 - Role (user templates) management system

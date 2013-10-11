@@ -13,6 +13,8 @@ namespace Taskever.Application.Services.Dto.Activities
     {
         public virtual ActivityAction Action { get; set; }
 
+        public virtual string ActionName { get; set; }
+
         public virtual ActivityInfo ActivityInfo { get; set; }
 
         public virtual DateTime CreationTime { get; set; }

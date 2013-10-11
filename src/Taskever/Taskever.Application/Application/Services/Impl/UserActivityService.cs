@@ -24,6 +24,7 @@ namespace Taskever.Application.Services.Impl
                                new ActivityDto
                                    {
                                        Action = activity.Action,
+                                       ActionName = activity.Action.ToString(),
                                        ActivityInfo = activity.Action.CreateActivityInfo(activity.Data),
                                        CreationTime = activity.CreationTime
                                    }

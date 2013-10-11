@@ -4,6 +4,6 @@ namespace Taskever.Domain.Enums
     {
         CreateTask = 1,
         
-        CompleteTask = 3
+        CompleteTask = 2
     }
 }
