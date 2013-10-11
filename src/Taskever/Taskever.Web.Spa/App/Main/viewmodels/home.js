@@ -5,7 +5,7 @@
         activities: activities,
         activate: function () {
             userActivityService.getFallowedActivities({
-                fallowerUserId: 4 //TODO: Must be the current user!
+                fallowerUserId: 1 //TODO: Must be the current user!
             }).then(function (data) {
                 ko.mapping.fromJS(data.activities, activities);
                 console.log(activities);
