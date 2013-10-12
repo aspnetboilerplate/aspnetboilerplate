@@ -13,7 +13,7 @@ requirejs.config({
 define('jquery', function () { return jQuery; });
 define('knockout', ko);
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function (system, app, viewLocator) {
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/viewEngine'], function (system, app, viewLocator, viewEngine) {
     system.debug(true); //TODO: remove in production code
 
     app.title = 'Task Ever';
@@ -26,6 +26,11 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function (sy
 
     app.start().then(function () {
         viewLocator.useConvention();
+        viewEngine.convertViewIdToRequirePath = function (viewId) {
+            console.log(this.viewPlugin + '!/DurandalView/GetAppView?view=' + viewId + '.cshtml');
+            return this.viewPlugin + '!' + viewId + this.viewExtension;
+        };
+
         app.setRoot('viewmodels/layout', 'entrance');
     });
 });
