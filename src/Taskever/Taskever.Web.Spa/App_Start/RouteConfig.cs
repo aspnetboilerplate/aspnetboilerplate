@@ -23,13 +23,6 @@ namespace Taskever.Web.App_Start
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
                 );
-
-            //Durandal Views! TODO: Where and how to write this?
-            routes.MapRoute(
-                name: "AppViews",
-                url: "App/{module}/views/{view}.html",
-                defaults: new { controller = "DurandalView", action = "GetAppView" }
-                );
         }
     }
 }

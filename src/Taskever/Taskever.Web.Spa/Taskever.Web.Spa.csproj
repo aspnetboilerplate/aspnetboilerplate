@@ -184,7 +184,7 @@
     <Content Include="App\Main\viewmodels\userCurrentTasks.js" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\userCurrentTasks.cshtml" />
-    <None Include="App\Main\views\activityInfo_CreateTask.cshtml" />
+    <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
@@ -320,7 +320,6 @@
     <Folder Include="Abp\Modules\Core\views\" />
     <Folder Include="App\Main\scripts\" />
     <Folder Include="App\Main\styles\" />
-    <Folder Include="App\Main\views\shared\activities\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -4,7 +4,7 @@
             <h3 class="panel-title">Latest events</h3>
         </div>
         <ul class="list-group" data-bind="foreach: activities">
-            <li class="list-group-item" data-bind="compose: 'activityInfo_' + actionName() + '.html'">
+            <li class="list-group-item" data-bind="compose: 'shared/activities/activityInfo_' + actionName() + '.html'">
             </li>
         </ul>
     </div>

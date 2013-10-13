@@ -11,9 +11,19 @@ namespace Taskever.Web.Controllers
         //
         // GET: /DurandalViewController/
 
-        public ActionResult GetAppView(string module, string view)
+        //public ActionResult GetAppView(string module, string view)
+        //{
+        //    return View("/App/" + module + "/views/" + view + ".cshtml");
+        //}
+
+        public ActionResult GetAppView(string viewUrl)
         {
-            return View("/App/" + module + "/views/" + view + ".cshtml");
+            if (viewUrl.StartsWith("/"))
+            {
+                return View(viewUrl);
+            }
+
+            return View("/App/Main/" + viewUrl);
         }
     }
 }
