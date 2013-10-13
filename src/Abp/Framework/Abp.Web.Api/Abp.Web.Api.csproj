@@ -72,9 +72,11 @@
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiHelper.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\DtosController.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ControllerScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\Dtos\DtoScriptBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\HttpDeleteActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\HttpGetActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\HttpPostActionScriptProxyGenerator.cs" />
@@ -84,7 +86,7 @@
     <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
-    <Compile Include="Controllers\Dynamic\ServiceProxyGenerateController.cs" />
+    <Compile Include="Controllers\Dynamic\ServiceProxiesController.cs" />
     <Compile Include="Startup\AbpWebApiModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
@@ -104,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Abp.Application\Abp.Application.csproj">
+      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
+      <Name>Abp.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>

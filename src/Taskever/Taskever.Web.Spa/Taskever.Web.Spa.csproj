@@ -187,7 +187,6 @@
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />
-    <Content Include="App\Main\models\dtos.js" />
     <Content Include="Abp\Framework\scripts\abp.jquery.js" />
     <Content Include="App\Main\viewmodels\home.js" />
     <Content Include="App\Main\viewmodels\createTaskDialog.js" />

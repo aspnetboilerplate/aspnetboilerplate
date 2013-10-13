@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'models/dtos', 'service!task'], function ($, ko, app, dialogs, dtos, taskService) {
+﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'service!task'], function ($, ko, app, dialogs, taskService) {
     var tasks = ko.mapping.fromJS([]);
 
     return {

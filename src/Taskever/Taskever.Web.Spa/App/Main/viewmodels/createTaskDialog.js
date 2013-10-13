@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'plugins/dialog', 'models/dtos', 'service!task', 'service!friendship', 'session'],
+﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!task', 'service!friendship', 'session'],
     function($, ko, dialogs, dtos, taskService, friendshipService, session) {
         var ctor = function() {
             this.task = new dtos.TaskDto();
@@ -16,7 +16,6 @@
 
         ctor.prototype.saveNewTask = function() {
             var that = this;
-            console.log(that.task);
             taskService.createTask(ko.mapping.toJS(that.task))
                 .then(function(data) {
                     dialogs.close(that, ko.mapping.fromJS(data));

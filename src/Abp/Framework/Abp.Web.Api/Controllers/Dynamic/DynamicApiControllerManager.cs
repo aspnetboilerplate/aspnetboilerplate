@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -35,6 +36,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         {
             //TODO: Register case insensitive?
             DynamicTypes[controllerInfo.Name] = controllerInfo;
+        }
+
+        public static List<DynamicApiControllerInfo> GetAllServiceControllers()
+        {
+            return DynamicTypes.Values.ToList();
         }
     }
 }
