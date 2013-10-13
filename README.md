@@ -5,7 +5,7 @@ ASP.NET Boilerplate
 
 ASP.NET Boilerplate is a starting point for new web applications with best practices and most popular tools!
 
-ASP.NET Boilerplate implements NLayer architecture and Domain Driven Design with popular tools:
+ASP.NET Boilerplate implements __NLayer architecture__ and __Domain Driven Design__ with these tools:
 
 - Server side
   - ASP.NET MVC and ASP.NET Web API (as web framework)
