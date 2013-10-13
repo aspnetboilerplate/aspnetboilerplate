@@ -1,4 +1,7 @@
-﻿using Abp.Modules.Core.Dependency.Installers;
+﻿using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Dependency.Installers;
+using Abp.WebApi.Controllers;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.Modules.Core.Startup
 {
@@ -9,6 +12,12 @@ namespace Abp.Modules.Core.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new AbpCoreModuleWebApiInstaller());
+
+            BuildApiController
+                .For<IUserService>().WithControllerName("user")
+                .UseConventions()
+                .ForMethod("GetCurrentUserInfo").WithVerb(HttpVerb.Post)
+                .Build();
         }
     }
 }

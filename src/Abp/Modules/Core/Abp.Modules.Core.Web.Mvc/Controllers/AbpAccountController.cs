@@ -73,10 +73,10 @@ namespace Abp.Modules.Core.Mvc.Controllers
         }
 
         [HttpPost]
-        public virtual JsonResult Register(RegisterUserInputDto registerUserDto)
+        public virtual JsonResult Register(RegisterUserInput registerUser)
         {
-            _userService.RegisterUser(registerUserDto);
-            return Login(new LoginModel { EmailAddress = registerUserDto.EmailAddress, Password = registerUserDto.Password });
+            _userService.RegisterUser(registerUser);
+            return Login(new LoginModel { EmailAddress = registerUser.EmailAddress, Password = registerUser.Password });
         }
     }
 }

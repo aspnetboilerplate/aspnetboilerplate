@@ -10,7 +10,7 @@
             friendshipService.getMyFriends({ canAssignTask: true })
                 .then(function(data) {
                     ko.mapping.fromJS(data, that.users);
-                    that.users.unshift(session.getCurrentUser()); //Me !
+                    that.users.unshift(session.getCurrentUser());
                 });
         };
 

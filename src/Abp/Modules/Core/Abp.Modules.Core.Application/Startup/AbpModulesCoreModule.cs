@@ -11,6 +11,8 @@ namespace Abp.Modules.Core.Startup
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new AbpCoreModuleDependencyInstaller());
             DtoMapper.Map();
+
+            
         }
     }
 }

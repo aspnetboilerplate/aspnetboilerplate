@@ -3,7 +3,6 @@
 
 * TODO
 
-- Auto create DTO objects (plain and/or knockout ?)
 - Get current user informations to SPA!
 
 - Make use of NHibernate auto mapping

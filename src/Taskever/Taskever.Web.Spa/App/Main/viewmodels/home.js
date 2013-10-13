@@ -1,14 +1,13 @@
-﻿define(['durandal/app', 'service!userActivity'], function (app, userActivityService) {
+﻿define(['durandal/app', 'session', 'service!userActivity'], function (app, session, userActivityService) {
     var activities = ko.mapping.fromJS([]);
 
     return {
         activities: activities,
         activate: function () {
             userActivityService.getFallowedActivities({
-                fallowerUserId: 1 //TODO: Must be the current user!
+                fallowerUserId: session.getCurrentUser().id()
             }).then(function (data) {
                 ko.mapping.fromJS(data.activities, activities);
-                console.log(activities);
             });
         }
     };

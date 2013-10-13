@@ -1,14 +1,16 @@
-﻿define(["knockout"], function (ko) {
-
-    var MyUserModel = function() {
-        this.id = ko.observable(1);
-        this.name = ko.observable('system');
-        this.surname = ko.observable('administrator');
+﻿define(["knockout", 'service!dto', "service!user"], function (ko, dtos, userService) {
+    var currentUser = ko.mapping.fromJS({});
+    
+    var start = function () {
+        return userService.getCurrentUserInfo({ })
+            .then(function(data) {
+                ko.mapping.fromJS(data.user, currentUser);
+                console.log(currentUser);
+            });
     };
 
-    var currentUser = new MyUserModel();
-
     return {
+        start: start,
         getCurrentUser: function () {
             return currentUser;
         }

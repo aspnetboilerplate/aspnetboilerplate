@@ -5,10 +5,11 @@
         tasks: tasks,
 
         activate: function () {
-            taskService.getTasksOfUser({userId : 1})
-                .then(function(data) {
-                    ko.mapping.fromJS(data.tasks, tasks);
-                });
+            taskService.getTasksOfUser({
+                userId: session.getCurrentUser().id()
+            }).then(function(data) {
+                ko.mapping.fromJS(data.tasks, tasks);
+            });
         },
 
         showTaskCreateDialog: function () {

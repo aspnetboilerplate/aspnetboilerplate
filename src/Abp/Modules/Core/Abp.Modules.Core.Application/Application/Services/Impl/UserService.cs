@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Modules.Core.Application.Services.Dto;
+using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 
@@ -43,11 +44,16 @@ namespace Abp.Modules.Core.Application.Services.Impl
             return userId.MapTo<UserDto>();
         }
 
-        public void RegisterUser(RegisterUserInputDto registerUserDto)
+        public void RegisterUser(RegisterUserInput registerUser)
         {
-            var userEntity = registerUserDto.MapTo<User>();
+            var userEntity = registerUser.MapTo<User>();
             userEntity.Tenant = _tenantRepository.Load(1); //TODO: Get from subdomain or ?
             _userRepository.Insert(userEntity);
+        }
+
+        public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
+        {
+            return new GetCurrentUserInfoOutput { User = _userRepository.Get(User.CurrentUserId).MapTo<UserDto>() };
         }
     }
 }

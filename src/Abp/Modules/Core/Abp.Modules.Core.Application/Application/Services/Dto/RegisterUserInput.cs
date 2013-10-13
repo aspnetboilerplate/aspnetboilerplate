@@ -3,7 +3,7 @@ using Abp.Application.Services.Dto;
 
 namespace Abp.Modules.Core.Application.Services.Dto
 {
-    public class RegisterUserInputDto : IInputDto
+    public class RegisterUserInput : IInputDto
     {
         [Required]
         [StringLength(30)]

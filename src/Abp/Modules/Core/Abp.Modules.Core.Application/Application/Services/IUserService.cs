@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Services;
 using Abp.Modules.Core.Application.Services.Dto;
+using Abp.Modules.Core.Application.Services.Dto.Users;
 
 namespace Abp.Modules.Core.Application.Services
 {
@@ -15,6 +16,8 @@ namespace Abp.Modules.Core.Application.Services
 
         UserDto GetUser(int userId);
 
-        void RegisterUser(RegisterUserInputDto registerUserDto);
+        void RegisterUser(RegisterUserInput registerUser);
+
+        GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input);
     }
 }
