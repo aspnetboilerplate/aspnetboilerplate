@@ -3,10 +3,8 @@
 
 * TODO
 
-- Get current user informations to SPA!
-
 - Make use of NHibernate auto mapping
-- Client-side validation-object generator for DTO's.
+- Client-side validation-object generator for DTO's.........?
 - Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
