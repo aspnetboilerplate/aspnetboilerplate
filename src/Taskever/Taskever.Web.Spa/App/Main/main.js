@@ -19,7 +19,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/vie
     //TODO: Move to framework?
     viewEngine.convertViewIdToRequirePath = function (viewId) {
         return this.viewPlugin + '!/DurandalView/GetAppView?viewUrl=' + viewId + '.cshtml';
-    };
+    }; 
 
     app.title = 'Task Ever';
 
