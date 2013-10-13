@@ -1,10 +1,11 @@
 ﻿using System.Web;
-using Abp.Modules.Core.Dependency.Installers;
-using Abp.Modules.Core.Startup;
-using Abp.Modules.Core.Web.Authentication;
+using Abp.Modules.Core.Mvc.Dependency.Installers;
+using Abp.Modules.Core.Mvc.Startup;
+using Abp.Modules.Core.Mvc.Web.Authentication;
+
 [assembly: PreApplicationStartMethod(typeof(Test), "Start")]
 
-namespace Abp.Modules.Core.Startup
+namespace Abp.Modules.Core.Mvc.Startup
 {
     [AbpModule("Abp.Modules.Core.Web.Mvc", Dependencies = new[] { "Abp.Web.Mvc" })]
     public class AbpModulesCoreWebMvcModule : AbpModule

@@ -163,9 +163,7 @@
     <Compile Include="App_Start\Test.cs" />
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DurandalViewController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
-    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="App_Start\Dependency\Installers\TaskeverWebSpaInstaller.cs" />

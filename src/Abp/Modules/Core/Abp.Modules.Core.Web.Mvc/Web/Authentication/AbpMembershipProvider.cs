@@ -3,7 +3,7 @@ using System.Web.Security;
 using Abp.Modules.Core.Application.Services;
 using Castle.Windsor;
 
-namespace Abp.Modules.Core.Web.Authentication
+namespace Abp.Modules.Core.Mvc.Web.Authentication
 {
     public class AbpMembershipProvider : MembershipProvider
     {

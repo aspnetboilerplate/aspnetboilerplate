@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Modules.Core.Dependency.Installers
+namespace Abp.Modules.Core.Mvc.Dependency.Installers
 {
     public class AbpCoreModuleWebMvcInstaller : IWindsorInstaller 
     {

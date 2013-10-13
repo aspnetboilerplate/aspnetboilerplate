@@ -3,12 +3,6 @@
 
 * TODO
 
-- Make durandal views working for all .cshtml files in /App
-
-  - areasPath in viewLocator?
-
-
-
 - Move AccountController, DurandalViewController and other needed controllers to base classes in the Abp framework!
 
 - Auto create DTO objects (plain and/or knockout ?)
@@ -44,6 +38,10 @@
   - Set current tenant/user
 
 * Tests
+
+* Learn
+
+What's area in durandal and how to use it?
 
 -----------------------------------------------------
 Next phases

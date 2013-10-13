@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Taskever.Web.Models
+namespace Abp.Modules.Core.Mvc.Models
 {
     public class LoginModel
     {
