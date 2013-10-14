@@ -3,31 +3,31 @@
 
 * TODO
 
+- Taskever Localization: Server&Client (js)
+
 * Interceptions
 
 - Web API interceptor
-  - WORKING ON -> Exception handling
+  + Exception handling
   - Transforming result to AbpAjaxResponse
   - Operation time measurement
   - DB logging?
 
 - ASP.NET MVC interceptor (Implement using base class!)
-  - + Transforming result to AbpAjaxResponse ???
-  - WORKING ON -> Exception handling
+  + Transforming result to AbpAjaxResponse ???
+  + Exception handling (except validation)
   - Operation time measurement
   - DB logging?
 
-- Service interceptions
+- Application Service interceptions
+  + Validation
   - Authorization
-  - Exception handling?
 
 - Repository interceptors
   - Tenancy filter
   - Write history/log
   - Set Audit properties
   - Set current tenant/user
-
-- Taskever Localization: Server&Client (js)
 
 - Make use of NHibernate auto mapping
 - Client-side validation-object generator for DTO's.........?
