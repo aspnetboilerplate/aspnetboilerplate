@@ -33,9 +33,6 @@ namespace Abp.Modules.Core.Mvc.Controllers
         [HttpPost]
         public virtual JsonResult Login(LoginModel loginModel)
         {
-            //Thread.Sleep(5000);
-            //try
-            //{
             if (ModelState.IsValid)
             {
                 if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
@@ -54,19 +51,7 @@ namespace Abp.Modules.Core.Mvc.Controllers
                 return Json(new AbpMvcAjaxResult(true) { TargetUrl = "/" });
             }
 
-            return Json(new AbpMvcAjaxResult(new AbpErrorInfo("Your form is invalid!")));
-            //}
-            //catch (AbpUserFriendlyException ex)
-            //{
-            //    //TODO: log ex as warning
-            //    return Json(new AbpMvcAjaxResult(new AbpErrorInfo(ex.Message)));
-            //}
-            //catch (Exception ex)
-            //{
-            //    //TODO: log ex as Error
-            //    Logger.Error(ex.Message, ex);
-            //    return Json(new AbpMvcAjaxResult(new AbpErrorInfo("System error!")));
-            //}
+            throw new AbpUserFriendlyException("Your form is invalid!");
         }
 
         [Authorization.AbpAuthorize]

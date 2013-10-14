@@ -6,12 +6,12 @@
 * Interceptions
 
 - Web API interceptor
-  - Exception handling
+  - WORKING ON -> Exception handling
   - Operation time measurement
   - DB logging?
 
 - ASP.NET MVC interceptor (Implement using base class!)
-  - Exception handling
+  - WORKING ON -> Exception handling
   - Operation time measurement
   - DB logging?
 

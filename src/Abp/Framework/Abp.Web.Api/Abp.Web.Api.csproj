@@ -87,7 +87,7 @@
     <Compile Include="Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
     <Compile Include="Controllers\Dynamic\ServiceProxiesController.cs" />
-    <Compile Include="Startup\AbpExceptionFilterAttribute.cs" />
+    <Compile Include="Controllers\Filters\AbpExceptionFilterAttribute.cs" />
     <Compile Include="Startup\AbpWebApiModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />

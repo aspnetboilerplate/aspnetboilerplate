@@ -1,5 +1,6 @@
 using System;
 using System.Web.Mvc;
+using Abp.Exceptions;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -49,9 +50,14 @@ namespace Abp.Web.Mvc.Controllers
 
         private void HandleAjaxError(ExceptionContext context)
         {
+            //TODO: Move this to another class to be able to share!
+            var message = context.Exception is AbpUserFriendlyException
+                              ? context.Exception.Message
+                              : "General exception message here!";
+
             context.Result = new JsonCamelCaseResult
                                  {
-                                     Data = new AbpMvcAjaxResult(new AbpErrorInfo(context.Exception.Message))
+                                     Data = new AbpMvcAjaxResult(new AbpErrorInfo(message))
                                  };
         }
 
@@ -74,11 +80,16 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
+            //TODO: Move this to another class to be able to share!
+            var message = context.Exception is AbpUserFriendlyException
+                              ? context.Exception.Message
+                              : "General exception message here!";
+            
             context.Result = new ViewResult
                                  {
                                      ViewName = View,
                                      MasterName = Master,
-                                     ViewData = new ViewDataDictionary<AbpErrorInfo>(new AbpErrorInfo(context.Exception.Message)),
+                                     ViewData = new ViewDataDictionary<AbpErrorInfo>(new AbpErrorInfo(message)),
                                      TempData = context.Controller.TempData
                                  };
 

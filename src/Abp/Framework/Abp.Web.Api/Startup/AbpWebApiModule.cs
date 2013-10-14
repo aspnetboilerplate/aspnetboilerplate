@@ -6,6 +6,7 @@ using System.Web.Http.Dispatcher;
 using Abp.Modules;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
+using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Dependency;
 using Abp.WebApi.Dependency.Installers;
 using Abp.WebApi.Dependency.Interceptors;
