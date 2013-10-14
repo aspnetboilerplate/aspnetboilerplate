@@ -52,6 +52,9 @@
       <Private>True</Private>
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.5.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -88,11 +91,12 @@
   <ItemGroup>
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AbpController.cs" />
+    <Compile Include="Controllers\AbpHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\Results\JsonCamelCaseResult.cs" />
     <Compile Include="Dependency\Installers\AbpWebInstaller.cs" />
     <Compile Include="Dependency\WindsorControllerFactory.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
-    <Compile Include="Models\AbpJsonResultObject.cs" />
-    <Compile Include="Models\ErrorModel.cs" />
+    <Compile Include="Models\AbpMvcAjaxResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebApplication.cs" />
     <Compile Include="Startup\AbpWebMvcModule.cs" />
@@ -108,6 +112,10 @@
     <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Web\Abp.Web.csproj">
+      <Project>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</Project>
+      <Name>Abp.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

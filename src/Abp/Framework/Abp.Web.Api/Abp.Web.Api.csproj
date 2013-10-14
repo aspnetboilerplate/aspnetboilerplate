@@ -87,6 +87,7 @@
     <Compile Include="Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\PlainTextFormatter.cs" />
     <Compile Include="Controllers\Dynamic\ServiceProxiesController.cs" />
+    <Compile Include="Startup\AbpExceptionFilterAttribute.cs" />
     <Compile Include="Startup\AbpWebApiModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\AbpApiControllerActionSelector.cs" />
@@ -113,6 +114,10 @@
     <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Web\Abp.Web.csproj">
+      <Project>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</Project>
+      <Name>Abp.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

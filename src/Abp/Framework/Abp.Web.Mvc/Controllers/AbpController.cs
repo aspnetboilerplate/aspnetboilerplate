@@ -1,6 +1,8 @@
 using System.Globalization;
+using System.Text;
 using System.Web.Mvc;
 using Abp.Localization;
+using Abp.Web.Mvc.Controllers.Results;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
@@ -58,6 +60,17 @@ namespace Abp.Web.Mvc.Controllers
         protected string L(string name, CultureInfo culture)
         {
             return LocalizationManager.GetString(name, culture);
+        }
+
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            return new JsonCamelCaseResult
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior
+            };
         }
     }
 }

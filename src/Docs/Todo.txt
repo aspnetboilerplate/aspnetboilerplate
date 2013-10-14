@@ -3,6 +3,28 @@
 
 * TODO
 
+* Interceptions
+
+- Web API interceptor
+  - Exception handling
+  - Operation time measurement
+  - DB logging?
+
+- ASP.NET MVC interceptor (Implement using base class!)
+  - Exception handling
+  - Operation time measurement
+  - DB logging?
+
+- Service interceptions
+  - Authorization
+  - Exception handling?
+
+- Repository interceptors
+  - Tenancy filter
+  - Write history/log
+  - Set Audit properties
+  - Set current tenant/user
+
 - Make use of NHibernate auto mapping
 - Client-side validation-object generator for DTO's.........?
 - Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
@@ -19,18 +41,6 @@
 - Role (user templates) management system
 - Tenant system and Cloud!
 - Usage logging/history (detailed auditing)
-
-* Interceptions
-
-- Service interceptions
-  - Authorization
-  - Exception handling?
-
-- Repository interceptors
-  - Tenancy filter
-  - Write history/log
-  - Set Audit properties
-  - Set current tenant/user
 
 * Tests
 

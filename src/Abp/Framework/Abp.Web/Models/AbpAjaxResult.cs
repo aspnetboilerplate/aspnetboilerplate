@@ -1,4 +1,4 @@
-﻿namespace Abp.Web.Mvc.Models
+﻿namespace Abp.Web.Models
 {
     /// <summary>
     /// This class is used to create return values for ajax requests.
@@ -19,12 +19,7 @@
         /// <summary>
         /// Error details (if <see cref="Success"/> is false.
         /// </summary>
-        public ErrorModel Error { get; set; }
-
-        /// <summary>
-        /// This property can be used to redirect user to a specified URL.
-        /// </summary>
-        public string TargetUrl { get; set; }
+        public AbpErrorInfo Error { get; set; }
 
         /// <summary>
         /// This property can be used to indicate that the current user has no privilege to perform this request.
@@ -57,7 +52,7 @@
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>
-        public AbpAjaxResult(ErrorModel error, bool unAuthorizedRequest = false)
+        public AbpAjaxResult(AbpErrorInfo error, bool unAuthorizedRequest = false)
         {
             Error = error;
             UnAuthorizedRequest = unAuthorizedRequest;

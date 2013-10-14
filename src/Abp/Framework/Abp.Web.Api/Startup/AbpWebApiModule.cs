@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Formatting;
+﻿using System;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -25,22 +26,25 @@ namespace Abp.WebApi.Startup
 
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
-            base.Initialize(initializationContext);  
+            base.Initialize(initializationContext);
 
             ApiControllerBuilder.IocContainer = initializationContext.IocContainer;
 
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
+            GlobalConfiguration.Configuration.Formatters.Clear();
+
             var formatter = new JsonMediaTypeFormatter();
             formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
-            GlobalConfiguration.Configuration.Formatters.Clear();
             GlobalConfiguration.Configuration.Formatters.Add(formatter);
+
             GlobalConfiguration.Configuration.Formatters.Add(new PlainTextFormatter());
-            
+
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(initializationContext.IocContainer));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+
+            GlobalConfiguration.Configuration.Filters.Add(new AbpExceptionFilterAttribute());
 
             initializationContext.IocContainer.Install(new AbpWebApiInstaller());
         }

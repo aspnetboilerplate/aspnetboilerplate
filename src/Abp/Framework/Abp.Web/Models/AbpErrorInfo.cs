@@ -1,18 +1,18 @@
-﻿namespace Abp.Web.Mvc.Models
+﻿namespace Abp.Web.Models
 {
-    public class ErrorModel
+    public class AbpErrorInfo
     {
         public string Title { get; set; }
 
         public string Message { get; set; }
 
-        public ErrorModel(string message)
+        public AbpErrorInfo(string message)
             : this("Error!", message)
         {
 
         }
-
-        public ErrorModel(string title, string message)
+        
+        public AbpErrorInfo(string title, string message)
         {
             Title = title;
             Message = message;

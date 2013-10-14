@@ -103,19 +103,19 @@
         handleData: function (data, userOptions, defer) {
             if (data) {
 
-                if (data.Success == false) {
+                if (data.success === false) {
 
-                    if (data.Error) {
+                    if (data.error) {
 
-                        alert(data.Error.Message); //TODO: Show a better message!
+                        alert(data.error.message); //TODO: Show a better message!
 
-                        defer && defer.reject(data.Error);
-                        userOptions.error && userOptions.error(data.Error);
+                        defer && defer.reject(data.error);
+                        userOptions.error && userOptions.error(data.error);
                     }
 
-                    if (data.UnAuthorizedRequest) {
+                    if (data.unAuthorizedRequest) {
                         if (data.TargetUrl) {
-                            location.href = data.TargetUrl;
+                            location.href = data.targetUrl;
                         } else {
                             location.reload();
                         }
@@ -129,7 +129,7 @@
             userOptions.success && userOptions.success(data);
 
             if (data.TargetUrl) {
-                location.href = data.TargetUrl;
+                location.href = data.targetUrl;
             }
         }
     };

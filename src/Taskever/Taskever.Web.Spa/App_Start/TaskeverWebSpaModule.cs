@@ -15,7 +15,6 @@ namespace Taskever.Web.App_Start
 
             AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             initializationContext.IocContainer.Install(new TaskeverWebSpaInstaller());
