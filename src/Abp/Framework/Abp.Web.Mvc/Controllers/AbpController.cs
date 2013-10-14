@@ -20,16 +20,6 @@ namespace Abp.Web.Mvc.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Reference to the localization manager.
-        /// </summary>
-        public ILocalizationManager LocalizationManager
-        {
-            get { return _localizationManager; }
-            set { _localizationManager = value; }
-        }
-        private ILocalizationManager _localizationManager = NullLocalizationManager.Instance;
-
-        /// <summary>
         /// Gets localized string for given key name and current language.
         /// Shortcut for LocalizationManager.GetString.
         /// </summary>
@@ -37,7 +27,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name)
         {
-            return LocalizationManager.GetString(name);
+            return LocalizationHelper.GetString(name);
         }
 
         /// <summary>
@@ -49,7 +39,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name, string languageCode)
         {
-            return LocalizationManager.GetString(name, languageCode);
+            return LocalizationHelper.GetString(name, languageCode);
         }
 
         /// <summary>
@@ -61,7 +51,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name, CultureInfo culture)
         {
-            return LocalizationManager.GetString(name, culture);
+            return LocalizationHelper.GetString(name, culture);
         }
 
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)

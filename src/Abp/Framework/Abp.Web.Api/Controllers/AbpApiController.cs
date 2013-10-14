@@ -16,16 +16,6 @@ namespace Abp.WebApi.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Reference to the localization manager.
-        /// </summary>
-        public ILocalizationManager LocalizationManager
-        {
-            get { return _localizationManager; }
-            set { _localizationManager = value; }
-        }
-        private ILocalizationManager _localizationManager = NullLocalizationManager.Instance;
-
-        /// <summary>
         /// Gets localized string for given key name and current language.
         /// Shortcut for LocalizationManager.GetString.
         /// </summary>
@@ -33,7 +23,7 @@ namespace Abp.WebApi.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name)
         {
-            return LocalizationManager.GetString(name);
+            return LocalizationHelper.GetString(name);
         }
 
         /// <summary>
@@ -45,7 +35,7 @@ namespace Abp.WebApi.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name, string languageCode)
         {
-            return LocalizationManager.GetString(name, languageCode);
+            return LocalizationHelper.GetString(name, languageCode);
         }
 
         /// <summary>
@@ -57,7 +47,7 @@ namespace Abp.WebApi.Controllers
         /// <returns>Localized string</returns>
         protected string L(string name, CultureInfo culture)
         {
-            return LocalizationManager.GetString(name, culture);
+            return LocalizationHelper.GetString(name, culture);
         }
     }
 }

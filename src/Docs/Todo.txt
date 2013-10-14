@@ -27,6 +27,8 @@
   - Set Audit properties
   - Set current tenant/user
 
+- Taskever Localization: Server&Client (js)
+
 - Make use of NHibernate auto mapping
 - Client-side validation-object generator for DTO's.........?
 - Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
@@ -35,7 +37,6 @@
 - Test & Use NHibernate L2? caching
 - Exception handling in Controllers and ApiControllers
 - JS&CSS Minimization and bundle (best practices!)
-- Localization: Server&Client (js)
 - Create 403 & 404 (maybe others) special error pages!
 
 * ADMIN Pages
