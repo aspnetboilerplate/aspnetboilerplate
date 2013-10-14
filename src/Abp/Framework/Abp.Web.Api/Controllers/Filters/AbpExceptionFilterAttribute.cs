@@ -24,7 +24,7 @@ namespace Abp.WebApi.Controllers.Filters
 
             context.Response = context.Request.CreateResponse(
                 HttpStatusCode.OK,
-                new AbpAjaxResult(new AbpErrorInfo(message))
+                new AbpAjaxResponse(new AbpErrorInfo(message))
                 );
         }
     }

@@ -7,6 +7,7 @@ using Abp.Web.Mvc.Models;
 
 namespace Abp.Web.Mvc.Controllers
 {
+    /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class AbpHandleErrorAttribute : FilterAttribute, IExceptionFilter
     {
@@ -55,9 +56,9 @@ namespace Abp.Web.Mvc.Controllers
                               ? context.Exception.Message
                               : "General exception message here!";
 
-            context.Result = new JsonCamelCaseResult
+            context.Result = new AbpJsonResult
                                  {
-                                     Data = new AbpMvcAjaxResult(new AbpErrorInfo(message))
+                                     Data = new AbpMvcAjaxResponse(new AbpErrorInfo(message))
                                  };
         }
 

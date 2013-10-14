@@ -2,7 +2,9 @@ using System.Globalization;
 using System.Text;
 using System.Web.Mvc;
 using Abp.Localization;
+using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
+using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
@@ -64,7 +66,12 @@ namespace Abp.Web.Mvc.Controllers
 
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            return new JsonCamelCaseResult
+            if (!(data is AbpAjaxResponse))
+            {
+                data = new AbpMvcAjaxResponse(data);
+            }
+
+            return new AbpJsonResult
             {
                 Data = data,
                 ContentType = contentType,

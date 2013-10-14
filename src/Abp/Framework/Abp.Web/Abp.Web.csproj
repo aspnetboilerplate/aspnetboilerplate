@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\AbpAjaxResult.cs" />
+    <Compile Include="Models\AbpAjaxResponse.cs" />
     <Compile Include="Models\AbpErrorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

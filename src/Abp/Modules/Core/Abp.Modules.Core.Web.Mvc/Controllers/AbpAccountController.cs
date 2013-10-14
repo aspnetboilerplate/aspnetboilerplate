@@ -14,8 +14,6 @@ using Abp.Web.Mvc.Models;
 
 namespace Abp.Modules.Core.Mvc.Controllers
 {
-    /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
-
     public abstract class AbpAccountController : AbpController
     {
         private readonly IUserService _userService;
@@ -48,7 +46,7 @@ namespace Abp.Modules.Core.Mvc.Controllers
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
 
-                return Json(new AbpMvcAjaxResult(true) { TargetUrl = "/" });
+                return Json(new AbpMvcAjaxResponse { TargetUrl = "/" });
             }
 
             throw new AbpUserFriendlyException("Your form is invalid!");

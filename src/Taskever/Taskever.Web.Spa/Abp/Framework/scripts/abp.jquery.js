@@ -128,7 +128,7 @@
             defer && defer.resolve(data);
             userOptions.success && userOptions.success(data);
 
-            if (data.TargetUrl) {
+            if (data.targetUrl) {
                 location.href = data.targetUrl;
             }
         }

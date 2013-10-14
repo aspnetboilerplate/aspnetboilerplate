@@ -7,11 +7,13 @@
 
 - Web API interceptor
   - WORKING ON -> Exception handling
+  - Transforming result to AbpAjaxResponse
   - Operation time measurement
   - DB logging?
 
 - ASP.NET MVC interceptor (Implement using base class!)
   - WORKING ON -> Exception handling
+  - Transforming result to AbpAjaxResponse ???
   - Operation time measurement
   - DB logging?
 

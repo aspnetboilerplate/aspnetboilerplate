@@ -6,9 +6,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Mvc.Controllers.Results
 {
-    public class JsonCamelCaseResult : JsonResult
+    public class AbpJsonResult : JsonResult
     {
-        public JsonCamelCaseResult()
+        public AbpJsonResult()
         {
             JsonRequestBehavior = JsonRequestBehavior.DenyGet;
         }

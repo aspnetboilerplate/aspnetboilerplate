@@ -1,9 +1,9 @@
 ﻿namespace Abp.Web.Models
 {
     /// <summary>
-    /// This class is used to create return values for ajax requests.
+    /// This class is used to create standard responses for ajax requests.
     /// </summary>
-    public class AbpAjaxResult
+    public class AbpAjaxResponse
     {
         /// <summary>
         /// The actual result object of ajax request.
@@ -25,34 +25,43 @@
         /// This property can be used to indicate that the current user has no privilege to perform this request.
         /// </summary>
         public bool UnAuthorizedRequest { get; set; }
-        
+
         /// <summary>
-        /// Creates a AbpJsonResult with <see cref="Success"/> specified.
+        /// Creates an <see cref="AbpAjaxResponse"/> object.
+        /// <see cref="Success"/> is set as true.
+        /// </summary>
+        public AbpAjaxResponse()
+        {
+            Success = true;
+        }
+
+        /// <summary>
+        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Success"/> specified.
         /// </summary>
         /// <param name="success">Indicates success status of the result</param>
-        public AbpAjaxResult(bool success)
+        public AbpAjaxResponse(bool success)
         {
             Success = success;
         }
 
         /// <summary>
-        /// Creates a AbpJsonResult with <see cref="Result"/> specified.
+        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Result"/> specified.
         /// <see cref="Success"/> is set as true.
         /// </summary>
         /// <param name="result">The actual result object of ajax request</param>
-        public AbpAjaxResult(object result)
+        public AbpAjaxResponse(object result)
         {
             Result = result;
             Success = true;
         }
 
         /// <summary>
-        /// Creates a AbpJsonResult with <see cref="Error"/> specified.
+        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Error"/> specified.
         /// <see cref="Success"/> is set as false.
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>
-        public AbpAjaxResult(AbpErrorInfo error, bool unAuthorizedRequest = false)
+        public AbpAjaxResponse(AbpErrorInfo error, bool unAuthorizedRequest = false)
         {
             Error = error;
             UnAuthorizedRequest = unAuthorizedRequest;
