@@ -34,6 +34,7 @@
 - Exception handling in Controllers and ApiControllers
 - JS&CSS Minimization and bundle (best practices!)
 - Localization: Server&Client (js)
+- Create 403 & 404 (maybe others) special error pages!
 
 * ADMIN Pages
 
