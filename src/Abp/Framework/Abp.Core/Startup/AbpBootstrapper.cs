@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Exceptions;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.Modules.Loading;
 using Castle.Windsor;
@@ -15,22 +17,20 @@ namespace Abp.Startup
     /// </summary>
     public class AbpBootstrapper : IDisposable
     {
-        protected WindsorContainer IocContainer { get; private set; }
-
         private IDictionary<string, AbpModuleInfo> Modules { get; set; }
 
         private readonly AbpInitializationContext _initializationContext;
 
         public AbpBootstrapper(string applicationDirectory)
         {
-            IocContainer = new WindsorContainer();
             _initializationContext = new AbpInitializationContext(this);
             _initializationContext.ApplicationDirectory = applicationDirectory;
         }
 
         public virtual void Initialize()
         {
-            IocContainer.Install(new AbpCoreInstaller());
+            IocManager.Initialize();
+            IocManager.IocContainer.Install(new AbpCoreInstaller());
 
             //TODO: Create a module manager and move all loading/sorting/initialization/shutdown methods to it!
             LoadModules();
@@ -41,15 +41,12 @@ namespace Abp.Startup
         {
             //TODO: Call shutdown of modules!
 
-            if (IocContainer != null)
-            {
-                IocContainer.Dispose();
-            }
+            IocManager.Dispose();
         }
 
         private void LoadModules()
         {
-            Modules = IocContainer.Resolve<AbpModuleLoader>().LoadModules();
+            Modules = IocHelper.Resolve<AbpModuleLoader>().LoadModules();
         }
 
         private void InitializeModules()
@@ -67,7 +64,7 @@ namespace Abp.Startup
 
         private class AbpInitializationContext : IAbpInitializationContext
         {
-            public WindsorContainer IocContainer { get { return _abpBootstrapper.IocContainer; } }
+            public WindsorContainer IocContainer { get { return IocManager.IocContainer; } }
             
             public string ApplicationDirectory { get; set; }
 
