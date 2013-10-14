@@ -12,8 +12,8 @@
   - DB logging?
 
 - ASP.NET MVC interceptor (Implement using base class!)
+  - + Transforming result to AbpAjaxResponse ???
   - WORKING ON -> Exception handling
-  - Transforming result to AbpAjaxResponse ???
   - Operation time measurement
   - DB logging?
 

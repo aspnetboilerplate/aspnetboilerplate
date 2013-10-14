@@ -1,6 +1,8 @@
 using System;
 using System.Web.Mvc;
 using Abp.Exceptions;
+using Abp.Web.Exceptions;
+using Abp.Web.Localization;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -28,7 +30,7 @@ namespace Abp.Web.Mvc.Controllers
             View = DefaultView;
             HandleErrors = true;
         }
-        
+
         public void OnException(ExceptionContext context)
         {
             if (!HandleErrors)
@@ -51,14 +53,9 @@ namespace Abp.Web.Mvc.Controllers
 
         private void HandleAjaxError(ExceptionContext context)
         {
-            //TODO: Move this to another class to be able to share!
-            var message = context.Exception is AbpUserFriendlyException
-                              ? context.Exception.Message
-                              : "General exception message here!";
-
             context.Result = new AbpJsonResult
                                  {
-                                     Data = new AbpMvcAjaxResponse(new AbpErrorInfo(message))
+                                     Data = new AbpMvcAjaxResponse(AbpErrorInfo.ForException(context.Exception))
                                  };
         }
 
@@ -85,12 +82,12 @@ namespace Abp.Web.Mvc.Controllers
             var message = context.Exception is AbpUserFriendlyException
                               ? context.Exception.Message
                               : "General exception message here!";
-            
+
             context.Result = new ViewResult
                                  {
                                      ViewName = View,
                                      MasterName = Master,
-                                     ViewData = new ViewDataDictionary<AbpErrorInfo>(new AbpErrorInfo(message)),
+                                     ViewData = new ViewDataDictionary<AbpErrorInfo>(AbpErrorInfo.ForException(context.Exception)),
                                      TempData = context.Controller.TempData
                                  };
 
