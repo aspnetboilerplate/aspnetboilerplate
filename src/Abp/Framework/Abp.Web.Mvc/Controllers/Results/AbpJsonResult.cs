@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
+/* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
+
 namespace Abp.Web.Mvc.Controllers.Results
 {
     public class AbpJsonResult : JsonResult
