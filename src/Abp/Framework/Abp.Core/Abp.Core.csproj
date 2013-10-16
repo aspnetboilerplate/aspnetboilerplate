@@ -67,9 +67,11 @@
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
+    <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
     <Compile Include="Dependency\IocHelper.cs" />
+    <Compile Include="Localization\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
-    <Compile Include="Localization\NullLocalizationManager.cs" />
+    <Compile Include="Localization\LocalizationManager.cs" />
     <Compile Include="Modules\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />

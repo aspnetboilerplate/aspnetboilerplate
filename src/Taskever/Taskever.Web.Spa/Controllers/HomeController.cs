@@ -5,7 +5,7 @@ using Abp.Web.Mvc.Controllers;
 namespace Taskever.Web.Controllers
 {
     [AbpAuthorize]
-    public class HomeController : AbpController
+    public class HomeController : TaskeverController
     {
         public ActionResult Index()
         {

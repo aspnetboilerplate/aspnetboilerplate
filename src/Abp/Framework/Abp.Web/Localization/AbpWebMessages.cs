@@ -11,7 +11,7 @@ namespace Abp.Web.Localization
         {
             try
             {
-                return LocalizationHelper.GetString(name);
+                return LocalizationHelper.GetString("Abp", name);
             }
             catch (Exception)
             {

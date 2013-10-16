@@ -68,5 +68,14 @@ namespace Taskever.Localization.Resources {
                 return ResourceManager.GetString("HelloWorld", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string Login {
+            get {
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
     }
 }

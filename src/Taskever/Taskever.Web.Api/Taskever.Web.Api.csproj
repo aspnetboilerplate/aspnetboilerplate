@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\TaskeverApiController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverWebApiModule.cs" />
     <Compile Include="Dependency\Installers\TaskeverWebInstaller.cs" />

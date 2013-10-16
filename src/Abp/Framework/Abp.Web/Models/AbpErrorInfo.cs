@@ -11,7 +11,7 @@ namespace Abp.Web.Models
         public string Message { get; set; }
 
         public AbpErrorInfo(string message)
-            : this(LocalizationHelper.GetString("Error"), message)
+            : this(LocalizationHelper.GetString("Abp", "Error"), message)
         {
 
         }

@@ -120,4 +120,7 @@
   <data name="HelloWorld" xml:space="preserve">
     <value>Merhaba Dünya!</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş</value>
+  </data>
 </root>

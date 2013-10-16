@@ -163,6 +163,7 @@
     <Compile Include="App_Start\Test.cs" />
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\TaskeverController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -171,6 +172,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\TaskeverViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -244,7 +246,9 @@
     <Content Include="ViewResources\main.js" />
     <Content Include="Widgets\LoginBox\LoginBox.js" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Home\Index.cshtml" />
     <None Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
