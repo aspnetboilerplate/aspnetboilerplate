@@ -4,19 +4,23 @@
 * TODO
 
 - Taskever Localization: Server&Client (js)
+- Handling validation errors
+- Client-side validation-object generator for DTO's.........?
+- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
+- Learn & test require.js bundling
 
 * Interceptions
 
 - Web API interceptor
   + Exception handling
-  - Transforming result to AbpAjaxResponse
-  - Operation time measurement
+  + Transforming result to AbpAjaxResponse
+  - Operation time measurement?
   - DB logging?
 
 - ASP.NET MVC interceptor (Implement using base class!)
-  + Transforming result to AbpAjaxResponse ???
+  + Transforming result to AbpMvcAjaxResponse ???
   + Exception handling (except validation)
-  - Operation time measurement
+  - Operation time measurement?
   - DB logging?
 
 - Application Service interceptions
@@ -30,13 +34,9 @@
   - Set current tenant/user
 
 - Make use of NHibernate auto mapping
-- Client-side validation-object generator for DTO's.........?
 - Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention! (make this optional?)
 - Bundle service calls (JS prepare requests, run all bundle request, runs all on server and returns bundle response)
-- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Test & Use NHibernate L2? caching
-- Exception handling in Controllers and ApiControllers
-- JS&CSS Minimization and bundle (best practices!)
 - Create 403 & 404 (maybe others) special error pages!
 
 * ADMIN Pages
@@ -46,10 +46,7 @@
 - Tenant system and Cloud!
 - Usage logging/history (detailed auditing)
 
-* Tests
-
 * Learn
-
 What's area in durandal and how to use it?
 
 -----------------------------------------------------
