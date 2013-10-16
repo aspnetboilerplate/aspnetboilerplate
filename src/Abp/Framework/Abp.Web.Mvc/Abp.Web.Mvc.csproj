@@ -100,6 +100,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebApplication.cs" />
     <Compile Include="Startup\AbpWebMvcModule.cs" />
+    <Compile Include="Views\AbpViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

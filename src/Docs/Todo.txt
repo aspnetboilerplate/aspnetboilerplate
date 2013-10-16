@@ -3,9 +3,12 @@
 
 * TODO
 
-- Taskever Localization: Server&Client (js)
+- Localization: Server&Client (js)
+- Move DTO's to namespaces!
+
 - Handling validation errors
 - Client-side validation-object generator for DTO's.........?
+
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Learn & test require.js bundling
 
