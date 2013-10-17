@@ -31,6 +31,8 @@ namespace Abp.WebApi.Startup
 
             ApiControllerBuilder.IocContainer = initializationContext.IocContainer;
 
+            initializationContext.IocContainer.Install(new AbpWebApiInstaller());
+
             RouteConfig.Register(GlobalConfiguration.Configuration);
 
             GlobalConfiguration.Configuration.Formatters.Clear();
@@ -46,8 +48,6 @@ namespace Abp.WebApi.Startup
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
 
             GlobalConfiguration.Configuration.Filters.Add(new AbpExceptionFilterAttribute());
-
-            initializationContext.IocContainer.Install(new AbpWebApiInstaller());
         }
 
         protected virtual void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

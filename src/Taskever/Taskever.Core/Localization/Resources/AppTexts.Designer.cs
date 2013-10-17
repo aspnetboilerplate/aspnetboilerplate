@@ -77,5 +77,23 @@ namespace Taskever.Localization.Resources {
                 return ResourceManager.GetString("Login", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My tasks.
+        /// </summary>
+        internal static string MyTasks {
+            get {
+                return ResourceManager.GetString("MyTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See all tasks.
+        /// </summary>
+        internal static string SeeAllTasks {
+            get {
+                return ResourceManager.GetString("SeeAllTasks", resourceCulture);
+            }
+        }
     }
 }

@@ -34,12 +34,24 @@ namespace Taskever.Application.Services.Impl
 
         public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput input)
         {
-            if (!_taskPrivilegeService.CanSeeTasksOfUser(User.CurrentUserId, input.UserId))
+            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var userOfTasks = _userRepository.Load(input.UserId);
+
+            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, userOfTasks))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }
 
-            var tasks = _taskRepository.Query(query => query.Where(task => task.AssignedUser.Id == input.UserId).ToList());
+            var tasks = _taskRepository.Query(
+                query =>
+                query
+                    .Where(task => task.AssignedUser.Id == input.UserId)
+                    .OrderByDescending(task => task.Priority)
+                    .Skip(input.SkipCount)
+                    .Take(input.MaxResultCount)
+                    .ToList()
+                );
+
             return new GetTasksOfUserOutput
                        {
                            Tasks = tasks.MapIList<Task, TaskDto>()

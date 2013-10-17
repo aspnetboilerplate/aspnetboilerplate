@@ -59,6 +59,7 @@
     <Compile Include="Application\Services\Dto\IDto.cs" />
     <Compile Include="Application\Services\Dto\IInputDto.cs" />
     <Compile Include="Application\Services\Dto\IOutputDto.cs" />
+    <Compile Include="Application\Services\Dto\IPagedResultRequest.cs" />
     <Compile Include="Application\Services\Dto\IValidate.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Application\Services\Interceptors\AbpApplicationServiceInterceptor.cs" />

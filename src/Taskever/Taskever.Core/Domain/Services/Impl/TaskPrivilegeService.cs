@@ -1,5 +1,6 @@
 using System.Linq;
 using Abp.Domain.Repositories;
+using Abp.Modules.Core.Domain.Entities;
 using Taskever.Domain.Entities;
 
 namespace Taskever.Domain.Services.Impl
@@ -13,17 +14,17 @@ namespace Taskever.Domain.Services.Impl
             _friendshipRepository = friendshipRepository;
         }
 
-        public bool CanSeeTasksOfUser(int currentUserId, int userId)
+        public bool CanSeeTasksOfUser(User requesterUser, User userOfTasks)
         {
-            if (currentUserId == userId)
+            if (requesterUser.Id == userOfTasks.Id)
             {
                 return true;
             }
 
             return _friendshipRepository.Query( //TODO: Create Index: UserId, FriendId, Status
                 q => q.Any(friendship =>
-                           friendship.User.Id == currentUserId &&
-                           friendship.Friend.Id == userId &&
+                           friendship.User.Id == requesterUser.Id &&
+                           friendship.Friend.Id == userOfTasks.Id &&
                            friendship.Status == FriendshipStatus.Accepted
                          ));
         }

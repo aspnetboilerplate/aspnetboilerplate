@@ -178,7 +178,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\abp.localization.js" />
-    <Content Include="App\Main\service.js" />
+    <Content Include="Abp\Framework\scripts\requirejs\plugins\service.js" />
     <Content Include="App\Main\images\hikalkan.jpg" />
     <Content Include="App\Main\session.js" />
     <Content Include="App\Main\viewmodels\user.js" />
@@ -194,13 +194,13 @@
     <Content Include="App\Main\viewmodels\createTaskDialog.js" />
     <Content Include="App\Main\viewmodels\friendlist.js" />
     <Content Include="App\Main\viewmodels\friends.js" />
-    <Content Include="App\Main\viewmodels\tasks.js" />
+    <Content Include="App\Main\viewmodels\briefTaskList.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
     <None Include="App\Main\views\home.cshtml" />
     <None Include="App\Main\views\createTaskDialog.cshtml" />
     <None Include="App\Main\views\friendlist.cshtml" />
     <None Include="App\Main\views\friends.cshtml" />
-    <None Include="App\Main\views\tasks.cshtml" />
+    <None Include="App\Main\views\briefTaskList.cshtml" />
     <None Include="App\Main\views\layout.cshtml" />
     <Content Include="Content\bootstrap\bootstrap.metro.min.css" />
     <Content Include="Content\durandal.css" />

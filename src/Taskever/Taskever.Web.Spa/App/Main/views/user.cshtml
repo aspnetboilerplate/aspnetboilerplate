@@ -7,12 +7,12 @@
         </div>
     </div>
     <ul class="nav nav-pills" id="myTab">
-        <li class="active"><a href="#home">Events</a></li>
-        <li><a href="#profile">Current tasks</a></li>
-        <li><a href="#messages">Completed tasks</a></li>
+        <li><a href="#UserActivities">Events</a></li>
+        <li><a href="#UserCurrentTasks">Current tasks</a></li>
+        <li><a href="#UserCompletedTasks">Completed tasks</a></li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="home">
+        <div class="tab-pane active" id="UserActivities">
             <ul class="list-group" style="margin-top: 10px;">
                 <li class="list-group-item">
                     <img src="/App/_Common/images/task_complete.png" width="16" height="16" style="margin-right: 4px" /><b>Ahmet</b> "<i>Engin Bey'in emailini cevapla</i>" görevini tamamladı. <i class="text-muted">5 dk önce.</i>
@@ -22,7 +22,7 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-pane" id="profile" data-bind="compose: 'viewmodels/userCurrentTasks'"></div>
-        <div class="tab-pane" id="messages">completed...</div>
+        <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: 'viewmodels/userCurrentTasks'"></div>
+        <div class="tab-pane" id="UserCompletedTasks">completed...</div>
     </div>
 </section>

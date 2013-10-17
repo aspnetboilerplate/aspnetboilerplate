@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Abp.Application.Services.Dto;
-using Abp.Validation;
+﻿using Abp.Validation;
 using Castle.DynamicProxy;
 
 namespace Abp.Application.Services.Interceptors

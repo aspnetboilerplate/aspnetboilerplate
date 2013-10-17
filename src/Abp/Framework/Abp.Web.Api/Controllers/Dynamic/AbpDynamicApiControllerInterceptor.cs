@@ -1,3 +1,4 @@
+using Castle.Core.Logging;
 using Castle.DynamicProxy;
 
 namespace Abp.WebApi.Controllers.Dynamic

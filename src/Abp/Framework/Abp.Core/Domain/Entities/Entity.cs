@@ -19,5 +19,7 @@ namespace Abp.Domain.Entities
         /// Unique identifier for this entity.
         /// </summary>
         public virtual TPrimaryKey Id { get; set; }
+
+        //TODO: Implement equality comparer ?
     }
 }
