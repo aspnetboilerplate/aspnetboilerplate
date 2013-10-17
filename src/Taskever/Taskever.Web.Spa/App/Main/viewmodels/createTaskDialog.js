@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!friendship', 'session'],
+﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
     function($, ko, dialogs, dtos, taskService, friendshipService, session) {
         var ctor = function() {
             this.task = new dtos.TaskDto();

@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'service!friendship'], function ($, ko, app, dialogs, friendshipService) {
+﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'service!taskever/friendship'], function ($, ko, app, dialogs, friendshipService) {
     var friends = ko.mapping.fromJS([]);
 
     return {

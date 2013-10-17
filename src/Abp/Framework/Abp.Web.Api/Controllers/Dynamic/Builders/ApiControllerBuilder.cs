@@ -33,11 +33,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private string _controllerName;
 
         /// <summary>
-        /// Name of the area.
-        /// </summary>
-        private string _areaName;
-
-        /// <summary>
         /// True if using conventions.
         /// </summary>
         public bool UsingConventions { get; private set; }
@@ -76,16 +71,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Sets area name of the api controller.
-        /// </summary>
-        /// <param name="areaName">area name</param>
-        /// <returns>Controller builder</returns>
-        public IApiControllerBuilder<T> WithAreaName(string areaName)
-        {
-            _areaName = areaName;
-            return this;
-        }
-        /// <summary>
         /// Used to specify a method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
@@ -106,21 +91,26 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
+            string areaName = null;
+
             if (string.IsNullOrWhiteSpace(_controllerName))
             {
+                //TODO: How we can determine area name?
                 _controllerName = UsingConventions ? DynamicApiHelper.GetConventionalControllerName<T>() : typeof(T).Name;
             }
             else
             {
+                if (_controllerName.Contains("/"))
+                {
+                    var splittedArray = _controllerName.Split('/');
+                    areaName = splittedArray[0].ToPascalCase();
+                    _controllerName = splittedArray[1].ToPascalCase();
+                }
+
                 _controllerName = _controllerName.ToPascalCase();
             }
 
-            if (!string.IsNullOrWhiteSpace(_areaName))
-            {
-                _areaName = _areaName.ToPascalCase();
-            }
-
-            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
+            var controllerInfo = new DynamicApiControllerInfo(areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
