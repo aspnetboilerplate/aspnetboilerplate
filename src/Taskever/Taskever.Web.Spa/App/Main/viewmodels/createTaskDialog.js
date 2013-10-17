@@ -1,7 +1,7 @@
 ﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
     function($, ko, dialogs, dtos, taskService, friendshipService, session) {
         var ctor = function() {
-            this.task = new dtos.TaskDto();
+            this.task = new dtos.taskever.task.TaskDto();
             this.users = ko.mapping.fromJS([]);
         };
 
