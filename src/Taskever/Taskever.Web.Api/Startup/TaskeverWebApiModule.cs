@@ -22,19 +22,19 @@ namespace Taskever.Web.Startup
             //TODO: must be able to exclude/include all methods option
 
             BuildApiController
-                .For<ITaskService>().WithControllerName("taskever/task")
+                .For<ITaskService>("taskever/task")
                 .UseConventions()
                 .ForMethod("GetTasksOfUser").WithVerb(HttpVerb.Post)
                 .Build(); 
 
             BuildApiController
-                .For<IFriendshipService>().WithControllerName("taskever/friendship")
+                .For<IFriendshipService>("taskever/friendship")
                 .UseConventions()
                 .ForMethod("GetMyFriends").WithVerb(HttpVerb.Post)
                 .Build();
 
             BuildApiController
-                .For<IUserActivityService>().WithControllerName("taskever/userActivity")
+                .For<IUserActivityService>("taskever/userActivity")
                 .UseConventions()
                 .ForMethod("GetFallowedActivities").WithVerb(HttpVerb.Post)
                 .Build();

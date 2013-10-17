@@ -14,7 +14,7 @@ namespace Abp.Modules.Core.Startup
             initializationContext.IocContainer.Install(new AbpCoreModuleWebApiInstaller());
 
             BuildApiController
-                .For<IUserService>().WithControllerName("user")
+                .For<IUserService>("abp/user")
                 .UseConventions()
                 .ForMethod("GetCurrentUserInfo").WithVerb(HttpVerb.Post)
                 .Build();

@@ -14,13 +14,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IApiControllerActionBuilder<T> ForMethod(string methodName);
         
         /// <summary>
-        /// Sets name of the api controller.
-        /// </summary>
-        /// <param name="controllerName">Api controller name</param>
-        /// <returns>Controller builder</returns>
-        IApiControllerBuilder<T> WithControllerName(string controllerName);
-        
-        /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>

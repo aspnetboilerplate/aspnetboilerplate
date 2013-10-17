@@ -1,4 +1,4 @@
-﻿define(["knockout", 'service!dto', "service!user"], function (ko, dtos, userService) {
+﻿define(["knockout", 'service!dto', "service!abp/user"], function (ko, dtos, userService) {
     var currentUser = ko.mapping.fromJS({});
     
     var start = function () {

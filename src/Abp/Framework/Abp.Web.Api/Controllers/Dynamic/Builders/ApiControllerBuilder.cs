@@ -40,8 +40,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
-        public ApiControllerBuilder()
+        /// <param name="controllerName"> </param>
+        public ApiControllerBuilder(string controllerName)
         {
+            _controllerName = controllerName;
+
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
             foreach (var methodInfo in GetPublicInstanceMethods())
             {
@@ -56,17 +59,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IApiControllerBuilder<T> UseConventions()
         {
             UsingConventions = true;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets name of the api controller.
-        /// </summary>
-        /// <param name="controllerName">Api controller name</param>
-        /// <returns>Controller builder</returns>
-        public IApiControllerBuilder<T> WithControllerName(string controllerName)
-        {
-            _controllerName = controllerName;
             return this;
         }
 
