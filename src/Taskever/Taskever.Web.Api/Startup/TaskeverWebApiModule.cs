@@ -22,7 +22,7 @@ namespace Taskever.Web.Startup
             //TODO: must be able to exclude/include all methods option
 
             BuildApiController
-                .For<ITaskService>().WithControllerName("task") 
+                .For<ITaskService>().WithControllerName("task").WithAreaName("taskever")
                 .UseConventions()
                 .ForMethod("GetTasksOfUser").WithVerb(HttpVerb.Post)
                 .Build(); 

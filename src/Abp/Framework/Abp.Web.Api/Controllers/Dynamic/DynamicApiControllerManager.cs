@@ -19,13 +19,15 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Searches and returns a dynamic api controller for given name
         /// </summary>
+        /// <param name="areaName">Area name</param>
         /// <param name="controllerName">Name of the controller</param>
         /// <returns>Controller info</returns>
-        public static DynamicApiControllerInfo FindServiceController(string controllerName)
+        public static DynamicApiControllerInfo FindServiceController(string areaName, string controllerName)
         {
-            //TODO: Find case insensitive match!
+            var registrationName = GetRegistrationName(areaName, controllerName);
+            //TODO: Find case insensitive match?
             DynamicApiControllerInfo controllerInfo;
-            return DynamicTypes.TryGetValue(controllerName, out controllerInfo) ? controllerInfo : null;
+            return DynamicTypes.TryGetValue(registrationName, out controllerInfo) ? controllerInfo : null;
         }
 
         /// <summary>
@@ -34,13 +36,27 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public static void RegisterServiceController(DynamicApiControllerInfo controllerInfo)
         {
+            var registrationName = GetRegistrationName(controllerInfo);
+
             //TODO: Register case insensitive?
-            DynamicTypes[controllerInfo.Name] = controllerInfo;
+            DynamicTypes[registrationName] = controllerInfo;
         }
 
         public static List<DynamicApiControllerInfo> GetAllServiceControllers()
         {
             return DynamicTypes.Values.ToList();
+        }
+
+        private static string GetRegistrationName(DynamicApiControllerInfo controllerInfo)
+        {
+            return GetRegistrationName(controllerInfo.AreaName, controllerInfo.Name);
+        }
+
+        private static string GetRegistrationName(string areaName, string controllerName)
+        {
+            return string.IsNullOrWhiteSpace(areaName)
+                                       ? controllerName
+                                       : areaName + "$" + controllerName;
         }
     }
 }

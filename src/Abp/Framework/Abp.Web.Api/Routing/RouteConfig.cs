@@ -8,9 +8,15 @@ namespace Abp.WebApi.Routing
     {
         public static void Register(HttpConfiguration config)
         {
-            //Dynamic Web APIs
+            //Dynamic Web APIs (with area name)
             config.Routes.MapHttpRoute(
-                name: "AbpDynamicWebApi",
+                name: "AbpDynamicWebApiWithAreaName",
+                routeTemplate: "api/services/{areaName}/{serviceName}/{action}"
+                );
+
+            //Dynamic Web APIs (without area name)
+            config.Routes.MapHttpRoute(
+                name: "AbpDynamicWebApiWithoutAreaName",
                 routeTemplate: "api/services/{serviceName}/{action}"
                 );
         }

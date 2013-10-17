@@ -19,6 +19,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="controllerName">Api controller name</param>
         /// <returns>Controller builder</returns>
         IApiControllerBuilder<T> WithControllerName(string controllerName);
+
+        /// <summary>
+        /// Sets area name of the api controller.
+        /// </summary>
+        /// <param name="areaName">area name</param>
+        /// <returns>Controller builder</returns>
+        IApiControllerBuilder<T> WithAreaName(string areaName);
         
         /// <summary>
         /// Builds the controller.

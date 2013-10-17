@@ -6,7 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 
-namespace Abp.Localization
+namespace Abp.Localization 
 {
     public class ResourceFileLocalizationSource : ILocalizationSource
     {
@@ -28,7 +28,7 @@ namespace Abp.Localization
         public virtual string GetString(string name, CultureInfo culture)
         {
             return ResourceManager.GetString(name, culture);
-        }
+        } 
 
         public virtual IList<LocalizedString> GetAllStrings()
         {
@@ -37,8 +37,9 @@ namespace Abp.Localization
 
         public virtual IList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
+            
             return ResourceManager
-                .GetResourceSet(culture, false, true)
+                .GetResourceSet(culture, true, true)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString()))
                 .ToList();

@@ -17,7 +17,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
 
         public string BuildAll()
         {
-            var script = new StringBuilder();
+            var script = new StringBuilder(); 
 
             script.AppendLine("(function(){");
             script.AppendLine();

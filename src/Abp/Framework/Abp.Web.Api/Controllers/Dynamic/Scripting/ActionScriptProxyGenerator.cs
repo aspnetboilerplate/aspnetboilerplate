@@ -10,8 +10,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         protected DynamicApiControllerInfo ControllerInfo { get; private set; }
 
         protected DynamicApiActionInfo ActionInfo { get; private set; }
-        
-        private const string JsMethodTemplate = 
+
+        private const string JsMethodTemplate =
 @"    var {jsMethodName} = function({jsMethodParameterList}) {
         return abp.ajax({
 {ajaxCallParameters}
@@ -43,7 +43,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             get
             {
-                return "/api/services/" + ControllerInfo.Name.ToCamelCase() + "/" + ActionInfo.ActionName.ToCamelCase();
+                var areaNamePart = "";
+                if (!string.IsNullOrWhiteSpace(ControllerInfo.AreaName))
+                {
+                    areaNamePart = ControllerInfo.AreaName.ToCamelCase() + "/";
+                }
+
+                return "/api/services/" + areaNamePart + ControllerInfo.Name.ToCamelCase() + "/" + ActionInfo.ActionName.ToCamelCase();
             }
         }
 

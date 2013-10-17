@@ -29,13 +29,15 @@ namespace Abp.WebApi.Controllers.Dynamic
             if (request != null)
             {
                 var routeData = request.GetRouteData();
-                //routeData.Route.
                 if (routeData != null)
                 {
                     string serviceName;
                     if (routeData.Values.TryGetValue("serviceName", out serviceName))
                     {
-                        var controllerInfo = DynamicApiControllerManager.FindServiceController(serviceName.ToPascalCase());
+                        string areaName;
+                        routeData.Values.TryGetValue("areaName", out areaName);
+
+                        var controllerInfo = DynamicApiControllerManager.FindServiceController(areaName.ToPascalCase(), serviceName.ToPascalCase());
                         if (controllerInfo != null)
                         {
                             var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);

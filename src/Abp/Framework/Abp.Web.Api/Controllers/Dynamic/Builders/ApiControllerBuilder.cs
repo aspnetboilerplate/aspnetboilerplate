@@ -33,10 +33,15 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private string _controllerName;
 
         /// <summary>
+        /// Name of the area.
+        /// </summary>
+        private string _areaName;
+
+        /// <summary>
         /// True if using conventions.
         /// </summary>
         public bool UsingConventions { get; private set; }
-        
+
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
@@ -71,6 +76,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
+        /// Sets area name of the api controller.
+        /// </summary>
+        /// <param name="areaName">area name</param>
+        /// <returns>Controller builder</returns>
+        public IApiControllerBuilder<T> WithAreaName(string areaName)
+        {
+            _areaName = areaName;
+            return this;
+        }
+        /// <summary>
         /// Used to specify a method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
@@ -93,14 +108,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             if (string.IsNullOrWhiteSpace(_controllerName))
             {
-                _controllerName = UsingConventions ? DynamicApiHelper.GetConventionalControllerName<T>() : typeof (T).Name;
+                _controllerName = UsingConventions ? DynamicApiHelper.GetConventionalControllerName<T>() : typeof(T).Name;
             }
             else
             {
                 _controllerName = _controllerName.ToPascalCase();
             }
 
-            var controllerInfo = new DynamicApiControllerInfo(_controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
+            if (!string.IsNullOrWhiteSpace(_areaName))
+            {
+                _areaName = _areaName.ToPascalCase();
+            }
+
+            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
@@ -124,7 +144,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         private IEnumerable<MethodInfo> GetPublicInstanceMethods()
         {
-            return typeof (T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            return typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
         }
 
         #endregion

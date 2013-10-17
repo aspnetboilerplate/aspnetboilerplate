@@ -11,9 +11,9 @@ namespace Abp.WebApi.Controllers.Dynamic
 {
     public class ServiceProxiesController : AbpApiController
     {
-        public HttpResponseMessage Get(string name)
+        public HttpResponseMessage Get(string name, string areaName = null)
         {
-            var controllerInfo = DynamicApiControllerManager.FindServiceController(name.ToPascalCase());
+            var controllerInfo = DynamicApiControllerManager.FindServiceController(areaName.ToPascalCase(), name.ToPascalCase());
             if (controllerInfo == null)
             {
                 throw new HttpException(404, "There is no such a service: " + name); //TODO: What to do if can not find?

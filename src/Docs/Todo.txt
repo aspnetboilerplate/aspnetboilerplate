@@ -3,9 +3,9 @@
 
 * TODO
 
-- generate script for localization sources
-- develop javascript-side localization system
-- Move DTO's to namespaces!
+- Dynamic script generation
+  - Move Serviceproxies to namespaces
+  - Move DTO's to namespaces!
 
 - Handling validation errors
 - Client-side validation-object generator for DTO's.........?
