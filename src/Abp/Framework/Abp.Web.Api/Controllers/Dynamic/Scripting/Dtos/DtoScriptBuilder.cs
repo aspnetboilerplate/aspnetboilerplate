@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,31 +82,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Dtos
             var areaNames = _types.Select(t => t.Controller.AreaName).Distinct().ToList();
             foreach (var areaName in areaNames)
             {
-                if (string.IsNullOrWhiteSpace(areaName))
-                {
-                    continue;
-                }
-
                 script.AppendLine("    dtos." + areaName.ToCamelCase() + " = dtos." + areaName.ToCamelCase() + " || {};");
-            }
 
-            foreach (var areaName in areaNames)
-            {
                 var areaNameToGetController = areaName;
                 var controllerNames = _types.Where(t => t.Controller.AreaName == areaNameToGetController).Select(t => t.Controller.Name).Distinct();
                 foreach (var controllerName in controllerNames)
                 {
-                    if (string.IsNullOrWhiteSpace(areaName))
-                    {
-                        script.AppendLine("    dtos." + controllerName.ToCamelCase() + " = dtos." + controllerName.ToCamelCase() + " || {};");                        
-                    }
-                    else
-                    {
-                        script.AppendLine("    dtos." + areaName.ToCamelCase() + "." + controllerName.ToCamelCase() + " = dtos." + areaName.ToCamelCase() + "." + controllerName.ToCamelCase() + " || {};");                        
-                    }
+                    script.AppendLine("    dtos." + areaName.ToCamelCase() + "." + controllerName.ToCamelCase() + " = dtos." + areaName.ToCamelCase() + "." + controllerName.ToCamelCase() + " || {};");
                 }
             }
-            
+
             foreach (var typeInfo in _types)
             {
 

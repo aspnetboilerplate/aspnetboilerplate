@@ -77,7 +77,7 @@
     <Compile Include="Controllers\Dynamic\LocalizationController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Localization\LocalizationScriptBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\ControllerScriptProxyGenerator.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\Proxy\ControllerScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Dtos\DtoScriptBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\HttpDeleteActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\HttpGetActionScriptProxyGenerator.cs" />

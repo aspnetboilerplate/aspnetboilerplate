@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Formatting;
-using System.Web.Http;
-using Newtonsoft.Json.Serialization;
+﻿using System.Web.Http;
 
 namespace Abp.WebApi.Routing
 {
@@ -10,14 +8,8 @@ namespace Abp.WebApi.Routing
         {
             //Dynamic Web APIs (with area name)
             config.Routes.MapHttpRoute(
-                name: "AbpDynamicWebApiWithAreaName",
+                name: "AbpDynamicWebApi",
                 routeTemplate: "api/services/{areaName}/{serviceName}/{action}"
-                );
-
-            //Dynamic Web APIs (without area name)
-            config.Routes.MapHttpRoute(
-                name: "AbpDynamicWebApiWithoutAreaName",
-                routeTemplate: "api/services/{serviceName}/{action}"
                 );
         }
     }

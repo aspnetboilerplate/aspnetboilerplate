@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Abp.Exceptions;
@@ -30,7 +31,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        private string _controllerName;
+        private readonly string _controllerName;
+        
+        /// <summary>
+        /// Area name.
+        /// </summary>
+        private readonly string _areaName;
 
         /// <summary>
         /// True if using conventions.
@@ -43,7 +49,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="controllerName"> </param>
         public ApiControllerBuilder(string controllerName)
         {
-            _controllerName = controllerName;
+            if (string.IsNullOrWhiteSpace(controllerName) || !controllerName.Contains("/"))
+            {
+                throw new ArgumentException("controllerName is not valid! It must be formatted as {areaName}/{controllerName}", "controllerName");
+            }
+
+            var splittedArray = controllerName.Split('/');
+            _areaName = splittedArray[0].ToPascalCase();
+            _controllerName = splittedArray[1].ToPascalCase();
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
             foreach (var methodInfo in GetPublicInstanceMethods())
@@ -83,26 +96,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            string areaName = null;
-
-            if (string.IsNullOrWhiteSpace(_controllerName))
-            {
-                //TODO: How we can determine area name?
-                _controllerName = UsingConventions ? DynamicApiHelper.GetConventionalControllerName<T>() : typeof(T).Name;
-            }
-            else
-            {
-                if (_controllerName.Contains("/"))
-                {
-                    var splittedArray = _controllerName.Split('/');
-                    areaName = splittedArray[0].ToPascalCase();
-                    _controllerName = splittedArray[1].ToPascalCase();
-                }
-
-                _controllerName = _controllerName.ToPascalCase();
-            }
-
-            var controllerInfo = new DynamicApiControllerInfo(areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
+            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
@@ -124,7 +118,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         #region Private methods
 
-        private IEnumerable<MethodInfo> GetPublicInstanceMethods()
+        private static IEnumerable<MethodInfo> GetPublicInstanceMethods()
         {
             return typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
         }

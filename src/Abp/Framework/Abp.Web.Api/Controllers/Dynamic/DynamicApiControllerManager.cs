@@ -56,7 +56,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         {
             return string.IsNullOrWhiteSpace(areaName)
                                        ? controllerName
-                                       : areaName + "$" + controllerName;
+                                       : areaName + "/" + controllerName;
         }
     }
 }

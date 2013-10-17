@@ -43,13 +43,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             get
             {
-                var areaNamePart = "";
-                if (!string.IsNullOrWhiteSpace(ControllerInfo.AreaName))
-                {
-                    areaNamePart = ControllerInfo.AreaName.ToCamelCase() + "/";
-                }
-
-                return "/api/services/" + areaNamePart + ControllerInfo.Name.ToCamelCase() + "/" + ActionInfo.ActionName.ToCamelCase();
+                return "/api/services/" + ControllerInfo.AreaName.ToCamelCase() + "/" + ControllerInfo.Name.ToCamelCase() + "/" + ActionInfo.ActionName.ToCamelCase();
             }
         }
 

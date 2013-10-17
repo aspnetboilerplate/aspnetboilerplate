@@ -15,7 +15,8 @@ namespace Abp.WebApi.Controllers.Dynamic
         }
         
         public HttpResponseMessage Get()
-        { 
+        {
+            //TODO: Caching script generation!
             var script = new LocalizationScriptBuilder(_localizationManager.GetAllSources()).BuildAll();
             HttpResponseMessage response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
