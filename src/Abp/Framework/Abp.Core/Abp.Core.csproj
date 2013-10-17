@@ -67,6 +67,7 @@
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
+    <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
     <Compile Include="Dependency\IocHelper.cs" />
     <Compile Include="Localization\ILocalizationSource.cs" />

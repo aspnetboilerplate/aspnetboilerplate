@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Resources;
+using System.Threading;
 
 namespace Abp.Localization
 {
@@ -27,14 +30,18 @@ namespace Abp.Localization
             return ResourceManager.GetString(name, culture);
         }
 
-        public virtual IList<string> GetAllStrings()
+        public virtual IList<LocalizedString> GetAllStrings()
         {
-            throw new NotImplementedException();
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
         }
 
-        public virtual IList<string> GetAllStrings(CultureInfo culture)
+        public virtual IList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return ResourceManager
+                .GetResourceSet(culture, false, true)
+                .Cast<DictionaryEntry>()
+                .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString()))
+                .ToList();
         }
     }
 }

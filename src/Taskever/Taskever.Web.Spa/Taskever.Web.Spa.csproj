@@ -177,6 +177,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="Abp\Framework\scripts\abp.localization.js" />
     <Content Include="App\Main\service.js" />
     <Content Include="App\Main\images\hikalkan.jpg" />
     <Content Include="App\Main\session.js" />

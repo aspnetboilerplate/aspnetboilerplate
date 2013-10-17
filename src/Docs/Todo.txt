@@ -3,7 +3,6 @@
 
 * TODO
 
-- Try localization in application service classes
 - generate script for localization sources
 - develop javascript-side localization system
 - Move DTO's to namespaces!

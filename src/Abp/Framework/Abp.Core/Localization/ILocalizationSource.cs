@@ -25,8 +25,8 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         string GetString(string name, CultureInfo culture);
 
-        IList<string> GetAllStrings();
+        IList<LocalizedString> GetAllStrings();
 
-        IList<string> GetAllStrings(CultureInfo culture);
+        IList<LocalizedString> GetAllStrings(CultureInfo culture);
     }
 }

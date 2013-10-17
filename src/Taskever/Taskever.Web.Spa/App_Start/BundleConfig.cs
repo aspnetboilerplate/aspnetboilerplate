@@ -43,6 +43,7 @@ namespace Taskever.Web.App_Start
                 new ScriptBundle("~/Scripts/abp")
                     .Include("~/abp/framework/scripts/abp.js")
                     .Include("~/abp/framework/scripts/abp.jquery.js")
+                    .Include("~/abp/framework/scripts/abp.localization.js")
                 );
         }
 

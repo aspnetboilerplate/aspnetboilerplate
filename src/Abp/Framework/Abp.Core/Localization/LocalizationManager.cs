@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Abp.Exceptions;
 
 namespace Abp.Localization
@@ -31,6 +32,11 @@ namespace Abp.Localization
             }
 
             return source;
+        }
+
+        public List<ILocalizationSource> GetAllSources()
+        {
+            return _sources.Values.ToList();
         }
     }
 }

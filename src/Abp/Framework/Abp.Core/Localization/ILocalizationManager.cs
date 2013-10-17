@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Abp.Localization
 {
     public interface ILocalizationManager
@@ -5,5 +7,7 @@ namespace Abp.Localization
         void RegisterSource(ILocalizationSource source);
 
         ILocalizationSource GetSource(string sourceName);
+
+        List<ILocalizationSource> GetAllSources();
     }
 }

@@ -10,9 +10,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Dtos
 {
     public class DtoScriptBuilder
     {
-        private List<Type> _types = new List<Type>();
+        private readonly List<Type> _types = new List<Type>();
 
-        public void FillAllTypes()
+        private void FillAllTypes()
         {
             var controllers = DynamicApiControllerManager.GetAllServiceControllers();
             foreach (var controller in controllers)
