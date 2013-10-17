@@ -163,8 +163,7 @@ ROUTES:
 - Web api
   - /api/{controller}/{id}
 - Dynamic service api
-  - /api/services/{serviceName}/{action}
-  - /api/serviceproxies/{serviceName}.js
+  - /api/services/{areaName}/{serviceName}/{action}
 
 ---------------------------------------------------------------------------
 

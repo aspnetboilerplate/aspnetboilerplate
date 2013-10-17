@@ -3,10 +3,6 @@
 
 * TODO
 
-- Dynamic script generation
-  - Move Serviceproxies to namespaces
-  - Move DTO's to namespaces!
-
 - Handling validation errors
 - Client-side validation-object generator for DTO's.........?
 
