@@ -3,6 +3,8 @@
 
 * TODO
 
+- Loading animations!
+
 - Handling validation errors
 - Client-side validation-object generator for DTO's.........?
 
