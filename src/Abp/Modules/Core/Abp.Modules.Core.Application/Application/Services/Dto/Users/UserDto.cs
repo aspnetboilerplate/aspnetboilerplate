@@ -1,6 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 
-namespace Abp.Modules.Core.Application.Services.Dto
+namespace Abp.Modules.Core.Application.Services.Dto.Users
 {
     /// <summary>
     /// Simple User DTO class.

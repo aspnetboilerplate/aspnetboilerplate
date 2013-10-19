@@ -1,14 +1,13 @@
 ﻿define(
-    ['jquery', 'plugins/history'],
-    function($, history) {
+    ['jquery', 'plugins/history', 'service!abp/user', 'service!dto'],
+    function ($, history, userService, dtos) {
 
         var _defaultUrlAgs = {
             activeSection: 'UserActivities'
         };
 
-        return function() {
+        return function () {
             var that = this;
-
 
             // Private variables //////////////////////////////////////////////////
 
@@ -17,17 +16,25 @@
             // Public fields //////////////////////////////////////////////////////
 
             that.userId = null;
+            that.user = ko.mapping.fromJS(new dtos.abp.user.UserDto()); //TODO: Direkt dönüş değeri olmayanlar için namespace problemi var!!! Hatta hepsi için!
 
             // Public methods /////////////////////////////////////////////////////
 
             that.activate = function (userId, urlArgs) {
                 that.userId = userId;
-                _urlArgs = $.extend({ }, _defaultUrlAgs, urlArgs);
+                _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
+
+                userService.getUser({
+                    userId: userId
+                }).then(function (data) {
+                    ko.mapping.fromJS(data.user, that.user);
+                });
+
             };
 
             that.attached = function (view, parent) {
                 $('#myTab').tab();
-                $('#myTab a').click(function(e) {
+                $('#myTab a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Web.Http.Controllers;
 using Abp.Exceptions;
 using Abp.Utils.Extensions;
@@ -19,13 +20,13 @@ namespace Abp.WebApi.Controllers.Dynamic
             //TODO: If method is not supplied, try to guess the method by Http Verb and parameters ?
 
             object controllerInfoObj;
-            if (controllerContext.ControllerDescriptor.Properties.TryGetValue("AbpDynamicApiControllerInfo", out  controllerInfoObj))
+            if (controllerContext.ControllerDescriptor.Properties.TryGetValue("__AbpDynamicApiControllerInfo", out  controllerInfoObj))
             {
                 //Get controller information which is selected by AbpHttpControllerSelector.
                 var controllerInfo = controllerInfoObj as DynamicApiControllerInfo;
                 if (controllerInfo == null)
                 {
-                    throw new AbpException("AbpDynamicApiControllerInfo in ControllerDescriptor.Properties is not a " + typeof(DynamicApiControllerInfo).FullName + " class.");
+                    throw new AbpException("__AbpDynamicApiControllerInfo in ControllerDescriptor.Properties is not a " + typeof(DynamicApiControllerInfo).FullName + " class.");
                 }
 
                 //Get action name
@@ -42,9 +43,9 @@ namespace Abp.WebApi.Controllers.Dynamic
                     throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.Name);
                 }
                 
-                return new ReflectedHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
+                return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
             }
-
+            
             return base.SelectAction(controllerContext);
         }
     }

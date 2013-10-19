@@ -41,7 +41,7 @@ namespace Abp.WebApi.Controllers.Dynamic
                         if (controllerInfo != null)
                         {
                             var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
-                            desc.Properties["AbpDynamicApiControllerInfo"] = controllerInfo;
+                            desc.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
                             return desc;
                         }
                     }

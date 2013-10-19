@@ -73,6 +73,7 @@
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\DtosController.cs" />
+    <Compile Include="Controllers\Dynamic\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
     <Compile Include="Controllers\Dynamic\LocalizationController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Localization\LocalizationScriptBuilder.cs" />

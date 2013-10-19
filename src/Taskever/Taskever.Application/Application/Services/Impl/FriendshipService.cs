@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Repositories;
 using Abp.Modules.Core.Application.Services.Dto;
+using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;

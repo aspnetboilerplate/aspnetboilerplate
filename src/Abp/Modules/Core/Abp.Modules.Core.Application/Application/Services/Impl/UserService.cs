@@ -33,15 +33,10 @@ namespace Abp.Modules.Core.Application.Services.Impl
             return userEntity.MapTo<UserDto>();
         }
 
-        public UserDto GetUser(int userId)
+        public GetUserOutput GetUser(GetUserInput input)
         {
-            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.Id == userId));
-            if (userEntity == null)
-            {
-                throw new ApplicationException("Can not find user with id = " + userId);
-            }
-
-            return userId.MapTo<UserDto>();
+            var user = _userRepository.Get(input.UserId);
+            return new GetUserOutput(user.MapTo<UserDto>());
         }
 
         public void RegisterUser(RegisterUserInput registerUser)

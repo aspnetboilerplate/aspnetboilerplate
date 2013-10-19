@@ -17,6 +17,7 @@ namespace Abp.Modules.Core.Startup
                 .For<IUserService>("abp/user")
                 .UseConventions()
                 .ForMethod("GetCurrentUserInfo").WithVerb(HttpVerb.Post)
+                .ForMethod("GetUser").WithVerb(HttpVerb.Post)
                 .Build();
         }
     }

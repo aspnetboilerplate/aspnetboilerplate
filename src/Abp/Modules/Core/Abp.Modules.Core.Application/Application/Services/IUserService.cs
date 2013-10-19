@@ -14,7 +14,7 @@ namespace Abp.Modules.Core.Application.Services
 
         UserDto GetUserOrNull(string emailAddress, string password);
 
-        UserDto GetUser(int userId);
+        GetUserOutput GetUser(GetUserInput input);
 
         void RegisterUser(RegisterUserInput registerUser);
 

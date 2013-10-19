@@ -58,9 +58,11 @@
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\Mappings\DtoMapper.cs" />
     <Compile Include="Application\Services\Dto\RegisterUserInput.cs" />
-    <Compile Include="Application\Services\Dto\UserDto.cs" />
+    <Compile Include="Application\Services\Dto\Users\UserDto.cs" />
     <Compile Include="Application\Services\Dto\Users\GetCurrentUserInfoInput.cs" />
     <Compile Include="Application\Services\Dto\Users\GetCurrentUserInfoOutput.cs" />
+    <Compile Include="Application\Services\Dto\Users\GetUserInput.cs" />
+    <Compile Include="Application\Services\Dto\Users\GetUserOutput.cs" />
     <Compile Include="Application\Services\Impl\AutoMapExtensions.cs" />
     <Compile Include="Application\Services\Impl\UserService.cs" />
     <Compile Include="Application\Services\IUserService.cs" />
