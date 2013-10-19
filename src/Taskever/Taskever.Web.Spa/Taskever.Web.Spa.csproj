@@ -235,12 +235,14 @@
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
-    <Content Include="Abp\Framework\images\loading.gif" />
     <Content Include="Images\loading_black.gif" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.form.min.js" />
+    <Content Include="Scripts\libs\spinjs\jquery.spin.js" />
+    <Content Include="Scripts\libs\spinjs\spin.js" />
+    <Content Include="Scripts\libs\spinjs\spin.min.js" />
     <Content Include="ViewResources\Account\Login.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -314,6 +316,7 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Abp\Framework\images\" />
     <Folder Include="Abp\Modules\Core\images\" />
     <Folder Include="Abp\Modules\Core\models\" />
     <Folder Include="Abp\Modules\Core\scripts\" />

@@ -54,6 +54,8 @@ Request -> Set User.Current (from authentication) -> Set Tenant.Current (from se
 
 TODO:
 
+- User Spin.js from Nuget? (It was not up-to-date)
+
 - Authentication notes
   - Preventing Cross-Site Request Forgery (CSRF) 
   - External Authentication Services (twitter, facebook etc.)

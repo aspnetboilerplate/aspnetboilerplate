@@ -2,12 +2,14 @@
 (function ($) {
 
     /* JQUERY PLUGIN CONFIGURATIONS */
+
+    //TODO: Extract configuration
     if ($.blockUI) {
         $.blockUI.defaults.css = {};
 
         $.blockUI.defaults.overlayCSS = {
-            backgroundColor: '#000',
-            opacity: 0.6,
+            backgroundColor: '#AAA',
+            opacity: 0.3,
             cursor: 'wait'
         };
     }
@@ -77,6 +79,8 @@
 
     /* PRIVATE METHODS *******************************************************/
 
+    //TODO: Extract block/spin options
+
     //Used on ajax request
     var abpAjaxHelper = {
 
@@ -85,7 +89,16 @@
                 if (options.blockUI === true) { //block whole page
                     $.blockUI(options.blockOptions);
                 } else { //block an element
-                    $(options.blockUI).block(options.blockOptions || { message: '<div style="width=50; height=50"><img src="/Abp/Framework/images/loading.gif" /></div>' });
+                    $(options.blockUI).block(options.blockOptions || { message: ' ' });
+                    $(options.blockUI).spin({
+                        lines: 11,
+                        length: 0,
+                        width: 10,
+                        radius: 20,
+                        corners: 1.0,
+                        trail: 60,
+                        speed: 1.2
+                    });
                 }
             }
         },
@@ -96,6 +109,7 @@
                     $.unblockUI();
                 } else { //unblock an element
                     $(options.blockUI).unblock();
+                    $(options.blockUI).spin(false);
                 }
             }
         },

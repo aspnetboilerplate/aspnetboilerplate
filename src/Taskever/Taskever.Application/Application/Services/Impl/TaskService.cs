@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
@@ -34,6 +35,7 @@ namespace Taskever.Application.Services.Impl
 
         public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput input)
         {
+            //Thread.Sleep(2000);
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var userOfTasks = _userRepository.Load(input.UserId);
 
