@@ -1,4 +1,4 @@
-namespace Taskever.Domain.Entities
+namespace Taskever.Domain.Enums
 {
     public enum TaskState : byte
     {

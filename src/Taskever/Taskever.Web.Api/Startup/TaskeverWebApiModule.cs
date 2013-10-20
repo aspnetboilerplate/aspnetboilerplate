@@ -24,7 +24,7 @@ namespace Taskever.Web.Startup
             BuildApiController
                 .For<ITaskService>("taskever/task")
                 .UseConventions()
-                .ForMethod("GetTasksOfUser").WithVerb(HttpVerb.Post)
+                .ForMethod("GetTasks").WithVerb(HttpVerb.Post)
                 .Build(); 
 
             BuildApiController

@@ -1,5 +1,19 @@
 ﻿<section>
-    <ul class="list-group" data-bind="foreach: friends">
-        <li class="list-group-item"><a href="#user/1"><span data-bind="html: name() + ' ' + surname()"></span></a></li>
+    <ul class="nav nav-pills" id="FriendshipTabs">
+        <li><a href="#MyFriends">My friends</a></li>
+        <li><a href="#FriendshipRequests">Friendship Requests</a></li>
+        <li><a href="#SentRequests">Sent Requests</a></li>
     </ul>
+    <div class="tab-content" style="margin-top: 10px;">
+        <div class="tab-pane active" id="MyFriends">
+            <ul class="list-group" data-bind="foreach: friends">
+                <li class="list-group-item">
+                    <img src="~/Abp/Framework/images/user.png" style="width:32px; height: 32px; position: relative; top:-2px; left:-2px;" />
+                    <a data-bind="attr: { href: '#user/' + id() }"><span data-bind="    html: name() + ' ' + surname()"></span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-pane" id="FriendshipRequests"></div>
+        <div class="tab-pane" id="SentRequests"></div>
+    </div>
 </section>

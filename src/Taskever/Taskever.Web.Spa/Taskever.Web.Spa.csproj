@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Content Include="Abp\Framework\images\user.png" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\abp.localization.js" />
     <Content Include="Abp\Framework\scripts\requirejs\plugins\service.js" />
@@ -192,13 +193,13 @@
     <Content Include="Abp\Framework\scripts\abp.jquery.js" />
     <Content Include="App\Main\viewmodels\home.js" />
     <Content Include="App\Main\viewmodels\createTaskDialog.js" />
-    <Content Include="App\Main\viewmodels\friendlist.js" />
+    <Content Include="App\Main\viewmodels\briefFriendlist.js" />
     <Content Include="App\Main\viewmodels\friends.js" />
     <Content Include="App\Main\viewmodels\briefTaskList.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
     <None Include="App\Main\views\home.cshtml" />
     <None Include="App\Main\views\createTaskDialog.cshtml" />
-    <None Include="App\Main\views\friendlist.cshtml" />
+    <None Include="App\Main\views\briefFriendlist.cshtml" />
     <None Include="App\Main\views\friends.cshtml" />
     <None Include="App\Main\views\briefTaskList.cshtml" />
     <None Include="App\Main\views\layout.cshtml" />
@@ -316,7 +317,6 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abp\Framework\images\" />
     <Folder Include="Abp\Modules\Core\images\" />
     <Folder Include="Abp\Modules\Core\models\" />
     <Folder Include="Abp\Modules\Core\scripts\" />

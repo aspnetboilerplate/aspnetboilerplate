@@ -1,11 +1,9 @@
 ﻿<section>
-    <div class="panel panel-default" style="margin-bottom: 10px">
-        <img src="/App/Main/images/hikalkan.jpg" alt="Halil İbrahim Kalkan" style="margin: 5px" width="60" height="60">
-        <div style="position: absolute; top: 5px; left: 85px">
-            <h4 data-bind="text: user.name() + ' ' + user.surname()"></h4>
-        </div>
+    <div class="panel panel-default" style="margin-bottom: 10px; position: relative; height: 38px">
+        <img src="~/Abp/Framework/images/user.png" style="width: 32px; height: 32px; position: absolute; top: 2px; left: 2px;" alt=""/>
+        <h4 data-bind="text: user.name() + ' ' + user.surname()" style="margin-left: 40px;"></h4>
     </div>
-    <ul class="nav nav-pills" id="myTab">
+    <ul class="nav nav-pills" id="UserViewTabs">
         <li><a href="#UserActivities">Activities</a></li>
         <li><a href="#UserCurrentTasks">Current tasks</a></li>
         <li><a href="#UserCompletedTasks">Completed tasks</a></li>
@@ -21,7 +19,7 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { userId: userId } }"></div>
-        <div class="tab-pane" id="UserCompletedTasks">completed...</div>
+        <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [1, 2] } }"></div>
+        <div class="tab-pane" id="UserCompletedTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [3] } }"></div>
     </div>
 </section>

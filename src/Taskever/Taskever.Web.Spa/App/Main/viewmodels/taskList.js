@@ -1,9 +1,11 @@
 ﻿define(
     ["jquery", "knockout", 'session', 'service!taskever/task'],
     function ($, ko, session, taskService) {
-        
+
         var _defaultActivationData = {
-            userId: 0
+            assignedUserId: 0,
+            taskStates: [],
+            maxResultCount: 20
         };
 
         return function () {
@@ -21,8 +23,9 @@
 
             that.activate = function (activationData) {
                 _activationData = $.extend({ }, _defaultActivationData, activationData);
-                taskService.getTasksOfUser({
-                    userId: _activationData.userId
+                taskService.getTasks({
+                    assignedUserId: _activationData.assignedUserId,
+                    taskStates: _activationData.taskStates
                 }).then(function (data) {
                     ko.mapping.fromJS(data.tasks, that.tasks);
                 });

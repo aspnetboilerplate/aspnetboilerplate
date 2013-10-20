@@ -1,16 +1,17 @@
 ﻿define(["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'service!taskever/task', 'session'],
     function ($, ko, app, dialogs, taskService, session) {
 
-        var maxTaskCount = 8;
+        var maxTaskCount = 10;
 
         var tasks = ko.mapping.fromJS([]);
 
         return {
             tasks: tasks,
+            session: session,
 
             activate: function() {
-                taskService.getTasksOfUser({
-                    userId: session.getCurrentUser().id(),
+                taskService.getTasks({
+                    assignedUserId: session.getCurrentUser().id(),
                     maxResultCount: maxTaskCount
                 }).then(function(data) {
                     ko.mapping.fromJS(data.tasks, tasks);

@@ -1,28 +1,32 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Tasks
 {
-    public class GetTasksOfUserInput : IInputDto, IPagedResultRequest, ICustomValidate
+    public class GetTasksInput : IInputDto, IPagedResultRequest, ICustomValidate
     {
-        public int UserId { get; set; }
+        public int AssignedUserId { get; set; }
+
+        public List<TaskState> TaskStates { get; set; }
 
         public int SkipCount { get; set; }
 
         public int MaxResultCount { get; set; }
 
-        public GetTasksOfUserInput()
+        public GetTasksInput()
         {
             MaxResultCount = int.MaxValue;
+            TaskStates = new List<TaskState>();
         }
 
         public void GetValidationResult(List<ValidationResult> results)
         {
             //TODO: For demonstration, do it declarative!
-            if (UserId <= 0)
+            if (AssignedUserId <= 0)
             {
-                results.Add(new ValidationResult("UserId must be a positive value!", new[] { "UserId" }));
+                results.Add(new ValidationResult("AssignedUserId must be a positive value!", new[] { "AssignedUserId" }));
             }
         }
     }

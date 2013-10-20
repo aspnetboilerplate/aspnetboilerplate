@@ -55,7 +55,7 @@ TODO:
 ===============================================================================
 
 - User
-  - Completed task'larý göster
+  + Completed task'larý göster
   - Activity'leri göster
   - Profil resmi özelliði ekle, burada da göster
 - Home

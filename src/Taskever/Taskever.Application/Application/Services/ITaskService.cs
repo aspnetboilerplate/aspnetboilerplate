@@ -7,7 +7,7 @@ namespace Taskever.Application.Services
 {
     public interface ITaskService :IApplicationService
     {
-        GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput args);
+        GetTasksOutput GetTasks(GetTasksInput args);
 
         TaskDto CreateTask(TaskDto task);
 

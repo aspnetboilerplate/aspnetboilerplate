@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
+using Abp.Utils.Extensions;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.Tasks;
 using Taskever.Data.Repositories;
@@ -33,30 +34,34 @@ namespace Taskever.Application.Services.Impl
             _taskPrivilegeService = taskPrivilegeService;
         }
 
-        public virtual GetTasksOfUserOutput GetTasksOfUser(GetTasksOfUserInput input)
+        [UnitOfWork]
+        public virtual GetTasksOutput GetTasks(GetTasksInput input)
         {
-            //Thread.Sleep(2000);
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            var userOfTasks = _userRepository.Load(input.UserId);
+            var userOfTasks = _userRepository.Load(input.AssignedUserId);
 
             if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, userOfTasks))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }
 
-            var tasks = _taskRepository.Query(
-                query =>
-                query
-                    .Where(task => task.AssignedUser.Id == input.UserId)
-                    .OrderByDescending(task => task.Priority)
-                    .Skip(input.SkipCount)
-                    .Take(input.MaxResultCount)
-                    .ToList()
-                );
+            var query = _taskRepository
+                .GetAll()
+                .Where(task => task.AssignedUser.Id == input.AssignedUserId);
 
-            return new GetTasksOfUserOutput
+            if (!input.TaskStates.IsNullOrEmpty())
+            {
+                query = query.Where(task => input.TaskStates.Contains(task.State));
+            }
+
+            query = query
+                .OrderByDescending(task => task.Priority)
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount);
+
+            return new GetTasksOutput
                        {
-                           Tasks = tasks.MapIList<Task, TaskDto>()
+                           Tasks = query.ToList().MapIList<Task, TaskDto>()
                        };
         }
 

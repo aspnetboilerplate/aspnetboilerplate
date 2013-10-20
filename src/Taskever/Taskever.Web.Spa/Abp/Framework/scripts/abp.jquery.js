@@ -139,8 +139,8 @@
                 }
             }
 
-            defer && defer.resolve(data.result);
-            userOptions.success && userOptions.success(data.result);
+            defer && defer.resolve(data.result, data);
+            userOptions.success && userOptions.success(data.result, data);
 
             if (data.targetUrl) {
                 location.href = data.targetUrl;

@@ -88,6 +88,15 @@ namespace Taskever.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See all friends.
+        /// </summary>
+        internal static string SeeAllFriends {
+            get {
+                return ResourceManager.GetString("SeeAllFriends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See all tasks.
         /// </summary>
         internal static string SeeAllTasks {

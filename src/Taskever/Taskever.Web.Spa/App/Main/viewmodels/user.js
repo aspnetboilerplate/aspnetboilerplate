@@ -33,8 +33,8 @@
             };
 
             that.attached = function (view, parent) {
-                $('#myTab').tab();
-                $('#myTab a').click(function (e) {
+                $('#UserViewTabs').tab();
+                $('#UserViewTabs a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
 
@@ -44,7 +44,7 @@
                     });
                 });
 
-                $('#myTab a[href=#' + _urlArgs.activeSection + ']').tab('show');
+                $('#UserViewTabs a[href=#' + _urlArgs.activeSection + ']').tab('show');
             };
         };
 

@@ -126,6 +126,9 @@
   <data name="MyTasks" xml:space="preserve">
     <value>My tasks</value>
   </data>
+  <data name="SeeAllFriends" xml:space="preserve">
+    <value>See all friends</value>
+  </data>
   <data name="SeeAllTasks" xml:space="preserve">
     <value>See all tasks</value>
   </data>

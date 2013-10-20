@@ -1,5 +1,6 @@
-﻿define(['plugins/router', 'durandal/app'], function (router, app) {
+﻿define(['plugins/router', 'session'], function (router, session) {
     return {
+        currentUser: session.getCurrentUser(),
         router: router,
         activate: function () {
             router.map([

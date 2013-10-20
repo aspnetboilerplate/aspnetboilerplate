@@ -1,5 +1,6 @@
 ﻿using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Entities.Utils;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Domain.Entities
 {
@@ -32,6 +33,7 @@ namespace Taskever.Domain.Entities
         public Task()
         {
             Priority = TaskPriority.Normal;
+            State = TaskState.New;
         }
     }
 }

@@ -12,7 +12,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#">Home</a></li>
-                    <li><a href="#user">My profile</a></li>
+                    <li><a data-bind="attr: { href: '#user/' + currentUser.id() }">My profile</a></li>
                     <li><a href="#friends">My Friends</a></li>
                     <li><a href="/Account/Logout">Logout</a></li>
                 </ul>
@@ -22,7 +22,7 @@
     <div class="container">
         <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefTaskList'"></div>
         <div class="col-md-6 col-sm-12" data-bind="router: { /*transition: 'entrance', cacheViews: true*/ }"></div>
-        <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/friendlist'"></div>
+        <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefFriendlist'"></div>
     </div>
 </div>
 @Html.Partial("~/Views/Shared/_Footer.cshtml")

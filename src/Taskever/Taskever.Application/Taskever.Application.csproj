@@ -57,8 +57,8 @@
   <ItemGroup>
     <Compile Include="Application\Services\Dto\Activities\ActivityDto.cs" />
     <Compile Include="Application\Services\Dto\DtoMapper.cs" />
-    <Compile Include="Application\Services\Dto\Tasks\GetTasksOfUserInput.cs" />
-    <Compile Include="Application\Services\Dto\Tasks\GetTasksOfUserOutput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesInput.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesOutput.cs" />

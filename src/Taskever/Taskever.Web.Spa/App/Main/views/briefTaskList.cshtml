@@ -7,7 +7,7 @@
             <li class="list-group-item" data-bind="html: title"></li>
         </ul>
         <div class="panel-footer">
-            <a href="#user/1?activeSection=UserCurrentTasks">@L("SeeAllTasks")</a>
+            <a data-bind="attr: { href: '#user/' + session.getCurrentUser().id() + '?activeSection=UserCurrentTasks' }">@L("SeeAllTasks")</a>
         </div>
     </div>
 </section>

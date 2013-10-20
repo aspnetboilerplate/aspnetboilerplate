@@ -1,0 +1,16 @@
+﻿<section>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">@L("MyTasks")</h3>
+        </div>
+        <ul class="list-group" data-bind="foreach: friends">
+            <li class="list-group-item">
+                <img src="~/Abp/Framework/images/user.png" style="width:16px; height: 16px; position: relative; top:-2px; left:-2px;" />
+                <a data-bind="attr: { href: '#user/' + id() }"><span data-bind="    html: name() + ' ' + surname()"></span></a>
+            </li>
+        </ul>
+        <div class="panel-footer">
+            <a href="#friends" >@L("SeeAllFriends")</a>
+        </div>
+    </div>
+</section>
