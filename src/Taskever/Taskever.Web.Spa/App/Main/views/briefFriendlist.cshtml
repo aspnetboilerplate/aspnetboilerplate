@@ -1,12 +1,12 @@
 ﻿<section>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">@L("MyTasks")</h3>
+            <h3 class="panel-title">@L("MyFriends")</h3>
         </div>
         <ul class="list-group" data-bind="foreach: friends">
-            <li class="list-group-item">
-                <img src="~/Abp/Framework/images/user.png" style="width:16px; height: 16px; position: relative; top:-2px; left:-2px;" />
-                <a data-bind="attr: { href: '#user/' + id() }"><span data-bind="    html: name() + ' ' + surname()"></span></a>
+            <li class="list-group-item" style="position: relative; height: 40px;">
+                <img data-bind="attr: { src: profileImage() }" style="width:40px; height: 40px; position: absolute; top:0px; left:0px;" />
+                <a style="margin-left: 36px;" data-bind="attr: { href: '#user/' + id() }"><span data-bind="    html: name() + ' ' + surname()"></span></a>
             </li>
         </ul>
         <div class="panel-footer">

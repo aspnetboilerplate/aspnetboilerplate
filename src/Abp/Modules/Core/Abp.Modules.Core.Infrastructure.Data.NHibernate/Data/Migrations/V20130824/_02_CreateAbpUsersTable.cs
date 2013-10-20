@@ -13,7 +13,8 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                 .WithColumn("Name").AsString(30).NotNullable()
                 .WithColumn("Surname").AsString(30).NotNullable()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
-                .WithColumn("Password").AsString(30).NotNullable()
+                .WithColumn("Password").AsString(80).NotNullable()
+                .WithColumn("ProfileImage").AsString(100).NotNullable()
                 .WithColumn("IsTenantOwner").AsBoolean().NotNullable().WithDefaultValue(false);
 
             Insert.IntoTable("AbpUsers").Row(

@@ -21,5 +21,10 @@ namespace Abp.Modules.Core.Application.Services.Dto.Users
         /// Email address of the user.
         /// </summary>
         public virtual string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Profile image of the user.
+        /// </summary>
+        public virtual string ProfileImage { get; set; }
     }
 }

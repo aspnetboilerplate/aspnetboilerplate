@@ -38,6 +38,11 @@ namespace Abp.Modules.Core.Domain.Entities
         public virtual string Password { get; set; }
 
         /// <summary>
+        /// Profile image of the user. 
+        /// </summary>
+        public virtual string ProfileImage { get; set; }
+
+        /// <summary>
         /// Is this user owner of the <see cref="Tenant"/>.
         /// </summary>
         public virtual bool IsTenantOwner { get; set; }

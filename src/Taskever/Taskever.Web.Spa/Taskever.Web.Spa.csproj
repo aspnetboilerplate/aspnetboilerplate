@@ -180,7 +180,9 @@
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\abp.localization.js" />
     <Content Include="Abp\Framework\scripts\requirejs\plugins\service.js" />
-    <Content Include="App\Main\images\hikalkan.jpg" />
+    <Content Include="App\Main\images\profile\hikalkan.jpg" />
+    <Content Include="App\Main\images\profile\ismail.jpg" />
+    <Content Include="App\Main\images\profile\ozhan.jpg" />
     <Content Include="App\Main\session.js" />
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\taskList.js" />

@@ -123,6 +123,9 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="MyFriends" xml:space="preserve">
+    <value>My friends</value>
+  </data>
   <data name="MyTasks" xml:space="preserve">
     <value>My tasks</value>
   </data>

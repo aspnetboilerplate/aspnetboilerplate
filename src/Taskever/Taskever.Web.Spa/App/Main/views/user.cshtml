@@ -1,7 +1,7 @@
 ﻿<section>
-    <div class="panel panel-default" style="margin-bottom: 10px; position: relative; height: 38px">
-        <img src="~/Abp/Framework/images/user.png" style="width: 32px; height: 32px; position: absolute; top: 2px; left: 2px;" alt=""/>
-        <h4 data-bind="text: user.name() + ' ' + user.surname()" style="margin-left: 40px;"></h4>
+    <div class="panel panel-default" style="margin-bottom: 10px; position: relative; height: 70px">
+        <img data-bind="attr: { src: user.profileImage() }" style="width: 64px; height: 64px; position: absolute; top: 2px; left: 2px;" alt=""/>
+        <h4 data-bind="text: user.name() + ' ' + user.surname()" style="margin-left: 70px;"></h4>
     </div>
     <ul class="nav nav-pills" id="UserViewTabs">
         <li><a href="#UserActivities">Activities</a></li>
