@@ -184,8 +184,15 @@
     <Content Include="App\Main\images\profile\ismail.jpg" />
     <Content Include="App\Main\images\profile\ozhan.jpg" />
     <Content Include="App\Main\session.js" />
+    <Content Include="App\Main\styles\briefFriendList.css">
+      <DependentUpon>briefFriendList.less</DependentUpon>
+    </Content>
+    <Content Include="App\Main\styles\briefFriendList.min.css">
+      <DependentUpon>briefFriendList.less</DependentUpon>
+    </Content>
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\taskList.js" />
+    <Content Include="App\Main\styles\briefFriendList.less" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />
@@ -195,13 +202,13 @@
     <Content Include="Abp\Framework\scripts\abp.jquery.js" />
     <Content Include="App\Main\viewmodels\home.js" />
     <Content Include="App\Main\viewmodels\createTaskDialog.js" />
-    <Content Include="App\Main\viewmodels\briefFriendlist.js" />
+    <Content Include="App\Main\viewmodels\briefFriendList.js" />
     <Content Include="App\Main\viewmodels\friends.js" />
     <Content Include="App\Main\viewmodels\briefTaskList.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
     <None Include="App\Main\views\home.cshtml" />
     <None Include="App\Main\views\createTaskDialog.cshtml" />
-    <None Include="App\Main\views\briefFriendlist.cshtml" />
+    <None Include="App\Main\views\briefFriendList.cshtml" />
     <None Include="App\Main\views\friends.cshtml" />
     <None Include="App\Main\views\briefTaskList.cshtml" />
     <None Include="App\Main\views\layout.cshtml" />
@@ -326,7 +333,6 @@
     <Folder Include="Abp\Modules\Core\viewmodels\" />
     <Folder Include="Abp\Modules\Core\views\" />
     <Folder Include="App\Main\scripts\" />
-    <Folder Include="App\Main\styles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -23,6 +23,11 @@ namespace Taskever.Web.App_Start
                 );
 
             bundles.Add(
+                new StyleBundle("~/styles/taskever")
+                    .Include("~/App/Main/styles/briefFriendList.min.css")
+                );
+
+            bundles.Add(
                 new ScriptBundle("~/Scripts/modernizr")
                     .Include("~/Scripts/modernizr-{version}.js") //TODO: Use minimized
                 );

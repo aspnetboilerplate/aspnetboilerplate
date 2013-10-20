@@ -6,10 +6,17 @@
     </ul>
     <div class="tab-content" style="margin-top: 10px;">
         <div class="tab-pane active" id="MyFriends">
-            <ul class="list-group" data-bind="foreach: friends">
+            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friends">
                 <li class="list-group-item">
-                    <img src="~/Abp/Framework/images/user.png" style="width:32px; height: 32px; position: relative; top:-2px; left:-2px;" />
-                    <a data-bind="attr: { href: '#user/' + id() }"><span data-bind="    html: name() + ' ' + surname()"></span></a>
+                    <img data-bind="attr: { src: profileImage() }" />
+                    <div class="user-info">
+                        <a data-bind="attr: { href: '#user/' + id() }">
+                            <span data-bind="    html: name() + ' ' + surname()"></span>
+                        </a>
+                        <br/>
+                        <input type="checkbox" /> Can assign tasks to me<br/>
+                        <input type="checkbox" /> Fallow activities
+                    </div>
                 </li>
             </ul>
         </div>
