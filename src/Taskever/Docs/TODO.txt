@@ -51,3 +51,34 @@ TODO:
   - Show waiting friend requests
   - Remove a friend
 - Adding comment to a task -> Maybe we can develop a more general-purpose commenting module?
+
+===============================================================================
+
+- User
+  - Completed task'larý göster
+  - Activity'leri göster
+  - Profil resmi özelliði ekle, burada da göster
+- Home
+  - My friends listesinde kullanýcýlarýn profil resimlerini göster
+    En fazla 10 kiþiyi göster, gerisini 'see all friends' linki ile ilgili sayfaya yönlendir
+- Layout
+  - Create new task butonu!
+- My friends (f'yi küçült)
+  - Friends
+    - Tüm arkadaþlarý profil resimleriyle göster.
+    - Birine týklayýnca User sayfasýna gönder
+    - Actions:
+	  - Arkadaþlýktan çýkarma
+	  - Takip edip etmeme
+	  - Bana task atayabilir
+  - Bekleyen arkadaþlýk istekleri (gelen)
+    - Onaylama, reddetme (birdaha teklif edemesin!->sonra)
+	- Ne zamandýr beklediði gözüksün
+  - Bekleyen arkadaþlýk istekleri (giden)    
+    - Ýsteði iptal etme
+	- Ne zamandýr beklediði gözüksün
+  - Yeni arkadaþ eklemek için dialog göster
+	Email adresini tam olarak girip ekleyebilir.	  
+- Task detail page
+  - Title, description v.s.
+  - Comments?
