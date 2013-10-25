@@ -8,6 +8,6 @@ namespace Taskever.Application.Services
 {
     public interface IFriendshipService : IApplicationService
     {
-        IList<UserDto> GetMyFriends(GetMyFriendsInput input);
+        GetFriendshipsOutput GetFriendships(GetFriendshipsInput input);
     }
 }

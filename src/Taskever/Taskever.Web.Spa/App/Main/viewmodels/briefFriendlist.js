@@ -1,19 +1,25 @@
 ﻿define(
-    ["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'service!taskever/friendship', 'session'],
-    function ($, ko, app, dialogs, friendshipService, session) {
+    ["knockout", 'session', 'service!taskever/friendship'],
+    function (ko, session, friendshipService) {
         
-    var friends = ko.mapping.fromJS([]);
+    return function () {
+        var that = this;
 
-    //var message = L("abp.message");
+        // Private variables //////////////////////////////////////////////////
 
-    return {
-        friends: friends,
-        currentUser: session.getCurrentUser(),
-        activate: function () {
-            friendshipService.getMyFriends({})
-                .then(function (data) {
-                    ko.mapping.fromJS(data, friends);
-                });
-        }
+        // Public fields //////////////////////////////////////////////////////
+
+        that.friendships = ko.mapping.fromJS([]);
+
+        // Public methods /////////////////////////////////////////////////////
+
+        that.activate = function () {
+            friendshipService.getFriendships({
+                userId: session.getCurrentUser().id()
+            }).then(function (data) {
+                ko.mapping.fromJS(data.friendships, that.friendships);
+            });
+        };
     };
+
 });

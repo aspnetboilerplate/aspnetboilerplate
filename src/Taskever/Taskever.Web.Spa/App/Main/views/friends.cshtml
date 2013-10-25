@@ -6,16 +6,16 @@
     </ul>
     <div class="tab-content" style="margin-top: 10px;">
         <div class="tab-pane active" id="MyFriends">
-            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friends">
+            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friendships">
                 <li class="list-group-item">
-                    <img data-bind="attr: { src: profileImage() }" />
+                    <img data-bind="attr: { src: friend.profileImage() }" />
                     <div class="user-info">
-                        <a data-bind="attr: { href: '#user/' + id() }">
-                            <span data-bind="    html: name() + ' ' + surname()"></span>
+                        <a data-bind="attr: { href: '#user/' + friend.id() }">
+                            <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
                         </a>
                         <br/>
-                        <input type="checkbox" /> Can assign tasks to me<br/>
-                        <input type="checkbox" /> Fallow activities
+                        <input type="checkbox" data-bind="checked: canAssignTask" /> Can assign tasks to me<br/>
+                        <input type="checkbox" data-bind="checked: fallowActivities" /> Fallow activities
                     </div>
                 </li>
             </ul>

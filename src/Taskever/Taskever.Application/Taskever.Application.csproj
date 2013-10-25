@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,14 +58,16 @@
   <ItemGroup>
     <Compile Include="Application\Services\Dto\Activities\ActivityDto.cs" />
     <Compile Include="Application\Services\Dto\DtoMapper.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\FriendDto.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesInput.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesOutput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsOutput.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
-    <Compile Include="Application\Services\Dto\Friendships\GetMyFriendsInput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsInput.cs" />
     <Compile Include="Application\Services\Impl\TaskService.cs" />
     <Compile Include="Application\Services\ITaskService.cs" />
     <Compile Include="Application\Services\IUserActivityService.cs" />

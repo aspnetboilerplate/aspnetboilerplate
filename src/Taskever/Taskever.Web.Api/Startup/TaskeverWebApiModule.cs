@@ -30,7 +30,7 @@ namespace Taskever.Web.Startup
             BuildApiController
                 .For<IFriendshipService>("taskever/friendship")
                 .UseConventions()
-                .ForMethod("GetMyFriends").WithVerb(HttpVerb.Post)
+                .ForMethod("GetFriendships").WithVerb(HttpVerb.Post)
                 .Build();
 
             BuildApiController

@@ -7,6 +7,7 @@ using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.Friendships;
+using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 
 namespace Taskever.Application.Services.Impl
@@ -15,33 +16,18 @@ namespace Taskever.Application.Services.Impl
     {
         private readonly IUserRepository _userRepository;
 
-        private readonly IRepository<Friendship> _friendshipRepository;
+        private readonly IFriendshipRepository _friendshipRepository;
 
-        public FriendshipService(IUserRepository userRepository, IRepository<Friendship> friendshipRepository)
+        public FriendshipService(IUserRepository userRepository, IFriendshipRepository friendshipRepository)
         { 
             _userRepository = userRepository;
             _friendshipRepository = friendshipRepository;
         }
 
-        public IList<UserDto> GetMyFriends(GetMyFriendsInput input)
+        public GetFriendshipsOutput GetFriendships(GetFriendshipsInput input)
         {
-            const int currentUserId = 1;
-            var list = _friendshipRepository.Query(friendships =>
-                                            {
-                                                var qr = from user in _userRepository.GetAll()
-                                                         join friendship in friendships on user.Id equals friendship.Friend.Id
-                                                         where friendship.User.Id == currentUserId && friendship.Status == FriendshipStatus.Accepted
-                                                         select new { user, friendship };
-
-                                                if (input.CanAssignTask)
-                                                {
-                                                    qr = qr.Where(_ => _.friendship.CanAssignTask);
-                                                }
-
-                                                return qr.Select(_ => _.user).ToList();
-                                            });
-
-            return list.MapIList<User, UserDto>();
+            var friendships = _friendshipRepository.GetAllWithFriendUser(input.UserId, input.CanAssignTask);
+            return new GetFriendshipsOutput { Friendships = friendships.MapIList<Friendship, FriendshipDto>() };
         }
     }
 }

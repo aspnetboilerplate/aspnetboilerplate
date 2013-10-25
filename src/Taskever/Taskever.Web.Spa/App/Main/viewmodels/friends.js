@@ -1,6 +1,6 @@
 ﻿define(
-    ["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'plugins/history', 'service!taskever/friendship'],
-    function ($, ko, app, dialogs, history, friendshipService) {
+    ["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'plugins/history', 'service!taskever/friendship', 'session'],
+    function ($, ko, app, dialogs, history, friendshipService,session) {
 
         var _defaultUrlAgs = {
             activeSection: 'MyFriends'
@@ -15,21 +15,20 @@
             
             // Public fields //////////////////////////////////////////////////////
 
-            that.friends = ko.mapping.fromJS([]);
+            that.friendships = ko.mapping.fromJS([]);
 
             // Public methods /////////////////////////////////////////////////////
 
             that.activate = function (urlArgs) {
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
-                friendshipService.getMyFriends({
-                    
-                }).then(function(data, response) {
-                    ko.mapping.fromJS(data, that.friends);
-                    console.log(response);
+                friendshipService.getFriendships({
+                    userId: session.getCurrentUser().id()
+                }).then(function(data) {
+                    ko.mapping.fromJS(data.friendships, that.friendships);
                 });
             };
             
-            that.attached = function (view, parent) {
+            that.attached = function () {
                 $('#FriendshipTabs').tab();
                 $('#FriendshipTabs a').click(function (e) {
                     e.preventDefault();
