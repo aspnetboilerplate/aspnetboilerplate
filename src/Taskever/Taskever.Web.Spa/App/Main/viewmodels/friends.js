@@ -41,7 +41,18 @@
                 });
 
                 $('#FriendshipTabs a[href=#' + _urlArgs.activeSection + ']').tab('show');
+                $('#MyFriends').on('change', 'input.checkbox-friendship-canAssignTask', function (ev) {
+                    var friendship = ko.dataFor(this);
+                    //TODO: Change canAssignTask on the server!
+                });
+                $('#MyFriends').on('change', 'input.checkbox-friendship-fallowActivities', function (ev) {
+                    var friendship = ko.dataFor(this);
+                    //TODO: Change fallowActivities on the server!
+                });
             };
+            
+            // Private methods ////////////////////////////////////////////////
+
         };
 
     }

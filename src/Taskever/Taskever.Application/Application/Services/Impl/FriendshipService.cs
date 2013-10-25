@@ -26,6 +26,7 @@ namespace Taskever.Application.Services.Impl
 
         public GetFriendshipsOutput GetFriendships(GetFriendshipsInput input)
         {
+            //Check if current user can see friendships of the the requested user!
             var friendships = _friendshipRepository.GetAllWithFriendUser(input.UserId, input.CanAssignTask);
             return new GetFriendshipsOutput { Friendships = friendships.MapIList<Friendship, FriendshipDto>() };
         }
