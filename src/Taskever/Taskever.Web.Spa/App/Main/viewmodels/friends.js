@@ -1,18 +1,18 @@
 ﻿define(
     ["jquery", "knockout", 'durandal/app', 'plugins/dialog', 'plugins/history', 'service!taskever/friendship', 'session'],
-    function ($, ko, app, dialogs, history, friendshipService,session) {
+    function ($, ko, app, dialogs, history, friendshipService, session) {
 
         var _defaultUrlAgs = {
             activeSection: 'MyFriends'
         };
-        
+
         return function () {
             var that = this;
 
             // Private variables //////////////////////////////////////////////////
 
             var _urlArgs;
-            
+
             // Public fields //////////////////////////////////////////////////////
 
             that.friendships = ko.mapping.fromJS([]);
@@ -23,11 +23,11 @@
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
                 friendshipService.getFriendships({
                     userId: session.getCurrentUser().id()
-                }).then(function(data) {
+                }).then(function (data) {
                     ko.mapping.fromJS(data.friendships, that.friendships);
                 });
             };
-            
+
             that.attached = function () {
                 $('#FriendshipTabs').tab();
                 $('#FriendshipTabs a').click(function (e) {
@@ -41,16 +41,28 @@
                 });
 
                 $('#FriendshipTabs a[href=#' + _urlArgs.activeSection + ']').tab('show');
-                $('#MyFriends').on('change', 'input.checkbox-friendship-canAssignTask', function (ev) {
+
+                //TODO: DRY for codes below!
+
+                //TODO: Prevent multiple-click (block ui?)!
+                $('#MyFriends').on('change', 'input.checkbox-friendship-canAssignTask', function () {
                     var friendship = ko.dataFor(this);
-                    //TODO: Change canAssignTask on the server!
+                    friendshipService.changeFriendshipProperties({
+                        id: friendship.id(),
+                        canAssignTask: friendship.canAssignTask()
+                    });
                 });
-                $('#MyFriends').on('change', 'input.checkbox-friendship-fallowActivities', function (ev) {
+
+                //TODO: Prevent multiple-click (block ui?)!
+                $('#MyFriends').on('change', 'input.checkbox-friendship-fallowActivities', function () {
                     var friendship = ko.dataFor(this);
-                    //TODO: Change fallowActivities on the server!
+                    friendshipService.changeFriendshipProperties({
+                        id: friendship.id(),
+                        fallowActivities: friendship.fallowActivities()
+                    });
                 });
             };
-            
+
             // Private methods ////////////////////////////////////////////////
 
         };

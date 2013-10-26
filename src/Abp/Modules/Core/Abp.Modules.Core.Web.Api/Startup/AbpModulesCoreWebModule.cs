@@ -1,6 +1,5 @@
 ﻿using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Dependency.Installers;
-using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.Modules.Core.Startup
@@ -15,9 +14,6 @@ namespace Abp.Modules.Core.Startup
 
             BuildApiController
                 .For<IUserService>("abp/user")
-                .UseConventions()
-                .ForMethod("GetCurrentUserInfo").WithVerb(HttpVerb.Post)
-                .ForMethod("GetUser").WithVerb(HttpVerb.Post)
                 .Build();
         }
     }

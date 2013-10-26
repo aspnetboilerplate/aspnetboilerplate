@@ -67,7 +67,10 @@
     <Compile Include="Domain\Business\Acitivities\ActivityAttribute.cs" />
     <Compile Include="Domain\Business\Acitivities\ActivityInfoFactory.cs" />
     <Compile Include="Domain\Business\Acitivities\CreateTaskActivityInfo.cs" />
+    <Compile Include="Domain\Policies\Impl\FriendshipPolicy.cs" />
+    <Compile Include="Domain\Policies\IPolicy.cs" />
     <Compile Include="Domain\Services\IActivityService.cs" />
+    <Compile Include="Domain\Policies\IFriendshipPolicy.cs" />
     <Compile Include="Domain\Services\Impl\ActivityService.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Domain\Entities\Activity.cs" />
@@ -115,6 +118,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

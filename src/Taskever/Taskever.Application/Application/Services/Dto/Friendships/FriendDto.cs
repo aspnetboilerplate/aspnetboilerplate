@@ -4,7 +4,7 @@ using Taskever.Domain.Entities;
 
 namespace Taskever.Application.Services.Dto.Friendships
 {
-    public class FriendshipDto
+    public class FriendshipDto : EntityDto
     {
         public UserDto Friend { get; set; }
 

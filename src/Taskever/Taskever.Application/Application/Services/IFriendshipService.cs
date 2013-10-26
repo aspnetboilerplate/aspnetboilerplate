@@ -9,6 +9,7 @@ namespace Taskever.Application.Services
     public interface IFriendshipService : IApplicationService
     {
         GetFriendshipsOutput GetFriendships(GetFriendshipsInput input);
-        
+
+        ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input);
     }
 }

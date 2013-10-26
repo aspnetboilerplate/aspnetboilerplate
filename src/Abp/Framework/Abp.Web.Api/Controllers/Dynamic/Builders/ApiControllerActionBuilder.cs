@@ -108,9 +108,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             if (_verb == null)
             {
-                _verb = _controllerBuilder.UsingConventions
-                            ? DynamicApiHelper.GetConventionalVerbForMethodName(_actionName)
-                            : DynamicApiHelper.GetDefaultHttpVerb();
+                _verb = DynamicApiHelper.GetDefaultHttpVerb();
             }
 
             return new DynamicApiActionInfo(_actionName, _verb.Value, _methodInfo);

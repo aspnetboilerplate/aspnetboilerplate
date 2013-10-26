@@ -39,11 +39,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private readonly string _areaName;
 
         /// <summary>
-        /// True if using conventions.
-        /// </summary>
-        public bool UsingConventions { get; private set; }
-
-        /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
         /// <param name="controllerName"> </param>
@@ -63,16 +58,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
             }
-        }
-
-        /// <summary>
-        /// Used to tell builder to use conventions for api.
-        /// </summary>
-        /// <returns>Controller builder</returns>
-        public IApiControllerBuilder<T> UseConventions()
-        {
-            UsingConventions = true;
-            return this;
         }
 
         /// <summary>

@@ -32,7 +32,7 @@
 
         public static HttpVerb GetDefaultHttpVerb()
         {
-            return HttpVerb.Get;
+            return HttpVerb.Post;
         }
     }
 }
