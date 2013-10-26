@@ -23,19 +23,11 @@
             that.canActivate = function (userId, urlArgs) {
                 that.userId = userId;
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
-                
-                var defer = $.Deferred();
-                
-                userService.getUser({
+                return userService.getUser({
                     userId: userId
-                }).then(function (data) {
+                }).done(function (data) {
                     ko.mapping.fromJS(data.user, that.user);
-                    defer.resolve(true);
-                }.fail(function () {
-                    defer.resolve(false);
-                }));
-                
-                return defer.promise();
+                });
             };
 
             that.attached = function (view, parent) {
