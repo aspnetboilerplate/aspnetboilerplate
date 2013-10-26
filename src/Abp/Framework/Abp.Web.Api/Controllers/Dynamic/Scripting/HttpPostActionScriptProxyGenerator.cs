@@ -13,6 +13,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         public HttpPostActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
             : base(controllerInfo, methodInfo)
         {
+
         }
 
         protected override string GenerateAjaxCallParameters()

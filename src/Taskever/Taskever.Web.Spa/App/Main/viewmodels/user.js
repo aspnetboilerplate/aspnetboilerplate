@@ -15,21 +15,27 @@
 
             // Public fields //////////////////////////////////////////////////////
 
-            that.userId = null;
-            that.user = ko.mapping.fromJS(new dtos.abp.user.UserDto()); //TODO: Direkt dönüş değeri olmayanlar için namespace problemi var!!! Hatta hepsi için!
+            that.userId = null; //TODO: Remove this, use user.Id() ?
+            that.user = ko.mapping.fromJS({}); //TODO: Direkt dönüş değeri olmayanlar için namespace problemi var!!! Hatta hepsi için!
 
             // Public methods /////////////////////////////////////////////////////
 
-            that.activate = function (userId, urlArgs) {
+            that.canActivate = function (userId, urlArgs) {
                 that.userId = userId;
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
-
+                
+                var defer = $.Deferred();
+                
                 userService.getUser({
                     userId: userId
                 }).then(function (data) {
                     ko.mapping.fromJS(data.user, that.user);
-                });
-
+                    defer.resolve(true);
+                }.fail(function () {
+                    defer.resolve(false);
+                }));
+                
+                return defer.promise();
             };
 
             that.attached = function (view, parent) {

@@ -27,7 +27,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
             return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();
         }
 
-        public UserDto GetUserOrNull(string emailAddress, string password)
+        public UserDto GetUserOrNull(string emailAddress, string password) //TODO: Make this GetUserOrNullInput and GetUserOrNullOutput
         {
             var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password));
             return userEntity.MapTo<UserDto>();

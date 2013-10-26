@@ -13,9 +13,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
         private const string JsMethodTemplate =
 @"    var {jsMethodName} = function({jsMethodParameterList}) {
-        return abp.ajax({
+        return abp.ajax($.extend({
 {ajaxCallParameters}
-        });
+        }, ajaxParams));
     };";
 
         protected ActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
@@ -49,13 +49,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
         protected string GenerateJsMethodParameterList(MethodInfo methodInfo)
         {
-            var parameters = methodInfo.GetParameters();
-            if (parameters.Length <= 0)
-            {
-                return "";
-            }
-
-            return string.Join(", ", parameters.Select(prm => prm.Name.ToCamelCase()));
+            var paramNames = methodInfo.GetParameters().Select(prm => prm.Name.ToCamelCase()).ToList();
+            paramNames.Add("ajaxParams");
+            return string.Join(", ", paramNames);
         }
     }
 }

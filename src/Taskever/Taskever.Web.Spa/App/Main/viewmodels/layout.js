@@ -10,6 +10,9 @@
             ]).buildNavigationModel();
 
             return router.activate();
+        },
+        createTask: function () {
+            alert(1);
         }
     };
 });
