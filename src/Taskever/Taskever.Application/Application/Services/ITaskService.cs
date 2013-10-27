@@ -9,7 +9,7 @@ namespace Taskever.Application.Services
     {
         GetTasksOutput GetTasks(GetTasksInput args);
 
-        TaskDto CreateTask(TaskDto task);
+        CreateTaskOutput CreateTask(CreateTaskInput input);
 
         TaskDto UpdateTask(TaskDto task);
          

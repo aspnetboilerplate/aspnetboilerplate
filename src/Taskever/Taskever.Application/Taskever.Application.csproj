@@ -60,7 +60,8 @@
     <Compile Include="Application\Services\Dto\Friendships\ChangeFriendshipPropertiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Activities\ActivityDto.cs" />
     <Compile Include="Application\Services\Dto\DtoMapper.cs" />
-    <Compile Include="Application\Services\Dto\Friendships\FriendDto.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\FriendshipDto.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\CreateTaskOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsOutput.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\CreateTaskInput.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsInput.cs" />
     <Compile Include="Application\Services\Impl\TaskService.cs" />

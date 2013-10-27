@@ -66,15 +66,17 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork]
-        public virtual TaskDto CreateTask(TaskDto task)
+        public virtual CreateTaskOutput CreateTask(CreateTaskInput input)
         {
             //Get entities from database
             var creatorUser = _userRepository.Get(User.CurrentUserId);
-            var assignedUser = _userRepository.Get(task.AssignedUserId);
+            var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
+
+            //TODO: Can assign the task to the user?
 
             //Create the task
-            var taskEntity = task.MapTo<Task>();
-            taskEntity.AssignedUser = _userRepository.Load(task.AssignedUserId);
+            var taskEntity = input.Task.MapTo<Task>();
+            taskEntity.AssignedUser = _userRepository.Load(input.Task.AssignedUserId);
             _taskRepository.Insert(taskEntity);
 
             //Add to activities (TODO: This must be done by events, not directly by Task service?)
@@ -89,7 +91,10 @@ namespace Taskever.Application.Services.Impl
                     )
                 );
 
-            return taskEntity.MapTo<TaskDto>();
+            return new CreateTaskOutput
+                       {
+                           Task = taskEntity.MapTo<TaskDto>()
+                       };
         }
 
         public TaskDto UpdateTask(TaskDto task)

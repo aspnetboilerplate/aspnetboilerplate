@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'session'], function (router, session) {
+﻿define(['plugins/router', 'session', 'plugins/dialog'], function (router, session, dialog) {
     return {
         currentUser: session.getCurrentUser(),
         router: router,
@@ -12,7 +12,7 @@
             return router.activate();
         },
         createTask: function () {
-            alert(1);
+            dialog.show('viewmodels/createTaskDialog');
         }
     };
 });

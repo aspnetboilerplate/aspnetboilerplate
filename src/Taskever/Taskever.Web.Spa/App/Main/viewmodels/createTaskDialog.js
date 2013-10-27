@@ -1,26 +1,38 @@
 ﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
     function($, ko, dialogs, dtos, taskService, friendshipService, session) {
-        var ctor = function() {
-            this.task = new dtos.taskever.task.TaskDto();
-            this.users = ko.mapping.fromJS([]);
-        };
-
-        ctor.prototype.activate = function() {
+        return function () {
             var that = this;
-            friendshipService.getMyFriends({ canAssignTask: true })
-                .then(function(data) {
-                    ko.mapping.fromJS(data, that.users);
+
+            // Public fields //////////////////////////////////////////////////////
+
+            that.task = {
+                title: ko.observable(),
+                description: ko.observable(),
+                assignedUserId: ko.observable(),
+                priority: ko.observable(),
+            };
+            
+            that.users = ko.mapping.fromJS([]);
+
+            // Public methods /////////////////////////////////////////////////////
+
+            that.canActivate = function () {
+                return friendshipService.getFriendships({
+                    userId: session.getCurrentUser().id(),
+                    canAssignTask: true
+                }).done(function (result) {
+                    var users = $.map(result.friendships, function(friendship) { return friendship.friend; });
+                    ko.mapping.fromJS(users, that.users);
                     that.users.unshift(session.getCurrentUser());
                 });
-        };
+            };
 
-        ctor.prototype.saveNewTask = function() {
-            var that = this;
-            taskService.createTask(ko.mapping.toJS(that.task))
-                .then(function(data) {
-                    dialogs.close(that, ko.mapping.fromJS(data));
+            that.saveNewTask = function () {
+                taskService.createTask({
+                    task: ko.mapping.toJS(that.task)
+                }).then(function(result) {
+                    dialogs.close(that, ko.mapping.fromJS(result.task));
                 });
+            };
         };
-
-        return ctor;
     });
