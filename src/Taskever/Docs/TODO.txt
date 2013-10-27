@@ -55,6 +55,7 @@ TODO:
 ===============================================================================
 
 - Use moment.js to show datetimes!
+- Use notification!
 
 - User
   + Completed task'larý göster

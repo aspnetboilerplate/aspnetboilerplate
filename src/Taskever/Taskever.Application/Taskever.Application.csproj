@@ -78,6 +78,8 @@
     <Compile Include="Application\Services\Impl\UserActivityService.cs" />
     <Compile Include="Application\Services\Dto\Friendships\SendFriendshipRequestInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\SendFriendshipRequestOutput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipInput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipOutput.cs" />
     <Compile Include="Dependency\Installers\TaskeverAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverAppModule.cs" />

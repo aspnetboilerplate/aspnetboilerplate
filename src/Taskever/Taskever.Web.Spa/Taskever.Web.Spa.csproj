@@ -205,6 +205,7 @@
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />
+    <Content Include="App\_Common\images\x.png" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
     <Content Include="App\Main\main.js" />

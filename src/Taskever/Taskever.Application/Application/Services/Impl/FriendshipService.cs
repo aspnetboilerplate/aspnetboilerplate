@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
-using Abp.Modules.Core.Application.Services.Dto;
-using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
@@ -14,8 +10,6 @@ using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;
 using Taskever.Domain.Policies;
-using Taskever.Domain.Services;
-using Abp.Localization;
 
 namespace Taskever.Application.Services.Impl
 {
@@ -77,7 +71,7 @@ namespace Taskever.Application.Services.Impl
             }
 
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            
+
             _friendshipRepository.Insert(
                 new Friendship
                     {
@@ -95,6 +89,27 @@ namespace Taskever.Application.Services.Impl
                     });
 
             return new SendFriendshipRequestOutput();
+        }
+
+        [UnitOfWork]
+        public RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input)
+        {
+            var friendShipOfUser = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+
+            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Dd in a policy?
+            {
+                throw new ApplicationException("Can not remove this friendship!"); //TODO: User friendliy exception
+            }
+
+            _friendshipRepository.Delete(friendShipOfUser.Id);
+
+            var friendshipOfFriend = _friendshipRepository.GetAll().FirstOrDefault(f => f.User.Id == friendShipOfUser.Friend.Id);
+            if (friendshipOfFriend != null)
+            {
+                _friendshipRepository.Delete(friendshipOfFriend.Id);
+            }
+
+            return new RemoveFriendshipOutput();
         }
     }
 }

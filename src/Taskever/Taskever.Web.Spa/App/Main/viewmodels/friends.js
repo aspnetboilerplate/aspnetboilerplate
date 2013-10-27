@@ -51,7 +51,7 @@
                         id: friendship.id(),
                         canAssignTask: friendship.canAssignTask()
                     });
-                });
+                }); //TODO Do something on done?
 
                 //TODO: Prevent multiple-click (block ui?)!
                 $('#MyFriends').on('change', 'input.checkbox-friendship-fallowActivities', function () {
@@ -59,12 +59,21 @@
                     friendshipService.changeFriendshipProperties({
                         id: friendship.id(),
                         fallowActivities: friendship.fallowActivities()
-                    });
+                    }); //TODO Do something on done?
                 });
             };
 
             that.showAddNewFriendDialog = function() {
                 dialogs.show('viewmodels/addFriendDialog');
+            };
+
+            that.removeFriendship = function (friendship) {
+                friendshipService.removeFriendship({
+                    id: friendship.id()
+                }).done(function () {
+                    alert('removed!'); //TODO: Show notification!
+                    that.friendships.remove(friendship);
+                });
             };
 
             // Private methods ////////////////////////////////////////////////
