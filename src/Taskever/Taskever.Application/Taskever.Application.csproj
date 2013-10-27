@@ -56,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Services\Dto\Friendships\AcceptFriendshipInput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\AcceptFriendshipOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\ChangeFriendshipPropertiesInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\ChangeFriendshipPropertiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Activities\ActivityDto.cs" />

@@ -76,6 +76,15 @@
                 });
             };
 
+            that.acceptFriendship = function (friendship) {
+                friendshipService.acceptFriendship({
+                    id: friendship.id()
+                }).done(function () {
+                    alert('accepted!'); //TODO: Show notification!
+                    friendship.status(2);
+                });
+            };
+
             // Private methods ////////////////////////////////////////////////
 
         };

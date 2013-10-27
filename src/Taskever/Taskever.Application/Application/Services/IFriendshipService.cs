@@ -12,5 +12,7 @@ namespace Taskever.Application.Services
         SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input);
 
         RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input);
+
+        AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input);
     }
 }

@@ -95,8 +95,7 @@ namespace Taskever.Application.Services.Impl
         public RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input)
         {
             var friendShipOfUser = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
-
-            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Dd in a policy?
+            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Do in a policy?
             {
                 throw new ApplicationException("Can not remove this friendship!"); //TODO: User friendliy exception
             }
@@ -110,6 +109,33 @@ namespace Taskever.Application.Services.Impl
             }
 
             return new RemoveFriendshipOutput();
+        }
+
+        [UnitOfWork]
+        public AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input)
+        {
+            var friendShipOfUser = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Do in a policy?
+            {
+                throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
+            }
+
+            if (friendShipOfUser.Status != FriendshipStatus.WaitingApprovalFromUser)
+            {
+                throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
+            }
+
+            friendShipOfUser.Status = FriendshipStatus.Accepted;
+            _friendshipRepository.Update(friendShipOfUser);
+
+            var friendshipOfFriend = _friendshipRepository.GetAll().FirstOrDefault(f => f.User.Id == friendShipOfUser.Friend.Id);
+            if (friendshipOfFriend != null)
+            {
+                friendshipOfFriend.Status = FriendshipStatus.Accepted;
+                _friendshipRepository.Update(friendshipOfFriend);
+            }
+
+            return new AcceptFriendshipOutput();
         }
     }
 }
