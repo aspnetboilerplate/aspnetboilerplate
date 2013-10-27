@@ -2,6 +2,7 @@ using System.Linq;
 using Abp.Domain.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Domain.Services.Impl
 {

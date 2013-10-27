@@ -15,7 +15,8 @@
 
         that.activate = function () {
             friendshipService.getFriendships({
-                userId: session.getCurrentUser().id()
+                userId: session.getCurrentUser().id(),
+                status: 2 //Accepted TODO: Define enums in client side!
             }).then(function (data) {
                 ko.mapping.fromJS(data.friendships, that.friendships);
             });

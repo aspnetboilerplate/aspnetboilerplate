@@ -1,6 +1,7 @@
+using System;
 using Abp.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
-using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Friendships
 {
@@ -12,6 +13,8 @@ namespace Taskever.Application.Services.Dto.Friendships
 
         public bool CanAssignTask { get; set; }
 
-        //? public virtual FriendshipStatus Status { get; set; }
+        public FriendshipStatus Status { get; set; }
+
+        public DateTime CreationTime { get; set; }
     }
 }

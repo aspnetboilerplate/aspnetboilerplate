@@ -1,7 +1,8 @@
-﻿define(['plugins/router', 'session', 'plugins/dialog'], function (router, session, dialog) {
+﻿define(['plugins/router', 'session', 'plugins/dialog'], function (router, session, dialogs) {
     return {
         currentUser: session.getCurrentUser(),
         router: router,
+        
         activate: function () {
             router.map([
                 { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
@@ -11,8 +12,9 @@
 
             return router.activate();
         },
+        
         createTask: function () {
-            dialog.show('viewmodels/createTaskDialog');
+            dialogs.show('viewmodels/createTaskDialog');
         }
     };
 });

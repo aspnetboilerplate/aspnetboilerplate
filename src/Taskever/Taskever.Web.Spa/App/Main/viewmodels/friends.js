@@ -19,11 +19,11 @@
 
             // Public methods /////////////////////////////////////////////////////
 
-            that.activate = function (urlArgs) {
+            that.activate = function (urlArgs) { //TODO: Make this in canActivate?
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
                 friendshipService.getFriendships({
                     userId: session.getCurrentUser().id()
-                }).then(function (data) {
+            }).done(function (data) {
                     ko.mapping.fromJS(data.friendships, that.friendships);
                 });
             };
@@ -61,6 +61,10 @@
                         fallowActivities: friendship.fallowActivities()
                     });
                 });
+            };
+
+            that.showAddNewFriendDialog = function() {
+                dialogs.show('viewmodels/addFriendDialog');
             };
 
             // Private methods ////////////////////////////////////////////////

@@ -1,5 +1,7 @@
-﻿using Abp.Domain.Entities;
+﻿using System;
+using Abp.Domain.Entities;
 using Abp.Modules.Core.Domain.Entities;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Domain.Entities
 {
@@ -20,5 +22,17 @@ namespace Taskever.Domain.Entities
         public virtual bool CanAssignTask { get; set; }
 
         public virtual FriendshipStatus Status { get; set; }
+
+        /// <summary>
+        /// Creation date of this entity.
+        /// </summary>
+        public virtual DateTime CreationTime { get; set; }
+
+        public Friendship()
+        {
+            CreationTime = DateTime.Now;
+            CanAssignTask = true;
+            FallowActivities = true;
+        }
     }
 }

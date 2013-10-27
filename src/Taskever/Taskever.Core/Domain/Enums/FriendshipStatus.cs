@@ -1,9 +1,11 @@
-namespace Taskever.Domain.Entities
+namespace Taskever.Domain.Enums
 {
     public enum FriendshipStatus
     {
-        WaitingForApproval = 0,
+        WaitingApprovalFromFriend = 0,
 
-        Accepted = 1
+        WaitingApprovalFromUser = 1,
+
+        Accepted = 2
     }
 }

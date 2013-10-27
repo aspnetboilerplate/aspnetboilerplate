@@ -4,6 +4,7 @@
 * TODO
 
 - Loading animations!
+- Remove dynamic DTO creation!
 
 - Handling validation errors
 - Client-side validation-object generator for DTO's.........?

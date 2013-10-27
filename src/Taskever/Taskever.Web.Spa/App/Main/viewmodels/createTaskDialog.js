@@ -30,7 +30,7 @@
             that.saveNewTask = function () {
                 taskService.createTask({
                     task: ko.mapping.toJS(that.task)
-                }).then(function(result) {
+                }).done(function(result) {
                     dialogs.close(that, ko.mapping.fromJS(result.task));
                 });
             };

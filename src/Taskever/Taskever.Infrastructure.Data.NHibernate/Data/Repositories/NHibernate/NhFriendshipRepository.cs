@@ -3,23 +3,29 @@ using System.Linq;
 using Abp.Data.Repositories.NHibernate;
 using NHibernate.Linq;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Data.Repositories.NHibernate
 {
     public class NhFriendshipRepository : NhRepositoryBase<Friendship>, IFriendshipRepository
     {
-        public List<Friendship> GetAllWithFriendUser(int userId, bool? canAssignTask)
+        public List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask)
         {
-            var qr = GetAll()
+            var query = GetAll()
                 .Fetch(f => f.Friend)
-                .Where(f => f.User.Id == userId && f.Status == FriendshipStatus.Accepted);
+                .Where(f => f.User.Id == userId);
+
+            if (status.HasValue)
+            {
+                query = query.Where(friendship => friendship.Status == status.Value);
+            }
 
             if (canAssignTask.HasValue)
             {
-                qr = qr.Where(friendship => friendship.CanAssignTask == canAssignTask);
+                query = query.Where(friendship => friendship.CanAssignTask == canAssignTask);
             }
 
-            return qr.ToList();
+            return query.ToList();
         }
     }
 }

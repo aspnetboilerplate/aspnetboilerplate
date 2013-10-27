@@ -54,6 +54,8 @@ TODO:
 
 ===============================================================================
 
+- Use moment.js to show datetimes!
+
 - User
   + Completed task'larý göster
   + Profil resmi özelliði ekle, burada da göster
@@ -68,8 +70,10 @@ TODO:
     + Tüm arkadaþlarý profil resimleriyle göster.
     + Birine týklayýnca User sayfasýna gönder
     - Actions:
-	  - Yeni arkadaþ ekleme!
+	  + Yeni arkadaþ ekleme!
 	  - Arkadaþlýktan çýkarma
+	  - Arkadaþlýk isteðini kabul etme
+	  - Arkadaþlýk isteðinden vazgeçme
 	  + Takip edip etmeme
 	  + Bana task atayabilir
   - Bekleyen arkadaþlýk istekleri (gelen)
