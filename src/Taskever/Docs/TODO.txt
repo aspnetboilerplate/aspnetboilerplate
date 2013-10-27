@@ -56,21 +56,22 @@ TODO:
 
 - User
   + Completed task'larý göster
+  + Profil resmi özelliði ekle, burada da göster
   - Activity'leri göster
-  - Profil resmi özelliði ekle, burada da göster
 - Home
-  - My friends listesinde kullanýcýlarýn profil resimlerini göster
-    En fazla 10 kiþiyi göster, gerisini 'see all friends' linki ile ilgili sayfaya yönlendir
-- Layout
-  - Create new task butonu!
-- My friends (f'yi küçült)
+  + My friends listesinde kullanýcýlarýn profil resimlerini göster
+  + En fazla X kiþiyi göster, gerisini 'see all friends' linki ile ilgili sayfaya yönlendir
++ Layout
+  + Create new task butonu!
+- My friends
   - Friends
-    - Tüm arkadaþlarý profil resimleriyle göster.
-    - Birine týklayýnca User sayfasýna gönder
+    + Tüm arkadaþlarý profil resimleriyle göster.
+    + Birine týklayýnca User sayfasýna gönder
     - Actions:
+	  - Yeni arkadaþ ekleme!
 	  - Arkadaþlýktan çýkarma
-	  - Takip edip etmeme
-	  - Bana task atayabilir
+	  + Takip edip etmeme
+	  + Bana task atayabilir
   - Bekleyen arkadaþlýk istekleri (gelen)
     - Onaylama, reddetme (birdaha teklif edemesin!->sonra)
 	- Ne zamandýr beklediði gözüksün
@@ -82,3 +83,4 @@ TODO:
 - Task detail page
   - Title, description v.s.
   - Comments?
+  - Normal task listelerinde description'ýn ilk 512 karakteri gözüksün, gerisi için bu sayfaya gelinsin

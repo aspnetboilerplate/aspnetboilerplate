@@ -12,10 +12,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#">Home</a></li>
+                    <li><a class="clickable" data-bind="click: createTask">Create new task</a></li>
                     <li><a data-bind="attr: { href: '#user/' + currentUser.id() }">My profile</a></li>
                     <li><a href="#friends">My friends</a></li>
                     <li><a href="/Account/Logout">Logout</a></li>
-                    <li><a class="btn" data-bind="click: createTask">Create new task</a></li>
                 </ul>
             </div>
         </div>

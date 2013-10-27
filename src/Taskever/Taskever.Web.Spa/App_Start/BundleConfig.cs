@@ -20,6 +20,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Content/font-awesome.min.css")
                     .Include("~/Content/durandal.css")
                     .Include("~/App/_Common/styles/main.css")
+                    .Include("~/Abp/Framework/styles/abp.css")
                 );
 
             bundles.Add(
