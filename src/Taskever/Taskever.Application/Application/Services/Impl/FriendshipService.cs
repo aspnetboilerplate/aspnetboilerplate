@@ -102,10 +102,10 @@ namespace Taskever.Application.Services.Impl
 
             _friendshipRepository.Delete(friendShipOfUser.Id);
 
-            var friendshipOfFriend = _friendshipRepository.GetAll().FirstOrDefault(f => f.User.Id == friendShipOfUser.Friend.Id);
+            var friendshipOfFriend = _friendshipRepository.GetOrNull(friendShipOfUser.Friend.Id, friendShipOfUser.User.Id);
             if (friendshipOfFriend != null)
             {
-                _friendshipRepository.Delete(friendshipOfFriend.Id);
+                _friendshipRepository.Delete(friendshipOfFriend);
             }
 
             return new RemoveFriendshipOutput();
@@ -114,25 +114,15 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input)
         {
-            var friendShipOfUser = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
-            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Do in a policy?
-            {
-                throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
-            }
+            var currentUser = _userRepository.Load(User.CurrentUserId);
 
-            if (friendShipOfUser.Status != FriendshipStatus.WaitingApprovalFromUser)
-            {
-                throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
-            }
+            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+            friendship.Accept(currentUser);
 
-            friendShipOfUser.Status = FriendshipStatus.Accepted;
-            _friendshipRepository.Update(friendShipOfUser);
-
-            var friendshipOfFriend = _friendshipRepository.GetAll().FirstOrDefault(f => f.User.Id == friendShipOfUser.Friend.Id);
+            var friendshipOfFriend = _friendshipRepository.GetOrNull(friendship.Friend.Id, friendship.User.Id);
             if (friendshipOfFriend != null)
             {
-                friendshipOfFriend.Status = FriendshipStatus.Accepted;
-                _friendshipRepository.Update(friendshipOfFriend);
+                friendshipOfFriend.Accept(currentUser);
             }
 
             return new AcceptFriendshipOutput();

@@ -8,5 +8,7 @@ namespace Taskever.Data.Repositories
     public interface IFriendshipRepository : IRepository<Friendship>
     {
         List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask);
+
+        Friendship GetOrNull(int userId, int friendId);
     }
 }

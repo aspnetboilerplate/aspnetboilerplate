@@ -8,7 +8,7 @@ namespace Taskever.Domain.Entities
     public class Friendship : Entity
     {
         public virtual User User { get; set; }
-        
+
         public virtual User Friend { get; set; }
 
         /// <summary>
@@ -33,6 +33,31 @@ namespace Taskever.Domain.Entities
             CreationTime = DateTime.Now;
             CanAssignTask = true;
             FallowActivities = true;
+        }
+
+        public virtual void Accept(User acceptorUser)
+        {
+            switch (Status)
+            {
+                case FriendshipStatus.Accepted:
+                    return;
+                case FriendshipStatus.WaitingApprovalFromUser:
+                    if (User.Id != acceptorUser.Id)
+                    {
+                        throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
+                    }
+                    break;
+                case FriendshipStatus.WaitingApprovalFromFriend:
+                    if (Friend.Id != acceptorUser.Id)
+                    {
+                        throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException("Not implemented friendship status: " + Status);
+            }
+
+            Status = FriendshipStatus.Accepted;
         }
     }
 }
