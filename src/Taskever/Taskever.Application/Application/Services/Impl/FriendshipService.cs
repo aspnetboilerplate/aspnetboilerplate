@@ -8,7 +8,6 @@ using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.Friendships;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
-using Taskever.Domain.Enums;
 using Taskever.Domain.Policies;
 
 namespace Taskever.Application.Services.Impl
@@ -27,7 +26,7 @@ namespace Taskever.Application.Services.Impl
             _friendshipPolicy = friendshipPolicy;
         }
 
-        public GetFriendshipsOutput GetFriendships(GetFriendshipsInput input)
+        public virtual GetFriendshipsOutput GetFriendships(GetFriendshipsInput input)
         {
             //TODO: Check if current user can see friendships of the the requested user!
             var friendships = _friendshipRepository.GetAllWithFriendUser(input.UserId, input.Status, input.CanAssignTask);
@@ -35,7 +34,7 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork]
-        public ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
+        public virtual ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
@@ -62,7 +61,7 @@ namespace Taskever.Application.Services.Impl
             return new ChangeFriendshipPropertiesOutput();
         }
 
-        public SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
+        public virtual SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
         {
             var friendUser = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == input.EmailAddress));
             if (friendUser == null)
@@ -72,60 +71,45 @@ namespace Taskever.Application.Services.Impl
 
             var currentUser = _userRepository.Load(User.CurrentUserId);
 
-            _friendshipRepository.Insert(
-                new Friendship
-                    {
-                        User = currentUser,
-                        Status = FriendshipStatus.WaitingApprovalFromFriend,
-                        Friend = friendUser
-                    });
+            //TODO: Check if they are already friends!
 
-            _friendshipRepository.Insert(
-                new Friendship
-                    {
-                        User = friendUser,
-                        Status = FriendshipStatus.WaitingApprovalFromUser,
-                        Friend = currentUser
-                    });
-
+            var friendShip = Friendship.CreateAsRequest(currentUser, friendUser);
+            _friendshipRepository.Insert(friendShip);
+            
             return new SendFriendshipRequestOutput();
         }
 
-        [UnitOfWork]
-        public RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input)
+        [UnitOfWork] //TODO: Need UnitOfWork, I think no!
+        public virtual RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input)
         {
-            var friendShipOfUser = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
-            if (friendShipOfUser.User.Id != User.CurrentUserId) //TODO: Do in a policy?
+            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+
+            if(!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
             {
                 throw new ApplicationException("Can not remove this friendship!"); //TODO: User friendliy exception
             }
 
-            _friendshipRepository.Delete(friendShipOfUser.Id);
-
-            var friendshipOfFriend = _friendshipRepository.GetOrNull(friendShipOfUser.Friend.Id, friendShipOfUser.User.Id);
-            if (friendshipOfFriend != null)
-            {
-                _friendshipRepository.Delete(friendshipOfFriend);
-            }
+            _friendshipRepository.Delete(friendship);
 
             return new RemoveFriendshipOutput();
         }
 
         [UnitOfWork]
-        public AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input)
+        public virtual AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input)
         {
+            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
             var currentUser = _userRepository.Load(User.CurrentUserId);
 
-            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
-            friendship.Accept(currentUser);
-
-            var friendshipOfFriend = _friendshipRepository.GetOrNull(friendship.Friend.Id, friendship.User.Id);
-            if (friendshipOfFriend != null)
-            {
-                friendshipOfFriend.Accept(currentUser);
-            }
+            friendship.AcceptBy(currentUser);
 
             return new AcceptFriendshipOutput();
+        }
+
+        public virtual RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input)
+        {
+            RemoveFriendship(new RemoveFriendshipInput {Id = input.Id});
+            return new RejectFriendshipOutput();
         }
     }
 }

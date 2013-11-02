@@ -72,8 +72,9 @@ TODO:
     + Birine týklayýnca User sayfasýna gönder
     - Actions:
 	  + Yeni arkadaþ ekleme!
-	  - Arkadaþlýktan çýkarma
-	  - Arkadaþlýk isteðini kabul etme
+	  + Arkadaþlýktan çýkarma
+	  + Arkadaþlýk isteðini kabul etme
+	  - Arkadaþlýk isteðini red etme
 	  - Arkadaþlýk isteðinden vazgeçme
 	  + Takip edip etmeme
 	  + Bana task atayabilir

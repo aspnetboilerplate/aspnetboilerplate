@@ -11,6 +11,8 @@ namespace Taskever.Domain.Entities
 
         public virtual User Friend { get; set; }
 
+        public virtual Friendship Pair { get; set; }
+
         /// <summary>
         /// Is <see cref="User"/> fallowing activities of the <see cref="Friend"/>?
         /// </summary>
@@ -35,7 +37,7 @@ namespace Taskever.Domain.Entities
             FallowActivities = true;
         }
 
-        public virtual void Accept(User acceptorUser)
+        public virtual void AcceptBy(User acceptorUser)
         {
             switch (Status)
             {
@@ -58,6 +60,42 @@ namespace Taskever.Domain.Entities
             }
 
             Status = FriendshipStatus.Accepted;
+
+            if (Pair == null)
+            {
+                throw new Exception("Friendship pair is null!");
+            }
+
+            Pair.AcceptBy(acceptorUser);
+        }
+
+        public static Friendship CreateAsRequest(User user, User friend)
+        {
+            if (user.Id == friend.Id)
+            {
+                throw new Exception("A user can not send request to the same user!");
+            }
+
+            var friendShip = new Friendship
+            {
+                User = user,
+                Status = FriendshipStatus.WaitingApprovalFromFriend,
+                Friend = friend
+            };
+
+            friendShip.CreatePair();
+            return friendShip;
+        }
+
+        private void CreatePair()
+        {
+            Pair = new Friendship
+            {
+                User = Friend,
+                Status = FriendshipStatus.WaitingApprovalFromUser,
+                Friend = User,
+                Pair = this
+            };
         }
     }
 }

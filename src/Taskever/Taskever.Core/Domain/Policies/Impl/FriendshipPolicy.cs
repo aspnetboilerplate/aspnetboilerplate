@@ -10,5 +10,10 @@ namespace Taskever.Domain.Policies.Impl
             //Can change only his own friendships.
             return user.Id == friendShip.User.Id;
         }
+
+        public bool CanRemoveFriendship(User currentUser, Friendship friendship)
+        {
+            return friendship.User.Id == currentUser.Id;
+        }
     }
 }

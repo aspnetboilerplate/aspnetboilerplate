@@ -170,3 +170,7 @@ ROUTES:
 ---------------------------------------------------------------------------
 
 - Use TypeScript?
+
+- Offline/Online support?
+  - example library: https://github.com/HubSpot/offline
+- use underscore?

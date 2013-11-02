@@ -23,7 +23,7 @@
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
                 friendshipService.getFriendships({
                     userId: session.getCurrentUser().id()
-            }).done(function (data) {
+                }).done(function (data) {
                     ko.mapping.fromJS(data.friendships, that.friendships);
                 });
             };
@@ -63,7 +63,7 @@
                 });
             };
 
-            that.showAddNewFriendDialog = function() {
+            that.showAddNewFriendDialog = function () {
                 dialogs.show('viewmodels/addFriendDialog');
             };
 
@@ -82,6 +82,15 @@
                 }).done(function () {
                     alert('accepted!'); //TODO: Show notification!
                     friendship.status(2);
+                });
+            };
+
+            that.rejectFriendship = function (friendship) {
+                friendshipService.rejectFriendship({
+                    id: friendship.id()
+                }).done(function () {
+                    alert('rejected!'); //TODO: Show notification!
+                    that.friendships.remove(friendship);
                 });
             };
 
