@@ -16,5 +16,7 @@ namespace Taskever.Application.Services
         AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input);
 
         RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input);
+
+        CancelFriendshipRequestOutput CancelFriendshipRequest(CancelFriendshipRequestInput input);
     }
 }

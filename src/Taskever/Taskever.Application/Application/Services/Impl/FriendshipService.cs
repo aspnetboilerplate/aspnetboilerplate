@@ -111,5 +111,11 @@ namespace Taskever.Application.Services.Impl
             RemoveFriendship(new RemoveFriendshipInput {Id = input.Id});
             return new RejectFriendshipOutput();
         }
+
+        public CancelFriendshipRequestOutput CancelFriendshipRequest(CancelFriendshipRequestInput input)
+        {
+            RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
+            return new CancelFriendshipRequestOutput();
+        }
     }
 }

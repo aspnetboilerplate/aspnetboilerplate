@@ -44,7 +44,7 @@
                         </div>
                         <div>
                             Waiting since <span data-bind="text: creationTime"></span><br/>
-                            <a class="clickable" data-bind="click: $root.acceptFriendship"><i class="icon-check" /> Accept</a>
+                            <a class="clickable" data-bind="click: $root.acceptFriendship"><i class="icon-check" /> Accept</a>&nbsp;&nbsp;
                             <a class="clickable" data-bind="click: $root.rejectFriendship"><i class="icon-ban-circle" /> Reject</a>
                         </div>
                     </div>
@@ -64,7 +64,8 @@
                             </a>
                         </div>
                         <div>
-                            Waiting since <span data-bind="text: creationTime"></span>
+                            Waiting since <span data-bind="text: creationTime"></span><br/>
+                            <a class="clickable" data-bind="click: $root.cancelFriendshipRequest"><i class="icon-ban-circle" /> Cancel</a>
                         </div>
                     </div>
                 </li>

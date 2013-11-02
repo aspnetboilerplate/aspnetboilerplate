@@ -93,6 +93,15 @@
                     that.friendships.remove(friendship);
                 });
             };
+            
+            that.cancelFriendshipRequest = function (friendship) {
+                friendshipService.cancelFriendshipRequest({
+                    id: friendship.id()
+                }).done(function () {
+                    alert('cancelled!'); //TODO: Show notification!
+                    that.friendships.remove(friendship);
+                });
+            };
 
             // Private methods ////////////////////////////////////////////////
 

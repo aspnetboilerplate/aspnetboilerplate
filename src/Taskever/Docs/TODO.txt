@@ -61,32 +61,32 @@ TODO:
   + Completed task'ları göster
   + Profil resmi özelliği ekle, burada da göster
   - Activity'leri göster
-- Home
+    + Task oluşturma
+	- Task kapama
++ Home
   + My friends listesinde kullanıcıların profil resimlerini göster
   + En fazla X kişiyi göster, gerisini 'see all friends' linki ile ilgili sayfaya yönlendir
 + Layout
   + Create new task butonu!
-- My friends
-  - Friends
++ My friends
+  + Friends
     + Tüm arkadaşları profil resimleriyle göster.
     + Birine tıklayınca User sayfasına gönder
-    - Actions:
+    + Actions:
 	  + Yeni arkadaş ekleme!
 	  + Arkadaşlıktan çıkarma
-	  + Arkadaşlık isteğini kabul etme
-	  - Arkadaşlık isteğini red etme
-	  - Arkadaşlık isteğinden vazgeçme
 	  + Takip edip etmeme
 	  + Bana task atayabilir
-  - Bekleyen arkadaşlık istekleri (gelen)
-    - Onaylama, reddetme (birdaha teklif edemesin!->sonra)
-	- Ne zamandır beklediği gözüksün
+  + Bekleyen arkadaşlık istekleri (gelen)
+    + Onaylama, reddetme (birdaha teklif edemesin!->sonra)
+	+ Ne zamandır beklediği gözüksün
   - Bekleyen arkadaşlık istekleri (giden)    
-    - İsteği iptal etme
-	- Ne zamandır beklediği gözüksün
-  - Yeni arkadaş eklemek için dialog göster
-	Email adresini tam olarak girip ekleyebilir.	  
+    + İsteği iptal etme
+	+ Ne zamandır beklediği gözüksün
+  + Yeni arkadaş eklemek için dialog göster
+	+ Email adresini tam olarak girip ekleyebilir.	  
 - Task detail page
   - Title, description v.s.
   - Comments?
   - Normal task listelerinde description'ın ilk 512 karakteri gözüksün, gerisi için bu sayfaya gelinsin
+  - Status'ünü değiştirme! -> bitirme v.s.
