@@ -36,7 +36,7 @@ namespace Taskever.Application.Services.Impl
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var task = _taskRepository.GetOrNull(input.Id);
-            
+
             if (task == null)
             {
                 throw new Exception("Can not found the task: " + input.Id);
@@ -96,6 +96,7 @@ namespace Taskever.Application.Services.Impl
             //Create the task
             var taskEntity = input.Task.MapTo<Task>();
             taskEntity.AssignedUser = _userRepository.Load(input.Task.AssignedUserId);
+            taskEntity.State = TaskState.New;
             _taskRepository.Insert(taskEntity);
 
             //Add to activities (TODO: This must be done by events, not directly by Task service?)
@@ -120,15 +121,15 @@ namespace Taskever.Application.Services.Impl
         public UpdateTaskOutput UpdateTask(UpdateTaskInput input)
         {
             var task = _taskRepository.GetOrNull(input.Id);
-            if(task == null)
+            if (task == null)
             {
                 throw new Exception("Can not found the task!");
             }
 
             //TODO: Make with auto mapper!
             //AutoMapper.Mapper.DynamicMap(input, task); //TODO: Change it to be static map for performance reasons? Also check performance!
-            
-            if(task.AssignedUser.Id != input.AssignedUserId)
+
+            if (task.AssignedUser.Id != input.AssignedUserId)
             {
                 //TODO: Can assign the task to the user?
                 //TODO: Check if assigned user does exists
@@ -136,12 +137,22 @@ namespace Taskever.Application.Services.Impl
             }
 
             task.Description = input.Description;
-            task.Priority = (TaskPriority) input.Priority;
-            task.State = (TaskState) input.State;
+            task.Priority = (TaskPriority)input.Priority;
+            task.State = (TaskState)input.State;
             task.Title = input.Title;
 
             //TODO: Write a 'task complete' activity if needed
-            //TODO: Write a 'assigned to' activity if needed
+            if (task.State == TaskState.Completed)
+            {
+                _activityService.AddActivity(
+                    new CompleteTaskActivityInfo(
+                        task.Id,
+                        task.Title,
+                        task.AssignedUser.Id,
+                        task.AssignedUser.NameAndSurname
+                        )
+                    );
+            }
 
             return new UpdateTaskOutput();
         }

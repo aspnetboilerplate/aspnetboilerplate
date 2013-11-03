@@ -5,6 +5,6 @@ namespace Taskever.Domain.Services
 {
     public interface IActivityService : IDomainService
     {
-        void AddActivity(ActivityInfo eventHistoryData);
+        void AddActivity(ActivityInfo activityData);
     }
 }

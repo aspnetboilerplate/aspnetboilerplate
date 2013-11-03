@@ -204,6 +204,7 @@
     <Content Include="Abp\Framework\styles\abp.less" />
     <Content Include="App\Main\views\addFriendDialog.cshtml" />
     <Content Include="App\Main\views\task.cshtml" />
+    <Content Include="App\Main\views\shared\activities\activityInfo_CompleteTask.cshtml" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />

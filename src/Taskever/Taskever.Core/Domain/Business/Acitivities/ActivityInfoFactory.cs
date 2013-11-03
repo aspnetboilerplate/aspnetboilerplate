@@ -19,8 +19,10 @@ namespace Taskever.Domain.Business.Acitivities
             {
                 case ActivityAction.CreateTask:
                     return new CreateTaskActivityInfo();
+                case ActivityAction.CompleteTask:
+                    return new CompleteTaskActivityInfo();
                 default:
-                    throw new NotImplementedException();
+                    return new CompleteTaskActivityInfo();
             }
         }
     }

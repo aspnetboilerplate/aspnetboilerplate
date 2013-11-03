@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.Application.Services;
-using Taskever.Application.Services.Dto;
+﻿using Abp.Application.Services;
 using Taskever.Application.Services.Dto.Tasks;
 
 namespace Taskever.Application.Services

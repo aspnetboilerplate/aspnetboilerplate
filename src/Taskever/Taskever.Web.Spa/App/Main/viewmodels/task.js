@@ -79,6 +79,11 @@
                     history.navigate('#');
                 });
             };
+
+            that.cancelUpdate = function () {
+                //TODO: What will be the changes!
+                that.mode('view');
+            };
         };
     }
 );
