@@ -1,22 +1,10 @@
-Used methodologies:
+=======================================================================
 
-- Domain driven design infrastructure
-  - Entities
-  - Repositories
-  - Domain And Application Services
-  - Unit of work
-  - DTO (Data transfer objects)
-    - DTO auto mappings
-- ORM integration
-  - Fluent mapping
-- Database migrations
-- Logging
-- Dependency Injection
-- Web layer
-  - Dynamic service WebApi creation
-- Client
-  - Dynamic service proxy generation
-  
+- Refactor solution/project structure.
+- Make all 3rd party dependencies to Infrastructure dll's as Abp.Infrastructure.NHibernate
+
+=======================================================================
+
 Interceptions:
 	- Application service
 	  + DTO Validation
