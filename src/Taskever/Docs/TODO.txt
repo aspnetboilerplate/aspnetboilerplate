@@ -80,13 +80,12 @@ TODO:
   + Bekleyen arkadaþlýk istekleri (gelen)
     + Onaylama, reddetme (birdaha teklif edemesin!->sonra)
 	+ Ne zamandýr beklediði gözüksün
-  - Bekleyen arkadaþlýk istekleri (giden)    
+  + Bekleyen arkadaþlýk istekleri (giden)    
     + Ýsteði iptal etme
 	+ Ne zamandýr beklediði gözüksün
   + Yeni arkadaþ eklemek için dialog göster
 	+ Email adresini tam olarak girip ekleyebilir.	  
 - Task detail page
-  - Title, description v.s.
-  - Comments?
+  + Title, description v.s.
   - Normal task listelerinde description'ýn ilk 512 karakteri gözüksün, gerisi için bu sayfaya gelinsin
-  - Status'ünü deðiþtirme! -> bitirme v.s.
+  + Editleme (herþeyini deðiþtirebilir)

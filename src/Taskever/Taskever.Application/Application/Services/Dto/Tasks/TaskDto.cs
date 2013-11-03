@@ -1,7 +1,6 @@
 ﻿using Abp.Modules.Core.Application.Services.Dto;
-using Taskever.Domain.Entities;
 
-namespace Taskever.Application.Services.Dto
+namespace Taskever.Application.Services.Dto.Tasks
 {
     /// <summary>
     /// Task DTO.
@@ -21,5 +20,7 @@ namespace Taskever.Application.Services.Dto
         public virtual int AssignedUserId { get; set; }
 
         public virtual byte Priority { get; set; }
+
+        public virtual byte State { get; set; }
     }
 }

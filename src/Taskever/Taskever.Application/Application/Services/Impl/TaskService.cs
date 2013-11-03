@@ -13,6 +13,7 @@ using Taskever.Application.Services.Dto.Tasks;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 using Taskever.Domain.Services;
 using Taskever.Localization.Resources;
 
@@ -34,6 +35,7 @@ namespace Taskever.Application.Services.Impl
             _taskPrivilegeService = taskPrivilegeService;
         }
 
+        [UnitOfWork]
         public GetTaskOutput GetTask(GetTaskInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
@@ -51,7 +53,7 @@ namespace Taskever.Application.Services.Impl
 
             return new GetTaskOutput
                        {
-                           Task = task.MapTo<TaskDto>()
+                           Task = task.MapTo<TaskWithAssignedUserDto>()
                        };
         }
 
@@ -116,6 +118,36 @@ namespace Taskever.Application.Services.Impl
                        {
                            Task = taskEntity.MapTo<TaskDto>()
                        };
+        }
+
+        [UnitOfWork]
+        public UpdateTaskOutput UpdateTask(UpdateTaskInput input)
+        {
+            var task = _taskRepository.GetOrNull(input.Id);
+            if(task == null)
+            {
+                throw new Exception("Can not found the task!");
+            }
+
+            //TODO: Make with auto mapper!
+            //AutoMapper.Mapper.DynamicMap(input, task); //TODO: Change it to be static map for performance reasons? Also check performance!
+            
+            if(task.AssignedUser.Id != input.AssignedUserId)
+            {
+                //TODO: Can assign the task to the user?
+                //TODO: Check if assigned user does exists
+                task.AssignedUser = _userRepository.Load(input.AssignedUserId);
+            }
+
+            task.Description = input.Description;
+            task.Priority = (TaskPriority) input.Priority;
+            task.State = (TaskState) input.State;
+            task.Title = input.Title;
+
+            //TODO: Write a 'task complete' activity if needed
+            //TODO: Write a 'assigned to' activity if needed
+
+            return new UpdateTaskOutput();
         }
 
         public TaskDto UpdateTask(TaskDto task)

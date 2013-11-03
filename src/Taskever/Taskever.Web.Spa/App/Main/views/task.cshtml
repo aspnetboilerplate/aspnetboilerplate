@@ -1,10 +1,73 @@
 ﻿<section>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Task: <span data-bind="html: task.title()"></span></h3>
-        </div>
-        <div class="panel-body">
-            <p data-bind="html: task.description()"></p>
+
+    <div data-bind="if: mode() == 'view'">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Task: <span data-bind="html: task.title()"></span></h3>
+            </div>
+            <div class="panel-body">
+                <p data-bind="html: task.description()"></p>
+                <p>Priority: <span data-bind="html: task.priority()"></span></p>
+                <p>State: <span data-bind="html: task.state()"></span></p>
+                <p>Assigned to: <span data-bind="html: task.assignedUserId()"></span></p>
+                <p>Assigned to: <span data-bind="html: task.assignedUser.name() + ' ' + task.assignedUser.surname()"></span></p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-default" data-bind="click: changeToEditMode">
+                    <span class="glyphicon glyphicon-edit"></span>&nbsp;Edit
+                </button>
+            </div>
         </div>
     </div>
+
+    <div data-bind="if: mode() == 'edit'">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Edit task</h3>
+            </div>
+            <div class="panel-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="EditTaskTitle">Title</label>
+                        <input type="text" class="form-control" id="EditTaskTitle" placeholder="Enter title" data-bind="value: task.title">
+                    </div>
+                    <div class="form-group">
+                        <label for="EditTaskDescription">Description</label>
+                        <textarea class="form-control" id="EditTaskDescription" placeholder="Enter description here" data-bind="value: task.description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="EditTaskPriority">Priority</label>
+                        <!-- TODO: Get from enumaration -->
+                        <select id="EditTaskPriority" class="form-control" data-bind="value: task.priority">
+                            <option value="1">Low</option>
+                            <option value="2">BelowNormal</option>
+                            <option value="3">Normal</option>
+                            <option value="4">AboveNormal</option>
+                            <option value="5">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="EditTaskState">Priority</label>
+                        <!-- TODO: Get from enumaration -->
+                        <select id="EditTaskState" class="form-control" data-bind="value: task.state">
+                            <option value="1">New</option>
+                            <option value="2">WorkingOn</option>
+                            <option value="3">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="NewTaskAssignedUserId">Assign to</label>
+                        <select id="NewTaskAssignedUserId" class="form-control" data-bind="value: task.assignedUserId, options: users, optionsText: function (item) { return item.name() + ' ' + item.surname(); }, optionsValue: function (item) { return item.id(); }">
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-default" data-bind="click: updateTask">
+                    <span class="glyphicon glyphicon-edit"></span>&nbsp;Update
+                </button>
+            </div>
+        </div>
+    </div>
+
 </section>

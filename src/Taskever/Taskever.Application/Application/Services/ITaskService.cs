@@ -13,7 +13,7 @@ namespace Taskever.Application.Services
 
         CreateTaskOutput CreateTask(CreateTaskInput input);
 
-        TaskDto UpdateTask(TaskDto task);
+        UpdateTaskOutput UpdateTask(UpdateTaskInput input);
          
         void DeleteTask(int taskId);
     }

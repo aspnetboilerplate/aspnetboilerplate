@@ -72,10 +72,11 @@
     <Compile Include="Application\Services\Dto\Tasks\GetTaskOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
-    <Compile Include="Application\Services\Dto\TaskDto.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\TaskDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesInput.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsOutput.cs" />
+    <Compile Include="Application\Services\Dto\TaskWithAssignedUserDto.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Tasks\CreateTaskInput.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="Application\Services\Dto\Friendships\SendFriendshipRequestOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipOutput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\UpdateTaskInput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\UpdateTaskOutput.cs" />
     <Compile Include="Dependency\Installers\TaskeverAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverAppModule.cs" />
