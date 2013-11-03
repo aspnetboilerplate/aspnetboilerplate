@@ -1,91 +1,15 @@
-Layout
--------------------------
-- Left: My tasks
-- Middle: Pages
-- Right: My friends
-
-Pages
--------------------------
-- Home page: View latest events for all friends
-    Events from me (?)
-    Event from fallowed friends
-- User page
-    - Default: Events from this person
-	- Tasks (todo list)
-	- Completed tasks (in a few days by history)
-
-Entities
-------------------------
-Task
-- Protection: private (only me and creator), protected (only me, creator and my friends), public (everybody)
-- Title
-- Description
-- Priority
-
-- Deadline?
-- EstimatedTime?
-- WorkTime?
-
-In the future
-------------------------
-- Projects (private, public)
-
-- Project page
-    - Default: Events from this project
-	- Tasks (todo list)
-	- Completed tasks (in a few days by history)
-
-Mention: @halil
-Project: $projectName
-
-=================================================================================
-TODO:
-- Home
-  - Events
-- Person page
-  - Events
-  - Active tasks
-  - Completed tasks
-- Friendship
-  - Add a new friend dialog
-  - Show waiting friend requests
-  - Remove a friend
-- Adding comment to a task -> Maybe we can develop a more general-purpose commenting module?
-
-===============================================================================
-
+TODO (primary):
+- Task: delete a task
+- Activities: Create, Assign and Complete tasks.
+- User setting page: Change user properties, password, picture and so on...
+- Task privacy: Private/Protected tasks
+- Check all pages and make them better look.
 - Use moment.js to show datetimes!
-- Use notification!
+- Show notification!
+- Localization for all pages
+- Use capcha on registration
+- Check all TODO's
 
-- User
-  + Completed task'larý göster
-  + Profil resmi özelliði ekle, burada da göster
-  - Activity'leri göster
-    + Task oluþturma
-	- Task kapama
-+ Home
-  + My friends listesinde kullanýcýlarýn profil resimlerini göster
-  + En fazla X kiþiyi göster, gerisini 'see all friends' linki ile ilgili sayfaya yönlendir
-+ Layout
-  + Create new task butonu!
-+ My friends
-  + Friends
-    + Tüm arkadaþlarý profil resimleriyle göster.
-    + Birine týklayýnca User sayfasýna gönder
-    + Actions:
-	  + Yeni arkadaþ ekleme!
-	  + Arkadaþlýktan çýkarma
-	  + Takip edip etmeme
-	  + Bana task atayabilir
-  + Bekleyen arkadaþlýk istekleri (gelen)
-    + Onaylama, reddetme (birdaha teklif edemesin!->sonra)
-	+ Ne zamandýr beklediði gözüksün
-  + Bekleyen arkadaþlýk istekleri (giden)    
-    + Ýsteði iptal etme
-	+ Ne zamandýr beklediði gözüksün
-  + Yeni arkadaþ eklemek için dialog göster
-	+ Email adresini tam olarak girip ekleyebilir.	  
-- Task detail page
-  + Title, description v.s.
-  - Normal task listelerinde description'ýn ilk 512 karakteri gözüksün, gerisi için bu sayfaya gelinsin
-  + Editleme (herþeyini deðiþtirebilir)
+TODO (secondary):
+- Add user name (nick) that can be used as mentions (like @hikalkan) ?
+- Search for a better bootstrap theme
