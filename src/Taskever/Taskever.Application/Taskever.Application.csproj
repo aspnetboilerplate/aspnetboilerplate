@@ -68,6 +68,8 @@
     <Compile Include="Application\Services\Dto\Friendships\RejectFriendshipInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\RejectFriendshipOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\CreateTaskOutput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\GetTaskInput.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\GetTaskOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskDto.cs" />

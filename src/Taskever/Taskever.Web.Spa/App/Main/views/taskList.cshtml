@@ -1,6 +1,6 @@
 ﻿<ul class="list-group" data-bind="foreach: tasks">
     <li class="list-group-item">
-        <h5 style="font-weight: bold" data-bind="html: title"></h5>
-        <p data-bind="html: description"></p>
+        <h5 style="font-weight: bold"><a data-bind="html: title(), attr: { href: '#task/' + id() }" style="color:black;"></a></h5>
+        <p data-bind="html: description()"></p>
     </li>
 </ul>

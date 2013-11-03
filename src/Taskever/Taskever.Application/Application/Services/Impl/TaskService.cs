@@ -34,6 +34,27 @@ namespace Taskever.Application.Services.Impl
             _taskPrivilegeService = taskPrivilegeService;
         }
 
+        public GetTaskOutput GetTask(GetTaskInput input)
+        {
+            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var task = _taskRepository.GetOrNull(input.Id);
+            
+            if (task == null)
+            {
+                throw new Exception("Can not found the task: " + input.Id);
+            }
+
+            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, task.AssignedUser))
+            {
+                throw new ApplicationException("Can not see tasks of user");
+            }
+
+            return new GetTaskOutput
+                       {
+                           Task = task.MapTo<TaskDto>()
+                       };
+        }
+
         [UnitOfWork]
         public virtual GetTasksOutput GetTasks(GetTasksInput input)
         {
