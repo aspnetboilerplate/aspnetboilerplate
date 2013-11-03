@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
@@ -15,7 +12,6 @@ using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;
 using Taskever.Domain.Services;
-using Taskever.Localization.Resources;
 
 namespace Taskever.Application.Services.Impl
 {
@@ -150,16 +146,19 @@ namespace Taskever.Application.Services.Impl
             return new UpdateTaskOutput();
         }
 
-        public TaskDto UpdateTask(TaskDto task)
+        public DeleteTaskOutput DeleteTask(DeleteTaskInput input)
         {
-            var taskEntity = task.MapTo<Task>();
-            _taskRepository.Update(taskEntity);
-            return taskEntity.MapTo<TaskDto>();
-        }
+            var task = _taskRepository.GetOrNull(input.Id);
+            if (task == null)
+            {
+                throw new Exception("Can not found the task!");
+            }
 
-        public virtual void DeleteTask(int taskId)
-        {
-            _taskRepository.Delete(taskId);
+            //TODO: Check if this user can delete to this task!
+
+            _taskRepository.Delete(task);
+
+            return new DeleteTaskOutput();
         }
     }
 }

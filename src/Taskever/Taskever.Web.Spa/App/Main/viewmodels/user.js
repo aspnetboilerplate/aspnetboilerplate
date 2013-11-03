@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'plugins/history', 'service!abp/user', 'service!dto'],
-    function ($, history, userService, dtos) {
+    ['jquery', 'plugins/history', 'service!abp/user'],
+    function ($, history, userService) {
 
         var _defaultUrlAgs = {
             activeSection: 'UserActivities'

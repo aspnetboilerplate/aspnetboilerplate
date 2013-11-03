@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'service!taskever/task', 'service!taskever/friendship', 'session'],
-    function ($, taskService, friendshipService, session) {
+    ['jquery', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
+    function ($, taskService, friendshipService, session, history) {
 
         return function () {
             var that = this;
@@ -69,6 +69,14 @@
                 }).done(function () {
                     //TODO: show a notification?
                     that.mode('view');
+                });
+            };
+
+            that.deleteTask = function () {
+                taskService.deleteTask({
+                    id: that.task.id()
+                }).done(function () {
+                    history.navigate('#');
                 });
             };
         };

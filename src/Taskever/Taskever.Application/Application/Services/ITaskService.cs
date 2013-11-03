@@ -15,6 +15,6 @@ namespace Taskever.Application.Services
 
         UpdateTaskOutput UpdateTask(UpdateTaskInput input);
          
-        void DeleteTask(int taskId);
+        DeleteTaskOutput DeleteTask(DeleteTaskInput input);
     }
 }
