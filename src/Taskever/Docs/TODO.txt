@@ -1,5 +1,4 @@
 TODO (primary):
-- Task: delete a task
 - Activities: Create, Assign and Complete tasks.
 - User setting page: Change user properties, password, picture and so on...
 - Task privacy: Private/Protected tasks
