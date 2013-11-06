@@ -10,6 +10,7 @@
                 description: ko.observable(),
                 assignedUserId: ko.observable(),
                 priority: ko.observable(),
+                privacy: ko.observable(),
             };
             
             that.users = ko.mapping.fromJS([]);

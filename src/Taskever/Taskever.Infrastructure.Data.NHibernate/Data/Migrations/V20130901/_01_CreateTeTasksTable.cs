@@ -14,6 +14,7 @@ namespace Taskever.Data.Migrations.V20130901
                 .WithColumn("Title").AsString(200).NotNullable()
                 .WithColumn("Description").AsString(2000).Nullable()
                 .WithColumn("Priority").AsByte().NotNullable().WithDefaultValue(3) //TaskPriority.Normal
+                .WithColumn("Privacy").AsByte().NotNullable().WithDefaultValue(2) //TaskPrivacy.Protected
                 .WithColumn("AssignedUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("State").AsByte().NotNullable().WithDefaultValue(1) //TaskState.New
                 .WithAuditColumns();

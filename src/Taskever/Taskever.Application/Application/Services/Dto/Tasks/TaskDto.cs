@@ -22,5 +22,7 @@ namespace Taskever.Application.Services.Dto.Tasks
         public virtual byte Priority { get; set; }
 
         public virtual byte State { get; set; }
+
+        public virtual byte Privacy { get; set; }
     }
 }

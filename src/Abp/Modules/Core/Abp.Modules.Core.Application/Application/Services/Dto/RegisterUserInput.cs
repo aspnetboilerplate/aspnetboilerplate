@@ -21,7 +21,7 @@ namespace Abp.Modules.Core.Application.Services.Dto
         public string Password { get; set; }
 
         [StringLength(30, MinimumLength = 3)]
-        [Compare("Password", ErrorMessage = "Heyooo! þifreyi düzgün gir!")]
+        [Compare("Password", ErrorMessage = "Þifre ayný olmalý!")]
         public string PasswordRepeat { get; set; }
     }
 }

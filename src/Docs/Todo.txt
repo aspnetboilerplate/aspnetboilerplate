@@ -12,6 +12,8 @@
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Learn & test require.js bundling
 
+- REMOVE Empty Output OR INPUT DTOS or do not remove?
+
 * Interceptions
 
 - Web API interceptor

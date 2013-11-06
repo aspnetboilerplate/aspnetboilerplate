@@ -19,5 +19,7 @@ namespace Abp.Modules.Core.Application.Services
         void RegisterUser(RegisterUserInput registerUser);
 
         GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input);
+
+        ChangeSettingsOutput ChangeSettings(ChangeSettingsInput input);
     }
 }

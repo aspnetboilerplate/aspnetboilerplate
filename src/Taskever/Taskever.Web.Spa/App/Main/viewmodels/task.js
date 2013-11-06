@@ -65,6 +65,7 @@
                     description: that.task.description(),
                     assignedUserId: that.task.assignedUserId(),
                     priority: that.task.priority(),
+                    privacy: that.task.privacy(),
                     state: that.task.state(),
                 }).done(function () {
                     //TODO: show a notification?

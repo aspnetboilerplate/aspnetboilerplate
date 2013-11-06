@@ -1,7 +1,9 @@
 TODO (primary):
 + Activities: +Create and +Complete tasks.
-- User setting page: Change user properties, password, picture and so on...
-- Task privacy: Private/Protected tasks
++ User setting page: Change user properties, password
++ Task privacy: Private/Protected tasks
+- User/activities section
+- Change profile picture!
 - Check all pages and make them better look.
 - Use moment.js to show datetimes!
 - Show notification!

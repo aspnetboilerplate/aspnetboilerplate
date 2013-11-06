@@ -28,11 +28,14 @@ namespace Taskever.Domain.Entities
 
         public virtual TaskPriority Priority { get; set; }
 
+        public virtual TaskPrivacy Privacy { get; set; }
+
         public virtual TaskState State { get; set; }
 
         public Task()
         {
             Priority = TaskPriority.Normal;
+            Privacy = TaskPrivacy.Protected;
             State = TaskState.New;
         }
     }

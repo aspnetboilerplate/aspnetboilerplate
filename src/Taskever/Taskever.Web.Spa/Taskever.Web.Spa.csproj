@@ -197,6 +197,7 @@
       <DependentUpon>briefFriendList.less</DependentUpon>
     </Content>
     <Content Include="App\Main\viewmodels\addFriendDialog.js" />
+    <Content Include="App\Main\viewmodels\settings.js" />
     <Content Include="App\Main\viewmodels\task.js" />
     <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="App\Main\viewmodels\taskList.js" />
@@ -205,6 +206,7 @@
     <Content Include="App\Main\views\addFriendDialog.cshtml" />
     <Content Include="App\Main\views\task.cshtml" />
     <Content Include="App\Main\views\shared\activities\activityInfo_CompleteTask.cshtml" />
+    <Content Include="App\Main\views\settings.cshtml" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />

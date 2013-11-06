@@ -1,4 +1,5 @@
 using Abp.Application.Services.Dto;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Tasks
 {
@@ -15,5 +16,7 @@ namespace Taskever.Application.Services.Dto.Tasks
         public byte Priority { get; set; }
 
         public byte State { get; set; }
+
+        public byte Privacy { get; set; }
     }
 }

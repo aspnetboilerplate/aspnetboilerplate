@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Services\Dto\Users\ChangeSettingsInput.cs" />
+    <Compile Include="Application\Services\Dto\Users\ChangeSettingsOutput.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\Mappings\DtoMapper.cs" />
     <Compile Include="Application\Services\Dto\RegisterUserInput.cs" />

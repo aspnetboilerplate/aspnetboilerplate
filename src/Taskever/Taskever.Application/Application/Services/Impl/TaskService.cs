@@ -68,6 +68,11 @@ namespace Taskever.Application.Services.Impl
                 .GetAll()
                 .Where(task => task.AssignedUser.Id == input.AssignedUserId);
 
+            if(currentUser.Id != userOfTasks.Id)
+            {
+                query = query.Where(task => task.Privacy != TaskPrivacy.Private);
+            }
+
             if (!input.TaskStates.IsNullOrEmpty())
             {
                 query = query.Where(task => input.TaskStates.Contains(task.State));
@@ -136,13 +141,16 @@ namespace Taskever.Application.Services.Impl
                 task.AssignedUser = _userRepository.Load(input.AssignedUserId);
             }
 
+            var oldTaskState = task.State;
+
             task.Description = input.Description;
             task.Priority = (TaskPriority)input.Priority;
             task.State = (TaskState)input.State;
+            task.Privacy = (TaskPrivacy) input.Privacy;
             task.Title = input.Title;
 
             //TODO: Write a 'task complete' activity if needed
-            if (task.State == TaskState.Completed)
+            if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
                 _activityService.AddActivity(
                     new CompleteTaskActivityInfo(

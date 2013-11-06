@@ -1,0 +1,41 @@
+﻿<section>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Change profile picture</h3>
+        </div>
+        <div class="panel-body">
+            Profile picture and uploading here!!!
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-default">
+                <span class="glyphicon glyphicon-remove"></span>&nbsp;Update
+            </button>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Change password</h3>
+        </div>
+        <div class="panel-body">
+            <form role="form">
+                <div class="form-group">
+                    <label for="EditCurrentPassword">Current password</label>
+                    <input type="password" class="form-control" id="EditCurrentPassword" placeholder="old password" maxlength="30" data-bind="value: passwordChange.currentPassword"> <!-- TODO: Use a constant for 30? -->
+                </div>
+                <div class="form-group">
+                    <label for="EditNewPassword">New password</label>
+                    <input type="password" class="form-control" id="EditNewPassword" placeholder="new password" maxlength="30" data-bind="value: passwordChange.newPassword">
+                </div>
+                <div class="form-group">
+                    <label for="EditPasswordRepeat">New password (repeat)</label>
+                    <input type="password" class="form-control" id="EditPasswordRepeat" placeholder="repeat new password" maxlength="30" data-bind="value: passwordChange.newPasswordRepeat">
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-default" data-bind="click: updatePassword">
+                <span class="glyphicon glyphicon-remove"></span>&nbsp;Update
+            </button>
+        </div>
+    </div>
+</section>

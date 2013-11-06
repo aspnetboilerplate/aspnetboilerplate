@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Domain.Uow;
+using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Data.Repositories;
@@ -48,7 +50,21 @@ namespace Abp.Modules.Core.Application.Services.Impl
 
         public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
         {
+            //TODO: Use GetUser?
             return new GetCurrentUserInfoOutput { User = _userRepository.Get(User.CurrentUserId).MapTo<UserDto>() };
+        }
+
+        [UnitOfWork]
+        public ChangeSettingsOutput ChangeSettings(ChangeSettingsInput input)
+        {
+            var currentUser = _userRepository.Get(User.CurrentUserId);
+            if(currentUser.Password != input.CurrentPassword)
+            {
+                throw new AbpUserFriendlyException("Current password is invalid!");
+            }
+
+            currentUser.Password = input.NewPassword;
+            return new ChangeSettingsOutput();
         }
     }
 }
