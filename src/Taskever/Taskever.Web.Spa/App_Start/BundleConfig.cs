@@ -43,6 +43,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Scripts/jquery.validate.min.js")
                     .Include("~/Scripts/jquery.form.min.js")
                     .Include("~/Scripts/jquery.blockUI.min.js")
+                    .Include("~/Scripts/moment-with-langs.min.js")
                 );
 
             bundles.Add(

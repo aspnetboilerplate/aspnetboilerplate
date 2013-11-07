@@ -1,14 +1,15 @@
 ﻿define(['durandal/app', 'session', 'service!taskever/userActivity'], function (app, session, userActivityService) {
-    var activities = ko.mapping.fromJS([]);
+    return function (){
+        var that = this;
 
-    return {
-        activities: activities,
-        activate: function () {
+        that.activities = ko.mapping.fromJS([]);
+        
+        that.activate = function() {
             userActivityService.getFallowedActivities({
                 fallowerUserId: session.getCurrentUser().id()
-            }).then(function (data) {
-                ko.mapping.fromJS(data.activities, activities);
+            }).done(function(data) {
+                ko.mapping.fromJS(data.activities, that.activities);
             });
-        }
+        };
     };
 });

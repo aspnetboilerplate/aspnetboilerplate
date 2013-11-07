@@ -16,7 +16,7 @@
             // Public fields //////////////////////////////////////////////////////
 
             that.userId = null; //TODO: Remove this, use user.Id() ?
-            that.user = ko.mapping.fromJS({}); //TODO: Direkt dönüş değeri olmayanlar için namespace problemi var!!! Hatta hepsi için!
+            that.user = ko.mapping.fromJS({});
 
             // Public methods /////////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 ﻿<section>
     <div class="panel panel-default" style="margin-bottom: 10px; position: relative; height: 70px">
-        <img data-bind="attr: { src: user.profileImage() }" style="width: 64px; height: 64px; position: absolute; top: 2px; left: 2px;" alt=""/>
+        <img data-bind="attr: { src: user.profileImage() }" style="width: 64px; height: 64px; position: absolute; top: 2px; left: 2px;" alt="" />
         <h4 data-bind="text: user.name() + ' ' + user.surname()" style="margin-left: 70px;"></h4>
     </div>
     <ul class="nav nav-pills" id="UserViewTabs">
@@ -9,16 +9,7 @@
         <li><a href="#UserCompletedTasks">Completed tasks</a></li>
     </ul>
     <div class="tab-content" style="margin-top: 10px;">
-        <div class="tab-pane active" id="UserActivities">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <img src="/App/_Common/images/task_complete.png" width="16" height="16" style="margin-right: 4px" /><b>Ahmet</b> "<i>Engin Bey'in emailini cevapla</i>" görevini tamamladı. <i class="text-muted">5 dk önce.</i>
-                </li>
-                <li class="list-group-item">
-                    <img src="/App/_Common/images/task_add.png" width="16" height="16" style="margin-right: 4px" /><b>Halil</b>, <b>İsmail</b> kullanıcısına "<i>Sosyal Medya Projesi için Demo kurulumu</i>" görevini atadı. <i class="text-muted">12 saat önce.</i>
-                </li>
-            </ul>
-        </div>
+        <div class="tab-pane active" id="UserActivities" data-bind="compose: { model: 'viewmodels/userActivityList', activationData: { userId: userId } }"></div>
         <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [1, 2] } }"></div>
         <div class="tab-pane" id="UserCompletedTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [3] } }"></div>
     </div>
