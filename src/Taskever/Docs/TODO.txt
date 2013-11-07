@@ -5,7 +5,7 @@ TODO (primary):
 + User/activities section
 - Change profile picture!
 - Check all pages and make them better look.
-- Use moment.js to show datetimes!
+- Use moment.js to show datetimes! -> working on!
 - Show notification!
 - Localization for all pages
 - Use capcha on registration
