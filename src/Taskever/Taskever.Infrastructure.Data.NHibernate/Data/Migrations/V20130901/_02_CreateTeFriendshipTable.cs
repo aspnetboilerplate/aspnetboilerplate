@@ -11,7 +11,7 @@ namespace Taskever.Data.Migrations.V20130916
             Create.Table("TeFriendships") 
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("PairFriendshipId").AsInt32().Nullable().ForeignKey("TeFriendships", "Id").OnDeleteOrUpdate(Rule.Cascade) //TODO: Test it!
+                .WithColumn("PairFriendshipId").AsInt32().Nullable().ForeignKey("TeFriendships", "Id") //TODO: Removed cascade update and delete! Test it!
                 .WithColumn("FriendUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("FallowActivities").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithColumn("CanAssignTask").AsBoolean().NotNullable().WithDefaultValue(false)
