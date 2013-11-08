@@ -14,8 +14,7 @@ namespace Abp.Modules.Core.Application.Services.Dto.Mappings
                         user => user.ProfileImage == null
                                     //TODO: How to implement this?
                                     ? "/Abp/Framework/images/user.png"
-                                    : "/App/Main/images/profile/" +
-                                      user.ProfileImage
+                                    : "/ProfileImages/" + user.ProfileImage
                                          )
                 ).ReverseMap();
 

@@ -4,11 +4,11 @@
             <h3 class="panel-title">Change profile picture</h3>
         </div>
         <div class="panel-body">
-            Profile picture and uploading here!!!
+            <form class="dropzone"></form>
         </div>
         <div class="panel-footer">
-            <button class="btn btn-default">
-                <span class="glyphicon glyphicon-remove"></span>&nbsp;Update
+            <button class="btn btn-default" data-bind="click: acceptProfilePicture">
+                <span class="glyphicon glyphicon-remove"></span>&nbsp;Accept
             </button>
         </div>
     </div>
@@ -20,7 +20,8 @@
             <form role="form">
                 <div class="form-group">
                     <label for="EditCurrentPassword">Current password</label>
-                    <input type="password" class="form-control" id="EditCurrentPassword" placeholder="old password" maxlength="30" data-bind="value: passwordChange.currentPassword"> <!-- TODO: Use a constant for 30? -->
+                    <input type="password" class="form-control" id="EditCurrentPassword" placeholder="old password" maxlength="30" data-bind="value: passwordChange.currentPassword">
+                    <!-- TODO: Use a constant for 30? -->
                 </div>
                 <div class="form-group">
                     <label for="EditNewPassword">New password</label>

@@ -41,6 +41,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Abp.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Abp.Web.dll</HintPath>
+    </Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
@@ -163,6 +167,7 @@
     <Compile Include="App_Start\Test.cs" />
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ProfileImageController.cs" />
     <Compile Include="Controllers\TaskeverController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
@@ -260,9 +265,19 @@
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
+    <Content Include="Scripts\dropzone\css\basic.css" />
+    <Content Include="Scripts\dropzone\css\dropzone.css" />
+    <Content Include="Scripts\dropzone\css\stylus\dropzone.styl" />
+    <Content Include="Scripts\dropzone\css\stylus\basic.styl" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
     <Content Include="Images\loading_black.gif" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
+    <Content Include="Scripts\dropzone\dropzone.min.js" />
+    <Content Include="Scripts\dropzone\images\spritemap%402x.png" />
+    <Content Include="Scripts\dropzone\images\spritemap.png" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.form.js" />
@@ -354,6 +369,7 @@
     <Folder Include="Abp\Modules\Core\viewmodels\" />
     <Folder Include="Abp\Modules\Core\views\" />
     <Folder Include="App\Main\scripts\" />
+    <Folder Include="ProfileImages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
