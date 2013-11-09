@@ -13,7 +13,7 @@
                 friendshipService.sendFriendshipRequest({
                     emailAddress: that.emailAddress()
                 }).done(function () {
-                    alert("Sent friendship request!"); //TODO: Show notification!
+                    abp.notify.info("Sent friendship request!"); //TODO: Show notification!
                     dialogs.close(that);
                 });
             };

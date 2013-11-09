@@ -3,14 +3,21 @@ TODO (primary):
 + User setting page: Change user properties, password
 + Task privacy: Private/Protected tasks
 + User/activities section
-- Change profile picture!
-- Check all pages and make them better look.
-- Use moment.js to show datetimes! -> working on!
-- Show notification!
++ Change profile picture!
++ Use moment.js to show datetimes!
++ Show notification!
+- Check all pages
+  - home
+    - my tasks
+	- latest activities
+	- my friends
+  - task
+    - show
+	- edit
+	- delete
 - Localization for all pages
 - Use capcha on registration
 - Check all TODO's
 
 TODO (secondary):
-- Add user name (nick) that can be used as mentions (like @hikalkan) ?
 - Search for a better bootstrap theme

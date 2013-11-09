@@ -6,6 +6,21 @@
             activeSection: 'MyFriends'
         };
 
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "positionClass": "toast-bottom-right",
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
         return function () {
             var that = this;
 
@@ -71,7 +86,7 @@
                 friendshipService.removeFriendship({
                     id: friendship.id()
                 }).done(function () {
-                    alert('removed!'); //TODO: Show notification!
+                    abp.notify.info('Removed!', 'Removed your friendship.');
                     that.friendships.remove(friendship);
                 });
             };
@@ -80,7 +95,7 @@
                 friendshipService.acceptFriendship({
                     id: friendship.id()
                 }).done(function () {
-                    alert('accepted!'); //TODO: Show notification!
+                    abp.notify.info('Accepted!', 'Accepted friendship.');
                     friendship.status(2);
                 });
             };
@@ -89,7 +104,7 @@
                 friendshipService.rejectFriendship({
                     id: friendship.id()
                 }).done(function () {
-                    alert('rejected!'); //TODO: Show notification!
+                    abp.notify.info('Rejected!', 'Rejected friendship.');
                     that.friendships.remove(friendship);
                 });
             };
@@ -98,7 +113,7 @@
                 friendshipService.cancelFriendshipRequest({
                     id: friendship.id()
                 }).done(function () {
-                    alert('cancelled!'); //TODO: Show notification!
+                    abp.notify.info('Cancelled!', 'Cancelled friendship request.');
                     that.friendships.remove(friendship);
                 });
             };

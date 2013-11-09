@@ -20,6 +20,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Content/font-awesome.min.css")
                     .Include("~/Content/durandal.css")
                     .Include("~/Scripts/dropzone/css/dropzone.css")
+                    .Include("~/Content/toastr.min.css")
                     .Include("~/App/_Common/styles/main.css")
                     .Include("~/Abp/Framework/styles/abp.css")
                 );
@@ -45,12 +46,14 @@ namespace Taskever.Web.App_Start
                     .Include("~/Scripts/jquery.form.min.js")
                     .Include("~/Scripts/jquery.blockUI.min.js")
                     .Include("~/Scripts/moment-with-langs.min.js")
+                    .Include("~/Scripts/toastr.min.js")
                 );
 
             bundles.Add(
                 new ScriptBundle("~/Scripts/abp")
                     .Include("~/abp/framework/scripts/abp.js")
                     .Include("~/abp/framework/scripts/abp.jquery.js")
+                    .Include("~/abp/framework/scripts/abp.toastr.js")
                     .Include("~/abp/framework/scripts/abp.localization.js")
                 );
         }
