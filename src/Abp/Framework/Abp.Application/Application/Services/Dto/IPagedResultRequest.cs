@@ -1,8 +1,7 @@
 namespace Abp.Application.Services.Dto
 {
-    public interface IPagedResultRequest
+    public interface IPagedResultRequest : ILimitedResultRequest
     {
         int SkipCount { get; set; }
-        int MaxResultCount { get; set; }
     }
 }

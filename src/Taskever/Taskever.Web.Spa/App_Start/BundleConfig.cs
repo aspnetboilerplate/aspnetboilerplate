@@ -54,6 +54,8 @@ namespace Taskever.Web.App_Start
                     .Include("~/abp/framework/scripts/abp.js")
                     .Include("~/abp/framework/scripts/abp.jquery.js")
                     .Include("~/abp/framework/scripts/abp.toastr.js")
+                    .Include("~/abp/framework/scripts/abp.blockUI.js")
+                    .Include("~/abp/framework/scripts/abp.spin.js")
                     .Include("~/abp/framework/scripts/abp.localization.js")
                 );
         }

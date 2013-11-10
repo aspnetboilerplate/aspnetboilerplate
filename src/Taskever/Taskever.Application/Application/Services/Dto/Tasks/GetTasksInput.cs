@@ -7,6 +7,7 @@ namespace Taskever.Application.Services.Dto.Tasks
 {
     public class GetTasksInput : IInputDto, IPagedResultRequest, ICustomValidate
     {
+        [Range(1, int.MaxValue)]
         public int AssignedUserId { get; set; }
 
         public List<TaskState> TaskStates { get; set; }

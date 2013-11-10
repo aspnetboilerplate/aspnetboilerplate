@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
@@ -56,22 +57,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public virtual GetTasksOutput GetTasks(GetTasksInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
-            var userOfTasks = _userRepository.Load(input.AssignedUserId);
-
-            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, userOfTasks))
-            {
-                throw new ApplicationException("Can not see tasks of user");
-            }
-
-            var query = _taskRepository
-                .GetAll()
-                .Where(task => task.AssignedUser.Id == input.AssignedUserId);
-
-            if(currentUser.Id != userOfTasks.Id)
-            {
-                query = query.Where(task => task.Privacy != TaskPrivacy.Private);
-            }
+            var query = CreateQueryForAssignedTasksOfUser(input.AssignedUserId);
 
             if (!input.TaskStates.IsNullOrEmpty())
             {
@@ -87,6 +73,25 @@ namespace Taskever.Application.Services.Impl
                        {
                            Tasks = query.ToList().MapIList<Task, TaskDto>()
                        };
+        }
+
+        [UnitOfWork]
+        public GetTasksByImportanceOutput GetTasksByImportance(GetTasksByImportanceInput input)
+        {
+            Thread.Sleep(4000);
+
+            var query = CreateQueryForAssignedTasksOfUser(input.AssignedUserId);
+            query = query
+                .Where(task => task.State != TaskState.Completed)
+                .OrderByDescending(task => task.Priority)
+                .ThenByDescending(task => task.State)
+                .ThenByDescending(task => task.CreationTime)
+                .Take(input.MaxResultCount);
+
+            return new GetTasksByImportanceOutput
+            {
+                Tasks = query.ToList().MapIList<Task, TaskDto>()
+            };
         }
 
         [UnitOfWork]
@@ -178,6 +183,28 @@ namespace Taskever.Application.Services.Impl
             _taskRepository.Delete(task);
 
             return new DeleteTaskOutput();
+        }
+
+        private IQueryable<Task> CreateQueryForAssignedTasksOfUser(int assignedUserId)
+        {
+            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var userOfTasks = _userRepository.Load(assignedUserId);
+
+            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, userOfTasks))
+            {
+                throw new ApplicationException("Can not see tasks of user");
+            }
+
+            var query = _taskRepository
+                .GetAll()
+                .Where(task => task.AssignedUser.Id == assignedUserId);
+
+            if (currentUser.Id != userOfTasks.Id)
+            {
+                query = query.Where(task => task.Privacy != TaskPrivacy.Private);
+            }
+
+            return query;
         }
     }
 }

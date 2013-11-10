@@ -1,13 +1,14 @@
 ﻿<section>
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <div class="panel-heading" style="position: relative;">
             <h3 class="panel-title">@L("MyTasks")</h3>
+            <div class="abp-busy-indicator abp-busy-indicator-small" style="position: absolute; top: 0px; bottom: 0px; right: 0px; width: 36px;" />
         </div>
         <ul class="list-group" data-bind="foreach: tasks">
             <li class="list-group-item"><a data-bind="html: title(), attr: { href: '#task/' + id() }" style="color:black;"></a></li> <!-- TODO: Don't use inline style and hard-coded color -->
         </ul>
         <div class="panel-footer">
-            <a data-bind="attr: { href: '#user/' + session.getCurrentUser().id() + '?activeSection=UserCurrentTasks' }">@L("SeeAllTasks")</a>
+            <a data-bind="attr: { href: '#user/' + currentUserId + '?activeSection=UserCurrentTasks' }">@L("SeeAllTasks")</a>
         </div>
     </div>
 </section>

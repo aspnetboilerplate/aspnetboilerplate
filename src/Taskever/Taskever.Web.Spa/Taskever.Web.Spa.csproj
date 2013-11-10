@@ -184,7 +184,9 @@
     <Content Include="Abp\Framework\images\user.png" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\abp.localization.js" />
+    <Content Include="Abp\Framework\scripts\abp.spin.js" />
     <Content Include="Abp\Framework\scripts\abp.toastr.js" />
+    <Content Include="Abp\Framework\scripts\abp.blockUI.js" />
     <Content Include="Abp\Framework\scripts\requirejs\plugins\service.js" />
     <Content Include="Abp\Framework\styles\abp.css">
       <DependentUpon>abp.less</DependentUpon>

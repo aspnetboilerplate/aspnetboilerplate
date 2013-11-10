@@ -1,19 +1,6 @@
 ﻿var abp = abp || {};
 (function ($) {
 
-    /* JQUERY PLUGIN CONFIGURATIONS */
-
-    //TODO: Extract configuration
-    if ($.blockUI) {
-        $.blockUI.defaults.css = {};
-
-        $.blockUI.defaults.overlayCSS = {
-            backgroundColor: '#AAA',
-            opacity: 0.3,
-            cursor: 'wait'
-        };
-    }
-
     /* JQUERY ENHANCEMENTS ***************************************************/
 
     // abp.ajax -> uses $.ajax ------------------------------------------------
@@ -25,14 +12,11 @@
         var defer = $.Deferred();
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
 
-        abpAjaxHelper.blockUI(options);
         $.ajax(options)
             .done(function (data) {
                 abpAjaxHelper.handleData(data, userOptions, defer);
             }).fail(function () {
                 defer.reject.apply(this, arguments);
-            }).always(function () {
-                abpAjaxHelper.unblockUI(options);
             });
 
         return defer.promise();
@@ -91,16 +75,29 @@
                 if (options.blockUI === true) { //block whole page
                     $.blockUI(options.blockOptions);
                 } else { //block an element
-                    $(options.blockUI).block(options.blockOptions || { message: ' ' });
-                    $(options.blockUI).spin({
-                        lines: 11,
-                        length: 0,
-                        width: 10,
-                        radius: 20,
-                        corners: 1.0,
-                        trail: 60,
-                        speed: 1.2
-                    });
+                    var $blockUI = $(options.blockUI);
+                    if ($blockUI.find('.abp-busy-indicator').length) {
+                        $blockUI.find('.abp-busy-indicator').spin({
+                            lines: 11,
+                            length: 0,
+                            width: 4,
+                            radius: 7,
+                            corners: 1.0,
+                            trail: 60,
+                            speed: 1.2
+                        });
+                    } else {
+                        $(options.blockUI).block(options.blockOptions || { message: ' ' });
+                        $(options.blockUI).spin({
+                            lines: 11,
+                            length: 0,
+                            width: 10,
+                            radius: 20,
+                            corners: 1.0,
+                            trail: 60,
+                            speed: 1.2
+                        });
+                    }
                 }
             }
         },
@@ -110,8 +107,13 @@
                 if (options.blockUI === true) { //unblock whole page
                     $.unblockUI();
                 } else { //unblock an element
-                    $(options.blockUI).unblock();
-                    $(options.blockUI).spin(false);
+                    var $blockUI = $(options.blockUI);
+                    if ($blockUI.find('.abp-busy-indicator').length) {
+                        $blockUI.find('.abp-busy-indicator').spin(false);
+                    } else {
+                        $(options.blockUI).unblock();
+                        $(options.blockUI).spin(false);
+                    }
                 }
             }
         },
