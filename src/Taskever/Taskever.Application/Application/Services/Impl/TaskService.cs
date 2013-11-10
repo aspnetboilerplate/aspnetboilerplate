@@ -78,7 +78,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public GetTasksByImportanceOutput GetTasksByImportance(GetTasksByImportanceInput input)
         {
-            Thread.Sleep(4000);
+            Thread.Sleep(1000); //TODO: Remove sleep!
 
             var query = CreateQueryForAssignedTasksOfUser(input.AssignedUserId);
             query = query
