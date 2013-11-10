@@ -1,26 +1,27 @@
 ﻿define(
     ["knockout", 'session', 'service!taskever/friendship'],
     function (ko, session, friendshipService) {
-        
-    return function () {
-        var that = this;
 
-        // Private variables //////////////////////////////////////////////////
+        var maxTaskCount = 10;
 
-        // Public fields //////////////////////////////////////////////////////
+        return function () {
+            var that = this;
 
-        that.friendships = ko.mapping.fromJS([]);
+            // Private variables //////////////////////////////////////////////////
 
-        // Public methods /////////////////////////////////////////////////////
+            // Public fields //////////////////////////////////////////////////////
 
-        that.activate = function () {
-            friendshipService.getFriendships({
-                userId: session.getCurrentUser().id(),
-                status: 2 //Accepted TODO: Define enums in client side!
-            }).then(function (data) {
-                ko.mapping.fromJS(data.friendships, that.friendships);
-            });
+            that.friendships = ko.mapping.fromJS([]);
+
+            // Public methods /////////////////////////////////////////////////////
+
+            that.activate = function () {
+                friendshipService.getFriendshipsByMostActive({
+                    maxResultCount: maxTaskCount
+                }).then(function (data) {
+                    ko.mapping.fromJS(data.friendships, that.friendships);
+                });
+            };
         };
-    };
 
-});
+    });

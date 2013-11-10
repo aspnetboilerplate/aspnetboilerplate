@@ -30,9 +30,15 @@ namespace Taskever.Domain.Entities
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// The last time the <see cref="User"/> visited to the <see cref="Friend"/>.
+        /// </summary>
+        public virtual DateTime LastVisitTime { get; set; }
+
         public Friendship()
         {
             CreationTime = DateTime.Now;
+            LastVisitTime = DateTime.Now;
             CanAssignTask = true;
             FallowActivities = true;
         }

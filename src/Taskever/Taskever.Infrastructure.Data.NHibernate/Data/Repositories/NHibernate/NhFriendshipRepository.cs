@@ -28,6 +28,13 @@ namespace Taskever.Data.Repositories.NHibernate
             return query.ToList();
         }
 
+        public IQueryable<Friendship> GetAllWithFriendUser(int userId)
+        {
+            return GetAll()
+                .Fetch(f => f.Friend)
+                .Where(f => f.User.Id == userId);
+        }
+
         public Friendship GetOrNull(int userId, int friendId)
         {
             return GetAll().FirstOrDefault(f => f.User.Id == userId && f.Friend.Id == friendId);

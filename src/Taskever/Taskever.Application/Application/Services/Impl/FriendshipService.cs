@@ -34,6 +34,14 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork]
+        public GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input)
+        {
+            var friendships = _friendshipRepository.GetAllWithFriendUser(User.CurrentUserId);
+            var list = friendships.OrderByDescending(friendship => friendship.LastVisitTime).Take(input.MaxResultCount).ToList();
+            return new GetFriendshipsByMostActiveOutput {Friendships = list.MapIList<Friendship, FriendshipDto>() };
+        }
+
+        [UnitOfWork]
         public virtual ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);

@@ -82,6 +82,8 @@
     <Compile Include="Application\Services\Dto\Activities\GetUserActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksByImportanceInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksByImportanceOutput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsByMostActiveInput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsByMostActiveOutput.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Tasks\CreateTaskInput.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />

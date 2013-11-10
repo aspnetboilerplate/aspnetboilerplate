@@ -7,6 +7,8 @@ namespace Taskever.Application.Services
     {
         GetFriendshipsOutput GetFriendships(GetFriendshipsInput input);
 
+        GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input);
+
         ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input);
 
         SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input);
