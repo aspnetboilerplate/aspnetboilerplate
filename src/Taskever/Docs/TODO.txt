@@ -8,9 +8,9 @@ TODO (primary):
 + Show notification!
 - Check all pages
   - home
-    - my tasks
+    + my tasks
 	- latest activities
-	- my friends
+	+ my friends
   - task
     - show
 	- edit

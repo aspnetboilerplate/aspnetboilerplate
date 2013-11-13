@@ -97,6 +97,51 @@ namespace Taskever.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Above Normal.
+        /// </summary>
+        internal static string Priority_AboveNormal {
+            get {
+                return ResourceManager.GetString("Priority_AboveNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Below Normal.
+        /// </summary>
+        internal static string Priority_BelowNormal {
+            get {
+                return ResourceManager.GetString("Priority_BelowNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string Priority_High {
+            get {
+                return ResourceManager.GetString("Priority_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        internal static string Priority_Low {
+            get {
+                return ResourceManager.GetString("Priority_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        internal static string Priority_Normal {
+            get {
+                return ResourceManager.GetString("Priority_Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See all friends.
         /// </summary>
         internal static string SeeAllFriends {

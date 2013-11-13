@@ -7,22 +7,16 @@ namespace Taskever.Application.Services.Dto.Tasks
     /// </summary>
     public class TaskDto : AuditedEntityDto
     {
-        /// <summary>
-        /// Task title.
-        /// </summary>
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
-        /// <summary>
-        /// Task description.
-        /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
 
-        public virtual int AssignedUserId { get; set; }
+        public int AssignedUserId { get; set; }
 
-        public virtual byte Priority { get; set; }
+        public byte Priority { get; set; }
 
-        public virtual byte State { get; set; }
+        public byte State { get; set; }
 
-        public virtual byte Privacy { get; set; }
+        public byte Privacy { get; set; }
     }
 }

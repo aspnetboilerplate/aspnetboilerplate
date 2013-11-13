@@ -39,6 +39,7 @@ namespace Taskever.Web.App_Start
                 new ScriptBundle("~/Scripts/baselibs")
                     .Include("~/Scripts/json2.min.js")
                     .Include("~/Scripts/jquery-2.0.3.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/underscore.min.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout-2.3.0.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout.mapping-latest.js")
                     .Include("~/Scripts/bootstrap.js") //TODO: Use minimized
@@ -57,6 +58,11 @@ namespace Taskever.Web.App_Start
                     .Include("~/abp/framework/scripts/abp.blockUI.js")
                     .Include("~/abp/framework/scripts/abp.spin.js")
                     .Include("~/abp/framework/scripts/abp.localization.js")
+                );
+
+            bundles.Add(
+                new ScriptBundle("~/Scripts/taskever")
+                    .Include("~/App/Main/scripts/taskever.js")
                 );
         }
 

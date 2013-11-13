@@ -31,10 +31,12 @@
     @RenderBody()
 
     @Scripts.Render("~/scripts/baselibs")
-    <script src="~/Scripts/libs/spinjs/spin.js"></script>
+
+    <script src="~/Scripts/libs/spinjs/spin.js"></script> <!-- TODO: Add to base libs! -->
     <script src="~/Scripts/libs/spinjs/jquery.spin.js"></script>
 
     @Scripts.Render("~/scripts/abp")
+    @Scripts.Render("~/scripts/taskever")
     <script src="/api/Localization" type="text/javascript"></script> <!-- TODO: Find a better way! -->
     @RenderSection("scripts", required: false)
 </body>

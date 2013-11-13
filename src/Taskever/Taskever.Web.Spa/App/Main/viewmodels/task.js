@@ -1,6 +1,8 @@
 ﻿define(
-    ['jquery', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
-    function ($, taskService, friendshipService, session, history) {
+    ['jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
+    function ($, _, taskService, friendshipService, session, history) {
+
+        var localize = abp.localization.getSource('taskever');
 
         return function () {
             var that = this;
@@ -82,8 +84,12 @@
             };
 
             that.cancelUpdate = function () {
-                //TODO: What will be the changes!
+                //TODO: What will be the changes when not save?!
                 that.mode('view');
+            };
+
+            that.getPriorityText = function (priorityValue) {
+                return localize('Priority_' + taskever.taskPrioritiesInverted[priorityValue]);
             };
         };
     }

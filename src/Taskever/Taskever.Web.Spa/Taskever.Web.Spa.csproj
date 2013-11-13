@@ -197,6 +197,7 @@
     <Content Include="App\Main\images\profile\hikalkan.jpg" />
     <Content Include="App\Main\images\profile\ismail.jpg" />
     <Content Include="App\Main\images\profile\ozhan.jpg" />
+    <Content Include="App\Main\scripts\taskever.js" />
     <Content Include="App\Main\session.js" />
     <Content Include="App\Main\styles\briefFriendList.css">
       <DependentUpon>briefFriendList.less</DependentUpon>
@@ -292,6 +293,8 @@
     <Content Include="Scripts\moment-with-langs.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
     <Content Include="ViewResources\Account\Login.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -363,6 +366,7 @@
     <Content Include="Views\Account\_RegisterPanel.cshtml" />
     <Content Include="Views\Account\_LoginPanel.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Scripts\underscore.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />
@@ -371,7 +375,6 @@
     <Folder Include="Abp\Modules\Core\styles\" />
     <Folder Include="Abp\Modules\Core\viewmodels\" />
     <Folder Include="Abp\Modules\Core\views\" />
-    <Folder Include="App\Main\scripts\" />
     <Folder Include="ProfileImages\" />
   </ItemGroup>
   <ItemGroup>

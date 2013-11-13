@@ -7,10 +7,9 @@
             </div>
             <div class="panel-body">
                 <p data-bind="html: task.description()"></p>
-                <p>Priority: <span data-bind="html: task.priority()"></span></p>
+                <p>Priority: <span data-bind="html: getPriorityText(task.priority())"></span></p>
                 <p>Privacy: <span data-bind="html: task.privacy()"></span></p>
                 <p>State: <span data-bind="html: task.state()"></span></p>
-                <p>Assigned to: <span data-bind="html: task.assignedUserId()"></span></p>
                 <p>Assigned to: <span data-bind="html: task.assignedUser.name() + ' ' + task.assignedUser.surname()"></span></p>
             </div>
             <div class="panel-footer">
