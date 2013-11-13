@@ -129,25 +129,40 @@
   <data name="MyTasks" xml:space="preserve">
     <value>My tasks</value>
   </data>
-  <data name="Priority_AboveNormal" xml:space="preserve">
-    <value>Above Normal</value>
-  </data>
-  <data name="Priority_BelowNormal" xml:space="preserve">
-    <value>Below Normal</value>
-  </data>
-  <data name="Priority_High" xml:space="preserve">
-    <value>High</value>
-  </data>
-  <data name="Priority_Low" xml:space="preserve">
-    <value>Low</value>
-  </data>
-  <data name="Priority_Normal" xml:space="preserve">
-    <value>Normal</value>
-  </data>
   <data name="SeeAllFriends" xml:space="preserve">
     <value>See all friends</value>
   </data>
   <data name="SeeAllTasks" xml:space="preserve">
     <value>See all tasks</value>
+  </data>
+  <data name="TaskPriority_AboveNormal" xml:space="preserve">
+    <value>Above Normal</value>
+  </data>
+  <data name="TaskPriority_BelowNormal" xml:space="preserve">
+    <value>Below Normal</value>
+  </data>
+  <data name="TaskPriority_High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="TaskPriority_Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="TaskPriority_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="TaskPrivacy_Private" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="TaskPrivacy_Protected" xml:space="preserve">
+    <value>Protected</value>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="TaskState_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="TaskState_WorkingOn" xml:space="preserve">
+    <value>WorkingOn</value>
   </data>
 </root>

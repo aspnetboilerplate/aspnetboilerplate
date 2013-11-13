@@ -6,11 +6,11 @@
                 <h3 class="panel-title">Task: <span data-bind="html: task.title()"></span></h3>
             </div>
             <div class="panel-body">
-                <p data-bind="html: task.description()"></p>
-                <p>Priority: <span data-bind="html: getPriorityText(task.priority())"></span></p>
-                <p>Privacy: <span data-bind="html: task.privacy()"></span></p>
-                <p>State: <span data-bind="html: task.state()"></span></p>
-                <p>Assigned to: <span data-bind="html: task.assignedUser.name() + ' ' + task.assignedUser.surname()"></span></p>
+                <div><p data-bind="html: task.description()"></p></div>
+                <div class="col-md-6"><span class="text-muted">Assigned to: </span><span data-bind="html: task.assignedUser.name() + ' ' + task.assignedUser.surname()"></span></div>
+                <div class="col-md-6"><span class="text-muted">Privacy: </span><span data-bind="html: taskever.taskPrivacy.getLocalizedText(task.privacy())"></span></div>
+                <div class="col-md-6"><span class="text-muted">Priority: </span><span data-bind="html: taskever.taskPriority.getLocalizedText(task.priority())"></span></div>
+                <div class="col-md-6"><span class="text-muted">State: </span><span data-bind="html: taskever.taskState.getLocalizedText(task.state())"></span></div>
             </div>
             <div class="panel-footer">
                 <button class="btn btn-default" data-bind="click: changeToEditMode">

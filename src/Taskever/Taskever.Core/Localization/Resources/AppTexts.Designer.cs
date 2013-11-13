@@ -97,51 +97,6 @@ namespace Taskever.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Above Normal.
-        /// </summary>
-        internal static string Priority_AboveNormal {
-            get {
-                return ResourceManager.GetString("Priority_AboveNormal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Below Normal.
-        /// </summary>
-        internal static string Priority_BelowNormal {
-            get {
-                return ResourceManager.GetString("Priority_BelowNormal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to High.
-        /// </summary>
-        internal static string Priority_High {
-            get {
-                return ResourceManager.GetString("Priority_High", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Low.
-        /// </summary>
-        internal static string Priority_Low {
-            get {
-                return ResourceManager.GetString("Priority_Low", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Normal.
-        /// </summary>
-        internal static string Priority_Normal {
-            get {
-                return ResourceManager.GetString("Priority_Normal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to See all friends.
         /// </summary>
         internal static string SeeAllFriends {
@@ -156,6 +111,96 @@ namespace Taskever.Localization.Resources {
         internal static string SeeAllTasks {
             get {
                 return ResourceManager.GetString("SeeAllTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Above Normal.
+        /// </summary>
+        internal static string TaskPriority_AboveNormal {
+            get {
+                return ResourceManager.GetString("TaskPriority_AboveNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Below Normal.
+        /// </summary>
+        internal static string TaskPriority_BelowNormal {
+            get {
+                return ResourceManager.GetString("TaskPriority_BelowNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string TaskPriority_High {
+            get {
+                return ResourceManager.GetString("TaskPriority_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        internal static string TaskPriority_Low {
+            get {
+                return ResourceManager.GetString("TaskPriority_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        internal static string TaskPriority_Normal {
+            get {
+                return ResourceManager.GetString("TaskPriority_Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Private.
+        /// </summary>
+        internal static string TaskPrivacy_Private {
+            get {
+                return ResourceManager.GetString("TaskPrivacy_Private", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protected.
+        /// </summary>
+        internal static string TaskPrivacy_Protected {
+            get {
+                return ResourceManager.GetString("TaskPrivacy_Protected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        internal static string TaskState_Completed {
+            get {
+                return ResourceManager.GetString("TaskState_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        internal static string TaskState_New {
+            get {
+                return ResourceManager.GetString("TaskState_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WorkingOn.
+        /// </summary>
+        internal static string TaskState_WorkingOn {
+            get {
+                return ResourceManager.GetString("TaskState_WorkingOn", resourceCulture);
             }
         }
     }
