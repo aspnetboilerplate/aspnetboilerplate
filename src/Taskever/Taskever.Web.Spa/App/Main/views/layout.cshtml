@@ -22,9 +22,11 @@
         </div>
     </div>
     <div class="container">
-        <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefTaskList'"></div>
-        <div class="col-md-6 col-sm-12" data-bind="router: { /*transition: 'entrance', cacheViews: true*/ }"></div>
-        <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefFriendList'"></div>
+        <div class="row">
+            <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefTaskList'"></div>
+            <div class="col-md-6 col-sm-12" data-bind="router: { /*transition: 'entrance', cacheViews: true*/ }"></div>
+            <div class="col-md-3 hidden-sm hidden-xs" data-bind="compose: 'viewmodels/briefFriendList'"></div>
+        </div>
     </div>
 </div>
 @Html.Partial("~/Views/Shared/_Footer.cshtml")

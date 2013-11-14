@@ -7,7 +7,7 @@
     <div class="tab-content" style="margin-top: 10px;">
         <div class="tab-pane" id="MyFriends">
             <a class="clickable" data-bind="click: showAddNewFriendDialog">+ Add new friend</a>
-            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friendships">
+            <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 2 -->
                 <li class="list-group-item">
                     <img data-bind="attr: { src: friend.profileImage() }" />
@@ -32,7 +32,7 @@
             </ul>
         </div>
         <div class="tab-pane" id="FriendshipRequests">
-            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friendships">
+            <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 1 -->
                 <li class="list-group-item">
                     <img data-bind="attr: { src: friend.profileImage() }" />
@@ -53,7 +53,7 @@
             </ul>
         </div>
         <div class="tab-pane" id="SentRequests">
-            <ul class="list-group friend-list friend-list-detailed" data-bind="foreach: friendships">
+            <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 0 -->
                 <li class="list-group-item">
                     <img data-bind="attr: { src: friend.profileImage() }" />

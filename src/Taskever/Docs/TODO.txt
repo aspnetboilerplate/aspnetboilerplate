@@ -22,6 +22,11 @@ TODO (primary):
 TODO (secondary):
 - Search for a better bootstrap theme
 
+TODO (additional):
+- Put icons to pages
+  - Task title (left): protected/private
 
 
 NOW: Update Friendship.LastVisitDate!
+
+

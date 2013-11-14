@@ -6,7 +6,7 @@
             <h3 class="panel-title">@L("MyTasks")</h3>
         </div>
         <ul class="list-group" data-bind="foreach: tasks">
-            <li class="list-group-item"><a data-bind="html: title(), attr: { href: '#task/' + id() }" style="color:black;"></a></li> <!-- TODO: Don't use inline style and hard-coded color -->
+            <a class="list-group-item" data-bind="html: title(), attr: { href: '#task/' + id() }"></a> <!-- TODO: Don't use inline style and hard-coded color -->
         </ul>
         <div class="panel-footer">
             <a data-bind="attr: { href: '#user/' + currentUserId + '?activeSection=UserCurrentTasks' }">@L("SeeAllTasks")</a>

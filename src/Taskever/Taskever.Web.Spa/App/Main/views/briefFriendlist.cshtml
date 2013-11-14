@@ -3,15 +3,13 @@
         <div class="panel-heading">
             <h3 class="panel-title">@L("MyFriends")</h3>
         </div>
-        <ul class="list-group friend-list friend-list-brief" data-bind="foreach: friendships">
-            <li class="list-group-item">
+        <ul class="list-group friend-list-brief" data-bind="foreach: friendships">
+            <a class="list-group-item" data-bind="attr: { href: '#user/' + friend.id() }">
                 <img data-bind="attr: { src: friend.profileImage(), alt: friend.name() + ' ' + friend.surname() }" />
                 <div class="user-info">
-                    <a data-bind="attr: { href: '#user/' + friend.id() }">
-                        <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
-                    </a>
+                    <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
                 </div>
-            </li>
+            </a>
         </ul>
         <div class="panel-footer">
             <a href="#friends">@L("SeeAllFriends")</a>
