@@ -11,21 +11,25 @@
                 <!-- ko if: status() == 2 -->
                 <li class="list-group-item">
                     <img data-bind="attr: { src: friend.profileImage() }" />
-                    <div class="user-info">
-                        <div>
-                            <a data-bind="attr: { href: '#user/' + friend.id() }">
-                                <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
-                            </a>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="user-info">
+                                <div>
+                                    <a data-bind="attr: { href: '#user/' + friend.id() }">
+                                        <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <input class="checkbox-friendship-canAssignTask" type="checkbox" data-bind="checked: canAssignTask" />
+                                    Can assign tasks to me<br />
+                                    <input class="checkbox-friendship-fallowActivities" type="checkbox" data-bind="checked: fallowActivities" />
+                                    Fallow activities
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <input class="checkbox-friendship-canAssignTask" type="checkbox" data-bind="checked: canAssignTask" />
-                            Can assign tasks to me<br />
-                            <input class="checkbox-friendship-fallowActivities" type="checkbox" data-bind="checked: fallowActivities" />
-                            Fallow activities
+                        <div class="col-xs-4">
+                            <button class="btn btn-link pull-right" data-bind="click: $root.removeFriendship"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Delete</button>
                         </div>
-                    </div>
-                    <div style="position: absolute; top: 5px; right: 8px;"> <!-- TODO: Use docking with less! -->
-                        <img src="~/App/_Common/images/x.png" style="width: 16px; height: 16px;" class="clickable" data-bind="click: $root.removeFriendship"></img> <!-- TODO: Use span? -->
                     </div>
                 </li>
                 <!-- /ko -->
@@ -43,9 +47,10 @@
                             </a>
                         </div>
                         <div>
-                            Waiting since <span data-bind="text: creationTime"></span><br/>
-                            <a class="clickable" data-bind="click: $root.acceptFriendship"><i class="icon-check" /> Accept</a>&nbsp;&nbsp;
-                            <a class="clickable" data-bind="click: $root.rejectFriendship"><i class="icon-ban-circle" /> Reject</a>
+                            Waiting since <span data-bind="text: creationTime"></span>
+                            <br />
+                            <a class="clickable" data-bind="click: $root.acceptFriendship"><i class="icon-check" />Accept</a>&nbsp;&nbsp;
+                            <a class="clickable" data-bind="click: $root.rejectFriendship"><i class="icon-ban-circle" />Reject</a>
                         </div>
                     </div>
                 </li>
@@ -64,8 +69,9 @@
                             </a>
                         </div>
                         <div>
-                            Waiting since <span data-bind="text: creationTime"></span><br/>
-                            <a class="clickable" data-bind="click: $root.cancelFriendshipRequest"><i class="icon-ban-circle" /> Cancel</a>
+                            Waiting since <span data-bind="text: creationTime"></span>
+                            <br />
+                            <a class="clickable" data-bind="click: $root.cancelFriendshipRequest"><i class="icon-ban-circle" />Cancel</a>
                         </div>
                     </div>
                 </li>

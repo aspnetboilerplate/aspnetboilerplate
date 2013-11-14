@@ -12,12 +12,15 @@ TODO (primary):
 	- latest activities
 	+ my friends
   - task
-    - show
-	- edit
-	- delete
+    + show
+	+ edit
+	- delete: confirmation!
+  - user
+    - paging for tasks!
 - Localization for all pages
 - Use capcha on registration
 - Check all TODO's
+- Make login page attractive!
 
 TODO (secondary):
 - Search for a better bootstrap theme

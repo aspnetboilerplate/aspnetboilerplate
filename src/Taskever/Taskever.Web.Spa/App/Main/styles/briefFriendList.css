@@ -16,13 +16,13 @@ ul.friend-list-detailed > li {
   position: relative;
   min-height: 84px;
 }
-ul.friend-list-detailed > li > img {
+ul.friend-list-detailed > li img {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 84px;
   height: 84px;
 }
-ul.friend-list-detailed > li > div.user-info {
+ul.friend-list-detailed > li div.user-info {
   margin-left: 90px;
 }
