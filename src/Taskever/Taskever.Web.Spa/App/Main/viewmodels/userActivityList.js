@@ -3,7 +3,7 @@
         return function () {
             var that = this;
 
-            var maxResultCountOnce = 2;
+            var maxResultCountOnce = 20;
 
             var _userId;
             var _minShownActivityId = null;

@@ -7,16 +7,24 @@ TODO (primary):
 + Use moment.js to show datetimes!
 + Show notification!
 - Check all pages
+  - user
+    + paging for activities!
+    - paging for current tasks!
+    - paging for completed tasks!
+  - settings
+    - Change profile picture
+	- change password
   - home
     + my tasks
-	- latest activities
+	- latest activities (paging)
 	+ my friends
   - task
-    + show
-	+ edit
+    - show (task creation time)
+	- edit (description boz size!)
 	- delete: confirmation!
-  - user
-    - paging for tasks!
+	- cancel: do not modify screen!
+  - profile images
+    - set profile image (colored)
 - Localization for all pages
 - Use capcha on registration
 - Check all TODO's
