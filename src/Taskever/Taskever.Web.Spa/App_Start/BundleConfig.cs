@@ -47,6 +47,7 @@ namespace Taskever.Web.App_Start
                     .Include("~/Scripts/jquery.form.min.js")
                     .Include("~/Scripts/jquery.blockUI.min.js")
                     .Include("~/Scripts/moment-with-langs.min.js")
+                    .Include("~/Scripts/libs/livestamp/livestamp.min.js")
                     .Include("~/Scripts/toastr.min.js")
                 );
 

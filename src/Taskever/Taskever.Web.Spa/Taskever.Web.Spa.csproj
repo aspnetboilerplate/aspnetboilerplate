@@ -286,6 +286,8 @@
     <Content Include="Scripts\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.form.min.js" />
+    <Content Include="Scripts\libs\livestamp\livestamp.js" />
+    <Content Include="Scripts\libs\livestamp\livestamp.min.js" />
     <Content Include="Scripts\libs\spinjs\jquery.spin.js" />
     <Content Include="Scripts\libs\spinjs\spin.js" />
     <Content Include="Scripts\libs\spinjs\spin.min.js" />

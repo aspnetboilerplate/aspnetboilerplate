@@ -14,7 +14,8 @@ requirejs.config({
 
 define('jquery', function () { return jQuery; });
 define('knockout', function () { return ko;});
-define('underscore', function() { return _; });
+define('moment', function () { return moment; });
+define('underscore', function () { return _; });
 
 define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/viewEngine', 'session', 'durandal/activator', 'knockout'], function (system, app, viewLocator, viewEngine, session, activator, ko) {
     system.debug(true); //TODO: remove in production code
