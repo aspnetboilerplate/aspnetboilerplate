@@ -33,3 +33,4 @@ TODO (additional):
 NOW: Update Friendship.LastVisitDate!
 
 
+- Check livestamp's performance!

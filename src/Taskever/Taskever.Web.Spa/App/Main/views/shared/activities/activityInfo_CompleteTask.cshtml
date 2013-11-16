@@ -3,4 +3,4 @@
 görevi
 <a data-bind="html: activityInfo.assignedUserName, attr: { href: '#user/' + activityInfo.assignedUserId() }"></a>
 tarafından tamamlandı.
-<i class="text-muted"><span data-bind="text: moment(creationTime()).fromNow(), attr: { 'data-livestamp': creationTime }"></span></i>
+<i class="text-muted"><span data-bind="text: moment(creationTime()).fromNow(), attr: { 'data-livestamp': creationTime, title: moment(creationTime()) }"></span></i>
