@@ -71,8 +71,10 @@
     <Compile Include="Domain\Enums\TaskPrivacy.cs" />
     <Compile Include="Domain\Policies\Impl\FriendshipPolicy.cs" />
     <Compile Include="Domain\Policies\IPolicy.cs" />
+    <Compile Include="Domain\Services\Impl\FriendshipDomainService.cs" />
     <Compile Include="Domain\Services\IActivityService.cs" />
     <Compile Include="Domain\Policies\IFriendshipPolicy.cs" />
+    <Compile Include="Domain\Services\IFriendshipDomainService.cs" />
     <Compile Include="Domain\Services\Impl\ActivityService.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Domain\Entities\Activity.cs" />

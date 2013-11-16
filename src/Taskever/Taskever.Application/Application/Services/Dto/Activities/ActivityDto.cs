@@ -10,7 +10,7 @@ using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Activities
 {
-    public class ActivityDto : IOutputDto
+    public class ActivityDto : EntityDto<long>, IOutputDto
     {
         public virtual ActivityAction Action { get; set; }
 
@@ -24,6 +24,7 @@ namespace Taskever.Application.Services.Dto.Activities
         {
             return new ActivityDto
                        {
+                           Id = activity.Id,
                            Action = activity.Action,
                            ActionName = activity.Action.ToString(),
                            ActivityInfo = activity.Action.CreateActivityInfo(activity.Data),

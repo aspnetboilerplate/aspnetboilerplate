@@ -1,33 +1,20 @@
-using System.Linq;
-using Abp.Domain.Repositories;
 using Abp.Modules.Core.Domain.Entities;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Enums;
 
 namespace Taskever.Domain.Services.Impl
 {
     public class TaskPrivilegeService : ITaskPrivilegeService
     {
-        private readonly IRepository<Friendship> _friendshipRepository;
+        private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public TaskPrivilegeService(IRepository<Friendship> friendshipRepository)
+        public TaskPrivilegeService(IFriendshipDomainService friendshipDomainService)
         {
-            _friendshipRepository = friendshipRepository;
+            _friendshipDomainService = friendshipDomainService;
         }
 
         public bool CanSeeTasksOfUser(User requesterUser, User userOfTasks)
         {
-            if (requesterUser.Id == userOfTasks.Id)
-            {
-                return true;
-            }
-
-            return _friendshipRepository.Query( //TODO: Create Index: UserId, FriendId, Status
-                q => q.Any(friendship =>
-                           friendship.User.Id == requesterUser.Id &&
-                           friendship.Friend.Id == userOfTasks.Id &&
-                           friendship.Status == FriendshipStatus.Accepted
-                         ));
+            return requesterUser.Id == userOfTasks.Id ||
+                   _friendshipDomainService.HasFriendship(requesterUser, userOfTasks);
         }
     }
 }
