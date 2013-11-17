@@ -66,5 +66,16 @@ namespace Abp.Modules.Core.Application.Services.Impl
             currentUser.Password = input.NewPassword;
             return new ChangeSettingsOutput();
         }
+
+        [UnitOfWork]
+        public ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input)
+        {
+            var currentUser = _userRepository.Get(User.CurrentUserId); //TODO: test Load method
+            var oldFileName = currentUser.ProfileImage;
+
+            currentUser.ProfileImage = input.FileName;
+            
+            return new ChangeProfileImageOutput() { OldFileName = oldFileName };
+        }
     }
 }

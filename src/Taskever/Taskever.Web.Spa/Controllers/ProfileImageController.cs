@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.Web.Mvc;
-using Abp.Modules.Core.Data.Repositories;
+using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Utils.Helpers;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Authorization;
@@ -10,11 +12,11 @@ namespace Taskever.Web.Controllers
     [AbpAuthorize]
     public class ProfileImageController : TaskeverController
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public ProfileImageController(IUserRepository userRepository)
+        public ProfileImageController(IUserService userService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -25,16 +27,20 @@ namespace Taskever.Web.Controllers
                 var uploadfile = Request.Files[0];
                 if (uploadfile != null)
                 {
-                    var path = GenerateProfileImagePath(Path.GetExtension(uploadfile.FileName));
-                    FileHelper.DeleteIfExists(path);
-                    uploadfile.SaveAs(path);
+                    //Save uploaded file
+                    var tempPath = GenerateProfileImagePath(uploadfile.FileName);
+                    FileHelper.DeleteIfExists(tempPath);
+                    uploadfile.SaveAs(tempPath);
 
-                    var fileName = Path.GetFileName(path);
+                    //Change profile picture
+                    var fileName = Path.GetFileName(tempPath);
+                    var result = _userService.ChangeProfileImage(new ChangeProfileImageInput { FileName = fileName });
+                    
+                    //Delete old file
+                    var oldFilePath = Path.Combine(Server.MapPath("~/ProfileImages"), result.OldFileName);
+                    FileHelper.DeleteIfExists(oldFilePath);
 
-                    var currentUser = _userRepository.Get(Abp.Modules.Core.Domain.Entities.User.CurrentUserId);
-                    currentUser.ProfileImage = fileName;
-                    _userRepository.Update(currentUser);
-
+                    //Return response
                     return Json(new AbpAjaxResponse(new
                                                         {
                                                             imageUrl = "/ProfileImages/" + fileName
@@ -42,13 +48,15 @@ namespace Taskever.Web.Controllers
                 }
             }
 
+            //No file
             return Json(new AbpAjaxResponse(false)); //TODO: Error message?
         }
 
-        private string GenerateProfileImagePath(string ext)
+        private string GenerateProfileImagePath(string fileName)
         {
+            var ext = Path.GetExtension(fileName);
             var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
-            return Path.Combine(Server.MapPath("~/ProfileImages"), userId + ext);
+            return Path.Combine(Server.MapPath("~/ProfileImages"), userId + "_" + DateTime.Now.Ticks + ext);
         }
     }
 }
