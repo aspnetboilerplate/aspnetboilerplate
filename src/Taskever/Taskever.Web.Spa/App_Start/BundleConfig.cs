@@ -19,7 +19,6 @@ namespace Taskever.Web.App_Start
                     //.Include("~/Content/bootstrap/bootstrap-theme.css")
                     .Include("~/Content/font-awesome.min.css")
                     .Include("~/Content/durandal.css")
-                    .Include("~/Scripts/dropzone/css/dropzone.css")
                     .Include("~/Content/toastr.min.css")
                     .Include("~/App/_Common/styles/main.css")
                     .Include("~/Abp/Framework/styles/abp.css")

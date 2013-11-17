@@ -5,6 +5,8 @@
         return;
     }
 
+    toastr.options.positionClass = 'toast-bottom-right';
+
     var showNotification = function (type, title, message) {
         toastr[type](title, message);
     };

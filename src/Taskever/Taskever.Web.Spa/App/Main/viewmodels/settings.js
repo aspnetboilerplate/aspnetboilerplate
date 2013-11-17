@@ -1,6 +1,6 @@
 ﻿define(
-    ["knockout", 'session', 'service!abp/user', 'dropzone'],
-    function (ko, session, userService) {
+    ["knockout", 'session', 'service!abp/user', 'plugins/dialog'],
+    function (ko, session, userService, dialogs) {
 
         return function () {
             var that = this;
@@ -8,6 +8,8 @@
             // Private variables //////////////////////////////////////////////////
 
             // Public fields //////////////////////////////////////////////////////
+
+            that.user = session.getCurrentUser();
 
             that.passwordChange = {
                 currentPassword: ko.observable(''),
@@ -21,30 +23,14 @@
                 userService.changeSettings(
                     ko.mapping.toJS(that.passwordChange)
                 ).done(function () {
-                    alert('ok');
+                    abp.notify.info('Your password has been successfully changed');
                 });
             };
 
-            that.acceptProfilePicture = function () {
-                console.log('accepting...');
-                abp.ajax({
-                    url: '/ProfileImage/AcceptTempProfileImage'
-                });
-            };
-
-            that.attached = function (view) {
-                $(view).find("form.dropzone").dropzone({
-                    url: '/ProfileImage/UploadTempProfileImage',
-                    maxFilesize: 1,
-                    addRemoveLinks: true,
-                    maxFiles: 1,
-                    removedfile: function (file) { //TODO: Find a better way!
-                        abp.ajax({
-                            url: '/ProfileImage/RemoveTempProfileImage'
-                        });
-                        
-                        var _ref;
-                        return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            that.showUploadProfilePictureDialog = function() {
+                dialogs.show('viewmodels/uploadProfilePictureDialog').then(function (imageUrl) {
+                    if(imageUrl) {
+                        that.user.profileImage(imageUrl + '?timestamp=' + new Date().getTime());
                     }
                 });
             };

@@ -7,8 +7,7 @@ requirejs.config({
         'transitions': '../../Scripts/durandal/transitions',
         'abp': '../../Abp',
         'services': '/api/serviceproxies',
-        'service': '/Abp/Framework/scripts/requirejs/plugins/service',
-        'dropzone': '/Scripts/dropzone/dropzone-amd-module' //TODO: TEST with min.js extension!
+        'service': '/Abp/Framework/scripts/requirejs/plugins/service'
     }
 });
 

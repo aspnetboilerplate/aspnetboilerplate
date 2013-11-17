@@ -1,20 +1,20 @@
 ﻿<section>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Change profile picture</h3>
+            <h3 class="panel-title">Profile picture</h3>
         </div>
         <div class="panel-body">
-            <form class="dropzone"></form>
+            <img class="img-thumbnail img-responsive" data-bind="attr: { src: user.profileImage() }" />
         </div>
         <div class="panel-footer">
-            <button class="btn btn-default" data-bind="click: acceptProfilePicture">
-                <span class="glyphicon glyphicon-remove"></span>&nbsp;Accept
+            <button class="btn btn-default" data-bind="click: showUploadProfilePictureDialog">
+                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;Change
             </button>
         </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Change password</h3>
+            <h3 class="panel-title">Password</h3>
         </div>
         <div class="panel-body">
             <form role="form">
@@ -35,7 +35,7 @@
         </div>
         <div class="panel-footer">
             <button class="btn btn-default" data-bind="click: updatePassword">
-                <span class="glyphicon glyphicon-remove"></span>&nbsp;Update
+                <span class="glyphicon glyphicon-check"></span>&nbsp;Update
             </button>
         </div>
     </div>

@@ -92,6 +92,7 @@
     <Compile Include="Utils\Extensions\CollectionExtensions.cs" />
     <Compile Include="Utils\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
+    <Compile Include="Utils\Helpers\FileHelper.cs" />
     <Compile Include="Utils\Helpers\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

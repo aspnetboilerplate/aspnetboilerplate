@@ -1,7 +1,7 @@
 using System.IO;
-using System.Web;
 using System.Web.Mvc;
 using Abp.Modules.Core.Data.Repositories;
+using Abp.Utils.Helpers;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Authorization;
 
@@ -18,75 +18,37 @@ namespace Taskever.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult UploadTempProfileImage()
+        public JsonResult UploadProfileImage()
         {
             if (Request.Files.Count > 0)
             {
                 var uploadfile = Request.Files[0];
-
-                var ext = Path.GetExtension(uploadfile.FileName);
-                var path = GenerateTempProfileImagePath(ext);
-                if (System.IO.File.Exists(path)) //TODO: Make a helper method for that! DeleteFileIfExists
+                if (uploadfile != null)
                 {
-                    System.IO.File.Delete(path);
+                    var path = GenerateProfileImagePath(Path.GetExtension(uploadfile.FileName));
+                    FileHelper.DeleteIfExists(path);
+                    uploadfile.SaveAs(path);
+
+                    var fileName = Path.GetFileName(path);
+
+                    var currentUser = _userRepository.Get(Abp.Modules.Core.Domain.Entities.User.CurrentUserId);
+                    currentUser.ProfileImage = fileName;
+                    _userRepository.Update(currentUser);
+
+                    return Json(new AbpAjaxResponse(new
+                                                        {
+                                                            imageUrl = "/ProfileImages/" + fileName
+                                                        }));
                 }
-
-                uploadfile.SaveAs(path);
             }
 
-            return Json(new AbpAjaxResponse(true));
-        }
-
-        //[HttpPost]
-        public JsonResult CancelTempProfileImage()
-        {
-            var path = GenerateTempProfileImagePath(".jpg");
-            if (System.IO.File.Exists(path)) //TODO: Make a helper method for that! DeleteFileIfExists
-            {
-                System.IO.File.Delete(path);
-            }
-
-            return Json(new AbpAjaxResponse(true));
-        }
-
-        public JsonResult RemoveTempProfileImage()
-        {
-            var path = GenerateTempProfileImagePath(".jpg");
-            if (System.IO.File.Exists(path)) //TODO: Make a helper method for that! DeleteFileIfExists
-            {
-                System.IO.File.Delete(path);
-            }
-
-            return Json(new AbpAjaxResponse(true));
-        }
-
-        public JsonResult AcceptTempProfileImage()
-        {
-            var tempPath = GenerateTempProfileImagePath(".jpg");
-            var realPath = GenerateProfileImagePath(".jpg");
-
-            System.IO.File.Copy(tempPath, realPath, true);
-
-            var fileName = Path.GetFileName(realPath);
-
-            var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
-            var user = _userRepository.Get(userId);
-            user.ProfileImage = fileName;
-            _userRepository.Update(user);
-
-            return Json(new AbpAjaxResponse(true));
+            return Json(new AbpAjaxResponse(false)); //TODO: Error message?
         }
 
         private string GenerateProfileImagePath(string ext)
         {
             var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
             return Path.Combine(Server.MapPath("~/ProfileImages"), userId + ext);
-        }
-
-        private string GenerateTempProfileImagePath(string ext)
-        {
-            var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
-            return Path.Combine(Server.MapPath("~/ProfileImages/Temp"), userId + ext);
         }
     }
 }

@@ -206,6 +206,7 @@
       <DependentUpon>briefFriendList.less</DependentUpon>
     </Content>
     <Content Include="App\Main\viewmodels\addFriendDialog.js" />
+    <Content Include="App\Main\viewmodels\uploadProfilePictureDialog.js" />
     <Content Include="App\Main\viewmodels\task\edit.js" />
     <Content Include="App\Main\viewmodels\userActivityList.js" />
     <Content Include="App\Main\viewmodels\settings.js" />
@@ -220,6 +221,7 @@
     <Content Include="App\Main\views\settings.cshtml" />
     <Content Include="App\Main\views\userActivityList.cshtml" />
     <Content Include="App\Main\views\task\edit.cshtml" />
+    <Content Include="App\Main\views\uploadProfilePictureDialog.cshtml" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />
@@ -271,19 +273,9 @@
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
-    <Content Include="Scripts\dropzone\css\basic.css" />
-    <Content Include="Scripts\dropzone\css\dropzone.css" />
-    <Content Include="Scripts\dropzone\css\stylus\dropzone.styl" />
-    <Content Include="Scripts\dropzone\css\stylus\basic.styl" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
     <Content Include="Images\loading_black.gif" />
-    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
-    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
-    <Content Include="Scripts\dropzone\dropzone.js" />
-    <Content Include="Scripts\dropzone\dropzone.min.js" />
-    <Content Include="Scripts\dropzone\images\spritemap%402x.png" />
-    <Content Include="Scripts\dropzone\images\spritemap.png" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.form.js" />
