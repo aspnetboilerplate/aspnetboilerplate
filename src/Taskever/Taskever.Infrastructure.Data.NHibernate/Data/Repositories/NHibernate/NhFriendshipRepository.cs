@@ -25,6 +25,8 @@ namespace Taskever.Data.Repositories.NHibernate
                 query = query.Where(friendship => friendship.CanAssignTask == canAssignTask);
             }
 
+            query = query.OrderBy(f => f.Friend.Name).ThenBy(f => f.Friend.Surname);
+
             return query.ToList();
         }
 

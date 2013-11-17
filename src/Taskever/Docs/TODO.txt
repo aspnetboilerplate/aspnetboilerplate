@@ -20,8 +20,8 @@ TODO (primary):
 	+ my friends
   - task
     + show (task creation time)
-	- edit (description box size!)
-	- delete: confirmation!
+	+ edit (description box size!)
+	+ delete: confirmation!
 	- cancel: do not modify screen!
   - profile images
     - set profile image (colored)

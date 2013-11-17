@@ -1,0 +1,33 @@
+﻿<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-7">
+                    <h3 class="panel-title">Task: <span data-bind="html: task.title()"></span></h3>
+                </div>
+                <div class="col-xs-5 text-right">
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-primary" data-bind="attr: { href: '#task/' + task.id() + '/edit' }"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</a>
+                        <button class="btn btn-primary" data-bind="click: deleteTask"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div>
+                <p data-bind="html: task.description()"></p>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-12"><span class="text-muted">Assigned to: </span><span data-bind="html: task.assignedUser.name() + ' ' + task.assignedUser.surname()"></span></div>
+                <div class="col-sm-6 col-xs-12"><span class="text-muted">Privacy: </span><span data-bind="html: taskever.taskPrivacy.getLocalizedText(task.privacy())"></span></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-12"><span class="text-muted">Priority: </span><span data-bind="html: taskever.taskPriority.getLocalizedText(task.priority())"></span></div>
+                <div class="col-sm-6 col-xs-12"><span class="text-muted">State: </span><span data-bind="html: taskever.taskState.getLocalizedText(task.state())"></span></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12"><span class="text-muted">Created: </span><span data-bind="html: moment(task.creationTime()).fromNow(), attr: { title: moment(task.creationTime()) }"></span></div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,56 @@
+﻿<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Edit task</h3>
+        </div>
+        <div class="panel-body">
+            <form role="form">
+                <div class="form-group">
+                    <label for="EditTaskTitle">Title</label>
+                    <input type="text" class="form-control" id="EditTaskTitle" placeholder="Enter title" data-bind="value: task.title">
+                </div>
+                <div class="form-group">
+                    <label for="EditTaskDescription">Description</label>
+                    <textarea class="form-control" id="EditTaskDescription" placeholder="Enter description here" data-bind="value: task.description" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="EditTaskPriority">Priority</label>
+                    <!-- TODO: Get from enumaration, make component? -->
+                    <select id="EditTaskPriority" class="form-control" data-bind="value: task.priority">
+                        <option value="1">Low</option>
+                        <option value="2">BelowNormal</option>
+                        <option value="3">Normal</option>
+                        <option value="4">AboveNormal</option>
+                        <option value="5">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="EditTaskPrivacy">Privacy</label>
+                    <!-- TODO: Get from enumaration, make component? -->
+                    <select id="EditTaskPrivacy" class="form-control" data-bind="value: task.privacy">
+                        <option value="1">Private</option>
+                        <option value="2">Protected</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="EditTaskState">Priority</label>
+                    <!-- TODO: Get from enumaration, make component? -->
+                    <select id="EditTaskState" class="form-control" data-bind="value: task.state">
+                        <option value="1">New</option>
+                        <option value="2">WorkingOn</option>
+                        <option value="3">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="NewTaskAssignedUserId">Assign to</label>
+                    <select id="NewTaskAssignedUserId" class="form-control" data-bind="value: task.assignedUserId, options: users, optionsText: function (item) { return item.name() + ' ' + item.surname(); }, optionsValue: function (item) { return item.id(); }">
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" data-bind="click: cancelUpdate"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp;Cancel</button>
+            <button class="btn btn-primary" data-bind="click: updateTask"><span class="glyphicon glyphicon-ok"></span>&nbsp;Update</button>
+        </div>
+    </div>
+</section>

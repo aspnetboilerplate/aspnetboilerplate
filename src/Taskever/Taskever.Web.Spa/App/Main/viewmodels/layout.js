@@ -8,7 +8,8 @@
                 { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
                 { route: 'user/:id', title: 'User Profile', moduleId: 'viewmodels/user', nav: true },
                 { route: 'friends', title: 'My Friends', moduleId: 'viewmodels/friends', nav: true },
-                { route: 'task/:id', moduleId: 'viewmodels/task', nav: true },
+                { route: 'task/:id/edit', moduleId: 'viewmodels/task/edit', nav: true },
+                { route: 'task/:id', moduleId: 'viewmodels/task/view', nav: true },
                 { route: 'settings', moduleId: 'viewmodels/settings', nav: true }
             ]).buildNavigationModel();
 

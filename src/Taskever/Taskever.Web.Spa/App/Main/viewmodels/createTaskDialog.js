@@ -1,5 +1,5 @@
 ﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
-    function($, ko, dialogs, dtos, taskService, friendshipService, session) {
+    function ($, ko, dialogs, dtos, taskService, friendshipService, session) {
         return function () {
             var that = this;
 
@@ -12,7 +12,7 @@
                 priority: ko.observable(),
                 privacy: ko.observable(),
             };
-            
+
             that.users = ko.mapping.fromJS([]);
 
             // Public methods /////////////////////////////////////////////////////
@@ -22,7 +22,7 @@
                     userId: session.getCurrentUser().id(),
                     canAssignTask: true
                 }).done(function (result) {
-                    var users = $.map(result.friendships, function(friendship) { return friendship.friend; });
+                    var users = $.map(result.friendships, function (friendship) { return friendship.friend; });
                     ko.mapping.fromJS(users, that.users);
                     that.users.unshift(session.getCurrentUser());
                 });
@@ -31,9 +31,13 @@
             that.saveNewTask = function () {
                 taskService.createTask({
                     task: ko.mapping.toJS(that.task)
-                }).done(function(result) {
+                }).done(function (result) {
                     dialogs.close(that, ko.mapping.fromJS(result.task));
                 });
+            };
+
+            that.cancel = function () {
+                dialogs.close(that);
             };
         };
     });
