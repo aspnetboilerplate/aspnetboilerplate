@@ -2,7 +2,7 @@ using Abp.Application.Services.Dto;
 
 namespace Abp.Modules.Core.Application.Services.Dto.Users
 {
-    public class ChangeSettingsOutput : IOutputDto
+    public class ChangePasswordOutput : IOutputDto
     {
 
     }

@@ -3,7 +3,7 @@ using Abp.Application.Services.Dto;
 
 namespace Abp.Modules.Core.Application.Services.Dto.Users
 {
-    public class ChangeSettingsInput : IInputDto
+    public class ChangePasswordInput : IInputDto
     {
         [StringLength(30, MinimumLength = 3)] //TODO: Avoid Magic numbers!
         public virtual string CurrentPassword { get; set; }

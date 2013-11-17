@@ -20,7 +20,7 @@
             // Public methods /////////////////////////////////////////////////////
 
             that.updatePassword = function () {
-                userService.changeSettings(
+                userService.changePassword(
                     ko.mapping.toJS(that.passwordChange)
                 ).done(function () {
                     abp.notify.info('Your password has been successfully changed');

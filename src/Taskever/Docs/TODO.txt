@@ -6,7 +6,7 @@ TODO (primary):
 + Change profile picture!
 + Use moment.js to show datetimes!
 + Show notification!
-- Check all pages
++ Check all pages
   + user
     + paging for activities!
     + paging for current tasks!
@@ -23,6 +23,24 @@ TODO (primary):
 	+ edit (description box size!)
 	+ delete: confirmation!
 	+ cancel: do not modify screen!
+
+- Friendship
+  + Remove friend: confirm
+  - Add friend: Validate?
+
+- Activities
+  - When a task deleted!
+  - When a friendship cancelled?
+  - When 'do not fallow' checked!
+  - so on...
+
+- UI refreshes:
+  - Task
+    - Delete
+  - Friendship
+    - Delete
+	- Sent request?
+
 - Localization for all pages
 - Use capcha on registration
 - Check all TODO's

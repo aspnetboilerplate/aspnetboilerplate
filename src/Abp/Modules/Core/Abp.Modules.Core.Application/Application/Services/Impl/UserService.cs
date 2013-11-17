@@ -55,7 +55,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
         }
 
         [UnitOfWork]
-        public ChangeSettingsOutput ChangeSettings(ChangeSettingsInput input)
+        public ChangePasswordOutput ChangePassword(ChangePasswordInput input)
         {
             var currentUser = _userRepository.Get(User.CurrentUserId);
             if(currentUser.Password != input.CurrentPassword)
@@ -64,7 +64,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
             }
 
             currentUser.Password = input.NewPassword;
-            return new ChangeSettingsOutput();
+            return new ChangePasswordOutput();
         }
 
         [UnitOfWork]

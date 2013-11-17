@@ -20,7 +20,7 @@ namespace Abp.Modules.Core.Application.Services
 
         GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input);
 
-        ChangeSettingsOutput ChangeSettings(ChangeSettingsInput input);
+        ChangePasswordOutput ChangePassword(ChangePasswordInput input);
 
         ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input);
     }

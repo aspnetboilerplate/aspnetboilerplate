@@ -6,21 +6,6 @@
             activeSection: 'MyFriends'
         };
 
-        toastr.options = {
-            "closeButton": false,
-            "debug": false,
-            "positionClass": "toast-bottom-right",
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
-
         return function () {
             var that = this;
 
@@ -83,11 +68,19 @@
             };
 
             that.removeFriendship = function (friendship) {
-                friendshipService.removeFriendship({
-                    id: friendship.id()
-                }).done(function () {
-                    abp.notify.info('Removed!', 'Removed your friendship.');
-                    that.friendships.remove(friendship);
+                dialogs.showMessage(
+                    friendship.friend.name() + ' ' + friendship.friend.surname() + ' will be removed from your friends! Are you sure?',
+                    'Delete the friendship?',
+                    ['No', 'Yes']
+                ).done(function (result) {
+                    if (result == 'Yes') {
+                        friendshipService.removeFriendship({
+                            id: friendship.id()
+                        }).done(function () {
+                            abp.notify.info('Removed!', 'Removed your friendship.');
+                            that.friendships.remove(friendship);
+                        });
+                    }
                 });
             };
 
