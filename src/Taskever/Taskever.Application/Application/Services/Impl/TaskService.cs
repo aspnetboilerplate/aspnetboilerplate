@@ -58,7 +58,6 @@ namespace Taskever.Application.Services.Impl
         public virtual GetTasksOutput GetTasks(GetTasksInput input)
         {
             var query = CreateQueryForAssignedTasksOfUser(input.AssignedUserId);
-
             if (!input.TaskStates.IsNullOrEmpty())
             {
                 query = query.Where(task => input.TaskStates.Contains(task.State));
@@ -78,8 +77,6 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public GetTasksByImportanceOutput GetTasksByImportance(GetTasksByImportanceInput input)
         {
-            Thread.Sleep(1000); //TODO: Remove sleep!
-
             var query = CreateQueryForAssignedTasksOfUser(input.AssignedUserId);
             query = query
                 .Where(task => task.State != TaskState.Completed)

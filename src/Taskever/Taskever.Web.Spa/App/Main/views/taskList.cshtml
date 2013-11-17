@@ -4,3 +4,8 @@
         <p data-bind="html: description()"></p>
     </a>
 </ul>
+
+<ul class="pager">
+  <li class="previous" data-bind="if: hasPreviousPage"><a href="#" data-bind="click: gotoPreviousPage">&larr; Previous</a></li>
+  <li class="next" data-bind="if: hasNextPage"><a href="#" data-bind="click: gotoNextPage">Next &rarr;</a></li>
+</ul>

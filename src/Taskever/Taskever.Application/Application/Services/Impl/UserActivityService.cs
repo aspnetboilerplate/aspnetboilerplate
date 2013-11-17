@@ -26,7 +26,7 @@ namespace Taskever.Application.Services.Impl
 
         public GetFallowedActivitiesOutput GetFallowedActivities(GetFallowedActivitiesInput input)
         {
-            var activities = _fallowedActivityRepository.GetActivities(input.FallowerUserId);
+            var activities = _fallowedActivityRepository.GetActivities(input.FallowerUserId, input.MaxResultCount, input.BeforeFallowedActivityId);
             return new GetFallowedActivitiesOutput
                        {
                            Activities = activities.Select(ActivityDto.CreateFromActivity).ToList()
