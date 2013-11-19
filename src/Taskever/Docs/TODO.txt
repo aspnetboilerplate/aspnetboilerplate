@@ -27,6 +27,7 @@ TODO (primary):
 - Friendship
   + Remove friend: confirm
   - Add friend: Validate?
+  - Update Friendship.LastVisitDate
 
 - Activities
   - When a task deleted!
@@ -34,27 +35,39 @@ TODO (primary):
   - When 'do not fallow' checked!
   - so on...
 
+- Localization for all pages
+
+- Put icons to pages
+
+- Use capcha on registration (and in first events?)
+- Make login page attractive!
+
 - UI refreshes:
   - Task
     - Delete
   - Friendship
     - Delete
 	- Sent request?
+  - Activities?
 
-- Localization for all pages
-- Use capcha on registration
+SignalR
+  - Task
+    - Complete
+	- Assigned to me
+	- ...
+  - Friendships
+	- Request
+    - Accept
+
+Work offline
+  - ...
+
 - Check all TODO's
-- Make login page attractive!
 
 TODO (secondary):
 - Search for a better bootstrap theme
 
-TODO (additional):
-- Put icons to pages
-  - Task title (left): protected/private
 
-
-NOW: Update Friendship.LastVisitDate!
 
 
 - Check livestamp's performance!
