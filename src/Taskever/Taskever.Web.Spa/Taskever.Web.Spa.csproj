@@ -205,7 +205,7 @@
     <Content Include="App\Main\styles\briefFriendList.min.css">
       <DependentUpon>briefFriendList.less</DependentUpon>
     </Content>
-    <Content Include="App\Main\viewmodels\addFriendDialog.js" />
+    <Content Include="App\Main\viewmodels\friend\addFriendDialog.js" />
     <Content Include="App\Main\viewmodels\uploadProfilePictureDialog.js" />
     <Content Include="App\Main\viewmodels\task\edit.js" />
     <Content Include="App\Main\viewmodels\userActivityList.js" />
@@ -215,7 +215,7 @@
     <Content Include="App\Main\viewmodels\taskList.js" />
     <Content Include="App\Main\styles\briefFriendList.less" />
     <Content Include="Abp\Framework\styles\abp.less" />
-    <Content Include="App\Main\views\addFriendDialog.cshtml" />
+    <Content Include="App\Main\views\friend\addFriendDialog.cshtml" />
     <Content Include="App\Main\views\task\view.cshtml" />
     <Content Include="App\Main\views\shared\activities\activityInfo_CompleteTask.cshtml" />
     <Content Include="App\Main\views\settings.cshtml" />

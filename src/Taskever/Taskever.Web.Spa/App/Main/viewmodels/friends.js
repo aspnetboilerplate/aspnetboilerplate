@@ -64,7 +64,7 @@
             };
 
             that.showAddNewFriendDialog = function () {
-                dialogs.show('viewmodels/addFriendDialog');
+                dialogs.show('viewmodels/friend/addFriendDialog');
             };
 
             that.removeFriendship = function (friendship) {

@@ -41,6 +41,7 @@ TODO (primary):
 
 - Use capcha on registration (and in first events?)
 - Make login page attractive!
+- Better message boxes
 
 - UI refreshes:
   - Task

@@ -34,5 +34,14 @@ namespace Abp.Localization
         {
             return LocalizationManager.GetSource(sourceName).GetString(name, culture);
         }
+
+        /// <summary>
+        /// Registers a localization source.
+        /// </summary>
+        /// <typeparam name="T">Type of the localization source.</typeparam>
+        public static void RegisterSource<T>() where T : ILocalizationSource
+        {
+            LocalizationManager.RegisterSource(IocHelper.Resolve<T>());
+        }
     }
 }

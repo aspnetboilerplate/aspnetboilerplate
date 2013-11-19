@@ -125,8 +125,8 @@
 
                     if (data.error) {
 
-                        alert(data.error.message); //TODO: Show a better message!
-
+                        abp.message.error(data.error.message);
+                        
                         defer && defer.reject(data.error);
                         userOptions.error && userOptions.error(data.error);
                     }

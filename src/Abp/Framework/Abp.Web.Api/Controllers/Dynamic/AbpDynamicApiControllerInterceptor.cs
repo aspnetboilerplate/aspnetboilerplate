@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using Abp.Web.Models;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
@@ -36,7 +38,19 @@ namespace Abp.WebApi.Controllers.Dynamic
             if (typeof(T).IsAssignableFrom(invocation.Method.DeclaringType))
             {
                 //Call real object's method
-                invocation.ReturnValue = invocation.Method.Invoke(_proxiedObject, invocation.Arguments);
+                try
+                {
+                    invocation.ReturnValue = invocation.Method.Invoke(_proxiedObject, invocation.Arguments);
+                }
+                catch (TargetInvocationException targetInvocation)
+                {
+                    if (targetInvocation.InnerException != null)
+                    {
+                        throw targetInvocation.InnerException;
+                    }
+
+                    throw;
+                }
             }
             else
             {

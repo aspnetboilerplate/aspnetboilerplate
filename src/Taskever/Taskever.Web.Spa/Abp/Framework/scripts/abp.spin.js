@@ -43,7 +43,7 @@
         }
 
         if (options.promise) {
-            options.promise.then(function() {
+            options.promise.always(function() {
                 abp.ui.clearBusy(elm);
             });
         }
