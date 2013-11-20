@@ -29,11 +29,27 @@ TODO (primary):
   + Add friend: Validate?
   - Update Friendship.LastVisitDate
 
-- Activities
-  - When a task deleted!
-  - When a friendship cancelled?
-  - When 'do not fallow' checked!
-  - so on...
+Activity stream (home)
+- Tasks
+  - Creating a task
+    - To all fallowers of Creator user
+    - To all fallowers of Assigned user
+  - Re-assigning a task
+    - To all fallowers of Assigned user
+  - Completing a task
+    - To all fallowers of completing user
+  - Friendship
+    - A user accepted a friendship of YOUR
+	- A user sent friendship request to YOU
+
+Activity stream (user)
+- Tasks
+  - USER created a task
+  - USED is assigned to a task
+  - A task is completed by this USER
+
+RULES
+- A task can only be completed by assigned user
 
 - Localization for all pages
 
@@ -43,7 +59,7 @@ TODO (primary):
 - Make login page attractive!
 - Better message boxes
 
-- UI refreshes:
+- Auto refresh UI
   - Task
     - Delete
   - Friendship
@@ -72,3 +88,9 @@ TODO (secondary):
 
 
 - Check livestamp's performance!
+
+FUTURE:
+- Dashboard?
+- Project
+  - Created by you
+  - Assigned to you
