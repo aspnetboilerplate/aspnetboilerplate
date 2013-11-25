@@ -94,3 +94,8 @@ FUTURE:
 - Project
   - Created by you
   - Assigned to you
+
+ -------------------------------
+
+ DB:
+ Friendship -> UserId, FriendUserId index'i

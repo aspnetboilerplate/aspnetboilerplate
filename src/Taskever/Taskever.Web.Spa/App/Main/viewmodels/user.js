@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'plugins/history', 'service!abp/user'],
-    function ($, history, userService) {
+    ['jquery', 'plugins/history', 'service!abp/user', 'service!taskever/friendship'],
+    function ($, history, userService, friendshipService) {
 
         var _defaultUrlAgs = {
             activeSection: 'UserActivities'
@@ -15,18 +15,19 @@
 
             // Public fields //////////////////////////////////////////////////////
 
-            that.userId = null; //TODO: Remove this, use user.Id() ?
             that.user = ko.mapping.fromJS({});
 
             // Public methods /////////////////////////////////////////////////////
 
             that.canActivate = function (userId, urlArgs) {
-                that.userId = userId;
                 _urlArgs = $.extend({}, _defaultUrlAgs, urlArgs);
                 return userService.getUser({
                     userId: userId
                 }).done(function (data) {
                     ko.mapping.fromJS(data.user, that.user);
+                    friendshipService.updateLastVisitTime({
+                        friendUserId: userId
+                    });
                 });
             };
 
@@ -37,7 +38,7 @@
                     $(this).tab('show');
 
                     //TODO: This is experimental now, find a more proper way of doing this!
-                    history.navigate('user/' + that.userId + '?activeSection=' + $(this).attr('href').substr(1), {
+                    history.navigate('user/' + that.user().id() + '?activeSection=' + $(this).attr('href').substr(1), {
                         trigger: false
                     });
                 });

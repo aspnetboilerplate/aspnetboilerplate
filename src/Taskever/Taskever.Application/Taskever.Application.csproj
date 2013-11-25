@@ -98,6 +98,8 @@
     <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\UpdateTaskInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\UpdateTaskOutput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\UpdateLastVisitTimeInput.cs" />
+    <Compile Include="Application\Services\Dto\Friendships\UpdateLastVisitTimeOutput.cs" />
     <Compile Include="Dependency\Installers\TaskeverAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverAppModule.cs" />

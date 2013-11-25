@@ -20,5 +20,7 @@ namespace Taskever.Application.Services
         RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input);
 
         CancelFriendshipRequestOutput CancelFriendshipRequest(CancelFriendshipRequestInput input);
+
+        UpdateLastVisitTimeOutput UpdateLastVisitTime(UpdateLastVisitTimeInput input);
     }
 }

@@ -38,7 +38,7 @@ namespace Taskever.Application.Services.Impl
         {
             var friendships = _friendshipRepository.GetAllWithFriendUser(User.CurrentUserId);
             var list = friendships.OrderByDescending(friendship => friendship.LastVisitTime).Take(input.MaxResultCount).ToList();
-            return new GetFriendshipsByMostActiveOutput {Friendships = list.MapIList<Friendship, FriendshipDto>() };
+            return new GetFriendshipsByMostActiveOutput { Friendships = list.MapIList<Friendship, FriendshipDto>() };
         }
 
         [UnitOfWork]
@@ -83,7 +83,7 @@ namespace Taskever.Application.Services.Impl
 
             var friendShip = Friendship.CreateAsRequest(currentUser, friendUser);
             _friendshipRepository.Insert(friendShip);
-            
+
             return new SendFriendshipRequestOutput();
         }
 
@@ -93,7 +93,7 @@ namespace Taskever.Application.Services.Impl
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
 
-            if(!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
+            if (!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
             {
                 throw new ApplicationException("Can not remove this friendship!"); //TODO: User friendliy exception
             }
@@ -116,7 +116,7 @@ namespace Taskever.Application.Services.Impl
 
         public virtual RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input)
         {
-            RemoveFriendship(new RemoveFriendshipInput {Id = input.Id});
+            RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
             return new RejectFriendshipOutput();
         }
 
@@ -124,6 +124,18 @@ namespace Taskever.Application.Services.Impl
         {
             RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
             return new CancelFriendshipRequestOutput();
+        }
+
+        [UnitOfWork]
+        public UpdateLastVisitTimeOutput UpdateLastVisitTime(UpdateLastVisitTimeInput input)
+        {
+            var friendship = _friendshipRepository.GetOrNull(User.CurrentUserId, input.FriendUserId);
+            if (friendship != null)
+            {
+                friendship.LastVisitTime = DateTime.Now;
+            }
+
+            return new UpdateLastVisitTimeOutput();
         }
     }
 }
