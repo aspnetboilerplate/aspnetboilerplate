@@ -55,4 +55,14 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             }
         }
     }
+
+    ///// <summary>
+    ///// This class is base class to map entities to database tables.
+    ///// </summary>
+    ///// <typeparam name="TEntity">Entity type</typeparam>
+    ///// <typeparam name="TPrimaryKey">Type of primary key of the entity</typeparam>
+    //public abstract class SubclassEntityMap<TEntity, TPrimaryKey> : SubclassMap<TEntity> where TEntity : IEntity<TPrimaryKey>
+    //{
+
+    //}
 }

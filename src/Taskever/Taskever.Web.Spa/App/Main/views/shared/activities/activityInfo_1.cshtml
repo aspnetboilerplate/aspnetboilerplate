@@ -1,0 +1,7 @@
+﻿<img src="/App/_Common/images/task_add.png" width="16" height="16" style="margin-right: 4px" alt="" />
+<a data-bind="html: creatorUser.name(), attr: { href: '#user/' + creatorUser.id() }"></a>
+"<i><b><a data-bind="html: task.title(), attr: { href: '#task/' + task.id() }"></a></b></i>"
+görevini oluşturup 
+<a data-bind="html: assignedUser.name(), attr: { href: '#user/' + assignedUser.id() }"></a>
+kullanıcısına atadı.
+<i class="text-muted"><span data-bind="text: moment(creationTime()).fromNow(), attr: { 'data-livestamp': creationTime(), title: moment(creationTime()) }"></span></i>

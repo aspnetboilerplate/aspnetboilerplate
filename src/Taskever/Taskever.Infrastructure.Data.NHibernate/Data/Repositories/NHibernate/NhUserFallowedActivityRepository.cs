@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Data.Repositories.NHibernate;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Entities.Activities;
 
 namespace Taskever.Data.Repositories.NHibernate
 {

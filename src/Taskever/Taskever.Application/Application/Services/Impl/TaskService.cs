@@ -11,6 +11,7 @@ using Taskever.Application.Services.Dto.Tasks;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Enums;
 using Taskever.Domain.Services;
 
@@ -107,16 +108,23 @@ namespace Taskever.Application.Services.Impl
             _taskRepository.Insert(taskEntity);
 
             //Add to activities (TODO: This must be done by events, not directly by Task service?)
-            _activityService.AddActivity(
-                new CreateTaskActivityInfo(
-                    creatorUser.Id,
-                    creatorUser.NameAndSurname,
-                    taskEntity.Id,
-                    taskEntity.Title,
-                    assignedUser.Id,
-                    assignedUser.NameAndSurname
-                    )
-                );
+            //_activityService.AddActivity(
+            //    new CreateTaskActivityInfo(
+            //        creatorUser.Id,
+            //        creatorUser.NameAndSurname,
+            //        taskEntity.Id,
+            //        taskEntity.Title,
+            //        assignedUser.Id,
+            //        assignedUser.NameAndSurname
+            //        )
+            //    );
+
+            _activityService.AddActivity(new CreateTaskActivity
+                                             {
+                                                 CreatorUser = creatorUser,
+                                                 AssignedUser = assignedUser,
+                                                 Task = taskEntity
+                                             });
 
             return new CreateTaskOutput
                        {
@@ -154,14 +162,19 @@ namespace Taskever.Application.Services.Impl
             //TODO: Write a 'task complete' activity if needed
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
-                _activityService.AddActivity(
-                    new CompleteTaskActivityInfo(
-                        task.Id,
-                        task.Title,
-                        task.AssignedUser.Id,
-                        task.AssignedUser.NameAndSurname
-                        )
-                    );
+                //_activityService.AddActivity(
+                //    new CompleteTaskActivityInfo(
+                //        task.Id,
+                //        task.Title,
+                //        task.AssignedUser.Id,
+                //        task.AssignedUser.NameAndSurname
+                //        )
+                //    );
+                _activityService.AddActivity(new CompleteTaskActivity
+                                                 {
+                                                     AssignedUser = task.AssignedUser,
+                                                     Task = task
+                                                 });
             }
 
             return new UpdateTaskOutput();

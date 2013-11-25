@@ -1,10 +1,12 @@
 using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Data.Repositories;
+using Abp.Utils.Extensions;
 using Castle.Core.Logging;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Entities.Activities;
 
 namespace Taskever.Domain.Services.Impl
 {
@@ -18,9 +20,9 @@ namespace Taskever.Domain.Services.Impl
         public ILogger Logger { get; set; }
 
         public ActivityService(
-            IUserRepository userRepository, 
-            IFriendshipRepository friendshipRepository, 
-            IActivityRepository activityRepository, 
+            IUserRepository userRepository,
+            IFriendshipRepository friendshipRepository,
+            IActivityRepository activityRepository,
             IUserFallowedActivityRepository userFallowedActivityRepository)
         {
             _userRepository = userRepository;
@@ -30,23 +32,24 @@ namespace Taskever.Domain.Services.Impl
         }
 
         [UnitOfWork]
-        public void AddActivity(ActivityInfo activityData)
+        public void AddActivity(Activity activity)
         {
-            var activity = new Activity
-                              {
-                                  Data = activityData.SerializeData(),
-                                  ActorUser = _userRepository.Load(activityData.GetActorUserId()),
-                                  Action = activityData.Action
-                              };
             _activityRepository.Insert(activity);
-
             //TODO: Make this in a new thread (also check connection creation for the new thread)
             CreateUserFallowedActivities(activity);
         }
 
         protected virtual void CreateUserFallowedActivities(Activity activity)
         {
-            var fallowerUserIds = _friendshipRepository.Query(q => q.Where(f => f.Friend.Id == activity.ActorUser.Id && f.FallowActivities).Select(f => f.User.Id));
+            var actors = activity.GetActors();
+            if (actors.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var actorIds = actors.Select(user => user.Id).ToList();
+
+            var fallowerUserIds = _friendshipRepository.Query(q => q.Where(f => actorIds.Contains(f.Friend.Id) && f.FallowActivities).Select(f => f.User.Id));
             foreach (var fallowerUserId in fallowerUserIds)
             {
                 _userFallowedActivityRepository.Insert(

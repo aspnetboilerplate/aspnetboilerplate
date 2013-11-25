@@ -77,7 +77,7 @@
     <Compile Include="Domain\Services\IFriendshipDomainService.cs" />
     <Compile Include="Domain\Services\Impl\ActivityService.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
-    <Compile Include="Domain\Entities\Activity.cs" />
+    <Compile Include="Domain\Entities\Activities\Activity.cs" />
     <Compile Include="Domain\Business\Acitivities\ActivityInfo.cs" />
     <Compile Include="Domain\Enums\ActivityAction.cs" />
     <Compile Include="Domain\Entities\UserFallowedActivity.cs" />

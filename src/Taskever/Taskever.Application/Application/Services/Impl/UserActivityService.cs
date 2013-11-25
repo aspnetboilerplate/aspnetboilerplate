@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
+using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.Activities;
 using Taskever.Data.Repositories;
+using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Services;
 
 namespace Taskever.Application.Services.Impl
@@ -29,7 +32,7 @@ namespace Taskever.Application.Services.Impl
             var activities = _fallowedActivityRepository.GetActivities(input.FallowerUserId, input.MaxResultCount, input.BeforeFallowedActivityId);
             return new GetFallowedActivitiesOutput
                        {
-                           Activities = activities.Select(ActivityDto.CreateFromActivity).ToList()
+                           Activities = null //activities.Select(ActivityDto.CreateFromActivity).ToList()
                        };
         }
 
@@ -43,16 +46,20 @@ namespace Taskever.Application.Services.Impl
             {
                 throw new AbpUserFriendlyException("Can not see activities of this user!");
             }
-            
-            var activities = _activityRepository.Query(
-                q => q.Where(activity => activity.ActorUser.Id == input.UserId && activity.Id < input.BeforeActivityId)
+
+            var activities = _fallowedActivityRepository.Query(
+                q => q.Where(fa => fa.IsActor && fa.User.Id == input.UserId)
                     .OrderByDescending(activity => activity.Id)
                     .Take(input.MaxResultCount)
-                    .ToList());
+                    .Select(fa => fa.Activity)
+                    .ToList()
+                );
+
+            var activityDtos = activities.MapIList<Activity, ActivityDto>();
 
             return new GetUserActivitiesOutput
             {
-                Activities = activities.Select(ActivityDto.CreateFromActivity).ToList()
+                Activities = activityDtos
             };
         }
     }

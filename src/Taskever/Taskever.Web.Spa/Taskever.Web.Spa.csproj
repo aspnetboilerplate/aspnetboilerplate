@@ -217,14 +217,14 @@
     <Content Include="Abp\Framework\styles\abp.less" />
     <Content Include="App\Main\views\friend\addFriendDialog.cshtml" />
     <Content Include="App\Main\views\task\view.cshtml" />
-    <Content Include="App\Main\views\shared\activities\activityInfo_CompleteTask.cshtml" />
+    <Content Include="App\Main\views\shared\activities\activityInfo_2.cshtml" />
     <Content Include="App\Main\views\settings.cshtml" />
     <Content Include="App\Main\views\userActivityList.cshtml" />
     <Content Include="App\Main\views\task\edit.cshtml" />
     <Content Include="App\Main\views\uploadProfilePictureDialog.cshtml" />
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
-    <None Include="App\Main\views\shared\activities\activityInfo_CreateTask.cshtml" />
+    <None Include="App\Main\views\shared\activities\activityInfo_1.cshtml" />
     <Content Include="App\_Common\images\user\user_blue.png" />
     <Content Include="App\_Common\images\user\user_cyan.png" />
     <Content Include="App\_Common\images\user\user_green.png" />

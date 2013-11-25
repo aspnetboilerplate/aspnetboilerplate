@@ -10,6 +10,7 @@ namespace Taskever.Entities.NHibernate.Mappings
         {
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Activity).Column("ActivityId").LazyLoad();
+            Map(x => x.IsActor);
             Map(x => x.CreationTime);
         }
     }
