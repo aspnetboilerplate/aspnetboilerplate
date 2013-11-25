@@ -27,7 +27,7 @@ TODO (primary):
 - Friendship
   + Remove friend: confirm
   + Add friend: Validate?
-  - Update Friendship.LastVisitDate
+  + Update Friendship.LastVisitDate
 
 Activity stream (home)
 - Tasks
