@@ -1,7 +1,7 @@
 ﻿define(['durandal/app', 'session', 'service!taskever/userActivity', 'knockout', 'underscore'],
     function (app, session, userActivityService, ko, _) {
 
-        var _maxResultCountOnce = 20;
+        var _maxResultCountOnce = 2;
 
         return function () {
             var that = this;

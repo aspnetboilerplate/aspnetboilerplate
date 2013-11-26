@@ -24,7 +24,7 @@ TODO (primary):
 	+ delete: confirmation!
 	+ cancel: do not modify screen!
 
-- Friendship
++ Friendship
   + Remove friend: confirm
   + Add friend: Validate?
   + Update Friendship.LastVisitDate

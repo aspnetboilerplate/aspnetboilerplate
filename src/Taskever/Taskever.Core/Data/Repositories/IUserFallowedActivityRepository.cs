@@ -5,7 +5,7 @@ using Taskever.Domain.Entities.Activities;
 
 namespace Taskever.Data.Repositories
 {
-    public interface IUserFallowedActivityRepository :  IRepository<UserFallowedActivity, long>
+    public interface IUserFollowedActivityRepository :  IRepository<UserFollowedActivity, long>
     {
         IList<Activity> GetActivities(int fallowerUserId, int maxResultCount, long beforeFallowedActivityId);
     }

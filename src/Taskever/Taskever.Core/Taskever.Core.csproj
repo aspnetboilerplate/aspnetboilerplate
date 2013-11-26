@@ -80,7 +80,7 @@
     <Compile Include="Domain\Entities\Activities\Activity.cs" />
     <Compile Include="Domain\Business\Acitivities\ActivityInfo.cs" />
     <Compile Include="Domain\Enums\ActivityAction.cs" />
-    <Compile Include="Domain\Entities\UserFallowedActivity.cs" />
+    <Compile Include="Domain\Entities\UserFollowedActivity.cs" />
     <Compile Include="Domain\Entities\Friendship.cs" />
     <Compile Include="Domain\Enums\FriendshipStatus.cs" />
     <Compile Include="Domain\Entities\Task.cs" />

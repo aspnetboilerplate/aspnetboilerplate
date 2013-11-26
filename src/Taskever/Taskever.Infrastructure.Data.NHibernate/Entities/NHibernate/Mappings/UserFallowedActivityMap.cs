@@ -3,10 +3,10 @@ using Taskever.Domain.Entities;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {
-    public class UserFallowedActivityMap : EntityMap<UserFallowedActivity, long>
+    public class UserFollowedActivityMap : EntityMap<UserFollowedActivity, long>
     {
-        public UserFallowedActivityMap()
-            : base("TeUserFallowedActivities")
+        public UserFollowedActivityMap()
+            : base("TeUserFollowedActivities")
         {
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Activity).Column("ActivityId").LazyLoad();

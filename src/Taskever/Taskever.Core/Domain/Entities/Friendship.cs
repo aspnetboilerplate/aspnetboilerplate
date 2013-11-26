@@ -16,7 +16,7 @@ namespace Taskever.Domain.Entities
         /// <summary>
         /// Is <see cref="User"/> fallowing activities of the <see cref="Friend"/>?
         /// </summary>
-        public virtual bool FallowActivities { get; set; }
+        public virtual bool FollowActivities { get; set; }
 
         /// <summary>
         /// Can <see cref="Friend"/> assign tasks to the <see cref="User"/>?
@@ -40,7 +40,7 @@ namespace Taskever.Domain.Entities
             CreationTime = DateTime.Now;
             LastVisitTime = DateTime.Now;
             CanAssignTask = true;
-            FallowActivities = true;
+            FollowActivities = true;
         }
 
         public virtual void AcceptBy(User acceptorUser)

@@ -13,7 +13,7 @@ namespace Taskever.Entities.NHibernate.Mappings
             References(x => x.Pair).Column("PairFriendshipId").Cascade.All();
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Friend).Column("FriendUserId").LazyLoad();
-            Map(x => x.FallowActivities);
+            Map(x => x.FollowActivities);
             Map(x => x.CanAssignTask);
             Map(x => x.LastVisitTime);
             Map(x => x.CreationTime);

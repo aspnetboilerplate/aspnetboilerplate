@@ -3,11 +3,11 @@ using FluentMigrator;
 namespace Taskever.Data.Migrations.V20131007
 {
     [Migration(2013100702)]
-    public class _02_CreateTeUserFallowedActivitiesTable : Migration
+    public class _02_CreateTeUserFollowedActivitiesTable : Migration
     {
         public override void Up()
         {
-            Create.Table("TeUserFallowedActivities")
+            Create.Table("TeUserFollowedActivities")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
                 .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("ActivityId").AsInt64().NotNullable().ForeignKey("TeActivities", "Id")

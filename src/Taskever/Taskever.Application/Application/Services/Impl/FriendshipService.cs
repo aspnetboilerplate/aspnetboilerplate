@@ -61,7 +61,7 @@ namespace Taskever.Application.Services.Impl
 
             if (input.FallowActivities.HasValue)
             {
-                friendShip.FallowActivities = input.FallowActivities.Value;
+                friendShip.FollowActivities = input.FallowActivities.Value;
             }
 
             _friendshipRepository.Update(friendShip);

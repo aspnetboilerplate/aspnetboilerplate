@@ -5,7 +5,7 @@ using Taskever.Domain.Entities.Activities;
 
 namespace Taskever.Domain.Entities
 {
-    public class UserFallowedActivity : Entity<long>
+    public class UserFollowedActivity : Entity<long>
     {
         public virtual User User { get; set; }
 
@@ -15,7 +15,7 @@ namespace Taskever.Domain.Entities
 
         public virtual bool IsActor { get; set; }
 
-        public UserFallowedActivity()
+        public UserFollowedActivity()
         {
             CreationTime = DateTime.Now;
         }

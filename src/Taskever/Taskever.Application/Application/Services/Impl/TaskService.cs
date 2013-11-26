@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
@@ -9,7 +8,6 @@ using Abp.Utils.Extensions;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.Tasks;
 using Taskever.Data.Repositories;
-using Taskever.Domain.Business.Acitivities;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Enums;
@@ -20,12 +18,15 @@ namespace Taskever.Application.Services.Impl
     public class TaskService : ITaskService
     {
         private readonly IActivityService _activityService;
+        private readonly ITaskPrivilegeService _taskPrivilegeService;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
 
-        private readonly ITaskPrivilegeService _taskPrivilegeService;
-
-        public TaskService(IActivityService activityService, ITaskRepository taskRepository, IUserRepository userRepository, ITaskPrivilegeService taskPrivilegeService)
+        public TaskService(
+            IActivityService activityService, 
+            ITaskPrivilegeService taskPrivilegeService,
+            ITaskRepository taskRepository, 
+            IUserRepository userRepository)
         {
             _activityService = activityService;
             _taskRepository = taskRepository;
@@ -107,24 +108,13 @@ namespace Taskever.Application.Services.Impl
             taskEntity.State = TaskState.New;
             _taskRepository.Insert(taskEntity);
 
-            //Add to activities (TODO: This must be done by events, not directly by Task service?)
-            //_activityService.AddActivity(
-            //    new CreateTaskActivityInfo(
-            //        creatorUser.Id,
-            //        creatorUser.NameAndSurname,
-            //        taskEntity.Id,
-            //        taskEntity.Title,
-            //        assignedUser.Id,
-            //        assignedUser.NameAndSurname
-            //        )
-            //    );
-
-            _activityService.AddActivity(new CreateTaskActivity
-                                             {
-                                                 CreatorUser = creatorUser,
-                                                 AssignedUser = assignedUser,
-                                                 Task = taskEntity
-                                             });
+            _activityService.AddActivity(
+                new CreateTaskActivity
+                    {
+                        CreatorUser = creatorUser,
+                        AssignedUser = assignedUser,
+                        Task = taskEntity
+                    });
 
             return new CreateTaskOutput
                        {

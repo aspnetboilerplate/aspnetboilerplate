@@ -13,7 +13,7 @@ namespace Taskever.Data.Migrations.V20130916
                 .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("PairFriendshipId").AsInt32().Nullable().ForeignKey("TeFriendships", "Id") //TODO: Removed cascade update and delete! Test it!
                 .WithColumn("FriendUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("FallowActivities").AsBoolean().NotNullable().WithDefaultValue(true)
+                .WithColumn("FollowActivities").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithColumn("CanAssignTask").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("LastVisitTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)

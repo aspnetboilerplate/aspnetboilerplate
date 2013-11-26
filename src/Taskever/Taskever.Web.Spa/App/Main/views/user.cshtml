@@ -9,8 +9,8 @@
         <li><a href="#UserCompletedTasks">Completed tasks</a></li>
     </ul>
     <div class="tab-content" style="margin-top: 10px;">
-        <div class="tab-pane active" id="UserActivities" data-bind="compose: { model: 'viewmodels/userActivityList', activationData: { userId: userId } }"></div>
-        <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [1, 2] } }"></div>
-        <div class="tab-pane" id="UserCompletedTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: userId, taskStates: [3] } }"></div>
+        <div class="tab-pane active" id="UserActivities" data-bind="compose: { model: 'viewmodels/userActivityList', activationData: { userId: user.id() } }"></div>
+        <div class="tab-pane" id="UserCurrentTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: user.id(), taskStates: [1, 2] } }"></div>
+        <div class="tab-pane" id="UserCompletedTasks" data-bind="compose: { model: 'viewmodels/taskList', activationData: { assignedUserId: user.id(), taskStates: [3] } }"></div>
     </div>
 </section>

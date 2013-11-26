@@ -15,11 +15,11 @@ namespace Taskever.Application.Services.Impl
     public class UserActivityService : IUserActivityService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IUserFallowedActivityRepository _fallowedActivityRepository;
+        private readonly IUserFollowedActivityRepository _fallowedActivityRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public UserActivityService(IUserRepository userRepository, IUserFallowedActivityRepository fallowedActivityRepository, IActivityRepository activityRepository, IFriendshipDomainService friendshipDomainService)
+        public UserActivityService(IUserRepository userRepository, IUserFollowedActivityRepository fallowedActivityRepository, IActivityRepository activityRepository, IFriendshipDomainService friendshipDomainService)
         {
             _userRepository = userRepository;
             _fallowedActivityRepository = fallowedActivityRepository;
@@ -27,12 +27,13 @@ namespace Taskever.Application.Services.Impl
             _friendshipDomainService = friendshipDomainService;
         }
 
+        [UnitOfWork]
         public GetFallowedActivitiesOutput GetFallowedActivities(GetFallowedActivitiesInput input)
         {
             var activities = _fallowedActivityRepository.GetActivities(input.FallowerUserId, input.MaxResultCount, input.BeforeFallowedActivityId);
             return new GetFallowedActivitiesOutput
                        {
-                           Activities = null //activities.Select(ActivityDto.CreateFromActivity).ToList()
+                           Activities = activities.MapIList<Activity, ActivityDto>()
                        };
         }
 
@@ -48,7 +49,7 @@ namespace Taskever.Application.Services.Impl
             }
 
             var activities = _fallowedActivityRepository.Query(
-                q => q.Where(fa => fa.IsActor && fa.User.Id == input.UserId)
+                q => q.Where(fa => fa.User.Id == input.UserId && fa.IsActor)
                     .OrderByDescending(activity => activity.Id)
                     .Take(input.MaxResultCount)
                     .Select(fa => fa.Activity)
