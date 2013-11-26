@@ -5,6 +5,6 @@ namespace Taskever.Application.Services.Dto.Activities
 {
     public class GetUserActivitiesOutput : IOutputDto
     {
-        public IList<ActivityDto> Activities { get; set; }
+        public IList<UserFollowedActivityDto> Activities { get; set; }
     }
 }

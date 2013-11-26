@@ -16,6 +16,8 @@ namespace Taskever.Domain.Entities.Activities
         }
 
         public abstract User[] GetActors();
+
+        public abstract User[] GetRelatedUsers();
     }
 
     public class CreateTaskActivity : Activity //: TaskActivity
@@ -35,6 +37,11 @@ namespace Taskever.Domain.Entities.Activities
         {
             return new [] {CreatorUser, AssignedUser};
         }
+
+        public override User[] GetRelatedUsers()
+        {
+            return new User[] { };
+        }
     }
 
     public class CompleteTaskActivity : Activity //: TaskActivity
@@ -51,6 +58,11 @@ namespace Taskever.Domain.Entities.Activities
         public override User[] GetActors()
         {
             return new [] { AssignedUser };
+        }
+
+        public override User[] GetRelatedUsers()
+        {
+            return new[] {Task.CreatorUser};
         }
     }
 

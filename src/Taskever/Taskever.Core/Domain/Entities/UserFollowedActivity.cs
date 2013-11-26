@@ -11,9 +11,11 @@ namespace Taskever.Domain.Entities
 
         public virtual Activity Activity { get; set; }
 
-        public virtual DateTime CreationTime { get; set; }
-
         public virtual bool IsActor { get; set; }
+
+        public virtual bool IsRelated { get; set; }
+
+        public virtual DateTime CreationTime { get; set; }
 
         public UserFollowedActivity()
         {

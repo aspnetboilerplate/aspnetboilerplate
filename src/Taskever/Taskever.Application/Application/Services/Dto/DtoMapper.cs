@@ -10,6 +10,7 @@ namespace Taskever.Application.Services.Dto
     {
         public static void Map()
         {
+            //TODO: Check unnecessary ReverseMaps
             AutoMapper.Mapper.CreateMap<Task, TaskDto>().ReverseMap();
             AutoMapper.Mapper.CreateMap<Task, TaskWithAssignedUserDto>().ReverseMap();
             AutoMapper.Mapper.CreateMap<Friendship, FriendshipDto>().ReverseMap();
@@ -17,10 +18,11 @@ namespace Taskever.Application.Services.Dto
             AutoMapper.Mapper
                 .CreateMap<Activity, ActivityDto>()
                 .Include<CreateTaskActivity, CreateTaskActivityDto>()
-                .Include<CompleteTaskActivity, CompleteTaskActivityDto>()
-                .ReverseMap();
+                .Include<CompleteTaskActivity, CompleteTaskActivityDto>();
             AutoMapper.Mapper.CreateMap<CreateTaskActivity, CreateTaskActivityDto>();
             AutoMapper.Mapper.CreateMap<CompleteTaskActivity, CompleteTaskActivityDto>();
+
+            AutoMapper.Mapper.CreateMap<UserFollowedActivity, UserFollowedActivityDto>();
         }
     }
 }

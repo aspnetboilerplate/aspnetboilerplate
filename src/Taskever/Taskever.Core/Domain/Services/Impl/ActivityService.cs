@@ -42,6 +42,7 @@ namespace Taskever.Domain.Services.Impl
         protected virtual void CreateUserFallowedActivities(Activity activity)
         {
             //TODO: Run this method in a new thread (check connection creation)
+            //TODO: Maybe optimized by creating a stored procedure?
 
             //Get user id's of all actors of this activity
             var actorUserIds = activity.GetActors().Select(user => user.Id).ToList();
@@ -57,6 +58,12 @@ namespace Taskever.Domain.Services.Impl
             //Add also actors (if not includes)
             followerUserIds = followerUserIds.Union(actorUserIds).ToList();
 
+            //Get id's of all related users of this activity
+            var relatedUserIds = activity.GetRelatedUsers().Select(user => user.Id).ToList();
+
+            //Add also related users (if not includes)
+            followerUserIds = followerUserIds.Union(relatedUserIds).ToList();
+
             //Add one entity for each fallower and actor
             foreach (var fallowerUserId in followerUserIds)
             {
@@ -65,7 +72,8 @@ namespace Taskever.Domain.Services.Impl
                         {
                             User = _userRepository.Load(fallowerUserId),
                             Activity = activity,
-                            IsActor = actorUserIds.Contains(fallowerUserId)
+                            IsActor = actorUserIds.Contains(fallowerUserId),
+                            IsRelated = relatedUserIds.Contains(fallowerUserId)
                         });
             }
         }

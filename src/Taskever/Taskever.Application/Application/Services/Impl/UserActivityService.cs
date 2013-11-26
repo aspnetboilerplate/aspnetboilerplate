@@ -7,6 +7,7 @@ using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.Activities;
 using Taskever.Data.Repositories;
+using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Services;
 
@@ -43,20 +44,21 @@ namespace Taskever.Application.Services.Impl
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var user = _userRepository.Load(input.UserId);
 
+            //Can see activities of this user?
             if (currentUser.Id != user.Id && !_friendshipDomainService.HasFriendship(user, currentUser))
             {
                 throw new AbpUserFriendlyException("Can not see activities of this user!");
             }
 
             var activities = _fallowedActivityRepository.Query(
-                q => q.Where(fa => fa.User.Id == input.UserId && fa.IsActor)
-                    .OrderByDescending(activity => activity.Id)
+                q => q.Where(fa => fa.User.Id == input.UserId && fa.IsActor && fa.Id < input.BeforeActivityId)
+                    .OrderByDescending(fa => fa.Id)
                     .Take(input.MaxResultCount)
-                    .Select(fa => fa.Activity)
+                    .Select(fa => fa)
                     .ToList()
                 );
 
-            var activityDtos = activities.MapIList<Activity, ActivityDto>();
+            var activityDtos = activities.MapIList<UserFollowedActivity, UserFollowedActivityDto>();
 
             return new GetUserActivitiesOutput
             {

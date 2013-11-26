@@ -29,6 +29,10 @@ TODO (primary):
   + Add friend: Validate?
   + Update Friendship.LastVisitDate
 
+- Return UserFollowedActivity, instead of activity! Edit pages for that!
+  - Show actor & related activities different
+  - Show profile images of actors of the activity!
+
 Activity stream (home)
 - Tasks
   - Creating a task

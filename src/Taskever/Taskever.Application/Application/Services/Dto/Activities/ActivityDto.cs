@@ -6,10 +6,10 @@ using Taskever.Domain.Entities.Activities;
 
 namespace Taskever.Application.Services.Dto.Activities
 {
-    public class ActivityDto : EntityDto<long>, IOutputDto
+    public class ActivityDto : EntityDto<long>
     {
         public ActivityType ActivityType { get; set; }
-        
+
         public DateTime CreationTime { get; set; }
     }
 
@@ -27,5 +27,18 @@ namespace Taskever.Application.Services.Dto.Activities
         public UserDto AssignedUser { get; set; }
 
         public TaskDto Task { get; set; }
+    }
+
+    public class UserFollowedActivityDto : EntityDto<long>
+    {
+        public UserDto User { get; set; }
+
+        public ActivityDto Activity { get; set; }
+
+        public bool IsActor { get; set; }
+
+        public bool IsRelated { get; set; }
+
+        public DateTime CreationTime { get; set; }
     }
 }
