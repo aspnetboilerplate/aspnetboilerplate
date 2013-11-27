@@ -15,10 +15,10 @@
         };
 
         that.loadActivities = function () {
-            userActivityService.getFallowedActivities({
-                fallowerUserId: session.getCurrentUser().id(),
+            userActivityService.getFollowedActivities({
+                userId: session.getCurrentUser().id(),
+                beforeId: _minShownActivityId,
                 maxResultCount: _maxResultCountOnce,
-                beforeFallowedActivityId: _minShownActivityId
             }).done(function (data) {
                 if (data.activities.length > 0) {
                     _minShownActivityId = _.last(data.activities).id;
