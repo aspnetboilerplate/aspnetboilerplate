@@ -53,6 +53,7 @@ namespace Abp.Data.Startup
                                       mapping(m);
                                   }
                               })
+                //.Cache(c => c.ProviderClass<MemCache>().UseSecondLevelCache()) //TODO: Cache!
                 .BuildSessionFactory();
         }
     }
