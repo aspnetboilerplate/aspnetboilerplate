@@ -3,21 +3,25 @@ using Abp.Application.Services.Dto;
 
 namespace Taskever.Application.Services.Dto.Activities
 {
-    public class GetUserActivitiesInput : IInputDto, ILimitedResultRequest
+    public class GetFollowedActivitiesInput : IInputDto, ILimitedResultRequest
     {
         private const int MaxMaxResultCount = 100;
 
         [Range(1, int.MaxValue)]
         public int UserId { get; set; }
-        
+
+        public bool? IsActor { get; set; }
+
+        [Range(1, long.MaxValue)]
+        public long BeforeId { get; set; }
+
         [Range(1, MaxMaxResultCount)]
         public int MaxResultCount { get; set; }
 
-        public int BeforeId { get; set; }
-
-        public GetUserActivitiesInput()
+        public GetFollowedActivitiesInput()
         {
-            BeforeId = int.MaxValue;
+            BeforeId = long.MaxValue;
+            MaxResultCount = MaxMaxResultCount;
         }
     }
 }

@@ -5,8 +5,6 @@ namespace Taskever.Application.Services
 {
     public interface IUserActivityService : IApplicationService
     {
-        GetFallowedActivitiesOutput GetFallowedActivities(GetFallowedActivitiesInput input);
-        
-        GetUserActivitiesOutput GetUserActivities(GetUserActivitiesInput input);
+        GetFollowedActivitiesOutput GetFollowedActivities(GetFollowedActivitiesInput input);
     }
 }

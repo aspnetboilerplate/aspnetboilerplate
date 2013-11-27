@@ -1,5 +1,5 @@
 ﻿<ul class="list-group" data-bind="foreach: activities">
-    <li class="list-group-item" data-bind="compose: 'shared/activities/activityInfo_' + activityType() + '.html'"></li>
+    <li class="list-group-item" data-bind="compose: 'shared/activities/activityInfo_' + activity.activityType() + '.html'"></li>
 </ul>
 <div data-bind="if: hasMoreActivities">
     <button data-bind="click: loadActivities" type="button" class="btn btn-primary btn-block">Show older activities</button>

@@ -16,30 +16,20 @@ namespace Taskever.Application.Services.Impl
     public class UserActivityService : IUserActivityService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IUserFollowedActivityRepository _fallowedActivityRepository;
+        private readonly IUserFollowedActivityRepository _followedActivityRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public UserActivityService(IUserRepository userRepository, IUserFollowedActivityRepository fallowedActivityRepository, IActivityRepository activityRepository, IFriendshipDomainService friendshipDomainService)
+        public UserActivityService(IUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IActivityRepository activityRepository, IFriendshipDomainService friendshipDomainService)
         {
             _userRepository = userRepository;
-            _fallowedActivityRepository = fallowedActivityRepository;
+            _followedActivityRepository = followedActivityRepository;
             _activityRepository = activityRepository;
             _friendshipDomainService = friendshipDomainService;
         }
 
         [UnitOfWork]
-        public GetFallowedActivitiesOutput GetFallowedActivities(GetFallowedActivitiesInput input)
-        {
-            var activities = _fallowedActivityRepository.GetActivities(input.FallowerUserId, input.MaxResultCount, input.BeforeFallowedActivityId);
-            return new GetFallowedActivitiesOutput
-                       {
-                           Activities = activities.MapIList<Activity, ActivityDto>()
-                       };
-        }
-
-        [UnitOfWork]
-        public GetUserActivitiesOutput GetUserActivities(GetUserActivitiesInput input)
+        public GetFollowedActivitiesOutput GetFollowedActivities(GetFollowedActivitiesInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var user = _userRepository.Load(input.UserId);
@@ -50,20 +40,26 @@ namespace Taskever.Application.Services.Impl
                 throw new AbpUserFriendlyException("Can not see activities of this user!");
             }
 
-            var activities = _fallowedActivityRepository.Query(
-                q => q.Where(fa => fa.User.Id == input.UserId && fa.IsActor && fa.Id < input.BeforeActivityId)
-                    .OrderByDescending(fa => fa.Id)
-                    .Take(input.MaxResultCount)
-                    .Select(fa => fa)
-                    .ToList()
-                );
+            //TODO: Think on private activities? When a private task is created or completed?
 
-            var activityDtos = activities.MapIList<UserFollowedActivity, UserFollowedActivityDto>();
+            var query = from fallowedActivity in _followedActivityRepository.GetAllWithActivity()
+                        where fallowedActivity.User.Id == input.UserId && fallowedActivity.Id < input.BeforeId
+                        select fallowedActivity;
 
-            return new GetUserActivitiesOutput
+            if (input.IsActor.HasValue)
             {
-                Activities = activityDtos
-            };
+                query = query.Where(fa => fa.IsActor == input.IsActor.Value);
+            }
+
+            var activities = query
+                .OrderByDescending(fa => fa.Id)
+                .Take(input.MaxResultCount)
+                .ToList();
+
+            return new GetFollowedActivitiesOutput
+                       {
+                           Activities = activities.MapIList<UserFollowedActivity, UserFollowedActivityDto>()
+                       };
         }
     }
 }

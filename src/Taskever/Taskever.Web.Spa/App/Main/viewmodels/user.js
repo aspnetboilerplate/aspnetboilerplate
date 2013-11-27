@@ -38,7 +38,7 @@
                     $(this).tab('show');
 
                     //TODO: This is experimental now, find a more proper way of doing this!
-                    history.navigate('user/' + that.user().id() + '?activeSection=' + $(this).attr('href').substr(1), {
+                    history.navigate('user/' + that.user.id() + '?activeSection=' + $(this).attr('href').substr(1), {
                         trigger: false
                     });
                 });

@@ -74,8 +74,8 @@
     <Compile Include="Application\Services\Dto\Tasks\GetTasksInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\TaskDto.cs" />
-    <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesInput.cs" />
-    <Compile Include="Application\Services\Dto\Activities\GetFallowedActivitiesOutput.cs" />
+    <Compile Include="Application\Services\Dto\Activities\GetFollowedActivitiesInput.cs" />
+    <Compile Include="Application\Services\Dto\Activities\GetFollowedActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskWithAssignedUserDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetUserActivitiesInput.cs" />
