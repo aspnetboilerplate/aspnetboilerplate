@@ -8,6 +8,7 @@ using Abp.Modules.Core.Domain.Entities;
 using Taskever.Application.Services.Dto.Friendships;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 using Taskever.Domain.Policies;
 
 namespace Taskever.Application.Services.Impl
@@ -36,7 +37,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input)
         {
-            var friendships = _friendshipRepository.GetAllWithFriendUser(User.CurrentUserId);
+            var friendships = _friendshipRepository.GetAllWithFriendUser(User.CurrentUserId).Where(f => f.Status == FriendshipStatus.Accepted);
             var list = friendships.OrderByDescending(friendship => friendship.LastVisitTime).Take(input.MaxResultCount).ToList();
             return new GetFriendshipsByMostActiveOutput { Friendships = list.MapIList<Friendship, FriendshipDto>() };
         }
