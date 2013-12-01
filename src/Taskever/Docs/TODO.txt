@@ -29,28 +29,33 @@ TODO (primary):
   + Add friend: Validate?
   + Update Friendship.LastVisitDate
 
-- Return UserFollowedActivity, instead of activity! Edit pages for that!
+- Activities
+  + Return UserFollowedActivity, instead of activity! Edit pages for that!
   - Show actor & related activities different
   - Show profile images of actors of the activity!
 
 Activity stream (home)
 - Tasks
-  - Creating a task
-    - To all fallowers of Creator user
-    - To all fallowers of Assigned user
+  + Creating a task
+    + To all fallowers of Creator user
+    + To all fallowers of Assigned user
+	+ Actors: creator user, assigned user
+  + Completing a task
+    + To all fallowers of completing user
+	+ Actors: assigned (completing) user
+	+ Related: Creator user
   - Re-assigning a task
     - To all fallowers of Assigned user
-  - Completing a task
-    - To all fallowers of completing user
-  - Friendship
-    - A user accepted a friendship of YOUR
-	- A user sent friendship request to YOU
+- Friendship
+  - A user accepted a friendship of YOU
+  - A user sent friendship request to YOU (accept on history?)
 
 Activity stream (user)
 - Tasks
-  - USER created a task
-  - USED is assigned to a task
-  - A task is completed by this USER
+  + USER created a task (actor)
+  + USED is assigned to a new task (actor)
+  + A task is completed by this USER (actor)
+  - Reassign a task to this user (actor)
 
 RULES
 - A task can only be completed by assigned user
