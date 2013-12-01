@@ -41,6 +41,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
             return new GetUserOutput(user.MapTo<UserDto>());
         }
 
+        [UnitOfWork]
         public void RegisterUser(RegisterUserInput registerUser)
         {
             var userEntity = registerUser.MapTo<User>();

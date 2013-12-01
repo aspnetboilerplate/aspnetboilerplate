@@ -28,7 +28,7 @@ namespace Taskever.Web.Controllers
                 if (uploadfile != null)
                 {
                     //Save uploaded file
-                    var tempPath = GenerateProfileImagePath(uploadfile.FileName);
+                    var tempPath = GenerateProfileImagePath(Path.GetExtension(uploadfile.FileName));
                     FileHelper.DeleteIfExists(tempPath);
                     uploadfile.SaveAs(tempPath);
 
@@ -52,11 +52,10 @@ namespace Taskever.Web.Controllers
             return Json(new AbpAjaxResponse(false)); //TODO: Error message?
         }
 
-        private string GenerateProfileImagePath(string fileName)
+        private string GenerateProfileImagePath(string fileExtension)
         {
-            var ext = Path.GetExtension(fileName);
             var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
-            return Path.Combine(Server.MapPath("~/ProfileImages"), userId + "_" + DateTime.Now.Ticks + ext);
+            return Path.Combine(Server.MapPath("~/ProfileImages"), userId + "_" + DateTime.Now.Ticks + fileExtension);
         }
     }
 }

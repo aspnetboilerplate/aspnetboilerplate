@@ -23,5 +23,7 @@ namespace Abp.Modules.Core.Application.Services.Dto
         [StringLength(30, MinimumLength = 3)]
         [Compare("Password", ErrorMessage = "Þifre ayný olmalý!")]
         public string PasswordRepeat { get; set; }
+
+        public string ProfileImage { get; set; }
     }
 }

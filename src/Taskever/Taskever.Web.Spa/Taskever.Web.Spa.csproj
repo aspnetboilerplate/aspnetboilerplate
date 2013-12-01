@@ -225,13 +225,13 @@
     <None Include="App\Main\views\user.cshtml" />
     <None Include="App\Main\views\taskList.cshtml" />
     <None Include="App\Main\views\shared\activities\activityInfo_1.cshtml" />
-    <Content Include="App\_Common\images\user\user_blue.png" />
-    <Content Include="App\_Common\images\user\user_cyan.png" />
-    <Content Include="App\_Common\images\user\user_green.png" />
-    <Content Include="App\_Common\images\user\user_orange.png" />
-    <Content Include="App\_Common\images\user\user_purple.png" />
-    <Content Include="App\_Common\images\user\user_red.png" />
-    <Content Include="App\_Common\images\user\user_yellow.png" />
+    <Content Include="ProfileImages\predefined\user_blue.png" />
+    <Content Include="ProfileImages\predefined\user_cyan.png" />
+    <Content Include="ProfileImages\predefined\user_green.png" />
+    <Content Include="ProfileImages\predefined\user_orange.png" />
+    <Content Include="ProfileImages\predefined\user_purple.png" />
+    <Content Include="ProfileImages\predefined\user_red.png" />
+    <Content Include="ProfileImages\predefined\user_yellow.png" />
     <Content Include="App\_Common\images\x.png" />
     <Content Include="App\_Common\images\task_complete.png" />
     <Content Include="App\_Common\images\task_add.png" />
@@ -378,7 +378,6 @@
     <Folder Include="Abp\Modules\Core\styles\" />
     <Folder Include="Abp\Modules\Core\viewmodels\" />
     <Folder Include="Abp\Modules\Core\views\" />
-    <Folder Include="ProfileImages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
