@@ -3,6 +3,10 @@
         return function () {
             var that = this;
 
+            // Private fields /////////////////////////////////////////////////////
+
+            var _$form;
+
             // Public fields //////////////////////////////////////////////////////
 
             that.task = {
@@ -28,7 +32,16 @@
                 });
             };
 
+            that.attached = function (view, parent) {
+                _$form = $(view).find('form');
+                _$form.validate();
+            };
+
             that.saveNewTask = function () {
+                if (!_$form.valid()) {
+                    return;
+                }
+
                 taskService.createTask({
                     task: ko.mapping.toJS(that.task)
                 }).done(function (result) {

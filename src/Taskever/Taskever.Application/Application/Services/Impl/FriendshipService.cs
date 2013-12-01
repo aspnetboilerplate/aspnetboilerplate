@@ -37,9 +37,15 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input)
         {
-            var friendships = _friendshipRepository.GetAllWithFriendUser(User.CurrentUserId).Where(f => f.Status == FriendshipStatus.Accepted);
-            var list = friendships.OrderByDescending(friendship => friendship.LastVisitTime).Take(input.MaxResultCount).ToList();
-            return new GetFriendshipsByMostActiveOutput { Friendships = list.MapIList<Friendship, FriendshipDto>() };
+            var friendships =
+                _friendshipRepository
+                    .GetAllWithFriendUser(User.CurrentUserId)
+                    .Where(f => f.Status == FriendshipStatus.Accepted)
+                    .OrderByDescending(friendship => friendship.LastVisitTime)
+                    .Take(input.MaxResultCount)
+                    .ToList();
+
+            return new GetFriendshipsByMostActiveOutput { Friendships = friendships.MapIList<Friendship, FriendshipDto>() };
         }
 
         [UnitOfWork]

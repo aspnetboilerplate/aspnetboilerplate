@@ -149,22 +149,14 @@ namespace Taskever.Application.Services.Impl
             task.Privacy = (TaskPrivacy) input.Privacy;
             task.Title = input.Title;
 
-            //TODO: Write a 'task complete' activity if needed
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
-                //_activityService.AddActivity(
-                //    new CompleteTaskActivityInfo(
-                //        task.Id,
-                //        task.Title,
-                //        task.AssignedUser.Id,
-                //        task.AssignedUser.NameAndSurname
-                //        )
-                //    );
-                _activityService.AddActivity(new CompleteTaskActivity
-                                                 {
-                                                     AssignedUser = task.AssignedUser,
-                                                     Task = task
-                                                 });
+                _activityService.AddActivity(
+                    new CompleteTaskActivity
+                        {
+                            AssignedUser = task.AssignedUser,
+                            Task = task
+                        });
             }
 
             return new UpdateTaskOutput();

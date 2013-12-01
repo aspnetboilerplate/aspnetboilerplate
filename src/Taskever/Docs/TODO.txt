@@ -1,49 +1,25 @@
-TODO (primary):
-+ Activities: +Create and +Complete tasks.
-+ User setting page: Change user properties, password
-+ Task privacy: Private/Protected tasks
-+ User/activities section
-+ Change profile picture!
-+ Use moment.js to show datetimes!
-+ Show notification!
-+ Check all pages
-  + user
-    + paging for activities!
-    + paging for current tasks!
-    + paging for completed tasks!
-  + settings
-    + Change profile picture
-	+ change password
-  + home
-    + my tasks
-	+ latest activities (paging)
-	+ my friends
-  + task
-    + show (task creation time)
-	+ edit (description box size!)
-	+ delete: confirmation!
-	+ cancel: do not modify screen!
+TODO (primary - before first release):
 
-+ Friendship
-  + Remove friend: confirm
-  + Add friend: Validate?
-  + Update Friendship.LastVisitDate
+RULES
+- A task can only be edited by assigned or creator user (not by all friends!
+- Use capcha on registration
+
+
+
+
+
+
+TODO (secondary):
+- Localization for all pages
+
+- Check all TODO's
 
 - Activities
-  + Return UserFollowedActivity, instead of activity! Edit pages for that!
   - Show actor & related activities different
   - Show profile images of actors of the activity!
 
 Activity stream (home)
 - Tasks
-  + Creating a task
-    + To all fallowers of Creator user
-    + To all fallowers of Assigned user
-	+ Actors: creator user, assigned user
-  + Completing a task
-    + To all fallowers of completing user
-	+ Actors: assigned (completing) user
-	+ Related: Creator user
   - Re-assigning a task
     - To all fallowers of Assigned user
 - Friendship
@@ -52,19 +28,10 @@ Activity stream (home)
 
 Activity stream (user)
 - Tasks
-  + USER created a task (actor)
-  + USED is assigned to a new task (actor)
-  + A task is completed by this USER (actor)
   - Reassign a task to this user (actor)
-
-RULES
-- A task can only be completed by assigned user
-
-- Localization for all pages
 
 - Put icons to pages
 
-- Use capcha on registration (and in first events?)
 - Make login page attractive!
 - Better message boxes
 
@@ -88,22 +55,13 @@ SignalR
 Work offline
   - ...
 
-- Check all TODO's
-
-TODO (secondary):
 - Search for a better bootstrap theme
-
-
 
 
 - Check livestamp's performance!
 
 FUTURE:
 - Dashboard?
-- Project
-  - Created by you
-  - Assigned to you
-
  -------------------------------
 
  DB:
