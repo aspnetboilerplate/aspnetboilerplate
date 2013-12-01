@@ -1,6 +1,6 @@
 ﻿define(['durandal/app', 'session', 'service!taskever/userActivity'], function (app, session, userActivityService) {
 
-    var _maxResultCountOnce = 2;
+    var _maxResultCountOnce = 20;
 
     return function () {
         var that = this;

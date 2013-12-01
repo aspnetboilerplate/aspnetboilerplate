@@ -68,6 +68,9 @@
     <Compile Include="Domain\Business\Acitivities\ActivityInfoFactory.cs" />
     <Compile Include="Domain\Business\Acitivities\CompleteTaskActivityInfo.cs" />
     <Compile Include="Domain\Business\Acitivities\CreateTaskActivityInfo.cs" />
+    <Compile Include="Domain\Entities\Activities\ActivityType.cs" />
+    <Compile Include="Domain\Entities\Activities\CompleteTaskActivity.cs" />
+    <Compile Include="Domain\Entities\Activities\CreateTaskActivity.cs" />
     <Compile Include="Domain\Enums\TaskPrivacy.cs" />
     <Compile Include="Domain\Policies\Impl\FriendshipPolicy.cs" />
     <Compile Include="Domain\Policies\IPolicy.cs" />

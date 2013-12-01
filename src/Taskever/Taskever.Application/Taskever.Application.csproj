@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Services\Dto\Activities\CompleteTaskActivityDto.cs" />
+    <Compile Include="Application\Services\Dto\Activities\CreateTaskActivityDto.cs" />
+    <Compile Include="Application\Services\Dto\Activities\UserFollowedActivityDto.cs" />
     <Compile Include="Application\Services\Dto\Tasks\DeleteTaskInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\AcceptFriendshipInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\AcceptFriendshipOutput.cs" />
