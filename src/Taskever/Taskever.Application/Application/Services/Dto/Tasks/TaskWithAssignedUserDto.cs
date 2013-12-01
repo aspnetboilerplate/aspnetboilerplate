@@ -1,7 +1,6 @@
 using Abp.Modules.Core.Application.Services.Dto.Users;
-using Taskever.Application.Services.Dto.Tasks;
 
-namespace Taskever.Application.Services.Dto
+namespace Taskever.Application.Services.Dto.Tasks
 {
     public class TaskWithAssignedUserDto : TaskDto
     {

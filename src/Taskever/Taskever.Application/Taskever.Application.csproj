@@ -80,7 +80,7 @@
     <Compile Include="Application\Services\Dto\Activities\GetFollowedActivitiesInput.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetFollowedActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsOutput.cs" />
-    <Compile Include="Application\Services\Dto\TaskWithAssignedUserDto.cs" />
+    <Compile Include="Application\Services\Dto\Tasks\TaskWithAssignedUserDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetUserActivitiesInput.cs" />
     <Compile Include="Application\Services\Dto\Activities\GetUserActivitiesOutput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\GetTasksByImportanceInput.cs" />

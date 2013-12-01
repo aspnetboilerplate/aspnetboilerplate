@@ -1,15 +1,10 @@
 TODO (primary - before first release):
-
+--------------------------------------
 RULES
-- A task can only be edited by assigned or creator user (not by all friends!
 - Use capcha on registration
 
-
-
-
-
-
 TODO (secondary):
+--------------------------------------
 - Localization for all pages
 
 - Check all TODO's

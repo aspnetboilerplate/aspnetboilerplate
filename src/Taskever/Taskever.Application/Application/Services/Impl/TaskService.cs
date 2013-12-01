@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Abp.Domain.Uow;
+using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
@@ -23,9 +24,9 @@ namespace Taskever.Application.Services.Impl
         private readonly IUserRepository _userRepository;
 
         public TaskService(
-            IActivityService activityService, 
+            IActivityService activityService,
             ITaskPrivilegeService taskPrivilegeService,
-            ITaskRepository taskRepository, 
+            ITaskRepository taskRepository,
             IUserRepository userRepository)
         {
             _activityService = activityService;
@@ -52,7 +53,8 @@ namespace Taskever.Application.Services.Impl
 
             return new GetTaskOutput
                        {
-                           Task = task.MapTo<TaskWithAssignedUserDto>()
+                           Task = task.MapTo<TaskWithAssignedUserDto>(),
+                           IsEditableByCurrentUser = _taskPrivilegeService.CanUpdateTask(currentUser, task)
                        };
         }
 
@@ -100,7 +102,10 @@ namespace Taskever.Application.Services.Impl
             var creatorUser = _userRepository.Get(User.CurrentUserId);
             var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
 
-            //TODO: Can assign the task to the user?
+            if (!_taskPrivilegeService.CanAssignTask(creatorUser, assignedUser))
+            {
+                throw new AbpUserFriendlyException("You can not assign task to this user!");
+            }
 
             //Create the task
             var taskEntity = input.Task.MapTo<Task>();
@@ -131,22 +136,32 @@ namespace Taskever.Application.Services.Impl
                 throw new Exception("Can not found the task!");
             }
 
-            //TODO: Make with auto mapper!
-            //AutoMapper.Mapper.DynamicMap(input, task); //TODO: Change it to be static map for performance reasons? Also check performance!
-
+            var currentUser = _userRepository.Load(User.CurrentUserId); //TODO: Add method LoadCurrentUser and GetCurrentUser
+            if (_taskPrivilegeService.CanUpdateTask(currentUser, task))
+            {
+                throw new AbpUserFriendlyException("You can not update this task!");
+            }
+            
             if (task.AssignedUser.Id != input.AssignedUserId)
             {
-                //TODO: Can assign the task to the user?
-                //TODO: Check if assigned user does exists
-                task.AssignedUser = _userRepository.Load(input.AssignedUserId);
+                var userToAssign = _userRepository.Load(input.AssignedUserId);
+
+                if (!_taskPrivilegeService.CanAssignTask(currentUser, userToAssign))
+                {
+                    throw new AbpUserFriendlyException("You can not assign task to this user!");
+                }
+
+                task.AssignedUser = userToAssign;
             }
 
             var oldTaskState = task.State;
 
+            //TODO: Can we use Auto mapper?
+
             task.Description = input.Description;
             task.Priority = (TaskPriority)input.Priority;
             task.State = (TaskState)input.State;
-            task.Privacy = (TaskPrivacy) input.Privacy;
+            task.Privacy = (TaskPrivacy)input.Privacy;
             task.Title = input.Title;
 
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)

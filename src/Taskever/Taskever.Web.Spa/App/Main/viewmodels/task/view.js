@@ -8,6 +8,7 @@
             // Public fields //////////////////////////////////////////////////////
 
             that.task = ko.mapping.fromJS({});
+            that.isEditable = false;
 
             // Public methods /////////////////////////////////////////////////////
 
@@ -16,6 +17,7 @@
                     id: taskId
                 }).done(function (data) {
                     ko.mapping.fromJS(data.task, that.task);
+                    that.isEditable = data.isEditableByCurrentUser;
                 });
             };
 
