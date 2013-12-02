@@ -3,7 +3,7 @@
 namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
     [Migration(2013082401)]
-    public class _01_CreateAbpTenantsTable : Migration
+    public class _01_CreateAbpTenantsTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -22,9 +22,9 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                 );
         }
 
-        public override void Down()
-        {
-            Delete.Table("AbpTenants");
-        }
+        //public override void Down()
+        //{
+        //    Delete.Table("AbpTenants");
+        //}
     }
 }

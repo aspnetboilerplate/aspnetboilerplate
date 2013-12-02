@@ -4,7 +4,7 @@ using FluentMigrator;
 namespace Taskever.Data.Migrations.V20130916
 {
     [Migration(2013090102)]
-    public class _02_CreateTeFriendshipTable : Migration
+    public class _02_CreateTeFriendshipTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -18,11 +18,17 @@ namespace Taskever.Data.Migrations.V20130916
                 .WithColumn("LastVisitTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
                 .WithColumn("Status").AsByte().NotNullable().WithDefaultValue(0); //FriendshipStatus.WaitingForApproval
+
+            Create.Index("IX_User_Friend")
+                .OnTable("TeFriendships")
+                .OnColumn("UserId").Ascending()
+                .OnColumn("FriendUserId").Ascending()
+                .WithOptions().NonClustered();
         }
 
-        public override void Down()
-        {
-            Delete.Column("Priority").FromTable("TeTasks");
-        }
+        //public override void Down()
+        //{
+        //    Delete.Column("Priority").FromTable("TeTasks");
+        //}
     }
 }

@@ -1,5 +1,12 @@
 TODO (primary):
 ProfileImages folder!
+Remember me is not working!
+Onaylanmamýþ arkadaþýn sayfasýna gitmemeli!
+Bir arkadaþ eklerken zaten varsa eklememeli, eðer onay bekliyorsa otomatik onaylanmalý
+Baþkasýna private task atayamamalý!
+Default protected olmalý tasklar
+Default Normal olmalý öncelikler
+Avatarýn yanýndaki isim ortalý deðil, düzenle
 
 TODO (secondary):
 --------------------------------------

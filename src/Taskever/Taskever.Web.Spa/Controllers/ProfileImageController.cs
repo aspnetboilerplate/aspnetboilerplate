@@ -37,8 +37,11 @@ namespace Taskever.Web.Controllers
                     var result = _userService.ChangeProfileImage(new ChangeProfileImageInput { FileName = fileName });
                     
                     //Delete old file
-                    var oldFilePath = Path.Combine(Server.MapPath("~/ProfileImages"), result.OldFileName);
-                    FileHelper.DeleteIfExists(oldFilePath);
+                    if(!string.IsNullOrWhiteSpace(result.OldFileName))
+                    {
+                        var oldFilePath = Path.Combine(Server.MapPath("~/ProfileImages"), result.OldFileName);
+                        FileHelper.DeleteIfExists(oldFilePath);
+                    }
 
                     //Return response
                     return Json(new AbpAjaxResponse(new

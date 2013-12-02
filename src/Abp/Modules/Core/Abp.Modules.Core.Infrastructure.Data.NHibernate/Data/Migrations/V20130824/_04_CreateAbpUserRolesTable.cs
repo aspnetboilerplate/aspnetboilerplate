@@ -3,7 +3,7 @@ using FluentMigrator;
 namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
     [Migration(2013082404)]
-    public class _04_CreateAbpUserRolesTable : Migration
+    public class _04_CreateAbpUserRolesTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -22,9 +22,9 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                 );
         }
 
-        public override void Down()
-        {
-            Delete.Table("AbpUserRoles");
-        }
+        //public override void Down()
+        //{
+        //    Delete.Table("AbpUserRoles");
+        //}
     }
 }

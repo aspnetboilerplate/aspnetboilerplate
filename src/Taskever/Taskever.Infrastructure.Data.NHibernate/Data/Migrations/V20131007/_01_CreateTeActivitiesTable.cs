@@ -3,21 +3,17 @@
 namespace Taskever.Data.Migrations.V20131007
 {
     [Migration(2013100701)]
-    public class _01_CreateTeActivitiesTable : Migration
+    public class _01_CreateTeActivitiesTable : AutoReversingMigration
     {
         public override void Up()
         {
             Create.Table("TeActivities")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
-                .WithColumn("ActorUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("Action").AsInt32().NotNullable()
-                .WithColumn("Data").AsString(4096)
+                .WithColumn("ActivityType").AsInt32().NotNullable()
+                .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
+                .WithColumn("AssignedUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
+                .WithColumn("TaskId").AsInt32().Nullable().ForeignKey("TeTasks", "Id")
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
-        }
-
-        public override void Down()
-        {
-            Delete.Table("TeActivities");
         }
     }
 }

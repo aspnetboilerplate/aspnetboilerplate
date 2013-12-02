@@ -4,7 +4,7 @@ using FluentMigrator;
 namespace Taskever.Data.Migrations.V20130901
 {
     [Migration(2013090101)]
-    public class _01_CreateTeTasksTable : Migration
+    public class _01_CreateTeTasksTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -18,11 +18,6 @@ namespace Taskever.Data.Migrations.V20130901
                 .WithColumn("AssignedUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("State").AsByte().NotNullable().WithDefaultValue(1) //TaskState.New
                 .WithAuditColumns();
-        }
-
-        public override void Down()
-        {
-            Delete.Table("TeTasks");
         }
     }
 }

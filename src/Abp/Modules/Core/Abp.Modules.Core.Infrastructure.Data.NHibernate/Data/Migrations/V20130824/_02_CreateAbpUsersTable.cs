@@ -3,7 +3,7 @@
 namespace Abp.Modules.Core.Data.Migrations.V20130824
 {
     [Migration(2013082402)]
-    public class _02_CreateAbpUsersTable : Migration
+    public class _02_CreateAbpUsersTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -21,17 +21,17 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                 new
                     {
                         TenantId = 1,
-                        Name = "System",
-                        Surname = "Admin",
-                        EmailAddress = "admin@aspnetboilerplate.com",
+                        Name = "Halil İbrahim",
+                        Surname = "Kalkan",
+                        EmailAddress = "hi_kalkan@yahoo.com",
                         Password = "123"
                     }
                 );
         }
 
-        public override void Down()
-        {
-            Delete.Table("AbpUsers");
-        }
+        //public override void Down()
+        //{
+        //    Delete.Table("AbpUsers");
+        //}
     }
 }
