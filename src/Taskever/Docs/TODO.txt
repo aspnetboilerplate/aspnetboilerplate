@@ -1,7 +1,5 @@
 TODO (primary):
-- Change Turkish messages to English
-  - Activities
-  - Others
+ProfileImages folder!
 
 TODO (secondary):
 --------------------------------------
