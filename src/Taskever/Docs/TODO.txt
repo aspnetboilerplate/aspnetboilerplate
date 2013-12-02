@@ -1,12 +1,16 @@
 TODO (primary):
-ProfileImages folder!
-Remember me is not working!
+--------------------------------------
+Default protected olmalý tasklar
+Default Normal olmalý öncelikler
+
 Onaylanmamýþ arkadaþýn sayfasýna gitmemeli!
 Bir arkadaþ eklerken zaten varsa eklememeli, eðer onay bekliyorsa otomatik onaylanmalý
 Baþkasýna private task atayamamalý!
-Default protected olmalý tasklar
-Default Normal olmalý öncelikler
+
+Remember me is not working!
+
 Avatarýn yanýndaki isim ortalý deðil, düzenle
+ProfileImages folder github problemi!
 
 TODO (secondary):
 --------------------------------------
