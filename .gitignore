@@ -5,6 +5,9 @@
 # Logs
 Logs/
 
+# Profile images
+ProfileImages/
+
 # mstest test results
 TestResults
 
