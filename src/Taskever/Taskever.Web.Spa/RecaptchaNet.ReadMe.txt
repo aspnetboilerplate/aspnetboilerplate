@@ -1,0 +1,105 @@
+﻿Recaptcha for .NET
+======================================================
+1. Disclaimer
+---------------------
+THE BINARIES, CODE, INFORMATION, DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY  KIND, EITHER EXPRESSED OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+2. License
+----------------------
+http://recaptchanet.codeplex.com/license
+
+3. Documentation
+----------------------
+Full and up-to-date documentation is available here:
+http://recaptchanet.codeplex.com/documentation
+
+4. Getting Started
+----------------------
+4.1. Create a recaptcha key
+---------------------------
+1. Go to http://www.google.com/recaptcha/whyrecaptcha to create a recaptcha key.
+2. Note down the public and private key pair.
+
+4.2 Update the Web.config File
+----------------------------------------------
+1. Copy and paste your public and private keys in the respective value attributes of the 
+
+following appSettings keys:
+
+<add name="recaptchaPublicKey" value="" />
+<add name="recaptchaPrivateKey" value="" />
+
+4.3. How to Use Recaptcha in ASP.NET Web Forms
+----------------------------------------------
+1. Drag the Recaptcha control from Toolbox on to your Web Form. Alternatively, copy and 
+
+paste the following code:
+<%@ Register Assembly="Recaptcha.Web" Namespace="Recaptcha.Web.UI.Controls" TagPrefix="cc1" 
+
+%>
+<cc1:Recaptcha ID="Recaptcha1" runat="server" />
+2. Call Verify or VerifyTaskAsync method of the control in an appropriate event handler in 
+
+your web form. Typically this is the Click event of your web form's submit button. Example 
+
+code:
+if (String.IsNullOrEmpty(Recaptcha1.Response))
+{
+    // User did not provide any answer to the recaptcha challenge. You should show that 
+
+message to the user.
+}
+else
+{
+    RecaptchaVerificationResult result = Recaptcha1.Verify();
+
+    if (result == RecaptchaVerificationResult.Success)
+    {
+        // User provided correct answer to the recaptcha challenge. You now should do 
+
+further processing such as storing data in database or whatever may be the case.
+    }
+    if (result == RecaptchaVerificationResult.IncorrectCaptchaSolution)
+    {
+        // User provided an incorrect answer to the recaptcha challenge. You should not do 
+
+any further processing and inform the user that he must enter a correct answer first.
+    }
+    else
+    {
+        // Some other problem such as invalid private key.
+    }
+}
+
+4.4. How to Use Recaptcha in ASP.NET MVC
+----------------------------------------------
+1. Import the Recaptcha.Web.Mvc namespace in your view:
+@using Recaptcha.Web.Mvc;
+
+2. Render the recaptcha control:
+@Html.Recaptcha()
+
+3. Call VerifyRecaptchaResponse or VerifyRecaptchaResponseTaskAsync method of the 
+
+RecaptchaVerificationHelper class in your controller. Example code:
+
+RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+
+if (String.IsNullOrEmpty(recaptchaHelper.Response))
+{
+	ModelState.AddModelError("", "Captcha answer cannot be empty.");
+        return View(model);
+}
+
+RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+
+if (recaptchaResult != RecaptchaVerificationResult.Success)
+{	
+	ModelState.AddModelError("", "Incorrect captcha answer.");
+}
+
+if (ModelState.IsValid)
+{
+	return RedirectToAction("Welcome");
+}

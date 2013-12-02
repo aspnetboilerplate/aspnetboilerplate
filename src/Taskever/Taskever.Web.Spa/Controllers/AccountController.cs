@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
+using System.Web.Mvc;
+using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Mvc.Controllers;
+using Recaptcha.Web;
+using Recaptcha.Web.Mvc;
 
 namespace Taskever.Web.Controllers
 {
@@ -15,8 +20,23 @@ namespace Taskever.Web.Controllers
 
         }
 
-        public override System.Web.Mvc.JsonResult Register(Abp.Modules.Core.Application.Services.Dto.RegisterUserInput registerUser)
+        public override JsonResult Register(RegisterUserInput registerUser)
         {
+            //TODO: Return better exception messages!
+            //TODO: Show captcha after filling register form, not on startup!
+
+            var recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            if (String.IsNullOrEmpty(recaptchaHelper.Response))
+            {
+                throw new AbpUserFriendlyException("Captcha answer cannot be empty.");
+            }
+
+            var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            if (recaptchaResult != RecaptchaVerificationResult.Success)
+            {
+                throw new AbpUserFriendlyException("Incorrect captcha answer.");
+            }
+
             registerUser.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
             return base.Register(registerUser);
         }

@@ -24,6 +24,7 @@
             that.canActivate = function () {
                 return friendshipService.getFriendships({
                     userId: session.getCurrentUser().id(),
+                    status: taskever.friendshipStatus.Accepted,
                     canAssignTask: true
                 }).done(function (result) {
                     var users = $.map(result.friendships, function (friendship) { return friendship.friend; });

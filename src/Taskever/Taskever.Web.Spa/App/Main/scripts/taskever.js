@@ -36,5 +36,12 @@
     taskever.taskState.getLocalizedText = function (stateValue) {
         return localize('TaskState_' + taskever.taskStateInverted[stateValue]);
     };
+    
+    //FRIENDSHIP STATUS
+    taskever.friendshipStatus = {
+        WaitingApprovalFromFriend: 0,
+        WaitingApprovalFromUser: 1,
+        Accepted: 2
+    };
 
 }());

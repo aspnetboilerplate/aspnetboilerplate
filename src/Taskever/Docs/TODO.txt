@@ -1,7 +1,7 @@
-TODO (primary - before first release):
---------------------------------------
-RULES
-- Use capcha on registration
+TODO (primary):
+- Change Turkish messages to English
+  - Activities
+  - Others
 
 TODO (secondary):
 --------------------------------------

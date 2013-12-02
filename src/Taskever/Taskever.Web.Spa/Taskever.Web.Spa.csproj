@@ -85,6 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha.Web">
+      <HintPath>..\..\packages\RecaptchaNet.1.3\lib\net45\Recaptcha.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -283,6 +286,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
     <Content Include="Images\loading_black.gif" />
+    <Content Include="RecaptchaNet.ReadMe.txt" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.form.js" />
