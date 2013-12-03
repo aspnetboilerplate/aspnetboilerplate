@@ -1,5 +1,10 @@
 TODO (primary):
 --------------------------------------
+fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
+durandal debug'u kapat!
+
+güncelleme yetkisi yok ama silebiliyor :)
+
 Default protected olmalý tasklar
 Default Normal olmalý öncelikler
 
