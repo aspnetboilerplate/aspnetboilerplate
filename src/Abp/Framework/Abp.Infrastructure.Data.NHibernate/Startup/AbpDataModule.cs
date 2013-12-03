@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Abp.Data.Dependency.Installers;
 using Abp.Modules;
 using FluentNHibernate.Cfg;
@@ -43,7 +44,7 @@ namespace Abp.Data.Startup
         private ISessionFactory CreateNhSessionFactory()
         {
             //TODO: Move this to the application!
-            var connStr = "Server=localhost; Database=Taskever; Trusted_Connection=True;";
+            var connStr = ConfigurationManager.ConnectionStrings["Taskever"].ConnectionString; //"Server=localhost; Database=Taskever; Trusted_Connection=True;";
             return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
                 .Mappings(m =>

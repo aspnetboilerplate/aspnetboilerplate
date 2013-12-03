@@ -283,6 +283,7 @@
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Abp\Modules\Core\Views\Web.config" />
+    <None Include="Properties\PublishProfiles\Release_File.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\busy.gif" />
     <Content Include="Images\loading_black.gif" />
