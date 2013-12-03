@@ -75,3 +75,28 @@ FUTURE:
 
  DB:
  Friendship -> UserId, FriendUserId index'i
+
+ -------------------------------
+ 
+ Client side and server-to-client Events (to refresh GUI):
+
+FIRST:
+
+ - By me
+   - Create task (left side, refresh?)
+   - Complete task (left side, refresh?)
+   - Add/remove/Accept friend
+     (right side, refresh or insert/delete)
+	 (friends page on addition)
+ - Server-to-client (real time)
+   - Task
+     - Assign to me
+   - Activities (home, user (later))
+   - Friendship
+     - request
+	 - accept
+ ...
+
+SECOND:
+
+ - A notification system!
