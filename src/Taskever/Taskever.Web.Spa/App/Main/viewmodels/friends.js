@@ -49,7 +49,7 @@
                     var friendship = ko.dataFor(this);
                     friendshipService.changeFriendshipProperties({
                         id: friendship.id(),
-                        canAssignTask: friendship.canAssignTask()
+                        canAssignTask: $(this).is(':checked')
                     });
                 }); //TODO Do something on done?
 
@@ -58,7 +58,7 @@
                     var friendship = ko.dataFor(this);
                     friendshipService.changeFriendshipProperties({
                         id: friendship.id(),
-                        followActivities: friendship.followActivities()
+                        followActivities: $(this).is(':checked')
                     }); //TODO Do something on done?
                 });
             };

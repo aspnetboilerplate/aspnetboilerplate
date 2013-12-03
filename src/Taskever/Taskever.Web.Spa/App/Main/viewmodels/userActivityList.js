@@ -41,8 +41,6 @@
                     for (var j = 0; j < data.activities.length; j++) {//TODO: Find a way of appending new items to an existing item!
                         that.activities.push(ko.mapping.fromJS(data.activities[j]));
                     }
-
-                    console.log(that.activities());
                 });
             };
         };

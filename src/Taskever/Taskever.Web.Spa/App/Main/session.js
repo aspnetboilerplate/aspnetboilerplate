@@ -4,7 +4,6 @@
     var start = function () {
         return userService.getCurrentUserInfo({ }).done(function(data) {
             ko.mapping.fromJS(data.user, currentUser);
-            console.log(currentUser);
         });
     };
 

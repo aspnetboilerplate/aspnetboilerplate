@@ -137,7 +137,7 @@ namespace Taskever.Application.Services.Impl
             }
 
             var currentUser = _userRepository.Load(User.CurrentUserId); //TODO: Add method LoadCurrentUser and GetCurrentUser
-            if (_taskPrivilegeService.CanUpdateTask(currentUser, task))
+            if (!_taskPrivilegeService.CanUpdateTask(currentUser, task))
             {
                 throw new AbpUserFriendlyException("You can not update this task!");
             }
