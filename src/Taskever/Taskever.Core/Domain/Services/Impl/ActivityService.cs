@@ -35,11 +35,11 @@ namespace Taskever.Domain.Services.Impl
         public void AddActivity(Activity activity)
         {
             _activityRepository.Insert(activity);
-            CreateUserFallowedActivities(activity);
+            CreateUserFollowedActivities(activity);
         }
 
         [UnitOfWork]
-        protected virtual void CreateUserFallowedActivities(Activity activity)
+        protected virtual void CreateUserFollowedActivities(Activity activity)
         {
             //TODO: Run this method in a new thread (check connection creation)
             //TODO: Maybe optimized by creating a stored procedure?
@@ -48,11 +48,11 @@ namespace Taskever.Domain.Services.Impl
             var actorUserIds = activity.GetActors().Select(user => user.Id).ToList();
             if (actorUserIds.IsNullOrEmpty())
             {
-                //No actor of this activity, so, no one will fallow it.
+                //No actor of this activity, so, no one will follow it.
                 return;
             }
 
-            //Get all fallowers of these actors
+            //Get all followers of these actors
             var followerUserIds = GetFollowersOfUserIds(actorUserIds);
 
             //Add also actors (if not includes)
@@ -64,16 +64,16 @@ namespace Taskever.Domain.Services.Impl
             //Add also related users (if not includes)
             followerUserIds = followerUserIds.Union(relatedUserIds).ToList();
 
-            //Add one entity for each fallower and actor
-            foreach (var fallowerUserId in followerUserIds)
+            //Add one entity for each follower and actor
+            foreach (var followerUserId in followerUserIds)
             {
                 _userFollowedActivityRepository.Insert(
                     new UserFollowedActivity
                         {
-                            User = _userRepository.Load(fallowerUserId),
+                            User = _userRepository.Load(followerUserId),
                             Activity = activity,
-                            IsActor = actorUserIds.Contains(fallowerUserId),
-                            IsRelated = relatedUserIds.Contains(fallowerUserId)
+                            IsActor = actorUserIds.Contains(followerUserId),
+                            IsRelated = relatedUserIds.Contains(followerUserId)
                         });
             }
         }

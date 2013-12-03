@@ -1,3 +1,4 @@
+using System.Data;
 using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20131007
@@ -10,7 +11,7 @@ namespace Taskever.Data.Migrations.V20131007
             Create.Table("TeUserFollowedActivities")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
                 .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("ActivityId").AsInt64().NotNullable().ForeignKey("TeActivities", "Id")
+                .WithColumn("ActivityId").AsInt64().NotNullable().ForeignKey("TeActivities", "Id").OnDelete(Rule.Cascade)
                 .WithColumn("IsActor").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("IsRelated").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);

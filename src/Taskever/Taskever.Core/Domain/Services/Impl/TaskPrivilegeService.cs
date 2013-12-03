@@ -39,7 +39,7 @@ namespace Taskever.Domain.Services.Impl
 
         public bool CanUpdateTask(User user, Task task)
         {
-            return (task.CreatorUser.Id != user.Id) && (task.AssignedUser.Id != user.Id);
+            return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
         }
     }
 }

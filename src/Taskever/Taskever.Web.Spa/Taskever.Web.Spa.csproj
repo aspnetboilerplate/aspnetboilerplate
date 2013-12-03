@@ -225,9 +225,9 @@
     <Content Include="App\Main\views\userActivityList.cshtml" />
     <Content Include="App\Main\views\task\edit.cshtml" />
     <Content Include="App\Main\views\uploadProfilePictureDialog.cshtml" />
-    <None Include="App\Main\views\user.cshtml" />
-    <None Include="App\Main\views\taskList.cshtml" />
-    <None Include="App\Main\views\shared\activities\activityInfo_1.cshtml" />
+    <Content Include="App\Main\views\user.cshtml" />
+    <Content Include="App\Main\views\taskList.cshtml" />
+    <Content Include="App\Main\views\shared\activities\activityInfo_1.cshtml" />
     <Content Include="ProfileImages\predefined\user_blue.png" />
     <Content Include="ProfileImages\predefined\user_cyan.png" />
     <Content Include="ProfileImages\predefined\user_green.png" />
@@ -246,12 +246,12 @@
     <Content Include="App\Main\viewmodels\friends.js" />
     <Content Include="App\Main\viewmodels\briefTaskList.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
-    <None Include="App\Main\views\home.cshtml" />
-    <None Include="App\Main\views\createTaskDialog.cshtml" />
-    <None Include="App\Main\views\briefFriendList.cshtml" />
-    <None Include="App\Main\views\friends.cshtml" />
-    <None Include="App\Main\views\briefTaskList.cshtml" />
-    <None Include="App\Main\views\layout.cshtml" />
+    <Content Include="App\Main\views\home.cshtml" />
+    <Content Include="App\Main\views\createTaskDialog.cshtml" />
+    <Content Include="App\Main\views\briefFriendList.cshtml" />
+    <Content Include="App\Main\views\friends.cshtml" />
+    <Content Include="App\Main\views\briefTaskList.cshtml" />
+    <Content Include="App\Main\views\layout.cshtml" />
     <Content Include="Content\bootstrap\bootstrap.metro.min.css" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\font-awesome-ie7.css" />
@@ -312,7 +312,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Home\Index.cshtml" />
-    <None Include="log4net.config" />
+    <Content Include="log4net.config" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\durandal\activator.js" />
     <Content Include="Scripts\durandal\app.js" />

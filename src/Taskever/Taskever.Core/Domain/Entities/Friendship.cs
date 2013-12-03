@@ -14,7 +14,7 @@ namespace Taskever.Domain.Entities
         public virtual Friendship Pair { get; set; }
 
         /// <summary>
-        /// Is <see cref="User"/> fallowing activities of the <see cref="Friend"/>?
+        /// Is <see cref="User"/> following activities of the <see cref="Friend"/>?
         /// </summary>
         public virtual bool FollowActivities { get; set; }
 

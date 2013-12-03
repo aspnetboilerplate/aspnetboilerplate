@@ -66,12 +66,10 @@ namespace Taskever.Application.Services.Impl
                 friendShip.CanAssignTask = input.CanAssignTask.Value;
             }
 
-            if (input.FallowActivities.HasValue)
+            if (input.FollowActivities.HasValue)
             {
-                friendShip.FollowActivities = input.FallowActivities.Value;
+                friendShip.FollowActivities = input.FollowActivities.Value;
             }
-
-            _friendshipRepository.Update(friendShip);
 
             return new ChangeFriendshipPropertiesOutput();
         }

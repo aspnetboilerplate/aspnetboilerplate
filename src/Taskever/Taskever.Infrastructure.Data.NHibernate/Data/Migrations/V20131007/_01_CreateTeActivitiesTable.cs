@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20131007
 {
@@ -12,7 +13,7 @@ namespace Taskever.Data.Migrations.V20131007
                 .WithColumn("ActivityType").AsInt32().NotNullable()
                 .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
                 .WithColumn("AssignedUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("TaskId").AsInt32().Nullable().ForeignKey("TeTasks", "Id")
+                .WithColumn("TaskId").AsInt32().Nullable().ForeignKey("TeTasks", "Id").OnDelete(Rule.Cascade)
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
         }
     }

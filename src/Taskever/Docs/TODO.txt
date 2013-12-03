@@ -25,7 +25,7 @@ TODO (secondary):
 Activity stream (home)
 - Tasks
   - Re-assigning a task
-    - To all fallowers of Assigned user
+    - To all followers of Assigned user
 - Friendship
   - A user accepted a friendship of YOU
   - A user sent friendship request to YOU (accept on history?)

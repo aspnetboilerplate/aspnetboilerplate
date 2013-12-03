@@ -6,7 +6,7 @@ namespace Taskever.Application.Services.Dto.Friendships
     {
         public int Id { get; set; }
 
-        public bool? FallowActivities { get; set; }
+        public bool? FollowActivities { get; set; }
 
         public bool? CanAssignTask { get; set; }
     }

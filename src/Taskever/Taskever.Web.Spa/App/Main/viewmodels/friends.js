@@ -54,11 +54,11 @@
                 }); //TODO Do something on done?
 
                 //TODO: Prevent multiple-click (block ui?)!
-                $('#MyFriends').on('change', 'input.checkbox-friendship-fallowActivities', function () {
+                $('#MyFriends').on('change', 'input.checkbox-friendship-followActivities', function () {
                     var friendship = ko.dataFor(this);
                     friendshipService.changeFriendshipProperties({
                         id: friendship.id(),
-                        fallowActivities: friendship.fallowActivities()
+                        followActivities: friendship.followActivities()
                     }); //TODO Do something on done?
                 });
             };
