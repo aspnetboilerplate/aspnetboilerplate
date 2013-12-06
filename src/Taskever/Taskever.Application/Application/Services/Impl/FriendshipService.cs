@@ -74,6 +74,7 @@ namespace Taskever.Application.Services.Impl
             return new ChangeFriendshipPropertiesOutput();
         }
 
+        [UnitOfWork]
         public virtual SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
         {
             var friendUser = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == input.EmailAddress));
@@ -84,12 +85,23 @@ namespace Taskever.Application.Services.Impl
 
             var currentUser = _userRepository.Load(User.CurrentUserId);
 
-            //TODO: Check if they are already friends!
+            //Check if they are already friends
+            var friendship = _friendshipRepository.GetOrNull(currentUser.Id, friendUser.Id);
+            if (friendship != null)
+            {
+                if (friendship.CanBeAcceptedBy(currentUser))
+                {
+                    friendship.AcceptBy(currentUser);
+                }
 
-            var friendShip = Friendship.CreateAsRequest(currentUser, friendUser);
-            _friendshipRepository.Insert(friendShip);
+                return new SendFriendshipRequestOutput { Status = friendship.Status };
+            }
 
-            return new SendFriendshipRequestOutput();
+            //Add new friendship request
+            friendship = Friendship.CreateAsRequest(currentUser, friendUser);
+            _friendshipRepository.Insert(friendship);
+
+            return new SendFriendshipRequestOutput { Status = friendship.Status };
         }
 
         [UnitOfWork] //TODO: Need UnitOfWork, I think no!

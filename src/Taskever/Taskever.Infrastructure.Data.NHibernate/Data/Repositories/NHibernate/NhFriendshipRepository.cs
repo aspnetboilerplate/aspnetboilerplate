@@ -37,9 +37,18 @@ namespace Taskever.Data.Repositories.NHibernate
                 .Where(f => f.User.Id == userId);
         }
 
-        public Friendship GetOrNull(int userId, int friendId)
+        public Friendship GetOrNull(int userId, int friendId, bool onlyAccepted = false)
         {
-            return GetAll().FirstOrDefault(f => f.User.Id == userId && f.Friend.Id == friendId);
+            var query = from friendship in GetAll()
+                        where friendship.User.Id == userId && friendship.Friend.Id == friendId
+                        select friendship;
+
+            if (onlyAccepted)
+            {
+                query = query.Where(f => f.Status == FriendshipStatus.Accepted);
+            }
+            
+            return query.FirstOrDefault();
         }
     }
 }

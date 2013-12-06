@@ -1,6 +1,7 @@
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
+using Taskever.Domain.Enums;
 
 namespace Taskever.Domain.Services.Impl
 {
@@ -28,7 +29,7 @@ namespace Taskever.Domain.Services.Impl
                 return true;
             }
 
-            var friendship = _friendshipRepository.GetOrNull(assignerUser.Id, userToAssign.Id);
+            var friendship = _friendshipRepository.GetOrNull(assignerUser.Id, userToAssign.Id, true);
             if (friendship == null)
             {
                 return false;
@@ -38,6 +39,11 @@ namespace Taskever.Domain.Services.Impl
         }
 
         public bool CanUpdateTask(User user, Task task)
+        {
+            return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
+        }
+
+        public bool CanDeleteTask(User user, Task task)
         {
             return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
         }

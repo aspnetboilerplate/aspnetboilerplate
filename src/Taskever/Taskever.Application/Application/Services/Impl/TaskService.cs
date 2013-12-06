@@ -101,7 +101,7 @@ namespace Taskever.Application.Services.Impl
             //Get entities from database
             var creatorUser = _userRepository.Get(User.CurrentUserId);
             var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
-
+            
             if (!_taskPrivilegeService.CanAssignTask(creatorUser, assignedUser))
             {
                 throw new AbpUserFriendlyException("You can not assign task to this user!");
@@ -109,8 +109,16 @@ namespace Taskever.Application.Services.Impl
 
             //Create the task
             var taskEntity = input.Task.MapTo<Task>();
+
+            taskEntity.CreatorUser = creatorUser;
             taskEntity.AssignedUser = _userRepository.Load(input.Task.AssignedUserId);
             taskEntity.State = TaskState.New;
+
+            if (taskEntity.AssignedUser.Id != creatorUser.Id && taskEntity.Privacy == TaskPrivacy.Private)
+            {
+                throw new ApplicationException("A user can not assign a private task to another user!");
+            }
+
             _taskRepository.Insert(taskEntity);
 
             _activityService.AddActivity(
@@ -141,7 +149,7 @@ namespace Taskever.Application.Services.Impl
             {
                 throw new AbpUserFriendlyException("You can not update this task!");
             }
-            
+
             if (task.AssignedUser.Id != input.AssignedUserId)
             {
                 var userToAssign = _userRepository.Load(input.AssignedUserId);
@@ -185,7 +193,11 @@ namespace Taskever.Application.Services.Impl
                 throw new Exception("Can not found the task!");
             }
 
-            //TODO: Check if this user can delete to this task!
+            var currentUser = _userRepository.Load(User.CurrentUserId);
+            if (!_taskPrivilegeService.CanDeleteTask(currentUser, task))
+            {
+                throw new AbpUserFriendlyException("You can not delete this task!");
+            }
 
             _taskRepository.Delete(task);
 

@@ -43,38 +43,6 @@ namespace Taskever.Domain.Entities
             FollowActivities = true;
         }
 
-        public virtual void AcceptBy(User acceptorUser)
-        {
-            switch (Status)
-            {
-                case FriendshipStatus.Accepted:
-                    return;
-                case FriendshipStatus.WaitingApprovalFromUser:
-                    if (User.Id != acceptorUser.Id)
-                    {
-                        throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
-                    }
-                    break;
-                case FriendshipStatus.WaitingApprovalFromFriend:
-                    if (Friend.Id != acceptorUser.Id)
-                    {
-                        throw new ApplicationException("Can not accept this friendship!"); //TODO: Better exceptions
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException("Not implemented friendship status: " + Status);
-            }
-
-            Status = FriendshipStatus.Accepted;
-
-            if (Pair == null)
-            {
-                throw new Exception("Friendship pair is null!");
-            }
-
-            Pair.AcceptBy(acceptorUser);
-        }
-
         public static Friendship CreateAsRequest(User user, User friend)
         {
             if (user.Id == friend.Id)
@@ -91,6 +59,48 @@ namespace Taskever.Domain.Entities
 
             friendShip.CreatePair();
             return friendShip;
+        }
+
+        public virtual bool IsAccepted()
+        {
+            return Status == FriendshipStatus.Accepted;
+        }
+
+        public virtual bool CanBeAcceptedBy(User acceptorUser)
+        {
+            switch (Status)
+            {
+                case FriendshipStatus.Accepted:
+                    return true;
+                case FriendshipStatus.WaitingApprovalFromUser:
+                    return User.Id == acceptorUser.Id;
+                case FriendshipStatus.WaitingApprovalFromFriend:
+                    return Friend.Id == acceptorUser.Id;
+                default:
+                    throw new NotImplementedException("Not implemented friendship status: " + Status);
+            }
+        }
+
+        public virtual void AcceptBy(User acceptorUser)
+        {
+            if (IsAccepted())
+            {
+                return;
+            }
+
+            if (!CanBeAcceptedBy(acceptorUser))
+            {
+                throw new ApplicationException("This friendship can not be accepted by this user!");
+            }
+
+            Status = FriendshipStatus.Accepted;
+
+            if (Pair == null)
+            {
+                throw new Exception("Friendship pair is null!");
+            }
+
+            Pair.AcceptBy(acceptorUser);
         }
 
         private void CreatePair()

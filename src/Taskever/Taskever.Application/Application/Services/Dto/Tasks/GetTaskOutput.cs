@@ -7,5 +7,7 @@ namespace Taskever.Application.Services.Dto.Tasks
         public TaskWithAssignedUserDto Task { get; set; }
 
         public bool IsEditableByCurrentUser { get; set; }
+        
+        public bool IsDeletableByCurrentUser { get; set; }
     }
 }

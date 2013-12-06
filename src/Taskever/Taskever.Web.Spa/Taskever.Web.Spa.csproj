@@ -241,13 +241,13 @@
     <Content Include="App\Main\main.js" />
     <Content Include="Abp\Framework\scripts\abp.jquery.js" />
     <Content Include="App\Main\viewmodels\home.js" />
-    <Content Include="App\Main\viewmodels\createTaskDialog.js" />
+    <Content Include="App\Main\viewmodels\task\create.js" />
     <Content Include="App\Main\viewmodels\briefFriendList.js" />
     <Content Include="App\Main\viewmodels\friends.js" />
     <Content Include="App\Main\viewmodels\briefTaskList.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
     <Content Include="App\Main\views\home.cshtml" />
-    <Content Include="App\Main\views\createTaskDialog.cshtml" />
+    <Content Include="App\Main\views\task\create.cshtml" />
     <Content Include="App\Main\views\briefFriendList.cshtml" />
     <Content Include="App\Main\views\friends.cshtml" />
     <Content Include="App\Main\views\briefTaskList.cshtml" />

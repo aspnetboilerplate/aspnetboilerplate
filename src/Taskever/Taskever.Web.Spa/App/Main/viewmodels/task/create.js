@@ -7,15 +7,27 @@
 
             var _$form;
 
+            var _currentUser = session.getCurrentUser();
+
             // Public fields //////////////////////////////////////////////////////
 
             that.task = {
                 title: ko.observable(),
                 description: ko.observable(),
-                assignedUserId: ko.observable(),
-                priority: ko.observable(),
-                privacy: ko.observable(),
+                assignedUserId: ko.observable(_currentUser.id()),
+                priority: ko.observable(taskever.taskPriority.Normal),
+                privacy: ko.observable(taskever.taskPrivacy.Protected),
+                privacyEditable: ko.observable(true)
             };
+
+            that.task.assignedUserId.subscribe(function (newValue) {
+                if (newValue == _currentUser.id()) {
+                    that.task.privacyEditable(true);
+                } else {
+                    that.task.privacyEditable(false);
+                    that.task.privacy(taskever.taskPrivacy.Protected);
+                }
+            });
 
             that.users = ko.mapping.fromJS([]);
 
@@ -23,13 +35,13 @@
 
             that.canActivate = function () {
                 return friendshipService.getFriendships({
-                    userId: session.getCurrentUser().id(),
+                    userId: _currentUser.id(),
                     status: taskever.friendshipStatus.Accepted,
                     canAssignTask: true
                 }).done(function (result) {
                     var users = $.map(result.friendships, function (friendship) { return friendship.friend; });
                     ko.mapping.fromJS(users, that.users);
-                    that.users.unshift(session.getCurrentUser());
+                    that.users.unshift(_currentUser);
                 });
             };
 

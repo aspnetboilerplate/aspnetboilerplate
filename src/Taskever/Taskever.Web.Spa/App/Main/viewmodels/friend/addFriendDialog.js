@@ -15,8 +15,13 @@
                         abp.ui.setBusy($(view), {
                             promise: friendshipService.sendFriendshipRequest({
                                 emailAddress: that.emailAddress()
-                            }).done(function() {
-                                abp.notify.info("Sent friendship request!");
+                            }).done(function (result) {
+                                if (result.status == taskever.friendshipStatus.Accepted) {
+                                    abp.notify.info("Accepted friendship!");
+                                } else {
+                                    abp.notify.info("Sent friendship request!");
+                                }
+                                
                                 dialogs.close(that);
                             })
                         });

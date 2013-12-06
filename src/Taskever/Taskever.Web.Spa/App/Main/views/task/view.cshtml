@@ -8,7 +8,7 @@
                 <div class="col-xs-5 text-right">
                     <div class="btn-group btn-group-sm">
                         <a class="btn btn-primary" data-bind="visible: isEditable, attr: { href: '#task/' + task.id() + '/edit' }"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</a>
-                        <button class="btn btn-primary" data-bind="click: deleteTask"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</button>
+                        <button class="btn btn-primary" data-bind="visible: isEditable, click: deleteTask"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</button>
                     </div>
                 </div>
             </div>

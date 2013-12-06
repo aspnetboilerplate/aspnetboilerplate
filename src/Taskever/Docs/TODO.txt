@@ -1,21 +1,15 @@
 TODO (primary):
 --------------------------------------
 fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
-durandal debug'u kapat!
-
-güncelleme yetkisi yok ama silebiliyor :)
-
-Default protected olmalý tasklar
-Default Normal olmalý öncelikler
 
 Onaylanmamýþ arkadaþýn sayfasýna gitmemeli!
-Bir arkadaþ eklerken zaten varsa eklememeli, eðer onay bekliyorsa otomatik onaylanmalý
-Baþkasýna private task atayamamalý!
 
 Remember me is not working!
 
 Avatarýn yanýndaki isim ortalý deðil, düzenle
 ProfileImages folder github problemi!
+
+- REMOVE Empty Output DTOS or do not remove?
 
 TODO (secondary):
 --------------------------------------

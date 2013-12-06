@@ -17,7 +17,7 @@
         },
         
         createTask: function () {
-            dialogs.show('viewmodels/createTaskDialog');
+            dialogs.show('viewmodels/task/create');
         }
     };
 });

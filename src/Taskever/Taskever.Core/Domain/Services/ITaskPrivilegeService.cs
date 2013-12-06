@@ -12,5 +12,7 @@ namespace Taskever.Domain.Services
         bool CanAssignTask(User assignerUser, User userToAssign);
 
         bool CanUpdateTask(User user, Task task);
+
+        bool CanDeleteTask(User user, Task task);
     }
 }

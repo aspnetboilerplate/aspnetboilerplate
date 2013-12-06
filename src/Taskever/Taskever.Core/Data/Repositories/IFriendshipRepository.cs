@@ -12,6 +12,6 @@ namespace Taskever.Data.Repositories
 
         IQueryable<Friendship> GetAllWithFriendUser(int userId);
 
-        Friendship GetOrNull(int userId, int friendId);
+        Friendship GetOrNull(int userId, int friendId, bool onlyAccepted = false);
     }
 }
