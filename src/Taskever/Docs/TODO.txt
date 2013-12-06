@@ -2,6 +2,9 @@ TODO (primary):
 --------------------------------------
 fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
 
+KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
+ - Acaba sadece create ederken mi belirlense bu?
+
 Onaylanmamýþ arkadaþýn sayfasýna gitmemeli!
 
 Remember me is not working!
