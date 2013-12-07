@@ -64,10 +64,6 @@
     <Compile Include="Domain\Repositories\ITaskRepository.cs" />
     <Compile Include="Domain\Repositories\IUserFallowedActivityRepository.cs" />
     <Compile Include="Dependency\Installers\TaskeverCoreInstaller.cs" />
-    <Compile Include="Domain\Business\Acitivities\ActivityAttribute.cs" />
-    <Compile Include="Domain\Business\Acitivities\ActivityInfoFactory.cs" />
-    <Compile Include="Domain\Business\Acitivities\CompleteTaskActivityInfo.cs" />
-    <Compile Include="Domain\Business\Acitivities\CreateTaskActivityInfo.cs" />
     <Compile Include="Domain\Entities\Activities\ActivityType.cs" />
     <Compile Include="Domain\Entities\Activities\CompleteTaskActivity.cs" />
     <Compile Include="Domain\Entities\Activities\CreateTaskActivity.cs" />
@@ -81,7 +77,6 @@
     <Compile Include="Domain\Services\Impl\ActivityService.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Domain\Entities\Activities\Activity.cs" />
-    <Compile Include="Domain\Business\Acitivities\ActivityInfo.cs" />
     <Compile Include="Domain\Enums\ActivityAction.cs" />
     <Compile Include="Domain\Entities\UserFollowedActivity.cs" />
     <Compile Include="Domain\Entities\Friendship.cs" />
