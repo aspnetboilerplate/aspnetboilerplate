@@ -83,11 +83,14 @@
     <Compile Include="Application\Services\Dto\Tasks\GetTasksByImportanceOutput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsByMostActiveInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsByMostActiveOutput.cs" />
+    <Compile Include="Application\Services\Dto\TaskeverUsers\GetUserProfileInput.cs" />
+    <Compile Include="Application\Services\Dto\TaskeverUsers\GetUserProfileOutput.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Tasks\CreateTaskInput.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsInput.cs" />
     <Compile Include="Application\Services\Impl\TaskService.cs" />
+    <Compile Include="Application\Services\ITaskeverUserService.cs" />
     <Compile Include="Application\Services\ITaskService.cs" />
     <Compile Include="Application\Services\IUserActivityService.cs" />
     <Compile Include="Application\Services\Impl\UserActivityService.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Application\Services\Dto\Friendships\RemoveFriendshipInput.cs" />
     <Compile Include="Application\Services\Dto\Tasks\UpdateTaskInput.cs" />
     <Compile Include="Application\Services\Dto\Friendships\UpdateLastVisitTimeInput.cs" />
+    <Compile Include="Application\Services\Impl\TaskeverUserService.cs" />
     <Compile Include="Dependency\Installers\TaskeverAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverAppModule.cs" />
