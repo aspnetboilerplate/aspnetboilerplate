@@ -3,15 +3,15 @@ using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
-using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
+using Abp.Modules.Core.Domain.Repositories;
 using Abp.Utils.Extensions;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.Tasks;
-using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Enums;
+using Taskever.Domain.Repositories;
 using Taskever.Domain.Services;
 
 namespace Taskever.Application.Services.Impl

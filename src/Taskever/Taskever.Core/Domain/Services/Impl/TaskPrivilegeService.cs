@@ -1,7 +1,7 @@
 using Abp.Modules.Core.Domain.Entities;
-using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;
+using Taskever.Domain.Repositories;
 
 namespace Taskever.Domain.Services.Impl
 {

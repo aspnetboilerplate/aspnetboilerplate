@@ -10,7 +10,7 @@ namespace Abp.Modules.Core.Domain.Entities
         /// <summary>
         /// User.
         /// </summary>
-        public virtual Tenant User { get; set; }
+        public virtual User User { get; set; }
 
         /// <summary>
         /// Role.

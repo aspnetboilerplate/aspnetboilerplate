@@ -59,10 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Repositories\IActivityRepository.cs" />
-    <Compile Include="Data\Repositories\IFriendshipRepository.cs" />
-    <Compile Include="Data\Repositories\ITaskRepository.cs" />
-    <Compile Include="Data\Repositories\IUserFallowedActivityRepository.cs" />
+    <Compile Include="Domain\Repositories\IActivityRepository.cs" />
+    <Compile Include="Domain\Repositories\IFriendshipRepository.cs" />
+    <Compile Include="Domain\Repositories\ITaskRepository.cs" />
+    <Compile Include="Domain\Repositories\IUserFallowedActivityRepository.cs" />
     <Compile Include="Dependency\Installers\TaskeverCoreInstaller.cs" />
     <Compile Include="Domain\Business\Acitivities\ActivityAttribute.cs" />
     <Compile Include="Domain\Business\Acitivities\ActivityInfoFactory.cs" />

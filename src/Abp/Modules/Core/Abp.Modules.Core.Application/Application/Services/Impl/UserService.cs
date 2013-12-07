@@ -5,8 +5,8 @@ using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
-using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
+using Abp.Modules.Core.Domain.Repositories;
 
 namespace Abp.Modules.Core.Application.Services.Impl
 {

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Abp.Data.Repositories.NHibernate;
 using Abp.Modules.Core.Domain.Entities;
+using Abp.Modules.Core.Domain.Repositories;
 using NHibernate.Linq;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate

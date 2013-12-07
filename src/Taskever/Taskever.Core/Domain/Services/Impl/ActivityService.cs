@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Uow;
-using Abp.Modules.Core.Data.Repositories;
+using Abp.Modules.Core.Domain.Repositories;
 using Abp.Utils.Extensions;
 using Castle.Core.Logging;
-using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
+using Taskever.Domain.Repositories;
 
 namespace Taskever.Domain.Services.Impl
 {

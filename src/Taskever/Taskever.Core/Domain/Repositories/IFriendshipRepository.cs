@@ -4,7 +4,7 @@ using Abp.Domain.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;
 
-namespace Taskever.Data.Repositories
+namespace Taskever.Domain.Repositories
 {
     public interface IFriendshipRepository : IRepository<Friendship>
     {

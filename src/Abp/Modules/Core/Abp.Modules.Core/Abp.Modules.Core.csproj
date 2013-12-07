@@ -53,8 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Repositories\ITenantRepository.cs" />
-    <Compile Include="Data\Repositories\IUserRepository.cs" />
+    <Compile Include="Domain\Repositories\ITenantRepository.cs" />
+    <Compile Include="Domain\Repositories\IUserRepository.cs" />
     <Compile Include="Domain\Entities\TenantMembershipStatus.cs" />
     <Compile Include="Domain\Entities\UserRole.cs" />
     <Compile Include="Domain\Entities\Utils\AuditedEntity.cs" />

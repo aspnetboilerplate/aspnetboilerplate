@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Abp.Domain.Entities;
 using Abp.Modules.Core.Domain.Entities.Utils;
+using Abp.Modules.Core.Domain.Repositories;
 using Abp.Utils.Extensions;
 using Castle.DynamicProxy;
 using NHibernate.Linq;

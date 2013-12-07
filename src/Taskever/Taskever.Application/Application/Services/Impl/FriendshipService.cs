@@ -3,13 +3,13 @@ using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
-using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Domain.Entities;
+using Abp.Modules.Core.Domain.Repositories;
 using Taskever.Application.Services.Dto.Friendships;
-using Taskever.Data.Repositories;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;
 using Taskever.Domain.Policies;
+using Taskever.Domain.Repositories;
 
 namespace Taskever.Application.Services.Impl
 {
