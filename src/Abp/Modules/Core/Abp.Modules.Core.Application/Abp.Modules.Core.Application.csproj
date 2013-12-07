@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Services\Dto\Users\ChangePasswordInput.cs" />
-    <Compile Include="Application\Services\Dto\Users\ChangePasswordOutput.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\Mappings\DtoMapper.cs" />
     <Compile Include="Application\Services\Dto\RegisterUserInput.cs" />

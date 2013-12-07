@@ -49,7 +49,7 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork]
-        public virtual ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
+        public virtual void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
@@ -70,8 +70,6 @@ namespace Taskever.Application.Services.Impl
             {
                 friendShip.FollowActivities = input.FollowActivities.Value;
             }
-
-            return new ChangeFriendshipPropertiesOutput();
         }
 
         [UnitOfWork]
@@ -105,7 +103,7 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork] //TODO: Need UnitOfWork, I think no!
-        public virtual RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input)
+        public virtual void RemoveFriendship(RemoveFriendshipInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
@@ -116,43 +114,35 @@ namespace Taskever.Application.Services.Impl
             }
 
             _friendshipRepository.Delete(friendship);
-
-            return new RemoveFriendshipOutput();
         }
 
         [UnitOfWork]
-        public virtual AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input)
+        public virtual void AcceptFriendship(AcceptFriendshipInput input)
         {
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
             var currentUser = _userRepository.Load(User.CurrentUserId);
 
             friendship.AcceptBy(currentUser);
-
-            return new AcceptFriendshipOutput();
         }
 
-        public virtual RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input)
+        public virtual void RejectFriendship(RejectFriendshipInput input)
         {
             RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
-            return new RejectFriendshipOutput();
         }
 
-        public CancelFriendshipRequestOutput CancelFriendshipRequest(CancelFriendshipRequestInput input)
+        public void CancelFriendshipRequest(CancelFriendshipRequestInput input)
         {
             RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
-            return new CancelFriendshipRequestOutput();
         }
 
         [UnitOfWork]
-        public UpdateLastVisitTimeOutput UpdateLastVisitTime(UpdateLastVisitTimeInput input)
+        public void UpdateLastVisitTime(UpdateLastVisitTimeInput input)
         {
             var friendship = _friendshipRepository.GetOrNull(User.CurrentUserId, input.FriendUserId);
             if (friendship != null)
             {
                 friendship.LastVisitTime = DateTime.Now;
             }
-
-            return new UpdateLastVisitTimeOutput();
         }
     }
 }

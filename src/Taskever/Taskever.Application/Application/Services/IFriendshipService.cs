@@ -9,18 +9,18 @@ namespace Taskever.Application.Services
 
         GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input);
 
-        ChangeFriendshipPropertiesOutput ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input);
+        void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input);
 
         SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input);
 
-        RemoveFriendshipOutput RemoveFriendship(RemoveFriendshipInput input);
+        void RemoveFriendship(RemoveFriendshipInput input);
 
-        AcceptFriendshipOutput AcceptFriendship(AcceptFriendshipInput input);
+        void AcceptFriendship(AcceptFriendshipInput input);
 
-        RejectFriendshipOutput RejectFriendship(RejectFriendshipInput input);
+        void RejectFriendship(RejectFriendshipInput input);
 
-        CancelFriendshipRequestOutput CancelFriendshipRequest(CancelFriendshipRequestInput input);
+        void CancelFriendshipRequest(CancelFriendshipRequestInput input);
 
-        UpdateLastVisitTimeOutput UpdateLastVisitTime(UpdateLastVisitTimeInput input);
+        void UpdateLastVisitTime(UpdateLastVisitTimeInput input);
     }
 }

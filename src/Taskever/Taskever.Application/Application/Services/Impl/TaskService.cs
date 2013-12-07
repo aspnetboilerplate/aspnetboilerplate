@@ -136,7 +136,7 @@ namespace Taskever.Application.Services.Impl
         }
 
         [UnitOfWork]
-        public UpdateTaskOutput UpdateTask(UpdateTaskInput input)
+        public void UpdateTask(UpdateTaskInput input)
         {
             var task = _taskRepository.GetOrNull(input.Id);
             if (task == null)
@@ -181,8 +181,6 @@ namespace Taskever.Application.Services.Impl
                             Task = task
                         });
             }
-
-            return new UpdateTaskOutput();
         }
 
         public DeleteTaskOutput DeleteTask(DeleteTaskInput input)
