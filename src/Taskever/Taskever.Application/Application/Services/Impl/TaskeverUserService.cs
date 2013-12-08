@@ -5,6 +5,8 @@ using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
 using Taskever.Application.Services.Dto.TaskeverUsers;
+using Taskever.Domain.Enums;
+using Taskever.Domain.Repositories;
 using Taskever.Domain.Services;
 
 namespace Taskever.Application.Services.Impl
@@ -13,31 +15,40 @@ namespace Taskever.Application.Services.Impl
     {
         private readonly IUserRepository _userRepository;
         private readonly ITaskeverUserPolicy _taskeverUserPolicy;
+        private readonly IFriendshipRepository _friendshipRepository;
 
-
-        public TaskeverUserService(IUserRepository userRepository, ITaskeverUserPolicy taskeverUserPolicy)
+        public TaskeverUserService(IUserRepository userRepository, ITaskeverUserPolicy taskeverUserPolicy, IFriendshipRepository friendshipRepository)
         {
             _userRepository = userRepository;
             _taskeverUserPolicy = taskeverUserPolicy;
+            _friendshipRepository = friendshipRepository;
         }
 
         public GetUserProfileOutput GetUserProfile(GetUserProfileInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            var profileUser = _userRepository.Load(input.UserId);
 
-            if (!_taskeverUserPolicy.CanSeeProfile(currentUser, profileUser))
+            var profileUser = _userRepository.Get(input.UserId);
+            if (profileUser == null)
             {
-                return new GetUserProfileOutput { CanNotSeeTheProfile = true };
+                throw new AbpUserFriendlyException("Can not found the user!");
             }
 
-            var output = new GetUserProfileOutput();
+            if (profileUser.Id != currentUser.Id)
+            {
+                var friendship = _friendshipRepository.GetOrNull(currentUser.Id, input.UserId);
+                if (friendship == null)
+                {
+                    return new GetUserProfileOutput { CanNotSeeTheProfile = true, User = profileUser.MapTo<UserDto>() }; //TODO: Is it true to send user informations?
+                }
 
-            output.User = _userRepository.Get(input.UserId).MapTo<UserDto>();
-            
-            //TODO: Get tasks
+                if (friendship.Status != FriendshipStatus.Accepted)
+                {
+                    return new GetUserProfileOutput { CanNotSeeTheProfile = true, SentFriendshipRequest = true, User = profileUser.MapTo<UserDto>() };
+                }
+            }
 
-            return output;
+            return new GetUserProfileOutput { User = profileUser.MapTo<UserDto>() };
         }
     }
 }

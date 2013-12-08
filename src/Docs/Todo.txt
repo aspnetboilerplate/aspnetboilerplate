@@ -3,6 +3,8 @@
 
 * TODO
 
+- Session timeouts!
+
 - Loading animations!
 - Remove dynamic DTO creation!
 

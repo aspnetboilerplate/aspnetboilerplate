@@ -21,6 +21,10 @@ namespace Taskever.Web.Startup
             //TODO: must be able to exclude/include all methods option
 
             BuildApiController
+                .For<ITaskeverUserService>("taskever/user")
+                .Build();
+
+            BuildApiController
                 .For<ITaskService>("taskever/task")
                 .Build(); 
 

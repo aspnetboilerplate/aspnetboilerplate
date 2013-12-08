@@ -1,15 +1,30 @@
 ﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
-    function($, ko, dialogs, dtos, taskService, friendshipService, session) {
+    function ($, ko, dialogs, dtos, taskService, friendshipService, session) {
         return function () {
             var that = this;
 
             // Public fields //////////////////////////////////////////////////////
 
             that.emailAddress = ko.observable('');
-            
+            that.message = ko.observable('');
+
             // Public methods /////////////////////////////////////////////////////
 
-            that.attached = function(view, parent) {
+            that.activate = function (activateData) {
+                if (!activateData) {
+                    return;
+                }
+
+                if (activateData.message) {
+                    that.message(activateData.message);
+                }
+
+                if (activateData.emailAddress) {
+                    that.emailAddress(activateData.emailAddress);
+                }
+            };
+
+            that.attached = function (view, parent) {
                 $(view).find("form").validate({
                     submitHandler: function () {
                         abp.ui.setBusy($(view), {
@@ -21,7 +36,7 @@
                                 } else {
                                     abp.notify.info("Sent friendship request!");
                                 }
-                                
+
                                 dialogs.close(that);
                             })
                         });

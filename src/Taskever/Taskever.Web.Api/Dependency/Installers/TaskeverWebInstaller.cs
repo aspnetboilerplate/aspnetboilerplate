@@ -13,7 +13,7 @@ namespace Taskever.Web.Dependency.Installers
             container.Register(
 
                 //All Web Api Controllers
-                Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient()
+                Classes.FromThisAssembly().BasedOn<ApiController>().LifestyleTransient() //TODO: No need in fact
 
                 );
         }

@@ -72,7 +72,7 @@
 
     abp.message.show = function (type, message, title) {
         abp.log.warn('abp.message.show is not implemented! I shows alert as default!');
-        alert((title || '') + "! " + message);
+        alert((title || '') + ' ' + message);
     };
 
     abp.message.info = function (message, title) {
