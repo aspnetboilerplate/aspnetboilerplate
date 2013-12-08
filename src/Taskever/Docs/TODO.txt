@@ -2,6 +2,10 @@ TODO (primary):
 --------------------------------------
 fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
 
+- Emails
+  - TASK: To related people (Create, Complete)
+  - FRIENDSHIP: Sent me, Accepted by
+
 KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
  - Acaba sadece create ederken mi belirlense bu?
 
