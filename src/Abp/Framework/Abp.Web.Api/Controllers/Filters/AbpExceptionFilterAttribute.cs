@@ -12,7 +12,7 @@ namespace Abp.WebApi.Controllers.Filters
         public override void OnException(HttpActionExecutedContext context)
         {
             //TODO: Create a LogHelper for that!
-            using (var logger = IocHelper.ResolveDisposableService<ILogger>())
+            using (var logger = IocHelper.ResolveAsDisposable<ILogger>())
             {
                 logger.Service.Error(context.Exception.Message, context.Exception);
             }
