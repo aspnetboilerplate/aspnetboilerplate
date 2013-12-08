@@ -1,73 +1,61 @@
 TODO (primary):
 --------------------------------------
-fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
 
+BEFORE 1st release of Taskever:
+- KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
+  - Acaba sadece create ederken mi belirlense bu?
+- SEO for main page
+- Emails
+  - Email validation on registration
+- Remember me is not working!
+- Session timeout!
+
+AFTER 1st release
+- fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
 - Emails
   - TASK: To related people (Create, Complete)
   - FRIENDSHIP: Sent me, Accepted by
-
-KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
- - Acaba sadece create ederken mi belirlense bu?
-
-Onaylanmamýþ arkadaþýn sayfasýna gitmemeli!
-
-Remember me is not working!
-
-Avatarýn yanýndaki isim ortalý deðil, düzenle
-ProfileImages folder github problemi!
-
-- REMOVE Empty Output DTOS or do not remove?
-
-TODO (secondary):
---------------------------------------
-- Localization for all pages
-
-- Check all TODO's
-
+- Avatarýn yanýndaki isim ortalý deðil, düzenle
+- ProfileImages folder github problemi!
+- Optimizaton: DB operations (Activities and others), Indexes
+- Localization for all pages (English & Turkish)
+- Mobile optimization!
+- Disable buttons and areas on ajaxs!
+- Dynamic pages
+  - By me
+    - Create task (left side, refresh?)
+    - Complete task (left side, refresh?)
+    - Add/remove/Accept friend
+      (right side, refresh or insert/delete)
+	  (friends page on addition)
+  - Server-to-client (real time)
+    - Task
+      - Assign to me
+    - Activities (home, user (later)) - twitter style
+    - Friendship
+      - request
+	  - accept
+  ...
 - Activities
   - Show actor & related activities different
   - Show profile images of actors of the activity!
-
-Activity stream (home)
-- Tasks
-  - Re-assigning a task
-    - To all followers of Assigned user
-- Friendship
+  - Highligt new acivities for a few seconds
+- Notifications
   - A user accepted a friendship of YOU
   - A user sent friendship request to YOU (accept on history?)
-
-Activity stream (user)
-- Tasks
-  - Reassign a task to this user (actor)
-
 - Put icons to pages
-
 - Make login page attractive!
 - Better message boxes
-
-- Auto refresh UI
-  - Task
-    - Delete
-  - Friendship
-    - Delete
-	- Sent request?
-  - Activities?
-
-SignalR
-  - Task
-    - Complete
-	- Assigned to me
-	- ...
-  - Friendships
-	- Request
-    - Accept
-
-Work offline
-  - ...
-
 - Search for a better bootstrap theme
+- Check all TODO's
 
+TODO (2nd version):
+--------------------------------------
 
+- Work offline
+
+TODO (others)
+--------------------------------------
 - Check livestamp's performance!
 
 FUTURE:
@@ -83,20 +71,6 @@ FUTURE:
 
 FIRST:
 
- - By me
-   - Create task (left side, refresh?)
-   - Complete task (left side, refresh?)
-   - Add/remove/Accept friend
-     (right side, refresh or insert/delete)
-	 (friends page on addition)
- - Server-to-client (real time)
-   - Task
-     - Assign to me
-   - Activities (home, user (later))
-   - Friendship
-     - request
-	 - accept
- ...
 
 SECOND:
 

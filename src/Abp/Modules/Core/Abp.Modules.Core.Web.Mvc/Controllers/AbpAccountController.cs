@@ -39,10 +39,10 @@ namespace Abp.Modules.Core.Mvc.Controllers
                     throw new AbpUserFriendlyException("No user name or password!");
                 }
 
-                //FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
+                FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
                 var user = _userService.GetUserOrNull(loginModel.EmailAddress, loginModel.Password);
                 var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
-                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(15), false, identity.SerializeToString());
+                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddMinutes(120), false, identity.SerializeToString());
                 var encTicket = FormsAuthentication.Encrypt(authTicket);
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);

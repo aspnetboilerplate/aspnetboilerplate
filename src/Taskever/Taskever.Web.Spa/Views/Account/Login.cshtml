@@ -1,4 +1,7 @@
-﻿<div id="wrap">
+﻿@{
+    ViewBag.Title = "Taskever - A free social network for task management!";
+}
+<div id="wrap">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -12,20 +15,27 @@
             <section class="col-md-8 col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">What is Taskever</h3>
+                        <h3 class="panel-title">Taskever - A free social network for task management!</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Taskever is free a social network that is used to manage tasks. Here, a few key features of Taskever:</p>
-                        <ul>
-                            <li>Create and manage your own tasks</li>
-                            <li>See taks of your friends</li>
-                            <li>Assign tasks to your friends</li>
-                            <li>See activities of your friends</li>
-                        </ul>
-                        @*@Html.Action("LoginBox","Widgets")*@
-                    </div>
+                        <div class="col-sm-4 col-xs-12 text-center">
+                            <img src="~/Images/home/manage_tasks.png" style="width: 64px; height: 64px" alt="Manage tasks"/>
+                            <h3>Tasks</h3>
+                            <p>Create and manage your private and business tasks</p>
+                        </div>
+                        <div class="col-sm-4 col-xs-12 text-center">
+                            <img src="~/Images/home/friends.png" style="width: 64px; height: 64px" alt="Find your friends" />
+                            <h3>Friendships</h3>
+                            <p>Find your friends, assign tasks to and see tasks of your friends</p>
+                        </div>
+                        <div class="col-sm-4 col-xs-12 text-center">
+                            <img src="~/Images/home/see_activities.png" style="width: 64px; height: 64px" alt="See activities" />
+                            <h3>Activities</h3>
+                            <p>See activities of your friends and follow interested tasks</p>
+                        </div>
                 </div>
-            </section>
+        </div>
+        </section>
 
             <section class="col-md-4 col-sm-12">
 
@@ -35,8 +45,8 @@
 
             </section>
 
-        </div>
     </div>
+</div>
 </div>
 
 @Html.Partial("_Footer")
@@ -46,6 +56,6 @@
     <script src="~/Scripts/require.js" data-main="/ViewResources/main.js"></script>
     <script>
         require(['/ViewResources/Account/Login.js']);
-    //require(['/Widgets/LoginBox/LoginBox.js']);
+        //require(['/Widgets/LoginBox/LoginBox.js']);
     </script>
 }

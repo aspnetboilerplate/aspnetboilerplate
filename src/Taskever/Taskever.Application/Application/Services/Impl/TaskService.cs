@@ -43,12 +43,12 @@ namespace Taskever.Application.Services.Impl
 
             if (task == null)
             {
-                throw new Exception("Can not found the task: " + input.Id);
+                throw new AbpUserFriendlyException("Can not found the task!");
             }
 
             if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, task.AssignedUser))
             {
-                throw new ApplicationException("Can not see tasks of user");
+                throw new AbpUserFriendlyException("Can not see tasks of " + task.AssignedUser.Name);
             }
 
             return new GetTaskOutput
@@ -101,7 +101,7 @@ namespace Taskever.Application.Services.Impl
             //Get entities from database
             var creatorUser = _userRepository.Get(User.CurrentUserId);
             var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
-            
+
             if (!_taskPrivilegeService.CanAssignTask(creatorUser, assignedUser))
             {
                 throw new AbpUserFriendlyException("You can not assign task to this user!");

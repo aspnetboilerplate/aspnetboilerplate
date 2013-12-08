@@ -2,6 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
+
+    <meta name="keywords" content="task,task management,social network">
+    <meta name="description" content="A free social network for task management">
+    <meta name="author" content="Halil İbrahim Kalkan">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -32,12 +37,14 @@
 
     @Scripts.Render("~/scripts/baselibs")
 
-    <script src="~/Scripts/libs/spinjs/spin.js"></script> <!-- TODO: Add to base libs! -->
+    <script src="~/Scripts/libs/spinjs/spin.js"></script>
+    <!-- TODO: Add to base libs! -->
     <script src="~/Scripts/libs/spinjs/jquery.spin.js"></script>
 
     @Scripts.Render("~/scripts/abp")
     @Scripts.Render("~/scripts/taskever")
-    <script src="/api/Localization" type="text/javascript"></script> <!-- TODO: Find a better way! -->
+    <script src="/api/Localization" type="text/javascript"></script>
+    <!-- TODO: Find a better way! -->
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -69,7 +69,7 @@
                             </a>
                         </div>
                         <div>
-                            Waiting since <span data-bind="text: creationTime"></span>
+                            <span data-bind="text: moment(creationTime()).fromNow()"></span>
                             <br />
                             <a class="clickable" data-bind="click: $root.cancelFriendshipRequest"><i class="icon-ban-circle" />&nbsp;Cancel</a>
                         </div>
