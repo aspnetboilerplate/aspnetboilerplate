@@ -228,6 +228,7 @@
     <Content Include="App\Main\views\user.cshtml" />
     <Content Include="App\Main\views\taskList.cshtml" />
     <Content Include="App\Main\views\shared\activities\activityInfo_1.cshtml" />
+    <Content Include="Images\home\screenshot1.png" />
     <Content Include="Images\home\see_activities.png" />
     <Content Include="Images\home\manage_tasks.png" />
     <Content Include="Images\home\friends.png" />
