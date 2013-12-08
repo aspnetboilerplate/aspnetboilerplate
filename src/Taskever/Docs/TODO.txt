@@ -9,6 +9,7 @@ BEFORE 1st release of Taskever:
   - Email validation on registration
 - Remember me is not working!
 - Session timeout!
+- Hiç task ya da friend olmadýðýnda 'ekle..' gibi bir placeholder olsun!
 
 AFTER 1st release
 - fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
@@ -40,19 +41,16 @@ AFTER 1st release
   - Show actor & related activities different
   - Show profile images of actors of the activity!
   - Highligt new acivities for a few seconds
-- Notifications
+- Notifications (implement notifications and activities in Abp.Core)
   - A user accepted a friendship of YOU
   - A user sent friendship request to YOU (accept on history?)
 - Put icons to pages
 - Make login page attractive!
 - Better message boxes
+- update durandal and other libraries
+- page transition animations
 - Search for a better bootstrap theme
 - Check all TODO's
-
-TODO (2nd version):
---------------------------------------
-
-- Work offline
 
 TODO (others)
 --------------------------------------
@@ -61,17 +59,4 @@ TODO (others)
 FUTURE:
 - Dashboard?
  -------------------------------
-
- DB:
- Friendship -> UserId, FriendUserId index'i
-
- -------------------------------
  
- Client side and server-to-client Events (to refresh GUI):
-
-FIRST:
-
-
-SECOND:
-
- - A notification system!
