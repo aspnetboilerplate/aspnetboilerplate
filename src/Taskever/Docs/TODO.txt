@@ -4,7 +4,6 @@ TODO (primary):
 BEFORE 1st release of Taskever:
 - KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
   - Acaba sadece create ederken mi belirlense bu?
-- SEO for main page
 - Emails
   - Email validation on registration
 - Remember me is not working!

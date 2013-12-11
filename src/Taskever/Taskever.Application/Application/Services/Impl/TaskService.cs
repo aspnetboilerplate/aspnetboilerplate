@@ -22,16 +22,18 @@ namespace Taskever.Application.Services.Impl
         private readonly ITaskPrivilegeService _taskPrivilegeService;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
         public TaskService(
             IActivityService activityService,
             ITaskPrivilegeService taskPrivilegeService,
             ITaskRepository taskRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository, IEmailService emailService)
         {
             _activityService = activityService;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
+            _emailService = emailService;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
@@ -128,6 +130,8 @@ namespace Taskever.Application.Services.Impl
                         AssignedUser = assignedUser,
                         Task = taskEntity
                     });
+
+            _emailService.SendEmail(); //TODO: !!!
 
             return new CreateTaskOutput
                        {
