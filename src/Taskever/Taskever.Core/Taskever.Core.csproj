@@ -79,7 +79,6 @@
     <Compile Include="Domain\Services\Impl\TaskeverUserPolicy.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Domain\Entities\Activities\Activity.cs" />
-    <Compile Include="Domain\Enums\ActivityAction.cs" />
     <Compile Include="Domain\Entities\UserFollowedActivity.cs" />
     <Compile Include="Domain\Entities\Friendship.cs" />
     <Compile Include="Domain\Enums\FriendshipStatus.cs" />

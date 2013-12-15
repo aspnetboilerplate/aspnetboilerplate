@@ -3,6 +3,10 @@
         <h3 class="panel-title">@L("Login")</h3>
     </div>
     <div class="panel-body">
+        @if (ViewBag.LoginMessage != null)
+        {
+            <p class="text-success">@ViewBag.LoginMessage</p>            
+        }
         <form id="LoginForm" role="form" action="@Url.Action("Login")" method="POST">
             <div class="form-group">
                 <input type="email" maxlength="100" name="EmailAddress" class="form-control" id="LoginEmailAddress" placeholder="Enter email" required>
@@ -10,12 +14,12 @@
             <div class="form-group">
                 <input type="password" maxlength="30" name="Password" class="form-control" id="LoginPassword" placeholder="Password" required>
             </div>
-            <div class="checkbox">
+@*            <div class="checkbox">
                 <label>
                     <input type="checkbox" name="RememberMe" value="true">
                     Remember me
                 </label>
-            </div>
+            </div>*@
             <button type="submit" class="btn btn-default">Login</button>
         </form>
     </div>

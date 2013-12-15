@@ -12,11 +12,13 @@ namespace Abp.Modules.Core.Application.Services
     {
         IList<UserDto> GetAllUsers();
 
-        UserDto GetUserOrNull(string emailAddress, string password);
+        UserDto GetActiveUserOrNull(string emailAddress, string password);
 
         GetUserOutput GetUser(GetUserInput input);
 
         void RegisterUser(RegisterUserInput registerUser);
+
+        void ConfirmEmail(ConfirmEmailInput input);
 
         GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input);
 

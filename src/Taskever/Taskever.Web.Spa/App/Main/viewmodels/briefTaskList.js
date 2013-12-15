@@ -41,5 +41,9 @@
                 });
             };
 
+            that.createTask = function() {
+                dialogs.show('viewmodels/task/create');
+            };
+
         };
     });

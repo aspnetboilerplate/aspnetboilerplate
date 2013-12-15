@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label for="EditTaskPrivacy">Privacy</label>
                     <!-- TODO: Get from enumaration, make component? -->
-                    <select id="EditTaskPrivacy" class="form-control" data-bind="value: task.privacy">
+                    <select id="EditTaskPrivacy" class="form-control" data-bind="value: task.privacy, enable: task.privacyEditable">
                         <option value="1">Private</option>
                         <option value="2">Protected</option>
                     </select>

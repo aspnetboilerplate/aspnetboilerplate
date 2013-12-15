@@ -10,6 +10,8 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.Name);
             Map(x => x.Surname);
             Map(x => x.EmailAddress);
+            Map(x => x.IsEmailConfirmed);
+            Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.ProfileImage);
             Map(x => x.IsTenantOwner);

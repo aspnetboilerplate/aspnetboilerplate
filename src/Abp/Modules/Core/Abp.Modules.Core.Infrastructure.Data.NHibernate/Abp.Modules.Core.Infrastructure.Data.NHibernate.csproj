@@ -68,6 +68,7 @@
     <Compile Include="Data\Migrations\V20130824\_01_CreateAbpTenantsTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_03_CreateAbpRolesTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_04_CreateAbpUserRolesTable.cs" />
+    <Compile Include="Data\Migrations\V20131215\_01_AddEmailConfirmationColumnsToUsersTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Data\Repositories\Interceptors\AuditInterceptor.cs" />

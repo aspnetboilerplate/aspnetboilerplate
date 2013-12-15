@@ -171,6 +171,7 @@
     <Compile Include="Areas\Abp\Modules\Core\AbpAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ProfileImageController.cs" />
+    <Compile Include="Controllers\ProfileImageHelper.cs" />
     <Compile Include="Controllers\TaskeverController.cs" />
     <Compile Include="Controllers\WidgetsController.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
@@ -379,6 +380,7 @@
     <Content Include="Views\Account\_LoginPanel.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Scripts\underscore.min.map" />
+    <Content Include="Views\Account\ActivationInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />

@@ -1,26 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Application.Services.Dto;
+using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Mvc.Controllers;
+using Abp.Modules.Core.Mvc.Models;
+using Abp.Security;
+using Abp.Web.Models;
+using Abp.Web.Mvc.Controllers;
+using Abp.Web.Mvc.Models;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
 
 namespace Taskever.Web.Controllers
 {
-    public class AccountController : AbpAccountController
+    public class AccountController : AbpController
     {
-        public AccountController(IUserService userService)
-            : base(userService)
-        {
+        private readonly IUserService _userService;
 
+        public AccountController(IUserService userService)
+        {
+            _userService = userService;
         }
 
-        public override JsonResult Register(RegisterUserInput registerUser)
+        public virtual ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public virtual JsonResult Login(LoginModel loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
+                {
+                    throw new AbpUserFriendlyException("No user name or password!");
+                }
+
+                FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
+                var user = _userService.GetActiveUserOrNull(loginModel.EmailAddress, loginModel.Password);
+                var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
+                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddDays(2), true, identity.SerializeToString()); //TODO: true/false?
+                var encTicket = FormsAuthentication.Encrypt(authTicket);
+                var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                Response.Cookies.Add(faCookie);
+
+                return Json(new AbpMvcAjaxResponse { TargetUrl = "/" });
+            }
+
+            throw new AbpUserFriendlyException("Your form is invalid!");
+        }
+
+        public ActionResult ConfirmEmail(ConfirmEmailInput input)
+        {
+            _userService.ConfirmEmail(input);
+            ViewBag.LoginMessage = "Congratulations! Your account is activated. Enter your email address and password to login";
+            return RedirectToAction("Login");
+        }
+
+        [Abp.Modules.Core.Authorization.AbpAuthorize]
+        public virtual ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login");
+        }
+
+        public ActionResult ActivationInfo()
+        {
+            return View();
+        }
+
+        public JsonResult Register(RegisterUserInput registerUser)
         {
             //TODO: Return better exception messages!
             //TODO: Show captcha after filling register form, not on startup!
@@ -38,50 +92,9 @@ namespace Taskever.Web.Controllers
             }
 
             registerUser.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
-            return base.Register(registerUser);
-        }
-    }
+            _userService.RegisterUser(registerUser);
 
-    public static class ProfileImageHelper
-    {
-        private static List<string> _preDefinedProfileImages;
-
-        private static Random _rnd = new Random();
-
-        static ProfileImageHelper()
-        {
-            _preDefinedProfileImages = new List<string>
-                                           {
-                                               "user_blue.png",
-                                               "user_cyan.png",
-                                               "user_green.png",
-                                               "user_orange.png",
-                                               "user_purple.png",
-                                               "user_red.png",
-                                               "user_yellow.png"
-                                           };
-        }
-
-        public static string GenerateRandomProfileImage()
-        {
-            try
-            {
-                var imgIndex = _rnd.Next(0, _preDefinedProfileImages.Count);
-                var imgFileName = _preDefinedProfileImages[imgIndex];
-                var imgFilePath = Path.Combine(HttpContext.Current.Server.MapPath("~/ProfileImages/predefined"), imgFileName);
-
-                var userImageFileName = "0_" + _rnd.Next(0, int.MaxValue) + "_" + DateTime.Now.Ticks + Path.GetExtension(imgFilePath);
-                var userImageFilePath = Path.Combine(HttpContext.Current.Server.MapPath("~/ProfileImages"), userImageFileName);
-
-                File.Copy(imgFilePath, userImageFilePath, true);
-
-                return userImageFileName;
-            }
-            catch (Exception)
-            {
-                //TODO: Log?
-                return null;
-            }
+            return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("ActivationInfo") });
         }
     }
 }

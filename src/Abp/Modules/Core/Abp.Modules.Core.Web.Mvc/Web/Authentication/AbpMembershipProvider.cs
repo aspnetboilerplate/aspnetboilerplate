@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Security;
+using Abp.Dependency;
 using Abp.Modules.Core.Application.Services;
 using Castle.Windsor;
 
@@ -8,7 +9,7 @@ namespace Abp.Modules.Core.Mvc.Web.Authentication
     public class AbpMembershipProvider : MembershipProvider
     {
         internal static WindsorContainer IocContainer { get; set; } //TODO: Find a better way!
-        
+
         #region Implemented members
 
         public override int MaxInvalidPasswordAttempts
@@ -33,16 +34,10 @@ namespace Abp.Modules.Core.Mvc.Web.Authentication
 
         public override bool ValidateUser(string username, string password)
         {
-            var userService = IocContainer.Resolve<IUserService>();
-            try
+            using (var userService = IocHelper.ResolveAsDisposable<IUserService>())
             {
-                return (userService.GetUserOrNull(username, password) != null);
+                return (userService.Service.GetActiveUserOrNull(username, password) != null);
             }
-            finally
-            {
-                IocContainer.Release(userService);
-            }
-
         }
 
         #endregion

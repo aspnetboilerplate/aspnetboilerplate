@@ -2,22 +2,26 @@ TODO (primary):
 --------------------------------------
 
 BEFORE 1st release of Taskever:
-- KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
-  - Acaba sadece create ederken mi belirlense bu?
-- Emails
-  - Email validation on registration
-- Remember me is not working!
-- Session timeout!
-- Hiç task ya da friend olmadýðýnda 'ekle..' gibi bir placeholder olsun!
+
+Pazar hedefi:
++ Emails
+  + Assign a task!
+  + Complete task I created
+  + Email validation on registration
++ Hiç task ya da friend olmadýðýnda 'ekle..' gibi bir placeholder olsun!
+
++ KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
+- Optimizaton: DB operations (Activities and others), Indexes
+- Private task'i görebiliyorum task-id'sini girince!
 
 AFTER 1st release
+- Session timeout!
+- Remember me is not working!
+- Kullanýcý girdilerinde HTML/Js girilmesine izin vermeyelim!
+- Þifremi unuttum sýfýrlamasý
 - fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
-- Emails
-  - TASK: To related people (Create, Complete)
-  - FRIENDSHIP: Sent me, Accepted by
-- Avatarýn yanýndaki isim ortalý deðil, düzenle
 - ProfileImages folder github problemi!
-- Optimizaton: DB operations (Activities and others), Indexes
+- Avatarýn yanýndaki isim ortalý deðil, düzenle
 - Localization for all pages (English & Turkish)
 - Mobile optimization!
 - Disable buttons and areas on ajaxs!

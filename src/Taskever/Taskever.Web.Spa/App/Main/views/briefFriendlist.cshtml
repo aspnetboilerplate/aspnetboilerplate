@@ -11,6 +11,11 @@
                 </div>
             </a>
         </ul>
+        <!-- ko if: friendships().length <= 0 -->
+        <div class="panel-body text-muted">
+            <a class="clickable text-muted" data-bind="click: showAddNewFriendDialog">+ No friend, add one?</a>
+        </div>
+        <!-- /ko -->
         <div class="panel-footer">
             <a href="#friends">@L("SeeAllFriends")</a>
         </div>

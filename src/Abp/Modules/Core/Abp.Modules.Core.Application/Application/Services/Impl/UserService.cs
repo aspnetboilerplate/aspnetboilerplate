@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Dto;
@@ -16,11 +18,13 @@ namespace Abp.Modules.Core.Application.Services.Impl
     {
         private readonly IUserRepository _userRepository;
         private readonly ITenantRepository _tenantRepository;
+        private readonly IEmailService _emailService;
 
-        public UserService(IUserRepository questionRepository, ITenantRepository tenantRepository)
+        public UserService(IUserRepository questionRepository, ITenantRepository tenantRepository, IEmailService emailService)
         {
             _userRepository = questionRepository;
             _tenantRepository = tenantRepository;
+            _emailService = emailService;
         }
 
         public IList<UserDto> GetAllUsers()
@@ -28,9 +32,9 @@ namespace Abp.Modules.Core.Application.Services.Impl
             return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();
         }
 
-        public UserDto GetUserOrNull(string emailAddress, string password) //TODO: Make this GetUserOrNullInput and GetUserOrNullOutput
+        public UserDto GetActiveUserOrNull(string emailAddress, string password) //TODO: Make this GetUserOrNullInput and GetUserOrNullOutput
         {
-            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password));
+            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password && user.IsEmailConfirmed));
             return userEntity.MapTo<UserDto>();
         }
 
@@ -43,9 +47,74 @@ namespace Abp.Modules.Core.Application.Services.Impl
         [UnitOfWork]
         public void RegisterUser(RegisterUserInput registerUser)
         {
+            var existingUser = _userRepository.Query(q => q.FirstOrDefault(u => u.EmailAddress == registerUser.EmailAddress));
+            if (existingUser != null)
+            {
+                if (!existingUser.IsEmailConfirmed)
+                {
+                    SendConfirmationEmail(existingUser);
+                    throw new AbpUserFriendlyException("You registere with this email address before (" + registerUser.EmailAddress + ")! We re-sent an activation code to your email!");
+                }
+
+                throw new AbpUserFriendlyException("There is already a user with this email address (" + registerUser.EmailAddress + ")! Select another email address!");
+            }
+
             var userEntity = registerUser.MapTo<User>();
             userEntity.Tenant = _tenantRepository.Load(1); //TODO: Get from subdomain or ?
+            userEntity.GenerateEmailConfirmationCode();
             _userRepository.Insert(userEntity);
+            SendConfirmationEmail(userEntity);
+        }
+
+        [UnitOfWork]
+        public void ConfirmEmail(ConfirmEmailInput input)
+        {
+            var user = _userRepository.Get(input.UserId);
+            user.ConfirmEmail(input.ConfirmationCode);
+        }
+
+        private void SendConfirmationEmail(User user)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(user.EmailAddress);
+            mail.IsBodyHtml = true;
+            mail.Subject = "Email confirmation for Taskever";
+            mail.SubjectEncoding = Encoding.UTF8;
+
+            var mailBuilder = new StringBuilder();
+            mailBuilder.Append(
+@"<!DOCTYPE html>
+<html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+    <meta charset=""utf-8"" />
+    <title>{TEXT_HTML_TITLE}</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, 'DejaVu Sans', sans-serif;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h3>{TEXT_WELCOME}</h3>
+    <p>{TEXT_DESCRIPTION}</p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com/Account/ConfirmEmail?UserId={USER_ID}&ConfirmationCode={CONFIRMATION_CODE}"">http://www.taskever.com/Account/ConfirmEmail?UserId={USER_ID}&amp;ConfirmationCode={CONFIRMATION_CODE}</a></p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com"">http://www.taskever.com</a></p>
+</body>
+</html>");
+
+            mailBuilder.Replace("{TEXT_HTML_TITLE}", "Email confirmation for Taskever");
+            mailBuilder.Replace("{TEXT_WELCOME}", "Welcome to Taskever.com!");
+            mailBuilder.Replace("{TEXT_DESCRIPTION}", "Click the link below to confirm your email address and login to the Taskever.com");
+            mailBuilder.Replace("{USER_ID}", user.Id.ToString());
+            mailBuilder.Replace("{CONFIRMATION_CODE}", user.EmailConfirmationCode);
+
+            mail.Body = mailBuilder.ToString();
+            mail.BodyEncoding = Encoding.UTF8;
+
+            _emailService.SendEmail(mail);
         }
 
         public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
@@ -58,7 +127,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
         public void ChangePassword(ChangePasswordInput input)
         {
             var currentUser = _userRepository.Get(User.CurrentUserId);
-            if(currentUser.Password != input.CurrentPassword)
+            if (currentUser.Password != input.CurrentPassword)
             {
                 throw new AbpUserFriendlyException("Current password is invalid!");
             }
@@ -73,7 +142,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
             var oldFileName = currentUser.ProfileImage;
 
             currentUser.ProfileImage = input.FileName;
-            
+
             return new ChangeProfileImageOutput() { OldFileName = oldFileName };
         }
     }

@@ -7,8 +7,8 @@ using Abp.Application.Services;
 
 namespace Taskever.Application.Services
 {
-    public interface IEmailService : IApplicationService
+    public interface INotificationService : IApplicationService
     {
-        void SendEmail();
+        void Notify(INotification notification);
     }
 }

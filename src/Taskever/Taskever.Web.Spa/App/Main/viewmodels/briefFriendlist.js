@@ -1,6 +1,6 @@
 ﻿define(
-    ["knockout", 'session', 'service!taskever/friendship'],
-    function (ko, session, friendshipService) {
+    ["knockout", 'plugins/dialog', 'session', 'service!taskever/friendship'],
+    function (ko, dialogs, session, friendshipService) {
 
         var maxTaskCount = 10;
 
@@ -21,6 +21,10 @@
                 }).then(function (data) {
                     ko.mapping.fromJS(data.friendships, that.friendships);
                 });
+            };
+            
+            that.showAddNewFriendDialog = function () {
+                dialogs.show('viewmodels/friend/addFriendDialog');
             };
         };
 

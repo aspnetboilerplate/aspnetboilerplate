@@ -80,7 +80,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\AbpAccountController.cs" />
     <Compile Include="Controllers\DurandalViewController.cs" />
     <Compile Include="Dependency\Installers\AbpCoreModuleWebApiInstaller.cs" />
     <Compile Include="Models\LoginModel.cs" />

@@ -6,6 +6,11 @@
         <ul class="list-group" data-bind="foreach: activities">
             <li class="list-group-item" data-bind="compose: 'shared/activities/activityInfo_' + activity.activityType() + '.html'"></li>
         </ul>
+        <!-- ko if: activities().length <= 0 -->
+        <div class="panel-body text-muted">
+            There is no activity yet! You can start by creating a task.
+        </div>
+        <!-- /ko -->
     </div>
     <div data-bind="if: hasMoreActivities">
         <button data-bind="click: loadActivities" type="button" class="btn btn-primary btn-block">Show older activities</button>

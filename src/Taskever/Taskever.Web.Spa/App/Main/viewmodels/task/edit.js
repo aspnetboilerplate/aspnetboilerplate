@@ -18,6 +18,17 @@
                         id: taskId
                     }).done(function (data) {
                         ko.mapping.fromJS(data.task, that.task);
+
+                        that.task.privacyEditable = ko.observable(that.task.assignedUserId() == session.getCurrentUser().id());
+                        that.task.assignedUserId.subscribe(function (newValue) {
+                            if (newValue == session.getCurrentUser().id()) {
+                                that.task.privacyEditable(true);
+                            } else {
+                                that.task.privacyEditable(false);
+                                that.task.privacy(taskever.taskPrivacy.Protected);
+                            }
+                        });
+
                     }).fail(function () {
                         dfd.resolve(false);
                     }).then(function () {

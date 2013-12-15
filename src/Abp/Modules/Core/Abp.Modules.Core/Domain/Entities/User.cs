@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Modules.Core.Domain.Entities.Utils;
@@ -31,6 +32,16 @@ namespace Abp.Modules.Core.Domain.Entities
         /// Email address of the user.
         /// </summary>
         public virtual string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Is the <see cref="EmailAddress"/> confirmed.
+        /// </summary>
+        public virtual bool IsEmailConfirmed { get; set; }
+
+        /// <summary>
+        /// Is the <see cref="EmailAddress"/> confirmed.
+        /// </summary>
+        public virtual string EmailConfirmationCode { get; set; }
 
         /// <summary>
         /// Password of the user.
@@ -71,6 +82,52 @@ namespace Abp.Modules.Core.Domain.Entities
                 }
 
                 return identity.UserId;
+            }
+        }
+
+        public virtual void GenerateEmailConfirmationCode()
+        {
+            EmailConfirmationCode = RandomCodeGenerator.Generate(16);
+        }
+
+        public virtual void ConfirmEmail(string confirmationCode)
+        {
+            if (IsEmailConfirmed)
+            {
+                return;
+            }
+
+            if (EmailConfirmationCode != confirmationCode)
+            {
+                throw new ApplicationException("Wrong email confirmation code!");
+            }
+
+            IsEmailConfirmed = true;
+        }
+    }
+
+    public class RandomCodeGenerator
+    {
+        private static readonly Random Rnd = new Random();
+
+        private const string CodeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        public static string Generate(int length)
+        {
+            var codeBuilder = new StringBuilder();
+            for (var i = 0; i < length; i++)
+            {
+                codeBuilder.Append(CodeChars[GetRandomNumber(0, CodeChars.Length)]);
+            }
+
+            return codeBuilder.ToString();
+        }
+
+        private static int GetRandomNumber(int min, int max)
+        {
+            lock (Rnd)
+            {
+                return Rnd.Next(min, max);
             }
         }
     }

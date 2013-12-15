@@ -22,18 +22,18 @@ namespace Taskever.Application.Services.Impl
         private readonly ITaskPrivilegeService _taskPrivilegeService;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
 
         public TaskService(
             IActivityService activityService,
             ITaskPrivilegeService taskPrivilegeService,
             ITaskRepository taskRepository,
-            IUserRepository userRepository, IEmailService emailService)
+            IUserRepository userRepository, INotificationService notificationService)
         {
             _activityService = activityService;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
-            _emailService = emailService;
+            _notificationService = notificationService;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
@@ -130,8 +130,11 @@ namespace Taskever.Application.Services.Impl
                         AssignedUser = assignedUser,
                         Task = taskEntity
                     });
-
-            _emailService.SendEmail(); //TODO: !!!
+            
+            if(taskEntity.AssignedUser.Id != creatorUser.Id)
+            {
+                _notificationService.Notify(new AssignedToTaskNotification(taskEntity));
+            }
 
             return new CreateTaskOutput
                        {
@@ -184,6 +187,7 @@ namespace Taskever.Application.Services.Impl
                             AssignedUser = task.AssignedUser,
                             Task = task
                         });
+                _notificationService.Notify(new CompletedTaskNotification(task));
             }
         }
 
