@@ -66,6 +66,7 @@
     <Compile Include="Data\Migrations\V20130901\_02_CreateTeFriendshipTable.cs" />
     <Compile Include="Data\Migrations\V20131007\_01_CreateTeActivitiesTable.cs" />
     <Compile Include="Data\Migrations\V20131007\_02_CreateTeUserActivitiesTable.cs" />
+    <Compile Include="Data\Migrations\V20131215\_01_ChangeIndexOnTeUserFollowedActivitiesTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhActivityRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhFriendshipRepository.cs" />

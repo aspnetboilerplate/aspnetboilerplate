@@ -11,10 +11,12 @@ Pazar hedefi:
 + Hiç task ya da friend olmadýðýnda 'ekle..' gibi bir placeholder olsun!
 
 + KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
-- Optimizaton: DB operations (Activities and others), Indexes
-- Private task'i görebiliyorum task-id'sini girince!
++ Private task'i görebiliyorum task-id'sini girince!
++ Optimizaton: DB operations (Activities and others), Indexes
 
 AFTER 1st release
+- Indexes (db optimization)
+- Friendship request/acceptance emails!
 - Session timeout!
 - Remember me is not working!
 - Kullanýcý girdilerinde HTML/Js girilmesine izin vermeyelim!

@@ -42,19 +42,7 @@ namespace Taskever.Application.Services.Impl
 
             //TODO: Think on private activities? When a private task is created or completed?
 
-            var query = from followedActivity in _followedActivityRepository.GetAllWithActivity()
-                        where followedActivity.User.Id == input.UserId && followedActivity.Id < input.BeforeId
-                        select followedActivity;
-
-            if (input.IsActor.HasValue)
-            {
-                query = query.Where(fa => fa.IsActor == input.IsActor.Value);
-            }
-
-            var activities = query
-                .OrderByDescending(fa => fa.Id)
-                .Take(input.MaxResultCount)
-                .ToList();
+            var activities = _followedActivityRepository.Getactivities(input.UserId,input.IsActor, input.BeforeId, input.MaxResultCount);
 
             return new GetFollowedActivitiesOutput
                        {

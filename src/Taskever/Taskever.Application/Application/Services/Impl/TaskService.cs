@@ -53,6 +53,11 @@ namespace Taskever.Application.Services.Impl
                 throw new AbpUserFriendlyException("Can not see tasks of " + task.AssignedUser.Name);
             }
 
+            if (task.AssignedUser.Id != currentUser.Id && task.Privacy == TaskPrivacy.Private)
+            {
+                throw new AbpUserFriendlyException("Can not see this task since it's private!");
+            }
+
             return new GetTaskOutput
                        {
                            Task = task.MapTo<TaskWithAssignedUserDto>(),
@@ -130,8 +135,8 @@ namespace Taskever.Application.Services.Impl
                         AssignedUser = assignedUser,
                         Task = taskEntity
                     });
-            
-            if(taskEntity.AssignedUser.Id != creatorUser.Id)
+
+            if (taskEntity.AssignedUser.Id != creatorUser.Id)
             {
                 _notificationService.Notify(new AssignedToTaskNotification(taskEntity));
             }

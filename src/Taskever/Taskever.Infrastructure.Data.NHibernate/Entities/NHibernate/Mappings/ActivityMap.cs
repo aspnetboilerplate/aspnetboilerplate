@@ -10,6 +10,8 @@ namespace Taskever.Entities.NHibernate.Mappings
         {
             DiscriminateSubClassesOnColumn("ActivityType");
             Map(x => x.CreationTime);
+
+            //Cache.ReadOnly(); //TODO: Try caches!
         }
     }
 }
