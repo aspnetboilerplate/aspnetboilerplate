@@ -1,9 +1,13 @@
 ﻿define(
-    ['jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history', 'plugins/dialog'],
-    function ($, _, taskService, friendshipService, session, history, dialogs) {
+    ['jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
+    function ($, _, taskService, friendshipService, session, history) {
 
         return function () {
             var that = this;
+
+            // Private fields /////////////////////////////////////////////////////
+
+            var $view;
 
             // Public fields //////////////////////////////////////////////////////
 
@@ -49,18 +53,24 @@
                 });
             };
 
+            that.attached = function(view, parent) {
+                $view = $(view);
+            };
+
             that.updateTask = function () {
-                taskService.updateTask({
-                    id: that.task.id(),
-                    title: that.task.title(),
-                    description: that.task.description(),
-                    assignedUserId: that.task.assignedUserId(),
-                    priority: that.task.priority(),
-                    privacy: that.task.privacy(),
-                    state: that.task.state(),
-                }).done(function () {
-                    abp.notify.info('Task has been updated', 'Updated');
-                    history.navigate('task/' + that.task.id());
+                abp.ui.setBusy($view, {
+                    promise: taskService.updateTask({
+                        id: that.task.id(),
+                        title: that.task.title(),
+                        description: that.task.description(),
+                        assignedUserId: that.task.assignedUserId(),
+                        priority: that.task.priority(),
+                        privacy: that.task.privacy(),
+                        state: that.task.state(),
+                    }).done(function() {
+                        abp.notify.info('Task has been updated', 'Updated');
+                        history.navigate('task/' + that.task.id());
+                    })
                 });
             };
 

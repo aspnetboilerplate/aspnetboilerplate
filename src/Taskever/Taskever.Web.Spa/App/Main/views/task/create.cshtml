@@ -6,11 +6,11 @@
         <form role="form">
             <div class="form-group">
                 <label for="NewTaskTitle">Title</label>
-                <input type="text" class="form-control" id="NewTaskTitle" placeholder="Enter title" data-bind="value: task.title" required>
+                <input type="text" class="form-control" maxlength="200" id="NewTaskTitle" placeholder="Enter title" data-bind="value: task.title" required>
             </div>
             <div class="form-group">
                 <label for="NewTaskDescription">Description</label>
-                <textarea class="form-control" id="NewTaskDescription" placeholder="Enter description here" data-bind="value: task.description" rows="5"  required></textarea>
+                <textarea class="form-control" maxlength="2000" id="NewTaskDescription" placeholder="Enter description here" data-bind="value: task.description" rows="5"  required></textarea>
             </div>
             <div class="form-group">
                 <label for="NewTaskAssignedUserId">Assign to</label>

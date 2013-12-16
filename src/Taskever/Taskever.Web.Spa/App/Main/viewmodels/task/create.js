@@ -5,6 +5,7 @@
 
             // Private fields /////////////////////////////////////////////////////
 
+            var _$view;
             var _$form;
 
             var _currentUser = session.getCurrentUser();
@@ -46,7 +47,8 @@
             };
 
             that.attached = function (view, parent) {
-                _$form = $(view).find('form');
+                _$view = $(view);
+                _$form = _$view.find('form');
                 _$form.validate();
             };
 
@@ -54,11 +56,13 @@
                 if (!_$form.valid()) {
                     return;
                 }
-                
-                taskService.createTask({
-                    task: ko.mapping.toJS(that.task)
-                }).done(function (result) {
-                    dialogs.close(that, ko.mapping.fromJS(result.task));
+
+                abp.ui.setBusy(_$view, {
+                    promise: taskService.createTask({
+                        task: ko.mapping.toJS(that.task)
+                    }).done(function(result) {
+                        dialogs.close(that, ko.mapping.fromJS(result.task));
+                    })
                 });
             };
 
