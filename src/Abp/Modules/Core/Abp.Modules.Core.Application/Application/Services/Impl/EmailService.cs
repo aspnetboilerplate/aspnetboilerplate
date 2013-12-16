@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Net.Mail;
+using System.Text;
 using Castle.Core.Logging;
 
 namespace Abp.Modules.Core.Application.Services.Impl
@@ -13,7 +14,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
         {
             try
             {
-                mail.From = new MailAddress(ConfigurationManager.AppSettings["Email.SenderAddress"]);
+                mail.From = new MailAddress(ConfigurationManager.AppSettings["Email.SenderAddress"], "Taskever");
                 using (var client = new SmtpClient(ConfigurationManager.AppSettings["Email.Server"], 587))
                 {
                     client.UseDefaultCredentials = false;

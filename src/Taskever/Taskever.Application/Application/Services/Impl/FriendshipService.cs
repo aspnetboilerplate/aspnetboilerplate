@@ -177,7 +177,7 @@ namespace Taskever.Application.Services.Impl
     <h3>{TEXT_HEADER}</h3>
     <p>{TEXT_DESCRIPTION}</p>
     <p>&nbsp;</p>
-    <p><a href=""http://www.taskever.com/#friends?activeSection=SentRequests"">{TEXT_CLICK_TO_ANSWER}</a></p>
+    <p><a href=""http://www.taskever.com/#friends?activeSection=FriendshipRequests"">{TEXT_CLICK_TO_ANSWER}</a></p>
     <p>&nbsp;</p>
     <p><a href=""http://www.taskever.com"">http://www.taskever.com</a></p>
 </body>
