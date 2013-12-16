@@ -22,7 +22,7 @@ namespace Taskever.Application.Services.Dto.Tasks
             TaskStates = new List<TaskState>();
         }
 
-        public void GetValidationResult(List<ValidationResult> results)
+        public void AddValidationResults(List<ValidationResult> results)
         {
             //TODO: For demonstration, do it declarative!
             if (AssignedUserId <= 0)

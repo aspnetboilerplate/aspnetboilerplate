@@ -19,6 +19,8 @@
                     }).done(function (data) {
                         ko.mapping.fromJS(data.task, that.task);
 
+                        that.task.title(_.unescape(that.task.title()));
+                        that.task.description(_.unescape(that.task.description()));
                         that.task.privacyEditable = ko.observable(that.task.assignedUserId() == session.getCurrentUser().id());
                         that.task.assignedUserId.subscribe(function (newValue) {
                             if (newValue == session.getCurrentUser().id()) {

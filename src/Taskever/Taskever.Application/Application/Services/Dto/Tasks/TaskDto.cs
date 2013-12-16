@@ -1,4 +1,7 @@
-﻿using Abp.Modules.Core.Application.Services.Dto;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Abp.Application.Services.Dto;
+using Abp.Modules.Core.Application.Services.Dto;
 
 namespace Taskever.Application.Services.Dto.Tasks
 {

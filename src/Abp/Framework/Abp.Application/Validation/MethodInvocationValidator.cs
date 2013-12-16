@@ -39,7 +39,7 @@ namespace Abp.Validation
 
             if (argument is ICustomValidate)
             {
-                (argument as ICustomValidate).GetValidationResult(validationErrors);
+                (argument as ICustomValidate).AddValidationResults(validationErrors);
             }
             
             if(validationErrors.Any())

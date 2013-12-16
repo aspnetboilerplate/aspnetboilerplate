@@ -15,13 +15,13 @@ namespace Taskever.Web.App_Start
             bundles.Add(
                 new StyleBundle("~/styles/basestyles")
                     .Include("~/Abp/Framework/styles/utils/ie10fix.css")
-                    .Include("~/Content/bootstrap/bootstrap.metro.min.css") //TODO: Currently testing metro bootstrap
+                    .Include("~/Content/bootstrap/bootstrap.metro.min.css", new CssRewriteUrlTransform()) //TODO: Currently testing metro bootstrap
                     //.Include("~/Content/bootstrap/bootstrap-theme.css")
-                    .Include("~/Content/font-awesome.min.css")
-                    .Include("~/Content/durandal.css")
-                    .Include("~/Content/toastr.min.css")
-                    .Include("~/App/_Common/styles/main.css")
-                    .Include("~/Abp/Framework/styles/abp.css")
+                    .Include("~/Content/font-awesome.min.css", new CssRewriteUrlTransform())
+                    .Include("~/Content/durandal.css", new CssRewriteUrlTransform())
+                    .Include("~/Content/toastr.min.css", new CssRewriteUrlTransform())
+                    .Include("~/App/_Common/styles/main.css", new CssRewriteUrlTransform())
+                    .Include("~/Abp/Framework/styles/abp.css", new CssRewriteUrlTransform())
                 );
 
             bundles.Add(

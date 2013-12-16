@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Abp.Application.Services.Dto
 {
-    public interface ICustomValidate
+    public interface ICustomValidate : IValidate
     {
-        void GetValidationResult(List<ValidationResult> results);
+        void AddValidationResults(List<ValidationResult> results);
     }
 }

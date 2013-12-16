@@ -1,32 +1,28 @@
 TODO (primary):
 --------------------------------------
-
-BEFORE 1st release of Taskever:
-
-Pazar hedefi:
-+ Emails
-  + Assign a task!
-  + Complete task I created
-  + Email validation on registration
-+ Hiç task ya da friend olmadýðýnda 'ekle..' gibi bir placeholder olsun!
-
-+ KURAL: Bir task ancak create eden kiþiye assign edilmiþ durumda ise private yapýlabilir. Aksi halde yapýlamaz!
-+ Private task'i görebiliyorum task-id'sini girince!
-+ Optimizaton: DB operations (Activities and others), Indexes
-
-AFTER 1st release
-- Indexes (db optimization)
-- Friendship request/acceptance emails!
-- Session timeout!
-- Remember me is not working!
-- Kullanýcý girdilerinde HTML/Js girilmesine izin vermeyelim!
-- Þifremi unuttum sýfýrlamasý
-- fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
+FIX:
++ Kullanýcý girdilerinde HTML/Js girilmesine izin vermeyelim!
++ fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
 - ProfileImages folder github problemi!
-- Avatarýn yanýndaki isim ortalý deðil, düzenle
-- Localization for all pages (English & Turkish)
-- Mobile optimization!
 - Disable buttons and areas on ajaxs!
+- Session timeout!
+- Font sorunu var sanýrým Edit/Delete butonlarýnda mesela
+- Girdilere max length ver!
+- CROSS Browser hack!
+
+ÖZELLÝK:
+- Friendship request/acceptance emails!
+- Þifremi unuttum sýfýrlamasý
+- Remember me!
+
+ÝYÝLEÞTÝRME:
+- Screenshots to main page!
+- Avatarýn yanýndaki isim ortalý deðil, düzenle
+- Mobile optimization!
+- Indexes (db optimization)
+
+BÜYÜK GELÝÞTÝRMELER:
+- Localization for all pages (English & Turkish)
 - Dynamic pages
   - By me
     - Create task (left side, refresh?)
@@ -50,7 +46,6 @@ AFTER 1st release
   - A user accepted a friendship of YOU
   - A user sent friendship request to YOU (accept on history?)
 - Put icons to pages
-- Make login page attractive!
 - Better message boxes
 - update durandal and other libraries
 - page transition animations

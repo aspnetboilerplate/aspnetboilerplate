@@ -54,7 +54,7 @@
                 if (!_$form.valid()) {
                     return;
                 }
-
+                
                 taskService.createTask({
                     task: ko.mapping.toJS(that.task)
                 }).done(function (result) {

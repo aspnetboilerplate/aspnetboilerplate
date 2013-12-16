@@ -1,9 +1,11 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Web;
 using Abp.Application.Services.Dto;
-using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Tasks
 {
-    public class UpdateTaskInput : IInputDto
+    public class UpdateTaskInput : IInputDto, ICustomValidate
     {
         public int Id { get; set; }
 
@@ -18,5 +20,11 @@ namespace Taskever.Application.Services.Dto.Tasks
         public byte State { get; set; }
 
         public byte Privacy { get; set; }
+
+        public void AddValidationResults(List<ValidationResult> results)
+        {
+            Title = HttpUtility.HtmlEncode(Title);
+            Description = HttpUtility.HtmlEncode(Description);
+        }
     }
 }
