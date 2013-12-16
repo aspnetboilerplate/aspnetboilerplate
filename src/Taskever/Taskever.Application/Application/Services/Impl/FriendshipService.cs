@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
+using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
@@ -17,14 +20,15 @@ namespace Taskever.Application.Services.Impl
     {
         private readonly IUserRepository _userRepository;
         private readonly IFriendshipRepository _friendshipRepository;
-
+        private readonly IEmailService _emailService;
         private readonly IFriendshipPolicy _friendshipPolicy;
 
-        public FriendshipService(IUserRepository userRepository, IFriendshipRepository friendshipRepository, IFriendshipPolicy friendshipPolicy)
+        public FriendshipService(IUserRepository userRepository, IFriendshipRepository friendshipRepository, IFriendshipPolicy friendshipPolicy, IEmailService emailService)
         {
             _userRepository = userRepository;
             _friendshipRepository = friendshipRepository;
             _friendshipPolicy = friendshipPolicy;
+            _emailService = emailService;
         }
 
         public virtual GetFriendshipsOutput GetFriendships(GetFriendshipsInput input)
@@ -99,6 +103,8 @@ namespace Taskever.Application.Services.Impl
             friendship = Friendship.CreateAsRequest(currentUser, friendUser);
             _friendshipRepository.Insert(friendship);
 
+            SendRequestEmail(friendship);
+
             return new SendFriendshipRequestOutput { Status = friendship.Status };
         }
 
@@ -143,6 +149,49 @@ namespace Taskever.Application.Services.Impl
             {
                 friendship.LastVisitTime = DateTime.Now;
             }
+        }
+
+        private void SendRequestEmail(Friendship friendship)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(friendship.Friend.EmailAddress);
+            mail.IsBodyHtml = true;
+            mail.Subject = friendship.User.NameAndSurname + " wants to be your friend on Taskever";
+            mail.SubjectEncoding = Encoding.UTF8;
+
+            var mailBuilder = new StringBuilder();
+            mailBuilder.Append(
+@"<!DOCTYPE html>
+<html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+    <meta charset=""utf-8"" />
+    <title>{TEXT_HTML_TITLE}</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, 'DejaVu Sans', sans-serif;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h3>{TEXT_HEADER}</h3>
+    <p>{TEXT_DESCRIPTION}</p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com/#friends?activeSection=SentRequests"">{TEXT_CLICK_TO_ANSWER}</a></p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com"">http://www.taskever.com</a></p>
+</body>
+</html>");
+
+            mailBuilder.Replace("{TEXT_HTML_TITLE}", "Friendship request on Taskever");
+            mailBuilder.Replace("{TEXT_HEADER}", "You have a friendship request on Taskever");
+            mailBuilder.Replace("{TEXT_DESCRIPTION}", friendship.User.NameAndSurname + " has sent a friendship request to you.");
+            mailBuilder.Replace("{TEXT_CLICK_TO_ANSWER}", "Click here to answer to the request.");
+
+            mail.Body = mailBuilder.ToString();
+            mail.BodyEncoding = Encoding.UTF8;
+
+            _emailService.SendEmail(mail);
         }
     }
 }

@@ -9,7 +9,7 @@ FIX:
 + Disable buttons and areas on ajaxs!
 
 ÖZELLÝK:
-- Friendship request/acceptance emails!
++ Friendship request
 - Þifremi unuttum sýfýrlamasý
 - Remember me!
 
@@ -20,6 +20,7 @@ FIX:
 - Indexes (db optimization)
 - Session timeout!
 - CROSS Browser hack! ?
+- Friendship acceptance email!
 
 BÜYÜK GELÝÞTÝRMELER:
 - Localization for all pages (English & Turkish)
