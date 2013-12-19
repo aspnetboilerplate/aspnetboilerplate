@@ -105,9 +105,14 @@ namespace Abp.Modules.Core.Application.Services.Impl
         [UnitOfWork]
         public void SendPasswordResetLink(SendPasswordResetLinkInput input)
         {
-            var currentUser = _userRepository.Get(User.CurrentUserId);
-            currentUser.GeneratePasswordResetCode();
-            SendPasswordResetLinkEmail(currentUser);
+            var user = _userRepository.Query(q => q.FirstOrDefault(u => u.EmailAddress == input.EmailAddress));
+            if(user == null)
+            {
+                throw new AbpUserFriendlyException("Can not find this email address in the system.");
+            }
+
+            user.GeneratePasswordResetCode();
+            SendPasswordResetLinkEmail(user);
         }
 
         [UnitOfWork]

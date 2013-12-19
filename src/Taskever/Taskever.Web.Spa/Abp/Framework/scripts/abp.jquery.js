@@ -24,6 +24,7 @@
 
     abp.ajax.defaultOpts = {
         dataType: 'json',
+        type: 'POST',
         contentType: 'application/json'
     };
 

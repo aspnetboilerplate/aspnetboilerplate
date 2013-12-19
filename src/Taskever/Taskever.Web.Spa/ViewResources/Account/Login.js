@@ -11,7 +11,7 @@
                 }
             }
         });
-        
+
         $("#LoginForm").abpAjaxForm({
             blockUI: '#LoginFormPanelBody'
         });
@@ -33,12 +33,19 @@
             blockUI: '#RegisterFormPanelBody'
         });
 
-        $('#ForgotPasswordLink').click(function() {
+        $('#ForgotPasswordLink').click(function () {
             $('#PasswordResetLinkModal').modal('show');
         });
 
-        $('#PasswordResetLinkModalSubmitButton').click(function() {
-            $('#PasswordResetLinkModal').modal('hide');
+        $('#PasswordResetLinkModalSubmitButton').click(function () {
+            abp.ajax({
+                url: '/Account/SendPasswordResetLink',
+                data: {
+                    EmailAddress: $('#PasswordResetEmailAddress').val()
+                }
+            }).done(function () {
+                $('#PasswordResetLinkModal').modal('hide');
+            });
         });
 
     });
