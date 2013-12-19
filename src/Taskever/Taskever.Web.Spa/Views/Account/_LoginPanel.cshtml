@@ -14,13 +14,36 @@
             <div class="form-group">
                 <input type="password" maxlength="30" name="Password" class="form-control" id="LoginPassword" placeholder="Password" required>
             </div>
-@*            <div class="checkbox">
+            @*            <div class="checkbox">
                 <label>
                     <input type="checkbox" name="RememberMe" value="true">
                     Remember me
                 </label>
             </div>*@
             <button type="submit" class="btn btn-default">Login</button>
+            <a id="ForgotPasswordLink" href="#">Forgot your password?</a>
         </form>
     </div>
+</div>
+
+<div class="modal fade" id="PasswordResetLinkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form id="PasswordResetForm" role="form" action="@Url.Action("SendPasswordResetLink")" method="POST">
+        <div class="modal-dialog" style="width: 320px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Forgot your password</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Enter your email address below to send a password reset link to your email.</p>
+                    <div class="form-group">
+                        <input type="email" maxlength="100" name="EmailAddress" class="form-control" id="PasswordResetEmailAddress" placeholder="Enter email" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="PasswordResetLinkModalSubmitButton" type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

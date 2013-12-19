@@ -180,6 +180,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\TaskeverViewBase.cs" />
   </ItemGroup>
@@ -311,6 +312,7 @@
     <Content Include="ViewResources\Account\Login.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="ViewResources\Account\ResetPassword.js" />
     <Content Include="ViewResources\main.js" />
     <Content Include="Widgets\LoginBox\LoginBox.js" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -381,6 +383,7 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Scripts\underscore.min.map" />
     <Content Include="Views\Account\ActivationInfo.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />

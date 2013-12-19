@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Entities\RandomCodeGenerator.cs" />
     <Compile Include="Domain\Repositories\ITenantRepository.cs" />
     <Compile Include="Domain\Repositories\IUserRepository.cs" />
     <Compile Include="Domain\Entities\TenantMembershipStatus.cs" />

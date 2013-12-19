@@ -25,5 +25,9 @@ namespace Abp.Modules.Core.Application.Services
         void ChangePassword(ChangePasswordInput input);
 
         ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input);
+
+        void SendPasswordResetLink(SendPasswordResetLinkInput input);
+
+        void ResetPassword(ResetPasswordInput input);
     }
 }

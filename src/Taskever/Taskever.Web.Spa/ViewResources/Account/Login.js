@@ -33,6 +33,14 @@
             blockUI: '#RegisterFormPanelBody'
         });
 
+        $('#ForgotPasswordLink').click(function() {
+            $('#PasswordResetLinkModal').modal('show');
+        });
+
+        $('#PasswordResetLinkModalSubmitButton').click(function() {
+            $('#PasswordResetLinkModal').modal('hide');
+        });
+
     });
 
     return {

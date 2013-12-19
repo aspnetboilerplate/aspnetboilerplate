@@ -73,6 +73,61 @@ namespace Abp.Modules.Core.Application.Services.Impl
             user.ConfirmEmail(input.ConfirmationCode);
         }
 
+        public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
+        {
+            //TODO: Use GetUser?
+            return new GetCurrentUserInfoOutput { User = _userRepository.Get(User.CurrentUserId).MapTo<UserDto>() };
+        }
+
+        [UnitOfWork]
+        public void ChangePassword(ChangePasswordInput input)
+        {
+            var currentUser = _userRepository.Get(User.CurrentUserId);
+            if (currentUser.Password != input.CurrentPassword)
+            {
+                throw new AbpUserFriendlyException("Current password is invalid!");
+            }
+
+            currentUser.Password = input.NewPassword;
+        }
+
+        [UnitOfWork]
+        public ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input)
+        {
+            var currentUser = _userRepository.Get(User.CurrentUserId); //TODO: test Load method
+            var oldFileName = currentUser.ProfileImage;
+
+            currentUser.ProfileImage = input.FileName;
+
+            return new ChangeProfileImageOutput() { OldFileName = oldFileName };
+        }
+
+        [UnitOfWork]
+        public void SendPasswordResetLink(SendPasswordResetLinkInput input)
+        {
+            var currentUser = _userRepository.Get(User.CurrentUserId);
+            currentUser.GeneratePasswordResetCode();
+            SendPasswordResetLinkEmail(currentUser);
+        }
+
+        [UnitOfWork]
+        public void ResetPassword(ResetPasswordInput input)
+        {
+            var user = _userRepository.Get(input.UserId);
+            if (string.IsNullOrWhiteSpace(user.PasswordResetCode))
+            {
+                throw new AbpUserFriendlyException("You can not reset your password. You must first send a reset password link to your email.");
+            }
+
+            if (input.PasswordResetCode != user.PasswordResetCode)
+            {
+                throw new AbpUserFriendlyException("Password reset code is invalid!");
+            }
+
+            user.Password = input.Password;
+            user.PasswordResetCode = null;
+        }
+
         private void SendConfirmationEmail(User user)
         {
             var mail = new MailMessage();
@@ -117,33 +172,48 @@ namespace Abp.Modules.Core.Application.Services.Impl
             _emailService.SendEmail(mail);
         }
 
-        public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
+        private void SendPasswordResetLinkEmail(User user)
         {
-            //TODO: Use GetUser?
-            return new GetCurrentUserInfoOutput { User = _userRepository.Get(User.CurrentUserId).MapTo<UserDto>() };
+            var mail = new MailMessage();
+            mail.To.Add(user.EmailAddress);
+            mail.IsBodyHtml = true;
+            mail.Subject = "Password reset for Taskever";
+            mail.SubjectEncoding = Encoding.UTF8;
+
+            var mailBuilder = new StringBuilder();
+            mailBuilder.Append(
+@"<!DOCTYPE html>
+<html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+    <meta charset=""utf-8"" />
+    <title>{TEXT_HTML_TITLE}</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, 'DejaVu Sans', sans-serif;
+            font-size: 12px;
         }
+    </style>
+</head>
+<body>
+    <h3>{TEXT_WELCOME}</h3>
+    <p>{TEXT_DESCRIPTION}</p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com/Account/ResetPassword?UserId={USER_ID}&ResetCode={RESET_CODE}"">http://www.taskever.com/Account/ResetPassword?UserId={USER_ID}&amp;ResetCode={RESET_CODE}</a></p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com"">http://www.taskever.com</a></p>
+</body>
+</html>");
 
-        [UnitOfWork]
-        public void ChangePassword(ChangePasswordInput input)
-        {
-            var currentUser = _userRepository.Get(User.CurrentUserId);
-            if (currentUser.Password != input.CurrentPassword)
-            {
-                throw new AbpUserFriendlyException("Current password is invalid!");
-            }
+            mailBuilder.Replace("{TEXT_HTML_TITLE}", "Password reset for Taskever");
+            mailBuilder.Replace("{TEXT_WELCOME}", "Reset your password on Taskever!");
+            mailBuilder.Replace("{TEXT_DESCRIPTION}", "Click the link below to reset your password on the Taskever.com");
+            mailBuilder.Replace("{USER_ID}", user.Id.ToString());
+            mailBuilder.Replace("{RESET_CODE}", user.PasswordResetCode);
 
-            currentUser.Password = input.NewPassword;
-        }
+            mail.Body = mailBuilder.ToString();
+            mail.BodyEncoding = Encoding.UTF8;
 
-        [UnitOfWork]
-        public ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input)
-        {
-            var currentUser = _userRepository.Get(User.CurrentUserId); //TODO: test Load method
-            var oldFileName = currentUser.ProfileImage;
-
-            currentUser.ProfileImage = input.FileName;
-
-            return new ChangeProfileImageOutput() { OldFileName = oldFileName };
+            _emailService.SendEmail(mail);
         }
     }
 }

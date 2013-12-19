@@ -14,6 +14,7 @@ using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
+using Taskever.Web.Models.Account;
 
 namespace Taskever.Web.Controllers
 {
@@ -74,7 +75,8 @@ namespace Taskever.Web.Controllers
             return View();
         }
 
-        public JsonResult Register(RegisterUserInput registerUser)
+        [HttpPost]
+        public JsonResult Register(RegisterUserInput input)
         {
             //TODO: Return better exception messages!
             //TODO: Show captcha after filling register form, not on startup!
@@ -91,10 +93,43 @@ namespace Taskever.Web.Controllers
                 throw new AbpUserFriendlyException("Incorrect captcha answer.");
             }
 
-            registerUser.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
-            _userService.RegisterUser(registerUser);
+            input.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
+            _userService.RegisterUser(input);
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("ActivationInfo") });
+        }
+
+        public JsonResult SendPasswordResetLink(SendPasswordResetLinkInput input)
+        {
+            _userService.SendPasswordResetLink(input);
+
+            return Json(new AbpMvcAjaxResponse());
+        }
+
+        [HttpGet]
+        public ActionResult ResetPassword(int userId, string resetCode)
+        {
+            return View(new ResetPasswordViewModel {UserId = userId, ResetCode = resetCode});
+        }
+
+        [HttpPost]
+        public JsonResult ResetPassword(ResetPasswordInput input)
+        {
+            var recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            if (String.IsNullOrEmpty(recaptchaHelper.Response))
+            {
+                throw new AbpUserFriendlyException("Captcha answer cannot be empty.");
+            }
+
+            var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            if (recaptchaResult != RecaptchaVerificationResult.Success)
+            {
+                throw new AbpUserFriendlyException("Incorrect captcha answer.");
+            }
+
+            _userService.ResetPassword(input);
+
+            return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("Login") });
         }
     }
 }

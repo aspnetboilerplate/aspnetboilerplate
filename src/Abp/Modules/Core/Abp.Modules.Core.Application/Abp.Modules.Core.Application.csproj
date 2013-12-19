@@ -71,8 +71,10 @@
     <Compile Include="Application\Services\Dto\Users\ChangeProfileImageInput.cs" />
     <Compile Include="Application\Services\Dto\Users\ChangeProfileImageOutput.cs" />
     <Compile Include="Application\Services\Impl\EmailService.cs" />
+    <Compile Include="Application\Services\Dto\Users\ResetPasswordInput.cs" />
     <Compile Include="Application\Services\Impl\UserService.cs" />
     <Compile Include="Application\Services\IUserService.cs" />
+    <Compile Include="Application\Services\Dto\Users\SendPasswordResetLinkInput.cs" />
     <Compile Include="Authorization\AuthorizeAttribute.cs" />
     <Compile Include="Authorization\Roles\ApplicationOwner.cs" />
     <Compile Include="Authorization\Roles\ApplicationRole.cs" />
