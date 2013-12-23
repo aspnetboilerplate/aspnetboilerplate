@@ -44,4 +44,27 @@
         Accepted: 2
     };
 
+    //Used to keep session open TODO: Make this configurable and more-general
+    taskever.keepSessionOpenTickDuration = 12000;
+    var keepSessionOpen = function () {
+        if (taskever.keepSessionOpenTickDuration <= 0) {
+            return;
+        }
+
+        $.ajax({
+            url: '/Account/KeepSessionOpen',
+            type: 'POST',
+            dataType: 'json',
+            success: function () {
+                abp.log.debug("Keeping session open... OK"); //TODO: Remo log?
+            },
+            complete: function () {
+                if (taskever.keepSessionOpenTickDuration > 0) {
+                    setTimeout(keepSessionOpen, taskever.keepSessionOpenTickDuration);
+                }
+            }
+        });
+    };
+    setTimeout(keepSessionOpen, taskever.keepSessionOpenTickDuration);
+
 }());

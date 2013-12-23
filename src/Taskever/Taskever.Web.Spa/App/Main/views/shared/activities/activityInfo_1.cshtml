@@ -3,7 +3,8 @@
 has created the task
 "<i><b><a data-bind="html: activity.task.title(), attr: { href: '#task/' + activity.task.id() }"></a></b></i>"
 <span data-bind="if: activity.assignedUser.id() != activity.creatorUser.id()">
-and assigned to
-<a data-bind="html: activity.assignedUser.name(), attr: { href: '#user/' + activity.assignedUser.id() }"></a>
+    and assigned to
+    <a data-bind="html: activity.assignedUser.name(), attr: { href: '#user/' + activity.assignedUser.id() }"></a>
 </span>
+&nbsp;
 <i class="text-muted"><span data-bind="text: moment(activity.creationTime()).fromNow(), attr: { 'data-livestamp': activity.creationTime(), title: moment(activity.creationTime()) }"></span></i>

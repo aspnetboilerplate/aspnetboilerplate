@@ -7,7 +7,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20131219
     {
         public override void Up()
         {
-            Create.Column("PasswordResetCode").OnTable("AbpUsers").AsString(16).Nullable();
+            Create.Column("PasswordResetCode").OnTable("AbpUsers").AsString(32).Nullable();
         }
     }
 }

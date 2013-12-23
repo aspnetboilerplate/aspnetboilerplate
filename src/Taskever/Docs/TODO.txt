@@ -1,26 +1,10 @@
 TODO (primary):
 --------------------------------------
-FIX:
-+ Kullanýcý girdilerinde HTML/Js girilmesine izin vermeyelim!
-+ fonts'u bulamýyor (bundling'den dolayý farklý yerde arýyor), sorunu düzelt!
-+ ProfileImages folder github problemi!
-+ Font sorunu var sanýrým Edit/Delete butonlarýnda mesela
-+ Girdilere max length ver!
-+ Disable buttons and areas on ajaxs!
-
-ÖZELLÝK:
-+ Friendship request
-- Þifremi unuttum sýfýrlamasý
-- Remember me!
-
-ÝYÝLEÞTÝRME:
-- Screenshots to main page!
-- Avatarýn yanýndaki isim ortalý deðil, düzenle
 - Mobile optimization!
-- Indexes (db optimization)
-- Session timeout!
 - CROSS Browser hack! ?
-- Friendship acceptance email!
+- Indexes (db optimization)
+- Remember me!
+- Email alýp almama ayarlarý!!!
 
 BÜYÜK GELÝÞTÝRMELER:
 - Localization for all pages (English & Turkish)

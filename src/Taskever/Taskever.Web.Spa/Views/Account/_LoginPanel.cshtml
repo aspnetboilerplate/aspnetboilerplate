@@ -3,25 +3,26 @@
         <h3 class="panel-title">@L("Login")</h3>
     </div>
     <div class="panel-body">
-        @if (ViewBag.LoginMessage != null)
+        @if (!string.IsNullOrWhiteSpace(ViewBag.LoginMessage))
         {
             <p class="text-success">@ViewBag.LoginMessage</p>            
         }
         <form id="LoginForm" role="form" action="@Url.Action("Login")" method="POST">
+            <input type="hidden" value="@ViewBag.ReturnUrl" name="returnUrl" id="LoginReturnUrl" />
             <div class="form-group">
                 <input type="email" maxlength="100" name="EmailAddress" class="form-control" id="LoginEmailAddress" placeholder="Enter email" required>
             </div>
             <div class="form-group">
                 <input type="password" maxlength="30" name="Password" class="form-control" id="LoginPassword" placeholder="Password" required>
             </div>
-            @*            <div class="checkbox">
+@*            <div class="checkbox">
                 <label>
                     <input type="checkbox" name="RememberMe" value="true">
                     Remember me
                 </label>
             </div>*@
-            <button type="submit" class="btn btn-default">Login</button>
-            <a id="ForgotPasswordLink" href="#">Forgot your password?</a>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a id="ForgotPasswordLink" href="#" class="pull-right">Forgot your password?</a>
         </form>
     </div>
 </div>

@@ -1,7 +1,9 @@
 ﻿<section>
     <div class="panel panel-default" style="margin-bottom: 10px; position: relative; height: 70px">
         <img data-bind="attr: { src: user.profileImage() }" style="width: 64px; height: 64px; position: absolute; top: 2px; left: 2px;" alt="" />
-        <h4 data-bind="text: user.name() + ' ' + user.surname()" style="margin-left: 70px;"></h4>
+        <div style="margin-left: 75px; margin-top: 36px">
+            <h4 data-bind="text: user.name() + ' ' + user.surname()"></h4>
+        </div>
     </div>
     <ul class="nav nav-pills" id="UserViewTabs">
         <li><a href="#UserActivities">Activities</a></li>

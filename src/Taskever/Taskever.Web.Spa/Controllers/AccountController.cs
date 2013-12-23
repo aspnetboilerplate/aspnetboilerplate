@@ -27,13 +27,15 @@ namespace Taskever.Web.Controllers
             _userService = userService;
         }
 
-        public virtual ActionResult Login()
+        public virtual ActionResult Login(string returnUrl = "/", string loginMessage = null)
         {
+            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.LoginMessage = loginMessage;
             return View();
         }
 
         [HttpPost]
-        public virtual JsonResult Login(LoginModel loginModel)
+        public virtual JsonResult Login(LoginModel loginModel, string returnUrl = "/")
         {
             if (ModelState.IsValid)
             {
@@ -45,12 +47,12 @@ namespace Taskever.Web.Controllers
                 FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
                 var user = _userService.GetActiveUserOrNull(loginModel.EmailAddress, loginModel.Password);
                 var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
-                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddDays(2), true, identity.SerializeToString()); //TODO: true/false?
+                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddDays(2), loginModel.RememberMe, identity.SerializeToString()); //TODO: true/false?
                 var encTicket = FormsAuthentication.Encrypt(authTicket);
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
 
-                return Json(new AbpMvcAjaxResponse { TargetUrl = "/" });
+                return Json(new AbpMvcAjaxResponse { TargetUrl = returnUrl });
             }
 
             throw new AbpUserFriendlyException("Your form is invalid!");
@@ -59,8 +61,7 @@ namespace Taskever.Web.Controllers
         public ActionResult ConfirmEmail(ConfirmEmailInput input)
         {
             _userService.ConfirmEmail(input);
-            ViewBag.LoginMessage = "Congratulations! Your account is activated. Enter your email address and password to login";
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", new { loginMessage = "Congratulations! Your account is activated. Enter your email address and password to login" });
         }
 
         [Abp.Modules.Core.Authorization.AbpAuthorize]
@@ -130,6 +131,12 @@ namespace Taskever.Web.Controllers
             _userService.ResetPassword(input);
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("Login") });
+        }
+
+        [Authorize]
+        public JsonResult KeepSessionOpen()
+        {
+            return Json(new AbpMvcAjaxResponse());
         }
     }
 }

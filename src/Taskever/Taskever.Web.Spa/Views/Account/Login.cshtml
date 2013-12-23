@@ -37,10 +37,15 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">A screenshot (Home page of the application)</h4>
+                        <h4 class="panel-title">Some screenshots from the application</h4>
                     </div>
-                    <div class="panel-body text-center">
-                        <img src="~/Images/home/screenshot1.png" class="img-responsive" alt="Home page of the Taskever" />
+                    <div class="panel-body">
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/01-overall.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/01-overall.png" alt="Overall view"/></a></div>
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/02-overall.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/02-overall.png" alt="Overall view"/></a></div>
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/03-friends.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/03-friends.png" alt="Overall view"/></a></div>
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/04-create-task.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/04-create-task.png" alt="Overall view"/></a></div>
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/05-task-edit.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/05-task-edit.png" alt="Overall view"/></a></div>
+                        <div class="col-md-4 col-xs-12"><a class="taskever-screen-preview-image" rel="screenshots" href="~/Images/home/screens/06-profile-tasks.png"><img class="img-thumbnail img-responsive" style="max-height: 160px;" src="~/Images/home/screens/06-profile-tasks.png" alt="Overall view"/></a></div>
                     </div>
                 </div>
             </section>
@@ -59,8 +64,14 @@
 
 @Html.Partial("_Footer")
 
+@section styles
+{
+    <link href="~/Content/jquery.fancybox.css" rel="stylesheet" />
+}
+
 @section scripts
 {
+    <script src="~/Scripts/jquery.fancybox.js"></script>
     <script src="~/Scripts/require.js" data-main="/ViewResources/main.js"></script>
     <script>
         require(['/ViewResources/Account/Login.js']);

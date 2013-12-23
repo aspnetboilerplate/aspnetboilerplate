@@ -16,6 +16,9 @@
             blockUI: '#LoginFormPanelBody'
         });
 
+        //Add hash to return url
+        $('#LoginReturnUrl').val($('#LoginReturnUrl').val() + location.hash);
+
         //Registration form
 
         $("#RegisterForm").validate({
@@ -40,13 +43,13 @@
         $('#PasswordResetLinkModalSubmitButton').click(function () {
             abp.ajax({
                 url: '/Account/SendPasswordResetLink',
-                data: {
-                    EmailAddress: $('#PasswordResetEmailAddress').val()
-                }
+                data: JSON.stringify({ emailAddress: $('#PasswordResetEmailAddress').val() })
             }).done(function () {
                 $('#PasswordResetLinkModal').modal('hide');
             });
         });
+
+        $('.taskever-screen-preview-image').fancybox();
 
     });
 

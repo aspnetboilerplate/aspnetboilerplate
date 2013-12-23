@@ -13,14 +13,14 @@
         FATAL: 5
     };
 
-    abp.log.currentLevel = abp.log.levels.INFO;
+    abp.log.level = abp.log.levels.DEBUG;
 
     abp.log.log = function (logObject, logLevel) {
         if (!window.console || !window.console.log) {
             return;
         }
 
-        if (logLevel != undefined && logLevel < abp.log.currentLevel) {
+        if (logLevel != undefined && logLevel < abp.log.level) {
             return;
         }
 

@@ -127,8 +127,8 @@ namespace Taskever.Application.Services.Impl
         {
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
             var currentUser = _userRepository.Load(User.CurrentUserId);
-
             friendship.AcceptBy(currentUser);
+            SendAcceptEmail(friendship.Pair);
         }
 
         public virtual void RejectFriendship(RejectFriendshipInput input)
@@ -187,6 +187,50 @@ namespace Taskever.Application.Services.Impl
             mailBuilder.Replace("{TEXT_HEADER}", "You have a friendship request on Taskever");
             mailBuilder.Replace("{TEXT_DESCRIPTION}", friendship.User.NameAndSurname + " has sent a friendship request to you.");
             mailBuilder.Replace("{TEXT_CLICK_TO_ANSWER}", "Click here to answer to the request.");
+
+            mail.Body = mailBuilder.ToString();
+            mail.BodyEncoding = Encoding.UTF8;
+
+            _emailService.SendEmail(mail);
+        }
+
+        private void SendAcceptEmail(Friendship friendship)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(friendship.User.EmailAddress);
+            mail.IsBodyHtml = true;
+            mail.Subject = friendship.Friend.NameAndSurname + " accepted your friendship request on Taskever";
+            mail.SubjectEncoding = Encoding.UTF8;
+
+            var mailBuilder = new StringBuilder();
+            mailBuilder.Append(
+@"<!DOCTYPE html>
+<html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
+<head>
+    <meta charset=""utf-8"" />
+    <title>{TEXT_HTML_TITLE}</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, 'DejaVu Sans', sans-serif;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h3>{TEXT_HEADER}</h3>
+    <p>{TEXT_DESCRIPTION}</p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com/#user/{FRIEND_ID}"">{TEXT_CLICK_TO_SEE_PROFILE}</a></p>
+    <p>&nbsp;</p>
+    <p><a href=""http://www.taskever.com"">http://www.taskever.com</a></p>
+</body>
+</html>");
+
+            mailBuilder.Replace("{TEXT_HTML_TITLE}", "Friendship request is accepted on Taskever");
+            mailBuilder.Replace("{TEXT_HEADER}", "Your friendship request is accepted!");
+            mailBuilder.Replace("{TEXT_DESCRIPTION}", friendship.Friend.NameAndSurname + " has accepted your friendship request.");
+            mailBuilder.Replace("{TEXT_CLICK_TO_SEE_PROFILE}", "Click here to see profile of " + friendship.Friend.NameAndSurname);
+            mailBuilder.Replace("{FRIEND_ID}", friendship.Friend.Id.ToString());
 
             mail.Body = mailBuilder.ToString();
             mail.BodyEncoding = Encoding.UTF8;
