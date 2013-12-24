@@ -45,7 +45,7 @@
     };
 
     //Used to keep session open TODO: Make this configurable and more-general
-    taskever.keepSessionOpenTickDuration = 12000;
+    taskever.keepSessionOpenTickDuration = 120000;
     var keepSessionOpen = function () {
         if (taskever.keepSessionOpenTickDuration <= 0) {
             return;

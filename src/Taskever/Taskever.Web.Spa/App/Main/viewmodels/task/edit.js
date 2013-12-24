@@ -23,8 +23,8 @@
                     }).done(function (data) {
                         ko.mapping.fromJS(data.task, that.task);
 
-                        that.task.title(_.unescape(that.task.title()));
-                        that.task.description(_.unescape(that.task.description()));
+                        that.task.title(decodeHtml(that.task.title()));
+                        that.task.description(decodeHtml(that.task.description()));
                         that.task.privacyEditable = ko.observable(that.task.assignedUserId() == session.getCurrentUser().id());
                         that.task.assignedUserId.subscribe(function (newValue) {
                             if (newValue == session.getCurrentUser().id()) {
@@ -77,6 +77,30 @@
             that.cancelUpdate = function () {
                 history.navigateBack();
             };
+            
+            //Private functions
+            
+            //This method is copied from http://stackoverflow.com/questions/5796718/html-entity-decode
+            //TODO: Replace to a nicer one?
+            var decodeHtml = (function () {
+                // this prevents any overhead from creating the object each time
+                var element = document.createElement('div');
+
+                function decodeHtmlEntities(str) {
+                    if (str && typeof str === 'string') {
+                        // strip script/html tags
+                        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                        element.innerHTML = str;
+                        str = element.textContent;
+                        element.textContent = '';
+                    }
+
+                    return str;
+                }
+
+                return decodeHtmlEntities;
+            })();
         };
     }
 );
