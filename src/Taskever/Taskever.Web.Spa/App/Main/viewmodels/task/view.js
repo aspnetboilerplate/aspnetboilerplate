@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history', 'plugins/dialog'],
-    function ($, _, taskService, friendshipService, session, history, dialogs) {
+    ['durandal/app', 'jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history', 'plugins/dialog'],
+    function (app, $, _, taskService, friendshipService, session, history, dialogs) {
         
         return function () {
             var that = this;
@@ -34,6 +34,9 @@
                             id: that.task.id()
                         }).done(function () {
                             history.navigate('#');
+                            app.trigger('te.task.delete', {
+                                task: that.task
+                            });
                         });
                     }
                 });

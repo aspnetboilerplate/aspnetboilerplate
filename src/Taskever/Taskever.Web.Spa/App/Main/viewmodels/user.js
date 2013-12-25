@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'plugins/history', 'service!taskever/friendship', 'service!taskever/user', 'plugins/dialog'],
-    function ($, history, friendshipService, taskeverUserService, dialog) {
+    ['durandal/app', 'jquery', 'plugins/history', 'service!taskever/friendship', 'service!taskever/user', 'plugins/dialog', 'session'],
+    function (app, $, history, friendshipService, taskeverUserService, dialog, session) {
 
         var _defaultUrlAgs = {
             activeSection: 'UserActivities'
@@ -12,11 +12,12 @@
             // Private variables //////////////////////////////////////////////////
 
             var _urlArgs;
+            var currentUserId = session.getCurrentUser().id();
 
             // Public fields //////////////////////////////////////////////////////
 
             that.user = ko.mapping.fromJS({});
-
+            
             // Public methods /////////////////////////////////////////////////////
 
             that.canActivate = function (userId, urlArgs) {
@@ -38,7 +39,12 @@
                         } else {
                             ko.mapping.fromJS(result.user, that.user);
                             dfd.resolve(true);
-                            friendshipService.updateLastVisitTime({ friendUserId: userId });
+                            if (userId != currentUserId) {
+                                friendshipService.updateLastVisitTime({ friendUserId: userId });
+                                app.trigger('te.friendship.visited', {
+                                    friend: that.user
+                                });
+                            }
                         }
                     }).fail(function () {
                         dfd.resolve(false);

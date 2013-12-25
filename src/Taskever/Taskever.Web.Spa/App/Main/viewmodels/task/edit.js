@@ -1,6 +1,6 @@
 ﻿define(
-    ['jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
-    function ($, _, taskService, friendshipService, session, history) {
+    ['durandal/app', 'jquery', 'underscore', 'service!taskever/task', 'service!taskever/friendship', 'session', 'plugins/history'],
+    function (app, $, _, taskService, friendshipService, session, history) {
 
         return function () {
             var that = this;
@@ -70,6 +70,9 @@
                     }).done(function() {
                         abp.notify.info('Task has been updated', 'Updated');
                         history.navigate('task/' + that.task.id());
+                        app.trigger('te.task.update', {
+                            task: that.task
+                        });
                     })
                 });
             };

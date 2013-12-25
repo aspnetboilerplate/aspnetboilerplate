@@ -19,6 +19,16 @@
 
             // Public methods /////////////////////////////////////////////////////
 
+            that.attached = function (view, parent) {
+                $('#SettingTabs').tab();
+                $('#SettingTabs a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+
+                $('#SettingTabs a[href=#UserProfileImageEdit]').tab('show');
+            };
+
             that.updatePassword = function () {
                 userService.changePassword(
                     ko.mapping.toJS(that.passwordChange)

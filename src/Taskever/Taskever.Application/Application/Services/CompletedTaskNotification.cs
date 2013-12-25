@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using System.Text;
+using System.Web;
 using Taskever.Domain.Entities;
 
 namespace Taskever.Application.Services
@@ -18,7 +19,7 @@ namespace Taskever.Application.Services
             MailMessage mail = new MailMessage();
             mail.To.Add(Task.CreatorUser.EmailAddress);
             mail.IsBodyHtml = true;
-            mail.Subject = "Completed a task: " + Task.Title;
+            mail.Subject = "Completed a task: " + HttpUtility.HtmlDecode(Task.Title);
             mail.SubjectEncoding = Encoding.UTF8;
 
             var mailBuilder = new StringBuilder();

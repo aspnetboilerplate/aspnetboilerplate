@@ -16,6 +16,13 @@
             return router.activate();
         },
         
+        attached: function (view) {
+            var $mobileMenu = $(view).find('#MobileMenu');
+            $mobileMenu.find('a').click(function () {
+                $mobileMenu.collapse('hide');
+            });
+        },
+        
         createTask: function () {
             dialogs.show('viewmodels/task/create');
         }

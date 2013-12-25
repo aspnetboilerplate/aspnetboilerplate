@@ -79,6 +79,9 @@
                         }).done(function () {
                             abp.notify.info('Removed!', 'Removed your friendship.');
                             that.friendships.remove(friendship);
+                            app.trigger('te.friendship.delete', {
+                                friend: friendship.friend
+                            });
                         });
                     }
                 });

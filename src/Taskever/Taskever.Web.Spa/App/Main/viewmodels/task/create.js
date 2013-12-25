@@ -1,5 +1,5 @@
-﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
-    function ($, ko, dialogs, dtos, taskService, friendshipService, session) {
+﻿define(['durandal/app', "jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
+    function (app, $, ko, dialogs, dtos, taskService, friendshipService, session) {
         return function () {
             var that = this;
 
@@ -62,6 +62,9 @@
                         task: ko.mapping.toJS(that.task)
                     }).done(function(result) {
                         dialogs.close(that, ko.mapping.fromJS(result.task));
+                        app.trigger('te.task.new', {
+                            task: ko.mapping.fromJS(result.task)
+                        });
                     })
                 });
             };

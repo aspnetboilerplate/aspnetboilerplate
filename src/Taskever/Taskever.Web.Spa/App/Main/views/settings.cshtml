@@ -1,22 +1,21 @@
 ﻿<section>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Profile picture</h3>
+
+    <ul class="nav nav-pills" id="SettingTabs">
+        <li><a href="#UserProfileImageEdit">Profile picture</a></li>
+        <li><a href="#UserPasswordChange">Password</a></li>
+    </ul>
+    <div class="tab-content" style="margin-top: 10px;">
+        <div class="tab-pane active" id="UserProfileImageEdit">
+            <div>
+                <img class="img-responsive" data-bind="attr: { src: user.profileImage() }" />
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-default" data-bind="click: showUploadProfilePictureDialog">
+                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;Change
+                </button>
+            </div>
         </div>
-        <div class="panel-body">
-            <img class="img-thumbnail img-responsive" data-bind="attr: { src: user.profileImage() }" />
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-default" data-bind="click: showUploadProfilePictureDialog">
-                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;Change
-            </button>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Password</h3>
-        </div>
-        <div class="panel-body">
+        <div class="tab-pane" id="UserPasswordChange">
             <form role="form">
                 <div class="form-group">
                     <label for="EditCurrentPassword">Current password</label>
@@ -31,12 +30,10 @@
                     <label for="EditPasswordRepeat">New password (repeat)</label>
                     <input type="password" class="form-control" id="EditPasswordRepeat" placeholder="repeat new password" maxlength="30" data-bind="value: passwordChange.newPasswordRepeat">
                 </div>
+                <button class="btn btn-default" data-bind="click: updatePassword">
+                    <span class="glyphicon glyphicon-check"></span>&nbsp;Update
+                </button>
             </form>
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-default" data-bind="click: updatePassword">
-                <span class="glyphicon glyphicon-check"></span>&nbsp;Update
-            </button>
         </div>
     </div>
 </section>

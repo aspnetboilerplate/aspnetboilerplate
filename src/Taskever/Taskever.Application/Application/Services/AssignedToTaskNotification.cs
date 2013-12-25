@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using System.Text;
+using System.Web;
 using Abp.Modules.Core.Domain.Entities;
 using Taskever.Domain.Entities;
 
@@ -16,10 +17,10 @@ namespace Taskever.Application.Services
 
         public MailMessage CreateMailMessage()
         {
-            MailMessage mail = new MailMessage();
+            var mail = new MailMessage();
             mail.To.Add(Task.AssignedUser.EmailAddress);
             mail.IsBodyHtml = true;
-            mail.Subject = "Assigned a task: " + Task.Title;
+            mail.Subject = "Assigned a task: " + HttpUtility.HtmlDecode(Task.Title);
             mail.SubjectEncoding = Encoding.UTF8;
 
             var mailBuilder = new StringBuilder();

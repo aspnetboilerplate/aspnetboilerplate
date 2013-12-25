@@ -1,14 +1,24 @@
 TODO (primary):
 --------------------------------------
-- Mobile optimization!
-- CROSS Browser hack! ?
-- Indexes (db optimization)
-- Remember me!
-- Email alýp almama ayarlarý!!!
++ Client side Events: A general mechanism!
+  + Tasks
+    + Task created
+    + Task deleted
+    + Task updated
+  + Friendship
+    + Visit friend profile
++ Setting page: Make it in tabs, show true message on password change error!
+- Mobile optimization! -> Create task modal!
+
+TODO (secondary)
+- Email alýp almama ayarlarý!!! -> SETTING management ile yapýlacaktýr!
+- Javascript/Css cache problem! -> Bundling ve araþtýrma ile!
+- Remember me! -> araþtýrma/testler
+- CROSS Browser hack! -> araþtýrma
 
 BÜYÜK GELÝÞTÝRMELER:
 - Localization for all pages (English & Turkish)
-- Dynamic pages
+- More dynamic pages
   - By me
     - Create task (left side, refresh?)
     - Complete task (left side, refresh?)
@@ -39,6 +49,7 @@ BÜYÜK GELÝÞTÝRMELER:
 
 TODO (others)
 --------------------------------------
+- Indexes (db optimization)
 - Check livestamp's performance!
 
 FUTURE:

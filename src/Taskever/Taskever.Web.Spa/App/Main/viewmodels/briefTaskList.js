@@ -9,6 +9,7 @@
             // Private variables //////////////////////////////////////////////////
 
             var $view;
+            var eventSubscriptions = [];
 
             // Public fields //////////////////////////////////////////////////////
 
@@ -18,12 +19,36 @@
 
             // Public methods /////////////////////////////////////////////////////
 
+            that.activate = function () {
+                eventSubscriptions.push(app.on('te.task.new', function (data) {
+                    if (data.task.assignedUserId() == that.currentUserId) {
+                        that.refresh();
+                    }
+                }));
+                eventSubscriptions.push(app.on('te.task.update', function (data) {
+                    if (data.task.assignedUserId() == that.currentUserId) {
+                        that.refresh();
+                    }
+                }));
+                eventSubscriptions.push(app.on('te.task.delete', function (data) {
+                    if (data.task.assignedUserId() == that.currentUserId) {
+                        that.refresh();
+                    }
+                }));
+            };
+
+            that.deactivate = function () {
+                for (var i = 0; i < eventSubscriptions.length; i++) {
+                    eventSubscriptions[i].off();
+                }
+            };
+
             that.attached = function (view) {
                 $view = $(view);
                 that.refresh();
             };
 
-            that.refresh = function() {
+            that.refresh = function () {
                 if (that.refreshing()) {
                     return;
                 }
@@ -33,15 +58,15 @@
                     promise: taskService.getTasksByImportance({
                         assignedUserId: session.getCurrentUser().id(),
                         maxResultCount: maxTaskCount
-                    }).done(function(data) {
+                    }).done(function (data) {
                         ko.mapping.fromJS(data.tasks, that.tasks);
-                    }).always(function() {
+                    }).always(function () {
                         that.refreshing(false);
                     })
                 });
             };
 
-            that.createTask = function() {
+            that.createTask = function () {
                 dialogs.show('viewmodels/task/create');
             };
 
