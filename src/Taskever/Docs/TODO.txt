@@ -8,7 +8,9 @@ TODO (primary):
   + Friendship
     + Visit friend profile
 + Setting page: Make it in tabs, show true message on password change error!
-- Mobile optimization! -> Create task modal!
++ Mobile optimization! -> Create task modal! -> test more
+- Remove create.js v.s.
+- Sadece mobile'da menü kapansýn, aksi halde kötü bir götüntü oluyor :(
 
 TODO (secondary)
 - Email alýp almama ayarlarý!!! -> SETTING management ile yapýlacaktýr!
