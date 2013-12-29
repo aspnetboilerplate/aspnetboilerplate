@@ -29,8 +29,7 @@ namespace Abp.Startup
 
         public virtual void Initialize()
         {
-            IocManager.Initialize();
-            IocManager.IocContainer.Install(new AbpCoreInstaller());
+            IocManager.Instance.IocContainer.Install(new AbpCoreInstaller());
 
             //TODO: Create a module manager and move all loading/sorting/initialization/shutdown methods to it!
             LoadModules();
@@ -41,7 +40,7 @@ namespace Abp.Startup
         {
             //TODO: Call shutdown of modules!
 
-            IocManager.Dispose();
+            IocManager.Instance.Dispose();
         }
 
         private void LoadModules()
@@ -64,7 +63,7 @@ namespace Abp.Startup
 
         private class AbpInitializationContext : IAbpInitializationContext
         {
-            public WindsorContainer IocContainer { get { return IocManager.IocContainer; } }
+            public WindsorContainer IocContainer { get { return IocManager.Instance.IocContainer; } }
             
             public string ApplicationDirectory { get; set; }
 

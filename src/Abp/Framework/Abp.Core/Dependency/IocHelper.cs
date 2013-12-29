@@ -15,7 +15,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public static T Resolve<T>()
         {
-            return IocManager.IocContainer.Resolve<T>();
+            return IocManager.Instance.IocContainer.Resolve<T>();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public static T Resolve<T>(object argumentsAsAnonymousType) //TODO: Test!
         {
-            return IocManager.IocContainer.Resolve<T>(argumentsAsAnonymousType);
+            return IocManager.Instance.IocContainer.Resolve<T>(argumentsAsAnonymousType);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public static object Resolve(Type type)
         {
-            return IocManager.IocContainer.Resolve(type);
+            return IocManager.Instance.IocContainer.Resolve(type);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public static object Resolve(Type type, object argumentsAsAnonymousType)
         {
-            return IocManager.IocContainer.Resolve(type, argumentsAsAnonymousType);
+            return IocManager.Instance.IocContainer.Resolve(type, argumentsAsAnonymousType);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Abp.Dependency
         /// <param name="obj">Object to be released</param>
         public static void Release(object obj)
         {
-            IocManager.IocContainer.Release(obj);
+            IocManager.Instance.IocContainer.Release(obj);
         }
     }
 }
