@@ -6,7 +6,6 @@ namespace Abp.Domain.Uow
 {
     /// <summary>
     /// A helper class to simplify unit of work process.
-    /// TODO: Remove statics and use this class in DI?
     /// </summary>
     internal static class UnitOfWorkHelper
     {
@@ -17,26 +16,7 @@ namespace Abp.Domain.Uow
         /// <returns>True if should perform unit of work</returns>
         public static bool ShouldPerformUnitOfWork(MethodInfo methodInfo)
         {
-            if (HasUnitOfWorkAttribute(methodInfo))
-            {
-                return true;
-            }
-
-            if (IsRepositoryMethod(methodInfo))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if given method is a member of a repository class.
-        /// </summary>
-        /// <param name="methodInfo">Method info to check</param>
-        public static bool IsRepositoryMethod(MethodInfo methodInfo)
-        {
-            return IsRepositoryClass(methodInfo.DeclaringType);
+            return HasUnitOfWorkAttribute(methodInfo) || IsRepositoryClass(methodInfo.DeclaringType);
         }
 
         /// <summary>

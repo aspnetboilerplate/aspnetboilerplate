@@ -41,7 +41,8 @@ namespace Abp.Data.Dependency.Installers
                 Component.For(typeof(IRepository<>), typeof(NhRepositoryBase<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
                 Component.For(typeof(IRepository<,>), typeof(NhRepositoryBase<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
 
-                Classes.FromAssemblyInDirectory(new AssemblyFilter(_applicationDirectory)).BasedOn<IRepository>().WithServiceDefaultInterfaces().LifestyleTransient().WithServiceSelf().LifestyleTransient()
+                //TODO: Is this true to register all repositories. Think it?
+                Classes.FromAssemblyInDirectory(new AssemblyFilter(_applicationDirectory)).BasedOn(typeof(IRepository<,>)).WithServiceDefaultInterfaces().LifestyleTransient().WithServiceSelf().LifestyleTransient()
 
                 );
         }

@@ -6,6 +6,6 @@ namespace Abp.Domain.Repositories
     /// </summary>
     public interface IRepository
     {
-
+        //TODO: Can we remove this and use generic version to identify entities?
     }
 }
