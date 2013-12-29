@@ -1,16 +1,7 @@
 TODO (primary):
 --------------------------------------
-+ Client side Events: A general mechanism!
-  + Tasks
-    + Task created
-    + Task deleted
-    + Task updated
-  + Friendship
-    + Visit friend profile
-+ Setting page: Make it in tabs, show true message on password change error!
-+ Mobile optimization! -> Create task modal! -> test more
-- Remove create.js v.s.
-- Sadece mobile'da menü kapansýn, aksi halde kötü bir götüntü oluyor :(
+
+
 
 TODO (secondary)
 - Email alýp almama ayarlarý!!! -> SETTING management ile yapýlacaktýr!
@@ -53,6 +44,7 @@ TODO (others)
 --------------------------------------
 - Indexes (db optimization)
 - Check livestamp's performance!
+- Sadece mobile'da menü kapansýn, aksi halde kötü bir götüntü oluyor :(
 
 FUTURE:
 - Dashboard?
