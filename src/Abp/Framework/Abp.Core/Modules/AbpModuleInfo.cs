@@ -9,36 +9,36 @@ namespace Abp.Modules
     internal class AbpModuleInfo
     {
         /// <summary>
-        /// Name of the module. Shortcut for <see cref="AbpModuleAttribute.Name"/>.
+        /// Unique Name of the module. Shortcut for <see cref="AbpModuleAttribute.Name"/>.
         /// </summary>
         public string Name { get { return ModuleAttribute.Name; } }
 
         /// <summary>
-        /// Singleton instance of the module.
-        /// </summary>
-        public IAbpModule Instance { get; set; }
-
-        /// <summary>
         /// Type of the module.
         /// </summary>
-        public Type Type { get; set; }
+        public Type Type { get; private set; }
+
+        /// <summary>
+        /// Instance of the module.
+        /// </summary>
+        public IAbpModule Instance { get; private set; }
 
         /// <summary>
         /// Declared AbpModuleAttribute attribute for this module.
         /// </summary>
-        public AbpModuleAttribute ModuleAttribute { get; set; }
+        public AbpModuleAttribute ModuleAttribute { get; private set; }
         
         /// <summary>
         /// All dependent modules of this module.
         /// </summary>
-        public IDictionary<string, AbpModuleInfo> Dependencies { get; private set; } //TODO: This must be read only from outside of Abp.
-
-        /// <summary>
-        /// Creates a new AbpModuleInfo object.
-        /// </summary>
-        public AbpModuleInfo()
+        public IDictionary<string, AbpModuleInfo> Dependencies { get; private set; }
+        
+        public AbpModuleInfo(Type type, AbpModuleAttribute moduleAttribute, IAbpModule instance)
         {
             Dependencies = new Dictionary<string, AbpModuleInfo>();
+            Type = type;
+            ModuleAttribute = moduleAttribute;
+            Instance = instance;
         }
 
         public override string ToString()

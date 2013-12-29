@@ -61,12 +61,7 @@ namespace Abp.Modules.Loading
                         type.FullName));
             }
 
-            return new AbpModuleInfo
-                       {
-                           Type = type,
-                           ModuleAttribute = ReflectionHelper.GetSingleAttribute<AbpModuleAttribute>(type),
-                           Instance = (IAbpModule) Activator.CreateInstance(type, new object[] {})
-                       };
+            return new AbpModuleInfo(type, ReflectionHelper.GetSingleAttribute<AbpModuleAttribute>(type),(IAbpModule) Activator.CreateInstance(type, new object[] {}));
         }
     }
 }
