@@ -4,29 +4,38 @@ using System.Globalization;
 namespace Abp.Localization
 {
     /// <summary>
-    /// This interface is used to obtain localized strings.
+    /// A Localization Source is used to obtain localized strings.
     /// </summary>
     public interface ILocalizationSource
     {
-        string SourceName { get; }
+        /// <summary>
+        /// Unique Name of the source.
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
-        /// Gets localized string for given key name and current language.
+        /// Gets localized string for given name in current language.
         /// </summary>
-        /// <param name="name">Key name</param>
+        /// <param name="name">Name</param>
         /// <returns>Localized string</returns>
         string GetString(string name);
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
+        /// Gets localized string for given name and specified culture.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
         /// <returns>Localized string</returns>
         string GetString(string name, CultureInfo culture);
 
-        IList<LocalizedString> GetAllStrings();
+        /// <summary>
+        /// Gets all name-value pairs in current language.
+        /// </summary>
+        IReadOnlyList<LocalizedString> GetAllStrings();
 
-        IList<LocalizedString> GetAllStrings(CultureInfo culture);
+        /// <summary>
+        /// Gets all name-value pairs in specified culture.
+        /// </summary>
+        IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture);
     }
 }

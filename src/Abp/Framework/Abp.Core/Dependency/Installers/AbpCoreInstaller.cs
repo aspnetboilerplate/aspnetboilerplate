@@ -12,7 +12,7 @@ namespace Abp.Dependency.Installers
         {
             container.Register(
                 Component.For<AbpModuleLoader>().LifestyleSingleton(),
-                Component.For<ILocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton()
+                Component.For<ILocalizationSourceManager>().ImplementedBy<LocalizationSourceManager>().LifestyleSingleton()
                 );
         }
     }

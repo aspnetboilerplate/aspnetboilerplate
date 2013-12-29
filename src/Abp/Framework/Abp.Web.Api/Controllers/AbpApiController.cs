@@ -10,7 +10,7 @@ namespace Abp.WebApi.Controllers
     /// </summary>
     public abstract class AbpApiController : ApiController
     {
-        public string LocalizationSourceName { get; set; }
+        protected string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Reference to the logger to write logs.
@@ -19,7 +19,6 @@ namespace Abp.WebApi.Controllers
 
         /// <summary>
         /// Gets localized string for given key name and current language.
-        /// Shortcut for LocalizationManager.GetString.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
@@ -30,7 +29,6 @@ namespace Abp.WebApi.Controllers
 
         /// <summary>
         /// Gets localized string for given key name and specified culture information.
-        /// Shortcut for LocalizationManager.GetString.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>

@@ -3,36 +3,39 @@ using Abp.Dependency;
 
 namespace Abp.Localization
 {
+    /// <summary>
+    /// This static class is used to simplify getting localized strings.
+    /// </summary>
     public static class LocalizationHelper
     {
-        private static readonly ILocalizationManager LocalizationManager;
+        private static readonly ILocalizationSourceManager LocalizationSourceManager;
 
         static LocalizationHelper()
         {
-            LocalizationManager = IocHelper.Resolve<ILocalizationManager>();
+            LocalizationSourceManager = IocHelper.Resolve<ILocalizationSourceManager>();
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language.
+        /// Gets a localized string in current language.
         /// </summary>
-        /// <param name="sourceName"> </param>
-        /// <param name="name">Key name</param>
+        /// <param name="sourceName">Name of the localization source</param>
+        /// <param name="name">Key name to get localized string</param>
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name)
         {
-            return LocalizationManager.GetSource(sourceName).GetString(name);
+            return LocalizationSourceManager.GetSource(sourceName).GetString(name);
         }
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
+        /// Gets a localized string in specified language.
         /// </summary>
-        /// <param name="sourceName"> </param>
-        /// <param name="name">Key name</param>
-        /// <param name="culture">culture information</param>
+        /// <param name="sourceName">Name of the localization source</param>
+        /// <param name="name">Key name to get localized string</param>
+        /// <param name="culture">culture</param>
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name, CultureInfo culture)
         {
-            return LocalizationManager.GetSource(sourceName).GetString(name, culture);
+            return LocalizationSourceManager.GetSource(sourceName).GetString(name, culture);
         }
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace Abp.Localization
         /// <typeparam name="T">Type of the localization source.</typeparam>
         public static void RegisterSource<T>() where T : ILocalizationSource
         {
-            LocalizationManager.RegisterSource(IocHelper.Resolve<T>());
+            LocalizationSourceManager.RegisterSource(IocHelper.Resolve<T>());
         }
     }
 }

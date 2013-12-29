@@ -43,6 +43,9 @@
       <HintPath>..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Immutable.1.0.30\lib\portable-net45+win8+wp8\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -65,13 +68,13 @@
     <Compile Include="Domain\Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
-    <Compile Include="Localization\ILocalizationManager.cs" />
+    <Compile Include="Localization\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
     <Compile Include="Dependency\IocHelper.cs" />
     <Compile Include="Localization\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
-    <Compile Include="Localization\LocalizationManager.cs" />
+    <Compile Include="Localization\LocalizationSourceManager.cs" />
     <Compile Include="Modules\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />

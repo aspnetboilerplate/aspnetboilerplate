@@ -21,7 +21,6 @@ namespace Abp.Web.Mvc.Views
 
         /// <summary>
         /// Gets localized string for given key name and current language.
-        /// Shortcut for LocalizationManager.GetString.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
@@ -32,7 +31,6 @@ namespace Abp.Web.Mvc.Views
 
         /// <summary>
         /// Gets localized string for given key name and specified culture information.
-        /// Shortcut for LocalizationManager.GetString.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -8,15 +8,27 @@ using System.Threading;
 
 namespace Abp.Localization 
 {
+    /// <summary>
+    /// This class is used to simplify to create a localization source that
+    /// uses resource files.
+    /// </summary>
     public class ResourceFileLocalizationSource : ILocalizationSource
     {
+        /// <summary>
+        /// Unique Name of the source.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Reference to the <see cref="ResourceManager"/> object related to this localization source.
+        /// </summary>
         public ResourceManager ResourceManager { get; private set; }
 
-        public string SourceName { get; private set; }
-
-        public ResourceFileLocalizationSource(string sourceName, ResourceManager resourceManager)
+        /// <param name="name">Unique Name of the source</param>
+        /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
+        public ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
         {
-            SourceName = sourceName;
+            Name = name;
             ResourceManager = resourceManager;
         }
 
@@ -28,21 +40,20 @@ namespace Abp.Localization
         public virtual string GetString(string name, CultureInfo culture)
         {
             return ResourceManager.GetString(name, culture);
-        } 
+        }
 
-        public virtual IList<LocalizedString> GetAllStrings()
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
         }
 
-        public virtual IList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
-            
             return ResourceManager
-                .GetResourceSet(culture, true, true)
+                .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString()))
-                .ToList();
+                .ToImmutableList();
         }
     }
 }

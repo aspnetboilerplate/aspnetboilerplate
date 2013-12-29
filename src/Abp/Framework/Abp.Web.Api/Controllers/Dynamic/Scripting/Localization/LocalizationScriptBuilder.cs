@@ -8,9 +8,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
 {
     public class LocalizationScriptBuilder
     {
-        private readonly List<ILocalizationSource> _sources;
+        private readonly IReadOnlyList<ILocalizationSource> _sources;
 
-        public LocalizationScriptBuilder(List<ILocalizationSource> sources)
+        public LocalizationScriptBuilder(IReadOnlyList<ILocalizationSource> sources)
         {
             _sources = sources;
         }
@@ -25,7 +25,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
             script.AppendLine();
             foreach (var source in _sources)
             {
-                script.AppendLine("abp.localization.values['" + source.SourceName.ToCamelCase() + "'] = {");
+                script.AppendLine("abp.localization.values['" + source.Name.ToCamelCase() + "'] = {");
 
                 var stringValues = source.GetAllStrings();
                 for (int i = 0; i < stringValues.Count; i++)
@@ -33,7 +33,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
                     script.AppendLine(
                         string.Format(
                         "    '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
-                            stringValues[i].Key,
+                            stringValues[i].Name,
                             stringValues[i].Value.Replace("'", "\\'").Replace(Environment.NewLine, string.Empty) //TODO: Allow new line?
                             ));
                 }
