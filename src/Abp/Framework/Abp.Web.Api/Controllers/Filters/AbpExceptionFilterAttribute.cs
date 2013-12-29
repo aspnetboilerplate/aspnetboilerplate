@@ -14,7 +14,7 @@ namespace Abp.WebApi.Controllers.Filters
             //TODO: Create a LogHelper for that!
             using (var logger = IocHelper.ResolveAsDisposable<ILogger>())
             {
-                logger.Service.Error(context.Exception.Message, context.Exception);
+                logger.Object.Error(context.Exception.Message, context.Exception);
             }
 
             context.Response = context.Request.CreateResponse(

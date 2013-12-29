@@ -2,11 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Abp.Dependency;
+using Taskever.Dependency.Installers;
 using Taskever.Web.App_Start;
-//[assembly: PreApplicationStartMethod(typeof(Test), "Start")]
+[assembly: PreApplicationStartMethod(typeof(Taskever.Web.App_Start.PreAppStart), "Run")]
 
 namespace Taskever.Web.App_Start
 {
+    public class PreAppStart
+    {
+        public static void Run()
+        {
+            IocManager.Instance.IocContainer.Install(new Log4NetInstaller());
+        }
+    }
+
     //public class Test
     //{
     //    public static void Start()

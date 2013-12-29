@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dependency\Installers\Log4NetInstaller.cs" />
     <Compile Include="Domain\Repositories\IActivityRepository.cs" />
     <Compile Include="Domain\Repositories\IFriendshipRepository.cs" />
     <Compile Include="Domain\Repositories\ITaskRepository.cs" />

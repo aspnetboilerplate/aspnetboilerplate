@@ -36,7 +36,7 @@ namespace Abp.Modules.Core.Mvc.Web.Authentication
         {
             using (var userService = IocHelper.ResolveAsDisposable<IUserService>())
             {
-                return (userService.Service.GetActiveUserOrNull(username, password) != null);
+                return (userService.Object.GetActiveUserOrNull(username, password) != null);
             }
         }
 

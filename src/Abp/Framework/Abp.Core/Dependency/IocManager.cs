@@ -7,7 +7,7 @@ namespace Abp.Dependency
     /// This class is used to create/dispose and get a reference to the dependency injection container.
     /// It implements Singleton pattern.
     /// </summary>
-    internal class IocManager : IDisposable
+    public class IocManager : IDisposable
     {
         /// <summary>
         /// Reference to the Castle Windsor Container.

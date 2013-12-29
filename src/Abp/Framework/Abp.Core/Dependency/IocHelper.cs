@@ -54,24 +54,24 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an <see cref="DisposableService{T}"/> object that wraps resolved object to be Disposable.
+        /// Gets an <see cref="DisposableObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <returns>The instance object wrapped by <see cref="DisposableService{T}"/></returns>
-        public static DisposableService<T> ResolveAsDisposable<T>()
+        /// <returns>The instance object wrapped by <see cref="DisposableObjectWrapper{T}"/></returns>
+        public static DisposableObjectWrapper<T> ResolveAsDisposable<T>()
         {
-            return new DisposableService<T>(Resolve<T>());
+            return new DisposableObjectWrapper<T>(Resolve<T>());
         }
 
         /// <summary>
-        /// Gets an <see cref="DisposableService{T}"/> object that wraps resolved object to be Disposable.
+        /// Gets an <see cref="DisposableObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
-        /// <returns>The instance object wrapped by <see cref="DisposableService{T}"/></returns>
-        public static DisposableService<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
+        /// <returns>The instance object wrapped by <see cref="DisposableObjectWrapper{T}"/></returns>
+        public static DisposableObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
         {
-            return new DisposableService<T>(Resolve<T>(argumentsAsAnonymousType));
+            return new DisposableObjectWrapper<T>(Resolve<T>(argumentsAsAnonymousType));
         }
 
         /// <summary>
