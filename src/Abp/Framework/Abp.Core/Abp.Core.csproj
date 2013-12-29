@@ -53,7 +53,11 @@
   <ItemGroup>
     <Compile Include="Dependency\DisposableObjectWrapper.cs" />
     <Compile Include="Dependency\IocManager.cs" />
+    <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\IEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Repositories\IRepositoryOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\IRepository.cs" />
+    <Compile Include="Domain\Repositories\IRepositoryOfTEntity.cs" />
     <Compile Include="Domain\Uow\IUnitOfWork.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkAttribute.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />

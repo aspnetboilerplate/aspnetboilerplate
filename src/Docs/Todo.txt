@@ -3,6 +3,8 @@
 
 * TODO
 
+- VALUE TYPES!
+
 - Session timeouts!
 
 - Loading animations!
