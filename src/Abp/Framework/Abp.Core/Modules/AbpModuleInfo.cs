@@ -6,7 +6,7 @@ namespace Abp.Modules
     /// <summary>
     /// Used to store all needed informations for a module.
     /// </summary>
-    internal class AbpModuleInfo
+    public class AbpModuleInfo
     {
         /// <summary>
         /// Unique Name of the module. Shortcut for <see cref="AbpModuleAttribute.Name"/>.

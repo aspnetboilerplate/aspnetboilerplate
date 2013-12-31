@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        /// This method is called when the system is being shutdown.
+        /// This method is called when the application is being shutdown.
         /// </summary>
         public void Shutdown()
         {

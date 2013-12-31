@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
-using Abp.Exceptions;
-using Abp.Localization;
-using Abp.Modules;
-using Abp.Modules.Loading;
-using Castle.Windsor;
 
 namespace Abp.Startup
 {
@@ -17,75 +10,28 @@ namespace Abp.Startup
     /// </summary>
     public class AbpBootstrapper : IDisposable
     {
-        private IDictionary<string, AbpModuleInfo> Modules { get; set; }
+        private readonly string _applicationDirectory;
 
-        private readonly AbpInitializationContext _initializationContext;
+        private AbpApplicationManager _applicationManager;
 
-        public AbpBootstrapper(string applicationDirectory)
+        public AbpBootstrapper(string applicationDirectory) //TODO: Can we remove application directory?
         {
-            _initializationContext = new AbpInitializationContext(this);
-            _initializationContext.ApplicationDirectory = applicationDirectory;
+            _applicationDirectory = applicationDirectory;
         }
 
         public virtual void Initialize()
         {
             IocManager.Instance.IocContainer.Install(new AbpCoreInstaller());
 
-            //TODO: Create a module manager and move all loading/sorting/initialization/shutdown methods to it!
-            LoadModules();
-            InitializeModules();
+            _applicationManager = IocHelper.Resolve<AbpApplicationManager>(new { applicationDirectory = _applicationDirectory });
+            _applicationManager.Initialize();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-            //TODO: Call shutdown of modules!
+            _applicationManager.Dispose();
 
             IocManager.Instance.Dispose();
         }
-
-        private void LoadModules()
-        {
-            Modules = IocHelper.Resolve<AbpModuleLoader>().LoadModules();
-        }
-
-        private void InitializeModules()
-        {
-            new AbpModuleDependencyExplorer().SetDependencies(Modules);
-            var sortedModules = new AbpModuleDependencySorter().SortByDependency(Modules);
-
-            var initializer = new AbpModuleInitializer(sortedModules, _initializationContext);
-            initializer.PreInitializeModules();
-            initializer.InitializeModules();
-            initializer.PostInitializeModules();
-        }
-
-        #region AbpInitializationContext class
-
-        private class AbpInitializationContext : IAbpInitializationContext
-        {
-            public WindsorContainer IocContainer { get { return IocManager.Instance.IocContainer; } }
-            
-            public string ApplicationDirectory { get; set; }
-
-            private readonly AbpBootstrapper _abpBootstrapper;
-
-            public AbpInitializationContext(AbpBootstrapper abpBootstrapper)
-            {
-                _abpBootstrapper = abpBootstrapper;
-            }
-
-            public TModule GetModule<TModule>() where TModule : AbpModule
-            {
-                var module = _abpBootstrapper.Modules.Values.FirstOrDefault(m => m.Type == typeof(TModule));
-                if (module == null)
-                {
-                    throw new AbpException("Can not find module for " + typeof(TModule).FullName);
-                }
-
-                return (TModule)module.Instance;
-            }
-        }
-
-        #endregion
     }
 }

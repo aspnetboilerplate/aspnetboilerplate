@@ -8,7 +8,7 @@ namespace Abp.Modules
     public interface IAbpInitializationContext
     {
         /// <summary>
-        /// Reference to the IOC container.
+        /// Gets a reference to the Ioc container. A shortcut for Abp.Dependency.IocManager.Instance.IocContainer.
         /// </summary>
         WindsorContainer IocContainer { get; }
 
