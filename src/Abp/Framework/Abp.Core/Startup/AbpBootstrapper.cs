@@ -1,6 +1,8 @@
 ﻿using System;
 using Abp.Dependency;
-using Abp.Dependency.Installers;
+using Abp.Localization;
+using Abp.Modules;
+using Castle.Windsor.Installer;
 
 namespace Abp.Startup
 {
@@ -21,7 +23,9 @@ namespace Abp.Startup
 
         public virtual void Initialize()
         {
-            IocManager.Instance.IocContainer.Install(new AbpCoreInstaller());
+            IocManager.Instance.IocContainer.Install(new AbpStartupInstaller());
+            IocManager.Instance.IocContainer.Install(new AbpModuleSystemInstaller());
+            IocManager.Instance.IocContainer.Install(new LocalizationInstaller());
 
             _applicationManager = IocHelper.Resolve<AbpApplicationManager>(new { applicationDirectory = _applicationDirectory });
             _applicationManager.Initialize();

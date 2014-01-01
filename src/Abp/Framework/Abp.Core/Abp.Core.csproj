@@ -68,6 +68,7 @@
     <Compile Include="Domain\Entities\IEntity.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
+    <Compile Include="Localization\LocalizationInstaller.cs" />
     <Compile Include="Localization\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
+    <Compile Include="Modules\AbpModuleSystemInstaller.cs" />
     <Compile Include="Startup\AbpApplicationManager.cs" />
     <Compile Include="Modules\AbpModuleHelper.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Security\AbpIdentity.cs" />
     <Compile Include="Security\AbpPrincipal.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
-    <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
+    <Compile Include="Startup\AbpCoreInstaller.cs" />
     <Compile Include="Startup\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModuleCollection.cs" />
     <Compile Include="Utils\Extensions\CollectionExtensions.cs" />
