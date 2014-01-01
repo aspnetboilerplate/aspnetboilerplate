@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp.Modules.Core</RootNamespace>
-    <AssemblyName>Abp.Modules.Core.Infrastructure.Data.NHibernate</AssemblyName>
+    <AssemblyName>Abp.Modules.Core.Infrastructure.NHibernate</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -96,9 +96,9 @@
       <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
       <Name>Abp.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Infrastructure.Data.NHibernate\Abp.Infrastructure.Data.NHibernate.csproj">
+    <ProjectReference Include="..\..\..\Framework\Abp.Infrastructure.NHibernate\Abp.Infrastructure.NHibernate.csproj">
       <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
-      <Name>Abp.Infrastructure.Data.NHibernate</Name>
+      <Name>Abp.Infrastructure.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
