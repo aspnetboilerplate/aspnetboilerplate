@@ -2,7 +2,7 @@ using System;
 using Abp.Domain.Uow;
 using NHibernate;
 
-namespace Abp.Data.Repositories.NHibernate
+namespace Abp.Domain.Repositories.NHibernate
 {
     /// <summary>
     /// Implements Unit of work for NHibernate.

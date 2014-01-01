@@ -1,7 +1,6 @@
 using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 
-namespace Abp.Data.Repositories.NHibernate
+namespace Abp.Domain.Repositories.NHibernate
 {
     /// <summary>
     /// A shortcut of <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).

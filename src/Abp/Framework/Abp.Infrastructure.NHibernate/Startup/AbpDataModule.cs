@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Abp.Data.Dependency.Installers;
-using Abp.Data.Repositories;
+using Abp.Domain.Repositories.NHibernate;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.Startup;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 
-namespace Abp.Data.Startup
+namespace Abp.Domain.Startup
 {
-    [AbpModule("Abp.Infrastructure.Data.NHibernate")]
+    [AbpModule("Abp.Infrastructure.NHibernate")]
     public class AbpDataModule : AbpModule
     {
         private readonly List<Action<MappingConfiguration>> _mappings;
@@ -29,19 +29,16 @@ namespace Abp.Data.Startup
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+            NHibernateUnitOfWorkRegistrer.Initialize(initializationContext);
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            
-            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
-        }
 
-        protected void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
-        {
-            NHibernateUnitOfWorkRegistrer.ComponentRegistered(key, handler);
+            // TODO: Move register event handler out and install below!
+            initializationContext.IocContainer.Install(new NhUnitOfWorkInstaller());
+            initializationContext.IocContainer.Install(new NhRepositoryInstaller(CreateNhSessionFactory));
         }
 
         private ISessionFactory CreateNhSessionFactory()

@@ -1,38 +1,27 @@
-using System;
-using Abp.Data.Dependency.Interceptors;
-using Abp.Data.Repositories.NHibernate;
-using Abp.Domain.Repositories;
+﻿using System;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using NHibernate;
 
-namespace Abp.Data.Dependency.Installers
+namespace Abp.Domain.Repositories.NHibernate
 {
-    /// <summary>
-    /// This class installs base NHibernate components.
-    /// TODO: Make sessionFactoryCreator mechanism better!
-    /// </summary>
-    public class NHibernateInstaller : IWindsorInstaller
+    public class NhRepositoryInstaller : IWindsorInstaller
     {
         private readonly Func<ISessionFactory> _sessionFactoryCreator;
 
-        public NHibernateInstaller(Func<ISessionFactory> sessionFactoryCreator)
+        public NhRepositoryInstaller(Func<ISessionFactory> sessionFactoryCreator)
         {
             _sessionFactoryCreator = sessionFactoryCreator;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //Register all components
             container.Register(
 
                 //Nhibernate session factory
                 Component.For<ISessionFactory>().UsingFactoryMethod(_sessionFactoryCreator).LifeStyle.Singleton,
-
-                //Unitofwork interceptor
-                Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient,
-
+                
                 //Generic repositories
                 Component.For(typeof (IRepository<>), typeof (NhRepositoryBase<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
                 Component.For(typeof (IRepository<,>), typeof (NhRepositoryBase<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()

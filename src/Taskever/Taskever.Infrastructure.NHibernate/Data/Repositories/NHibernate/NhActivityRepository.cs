@@ -1,4 +1,4 @@
-using Abp.Data.Repositories.NHibernate;
+using Abp.Domain.Repositories.NHibernate;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Repositories;

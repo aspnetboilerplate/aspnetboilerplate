@@ -1,10 +1,9 @@
-﻿using Abp.Data.Repositories.NHibernate;
-using Abp.Domain.Uow;
+﻿using Abp.Domain.Repositories.NHibernate;
 using Castle.DynamicProxy;
 using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
 
-namespace Abp.Data.Dependency.Interceptors
+namespace Abp.Domain.Uow
 {
     /// <summary>
     /// This interceptor is used to manage database connection and transactions.

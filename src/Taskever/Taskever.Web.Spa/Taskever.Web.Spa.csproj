@@ -465,6 +465,10 @@
       <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
       <Name>Taskever.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Taskever.Infrastructure.NHibernate\Taskever.Infrastructure.NHibernate.csproj">
+      <Project>{89714409-e64f-4439-909a-415867494d16}</Project>
+      <Name>Taskever.Infrastructure.NHibernate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Taskever.Web.Api\Taskever.Web.Api.csproj">
       <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>
       <Name>Taskever.Web.Api</Name>

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
-using Abp.Data.Repositories.NHibernate;
+using Abp.Domain.Repositories.NHibernate;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Repositories;
 

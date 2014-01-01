@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Data.Repositories;
-using Abp.Data.Startup;
 using Abp.Domain.Repositories;
+using Abp.Domain.Startup;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
 using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Modules.Core.Startup.Dependency;
@@ -12,7 +12,7 @@ using Castle.Windsor;
 
 namespace Abp.Modules.Core.Startup
 {
-    [AbpModule("Abp.Modules.Core.Infrastructure.Data.NHibernate", Dependencies = new[] { "Abp.Infrastructure.Data.NHibernate" })]
+    [AbpModule("Abp.Modules.Core.Infrastructure.NHibernate", Dependencies = new[] { "Abp.Infrastructure.NHibernate" })]
     public class AbpModulesCoreDataModule : AbpModule
     {
         private WindsorContainer IocContainer { get; set; }

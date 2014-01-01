@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 using Abp.Exceptions;
 using NHibernate;
 using NHibernate.Linq;
 
-namespace Abp.Data.Repositories.NHibernate
+namespace Abp.Domain.Repositories.NHibernate
 {
     /// <summary>
     /// Base class for all repositories those uses NHibernate.

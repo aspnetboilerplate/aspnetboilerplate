@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Data.Repositories.NHibernate;
+using Abp.Domain.Repositories.NHibernate;
 using NHibernate.Linq;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Enums;

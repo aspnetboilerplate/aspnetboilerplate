@@ -1,15 +1,19 @@
 ﻿using System.Linq;
-using Abp.Data.Dependency.Interceptors;
-using Abp.Domain.Uow;
+using Abp.Startup;
 using Castle.Core;
 
-namespace Abp.Data.Dependency.Installers
+namespace Abp.Domain.Uow
 {
     /// <summary>
     /// This class is used to register interceptor for needed classes for Unit Of Work mechanism.
     /// </summary>
     public static class NHibernateUnitOfWorkRegistrer
     {
+        public static void Initialize(IAbpInitializationContext initializationContext)
+        {
+            initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+        }
+
         /// <summary>
         /// This method is called on ComponentRegistered event of Castle Windsor.
         /// </summary>

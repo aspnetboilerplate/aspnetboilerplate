@@ -1,5 +1,5 @@
 using System.Reflection;
-using Abp.Data.Startup;
+using Abp.Domain.Startup;
 using Abp.Modules;
 using Abp.Startup;
 using Taskever.Data.Repositories;
@@ -7,7 +7,7 @@ using Taskever.Dependency.Installers;
 
 namespace Taskever.Startup
 {
-    [AbpModule("Taskever.Infrastructure.Data.NHibernate", Dependencies = new[] { "Abp.Modules.Core.Infrastructure.Data.NHibernate" })]
+    [AbpModule("Taskever.Infrastructure.Data.NHibernate", Dependencies = new[] { "Abp.Modules.Core.Infrastructure.NHibernate" })]
     public class TaskeverDataModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)
