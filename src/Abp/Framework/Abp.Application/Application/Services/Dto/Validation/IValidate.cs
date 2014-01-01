@@ -1,4 +1,4 @@
-namespace Abp.Application.Services.Dto
+namespace Abp.Application.Services.Dto.Validation
 {
     public interface IValidate
     {

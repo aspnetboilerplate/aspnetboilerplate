@@ -8,11 +8,19 @@ using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Services.Dto.Validation
 {
+    /* TODO:
+     * - A method may allow null arguments, how to handle it?
+     * - Optional parameters & default values
+     * - Out/Ref parameters
+     */
+
+
     public class MethodInvocationValidator
     {
         private readonly MethodInfo _method;
         private readonly object[] _arguments;
-        
+        private readonly ParameterInfo[] _parameters;
+
         private readonly ValidationContext _validationContext;
         private readonly List<ValidationResult> _validationErrors;
 
@@ -23,29 +31,30 @@ namespace Abp.Application.Services.Dto.Validation
 
             _validationContext = new ValidationContext(instance);
             _validationErrors = new List<ValidationResult>();
+            _parameters = _method.GetParameters();
         }
 
         public virtual void Validate()
         {
-            if (_arguments.IsNullOrEmpty())
+            if (_parameters.IsNullOrEmpty())
             {
                 return;
             }
 
-            var parameters = _method.GetParameters();
-            if (parameters.Length != _arguments.Length)
+            if (_parameters.Length != _arguments.Length)
             {
+                //This is not possible! Remove check?
                 throw new Exception("Method parameter count does not matche with argument count!");
             }
-            
-            for (var i = 0; i < parameters.Length; i++)
+
+            for (var i = 0; i < _parameters.Length; i++)
             {
-                Validate(parameters[i], _arguments[i]);
+                Validate(_parameters[i], _arguments[i]);
             }
 
             if (_validationErrors.Any())
             {
-                throw new ValidationException("There are validation errors!"); //TODO: What are thay?
+                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.") { ValidationErrors = _validationErrors };
             }
         }
 
@@ -53,7 +62,6 @@ namespace Abp.Application.Services.Dto.Validation
         {
             if (argument == null)
             {
-                //TODO: Maybe method accept null values? How to handle it
                 _validationErrors.Add(new ValidationResult(parameter.Name + " is null!"));
                 return;
             }

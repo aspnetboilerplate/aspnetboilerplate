@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto.Validation;
 using Taskever.Domain.Enums;
 
 namespace Taskever.Application.Services.Dto.Tasks
