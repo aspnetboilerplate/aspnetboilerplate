@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto.Validation;
+﻿using Abp.Application.Authorization;
+using Abp.Application.Services.Dto.Validation;
 using Abp.Modules;
 using Abp.Startup;
 
@@ -20,6 +21,7 @@ namespace Abp.Application.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new ValidationInstaller());
+            initializationContext.IocContainer.Install(new AuthorizationInstaller());
         }
     }
 }

@@ -1,3 +1,4 @@
+using Abp.Application.Authorization;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto.Validation;
 using Abp.Startup;
@@ -20,6 +21,8 @@ namespace Abp.Application.Startup
             if (typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
             {
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
+                //TODO: If possible, intecept methods only those have AbpAuthorizeAttribute
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
             }
         }
     }

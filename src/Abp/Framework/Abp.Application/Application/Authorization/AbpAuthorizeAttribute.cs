@@ -1,13 +1,13 @@
-﻿using System.Web.Mvc;
-using Abp.Application.Authorization;
+﻿using System;
+using Abp.Application.Services;
 
-namespace Abp.Web.Mvc.Authorization
+namespace Abp.Application.Authorization
 {
     /// <summary>
-    /// This attribute is used on an action of an MVC <see cref="Controller"/>
-    /// to make that action usable only by authorized users.
+    /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)
+    /// to make that method usable only by authorized users.
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute, IFeatureBasedAuthorization
+    public class AbpAuthorizeAttribute : Attribute, IFeatureBasedAuthorization
     {
         /// <summary>
         /// A list of features to authorize.
@@ -23,22 +23,12 @@ namespace Abp.Web.Mvc.Authorization
         {
             if (!string.IsNullOrEmpty(singleFeature))
             {
-                Features = new[] { singleFeature };
+                Features = new[]{singleFeature};
             }
             else
             {
-                Features = new string[0];
+                Features = new string[0];                
             }
-        }
-
-        protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
-        {
-            if (!base.AuthorizeCore(httpContext))
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }

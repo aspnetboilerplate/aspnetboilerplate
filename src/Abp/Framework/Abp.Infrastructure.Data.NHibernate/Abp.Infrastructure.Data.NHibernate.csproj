@@ -58,11 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Startup\AbpDataModule.cs" />
     <Compile Include="Dependency\Installers\NHibernateInstaller.cs" />
     <Compile Include="Dependency\Installers\NHibernateUnitOfWorkRegistrer.cs" />
     <Compile Include="Dependency\Interceptors\NhUnitOfWorkInterceptor.cs" />
-    <Compile Include="Repositories\NHibernate\NhRepositoryBase.cs" />
+    <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
     <Compile Include="Repositories\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

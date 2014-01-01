@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Entities;
@@ -10,20 +10,11 @@ using NHibernate.Linq;
 namespace Abp.Data.Repositories.NHibernate
 {
     /// <summary>
-    /// A shortcut of <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (Int32).
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    public abstract class NhRepositoryBase<TEntity> : NhRepositoryBase<TEntity, int>, IRepository<TEntity> where TEntity : class, IEntity<int>
-    {
-
-    }
-
-    /// <summary>
     /// Base class for all repositories those uses NHibernate.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+    public class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
@@ -38,15 +29,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// <returns>IQueryable to be used to select entities from database</returns>
         public virtual IQueryable<TEntity> GetAll()
         {
-            var allEntities = Session.Query<TEntity>();
-
-            //TODO: Move this code out of repository!
-            //if ((typeof(IHasTenant)).IsAssignableFrom(typeof(TEntity)) && Tenant.Current != null)
-            //{
-            //    allEntities = allEntities.Cast<IHasTenant>().Where(entity => entity.Tenant.Id == Tenant.Current.Id).Cast<TEntity>();
-            //}
-
-            return allEntities;
+            return Session.Query<TEntity>();
         }
 
         /// <summary>
@@ -92,7 +75,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// </summary>
         /// <param name="key">Primary key of the entity to get</param>
         /// <returns>Entity or null</returns>
-        public TEntity GetOrNull(TPrimaryKey key)
+        public virtual TEntity GetOrNull(TPrimaryKey key)
         {
             return Session.Get<TEntity>(key);
         }
@@ -102,7 +85,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// </summary>
         /// <param name="key">Primary key of the entity to load</param>
         /// <returns>Entity</returns>
-        public TEntity Load(TPrimaryKey key)
+        public virtual TEntity Load(TPrimaryKey key)
         {
             return Session.Load<TEntity>(key);
         }
@@ -153,7 +136,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// Gets count of all entities in this repository.
         /// </summary>
         /// <returns>Count of entities</returns>
-        public int Count()
+        public virtual int Count()
         {
             return GetAll().Count();
         }
@@ -163,7 +146,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// </summary>
         /// <param name="queryMethod">A filter method to get count fo a projection</param>
         /// <returns>Count of entities</returns>
-        public int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
+        public virtual int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
         {
             return queryMethod(GetAll()).Count();
         }
@@ -172,7 +155,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
         /// </summary>
         /// <returns>Count of entities</returns>
-        public long LongCount()
+        public virtual long LongCount()
         {
             return GetAll().LongCount();
         }
@@ -182,7 +165,7 @@ namespace Abp.Data.Repositories.NHibernate
         /// </summary>
         /// <param name="queryMethod">A filter method to get count fo a projection</param>
         /// <returns>Count of entities</returns>
-        public long LongCount(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
+        public virtual long LongCount(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod)
         {
             return queryMethod(GetAll()).LongCount();
         }

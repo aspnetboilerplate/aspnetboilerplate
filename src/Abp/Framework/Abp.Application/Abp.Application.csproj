@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Application\Authorization\ValidationInstaller.cs" />
     <Compile Include="Application\Editions\Edition.cs" />
     <Compile Include="Application\Editions\NullEdition.cs" />
     <Compile Include="Application\Features\ApplicationFeature.cs" />
@@ -69,7 +71,8 @@
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Application\Services\Dto\Validation\ValidationInterceptor.cs" />
     <Compile Include="Application\Startup\ApplicationLayerInterceptorRegisterer.cs" />
-    <Compile Include="Authorization\AbpCoreAuthorizeAttribute.cs" />
+    <Compile Include="Application\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="Application\Authorization\IFeatureBasedAuthorization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Application\Services\Dto\Validation\ValidationInstaller.cs" />
     <Compile Include="Application\Startup\AbpApplicationModule.cs" />

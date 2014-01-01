@@ -30,14 +30,13 @@ namespace Abp.Application.Editions
         public IDictionary<string, ApplicationFeature> Features { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets the current edition.
         /// </summary>
         public static Edition Current
         {
             get { return _current ?? Default ?? NullEdition.Instance; }
             set { _current = value; }
         }
-        [ThreadStatic]
         private static Edition _current;
 
         /// <summary>
@@ -51,6 +50,10 @@ namespace Abp.Application.Editions
             Features = new Dictionary<string, ApplicationFeature>();
         }
 
+        /// <summary>
+        /// Gets a boolean value indicates that if this edition contains given feature.
+        /// </summary>
+        /// <param name="featureName">Name of the feature to check</param>
         public virtual bool HasFeature(string featureName)
         {
             return Features.ContainsKey(featureName);

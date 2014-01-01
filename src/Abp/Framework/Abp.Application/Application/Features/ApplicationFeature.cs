@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Abp.Application.Features
@@ -23,11 +22,6 @@ namespace Abp.Application.Features
         /// A brief description for this feature.
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// Creation date of this feature.
-        /// </summary>
-        public DateTime ReleaseDate { get; set; }
 
         /// <summary>
         /// Parent feature.
@@ -56,9 +50,8 @@ namespace Abp.Application.Features
         public ApplicationFeature(string name)
         {
             Name = name;
-            DisplayName = "";
-            Description = "";
-            ReleaseDate = DateTime.MinValue;
+            DisplayName = Name;
+            Description = Name;
             Children = new List<ApplicationFeature>();
             Dependencies = new List<ApplicationFeature>();
         }
