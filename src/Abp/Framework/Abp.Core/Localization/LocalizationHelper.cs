@@ -1,5 +1,6 @@
 using System.Globalization;
 using Abp.Dependency;
+using Abp.Localization.Sources;
 
 namespace Abp.Localization
 {

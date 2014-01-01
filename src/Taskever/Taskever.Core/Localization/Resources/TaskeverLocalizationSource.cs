@@ -5,6 +5,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Localization;
+using Abp.Localization.Sources.ResourceFiles;
 
 namespace Taskever.Localization.Resources
 {

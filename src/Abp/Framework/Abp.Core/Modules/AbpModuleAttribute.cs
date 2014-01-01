@@ -23,8 +23,13 @@ namespace Abp.Modules
         /// <param name="name">Name of the module</param>
         public AbpModuleAttribute(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Module name can not be null or empty", "name");
+            }
+
             Name = name;
-            Dependencies = new string[] {};
+            Dependencies = new string[] { };
         }
     }
 }

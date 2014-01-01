@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Abp.Exceptions;
+using Abp.Utils.Extensions.Reflection;
 
 namespace Abp.Modules
 {
@@ -39,6 +41,19 @@ namespace Abp.Modules
             Type = type;
             ModuleAttribute = moduleAttribute;
             Instance = instance;
+        }
+
+        public static AbpModuleInfo CreateForType(Type type)
+        {
+            if (!AbpModuleHelper.IsAbpModule(type))
+            {
+                throw new AbpException(
+                    string.Format(
+                        "type {0} is not an Abp module. An Abp module must be subclass of AbpModule, must declare AbpModuleAttribute attribute and must not be abstract!",
+                        type.FullName));
+            }
+
+            return new AbpModuleInfo(type, type.GetSingleAttribute<AbpModuleAttribute>(), (IAbpModule)Activator.CreateInstance(type, new object[] { }));
         }
 
         public override string ToString()

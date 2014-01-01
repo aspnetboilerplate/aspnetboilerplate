@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Abp.Localization
 {
     /// <summary>
@@ -5,6 +7,11 @@ namespace Abp.Localization
     /// </summary>
     public class LocalizedString
     {
+        /// <summary>
+        /// Culture info for this string.
+        /// </summary>
+        public CultureInfo CultureInfo { get; private set; }
+
         /// <summary>
         /// Unique Name of the string.
         /// </summary>
@@ -15,10 +22,12 @@ namespace Abp.Localization
         /// </summary>
         public string Value { get; private set; }
 
+        /// <param name="cultureInfo">Culture info for this string</param>
         /// <param name="name">Unique Name of the string</param>
         /// <param name="value">Value for the <see cref="name"/></param>
-        public LocalizedString(string name, string value)
+        public LocalizedString(CultureInfo cultureInfo, string name, string value)
         {
+            CultureInfo = cultureInfo;
             Name = name;
             Value = value;
         }

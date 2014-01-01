@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Abp.Application.Services.Dto;
 using Abp.Utils.Extensions;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Validation
 {

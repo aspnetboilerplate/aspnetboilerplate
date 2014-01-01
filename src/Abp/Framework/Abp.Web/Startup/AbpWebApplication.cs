@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Web;
 using System.Web.Security;
-using Abp.Authorization;
 using Abp.Security;
 using Abp.Startup;
 
 namespace Abp.Web.Mvc.Startup
 {
-    public class AbpWebApplication : System.Web.HttpApplication
+    /// <summary>
+    /// This class is used to start the web application
+    /// </summary>
+    public abstract class AbpWebApplication : HttpApplication
     {
-        private AbpBootstrapper _bootstrapper;
+        protected AbpBootstrapper AbpBootstrapper;
 
         protected virtual void Application_Start()
         {
-            _bootstrapper = new AbpBootstrapper(Server.MapPath("bin"));
-            _bootstrapper.Initialize();
+            AbpBootstrapper = new AbpBootstrapper();
+            AbpBootstrapper.Initialize();
+        }
+
+        protected virtual void Application_End(object sender, EventArgs e)
+        {
+            AbpBootstrapper.Dispose();
         }
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
@@ -29,16 +37,6 @@ namespace Abp.Web.Mvc.Startup
             userIdentity.DeserializeFromString(authTicket.UserData);
             var userPrincipal = new AbpPrincipal(userIdentity);
             Context.User = userPrincipal;
-        }
-
-        protected virtual void Application_PostAuthorizeRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        protected virtual void Application_End(object sender, EventArgs e)
-        {
-            _bootstrapper.Dispose();
         }
     }
 }

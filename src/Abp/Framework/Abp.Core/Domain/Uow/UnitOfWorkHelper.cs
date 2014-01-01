@@ -7,7 +7,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// A helper class to simplify unit of work process.
     /// </summary>
-    internal static class UnitOfWorkHelper
+    public static class UnitOfWorkHelper
     {
         /// <summary>
         /// Determines if given method is a UnitOfWork method.

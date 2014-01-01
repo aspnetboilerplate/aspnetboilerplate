@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.Data.Repositories;
 using Abp.Data.Startup;
 using Abp.Domain.Repositories;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
@@ -53,6 +54,7 @@ namespace Abp.Modules.Core.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
+            initializationContext.IocContainer.Install(new RepositoryInstaller());
             initializationContext.IocContainer.Install(new AbpCoreDataModuleDependencyInstaller());
         }
     }

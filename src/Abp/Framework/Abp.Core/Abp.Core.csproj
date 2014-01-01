@@ -69,14 +69,14 @@
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\LocalizationInstaller.cs" />
-    <Compile Include="Localization\ILocalizationSourceManager.cs" />
+    <Compile Include="Localization\Sources\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
-    <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
+    <Compile Include="Localization\Sources\ResourceFiles\ResourceFileLocalizationSource.cs" />
     <Compile Include="Dependency\IocHelper.cs" />
-    <Compile Include="Localization\ILocalizationSource.cs" />
+    <Compile Include="Localization\Sources\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
-    <Compile Include="Localization\LocalizationSourceManager.cs" />
-    <Compile Include="Modules\AbpInitializationContext.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
+    <Compile Include="Modules\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
@@ -92,11 +92,11 @@
     <Compile Include="Startup\AbpCoreInstaller.cs" />
     <Compile Include="Startup\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModuleCollection.cs" />
-    <Compile Include="Utils\Extensions\CollectionExtensions.cs" />
-    <Compile Include="Utils\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Utils\Extensions\Collections\CollectionExtensions.cs" />
+    <Compile Include="Utils\Extensions\Collections\DictionaryExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
+    <Compile Include="Utils\Extensions\Reflection\TypeExtensions.cs" />
     <Compile Include="Utils\Helpers\FileHelper.cs" />
-    <Compile Include="Utils\Helpers\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

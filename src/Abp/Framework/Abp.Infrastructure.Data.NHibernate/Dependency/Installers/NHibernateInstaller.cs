@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 using Abp.Data.Dependency.Interceptors;
 using Abp.Data.Repositories.NHibernate;
 using Abp.Domain.Repositories;
@@ -18,12 +16,10 @@ namespace Abp.Data.Dependency.Installers
     public class NHibernateInstaller : IWindsorInstaller
     {
         private readonly Func<ISessionFactory> _sessionFactoryCreator;
-        private readonly string _applicationDirectory;
 
-        public NHibernateInstaller(Func<ISessionFactory> sessionFactoryCreator, string applicationDirectory)
+        public NHibernateInstaller(Func<ISessionFactory> sessionFactoryCreator)
         {
             _sessionFactoryCreator = sessionFactoryCreator;
-            _applicationDirectory = applicationDirectory;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -38,11 +34,8 @@ namespace Abp.Data.Dependency.Installers
                 Component.For<NhUnitOfWorkInterceptor>().LifeStyle.Transient,
 
                 //Generic repositories
-                Component.For(typeof(IRepository<>), typeof(NhRepositoryBase<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
-                Component.For(typeof(IRepository<,>), typeof(NhRepositoryBase<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient(),
-
-                //TODO: Is this true to register all repositories. Think it?
-                Classes.FromAssemblyInDirectory(new AssemblyFilter(_applicationDirectory)).BasedOn(typeof(IRepository<,>)).WithServiceDefaultInterfaces().LifestyleTransient().WithServiceSelf().LifestyleTransient()
+                Component.For(typeof (IRepository<>), typeof (NhRepositoryBase<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof (IRepository<,>), typeof (NhRepositoryBase<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
 
                 );
         }

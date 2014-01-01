@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Utils.Extensions
+namespace Abp.Utils.Extensions.Collections
 {
     /// <summary>
     /// Extension methods for Dictionary.

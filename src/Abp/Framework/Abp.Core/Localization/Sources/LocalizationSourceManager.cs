@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Abp.Exceptions;
 
-namespace Abp.Localization
+namespace Abp.Localization.Sources
 {
     /// <summary>
-    /// This class is used to manage localization sources. See <see cref="ILocalizationSource"/>.
+    /// This class is used to manage localization sources by implementing <see cref="ILocalizationSourceManager"/>. See <see cref="ILocalizationSource"/>.
     /// </summary>
     public class LocalizationSourceManager : ILocalizationSourceManager
     {

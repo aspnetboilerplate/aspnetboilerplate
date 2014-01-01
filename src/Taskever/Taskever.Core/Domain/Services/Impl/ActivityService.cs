@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Modules.Core.Domain.Repositories;
 using Abp.Utils.Extensions;
+using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;

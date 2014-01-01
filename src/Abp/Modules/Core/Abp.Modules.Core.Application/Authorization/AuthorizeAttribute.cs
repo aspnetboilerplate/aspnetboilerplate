@@ -1,6 +1,7 @@
 ﻿using Abp.Authorization;
 using Abp.Utils.Extensions;
 using System.Threading;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Modules.Core.Authorization
 {

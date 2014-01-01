@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Abp.Localization;
+using Abp.Localization.Sources;
 using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization

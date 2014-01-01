@@ -1,11 +1,9 @@
+﻿using System;
 using System.Reflection;
 
-namespace Abp.Utils.Helpers
+namespace Abp.Utils.Extensions.Reflection
 {
-    /// <summary>
-    /// This class is used to perform some common reflection related operations.
-    /// </summary>
-    internal static class ReflectionHelper
+    public static class MemberInfoExtensions
     {
         /// <summary>
         /// Gets a single attrbiute for a member.
@@ -14,8 +12,13 @@ namespace Abp.Utils.Helpers
         /// <param name="memberInfo">The member that will be checked for the attribute</param>
         /// <param name="inherit">Include inherited attrbiutes</param>
         /// <returns>Returns the attribute object if found. Returns null if not found.</returns>
-        public static T GetSingleAttribute<T>(MemberInfo memberInfo, bool inherit = true) where T : class
+        public static T GetSingleAttribute<T>(this MemberInfo memberInfo, bool inherit = true) where T : class
         {
+            if (memberInfo == null)
+            {
+                throw new ArgumentNullException("memberInfo");
+            }
+
             var attrs = memberInfo.GetCustomAttributes(typeof(T), inherit);
             if (attrs.Length > 0)
             {

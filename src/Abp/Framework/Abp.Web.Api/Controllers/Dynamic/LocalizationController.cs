@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Abp.Localization;
+using Abp.Localization.Sources;
 using Abp.WebApi.Controllers.Dynamic.Scripting.Localization;
 
 namespace Abp.WebApi.Controllers.Dynamic

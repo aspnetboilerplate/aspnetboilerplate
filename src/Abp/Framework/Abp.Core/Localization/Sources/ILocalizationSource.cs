@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Abp.Localization
+namespace Abp.Localization.Sources
 {
     /// <summary>
     /// A Localization Source is used to obtain localized strings.
@@ -29,12 +29,12 @@ namespace Abp.Localization
         string GetString(string name, CultureInfo culture);
 
         /// <summary>
-        /// Gets all name-value pairs in current language.
+        /// Gets all strings in current language.
         /// </summary>
         IReadOnlyList<LocalizedString> GetAllStrings();
 
         /// <summary>
-        /// Gets all name-value pairs in specified culture.
+        /// Gets all strings in specified culture.
         /// </summary>
         IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Exceptions;
 using Abp.Utils.Extensions;
+using Abp.Utils.Extensions.Collections;
 using Abp.Utils.Helpers;
 using Castle.Core.Logging;
 
@@ -14,25 +15,14 @@ namespace Abp.Modules
     public class AbpModuleCollection : Dictionary<string, AbpModuleInfo>
     {
         /// <summary>
-        /// Gets a reference to a module instance.
-        /// </summary>
-        /// <typeparam name="TModule">Module type</typeparam>
-        /// <returns>Reference to the module instance</returns>
-        public TModule GetModule<TModule>() where TModule : AbpModule
-        {
-            var module = Values.FirstOrDefault(m => m.Type == typeof(TModule));
-            if (module == null)
-            {
-                throw new AbpException("Can not find module for " + typeof(TModule).FullName);
-            }
-
-            return (TModule)module.Instance;
-        }
-
-        /// <summary>
         /// Reference to the logger.
         /// </summary>
-        public ILogger Logger { get; set; } //TODO: Logging!
+        public ILogger Logger { get; set; }
+
+        public AbpModuleCollection()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <summary>
         /// Loads all modules.
@@ -51,7 +41,7 @@ namespace Abp.Modules
                         continue;
                     }
 
-                    var moduleInfo = CreateModuleInfo(type);
+                    var moduleInfo = AbpModuleInfo.CreateForType(type);
                     if (ContainsKey(moduleInfo.Name))
                     {
                         Logger.Warn("Module is loaded before: " + type.FullName);
@@ -69,24 +59,41 @@ namespace Abp.Modules
         }
 
         /// <summary>
+        /// Gets a reference to a module instance.
+        /// </summary>
+        /// <typeparam name="TModule">Module type</typeparam>
+        /// <returns>Reference to the module instance</returns>
+        public TModule GetModule<TModule>() where TModule : AbpModule
+        {
+            var module = Values.FirstOrDefault(m => m.Type == typeof(TModule));
+            if (module == null)
+            {
+                throw new AbpException("Can not find module for " + typeof(TModule).FullName);
+            }
+
+            return (TModule)module.Instance;
+        }
+
+        /// <summary>
         /// Sorts modules accorting to dependencies.
+        /// If module A depends on mobule B, A comes after B in the returned List.
         /// </summary>
         /// <returns>Sorted list</returns>
         public List<AbpModuleInfo> SortByDependency()
         {
             var orderedList = new List<AbpModuleInfo>();
 
-            foreach (var module in Values)
+            foreach (var moduleInfo in Values)
             {
                 var index = 0; //Order of this module (will be first module if there is no dependencies of it)
 
                 //Check all modules and place this module after all it's dependencies
-                if (!module.Dependencies.IsNullOrEmpty())
+                if (!moduleInfo.Dependencies.IsNullOrEmpty())
                 {
-                    for (int i = 0; i < orderedList.Count; i++)
+                    for (var i = 0; i < orderedList.Count; i++)
                     {
                         //Check for dependency
-                        if (module.Dependencies.ContainsKey(orderedList[i].Name))
+                        if (moduleInfo.Dependencies.ContainsKey(orderedList[i].Name))
                         {
                             //If there is dependency, place after it
                             index = i + 1;
@@ -95,7 +102,7 @@ namespace Abp.Modules
                 }
 
                 //Insert module the right place in the list
-                orderedList.Insert(index, module);
+                orderedList.Insert(index, moduleInfo);
             }
 
             return orderedList;
@@ -103,45 +110,32 @@ namespace Abp.Modules
 
         private void SetDependencies()
         {
-            foreach (var module in Values)
+            foreach (var moduleInfo in Values)
             {
                 //Check if this module has no dependecies
-                if (module.ModuleAttribute.Dependencies.IsNullOrEmpty())
+                if (moduleInfo.ModuleAttribute.Dependencies.IsNullOrEmpty())
                 {
                     continue;
                 }
 
-                foreach (var dependencyModuleName in module.ModuleAttribute.Dependencies)
+                foreach (var dependencyModuleName in moduleInfo.ModuleAttribute.Dependencies)
                 {
                     //Check if there is a module with this name
                     if (!ContainsKey(dependencyModuleName))
                     {
-                        throw new AbpException(string.Format("Can not find dependent Abp module {0} for {1}.", dependencyModuleName, module.Name));
+                        throw new AbpException(string.Format("Can not find dependent Abp module {0} for {1}.", dependencyModuleName, moduleInfo.Name));
                     }
 
                     //Check if same dependency set before
-                    if (module.Dependencies.ContainsKey(dependencyModuleName))
+                    if (moduleInfo.Dependencies.ContainsKey(dependencyModuleName))
                     {
                         continue;
                     }
 
                     //Set the dependency
-                    module.Dependencies[dependencyModuleName] = this[dependencyModuleName];
+                    moduleInfo.Dependencies[dependencyModuleName] = this[dependencyModuleName];
                 }
             }
-        }
-
-        private static AbpModuleInfo CreateModuleInfo(Type type)
-        {
-            if (!AbpModuleHelper.IsAbpModule(type))
-            {
-                throw new AbpException(
-                    string.Format(
-                        "type {0} is not an Abp module. An Abp module must be subclass of AbpModule, must declare AbpModuleAttribute attribute and must not be abstract!",
-                        type.FullName));
-            }
-
-            return new AbpModuleInfo(type, ReflectionHelper.GetSingleAttribute<AbpModuleAttribute>(type), (IAbpModule)Activator.CreateInstance(type, new object[] { }));
         }
     }
 }

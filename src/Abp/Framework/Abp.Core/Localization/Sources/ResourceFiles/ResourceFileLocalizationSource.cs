@@ -6,11 +6,11 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 
-namespace Abp.Localization 
+namespace Abp.Localization.Sources.ResourceFiles 
 {
     /// <summary>
     /// This class is used to simplify to create a localization source that
-    /// uses resource files.
+    /// uses resource a file.
     /// </summary>
     public class ResourceFileLocalizationSource : ILocalizationSource
     {
@@ -32,27 +32,44 @@ namespace Abp.Localization
             ResourceManager = resourceManager;
         }
 
+        /// <summary>
+        /// Gets localized string for given name in current language.
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <returns>Localized string</returns>
         public virtual string GetString(string name)
         {
             return ResourceManager.GetString(name);
         }
 
+        /// <summary>
+        /// Gets localized string for given name and specified culture.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <returns>Localized string</returns>
         public virtual string GetString(string name, CultureInfo culture)
         {
             return ResourceManager.GetString(name, culture);
         }
 
+        /// <summary>
+        /// Gets all strings in current language.
+        /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
         }
 
+        /// <summary>
+        /// Gets all strings in specified culture.
+        /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
             return ResourceManager
                 .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
                 .Cast<DictionaryEntry>()
-                .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString()))
+                .Select(entry => new LocalizedString(culture, entry.Key.ToString(), entry.Value.ToString()))
                 .ToImmutableList();
         }
     }

@@ -4,6 +4,7 @@ using Abp.Application.Editions;
 using Abp.Utils.Extensions;
 using System.Linq;
 using System.Threading;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Authorization
 {

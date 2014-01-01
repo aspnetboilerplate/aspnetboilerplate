@@ -16,13 +16,10 @@ namespace Abp.Startup
         /// </summary>
         public WindsorContainer IocContainer { get { return IocManager.Instance.IocContainer; } }
 
-        public string ApplicationDirectory { get; private set; }
-
         private readonly AbpModuleCollection _modules;
 
-        public AbpInitializationContext(AbpModuleCollection modules, string applicationDirectory)
+        public AbpInitializationContext(AbpModuleCollection modules)
         {
-            ApplicationDirectory = applicationDirectory;
             _modules = modules;
         }
 

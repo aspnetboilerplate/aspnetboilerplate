@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-namespace Abp.Localization
+namespace Abp.Localization.Sources
 {
     /// <summary>
-    /// This class is used to manage localization sources. See <see cref="ILocalizationSource"/>.
+    /// This interface is used to manage localization sources. See <see cref="ILocalizationSource"/>.
     /// </summary>
     public interface ILocalizationSourceManager
     {

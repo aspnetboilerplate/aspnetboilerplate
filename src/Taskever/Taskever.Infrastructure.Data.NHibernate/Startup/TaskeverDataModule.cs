@@ -1,6 +1,7 @@
 using System.Reflection;
 using Abp.Data.Startup;
 using Abp.Modules;
+using Taskever.Data.Repositories;
 using Taskever.Dependency.Installers;
 
 namespace Taskever.Startup
@@ -11,6 +12,9 @@ namespace Taskever.Startup
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
+
+            initializationContext.IocContainer.Install(new RepositoryInstaller());
+
             initializationContext.GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
         }
 

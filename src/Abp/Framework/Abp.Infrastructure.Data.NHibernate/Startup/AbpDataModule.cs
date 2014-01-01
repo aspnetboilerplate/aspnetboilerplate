@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using Abp.Data.Dependency.Installers;
+using Abp.Data.Repositories;
 using Abp.Modules;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
@@ -33,7 +34,8 @@ namespace Abp.Data.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory, initializationContext.ApplicationDirectory)); // TODO: Move register event handler out and install below!
+            
+            initializationContext.IocContainer.Install(new NHibernateInstaller(CreateNhSessionFactory)); // TODO: Move register event handler out and install below!
         }
 
         protected void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

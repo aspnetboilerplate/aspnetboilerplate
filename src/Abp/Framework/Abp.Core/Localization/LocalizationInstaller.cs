@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Modules;
-using Abp.Startup;
+﻿using Abp.Localization.Sources;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 namespace Abp.Localization
 {
+    /// <summary>
+    /// Used to register Localization specific classes to IOC.
+    /// </summary>
     internal class LocalizationInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)

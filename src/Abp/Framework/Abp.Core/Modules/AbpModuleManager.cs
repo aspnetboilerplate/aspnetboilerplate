@@ -1,7 +1,8 @@
-﻿using Abp.Startup;
-
-namespace Abp.Modules
+﻿namespace Abp.Modules
 {
+    /// <summary>
+    /// This class is used to manage modules.
+    /// </summary>
     public class AbpModuleManager
     {
         internal AbpModuleCollection Modules { get; private set; }
@@ -11,7 +12,7 @@ namespace Abp.Modules
             Modules = modules;
         }
 
-        public virtual void InitializeModules(IAbpInitializationContext initializationContext)
+        public virtual void Initialize(IAbpInitializationContext initializationContext)
         {
             Modules.LoadAll();
 
@@ -22,7 +23,7 @@ namespace Abp.Modules
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
         }
 
-        public virtual void ShutdownModules()
+        public virtual void Shutdown()
         {
             var sortedModules = Modules.SortByDependency();
             sortedModules.Reverse();
