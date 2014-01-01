@@ -1,5 +1,6 @@
 ﻿using Abp.Localization;
 using Abp.Modules;
+using Abp.Startup;
 using Taskever.Dependency.Installers;
 using Taskever.Localization.Resources;
 

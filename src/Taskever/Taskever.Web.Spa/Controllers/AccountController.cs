@@ -8,7 +8,7 @@ using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Mvc.Controllers;
 using Abp.Modules.Core.Mvc.Models;
-using Abp.Security;
+using Abp.Modules.Core.Security;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;

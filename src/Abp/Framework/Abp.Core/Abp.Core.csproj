@@ -76,7 +76,8 @@
     <Compile Include="Localization\Sources\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
-    <Compile Include="Modules\IAbpInitializationContext.cs" />
+    <Compile Include="Modules\AbpModuleLoader.cs" />
+    <Compile Include="Startup\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleAttribute.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
@@ -86,8 +87,6 @@
     <Compile Include="Modules\AbpModuleInfo.cs" />
     <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
-    <Compile Include="Security\AbpIdentity.cs" />
-    <Compile Include="Security\AbpPrincipal.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\AbpCoreInstaller.cs" />
     <Compile Include="Startup\AbpInitializationContext.cs" />

@@ -1,4 +1,6 @@
-﻿namespace Abp.Modules
+﻿using Abp.Startup;
+
+namespace Abp.Modules
 {
     /// <summary>
     /// Base class that can be inherited to easily implement <see cref="IAbpModule"/>.

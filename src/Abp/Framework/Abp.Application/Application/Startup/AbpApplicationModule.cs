@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Interceptors;
 using Abp.Modules;
+using Abp.Startup;
 using Castle.Core;
 
 namespace Abp.Application.Startup

@@ -2,6 +2,7 @@
 using Abp.Modules.Core.Mvc.Dependency.Installers;
 using Abp.Modules.Core.Mvc.Startup;
 using Abp.Modules.Core.Mvc.Web.Authentication;
+using Abp.Startup;
 
 [assembly: PreApplicationStartMethod(typeof(Test), "Start")]
 

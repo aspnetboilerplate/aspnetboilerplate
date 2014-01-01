@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Startup;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
@@ -16,7 +10,8 @@ namespace Abp.Modules
         {
             container.Register(
                 Component.For<AbpModuleCollection>().LifestyleSingleton(),
-                Component.For<AbpModuleManager>().LifestyleSingleton()
+                Component.For<AbpModuleManager>().LifestyleSingleton(),
+                Component.For<AbpModuleLoader>().LifestyleTransient()
                 );
         }
     }

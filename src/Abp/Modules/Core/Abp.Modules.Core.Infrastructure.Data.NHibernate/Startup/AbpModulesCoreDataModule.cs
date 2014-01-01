@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
 using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Modules.Core.Startup.Dependency;
+using Abp.Startup;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;

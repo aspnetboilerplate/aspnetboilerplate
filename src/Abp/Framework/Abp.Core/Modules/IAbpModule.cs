@@ -1,3 +1,5 @@
+using Abp.Startup;
+
 namespace Abp.Modules
 {
     /// <summary>

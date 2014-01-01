@@ -1,7 +1,7 @@
 using System;
 using System.Security.Principal;
 
-namespace Abp.Security
+namespace Abp.Modules.Core.Security
 {
     //TODO: Inherit from GenericIdentity and move this class out of Core!
     public class AbpIdentity : IIdentity

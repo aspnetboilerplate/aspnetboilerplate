@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Web;
-using System.Web.Security;
-using Abp.Security;
 using Abp.Startup;
 
-namespace Abp.Web.Mvc.Startup
+namespace Abp.Web.Startup
 {
     /// <summary>
     /// This class is used to start the web application
@@ -26,17 +24,7 @@ namespace Abp.Web.Mvc.Startup
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            var authCookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (authCookie == null)
-            {
-                return;
-            }
 
-            var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-            var userIdentity = new AbpIdentity();
-            userIdentity.DeserializeFromString(authTicket.UserData);
-            var userPrincipal = new AbpPrincipal(userIdentity);
-            Context.User = userPrincipal;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Exceptions;
 using Abp.Modules.Core.Domain.Entities.Utils;
-using Abp.Security;
+using Abp.Modules.Core.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
 {

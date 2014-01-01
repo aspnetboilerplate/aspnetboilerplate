@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Abp.Domain.Entities;
-using Abp.Security;
+using Abp.Modules.Core.Security;
 
 namespace Abp.Modules.Core.Domain.Entities
 {

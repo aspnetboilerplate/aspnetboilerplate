@@ -1,5 +1,6 @@
 ﻿using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Dependency.Installers;
+using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.Modules.Core.Startup

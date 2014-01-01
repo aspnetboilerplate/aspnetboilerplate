@@ -1,23 +1,26 @@
-﻿namespace Abp.Modules
+﻿using Abp.Startup;
+
+namespace Abp.Modules
 {
     /// <summary>
     /// This class is used to manage modules.
     /// </summary>
     public class AbpModuleManager
     {
-        internal AbpModuleCollection Modules { get; private set; }
+        private readonly AbpModuleCollection _modules;
+        private readonly AbpModuleLoader _moduleLoader;
 
-        public AbpModuleManager(AbpModuleCollection modules)
+        public AbpModuleManager(AbpModuleCollection modules, AbpModuleLoader moduleLoader)
         {
-            Modules = modules;
+            _moduleLoader = moduleLoader;
+            _modules = modules;
         }
 
         public virtual void Initialize(IAbpInitializationContext initializationContext)
         {
-            Modules.LoadAll();
+            _moduleLoader.LoadAll();
 
-            var sortedModules = Modules.SortByDependency();
-
+            var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.ForEach(module => module.Instance.PreInitialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.Initialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
@@ -25,7 +28,7 @@
 
         public virtual void Shutdown()
         {
-            var sortedModules = Modules.SortByDependency();
+            var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.Reverse();
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
         }

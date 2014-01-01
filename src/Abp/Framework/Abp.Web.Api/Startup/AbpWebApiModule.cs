@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Modules;
+using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Abp.WebApi.Controllers.Filters;

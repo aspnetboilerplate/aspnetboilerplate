@@ -1,6 +1,7 @@
+using Abp.Modules;
 using Castle.Windsor;
 
-namespace Abp.Modules
+namespace Abp.Startup
 {
     /// <summary>
     /// Defines properties and methods those can be used while initialization progress.

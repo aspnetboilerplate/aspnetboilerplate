@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Abp.Modules;
+using Abp.Startup;
 using Taskever.Web.App_Start.Dependency.Installers;
 
 namespace Taskever.Web.App_Start    

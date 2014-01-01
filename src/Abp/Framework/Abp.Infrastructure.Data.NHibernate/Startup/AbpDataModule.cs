@@ -4,6 +4,7 @@ using System.Configuration;
 using Abp.Data.Dependency.Installers;
 using Abp.Data.Repositories;
 using Abp.Modules;
+using Abp.Startup;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;

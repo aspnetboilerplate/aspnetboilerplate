@@ -1,6 +1,7 @@
 using System.Reflection;
 using Abp.Data.Startup;
 using Abp.Modules;
+using Abp.Startup;
 using Taskever.Data.Repositories;
 using Taskever.Dependency.Installers;
 

@@ -1,5 +1,6 @@
 ﻿using Abp.Modules.Core.Application.Services.Dto.Mappings;
 using Abp.Modules.Core.Startup.Dependency;
+using Abp.Startup;
 
 namespace Abp.Modules.Core.Startup
 {
