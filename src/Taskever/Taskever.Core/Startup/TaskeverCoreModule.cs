@@ -13,7 +13,7 @@ namespace Taskever.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new TaskeverCoreInstaller());
-            LocalizationHelper.RegisterSource<ITaskeverLocalizationSource>();
+            LocalizationHelper.RegisterSource<TaskeverLocalizationSource>();
         }
     }
 }

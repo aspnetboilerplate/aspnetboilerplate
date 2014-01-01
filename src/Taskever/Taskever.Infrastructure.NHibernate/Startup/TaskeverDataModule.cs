@@ -1,5 +1,6 @@
 using System.Reflection;
 using Abp.Domain.Startup;
+using Abp.Domain.Startup.NHibernate;
 using Abp.Modules;
 using Abp.Startup;
 using Taskever.Data.Repositories;
@@ -16,7 +17,7 @@ namespace Taskever.Startup
 
             initializationContext.IocContainer.Install(new RepositoryInstaller());
 
-            initializationContext.GetModule<AbpDataModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
+            initializationContext.GetModule<AbpNHibernateModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)

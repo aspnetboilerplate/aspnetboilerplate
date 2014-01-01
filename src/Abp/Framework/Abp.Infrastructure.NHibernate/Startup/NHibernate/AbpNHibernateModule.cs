@@ -9,14 +9,14 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 
-namespace Abp.Domain.Startup
+namespace Abp.Domain.Startup.NHibernate
 {
     [AbpModule("Abp.Infrastructure.NHibernate")]
-    public class AbpDataModule : AbpModule
+    public class AbpNHibernateModule : AbpModule
     {
         private readonly List<Action<MappingConfiguration>> _mappings;
 
-        public AbpDataModule()
+        public AbpNHibernateModule()
         {
             _mappings = new List<Action<MappingConfiguration>>();
         }

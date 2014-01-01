@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\AbpWebExceptionHelper.cs" />
-    <Compile Include="Localization\AbpWebMessages.cs" />
+    <Compile Include="Localization\LocalizedMessages.cs" />
     <Compile Include="Models\AbpAjaxResponse.cs" />
     <Compile Include="Models\AbpErrorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

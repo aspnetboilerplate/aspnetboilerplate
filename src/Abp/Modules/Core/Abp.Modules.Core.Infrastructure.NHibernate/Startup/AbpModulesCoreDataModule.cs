@@ -2,6 +2,7 @@
 using Abp.Data.Repositories;
 using Abp.Domain.Repositories;
 using Abp.Domain.Startup;
+using Abp.Domain.Startup.NHibernate;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
 using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Modules.Core.Startup.Dependency;
@@ -24,7 +25,7 @@ namespace Abp.Modules.Core.Startup
 
             initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
 
-            initializationContext.GetModule<AbpDataModule>().AddMapping(
+            initializationContext.GetModule<AbpNHibernateModule>().AddMapping(
                 m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly())
                 ); //TODO: Move this to Core.Data and remove fluent nhibernate dependency?
         }

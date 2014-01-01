@@ -60,10 +60,10 @@
   <ItemGroup>
     <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Repositories\NHibernate\NhRepositoryInstaller.cs" />
-    <Compile Include="Startup\AbpDataModule.cs" />
-    <Compile Include="Uow\NHibernateUnitOfWorkRegistrer.cs" />
-    <Compile Include="Uow\NhUnitOfWorkInstaller.cs" />
-    <Compile Include="Uow\NhUnitOfWorkInterceptor.cs" />
+    <Compile Include="Startup\NHibernate\AbpNHibernateModule.cs" />
+    <Compile Include="Uow\NHibernate\NHibernateUnitOfWorkRegistrer.cs" />
+    <Compile Include="Uow\NHibernate\NhUnitOfWorkInstaller.cs" />
+    <Compile Include="Uow\NHibernate\NhUnitOfWorkInterceptor.cs" />
     <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
     <Compile Include="Repositories\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

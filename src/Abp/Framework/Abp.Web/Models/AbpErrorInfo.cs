@@ -4,9 +4,12 @@ using Abp.Web.Exceptions;
 
 namespace Abp.Web.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AbpErrorInfo
     {
-        public string Title { get; set; }
+        public string Title { get; set; } //TODO: Change to Details
 
         public string Message { get; set; }
 

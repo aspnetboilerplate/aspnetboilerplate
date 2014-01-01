@@ -9,7 +9,7 @@ using Abp.Localization.Sources.ResourceFiles;
 
 namespace Taskever.Localization.Resources
 {
-    public class TaskeverLocalizationSource : ResourceFileLocalizationSource, ITaskeverLocalizationSource
+    public class TaskeverLocalizationSource : ResourceFileLocalizationSource
     {
         public TaskeverLocalizationSource()
             : base("Taskever", AppTexts.ResourceManager)

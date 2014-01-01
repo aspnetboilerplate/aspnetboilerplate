@@ -15,7 +15,7 @@ namespace Abp.Web.Exceptions
 
             //TODO: Validation exceptions ?
 
-            return AbpWebMessages.InternalServerError;
+            return LocalizedMessages.InternalServerError;
         }
     }
 }

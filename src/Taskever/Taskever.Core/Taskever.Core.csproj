@@ -91,7 +91,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Localization\Resources\ITaskeverLocalizationSource.cs" />
     <Compile Include="Localization\Resources\TaskeverLocalizationSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\Services\ITaskPrivilegeService.cs" />

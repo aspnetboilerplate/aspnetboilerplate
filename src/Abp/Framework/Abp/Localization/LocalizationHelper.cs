@@ -40,6 +40,14 @@ namespace Abp.Localization
         }
 
         /// <summary>
+        /// Gets a pre-registered localization source.
+        /// </summary>
+        public static ILocalizationSource GetSource(string name)
+        {
+            return LocalizationSourceManager.GetSource(name);
+        }
+
+        /// <summary>
         /// Registers a localization source.
         /// </summary>
         /// <typeparam name="T">Type of the localization source.</typeparam>
