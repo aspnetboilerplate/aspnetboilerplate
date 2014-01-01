@@ -27,15 +27,18 @@ namespace Abp.Application.Editions
         /// <summary>
         /// All features of this edition.
         /// </summary>
-        public IDictionary<string, Feature> Features { get; private set; }
+        public IDictionary<string, ApplicationFeature> Features { get; private set; }
 
-        [ThreadStatic]
-        private static Edition _current;
+        /// <summary>
+        /// 
+        /// </summary>
         public static Edition Current
         {
             get { return _current ?? Default ?? NullEdition.Instance; }
             set { _current = value; }
         }
+        [ThreadStatic]
+        private static Edition _current;
 
         /// <summary>
         /// Create a new Edition.
@@ -45,7 +48,7 @@ namespace Abp.Application.Editions
         {
             Name = name;
             DisplayName = name;
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, ApplicationFeature>();
         }
 
         public virtual bool HasFeature(string featureName)

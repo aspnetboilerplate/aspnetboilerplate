@@ -64,7 +64,7 @@ namespace Taskever.Web.Controllers
             return RedirectToAction("Login", new { loginMessage = "Congratulations! Your account is activated. Enter your email address and password to login" });
         }
 
-        [Abp.Modules.Core.Authorization.AbpAuthorize]
+        [Abp.Web.Mvc.Authorization.AbpAuthorize]
         public virtual ActionResult Logout()
         {
             FormsAuthentication.SignOut();

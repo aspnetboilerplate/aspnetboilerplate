@@ -6,10 +6,8 @@ namespace Abp.Application.Features
     /// <summary>
     /// Represents a feture of the application that can be authorized.
     /// </summary>
-    public class Feature
+    public class ApplicationFeature
     {
-        //TODO: Think on multi-value feaures!
-
         /// <summary>
         /// Unique Name of the feature.
         /// </summary>
@@ -33,35 +31,36 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Parent feature.
-        /// A feature can be a parent feature. If parent feature is
+        /// A feature can has a parent feature. If parent feature is
         /// disabled, this feature is disabled automatically.
         /// </summary>
-        public Feature Parent { get; set; }
+        public ApplicationFeature Parent { get; set; }
 
         /// <summary>
         /// Children features of this feature.
         /// A feature can be zero or more child features.
         /// If a feature is disabled, all children are disabled automatically.
         /// </summary>
-        public List<Feature> Children { get; private set; }
+        public List<ApplicationFeature> Children { get; private set; }
 
         /// <summary>
         /// A list of dependent features for this feature.
+        /// A feature can be enabled only if all dependencies are enabled.
         /// </summary>
-        public List<Feature> Dependencies { get; private set; }
+        public List<ApplicationFeature> Dependencies { get; private set; }
 
         /// <summary>
         /// Creates a new feature.
         /// </summary>
         /// <param name="name">Unique Name of the feature</param>
-        public Feature(string name)
+        public ApplicationFeature(string name)
         {
             Name = name;
             DisplayName = "";
             Description = "";
             ReleaseDate = DateTime.MinValue;
-            Children = new List<Feature>();
-            Dependencies = new List<Feature>();
+            Children = new List<ApplicationFeature>();
+            Dependencies = new List<ApplicationFeature>();
         }
     }
 }

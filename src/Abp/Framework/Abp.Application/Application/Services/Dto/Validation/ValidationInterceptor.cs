@@ -2,7 +2,7 @@
 
 namespace Abp.Application.Services.Dto.Validation
 {
-    public class ValidationInterceptor : IInterceptor
+    internal class ValidationInterceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
         {

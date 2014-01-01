@@ -1,11 +1,10 @@
-﻿using Abp.Application.Services.Dto.Validation;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Application.Startup
+namespace Abp.Application.Services.Dto.Validation
 {
-    public class AbpApplicationDependencyInstaller : IWindsorInstaller
+    internal class ValidationInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
