@@ -76,12 +76,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\Abp.Core\Abp.Core.csproj">
+    <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

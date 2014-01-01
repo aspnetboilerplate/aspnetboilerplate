@@ -109,13 +109,13 @@
       <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
       <Name>Abp.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Abp.Web\Abp.Web.csproj">
       <Project>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</Project>
       <Name>Abp.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp\Abp.csproj">
+      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

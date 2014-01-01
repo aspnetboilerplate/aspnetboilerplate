@@ -76,15 +76,14 @@
     <Compile Include="Application\Services\Dto\Validation\MethodInvocationValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
-      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Abp\Abp.csproj">
+      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

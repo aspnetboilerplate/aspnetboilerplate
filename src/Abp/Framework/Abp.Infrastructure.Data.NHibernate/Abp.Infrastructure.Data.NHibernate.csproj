@@ -67,13 +67,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Abp\Abp.csproj">
+      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

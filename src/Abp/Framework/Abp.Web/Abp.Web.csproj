@@ -47,11 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebApplication.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Core\Abp.Core.csproj">
+    <ProjectReference Include="..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

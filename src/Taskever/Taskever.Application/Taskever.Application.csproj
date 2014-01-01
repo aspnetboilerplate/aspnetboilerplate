@@ -115,9 +115,9 @@
       <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
       <Name>Abp.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
+    <ProjectReference Include="..\..\Abp\Framework\Abp\Abp.csproj">
+      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Application\Abp.Modules.Core.Application.csproj">
       <Project>{C543BB79-F01D-4FE6-89CB-A38BD8B255FD}</Project>

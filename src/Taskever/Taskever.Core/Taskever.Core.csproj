@@ -99,9 +99,9 @@
     <Compile Include="Startup\TaskeverCoreModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Framework\Abp.Core\Abp.Core.csproj">
+    <ProjectReference Include="..\..\Abp\Framework\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Application\Abp.Modules.Core.Application.csproj">
       <Project>{C543BB79-F01D-4FE6-89CB-A38BD8B255FD}</Project>

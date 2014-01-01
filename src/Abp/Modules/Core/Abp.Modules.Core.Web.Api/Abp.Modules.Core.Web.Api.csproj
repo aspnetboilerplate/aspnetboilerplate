@@ -103,13 +103,13 @@
       <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
       <Name>Abp.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp.Core\Abp.Core.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp.Web.Api\Abp.Web.Api.csproj">
       <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
       <Name>Abp.Web.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
+      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abp.Modules.Core.Application\Abp.Modules.Core.Application.csproj">
       <Project>{c543bb79-f01d-4fe6-89cb-a38bd8b255fd}</Project>
