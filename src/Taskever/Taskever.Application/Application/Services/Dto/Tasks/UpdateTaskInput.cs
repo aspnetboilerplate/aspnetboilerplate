@@ -21,7 +21,7 @@ namespace Taskever.Application.Services.Dto.Tasks
 
         public byte Privacy { get; set; }
 
-        public void AddValidationResults(List<ValidationResult> results)
+        public void AddValidationErrors(List<ValidationResult> results)
         {
             Title = HttpUtility.HtmlEncode(Title);
             Description = HttpUtility.HtmlEncode(Description);

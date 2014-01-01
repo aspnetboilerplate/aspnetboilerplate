@@ -9,7 +9,7 @@ namespace Taskever.Application.Services.Dto.Tasks
     {
         public TaskDto Task { get; set; }
         
-        public void AddValidationResults(List<ValidationResult> results)
+        public void AddValidationErrors(List<ValidationResult> results)
         {
             Task.Title = HttpUtility.HtmlEncode(Task.Title);
             Task.Description = HttpUtility.HtmlEncode(Task.Description);

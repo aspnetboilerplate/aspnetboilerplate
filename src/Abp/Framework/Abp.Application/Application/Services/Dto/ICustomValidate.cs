@@ -5,6 +5,6 @@ namespace Abp.Application.Services.Dto
 {
     public interface ICustomValidate : IValidate
     {
-        void AddValidationResults(List<ValidationResult> results);
+        void AddValidationErrors(List<ValidationResult> results);
     }
 }

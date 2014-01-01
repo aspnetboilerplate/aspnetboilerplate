@@ -1,5 +1,5 @@
 ﻿using Abp.Application.Services;
-using Abp.Application.Services.Interceptors;
+using Abp.Application.Services.Dto.Validation;
 using Abp.Modules;
 using Abp.Startup;
 using Castle.Core;
@@ -25,7 +25,7 @@ namespace Abp.Application.Startup
         {
             if(typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpApplicationServiceInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
             }
         }
     }
