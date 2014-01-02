@@ -78,6 +78,10 @@
     <Compile Include="Localization\Sources\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
+    <Compile Include="Localization\Engine\LocalizationDictionary.cs" />
+    <Compile Include="Localization\Engine\LocalizationDictionaryBuilder.cs" />
+    <Compile Include="Localization\Engine\LocalizationEngine.cs" />
+    <Compile Include="Localization\Sources\XmlFiles\XmlLocalizationSource.cs" />
     <Compile Include="Modules\AbpModuleLoader.cs" />
     <Compile Include="Startup\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />

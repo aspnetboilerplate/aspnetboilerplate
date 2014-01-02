@@ -48,6 +48,7 @@
     <Compile Include="Entities\Manager.cs" />
     <Compile Include="Entities\Test_Entities.cs" />
     <Compile Include="Entities\Worker.cs" />
+    <Compile Include="Localization\Test_Localizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,7 @@
       <Name>Abp %28Abp\Framework\Abp%29</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

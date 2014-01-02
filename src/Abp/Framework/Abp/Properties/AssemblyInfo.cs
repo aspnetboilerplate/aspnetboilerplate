@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Abp.Infrastructure.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
+[assembly: InternalsVisibleTo("Abp.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
