@@ -27,7 +27,7 @@ namespace Abp.Domain.Uow.NHibernate
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            //If there is a running transaction, just run the method
+            //If there isalready  a running transaction (or no need to a db connection), just run the method
             if (NhUnitOfWork.Current != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
             {
                 invocation.Proceed();
@@ -46,15 +46,7 @@ namespace Abp.Domain.Uow.NHibernate
                 }
                 catch
                 {
-                    try
-                    {
-                        NhUnitOfWork.Current.Rollback();
-                    }
-                    catch
-                    {
-                        
-                    }
-
+                    try { NhUnitOfWork.Current.Rollback(); } catch { }
                     throw;
                 }
             }

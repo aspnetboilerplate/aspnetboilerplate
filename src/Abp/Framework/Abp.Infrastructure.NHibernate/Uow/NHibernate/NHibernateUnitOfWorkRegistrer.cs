@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Abp.Startup;
 using Castle.Core;
+using Castle.MicroKernel;
 
 namespace Abp.Domain.Uow.NHibernate
 {
@@ -9,15 +10,16 @@ namespace Abp.Domain.Uow.NHibernate
     /// </summary>
     public static class NHibernateUnitOfWorkRegistrer
     {
+        /// <summary>
+        /// Initializes the registerer.
+        /// </summary>
+        /// <param name="initializationContext">Initialization context</param>
         public static void Initialize(IAbpInitializationContext initializationContext)
         {
             initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
         }
 
-        /// <summary>
-        /// This method is called on ComponentRegistered event of Castle Windsor.
-        /// </summary>
-        public static void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
+        private static void ComponentRegistered(string key, IHandler handler)
         {
             if (UnitOfWorkHelper.IsRepositoryClass(handler.ComponentModel.Implementation))
             {

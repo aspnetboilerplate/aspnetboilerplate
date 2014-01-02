@@ -25,9 +25,10 @@ namespace Abp.Modules.Core.Startup
 
             initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
 
-            initializationContext.GetModule<AbpNHibernateModule>().AddMapping(
-                m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly())
-                ); //TODO: Move this to Core.Data and remove fluent nhibernate dependency?
+            initializationContext.GetModule<AbpNHibernateModule>().Configuration
+                .Mappings(
+                    m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly())
+                );
         }
 
         private void ComponentRegistered(string key, IHandler handler)

@@ -40,7 +40,7 @@ namespace Abp.Modules
         /// <summary>
         /// This method is called when the application is being shutdown.
         /// </summary>
-        public void Shutdown()
+        public virtual void Shutdown()
         {
             
         }

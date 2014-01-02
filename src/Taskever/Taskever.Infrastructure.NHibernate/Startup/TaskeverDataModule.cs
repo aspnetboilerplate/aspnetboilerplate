@@ -1,8 +1,10 @@
+using System.Configuration;
 using System.Reflection;
 using Abp.Domain.Startup;
 using Abp.Domain.Startup.NHibernate;
 using Abp.Modules;
 using Abp.Startup;
+using FluentNHibernate.Cfg.Db;
 using Taskever.Data.Repositories;
 using Taskever.Dependency.Installers;
 
@@ -17,7 +19,11 @@ namespace Taskever.Startup
 
             initializationContext.IocContainer.Install(new RepositoryInstaller());
 
-            initializationContext.GetModule<AbpNHibernateModule>().AddMapping(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
+            var connStr = ConfigurationManager.ConnectionStrings["Taskever"].ConnectionString;
+
+            initializationContext.GetModule<AbpNHibernateModule>().Configuration
+                .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
+                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)
