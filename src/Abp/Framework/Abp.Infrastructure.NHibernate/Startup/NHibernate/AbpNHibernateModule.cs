@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using Abp.Domain.Repositories.NHibernate;
 using Abp.Domain.Uow;
+using Abp.Domain.Uow.NHibernate;
 using Abp.Modules;
 using Abp.Startup;
 using FluentNHibernate.Cfg;
@@ -11,6 +12,9 @@ using NHibernate;
 
 namespace Abp.Domain.Startup.NHibernate
 {
+    /// <summary>
+    /// This module is used to implement "Data Access Layer" in NHibernate.
+    /// </summary>
     [AbpModule("Abp.Infrastructure.NHibernate")]
     public class AbpNHibernateModule : AbpModule
     {
@@ -44,7 +48,7 @@ namespace Abp.Domain.Startup.NHibernate
         private ISessionFactory CreateNhSessionFactory()
         {
             //TODO: Move this to the application!
-            var connStr = ConfigurationManager.ConnectionStrings["Taskever"].ConnectionString; //"Server=localhost; Database=Taskever; Trusted_Connection=True;";
+            var connStr = ConfigurationManager.ConnectionStrings["Taskever"].ConnectionString;
             return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
                 .Mappings(m =>

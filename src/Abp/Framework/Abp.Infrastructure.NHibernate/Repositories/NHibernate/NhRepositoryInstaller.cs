@@ -6,7 +6,7 @@ using NHibernate;
 
 namespace Abp.Domain.Repositories.NHibernate
 {
-    public class NhRepositoryInstaller : IWindsorInstaller
+    internal class NhRepositoryInstaller : IWindsorInstaller
     {
         private readonly Func<ISessionFactory> _sessionFactoryCreator;
 

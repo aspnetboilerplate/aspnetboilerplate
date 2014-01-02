@@ -3,7 +3,7 @@ using Castle.DynamicProxy;
 using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
 
-namespace Abp.Domain.Uow
+namespace Abp.Domain.Uow.NHibernate
 {
     /// <summary>
     /// This interceptor is used to manage database connection and transactions.

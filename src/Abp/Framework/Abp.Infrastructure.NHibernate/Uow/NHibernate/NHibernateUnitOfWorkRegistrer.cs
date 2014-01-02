@@ -2,7 +2,7 @@
 using Abp.Startup;
 using Castle.Core;
 
-namespace Abp.Domain.Uow
+namespace Abp.Domain.Uow.NHibernate
 {
     /// <summary>
     /// This class is used to register interceptor for needed classes for Unit Of Work mechanism.
