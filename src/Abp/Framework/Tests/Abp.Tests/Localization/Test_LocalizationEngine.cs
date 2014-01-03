@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Localization.Engine;
-using Abp.Localization.Sources.XmlFiles;
 using NUnit.Framework;
 
 namespace Abp.Tests.Localization
 {
     [TestFixture]
-    public class Test_Localizer
+    public class Test_LocalizationEngine
     {
         private LocalizationEngine _localizationEngine;
 
@@ -21,25 +20,22 @@ namespace Abp.Tests.Localization
             _localizationEngine = new LocalizationEngine();
 
             _localizationEngine.AddDictionary(
-                new CultureInfo("en"),
-                new LocalizationDictionary
+                new LocalizationDictionary(new CultureInfo("en"))
                     {
                         {"hello", "Hello"},
                         {"world", "World"},
-                        {"FourtyTwo", "Fourty Two (42)"}
+                        {"fourtyTwo", "Fourty Two (42)"}
                     }, isDefault: true);
 
             _localizationEngine.AddDictionary(
-                new CultureInfo("tr"),
-                new LocalizationDictionary
+                new LocalizationDictionary(new CultureInfo("tr"))
                     {
                         {"hello", "Merhaba"},
                         {"world", "Dünya"},
                     });
 
             _localizationEngine.AddDictionary(
-                new CultureInfo("tr-TR"),
-                new LocalizationDictionary
+                new LocalizationDictionary(new CultureInfo("tr-TR"))
                     {
                         {"world", "Yeryüzü"},
                     });
@@ -60,8 +56,8 @@ namespace Abp.Tests.Localization
         [Test]
         public void Should_Get_Default_If_Not_Exists_On_Given_Culture()
         {
-            Assert.AreEqual("Fourty Two (42)", _localizationEngine.GetString("FourtyTwo", new CultureInfo("tr")));
-            Assert.AreEqual("Fourty Two (42)", _localizationEngine.GetString("FourtyTwo", new CultureInfo("tr-TR")));
+            Assert.AreEqual("Fourty Two (42)", _localizationEngine.GetString("fourtyTwo", new CultureInfo("tr")));
+            Assert.AreEqual("Fourty Two (42)", _localizationEngine.GetString("fourtyTwo", new CultureInfo("tr-TR")));
         }
 
         [Test]

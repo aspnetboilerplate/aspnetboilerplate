@@ -79,8 +79,8 @@
     <Compile Include="Localization\LocalizationHelper.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
     <Compile Include="Localization\Engine\LocalizationDictionary.cs" />
-    <Compile Include="Localization\Engine\LocalizationDictionaryBuilder.cs" />
     <Compile Include="Localization\Engine\LocalizationEngine.cs" />
+    <Compile Include="Localization\Sources\XmlFiles\XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Localization\Sources\XmlFiles\XmlLocalizationSource.cs" />
     <Compile Include="Modules\AbpModuleLoader.cs" />
     <Compile Include="Startup\IAbpInitializationContext.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Utils\Extensions\Collections\DictionaryExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Extensions\Reflection\TypeExtensions.cs" />
+    <Compile Include="Utils\Extensions\Xml\XmlExtensions.cs" />
     <Compile Include="Utils\Helpers\IO\DirectoryHelper.cs" />
     <Compile Include="Utils\Helpers\IO\FileHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,7 +109,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Localization\Sources\XmlFiles\Sample\ReadMe.txt" />
+    <Content Include="Localization\Sources\XmlFiles\Sample\SampleModule.tr-TR.xml" />
+    <Content Include="Localization\Sources\XmlFiles\Sample\SampleModule.tr.xml" />
+    <Content Include="Localization\Sources\XmlFiles\Sample\SampleModule.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

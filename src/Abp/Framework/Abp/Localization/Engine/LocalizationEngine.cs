@@ -17,9 +17,9 @@ namespace Abp.Localization.Engine
             _dictionaries = new Dictionary<string, LocalizationDictionary>();
         }
 
-        public void AddDictionary(CultureInfo cultureInfo, LocalizationDictionary dictionary, bool isDefault = false)
+        public void AddDictionary(LocalizationDictionary dictionary, bool isDefault = false)
         {
-            _dictionaries[cultureInfo.Name] = dictionary;
+            _dictionaries[dictionary.Culture.Name] = dictionary;
             if (isDefault)
             {
                 _defaultDictionary = dictionary;

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Abp.Exceptions;
 using Abp.Localization.Engine;
 
@@ -28,16 +24,18 @@ namespace Abp.Localization.Sources.XmlFiles
         /// </summary>
         public string DirectoryPath { get; private set; }
 
-        private LocalizationEngine _localizationEngine;
+        private readonly LocalizationEngine _localizationEngine;
 
         /// <summary>
         /// Creates an Xml based localization source.
         /// </summary>
         /// <param name="name">Unique Name of the source</param>
-        public XmlLocalizationSource(string name) //TODO: Add overload with directory parameter
+        /// <param name="directory">Directory path</param>
+        public XmlLocalizationSource(string name, string directory) //TODO: Add overload with directory parameter
         {
             Name = name;
-            DirectoryPath = Path.Combine(Assembly.GetExecutingAssembly().Location, "Localization\\Modules\\" + name);
+            DirectoryPath = directory;
+
             _localizationEngine = new LocalizationEngine();
             Initialize();
         }
@@ -49,6 +47,13 @@ namespace Abp.Localization.Sources.XmlFiles
             if (defaultLangFile == null)
             {
                 throw new AbpException("Can not find default localization file for source " + Name + ". A source must contain a source-name.xml file as default localization.");
+            }
+
+            _localizationEngine.AddDictionary(XmlLocalizationDictionaryBuilder.BuildFomFile(defaultLangFile), true);
+
+            foreach (var file in files.Where(f => f == defaultLangFile))
+            {
+                _localizationEngine.AddDictionary(XmlLocalizationDictionaryBuilder.BuildFomFile(file));
             }
         }
 
