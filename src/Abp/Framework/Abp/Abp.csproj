@@ -68,6 +68,18 @@
     <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />
     <Compile Include="Domain\Entities\Entity.cs" />
     <Compile Include="Domain\Entities\IEntity.cs" />
+    <Compile Include="Events\Bus\Factories\ActionHandlerFactory.cs" />
+    <Compile Include="Events\Bus\Handlers\ActionEventHandler.cs" />
+    <Compile Include="Events\Bus\Datas\Entities\EntityEventData.cs" />
+    <Compile Include="Events\Bus\Factories\IEventHandlerFactory.cs" />
+    <Compile Include="Events\Bus\Factories\IocHandlerFactory.cs" />
+    <Compile Include="Events\Bus\Factories\SingleInstanceHandlerFactory.cs" />
+    <Compile Include="Events\Bus\EventBus.cs" />
+    <Compile Include="Events\Bus\Factories\SingleInstanceHandlerFactoryOfTEventDataAndTHandler.cs" />
+    <Compile Include="Events\Bus\Factories\TransientHandlerFactory.cs" />
+    <Compile Include="Events\Bus\Handlers\IEventHandler.cs" />
+    <Compile Include="Events\Bus\Handlers\IEventHandlerOfTEventData.cs" />
+    <Compile Include="Events\Bus\IEventBus.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
     <Compile Include="Localization\LocalizationInstaller.cs" />
@@ -115,6 +127,7 @@
     <Content Include="Localization\Sources\XmlFiles\Sample\SampleModule.tr.xml" />
     <Content Include="Localization\Sources\XmlFiles\Sample\SampleModule.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
