@@ -10,7 +10,8 @@ namespace Abp.Events.Bus.Factories
     /// <remarks>
     /// This class always gets the same single instance of handler.
     /// </remarks>
-    public class TransientHandlerFactory<TEventData, THandler> : IEventHandlerFactory where THandler : IEventHandler<TEventData>, new()
+    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory 
+        where THandler : IEventHandler, new()
     {
         /// <summary>
         /// Creates a new instance of the handler object.
@@ -27,7 +28,6 @@ namespace Abp.Events.Bus.Factories
         /// <param name="handler">Handler to be released</param>
         public void ReleaseHandler(IEventHandler handler)
         {
-            //TODO: Resharper warning! Check it later (it's not a problem probably).
             if (handler is IDisposable)
             {
                 (handler as IDisposable).Dispose();

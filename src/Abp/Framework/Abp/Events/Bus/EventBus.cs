@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Datas;
+using Abp.Events.Bus.Datas.Entities;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
 using Castle.Core.Logging;
@@ -14,9 +14,13 @@ namespace Abp.Events.Bus
     /// </summary>
     public class EventBus : IEventBus
     {
-        #region Private fields
+        #region Public properties
 
-        private static readonly Dictionary<Type, List<IEventHandlerFactory>> HandlerFactories;
+        /// <summary>
+        /// Gets the default <see cref="EventBus"/> instance.
+        /// </summary>
+        public static EventBus Default { get { return DefaultInstance; } }
+        private static readonly EventBus DefaultInstance = new EventBus();
 
         /// <summary>
         /// Reference to the Logger.
@@ -25,11 +29,25 @@ namespace Abp.Events.Bus
 
         #endregion
 
+        #region Private fields
+
+        /// <summary>
+        /// All registered handler factories.
+        /// </summary>
+        private readonly Dictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
+
+        #endregion
+
         #region Constructor
 
-        static EventBus()
+        /// <summary>
+        /// Creates a new <see cref="EventBus"/> instance.
+        /// Instead of creating a new instace, you can use <see cref="Default"/> to use Global <see cref="EventBus"/>.
+        /// </summary>
+        public EventBus()
         {
-            HandlerFactories = new Dictionary<Type, List<IEventHandlerFactory>>();
+            _handlerFactories = new Dictionary<Type, List<IEventHandlerFactory>>();
+            Logger = NullLogger.Instance;
         }
 
         #endregion
@@ -38,81 +56,108 @@ namespace Abp.Events.Bus
 
         #region Register
 
-        public void Register<TEventData>(IEventHandler<TEventData> handler)
+        public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
-            Register(typeof(TEventData), new SingleInstanceHandlerFactory(handler));
+            return Register(typeof(TEventData), new ActionEventHandler<TEventData>(action));
         }
 
-        public void Register(Type eventType, IEventHandler handler)
+        public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
-            Register(eventType, new SingleInstanceHandlerFactory(handler));
+            return Register(typeof(TEventData), handler);
         }
 
-        public void Register<TEventData>(IEventHandlerFactory handlerFactory)
+        public IDisposable Register<TEventData, THandler>() where TEventData : IEventData where THandler : IEventHandler<TEventData>, new()
         {
-            Register(typeof(TEventData), handlerFactory);
+            return Register(typeof (TEventData), new TransientEventHandlerFactory<THandler>());
         }
 
-        public void Register(Type eventType, IEventHandlerFactory handlerFactory)
+        public IDisposable Register(Type eventType, IEventHandler handler)
         {
-            lock (HandlerFactories)
+            return Register(eventType, new SingleInstanceHandlerFactory(handler));
+        }
+
+        public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
+        {
+            return Register(typeof(TEventData), handlerFactory);
+        }
+
+        public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
+        {
+            lock (_handlerFactories)
             {
                 GetOrCreateHandlerFactories(eventType).Add(handlerFactory);
+                return new FactoryUnregisterer(this, eventType, handlerFactory);
             }
-        }
-
-        public void Register<TEventData>(Action<TEventData> handler)
-        {
-            Register(typeof(TEventData), new ActionHandlerFactory<TEventData>(handler));
         }
 
         #endregion
 
         #region Unregister
 
-        public void Unregister<TEventData>(IEventHandler<TEventData> handler)
+        public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
+        {
+            lock (_handlerFactories)
+            {
+                GetOrCreateHandlerFactories(typeof(TEventData))
+                    .RemoveAll(
+                        factory =>
+                        {
+                            if (factory is SingleInstanceHandlerFactory)
+                            {
+                                var singleInstanceFactoru = factory as SingleInstanceHandlerFactory;
+                                if (singleInstanceFactoru.HandlerInstance is ActionEventHandler<TEventData>)
+                                {
+                                    var actionHandler = singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
+                                    if (actionHandler.Action == action)
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+
+                            return false;
+                        });
+            }
+        }
+
+        public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), handler);
         }
 
         public void Unregister(Type eventType, IEventHandler handler)
         {
-            lock (HandlerFactories)
+            lock (_handlerFactories)
             {
-                var removingFactories =
-                    GetOrCreateHandlerFactories(eventType)
-                        .OfType<SingleInstanceHandlerFactory>()
-                        .Where(instanceFactory => instanceFactory.HandlerInstance == handler)
-                        .ToList();
-
-                foreach (var instanceFactory in removingFactories)
-                {
-                    Unregister(eventType, instanceFactory);
-                }
+                GetOrCreateHandlerFactories(eventType)
+                    .RemoveAll(
+                        factory =>
+                        factory is SingleInstanceHandlerFactory && (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
+                    );
             }
         }
 
-        public void Unregister<TEventData>(IEventHandlerFactory factory)
+        public void Unregister<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), factory);
         }
 
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
-            lock (HandlerFactories)
+            lock (_handlerFactories)
             {
                 GetOrCreateHandlerFactories(eventType).Remove(factory);
             }
         }
 
-        public void UnregisterAll<TEventData>()
+        public void UnregisterAll<TEventData>() where TEventData : IEventData
         {
             UnregisterAll(typeof(TEventData));
         }
 
         public void UnregisterAll(Type eventType)
         {
-            lock (HandlerFactories)
+            lock (_handlerFactories)
             {
                 GetOrCreateHandlerFactories(eventType).Clear();
             }
@@ -122,13 +167,19 @@ namespace Abp.Events.Bus
 
         #region Trigger
 
-        public void Trigger<TEventData>(TEventData eventData)
+        public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
+            Trigger(null, eventData);
+        }
+
+        public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
+        {
+            eventData.EventSource = eventSource;
             IEventHandlerFactory[] factoriesToTrigger;
-            lock (HandlerFactories)
+            lock (_handlerFactories)
             {
                 List<IEventHandlerFactory> handlerFactoryList;
-                if (!HandlerFactories.TryGetValue(typeof(TEventData), out handlerFactoryList))
+                if (!_handlerFactories.TryGetValue(typeof(TEventData), out handlerFactoryList))
                 {
                     return;
                 }
@@ -155,14 +206,19 @@ namespace Abp.Events.Bus
             }
         }
 
-        public Task TriggerAsync<TEventData>(TEventData eventData)
+        public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
+        {
+            return TriggerAsync(null, eventData);
+        }
+
+        public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             return Task.Factory.StartNew(
                 () =>
                 {
                     try
                     {
-                        Trigger(eventData);
+                        Trigger(eventSource, eventData);
                     }
                     catch (Exception ex)
                     {
@@ -177,12 +233,12 @@ namespace Abp.Events.Bus
 
         #region Private methods
 
-        private static List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
+        private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
             List<IEventHandlerFactory> handlers;
-            if (!HandlerFactories.TryGetValue(eventType, out handlers))
+            if (!_handlerFactories.TryGetValue(eventType, out handlers))
             {
-                HandlerFactories[eventType] = handlers = new List<IEventHandlerFactory>();
+                _handlerFactories[eventType] = handlers = new List<IEventHandlerFactory>();
             }
 
             return handlers;

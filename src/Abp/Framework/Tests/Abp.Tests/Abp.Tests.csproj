@@ -48,6 +48,11 @@
     <Compile Include="Entities\Manager.cs" />
     <Compile Include="Entities\Test_Entities.cs" />
     <Compile Include="Entities\Worker.cs" />
+    <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
+    <Compile Include="Events\Bus\EventBusTest.cs" />
+    <Compile Include="Events\Bus\MySimpleEventData.cs" />
+    <Compile Include="Events\Bus\MySimpleTransientEventHandler.cs" />
+    <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
     <Compile Include="Localization\Test_LocalizationEngine.cs" />
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

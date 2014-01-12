@@ -1,4 +1,3 @@
-using System;
 using Abp.Events.Bus.Handlers;
 
 namespace Abp.Events.Bus.Factories
@@ -10,7 +9,7 @@ namespace Abp.Events.Bus.Factories
     /// <remarks>
     /// This class always gets the same single instance of handler.
     /// </remarks>
-    public class SingleInstanceHandlerFactory : IEventHandlerFactory
+    internal class SingleInstanceHandlerFactory : IEventHandlerFactory
     {
         /// <summary>
         /// The event handler instance.
