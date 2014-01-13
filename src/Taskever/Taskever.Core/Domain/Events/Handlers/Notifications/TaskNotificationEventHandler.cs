@@ -14,12 +14,12 @@ namespace Taskever.Domain.Events.Handlers.Notifications
     {
         public void HandleEvent(EntityCreatedEventData<Task> eventData)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void HandleEvent(TaskCompletedEventData eventData)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
