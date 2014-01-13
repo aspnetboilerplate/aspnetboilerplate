@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Handlers
+namespace Abp.Events.Bus.Handlers.Internals
 {
     /// <summary>
     /// This event handler is an adapter to be able to use an action as <see cref="IEventHandler{TEventData}"/> implementation.

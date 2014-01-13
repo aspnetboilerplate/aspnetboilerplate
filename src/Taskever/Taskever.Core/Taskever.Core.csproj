@@ -59,7 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dependency\Installers\EventHandlersInstaller.cs" />
     <Compile Include="Dependency\Installers\Log4NetInstaller.cs" />
+    <Compile Include="Domain\Events\Datas\Tasks\TaskCompletedEventData.cs" />
+    <Compile Include="Domain\Events\Handlers\Activities\TaskActivityEventHandler.cs" />
+    <Compile Include="Domain\Events\Handlers\Notifications\TaskNotificationEventHandler.cs" />
     <Compile Include="Domain\Repositories\IActivityRepository.cs" />
     <Compile Include="Domain\Repositories\IFriendshipRepository.cs" />
     <Compile Include="Domain\Repositories\ITaskRepository.cs" />

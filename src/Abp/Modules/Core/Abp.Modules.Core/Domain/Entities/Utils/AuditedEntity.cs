@@ -6,7 +6,7 @@ namespace Abp.Modules.Core.Domain.Entities.Utils
     /// <summary>
     /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (Int32).
     /// </summary>
-    public abstract class AuditedEntity : AuditedEntity<int>
+    public abstract class AuditedEntity : AuditedEntity<int>, IEntity
     {
 
     }

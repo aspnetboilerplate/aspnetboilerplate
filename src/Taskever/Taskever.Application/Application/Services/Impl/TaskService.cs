@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Datas.Entities;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
@@ -13,6 +15,7 @@ using Taskever.Application.Services.Dto.Tasks;
 using Taskever.Domain.Entities;
 using Taskever.Domain.Entities.Activities;
 using Taskever.Domain.Enums;
+using Taskever.Domain.Events.Datas.Tasks;
 using Taskever.Domain.Repositories;
 using Taskever.Domain.Services;
 
@@ -25,17 +28,21 @@ namespace Taskever.Application.Services.Impl
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
+        private readonly IEventBus _eventBus;
 
         public TaskService(
             IActivityService activityService,
             ITaskPrivilegeService taskPrivilegeService,
             ITaskRepository taskRepository,
-            IUserRepository userRepository, INotificationService notificationService)
+            IUserRepository userRepository,
+            INotificationService notificationService,
+            IEventBus eventBus)
         {
             _activityService = activityService;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
             _notificationService = notificationService;
+            _eventBus = eventBus;
             _taskPrivilegeService = taskPrivilegeService;
         }
 
@@ -130,13 +137,7 @@ namespace Taskever.Application.Services.Impl
 
             _taskRepository.Insert(taskEntity);
 
-            _activityService.AddActivity(
-                new CreateTaskActivity
-                    {
-                        CreatorUser = creatorUser,
-                        AssignedUser = assignedUser,
-                        Task = taskEntity
-                    });
+            _eventBus.Trigger(this, new EntityCreatedEventData<Task>(taskEntity));
 
             if (taskEntity.AssignedUser.Id != creatorUser.Id)
             {
@@ -188,12 +189,7 @@ namespace Taskever.Application.Services.Impl
 
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
-                _activityService.AddActivity(
-                    new CompleteTaskActivity
-                        {
-                            AssignedUser = task.AssignedUser,
-                            Task = task
-                        });
+                _eventBus.Trigger(this, new TaskCompletedEventData(task));
                 _notificationService.Notify(new CompletedTaskNotification(task));
             }
         }

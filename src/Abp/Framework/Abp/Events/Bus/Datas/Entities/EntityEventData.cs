@@ -7,7 +7,6 @@ namespace Abp.Events.Bus.Datas.Entities
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     public abstract class EntityEventData<TEntity> : EventData
-        where TEntity : IEntity
     {
         /// <summary>
         /// Related entity with this event.

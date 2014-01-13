@@ -83,6 +83,8 @@
     <Compile Include="Events\Bus\Factories\Internals\TransientEventHandlerFactory.cs" />
     <Compile Include="Events\Bus\Handlers\IEventHandler.cs" />
     <Compile Include="Events\Bus\Handlers\IEventHandlerOfTEventData.cs" />
+    <Compile Include="Utils\Etc\NullDisposable.cs" />
+    <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />

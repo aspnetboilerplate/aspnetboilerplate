@@ -12,7 +12,10 @@ namespace Taskever.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
+            
             initializationContext.IocContainer.Install(new TaskeverCoreInstaller());
+            initializationContext.IocContainer.Install(new EventHandlersInstaller());
+
             LocalizationHelper.RegisterSource<TaskeverLocalizationSource>();
         }
     }

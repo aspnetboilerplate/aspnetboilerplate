@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Datas;
-using Abp.Events.Bus.Datas.Entities;
 using Abp.Events.Bus.Factories;
+using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
+using Abp.Events.Bus.Handlers.Internals;
 using Castle.Core.Logging;
 
 namespace Abp.Events.Bus
