@@ -3,7 +3,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Taskever.Localization.Resources;
 
-namespace Taskever.Dependency.Installers
+namespace Taskever.Startup.Dependency.Installers
 {
     public class TaskeverCoreInstaller : IWindsorInstaller
     {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Abp.Dependency;
 using Taskever.Dependency.Installers;
+using Taskever.Startup.Dependency.Installers;
 using Taskever.Web.App_Start;
 [assembly: PreApplicationStartMethod(typeof(Taskever.Web.App_Start.PreAppStart), "Run")]
 

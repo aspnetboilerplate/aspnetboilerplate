@@ -60,8 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dependency\Installers\EventHandlersInstaller.cs" />
-    <Compile Include="Dependency\Installers\Log4NetInstaller.cs" />
+    <Compile Include="Startup\Dependency\Installers\EventHandlersInstaller.cs" />
+    <Compile Include="Startup\Dependency\Installers\Log4NetInstaller.cs" />
     <Compile Include="Tasks\Events\TaskCompletedEventData.cs" />
     <Compile Include="Activities\EventHandlers\TaskActivityEventHandler.cs" />
     <Compile Include="Notifications\Tasks\AssignedToTaskNotification.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Friendships\IFriendshipRepository.cs" />
     <Compile Include="Tasks\ITaskRepository.cs" />
     <Compile Include="Activities\IUserFallowedActivityRepository.cs" />
-    <Compile Include="Dependency\Installers\TaskeverCoreInstaller.cs" />
+    <Compile Include="Startup\Dependency\Installers\TaskeverCoreInstaller.cs" />
     <Compile Include="Activities\ActivityType.cs" />
     <Compile Include="Activities\CompleteTaskActivity.cs" />
     <Compile Include="Activities\CreateTaskActivity.cs" />
