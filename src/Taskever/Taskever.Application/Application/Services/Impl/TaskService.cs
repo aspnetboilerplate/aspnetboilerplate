@@ -10,21 +10,19 @@ using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
 using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
+using Taskever.Activities;
 using Taskever.Application.Services.Dto;
 using Taskever.Application.Services.Dto.Tasks;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Entities.Activities;
-using Taskever.Domain.Enums;
-using Taskever.Domain.Events.Datas.Tasks;
-using Taskever.Domain.Repositories;
-using Taskever.Domain.Services;
+using Taskever.Notifications;
+using Taskever.Tasks;
+using Taskever.Tasks.Events;
 
 namespace Taskever.Application.Services.Impl
 {
     public class TaskService : ITaskService
     {
         private readonly IActivityService _activityService;
-        private readonly ITaskPrivilegeService _taskPrivilegeService;
+        private readonly ITaskPolicy _taskPolicy;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
@@ -32,7 +30,7 @@ namespace Taskever.Application.Services.Impl
 
         public TaskService(
             IActivityService activityService,
-            ITaskPrivilegeService taskPrivilegeService,
+            ITaskPolicy taskPolicy,
             ITaskRepository taskRepository,
             IUserRepository userRepository,
             INotificationService notificationService,
@@ -43,7 +41,7 @@ namespace Taskever.Application.Services.Impl
             _userRepository = userRepository;
             _notificationService = notificationService;
             _eventBus = eventBus;
-            _taskPrivilegeService = taskPrivilegeService;
+            _taskPolicy = taskPolicy;
         }
 
         [UnitOfWork]
@@ -57,7 +55,7 @@ namespace Taskever.Application.Services.Impl
                 throw new AbpUserFriendlyException("Can not found the task!");
             }
 
-            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, task.AssignedUser))
+            if (!_taskPolicy.CanSeeTasksOfUser(currentUser, task.AssignedUser))
             {
                 throw new AbpUserFriendlyException("Can not see tasks of " + task.AssignedUser.Name);
             }
@@ -70,7 +68,7 @@ namespace Taskever.Application.Services.Impl
             return new GetTaskOutput
                        {
                            Task = task.MapTo<TaskWithAssignedUserDto>(),
-                           IsEditableByCurrentUser = _taskPrivilegeService.CanUpdateTask(currentUser, task)
+                           IsEditableByCurrentUser = _taskPolicy.CanUpdateTask(currentUser, task)
                        };
         }
 
@@ -118,7 +116,7 @@ namespace Taskever.Application.Services.Impl
             var creatorUser = _userRepository.Get(User.CurrentUserId);
             var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
 
-            if (!_taskPrivilegeService.CanAssignTask(creatorUser, assignedUser))
+            if (!_taskPolicy.CanAssignTask(creatorUser, assignedUser))
             {
                 throw new AbpUserFriendlyException("You can not assign task to this user!");
             }
@@ -160,7 +158,7 @@ namespace Taskever.Application.Services.Impl
             }
 
             var currentUser = _userRepository.Load(User.CurrentUserId); //TODO: Add method LoadCurrentUser and GetCurrentUser
-            if (!_taskPrivilegeService.CanUpdateTask(currentUser, task))
+            if (!_taskPolicy.CanUpdateTask(currentUser, task))
             {
                 throw new AbpUserFriendlyException("You can not update this task!");
             }
@@ -169,7 +167,7 @@ namespace Taskever.Application.Services.Impl
             {
                 var userToAssign = _userRepository.Load(input.AssignedUserId);
 
-                if (!_taskPrivilegeService.CanAssignTask(currentUser, userToAssign))
+                if (!_taskPolicy.CanAssignTask(currentUser, userToAssign))
                 {
                     throw new AbpUserFriendlyException("You can not assign task to this user!");
                 }
@@ -203,7 +201,7 @@ namespace Taskever.Application.Services.Impl
             }
 
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            if (!_taskPrivilegeService.CanDeleteTask(currentUser, task))
+            if (!_taskPolicy.CanDeleteTask(currentUser, task))
             {
                 throw new AbpUserFriendlyException("You can not delete this task!");
             }
@@ -218,7 +216,7 @@ namespace Taskever.Application.Services.Impl
             var currentUser = _userRepository.Load(User.CurrentUserId);
             var userOfTasks = _userRepository.Load(assignedUserId);
 
-            if (!_taskPrivilegeService.CanSeeTasksOfUser(currentUser, userOfTasks))
+            if (!_taskPolicy.CanSeeTasksOfUser(currentUser, userOfTasks))
             {
                 throw new ApplicationException("Can not see tasks of user");
             }

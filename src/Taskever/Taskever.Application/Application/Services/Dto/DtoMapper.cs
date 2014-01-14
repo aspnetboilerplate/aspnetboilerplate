@@ -1,8 +1,9 @@
-﻿using Taskever.Application.Services.Dto.Activities;
+﻿using Taskever.Activities;
+using Taskever.Application.Services.Dto.Activities;
 using Taskever.Application.Services.Dto.Friendships;
 using Taskever.Application.Services.Dto.Tasks;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Entities.Activities;
+using Taskever.Friendships;
+using Taskever.Tasks;
 
 namespace Taskever.Application.Services.Dto
 {

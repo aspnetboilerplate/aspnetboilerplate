@@ -5,9 +5,8 @@ using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
 using Taskever.Application.Services.Dto.TaskeverUsers;
-using Taskever.Domain.Enums;
-using Taskever.Domain.Repositories;
-using Taskever.Domain.Services;
+using Taskever.Friendships;
+using Taskever.Users;
 
 namespace Taskever.Application.Services.Impl
 {

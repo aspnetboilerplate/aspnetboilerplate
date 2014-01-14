@@ -1,7 +1,7 @@
 using System;
 using Abp.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
-using Taskever.Domain.Enums;
+using Taskever.Friendships;
 
 namespace Taskever.Application.Services.Dto.Friendships
 {

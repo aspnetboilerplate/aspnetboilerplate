@@ -1,7 +1,6 @@
 using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using FluentNHibernate.Mapping;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Enums;
+using Taskever.Friendships;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {

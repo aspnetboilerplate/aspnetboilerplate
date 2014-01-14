@@ -1,5 +1,5 @@
 using Abp.Application.Services.Dto;
-using Taskever.Domain.Enums;
+using Taskever.Friendships;
 
 namespace Taskever.Application.Services.Dto.Friendships
 {

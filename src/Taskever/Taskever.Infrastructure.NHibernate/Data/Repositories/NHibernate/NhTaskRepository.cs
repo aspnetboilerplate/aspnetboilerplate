@@ -1,6 +1,5 @@
 ﻿using Abp.Domain.Repositories.NHibernate;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Repositories;
+using Taskever.Tasks;
 
 namespace Taskever.Data.Repositories.NHibernate
 {

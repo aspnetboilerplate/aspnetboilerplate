@@ -62,40 +62,39 @@
   <ItemGroup>
     <Compile Include="Dependency\Installers\EventHandlersInstaller.cs" />
     <Compile Include="Dependency\Installers\Log4NetInstaller.cs" />
-    <Compile Include="Domain\Events\Datas\Tasks\TaskCompletedEventData.cs" />
-    <Compile Include="Domain\Events\Handlers\Activities\TaskActivityEventHandler.cs" />
-    <Compile Include="Domain\Events\Handlers\Notifications\AssignedToTaskNotification.cs" />
-    <Compile Include="Domain\Events\Handlers\Notifications\CompletedTaskNotification.cs" />
-    <Compile Include="Domain\Events\Handlers\Notifications\TaskNotificationEventHandler.cs" />
-    <Compile Include="Domain\Repositories\IActivityRepository.cs" />
-    <Compile Include="Domain\Repositories\IFriendshipRepository.cs" />
-    <Compile Include="Domain\Repositories\ITaskRepository.cs" />
-    <Compile Include="Domain\Repositories\IUserFallowedActivityRepository.cs" />
+    <Compile Include="Tasks\Events\TaskCompletedEventData.cs" />
+    <Compile Include="Activities\EventHandlers\TaskActivityEventHandler.cs" />
+    <Compile Include="Notifications\Tasks\AssignedToTaskNotification.cs" />
+    <Compile Include="Notifications\Tasks\CompletedTaskNotification.cs" />
+    <Compile Include="Notifications\EventHandlers\TaskNotificationEventHandler.cs" />
+    <Compile Include="Activities\IActivityRepository.cs" />
+    <Compile Include="Friendships\IFriendshipRepository.cs" />
+    <Compile Include="Tasks\ITaskRepository.cs" />
+    <Compile Include="Activities\IUserFallowedActivityRepository.cs" />
     <Compile Include="Dependency\Installers\TaskeverCoreInstaller.cs" />
-    <Compile Include="Domain\Entities\Activities\ActivityType.cs" />
-    <Compile Include="Domain\Entities\Activities\CompleteTaskActivity.cs" />
-    <Compile Include="Domain\Entities\Activities\CreateTaskActivity.cs" />
-    <Compile Include="Domain\Enums\TaskPrivacy.cs" />
-    <Compile Include="Domain\Policies\Impl\FriendshipPolicy.cs" />
-    <Compile Include="Domain\Policies\IPolicy.cs" />
-    <Compile Include="Domain\Services\Impl\FriendshipDomainService.cs" />
-    <Compile Include="Domain\Services\IActivityService.cs" />
-    <Compile Include="Domain\Policies\IFriendshipPolicy.cs" />
-    <Compile Include="Domain\Services\IFriendshipDomainService.cs" />
-    <Compile Include="Domain\Services\Impl\ActivityService.cs" />
-    <Compile Include="Domain\Services\Impl\NotificationService.cs" />
-    <Compile Include="Domain\Services\INotification.cs" />
-    <Compile Include="Domain\Services\INotificationService.cs" />
-    <Compile Include="Domain\Services\ITaskeverUserPolicy.cs" />
-    <Compile Include="Domain\Services\Impl\TaskeverUserPolicy.cs" />
+    <Compile Include="Activities\ActivityType.cs" />
+    <Compile Include="Activities\CompleteTaskActivity.cs" />
+    <Compile Include="Activities\CreateTaskActivity.cs" />
+    <Compile Include="Tasks\TaskPrivacy.cs" />
+    <Compile Include="Friendships\FriendshipPolicy.cs" />
+    <Compile Include="Friendships\FriendshipDomainService.cs" />
+    <Compile Include="Activities\IActivityService.cs" />
+    <Compile Include="Friendships\IFriendshipPolicy.cs" />
+    <Compile Include="Friendships\IFriendshipDomainService.cs" />
+    <Compile Include="Activities\ActivityService.cs" />
+    <Compile Include="Notifications\NotificationService.cs" />
+    <Compile Include="Notifications\INotification.cs" />
+    <Compile Include="Notifications\INotificationService.cs" />
+    <Compile Include="Users\ITaskeverUserPolicy.cs" />
+    <Compile Include="Users\TaskeverUserPolicy.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
-    <Compile Include="Domain\Entities\Activities\Activity.cs" />
-    <Compile Include="Domain\Entities\UserFollowedActivity.cs" />
-    <Compile Include="Domain\Entities\Friendship.cs" />
-    <Compile Include="Domain\Enums\FriendshipStatus.cs" />
-    <Compile Include="Domain\Entities\Task.cs" />
-    <Compile Include="Domain\Enums\TaskPriority.cs" />
-    <Compile Include="Domain\Enums\TaskState.cs" />
+    <Compile Include="Activities\Activity.cs" />
+    <Compile Include="Activities\UserFollowedActivity.cs" />
+    <Compile Include="Friendships\Friendship.cs" />
+    <Compile Include="Friendships\FriendshipStatus.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskPriority.cs" />
+    <Compile Include="Tasks\TaskState.cs" />
     <Compile Include="Localization\Resources\AppTexts.Designer.cs">
       <DependentUpon>AppTexts.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -103,8 +102,8 @@
     </Compile>
     <Compile Include="Localization\Resources\TaskeverLocalizationSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Domain\Services\ITaskPrivilegeService.cs" />
-    <Compile Include="Domain\Services\Impl\TaskPrivilegeService.cs" />
+    <Compile Include="Tasks\ITaskPolicy.cs" />
+    <Compile Include="Tasks\TaskPolicy.cs" />
     <Compile Include="Startup\TaskeverCoreModule.cs" />
   </ItemGroup>
   <ItemGroup>

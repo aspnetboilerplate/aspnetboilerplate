@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Abp.Domain.Repositories.NHibernate;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Repositories;
+using Taskever.Activities;
 
 namespace Taskever.Data.Repositories.NHibernate
 {
@@ -11,7 +10,7 @@ namespace Taskever.Data.Repositories.NHibernate
         public IList<UserFollowedActivity> Getactivities(int userId, bool? isActor, long beforeId, int maxResultCount)
         {
             var queryBuilder = new StringBuilder();
-            queryBuilder.AppendLine("from Taskever.Domain.Entities.UserFollowedActivity as ufa");
+            queryBuilder.AppendLine("from " + typeof(UserFollowedActivity).FullName + " as ufa");
             queryBuilder.AppendLine("inner join fetch ufa.Activity as act");
             queryBuilder.AppendLine("left outer join fetch act.Task as task");
             queryBuilder.AppendLine("left outer join fetch act.CreatorUser as cusr");

@@ -60,6 +60,7 @@
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\IEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Policies\IPolicy.cs" />
     <Compile Include="Domain\Repositories\IRepositoryOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\IRepository.cs" />
     <Compile Include="Domain\Repositories\IRepositoryOfTEntity.cs" />

@@ -1,6 +1,5 @@
 ﻿using Abp.Modules.Core.Entities.NHibernate.Mappings;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Enums;
+using Taskever.Tasks;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {

@@ -1,5 +1,5 @@
 using FluentNHibernate.Mapping;
-using Taskever.Domain.Entities.Activities;
+using Taskever.Activities;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {

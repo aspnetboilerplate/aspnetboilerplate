@@ -1,6 +1,6 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
-using Taskever.Domain.Entities.Activities;
+using Taskever.Activities;
 
 namespace Taskever.Application.Services.Dto.Activities
 {

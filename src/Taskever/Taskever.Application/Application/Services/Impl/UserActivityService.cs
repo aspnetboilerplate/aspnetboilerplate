@@ -5,11 +5,9 @@ using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
+using Taskever.Activities;
 using Taskever.Application.Services.Dto.Activities;
-using Taskever.Domain.Entities;
-using Taskever.Domain.Entities.Activities;
-using Taskever.Domain.Repositories;
-using Taskever.Domain.Services;
+using Taskever.Friendships;
 
 namespace Taskever.Application.Services.Impl
 {
