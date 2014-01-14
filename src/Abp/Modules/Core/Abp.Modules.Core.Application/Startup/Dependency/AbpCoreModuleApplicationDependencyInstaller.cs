@@ -6,7 +6,7 @@ using Castle.Windsor;
 
 namespace Abp.Modules.Core.Startup.Dependency
 {
-    public class AbpCoreModuleDependencyInstaller : IWindsorInstaller
+    public class AbpCoreModuleApplicationDependencyInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

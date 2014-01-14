@@ -52,6 +52,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,6 +64,8 @@
     <Compile Include="Dependency\Installers\Log4NetInstaller.cs" />
     <Compile Include="Domain\Events\Datas\Tasks\TaskCompletedEventData.cs" />
     <Compile Include="Domain\Events\Handlers\Activities\TaskActivityEventHandler.cs" />
+    <Compile Include="Domain\Events\Handlers\Notifications\AssignedToTaskNotification.cs" />
+    <Compile Include="Domain\Events\Handlers\Notifications\CompletedTaskNotification.cs" />
     <Compile Include="Domain\Events\Handlers\Notifications\TaskNotificationEventHandler.cs" />
     <Compile Include="Domain\Repositories\IActivityRepository.cs" />
     <Compile Include="Domain\Repositories\IFriendshipRepository.cs" />
@@ -80,6 +83,9 @@
     <Compile Include="Domain\Policies\IFriendshipPolicy.cs" />
     <Compile Include="Domain\Services\IFriendshipDomainService.cs" />
     <Compile Include="Domain\Services\Impl\ActivityService.cs" />
+    <Compile Include="Domain\Services\Impl\NotificationService.cs" />
+    <Compile Include="Domain\Services\INotification.cs" />
+    <Compile Include="Domain\Services\INotificationService.cs" />
     <Compile Include="Domain\Services\ITaskeverUserPolicy.cs" />
     <Compile Include="Domain\Services\Impl\TaskeverUserPolicy.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />

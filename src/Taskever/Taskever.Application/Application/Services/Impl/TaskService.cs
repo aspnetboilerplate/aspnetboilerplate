@@ -139,10 +139,10 @@ namespace Taskever.Application.Services.Impl
 
             _eventBus.Trigger(this, new EntityCreatedEventData<Task>(taskEntity));
 
-            if (taskEntity.AssignedUser.Id != creatorUser.Id)
-            {
-                _notificationService.Notify(new AssignedToTaskNotification(taskEntity));
-            }
+            //if (taskEntity.AssignedUser.Id != creatorUser.Id)
+            //{
+            //    //_notificationService.Notify(new AssignedToTaskNotification(taskEntity));
+            //}
 
             return new CreateTaskOutput
                        {
@@ -190,7 +190,7 @@ namespace Taskever.Application.Services.Impl
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
                 _eventBus.Trigger(this, new TaskCompletedEventData(task));
-                _notificationService.Notify(new CompletedTaskNotification(task));
+                //_notificationService.Notify(new CompletedTaskNotification(task));
             }
         }
 

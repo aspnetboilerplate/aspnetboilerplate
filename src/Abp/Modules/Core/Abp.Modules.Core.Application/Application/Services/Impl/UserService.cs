@@ -8,6 +8,7 @@ using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
+using Abp.Modules.Core.Domain.Services;
 
 namespace Abp.Modules.Core.Application.Services.Impl
 {

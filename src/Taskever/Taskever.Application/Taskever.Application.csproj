@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Services\CompletedTaskNotification.cs" />
     <Compile Include="Application\Services\Dto\Activities\CompleteTaskActivityDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\CreateTaskActivityDto.cs" />
     <Compile Include="Application\Services\Dto\Activities\UserFollowedActivityDto.cs" />
@@ -87,10 +86,6 @@
     <Compile Include="Application\Services\Dto\Friendships\GetFriendshipsByMostActiveOutput.cs" />
     <Compile Include="Application\Services\Dto\TaskeverUsers\GetUserProfileInput.cs" />
     <Compile Include="Application\Services\Dto\TaskeverUsers\GetUserProfileOutput.cs" />
-    <Compile Include="Application\Services\AssignedToTaskNotification.cs" />
-    <Compile Include="Application\Services\Impl\NotificationService.cs" />
-    <Compile Include="Application\Services\INotification.cs" />
-    <Compile Include="Application\Services\INotificationService.cs" />
     <Compile Include="Application\Services\IFriendshipService.cs" />
     <Compile Include="Application\Services\Dto\Tasks\CreateTaskInput.cs" />
     <Compile Include="Application\Services\Impl\FriendshipService.cs" />
@@ -134,9 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Application\Services\Notification\AssignTaskEmail.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

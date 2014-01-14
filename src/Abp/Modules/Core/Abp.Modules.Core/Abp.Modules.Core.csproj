@@ -68,9 +68,13 @@
     <Compile Include="Domain\Entities\Utils\IHasTenant.cs" />
     <Compile Include="Domain\Entities\Utils\IModificationAudited.cs" />
     <Compile Include="Domain\Entities\Utils\ModificationAuditedEntity.cs" />
+    <Compile Include="Domain\Services\IEmailService.cs" />
+    <Compile Include="Domain\Services\Impl\EmailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AbpIdentity.cs" />
     <Compile Include="Security\AbpPrincipal.cs" />
+    <Compile Include="Startup\AbpModulesCoreModule.cs" />
+    <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

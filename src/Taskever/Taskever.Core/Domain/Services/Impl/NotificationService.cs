@@ -1,7 +1,7 @@
-using System.Net.Mail;
-using Abp.Modules.Core.Application.Services;
+using Abp.Modules.Core.Domain.Services;
+using Taskever.Application.Services;
 
-namespace Taskever.Application.Services.Impl
+namespace Taskever.Domain.Services.Impl
 {
     public class NotificationService : INotificationService
     {

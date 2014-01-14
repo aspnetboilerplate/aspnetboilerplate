@@ -1,10 +1,9 @@
 using System;
 using System.Configuration;
 using System.Net.Mail;
-using System.Text;
 using Castle.Core.Logging;
 
-namespace Abp.Modules.Core.Application.Services.Impl
+namespace Abp.Modules.Core.Domain.Services.Impl
 {
     public class EmailService : IEmailService
     {
