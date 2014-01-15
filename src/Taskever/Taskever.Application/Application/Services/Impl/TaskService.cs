@@ -137,11 +137,6 @@ namespace Taskever.Application.Services.Impl
 
             _eventBus.Trigger(this, new EntityCreatedEventData<Task>(taskEntity));
 
-            //if (taskEntity.AssignedUser.Id != creatorUser.Id)
-            //{
-            //    //_notificationService.Notify(new AssignedToTaskNotification(taskEntity));
-            //}
-
             return new CreateTaskOutput
                        {
                            Task = taskEntity.MapTo<TaskDto>()

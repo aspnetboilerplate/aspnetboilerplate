@@ -4,6 +4,8 @@
 * TODO
 
 - MULTITHREAD UNITOFWORK TEST!
+- Unitofwork and transaction scope best practices!
+
 - LOCALIZATION
 
 - VALUE TYPES!

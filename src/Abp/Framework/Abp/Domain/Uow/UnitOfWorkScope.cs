@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// TODO: Did not tested yet, do not use!
+    /// This class is experimental for now. (TODO: Test & make it usable)
     /// </summary>
     public class UnitOfWorkScope : IDisposable
     {
@@ -33,21 +28,21 @@ namespace Abp.Domain.Uow
         public UnitOfWorkScope()
         {
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
-
             Current = _unitOfWorkWrapper.Object;
-            Current.BeginTransaction();
+            try
+            {
+                Current.BeginTransaction();
+            }
+            catch
+            {
+                Current = null;
+            }
         }
 
         public void Commit()
         {
-            try
-            {
-                _unitOfWorkWrapper.Object.Commit();
-            }
-            finally
-            {
-                Current = null;
-            }
+            _unitOfWorkWrapper.Object.Commit();
+            _isCommited = true;
         }
 
         public void Dispose()
@@ -58,6 +53,7 @@ namespace Abp.Domain.Uow
                 catch { }
             }
 
+            Current = null;
             _unitOfWorkWrapper.Dispose();
         }
     }
