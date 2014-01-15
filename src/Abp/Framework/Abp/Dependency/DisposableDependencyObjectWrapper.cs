@@ -9,16 +9,21 @@ namespace Abp.Dependency
     /// This object is created by using <see cref="IocHelper.ResolveAsDisposable{T}()"/> method. 
     /// </summary>
     /// <typeparam name="T">Type of the service</typeparam>
-    public class DisposableObjectWrapper<T> : IDisposable
+    public class DisposableDependencyObjectWrapper<T> : IDisposable
     {
         /// <summary>
         /// The resolved object.
         /// </summary>
         public T Object { get; private set; }
 
-        public DisposableObjectWrapper(T obj)
+        internal DisposableDependencyObjectWrapper()
         {
-            Object = obj;
+            Object = IocHelper.Resolve<T>();
+        }
+
+        internal DisposableDependencyObjectWrapper(object argumentsAsAnonymousType)
+        {
+            Object = IocHelper.Resolve<T>(argumentsAsAnonymousType);
         }
 
         /// <summary>

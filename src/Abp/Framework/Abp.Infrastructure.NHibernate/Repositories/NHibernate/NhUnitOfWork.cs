@@ -1,4 +1,3 @@
-using System;
 using Abp.Domain.Uow;
 using NHibernate;
 
@@ -9,18 +8,6 @@ namespace Abp.Domain.Repositories.NHibernate
     /// </summary>
     public class NhUnitOfWork : IUnitOfWork
     {
-        /// <summary>
-        /// Gets current instance of the NhUnitOfWork.
-        /// It gets the right instance that is related to current thread.
-        /// </summary>
-        public static NhUnitOfWork Current
-        {
-            get { return _current; }
-            set { _current = value; }
-        }
-        [ThreadStatic]
-        private static NhUnitOfWork _current;
-
         /// <summary>
         /// Gets Nhibernate session object to perform queries.
         /// </summary>

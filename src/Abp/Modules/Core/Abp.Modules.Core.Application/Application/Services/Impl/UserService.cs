@@ -30,12 +30,12 @@ namespace Abp.Modules.Core.Application.Services.Impl
 
         public IList<UserDto> GetAllUsers()
         {
-            return _userRepository.Query(q => q.ToList()).MapIList<User, UserDto>();
+            return _userRepository.GetAllList().MapIList<User, UserDto>();
         }
 
         public UserDto GetActiveUserOrNull(string emailAddress, string password) //TODO: Make this GetUserOrNullInput and GetUserOrNullOutput
         {
-            var userEntity = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password && user.IsEmailConfirmed));
+            var userEntity = _userRepository.FirstOrDefault(user => user.EmailAddress == emailAddress && user.Password == password && user.IsEmailConfirmed);
             return userEntity.MapTo<UserDto>();
         }
 
@@ -48,7 +48,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
         [UnitOfWork]
         public void RegisterUser(RegisterUserInput registerUser)
         {
-            var existingUser = _userRepository.Query(q => q.FirstOrDefault(u => u.EmailAddress == registerUser.EmailAddress));
+            var existingUser = _userRepository.FirstOrDefault(u => u.EmailAddress == registerUser.EmailAddress);
             if (existingUser != null)
             {
                 if (!existingUser.IsEmailConfirmed)
@@ -106,7 +106,7 @@ namespace Abp.Modules.Core.Application.Services.Impl
         [UnitOfWork]
         public void SendPasswordResetLink(SendPasswordResetLinkInput input)
         {
-            var user = _userRepository.Query(q => q.FirstOrDefault(u => u.EmailAddress == input.EmailAddress));
+            var user = _userRepository.FirstOrDefault(u => u.EmailAddress == input.EmailAddress);
             if(user == null)
             {
                 throw new AbpUserFriendlyException("Can not find this email address in the system.");

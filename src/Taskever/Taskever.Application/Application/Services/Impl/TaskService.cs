@@ -48,7 +48,7 @@ namespace Taskever.Application.Services.Impl
         public GetTaskOutput GetTask(GetTaskInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            var task = _taskRepository.GetOrNull(input.Id);
+            var task = _taskRepository.FirstOrDefault(input.Id);
 
             if (task == null)
             {
@@ -151,7 +151,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public void UpdateTask(UpdateTaskInput input)
         {
-            var task = _taskRepository.GetOrNull(input.Id);
+            var task = _taskRepository.FirstOrDefault(input.Id);
             if (task == null)
             {
                 throw new Exception("Can not found the task!");
@@ -194,7 +194,7 @@ namespace Taskever.Application.Services.Impl
 
         public DeleteTaskOutput DeleteTask(DeleteTaskInput input)
         {
-            var task = _taskRepository.GetOrNull(input.Id);
+            var task = _taskRepository.FirstOrDefault(input.Id);
             if (task == null)
             {
                 throw new Exception("Can not found the task!");

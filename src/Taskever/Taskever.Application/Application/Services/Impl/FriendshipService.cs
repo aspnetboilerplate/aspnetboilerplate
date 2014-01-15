@@ -4,7 +4,6 @@ using System.Net.Mail;
 using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
-using Abp.Modules.Core.Application.Services;
 using Abp.Modules.Core.Application.Services.Impl;
 using Abp.Modules.Core.Domain.Entities;
 using Abp.Modules.Core.Domain.Repositories;
@@ -54,7 +53,7 @@ namespace Taskever.Application.Services.Impl
         public virtual void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+            var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanChangeFriendshipProperties(currentUser, friendShip))
             {
@@ -77,7 +76,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public virtual SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
         {
-            var friendUser = _userRepository.Query(q => q.FirstOrDefault(user => user.EmailAddress == input.EmailAddress));
+            var friendUser = _userRepository.FirstOrDefault(user => user.EmailAddress == input.EmailAddress);
             if (friendUser == null)
             {
                 throw new AbpUserFriendlyException("Can not find a user with email address: " + input.EmailAddress);
@@ -110,7 +109,7 @@ namespace Taskever.Application.Services.Impl
         public virtual void RemoveFriendship(RemoveFriendshipInput input)
         {
             var currentUser = _userRepository.Load(User.CurrentUserId);
-            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
             {
@@ -123,7 +122,7 @@ namespace Taskever.Application.Services.Impl
         [UnitOfWork]
         public virtual void AcceptFriendship(AcceptFriendshipInput input)
         {
-            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call GetOrNull and throw a specific exception?
+            var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
             var currentUser = _userRepository.Load(User.CurrentUserId);
             friendship.AcceptBy(currentUser);
             SendAcceptEmail(friendship.Pair);

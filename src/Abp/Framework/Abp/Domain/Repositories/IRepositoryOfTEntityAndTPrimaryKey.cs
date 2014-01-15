@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 
 namespace Abp.Domain.Repositories
 {
@@ -13,9 +14,11 @@ namespace Abp.Domain.Repositories
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
     public interface IRepository<TEntity, in TPrimaryKey> : IRepository where TEntity : IEntity<TPrimaryKey>
     {
+        #region Select/Get/Query
+
         /// <summary>
         /// Used to get a IQueryable that is used to retrive entities from entire table.
-        /// UnitOfWork attrbute must be used to be able to call this method since this method
+        /// <see cref="UnitOfWorkAttribute"/> attrbute must be used to be able to call this method since this method
         /// returns IQueryable and it requires open database connection to use it.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
@@ -25,11 +28,18 @@ namespace Abp.Domain.Repositories
         /// Used to get all entities.
         /// </summary>
         /// <returns>List of all entities</returns>
-        IList<TEntity> GetAllList();
+        List<TEntity> GetAllList();
+
+        /// <summary>
+        /// Used to get all entities based on given <see cref="predicate"/>.
+        /// </summary>
+        /// <param name="predicate">A condition to filter entities</param>
+        /// <returns>List of all entities</returns>
+        List<TEntity> GetAllList(Func<TEntity, bool> predicate);
 
         /// <summary>
         /// Used to run a query over entire entities.
-        /// UnitOfWork attribute is not always necessery (as opposite to <see cref="GetAll"/>)
+        /// <see cref="UnitOfWorkAttribute"/> attribute is not always necessery (as opposite to <see cref="GetAll"/>)
         /// if <see cref="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
         /// </summary>
         /// <typeparam name="T">Type of return value of this method</typeparam>
@@ -49,7 +59,14 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="key">Primary key of the entity to get</param>
         /// <returns>Entity or null</returns>
-        TEntity GetOrNull(TPrimaryKey key);
+        TEntity FirstOrDefault(TPrimaryKey key);
+
+        /// <summary>
+        /// Gets an entity with given given predicate.
+        /// </summary>
+        /// <param name="predicate">Predicate to filter entities</param>
+        /// <returns></returns>
+        TEntity FirstOrDefault(Func<TEntity, bool> predicate);
 
         /// <summary>
         /// Creates an entity with given primary key without database access.
@@ -58,17 +75,29 @@ namespace Abp.Domain.Repositories
         /// <returns>Entity</returns>
         TEntity Load(TPrimaryKey key);
 
+        #endregion
+
+        #region Insert
+
         /// <summary>
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>
         void Insert(TEntity entity);
 
+        #endregion
+
+        #region Update
+
         /// <summary>
         /// Updates an existing entity.
         /// </summary>
         /// <param name="entity">Entity</param>
         void Update(TEntity entity);
+
+        #endregion
+
+        #region Delete
 
         /// <summary>
         /// Deletes an entity.
@@ -82,6 +111,10 @@ namespace Abp.Domain.Repositories
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
 
+        #endregion
+
+        #region Aggregates
+
         /// <summary>
         /// Gets count of all entities in this repository.
         /// </summary>
@@ -89,11 +122,11 @@ namespace Abp.Domain.Repositories
         int Count();
 
         /// <summary>
-        /// Gets count of all entities in this repository.
+        /// Gets count of all entities in this repository based on given <see cref="predicate"/>.
         /// </summary>
-        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
-        int Count(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod);
+        int Count(Func<TEntity, bool> predicate);
 
         /// <summary>
         /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
@@ -102,10 +135,13 @@ namespace Abp.Domain.Repositories
         long LongCount();
 
         /// <summary>
-        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// Gets count of all entities in this repository based on given <see cref="predicate"/> (use if expected return value is greather than <see cref="int.MaxValue"/>).
         /// </summary>
-        /// <param name="queryMethod">A filter method to get count fo a projection</param>
+        /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
-        long LongCount(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryMethod);
+        long LongCount(Func<TEntity, bool> predicate);
+
+        #endregion
+
     }
 }

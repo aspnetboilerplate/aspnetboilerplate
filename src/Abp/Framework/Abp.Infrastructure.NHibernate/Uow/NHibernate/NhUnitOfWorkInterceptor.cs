@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories.NHibernate;
+﻿using Abp.Dependency;
+using Abp.Domain.Repositories.NHibernate;
 using Castle.DynamicProxy;
 using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
@@ -10,17 +11,6 @@ namespace Abp.Domain.Uow.NHibernate
     /// </summary>
     public class NhUnitOfWorkInterceptor : IInterceptor
     {
-        private readonly ISessionFactory _sessionFactory;
-
-        /// <summary>
-        /// Creates a new NhUnitOfWorkInterceptor object.
-        /// </summary>
-        /// <param name="sessionFactory">Nhibernate session factory.</param>
-        public NhUnitOfWorkInterceptor(ISessionFactory sessionFactory)
-        {
-            _sessionFactory = sessionFactory;
-        }
-
         /// <summary>
         /// Intercepts a method.
         /// </summary>
@@ -28,31 +18,35 @@ namespace Abp.Domain.Uow.NHibernate
         public void Intercept(IInvocation invocation)
         {
             //If there isalready  a running transaction (or no need to a db connection), just run the method
-            if (NhUnitOfWork.Current != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
+            if (UnitOfWorkScope.Current != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
             {
                 invocation.Proceed();
                 return;
             }
 
-            try
+            using (var unitOfWork = IocHelper.ResolveAsDisposable<IUnitOfWork>())
             {
-                NhUnitOfWork.Current = new NhUnitOfWork(_sessionFactory);
-                NhUnitOfWork.Current.BeginTransaction();
-
                 try
                 {
-                    invocation.Proceed();
-                    NhUnitOfWork.Current.Commit();
+
+                    UnitOfWorkScope.Current = unitOfWork.Object;
+                    UnitOfWorkScope.Current.BeginTransaction();
+
+                    try
+                    {
+                        invocation.Proceed();
+                        UnitOfWorkScope.Current.Commit();
+                    }
+                    catch
+                    {
+                        try { UnitOfWorkScope.Current.Rollback(); } catch { }
+                        throw;
+                    }
                 }
-                catch
+                finally
                 {
-                    try { NhUnitOfWork.Current.Rollback(); } catch { }
-                    throw;
+                    UnitOfWorkScope.Current = null;
                 }
-            }
-            finally
-            {
-                NhUnitOfWork.Current = null;
             }
         }
     }

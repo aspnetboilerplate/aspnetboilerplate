@@ -54,24 +54,24 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an <see cref="DisposableObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
+        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <returns>The instance object wrapped by <see cref="DisposableObjectWrapper{T}"/></returns>
-        public static DisposableObjectWrapper<T> ResolveAsDisposable<T>()
+        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
+        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>()
         {
-            return new DisposableObjectWrapper<T>(Resolve<T>());
+            return new DisposableDependencyObjectWrapper<T>();
         }
 
         /// <summary>
-        /// Gets an <see cref="DisposableObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
+        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
-        /// <returns>The instance object wrapped by <see cref="DisposableObjectWrapper{T}"/></returns>
-        public static DisposableObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
+        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
+        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
         {
-            return new DisposableObjectWrapper<T>(Resolve<T>(argumentsAsAnonymousType));
+            return new DisposableDependencyObjectWrapper<T>(argumentsAsAnonymousType);
         }
 
         /// <summary>

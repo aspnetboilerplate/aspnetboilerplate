@@ -49,6 +49,7 @@
       <HintPath>..\..\..\packages\Microsoft.Bcl.Immutable.1.0.30\lib\portable-net45+win8+wp8\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dependency\DisposableObjectWrapper.cs" />
+    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\IEntityOfTPrimaryKey.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Domain\Repositories\IRepository.cs" />
     <Compile Include="Domain\Repositories\IRepositoryOfTEntity.cs" />
     <Compile Include="Domain\Uow\IUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkScope.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkAttribute.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />
     <Compile Include="Domain\Entities\Entity.cs" />

@@ -32,7 +32,7 @@ namespace Abp.Domain.Uow
         /// Returns true if given method has UnitOfWorkAttribute attribute.
         /// </summary>
         /// <param name="methodInfo">Method info to check</param>
-        public static bool HasUnitOfWorkAttribute(MethodInfo methodInfo)
+        public static bool HasUnitOfWorkAttribute(MemberInfo methodInfo)
         {
             return methodInfo.IsDefined(typeof(UnitOfWorkAttribute), true);
         }
