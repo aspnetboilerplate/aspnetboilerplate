@@ -1,9 +1,8 @@
 ﻿using Abp.Application.Authorization;
 using Abp.Application.Services.Dto.Validation;
 using Abp.Modules;
-using Abp.Startup;
 
-namespace Abp.Application.Startup
+namespace Abp.Startup.Application
 {
     /// <summary>
     /// This module is used to simplify and standardize building the "Application Layer" of an application.

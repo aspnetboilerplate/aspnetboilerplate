@@ -70,12 +70,12 @@
     <Compile Include="Application\Services\Dto\Validation\AbpValidationException.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Application\Services\Dto\Validation\ValidationInterceptor.cs" />
-    <Compile Include="Application\Startup\ApplicationLayerInterceptorRegisterer.cs" />
+    <Compile Include="Startup\Application\ApplicationLayerInterceptorRegisterer.cs" />
     <Compile Include="Application\Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Authorization\IFeatureBasedAuthorization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Application\Services\Dto\Validation\ValidationInstaller.cs" />
-    <Compile Include="Application\Startup\AbpApplicationModule.cs" />
+    <Compile Include="Startup\Application\AbpApplicationModule.cs" />
     <Compile Include="Application\Services\Dto\Validation\MethodInvocationValidator.cs" />
   </ItemGroup>
   <ItemGroup>

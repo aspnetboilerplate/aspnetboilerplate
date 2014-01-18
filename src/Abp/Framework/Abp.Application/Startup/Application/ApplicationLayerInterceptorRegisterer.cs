@@ -1,10 +1,9 @@
 using Abp.Application.Authorization;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto.Validation;
-using Abp.Startup;
 using Castle.Core;
 
-namespace Abp.Application.Startup
+namespace Abp.Startup.Application
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.

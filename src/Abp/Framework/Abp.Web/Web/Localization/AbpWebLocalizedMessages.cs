@@ -1,0 +1,35 @@
+﻿using System;
+using Abp.Localization;
+using Abp.Localization.Sources;
+
+namespace Abp.Web.Localization
+{
+    /// <summary>
+    /// This class is used to simplify getting localized messages in this assembly.
+    /// </summary>
+    internal static class AbpWebLocalizedMessages
+    {
+        public static string InternalServerError { get { return L("InternalServerError"); } }
+
+        private const string SourceName = "Abp.Web";
+
+        private static readonly ILocalizationSource Source;
+
+        static AbpWebLocalizedMessages()
+        {
+            Source = LocalizationHelper.GetSource(SourceName);
+        }
+
+        private static string L(string name)
+        {
+            try
+            {
+                return Source.GetString(name);
+            }
+            catch (Exception)
+            {
+                return name;
+            }
+        }
+    }
+}

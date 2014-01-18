@@ -1,6 +1,6 @@
 ﻿using System.Web.Security;
 using Abp.Modules.Core.Security;
-using Abp.Web.Startup;
+using Abp.Startup.Web;
 
 namespace Taskever.Web
 {

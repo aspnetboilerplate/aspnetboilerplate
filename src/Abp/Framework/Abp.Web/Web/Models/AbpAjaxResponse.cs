@@ -7,17 +7,18 @@
     {
         /// <summary>
         /// The actual result object of ajax request.
-        /// It must be set if <see cref="Success"/> is true.
+        /// It is set if <see cref="Success"/> is true.
         /// </summary>
         public object Result { get; set; }
 
         /// <summary>
         /// Indicates success status of the result.
+        /// Set <see cref="Error"/> if this value is false.
         /// </summary>
         public bool Success { get; set; }
 
         /// <summary>
-        /// Error details (if <see cref="Success"/> is false.
+        /// Error details (Must and only set if <see cref="Success"/> is false).
         /// </summary>
         public AbpErrorInfo Error { get; set; }
 
