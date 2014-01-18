@@ -8,7 +8,7 @@ namespace Abp.Localization
     /// <summary>
     /// Used to register Localization specific classes to IOC.
     /// </summary>
-    internal class LocalizationInstaller : IWindsorInstaller
+    public class LocalizationInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

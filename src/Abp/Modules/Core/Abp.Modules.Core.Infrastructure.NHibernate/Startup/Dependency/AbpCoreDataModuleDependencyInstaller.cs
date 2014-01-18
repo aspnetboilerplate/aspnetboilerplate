@@ -12,10 +12,8 @@ namespace Abp.Modules.Core.Startup.Dependency
             container.Register(
 
                 Component.For(typeof(AuditInterceptor)),
-                Component.For(typeof(MultiTenancyInterceptor<,>))//,
+                Component.For(typeof(MultiTenancyInterceptor<,>))
 
-                //All repoistories
-                //Classes.FromAssembly(Assembly.GetAssembly(typeof(NhUserRepository))).InSameNamespaceAs<NhUserRepository>().WithService.DefaultInterfaces().WithServiceSelf().LifestyleTransient()
                 );
         }
     }

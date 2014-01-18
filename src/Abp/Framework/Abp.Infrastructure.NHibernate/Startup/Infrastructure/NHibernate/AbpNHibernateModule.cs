@@ -1,11 +1,10 @@
 ﻿using Abp.Domain.Repositories.NHibernate;
 using Abp.Domain.Uow.NHibernate;
 using Abp.Modules;
-using Abp.Startup;
 using FluentNHibernate.Cfg;
 using NHibernate;
 
-namespace Abp.Domain.Startup.NHibernate
+namespace Abp.Startup.Infrastructure.NHibernate
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.

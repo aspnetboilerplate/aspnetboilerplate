@@ -1,9 +1,8 @@
 using System.Configuration;
 using System.Reflection;
-using Abp.Domain.Startup;
-using Abp.Domain.Startup.NHibernate;
 using Abp.Modules;
 using Abp.Startup;
+using Abp.Startup.Infrastructure.NHibernate;
 using FluentNHibernate.Cfg.Db;
 using Taskever.Data.Repositories;
 using Taskever.Dependency.Installers;

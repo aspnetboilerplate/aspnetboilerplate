@@ -115,7 +115,7 @@
     <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
-    <Compile Include="Startup\AbpCoreInstaller.cs" />
+    <Compile Include="Startup\AbpStartupInstaller.cs" />
     <Compile Include="Startup\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModuleCollection.cs" />
     <Compile Include="Utils\Extensions\Collections\CollectionExtensions.cs" />

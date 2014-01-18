@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
 using Abp.Data.Repositories;
 using Abp.Domain.Repositories;
-using Abp.Domain.Startup;
-using Abp.Domain.Startup.NHibernate;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
 using Abp.Modules.Core.Domain.Entities.Utils;
 using Abp.Modules.Core.Startup.Dependency;
 using Abp.Startup;
+using Abp.Startup.Infrastructure.NHibernate;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;

@@ -7,7 +7,7 @@
     <ProjectGuid>{47853DCA-C058-42F4-B020-E9AC659C9204}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Domain</RootNamespace>
+    <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.Infrastructure.NHibernate</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -60,14 +60,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
-    <Compile Include="Repositories\NHibernate\NhRepositoryInstaller.cs" />
-    <Compile Include="Startup\NHibernate\AbpNHibernateModule.cs" />
-    <Compile Include="Uow\NHibernate\NHibernateUnitOfWorkRegistrer.cs" />
-    <Compile Include="Uow\NHibernate\NhUnitOfWorkInstaller.cs" />
-    <Compile Include="Uow\NHibernate\NhUnitOfWorkInterceptor.cs" />
-    <Compile Include="Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
-    <Compile Include="Repositories\NHibernate\NhUnitOfWork.cs" />
+    <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
+    <Compile Include="Domain\Repositories\NHibernate\NhRepositoryInstaller.cs" />
+    <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateModule.cs" />
+    <Compile Include="Domain\Uow\NHibernate\NHibernateUnitOfWorkRegistrer.cs" />
+    <Compile Include="Domain\Uow\NHibernate\NhUnitOfWorkInstaller.cs" />
+    <Compile Include="Domain\Uow\NHibernate\NhUnitOfWorkInterceptor.cs" />
+    <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
+    <Compile Include="Domain\Repositories\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

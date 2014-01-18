@@ -4,7 +4,7 @@ using Castle.Windsor;
 
 namespace Abp.Modules
 {
-    internal class AbpModuleSystemInstaller : IWindsorInstaller
+    public class AbpModuleSystemInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

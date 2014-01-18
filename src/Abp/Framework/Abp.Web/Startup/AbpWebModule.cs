@@ -2,6 +2,7 @@
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Web.Localization;
+using Castle.Windsor.Installer;
 
 namespace Abp.Web.Startup
 {
@@ -11,7 +12,7 @@ namespace Abp.Web.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         { 
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new LocalizationInstaller());
+            initializationContext.IocContainer.Install(FromAssembly.This());
             LocalizationHelper.RegisterSource<AbpWebLocalizationSource>();
         }
     }

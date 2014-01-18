@@ -5,7 +5,7 @@ using Castle.Windsor;
 
 namespace Abp.Startup
 {
-    internal class AbpStartupInstaller : IWindsorInstaller
+    public class AbpStartupInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
