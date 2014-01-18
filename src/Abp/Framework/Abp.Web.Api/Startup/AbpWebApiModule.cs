@@ -7,6 +7,7 @@ using Abp.Modules;
 using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
+using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Dependency;
 using Abp.WebApi.Dependency.Installers;
@@ -29,8 +30,6 @@ namespace Abp.WebApi.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-
-            ApiControllerBuilder.IocContainer = initializationContext.IocContainer;
 
             initializationContext.IocContainer.Install(new AbpWebApiInstaller());
 

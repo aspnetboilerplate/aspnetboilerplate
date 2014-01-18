@@ -4,8 +4,9 @@ using Abp.Application.Authorization;
 namespace Abp.WebApi.Authorization
 {
     /// <summary>
-    /// This attribute is used on a method of an MVC <see cref="ApiController"/>
+    /// This attribute is used on a method of an <see cref="ApiController"/>
     /// to make that method usable only by authorized users.
+    /// TODO: This class is not implemented yet.
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute, IFeatureBasedAuthorization
     {

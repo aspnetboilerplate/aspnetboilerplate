@@ -7,6 +7,9 @@ using Castle.Core.Logging;
 
 namespace Abp.WebApi.Controllers.Filters
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AbpExceptionFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)

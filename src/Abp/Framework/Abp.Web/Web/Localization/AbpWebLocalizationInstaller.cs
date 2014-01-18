@@ -7,7 +7,7 @@ namespace Abp.Web.Localization
     /// <summary>
     /// Used to register Localization specific classes to IOC.
     /// </summary>
-    internal class AbpWebLocalizationInstaller : IWindsorInstaller 
+    public class AbpWebLocalizationInstaller : IWindsorInstaller 
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

@@ -18,7 +18,7 @@ namespace Abp.WebApi.Controllers.Dynamic
 
             //TODO: Refactor !!!
             var splitted = name.Split('/');
-            var controllerInfo = DynamicApiControllerManager.FindServiceController(splitted[0].ToPascalCase(), splitted[1].ToPascalCase());
+            var controllerInfo = DynamicApiControllerManager.Find(splitted[0].ToPascalCase(), splitted[1].ToPascalCase());
             if (controllerInfo == null)
             {
                 throw new HttpException(404, "There is no such a service: " + name); //TODO: What to do if can not find?

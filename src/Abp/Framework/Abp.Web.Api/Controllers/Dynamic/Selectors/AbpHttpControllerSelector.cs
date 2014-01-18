@@ -5,7 +5,7 @@ using System.Web.Http.Dispatcher;
 using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// This class is used to extend default controller selector to add dynamic api controller creation feature of Abp.
@@ -38,7 +38,7 @@ namespace Abp.WebApi.Controllers.Dynamic
                         string areaName;
                         routeData.Values.TryGetValue("areaName", out areaName);
 
-                        var controllerInfo = DynamicApiControllerManager.FindServiceController(areaName.ToPascalCase(), serviceName.ToPascalCase());
+                        var controllerInfo = DynamicApiControllerManager.Find(areaName.ToPascalCase(), serviceName.ToPascalCase());
                         if (controllerInfo != null)
                         {
                             var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);

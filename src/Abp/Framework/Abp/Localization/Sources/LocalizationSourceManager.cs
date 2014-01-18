@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Exceptions;
@@ -28,6 +29,11 @@ namespace Abp.Localization.Sources
 
         public ILocalizationSource GetSource(string name)
         {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+            
             ILocalizationSource source;
             if (!_sources.TryGetValue(name, out source))
             {

@@ -1,9 +1,10 @@
 using System.Reflection;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
-    /// Used to store an action information.
+    /// Used to store an action information of a dynamic ApiController.
     /// </summary>
     internal class DynamicApiActionInfo
     {

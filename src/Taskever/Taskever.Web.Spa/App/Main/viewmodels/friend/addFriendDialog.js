@@ -1,5 +1,5 @@
-﻿define(["jquery", "knockout", 'plugins/dialog', 'service!dto', 'service!taskever/task', 'service!taskever/friendship', 'session'],
-    function ($, ko, dialogs, dtos, taskService, friendshipService, session) {
+﻿define(["jquery", "knockout", 'plugins/dialog', 'service!taskever/task', 'service!taskever/friendship', 'session'],
+    function ($, ko, dialogs, taskService, friendshipService, session) {
         return function () {
             var that = this;
 

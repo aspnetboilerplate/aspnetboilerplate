@@ -14,7 +14,7 @@ namespace Abp.Modules.Core.Startup
             initializationContext.IocContainer.Install(new AbpCoreModuleWebApiInstaller());
 
             //TODO: Remove this for security reasons!
-            BuildApiController
+            DyanmicApiControllerBuilder
                 .For<IUserService>("abp/user")
                 .Build();
         }

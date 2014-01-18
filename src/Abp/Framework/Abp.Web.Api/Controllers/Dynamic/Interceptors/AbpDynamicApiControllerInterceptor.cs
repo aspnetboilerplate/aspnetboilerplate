@@ -1,10 +1,7 @@
-using System;
 using System.Reflection;
-using Abp.Web.Models;
-using Castle.Core.Logging;
 using Castle.DynamicProxy;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Abp.WebApi.Controllers.Dynamic.Interceptors
 {
     /// <summary>
     /// Interceptor dynamic controllers.

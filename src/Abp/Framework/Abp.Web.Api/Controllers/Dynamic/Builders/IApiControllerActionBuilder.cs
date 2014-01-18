@@ -1,3 +1,5 @@
+using Abp.Web;
+
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Abp.WebApi.Controllers.Dynamic.Builders
+﻿using Abp.Web;
+
+namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// A helper class for dynamic api controllers.

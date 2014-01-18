@@ -8,6 +8,9 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// </summary>
     internal class DynamicApiControllerInfo
     {
+        /// <summary>
+        /// Gets/sets area name for this controller.
+        /// </summary>
         public string AreaName { get; set; }
 
         /// <summary>
@@ -21,7 +24,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         public Type Type { get; private set; }
 
         /// <summary>
-        /// Proxied type.
+        /// Dyanmic proxied type.
         /// </summary>
         public Type ProxiedType { get; private set; }
 
@@ -43,6 +46,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             Name = name;
             Type = type;
             ProxiedType = proxiedType;
+
             Actions = new Dictionary<string, DynamicApiActionInfo>();
         }
     }

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\HttpVerb.cs" />
     <Compile Include="Web\Localization\AbpWebLocalizationInstaller.cs" />
     <Compile Include="Web\Localization\AbpWebLocalizedMessages.cs" />
     <Compile Include="Web\Models\AbpAjaxResponse.cs" />

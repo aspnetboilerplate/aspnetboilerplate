@@ -1,47 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Abp.Dependency;
 using Abp.Exceptions;
+using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
-    internal class ApiControllerBuilder
-    {
-
-        /// <summary>
-        /// Reference to current Ioc container.
-        /// </summary>
-        internal static WindsorContainer IocContainer { get; set; }
-    }
-
     /// <summary>
     /// Used to build <see cref="DynamicApiControllerInfo"/> object.
     /// </summary>
     /// <typeparam name="T">The of the proxied object</typeparam>
-    internal class ApiControllerBuilder<T> : ApiControllerBuilder, IApiControllerBuilder<T>
+    internal class ApiControllerBuilder<T> : IApiControllerBuilder<T>
     {
         /// <summary>
-        /// List of all builders.
+        /// Area name of the controller.
         /// </summary>
-        private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
+        private readonly string _areaName;
 
         /// <summary>
         /// Name of the controller.
         /// </summary>
         private readonly string _controllerName;
-        
+
         /// <summary>
-        /// Area name.
+        /// List of all action builders for this controller.
         /// </summary>
-        private readonly string _areaName;
+        private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
 
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
-        /// <param name="controllerName"> </param>
+        /// <param name="controllerName">Name of the controller</param>
         public ApiControllerBuilder(string controllerName)
         {
             if (string.IsNullOrWhiteSpace(controllerName) || !controllerName.Contains("/"))
@@ -81,7 +74,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(AbpDynamicApiController<T>), typeof(T));
+            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(DynamicApiController<T>), typeof(T));
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
@@ -93,12 +86,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 controllerInfo.Actions[actionInfo.ActionName] = actionInfo;
             }
 
-            IocContainer.Register(
+            IocManager.Instance.IocContainer.Register(
                 Component.For<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient(),
-                Component.For<AbpDynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
+                Component.For<DynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
                 );
 
-            DynamicApiControllerManager.RegisterServiceController(controllerInfo);
+            DynamicApiControllerManager.Register(controllerInfo);
         }
 
         #region Private methods

@@ -1,9 +1,8 @@
-using System.Globalization;
 using System.Web.Http.Controllers;
 using Abp.Exceptions;
 using Abp.Utils.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// This class overrides ApiControllerActionSelector to select actions of dynamic ApiControllers.
