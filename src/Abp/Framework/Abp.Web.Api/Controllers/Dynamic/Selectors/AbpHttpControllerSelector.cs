@@ -9,11 +9,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// This class is used to extend default controller selector to add dynamic api controller creation feature of Abp.
+    /// It checks if requested controller is a dynamic api controller, if it is,
+    /// returns <see cref="HttpControllerDescriptor"/> to ASP.NET system.
     /// </summary>
     public class AbpHttpControllerSelector : DefaultHttpControllerSelector
     {
         private readonly HttpConfiguration _configuration;
 
+        /// <summary>
+        /// Creates a new <see cref="AbpHttpControllerSelector"/> object.
+        /// </summary>
+        /// <param name="configuration">Http configuration</param>
         public AbpHttpControllerSelector(HttpConfiguration configuration)
             : base(configuration)
         {
@@ -36,14 +42,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     if (routeData.Values.TryGetValue("serviceName", out serviceName))
                     {
                         string areaName;
-                        routeData.Values.TryGetValue("areaName", out areaName);
-
-                        var controllerInfo = DynamicApiControllerManager.Find(areaName.ToPascalCase(), serviceName.ToPascalCase());
-                        if (controllerInfo != null)
+                        if (routeData.Values.TryGetValue("areaName", out areaName))
                         {
-                            var desc = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
-                            desc.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
-                            return desc;
+                            var controllerName = areaName.ToPascalCase() + "/" + serviceName.ToPascalCase();
+
+                            var controllerInfo = DynamicApiControllerManager.Find(controllerName);
+                            if (controllerInfo != null)
+                            {
+                                var controllerDescriptor = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
+                                controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
+                                return controllerDescriptor;
+                            }
                         }
                     }
                 }

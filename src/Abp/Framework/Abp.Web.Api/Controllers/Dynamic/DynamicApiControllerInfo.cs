@@ -9,11 +9,6 @@ namespace Abp.WebApi.Controllers.Dynamic
     internal class DynamicApiControllerInfo
     {
         /// <summary>
-        /// Gets/sets area name for this controller.
-        /// </summary>
-        public string AreaName { get; set; }
-
-        /// <summary>
         /// Name of the controller.
         /// </summary>
         public string Name { get; private set; }
@@ -36,13 +31,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
-        /// <param name="areaName">Area name (can be null for default)</param>
         /// <param name="name">Name of the controller</param>
         /// <param name="type">Controller type</param>
         /// <param name="proxiedType">Proxied type</param>
-        public DynamicApiControllerInfo(string areaName, string name, Type type, Type proxiedType)
+        public DynamicApiControllerInfo(string name, Type type, Type proxiedType)
         {
-            AreaName = areaName;
             Name = name;
             Type = type;
             ProxiedType = proxiedType;

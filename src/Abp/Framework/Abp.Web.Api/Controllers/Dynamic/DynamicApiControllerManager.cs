@@ -21,35 +21,18 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public static void Register(DynamicApiControllerInfo controllerInfo)
         {
-            var registrationName = GetRegistrationName(controllerInfo);
-            DynamicApiControllers[registrationName] = controllerInfo;
+            DynamicApiControllers[controllerInfo.Name] = controllerInfo;
         }
 
         /// <summary>
         /// Searches and returns a dynamic api controller for given name.
         /// </summary>
-        /// <param name="areaName">Area name</param>
         /// <param name="controllerName">Name of the controller</param>
         /// <returns>Controller info</returns>
-        public static DynamicApiControllerInfo Find(string areaName, string controllerName)
+        public static DynamicApiControllerInfo Find(string controllerName)
         {
-            var registrationName = GetRegistrationName(areaName, controllerName);
             DynamicApiControllerInfo controllerInfo;
-            return DynamicApiControllers.TryGetValue(registrationName, out controllerInfo) ? controllerInfo : null;
+            return DynamicApiControllers.TryGetValue(controllerName, out controllerInfo) ? controllerInfo : null;
         }
-
-        #region Private methods
-
-        private static string GetRegistrationName(DynamicApiControllerInfo controllerInfo)
-        {
-            return GetRegistrationName(controllerInfo.AreaName, controllerInfo.Name);
-        }
-
-        private static string GetRegistrationName(string areaName, string controllerName)
-        {
-            return !string.IsNullOrWhiteSpace(areaName) ? (areaName + "/" + controllerName) : controllerName;
-        }
-
-        #endregion
     }
 }

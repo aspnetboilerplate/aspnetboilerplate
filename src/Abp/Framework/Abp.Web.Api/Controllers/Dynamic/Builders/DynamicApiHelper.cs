@@ -7,7 +7,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// </summary>
     internal static class DynamicApiHelper
     {
-        public static HttpVerb GetConventionalVerbForMethodName(string methodName)
+        //TODO: This is not used yet.
+        private static HttpVerb GetConventionalVerbForMethodName(string methodName)
         {
             if (methodName.StartsWith("Get"))
             {
@@ -32,7 +33,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return GetDefaultHttpVerb();
         }
 
-        public static HttpVerb GetDefaultHttpVerb()
+        private static HttpVerb GetDefaultHttpVerb()
         {
             return HttpVerb.Post;
         }

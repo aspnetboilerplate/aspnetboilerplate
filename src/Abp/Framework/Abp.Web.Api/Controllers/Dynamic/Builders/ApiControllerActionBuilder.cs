@@ -35,6 +35,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public bool DontCreate { get; private set; }
 
         /// <summary>
+        /// Default HTTP verb if not set.
+        /// </summary>
+        private const HttpVerb DefaultVerb = HttpVerb.Post;
+
+        /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
         /// </summary>
         /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
@@ -109,7 +114,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             if (_verb == null)
             {
-                _verb = DynamicApiHelper.GetDefaultHttpVerb();
+                _verb = DefaultVerb;
             }
 
             return new DynamicApiActionInfo(_actionName, _verb.Value, _methodInfo);

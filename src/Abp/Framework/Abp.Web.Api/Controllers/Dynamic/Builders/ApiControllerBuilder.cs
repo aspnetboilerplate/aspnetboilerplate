@@ -5,8 +5,6 @@ using Abp.Dependency;
 using Abp.Exceptions;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -16,11 +14,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// <typeparam name="T">The of the proxied object</typeparam>
     internal class ApiControllerBuilder<T> : IApiControllerBuilder<T>
     {
-        /// <summary>
-        /// Area name of the controller.
-        /// </summary>
-        private readonly string _areaName;
-
         /// <summary>
         /// Name of the controller.
         /// </summary>
@@ -42,9 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 throw new ArgumentException("controllerName is not valid! It must be formatted as {areaName}/{controllerName}", "controllerName");
             }
 
-            var splittedArray = controllerName.Split('/');
-            _areaName = splittedArray[0].ToPascalCase();
-            _controllerName = splittedArray[1].ToPascalCase();
+            _controllerName = controllerName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
             foreach (var methodInfo in GetPublicInstanceMethods())
@@ -74,7 +65,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_areaName, _controllerName, typeof(DynamicApiController<T>), typeof(T));
+            var controllerInfo = new DynamicApiControllerInfo(_controllerName, typeof(DynamicApiController<T>), typeof(T));
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
