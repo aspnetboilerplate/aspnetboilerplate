@@ -4,10 +4,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// A helper class for dynamic api controllers.
+    /// //NOTE: This class is not used.
     /// </summary>
     internal static class DynamicApiHelper
     {
-        //TODO: This is not used yet.
         private static HttpVerb GetConventionalVerbForMethodName(string methodName)
         {
             if (methodName.StartsWith("Get"))

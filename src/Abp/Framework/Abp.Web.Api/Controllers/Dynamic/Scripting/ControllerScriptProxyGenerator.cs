@@ -1,7 +1,8 @@
 using System.Text;
 using Abp.Utils.Extensions;
+using Abp.WebApi.Controllers.Dynamic.Scripting.Actions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.Proxy
+namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
     internal class ControllerScriptProxyGenerator
     {

@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Abp.Utils.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
     internal abstract class ActionScriptProxyGenerator
     {

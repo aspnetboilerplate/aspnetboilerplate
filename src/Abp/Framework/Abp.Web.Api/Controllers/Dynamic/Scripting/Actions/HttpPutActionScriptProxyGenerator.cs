@@ -1,4 +1,4 @@
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
     internal class HttpPutActionScriptProxyGenerator : HttpPostActionScriptProxyGenerator
     {

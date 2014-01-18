@@ -1,7 +1,7 @@
 using System.Text;
 using Abp.Utils.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
     internal class HttpDeleteActionScriptProxyGenerator : ActionScriptProxyGenerator
     {

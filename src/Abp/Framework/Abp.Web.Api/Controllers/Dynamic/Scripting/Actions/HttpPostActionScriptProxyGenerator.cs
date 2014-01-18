@@ -1,20 +1,19 @@
 using System.Text;
 using Abp.Utils.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
-    internal class HttpGetActionScriptProxyGenerator : ActionScriptProxyGenerator
+    internal class HttpPostActionScriptProxyGenerator : ActionScriptProxyGenerator
     {
         private const string AjaxPatametersTemplate = 
 @"            url: '{url}',
             type: '{type}',
-            data: {
-{getParams}
-            }";
+            data: JSON.stringify({postData})";
 
-        public HttpGetActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
+        public HttpPostActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
             : base(controllerInfo, methodInfo)
         {
+
         }
 
         protected override string GenerateAjaxCallParameters()
@@ -22,20 +21,33 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             var ajaxPatameters = AjaxPatametersTemplate
                 .Replace("{url}", PlainActionUrl)
                 .Replace("{type}", ActionInfo.Verb.ToString().ToUpperInvariant())
-                .Replace("{getParams}", GenerateGetParameters());
+                .Replace("{postData}", GeneratePostData());
 
             return ajaxPatameters;
         }
 
-        private string GenerateGetParameters()
+        private string GeneratePostData()
         {
-            var sb = new StringBuilder();
             var parameters = ActionInfo.Method.GetParameters();
+            if (parameters.Length <= 0)
+            {
+                return "{}";
+            }
+
+            if (parameters.Length == 1)
+            {
+                return parameters[0].Name.ToCamelCase();
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("{");
             for (var i = 0; i < parameters.Length; i++)
             {
                 var parameterInfo = parameters[i];
                 sb.AppendLine("                " + parameterInfo.Name.ToCamelCase() + ": " + parameterInfo.Name.ToCamelCase() + (i < parameters.Length - 1 ? "," : ""));
             }
+            sb.AppendLine("}");
+
             return sb.ToString();
         }
     }

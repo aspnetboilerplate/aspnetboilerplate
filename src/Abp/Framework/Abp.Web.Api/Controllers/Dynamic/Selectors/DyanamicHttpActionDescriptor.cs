@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using Abp.Web.Models;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     public class DyanamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {

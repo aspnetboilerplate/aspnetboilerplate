@@ -7,6 +7,7 @@ using Abp.Modules;
 using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
+using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Dependency;

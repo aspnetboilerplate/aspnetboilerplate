@@ -32,7 +32,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             if (string.IsNullOrWhiteSpace(controllerName) || !controllerName.Contains("/"))
             {
-                throw new ArgumentException("controllerName is not valid! It must be formatted as {areaName}/{controllerName}", "controllerName");
+                throw new ArgumentException("controllerName is not valid! It must be formatted as {areaName}/{serviceName}", "controllerName");
             }
 
             _controllerName = controllerName;
