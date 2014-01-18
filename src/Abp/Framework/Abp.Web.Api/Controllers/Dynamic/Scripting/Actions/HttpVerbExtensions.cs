@@ -18,7 +18,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
                 case HttpVerb.Delete:
                     return new HttpDeleteActionScriptProxyGenerator(controllerInfo, methodInfo);
                 default:
-                    throw new AbpException("This Http verb is not implemented: " + verb.ToString());
+                    throw new AbpException("This Http verb is not implemented: " + verb);
             }
         }
     }
