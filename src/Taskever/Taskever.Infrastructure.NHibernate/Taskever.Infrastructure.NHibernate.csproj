@@ -69,10 +69,12 @@
     <Compile Include="Data\Migrations\V20131007\_02_CreateTeUserActivitiesTable.cs" />
     <Compile Include="Data\Migrations\V20131215\_01_ChangeIndexOnTeUserFollowedActivitiesTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
-    <Compile Include="Data\Repositories\NHibernate\NhActivityRepository.cs" />
-    <Compile Include="Data\Repositories\NHibernate\NhFriendshipRepository.cs" />
-    <Compile Include="Data\Repositories\NHibernate\NhTaskRepository.cs" />
-    <Compile Include="Data\Repositories\NHibernate\NhUserFallowedActivityRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\ActivityRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\FriendshipRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\TaskRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\UserFollowedActivityRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\Base\TaskeverRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
+    <Compile Include="Data\Repositories\NHibernate\Base\TaskeverRepositoryBaseOfTEntity.cs" />
     <Compile Include="Data\Repositories\RepositoryInstaller.cs" />
     <Compile Include="Entities\NHibernate\Mappings\ActivityMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\CompleteTaskActivityMap.cs" />

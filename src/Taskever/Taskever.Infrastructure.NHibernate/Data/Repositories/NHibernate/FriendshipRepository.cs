@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Domain.Repositories.NHibernate;
 using NHibernate.Linq;
+using Taskever.Data.Repositories.NHibernate.Base;
 using Taskever.Friendships;
 
 namespace Taskever.Data.Repositories.NHibernate
 {
-    public class NhFriendshipRepository : NhRepositoryBase<Friendship>, IFriendshipRepository
+    public class FriendshipRepository : TaskeverRepositoryBase<Friendship>, IFriendshipRepository
     {
         public List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask)
         {
@@ -46,7 +46,7 @@ namespace Taskever.Data.Repositories.NHibernate
             {
                 query = query.Where(f => f.Status == FriendshipStatus.Accepted);
             }
-            
+
             return query.FirstOrDefault();
         }
     }

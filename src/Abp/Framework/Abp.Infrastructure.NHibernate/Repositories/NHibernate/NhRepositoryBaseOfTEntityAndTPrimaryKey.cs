@@ -77,10 +77,6 @@ namespace Abp.Domain.Repositories.NHibernate
             Session.Update(entity);
         }
 
-        /// <summary>
-        /// Deletes an entity.
-        /// </summary>
-        /// <param name="entity">Entity to be deleted</param>
         public virtual void Delete(TEntity entity)
         {
             Session.Delete(entity);
