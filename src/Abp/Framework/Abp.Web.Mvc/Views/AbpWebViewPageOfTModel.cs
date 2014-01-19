@@ -1,23 +1,20 @@
 ﻿using System.Globalization;
 using System.Web.Mvc;
 using Abp.Localization;
-using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Views
 {
-    public abstract class AbpViewBase : AbpViewBase<dynamic>
+    /// <summary>
+    /// Base class for all views in Abp system.
+    /// </summary>
+    /// <typeparam name="TModel">Type of the View Model</typeparam>
+    public abstract class AbpWebViewPage<TModel> : WebViewPage<TModel>
     {
-
-    }
-
-    public abstract class AbpViewBase<TModel> : WebViewPage<TModel>
-    {
-        public string LocalizationSourceName { get; set; }
-
         /// <summary>
-        /// Reference to the logger to write logs.
+        /// Gets/sets name of the localization source that is used in this controller.
+        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
-        public virtual ILogger Logger { get; set; }
+        public string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Gets localized string for given key name and current language.

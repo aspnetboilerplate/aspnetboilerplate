@@ -7,7 +7,7 @@ namespace Taskever.Web.Views
 
     }
 
-    public abstract class TaskeverViewBase<TModel> : AbpViewBase<TModel>
+    public abstract class TaskeverViewBase<TModel> : AbpWebViewPage<TModel>
     {
         public TaskeverViewBase()
         {

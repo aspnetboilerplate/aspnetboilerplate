@@ -101,7 +101,8 @@
     <Compile Include="Models\AbpMvcAjaxResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebMvcModule.cs" />
-    <Compile Include="Views\AbpViewBase.cs" />
+    <Compile Include="Views\AbpWebViewPage.cs" />
+    <Compile Include="Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
