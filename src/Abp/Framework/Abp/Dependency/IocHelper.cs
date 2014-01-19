@@ -67,6 +67,17 @@ namespace Abp.Dependency
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="type">Type of the object to resolve. This type must be type of <see cref="T"/> or inherit/implement <see cref="T"/>.</param>
+        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
+        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type)
+        {
+            return new DisposableDependencyObjectWrapper<T>(type);
+        }
+
+        /// <summary>
+        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
         public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)

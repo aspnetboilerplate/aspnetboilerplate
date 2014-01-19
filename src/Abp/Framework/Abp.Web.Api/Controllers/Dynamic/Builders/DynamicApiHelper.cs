@@ -4,7 +4,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// A helper class for dynamic api controllers.
-    /// //NOTE: This class is not used.
+    /// NOTE: This class is not used.
     /// </summary>
     internal static class DynamicApiHelper
     {

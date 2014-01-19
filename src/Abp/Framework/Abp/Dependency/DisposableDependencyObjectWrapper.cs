@@ -1,4 +1,5 @@
 using System;
+using Abp.Exceptions;
 
 namespace Abp.Dependency
 {
@@ -19,6 +20,16 @@ namespace Abp.Dependency
         internal DisposableDependencyObjectWrapper()
         {
             Object = IocHelper.Resolve<T>();
+        }
+
+        internal DisposableDependencyObjectWrapper(Type type)
+        {
+            if (!typeof (T).IsAssignableFrom(type))
+            {
+                throw new AbpException("Given type is compatible with generic type definition!");
+            }
+
+            Object = (T) IocHelper.Resolve(type);
         }
 
         internal DisposableDependencyObjectWrapper(object argumentsAsAnonymousType)

@@ -1,12 +1,10 @@
-﻿using Castle.Core.Logging;
+﻿using System.Web.Http;
 using Castle.DynamicProxy;
 
 namespace Abp.WebApi.Dependency.Interceptors
 {
     public class AbpApiControllerInterceptor : IInterceptor
     {
-        public ILogger Logger { get; set; }
-
         public void Intercept(IInvocation invocation)
         {
             if (!invocation.MethodInvocationTarget.IsPublic)
@@ -16,7 +14,6 @@ namespace Abp.WebApi.Dependency.Interceptors
             }
 
             invocation.Proceed();
-            //Logger.Debug(invocation.ReturnValue.ToString());
         }
     }
 }

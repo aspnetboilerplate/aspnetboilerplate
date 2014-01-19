@@ -3,8 +3,11 @@ using System.Net.Http.Headers;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Scripting.Localization;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
+    /// <summary>
+    /// Used to get localization javascript from clients.
+    /// </summary>
     public class LocalizationController : AbpApiController
     {
         private readonly ILocalizationScriptManager _localizationScriptManager;

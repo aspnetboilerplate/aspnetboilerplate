@@ -40,5 +40,18 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 return script;
             }
         }
+
+        private class ScriptInfo
+        {
+            public string ServiceName { get; private set; }
+
+            public string Script { get; private set; }
+
+            public ScriptInfo(string serviceName, string script)
+            {
+                ServiceName = serviceName;
+                Script = script;
+            }
+        }
     }
 }

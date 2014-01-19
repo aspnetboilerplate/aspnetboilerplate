@@ -81,11 +81,10 @@
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Localization\ILocalizationScriptManager.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Localization\LocalizationScriptManager.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\ScriptInfo.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="Controllers\Dynamic\LocalizationController.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\LocalizationController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Actions\ActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ControllerScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Actions\HttpDeleteActionScriptProxyGenerator.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />
     <Compile Include="Controllers\Filters\AbpExceptionFilterAttribute.cs" />
+    <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptorRegisterer.cs" />
     <Compile Include="Startup\AbpWebApiModule.cs" />
     <Compile Include="Controllers\AbpApiController.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\AbpApiControllerActionSelector.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Controllers\Dynamic\Builders\DyanmicApiControllerBuilder.cs" />
     <Compile Include="Dependency\Installers\AbpWebApiInstaller.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
-    <Compile Include="Dependency\WindsorCompositionRoot.cs" />
+    <Compile Include="Dependency\IocControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\RouteConfig.cs" />
   </ItemGroup>

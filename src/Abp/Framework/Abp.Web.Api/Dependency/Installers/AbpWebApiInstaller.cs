@@ -7,6 +7,9 @@ using Castle.Windsor;
 
 namespace Abp.WebApi.Dependency.Installers
 {
+    /// <summary>
+    /// Registers dependencies for this module.
+    /// </summary>
     public class AbpWebApiInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
