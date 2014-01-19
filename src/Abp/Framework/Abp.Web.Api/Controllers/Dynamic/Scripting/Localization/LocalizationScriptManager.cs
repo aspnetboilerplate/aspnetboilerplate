@@ -1,42 +1,73 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.Caching;
+using System.Text;
+using System.Threading;
+using Abp.Caching;
+using Abp.Dependency;
 using Abp.Localization.Sources;
+using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
 {
     /// <summary>
-    /// 
+    /// This class is used to build and cache localization script.
     /// </summary>
-    public static class LocalizationScriptManager
+    public class LocalizationScriptManager : ILocalizationScriptManager //TODO: Make it internal?
     {
-        private static readonly ILocalizationSourceManager LocalizationSourceManager;
+        private readonly ILocalizationSourceManager _localizationSourceManager;
 
-        private static string _script;
+        private readonly ThreadSafeObjectCache<string> _cache;
 
-        private static readonly object SyncObj = new object();
-
-        static LocalizationScriptManager()
+        public LocalizationScriptManager(ILocalizationSourceManager localizationSourceManager)
         {
-            LocalizationSourceManager = IocHelper.Resolve<ILocalizationSourceManager>();
+            _localizationSourceManager = localizationSourceManager;
+            _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(2));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GetScript()
+        public string GetLocalizationScript()
         {
-            //TODO: Generate according to current language!!! So, it's not true to store single _script cache! Use dictionary or MemoryCache instead?
-            //TODO: Also drop cache if localization file is changed!
+            return GetLocalizationScript(Thread.CurrentThread.CurrentUICulture);
+        }
 
-            lock (SyncObj)
+        public string GetLocalizationScript(CultureInfo cultureInfo)
+        {
+            return _cache.Get(cultureInfo.Name, BuildAll);
+        }
+
+        public string BuildAll()
+        {
+            var script = new StringBuilder();
+
+            script.AppendLine("(function(){");
+            script.AppendLine();
+            script.AppendLine("abp.localization.values = abp.localization.values || {};");
+            script.AppendLine();
+
+            foreach (var source in _localizationSourceManager.GetAllSources().OrderBy(s => s.Name))
             {
-                if (_script == null)
+                script.AppendLine("abp.localization.values['" + source.Name.ToCamelCase() + "'] = {");
+
+                var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
+                for (var i = 0; i < stringValues.Count; i++)
                 {
-                    _script = new LocalizationScriptBuilder(LocalizationSourceManager.GetAllSources()).BuildAll();
+                    script.AppendLine(
+                        string.Format(
+                        "    '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
+                            stringValues[i].Name,
+                            stringValues[i].Value.Replace("'", "\\'").Replace(Environment.NewLine, string.Empty) //TODO: Allow new line?
+                            ));
                 }
 
-                return _script;
+                script.AppendLine("};");
+                script.AppendLine();
             }
+
+            script.AppendLine();
+            script.AppendLine("})();");
+
+            return script.ToString();
         }
     }
 }
