@@ -1,4 +1,4 @@
-﻿namespace Abp.Modules.Core.Authorization.Roles
+﻿namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Base class for static roles of an application.

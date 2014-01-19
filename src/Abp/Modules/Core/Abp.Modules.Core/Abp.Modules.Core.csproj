@@ -74,7 +74,7 @@
     <Compile Include="Security\AbpIdentity.cs" />
     <Compile Include="Security\AbpPrincipal.cs" />
     <Compile Include="Startup\AbpModulesCoreModule.cs" />
-    <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
+    <Compile Include="Startup\Dependency\Installers\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using Abp.Data.Repositories;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
 using Abp.Modules.Core.Startup.Dependency;
 using Abp.Startup;

@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Abp.Modules.Core.Application.Services;
-using Abp.Modules.Core.Application.Services.Dto;
+using Abp.Users;
 using Abp.WebApi.Controllers;
 
 namespace Abp.Modules.Core.Api
 {
     public class UsersController : AbpApiController
     {
-        private readonly IUserService _userService;
+        private readonly IUserAppService _userAppService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserAppService userAppService)
         {
-            _userService = userService;
+            _userAppService = userAppService;
         }
 
         public HttpResponseMessage Get()
@@ -32,7 +31,7 @@ namespace Abp.Modules.Core.Api
             //logging
             //exception handling
             //Logger.Info(L("GetAllQuestions_Method_Is_Called"));
-            //return _userService.GetAllUsers();
+            //return _userAppService.GetAllUsers();
             //return 
         }
 

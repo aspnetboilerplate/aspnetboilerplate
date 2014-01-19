@@ -1,5 +1,6 @@
 ﻿using Abp.Modules;
 using Abp.Startup.Dependency;
+using Abp.Startup.Dependency.Installers;
 
 namespace Abp.Startup
 {

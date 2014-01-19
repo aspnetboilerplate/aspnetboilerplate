@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Security;
 using Abp.Dependency;
-using Abp.Modules.Core.Application.Services;
+using Abp.Users;
 using Castle.Windsor;
 
 namespace Abp.Modules.Core.Mvc.Web.Authentication
@@ -34,7 +34,7 @@ namespace Abp.Modules.Core.Mvc.Web.Authentication
 
         public override bool ValidateUser(string username, string password)
         {
-            using (var userService = IocHelper.ResolveAsDisposable<IUserService>())
+            using (var userService = IocHelper.ResolveAsDisposable<IUserAppService>())
             {
                 return (userService.Object.GetActiveUserOrNull(username, password) != null);
             }

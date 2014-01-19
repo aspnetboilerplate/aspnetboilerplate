@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Web.Mvc;
-using Abp.Modules.Core.Application.Services;
-using Abp.Modules.Core.Application.Services.Dto.Users;
+using Abp.Users;
+using Abp.Users.Dto;
 using Abp.Utils.Helpers;
 using Abp.Utils.Helpers.IO;
 using Abp.Web.Models;
@@ -13,11 +13,11 @@ namespace Taskever.Web.Controllers
     [AbpAuthorize]
     public class ProfileImageController : TaskeverController
     {
-        private readonly IUserService _userService;
+        private readonly IUserAppService _userAppService;
 
-        public ProfileImageController(IUserService userService)
+        public ProfileImageController(IUserAppService userAppService)
         {
-            _userService = userService;
+            _userAppService = userAppService;
         }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace Taskever.Web.Controllers
 
                     //Change profile picture
                     var fileName = Path.GetFileName(tempPath);
-                    var result = _userService.ChangeProfileImage(new ChangeProfileImageInput { FileName = fileName });
+                    var result = _userAppService.ChangeProfileImage(new ChangeProfileImageInput { FileName = fileName });
                     
                     //Delete old file
                     if(!string.IsNullOrWhiteSpace(result.OldFileName))

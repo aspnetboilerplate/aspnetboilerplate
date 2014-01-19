@@ -1,6 +1,6 @@
-﻿using Abp.Modules.Core.Application.Services;
-using Abp.Modules.Core.Dependency.Installers;
+﻿using Abp.Modules.Core.Startup.Dependency.Installers;
 using Abp.Startup;
+using Abp.Users;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.Modules.Core.Startup
@@ -15,7 +15,7 @@ namespace Abp.Modules.Core.Startup
 
             //TODO: Remove this for security reasons!
             DyanmicApiControllerBuilder
-                .For<IUserService>("abp/user")
+                .For<IUserAppService>("abp/user")
                 .Build();
         }
     }

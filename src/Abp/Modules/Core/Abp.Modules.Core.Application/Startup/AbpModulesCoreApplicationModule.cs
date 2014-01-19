@@ -1,8 +1,9 @@
-﻿using Abp.Modules.Core.Application.Services.Dto.Mappings;
-using Abp.Modules.Core.Startup.Dependency;
-using Abp.Startup;
+﻿using Abp.Modules;
+using Abp.Startup.Dependency;
+using Abp.Users;
+using Abp.Users.Dto;
 
-namespace Abp.Modules.Core.Startup
+namespace Abp.Startup
 {
     [AbpModule("Abp.Modules.Core.Application", Dependencies = new[] { "Abp.Modules.Core" })]
     public class AbpModulesCoreApplicationModule : AbpModule
@@ -11,7 +12,7 @@ namespace Abp.Modules.Core.Startup
         {
             base.Initialize(initializationContext);
             initializationContext.IocContainer.Install(new AbpCoreModuleApplicationDependencyInstaller());
-            DtoMapper.Map();
+            Mapper.Map();
         }
     }
 }

@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Data.Repositories
+namespace Abp.Modules.Core.Data.Repositories
 {
     public class RepositoryInstaller : IWindsorInstaller
     {

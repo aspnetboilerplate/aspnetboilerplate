@@ -1,7 +1,6 @@
-using System.Data;
 using FluentMigrator;
 
-namespace Taskever.Data.Migrations.V20131007
+namespace Taskever.Data.Migrations.V20131215
 {
     [Migration(2013121501)]
     public class _01_ChangeIndexOnTeUserFollowedActivitiesTable : Migration

@@ -1,4 +1,4 @@
-namespace Abp.Modules.Core.Authorization.Roles
+namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Only one user must has this role and he must be the owner of the tenant application.

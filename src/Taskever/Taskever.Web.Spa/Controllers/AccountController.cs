@@ -3,12 +3,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Abp.Exceptions;
-using Abp.Modules.Core.Application.Services;
-using Abp.Modules.Core.Application.Services.Dto;
-using Abp.Modules.Core.Application.Services.Dto.Users;
 using Abp.Modules.Core.Mvc.Controllers;
 using Abp.Modules.Core.Mvc.Models;
 using Abp.Security;
+using Abp.Users;
+using Abp.Users.Dto;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;
@@ -20,11 +19,11 @@ namespace Taskever.Web.Controllers
 {
     public class AccountController : AbpController
     {
-        private readonly IUserService _userService;
+        private readonly IUserAppService _userAppService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserAppService userAppService)
         {
-            _userService = userService;
+            _userAppService = userAppService;
         }
 
         public virtual ActionResult Login(string returnUrl = "/", string loginMessage = null)
@@ -45,7 +44,7 @@ namespace Taskever.Web.Controllers
                 }
 
                 FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
-                var user = _userService.GetActiveUserOrNull(loginModel.EmailAddress, loginModel.Password);
+                var user = _userAppService.GetActiveUserOrNull(loginModel.EmailAddress, loginModel.Password);
                 var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
                 var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddDays(2), loginModel.RememberMe, identity.SerializeToString()); //TODO: true/false?
                 var encTicket = FormsAuthentication.Encrypt(authTicket);
@@ -60,7 +59,7 @@ namespace Taskever.Web.Controllers
 
         public ActionResult ConfirmEmail(ConfirmEmailInput input)
         {
-            _userService.ConfirmEmail(input);
+            _userAppService.ConfirmEmail(input);
             return RedirectToAction("Login", new { loginMessage = "Congratulations! Your account is activated. Enter your email address and password to login" });
         }
 
@@ -95,14 +94,14 @@ namespace Taskever.Web.Controllers
             }
 
             input.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
-            _userService.RegisterUser(input);
+            _userAppService.RegisterUser(input);
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("ActivationInfo") });
         }
 
         public JsonResult SendPasswordResetLink(SendPasswordResetLinkInput input)
         {
-            _userService.SendPasswordResetLink(input);
+            _userAppService.SendPasswordResetLink(input);
 
             return Json(new AbpMvcAjaxResponse());
         }
@@ -128,7 +127,7 @@ namespace Taskever.Web.Controllers
                 throw new AbpUserFriendlyException("Incorrect captcha answer.");
             }
 
-            _userService.ResetPassword(input);
+            _userAppService.ResetPassword(input);
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("Login") });
         }

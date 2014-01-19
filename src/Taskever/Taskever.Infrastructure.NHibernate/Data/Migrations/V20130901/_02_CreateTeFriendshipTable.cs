@@ -1,7 +1,6 @@
-using System.Data;
 using FluentMigrator;
 
-namespace Taskever.Data.Migrations.V20130916
+namespace Taskever.Data.Migrations.V20130901
 {
     [Migration(2013090102)]
     public class _02_CreateTeFriendshipTable : AutoReversingMigration
@@ -25,10 +24,5 @@ namespace Taskever.Data.Migrations.V20130916
                 .OnColumn("FriendUserId").Ascending()
                 .WithOptions().NonClustered();
         }
-
-        //public override void Down()
-        //{
-        //    Delete.Column("Priority").FromTable("TeTasks");
-        //}
     }
 }

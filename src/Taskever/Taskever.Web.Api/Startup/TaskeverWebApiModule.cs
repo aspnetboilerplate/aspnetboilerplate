@@ -2,7 +2,10 @@ using Abp.Modules;
 using Abp.Startup;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic.Builders;
-using Taskever.Application.Services;
+using Taskever.Activities;
+using Taskever.Friendships;
+using Taskever.Tasks;
+using Taskever.Users;
 using Taskever.Web.Dependency.Installers;
 
 namespace Taskever.Web.Startup
@@ -22,19 +25,19 @@ namespace Taskever.Web.Startup
             //TODO: must be able to exclude/include all methods option
 
             DyanmicApiControllerBuilder
-                .For<ITaskeverUserService>("taskever/user")
+                .For<ITaskeverUserAppService>("taskever/user")
                 .Build();
 
             DyanmicApiControllerBuilder
-                .For<ITaskService>("taskever/task")
+                .For<ITaskAppService>("taskever/task")
                 .Build(); 
 
             DyanmicApiControllerBuilder
-                .For<IFriendshipService>("taskever/friendship")
+                .For<IFriendshipAppService>("taskever/friendship")
                 .Build();
 
             DyanmicApiControllerBuilder
-                .For<IUserActivityService>("taskever/userActivity")
+                .For<IUserActivityAppService>("taskever/userActivity")
                 .Build();
 
         }

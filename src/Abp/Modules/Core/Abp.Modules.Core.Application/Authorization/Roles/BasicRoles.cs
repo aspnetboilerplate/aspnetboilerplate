@@ -1,4 +1,4 @@
-namespace Abp.Modules.Core.Authorization.Roles
+namespace Abp.Authorization.Roles
 {
     public static class BasicRoles
     {
