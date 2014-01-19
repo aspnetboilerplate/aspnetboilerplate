@@ -1,5 +1,5 @@
 using System.Web;
-using Abp.Localization.Sources.XmlFiles;
+using Abp.Localization.Sources.Xml;
 
 namespace Abp.Web.Localization
 {

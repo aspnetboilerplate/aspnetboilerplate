@@ -6,7 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 
-namespace Abp.Localization.Sources.ResourceFiles 
+namespace Abp.Localization.Sources.Resource 
 {
     /// <summary>
     /// This class is used to simplify to create a localization source that
@@ -69,7 +69,7 @@ namespace Abp.Localization.Sources.ResourceFiles
             return ResourceManager
                 .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
                 .Cast<DictionaryEntry>()
-                .Select(entry => new LocalizedString(culture, entry.Key.ToString(), entry.Value.ToString()))
+                .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
         }
     }

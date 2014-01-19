@@ -53,7 +53,8 @@
     <Compile Include="Events\Bus\MySimpleEventData.cs" />
     <Compile Include="Events\Bus\MySimpleTransientEventHandler.cs" />
     <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
-    <Compile Include="Localization\Test_LocalizationEngine.cs" />
+    <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
+    <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

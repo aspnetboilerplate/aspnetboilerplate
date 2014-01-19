@@ -3,14 +3,39 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using Abp.Exceptions;
-using Abp.Localization.Engine;
 using Abp.Utils.Extensions.Xml;
 
-namespace Abp.Localization.Sources.XmlFiles
+namespace Abp.Localization.Dictionaries.Xml
 {
-    internal static class XmlLocalizationDictionaryBuilder
+    /// <summary>
+    /// This class is used to build a localization dictionary from XML.
+    /// </summary>
+    /// <remarks>
+    /// Use static Build methods to create instance of this class.
+    /// </remarks>
+    public class XmlLocalizationDictionary : LocalizationDictionary
     {
-        public static LocalizationDictionary BuildFomFile(string filePath)
+        #region Constructor
+
+        /// <summary>
+        /// Private constructor.
+        /// </summary>
+        /// <param name="cultureInfo">Culture of the dictionary</param>
+        private XmlLocalizationDictionary(CultureInfo cultureInfo)
+            : base(cultureInfo)
+        {
+            
+        }
+
+        #endregion
+
+        #region Public static methods
+
+        /// <summary>
+        /// Builds an <see cref="XmlLocalizationDictionary"/> from given file.
+        /// </summary>
+        /// <param name="filePath">Path of the file</param>
+        public static XmlLocalizationDictionary BuildFomFile(string filePath)
         {
             try
             {
@@ -22,7 +47,11 @@ namespace Abp.Localization.Sources.XmlFiles
             }
         }
 
-        public static LocalizationDictionary BuildFomXmlString(string xmlString)
+        /// <summary>
+        /// Builds an <see cref="XmlLocalizationDictionary"/> from given xml string.
+        /// </summary>
+        /// <param name="xmlString">XML string</param>
+        internal static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
         {
             var settingsXmlDoc = new XmlDocument();
             settingsXmlDoc.LoadXml(xmlString);
@@ -33,7 +62,7 @@ namespace Abp.Localization.Sources.XmlFiles
                 throw new AbpException("A Localization Xml must include localizationDictionary as root node.");
             }
 
-            var dictionary = new LocalizationDictionary(new CultureInfo(localizationDictionaryNode[0].GetAttributeValue("culture")));
+            var dictionary = new XmlLocalizationDictionary(new CultureInfo(localizationDictionaryNode[0].GetAttributeValue("culture")));
 
             var textNodes = settingsXmlDoc.SelectNodes("/localizationDictionary/texts/text");
             if (textNodes != null)
@@ -53,5 +82,7 @@ namespace Abp.Localization.Sources.XmlFiles
 
             return dictionary;
         }
+
+        #endregion
     }
 }

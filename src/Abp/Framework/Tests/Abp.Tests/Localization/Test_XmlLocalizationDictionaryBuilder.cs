@@ -1,4 +1,4 @@
-using Abp.Localization.Sources.XmlFiles;
+using Abp.Localization.Dictionaries.Xml;
 using NUnit.Framework;
 
 namespace Abp.Tests.Localization
@@ -9,7 +9,7 @@ namespace Abp.Tests.Localization
         [Test]
         public void Can_Build_LocalizationDictionary_From_Xml_String()
         {
-            var dictionary = XmlLocalizationDictionaryBuilder.BuildFomXmlString(
+            var dictionary = XmlLocalizationDictionary.BuildFomXmlString(
                 @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <localizationDictionary culture=""tr"">
   <texts>
@@ -19,7 +19,7 @@ namespace Abp.Tests.Localization
 </localizationDictionary>"
                 );
 
-            Assert.AreEqual("tr", dictionary.Culture.Name);
+            Assert.AreEqual("tr", dictionary.CultureInfo.Name);
             Assert.AreEqual("Merhaba", dictionary["hello"]);
             Assert.AreEqual("Dünya", dictionary["world"]);
         }

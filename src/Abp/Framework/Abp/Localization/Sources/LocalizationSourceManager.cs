@@ -12,6 +12,9 @@ namespace Abp.Localization.Sources
     {
         private readonly IDictionary<string, ILocalizationSource> _sources;
         
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public LocalizationSourceManager()
         {
             _sources = new Dictionary<string, ILocalizationSource>();

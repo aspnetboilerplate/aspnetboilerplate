@@ -10,7 +10,7 @@ namespace Abp.Localization
         /// <summary>
         /// Culture info for this string.
         /// </summary>
-        public CultureInfo CultureInfo { get; private set; }
+        public CultureInfo CultureInfo { get; internal set; }
 
         /// <summary>
         /// Unique Name of the string.
@@ -22,14 +22,21 @@ namespace Abp.Localization
         /// </summary>
         public string Value { get; private set; }
 
+        /// <param name="name">Unique Name of the string</param>
+        /// <param name="value">Value for the <see cref="name"/></param>
+        public LocalizedString(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+
         /// <param name="cultureInfo">Culture info for this string</param>
         /// <param name="name">Unique Name of the string</param>
         /// <param name="value">Value for the <see cref="name"/></param>
-        public LocalizedString(CultureInfo cultureInfo, string name, string value)
+        public LocalizedString(string name, string value, CultureInfo cultureInfo)
+            : this(name, value)
         {
             CultureInfo = cultureInfo;
-            Name = name;
-            Value = value;
         }
     }
 }
