@@ -6,9 +6,9 @@ using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Dto;
 using Abp.Modules.Core.Application.Services.Dto.Users;
-using Abp.Modules.Core.Domain.Entities;
-using Abp.Modules.Core.Domain.Repositories;
-using Abp.Modules.Core.Domain.Services;
+using Abp.Net.Mail;
+using Abp.Tenants;
+using Abp.Users;
 
 namespace Abp.Modules.Core.Application.Services.Impl
 {

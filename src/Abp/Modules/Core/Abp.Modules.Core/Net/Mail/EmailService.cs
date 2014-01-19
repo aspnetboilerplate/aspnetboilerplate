@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Net.Mail;
 using Castle.Core.Logging;
 
-namespace Abp.Modules.Core.Domain.Services.Impl
+namespace Abp.Net.Mail
 {
     public class EmailService : IEmailService
     {

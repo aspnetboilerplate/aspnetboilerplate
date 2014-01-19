@@ -1,4 +1,4 @@
-﻿using Abp.Modules.Core.Domain.Entities.Utils;
+﻿using Abp.Domain.Entities;
 using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 

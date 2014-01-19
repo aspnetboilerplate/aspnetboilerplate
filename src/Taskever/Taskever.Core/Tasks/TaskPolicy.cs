@@ -1,4 +1,4 @@
-using Abp.Modules.Core.Domain.Entities;
+using Abp.Users;
 using Taskever.Friendships;
 
 namespace Taskever.Tasks

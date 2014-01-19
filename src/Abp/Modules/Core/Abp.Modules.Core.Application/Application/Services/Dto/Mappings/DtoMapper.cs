@@ -1,5 +1,5 @@
 ﻿using Abp.Modules.Core.Application.Services.Dto.Users;
-using Abp.Modules.Core.Domain.Entities;
+using Abp.Users;
 
 namespace Abp.Modules.Core.Application.Services.Dto.Mappings
 {

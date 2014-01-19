@@ -1,7 +1,7 @@
-﻿using Abp.Modules.Core.Startup.Dependency;
-using Abp.Startup;
+﻿using Abp.Modules;
+using Abp.Startup.Dependency;
 
-namespace Abp.Modules.Core.Startup
+namespace Abp.Startup
 {
     [AbpModule("Abp.Modules.Core")]
     public class AbpModulesCoreModule : AbpModule

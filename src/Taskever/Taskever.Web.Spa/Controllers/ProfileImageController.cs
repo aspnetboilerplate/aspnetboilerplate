@@ -58,7 +58,7 @@ namespace Taskever.Web.Controllers
 
         private string GenerateProfileImagePath(string fileExtension)
         {
-            var userId = Abp.Modules.Core.Domain.Entities.User.CurrentUserId;
+            var userId = Abp.Users.User.CurrentUserId;
             return Path.Combine(Server.MapPath("~/ProfileImages"), userId + "_" + DateTime.Now.Ticks + fileExtension);
         }
     }

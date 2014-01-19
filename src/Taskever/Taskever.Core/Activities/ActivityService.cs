@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Uow;
-using Abp.Modules.Core.Domain.Repositories;
+using Abp.Users;
 using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 using Taskever.Friendships;

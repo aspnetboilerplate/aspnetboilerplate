@@ -5,9 +5,8 @@ using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Modules.Core.Application.Services.Impl;
-using Abp.Modules.Core.Domain.Entities;
-using Abp.Modules.Core.Domain.Repositories;
-using Abp.Modules.Core.Domain.Services;
+using Abp.Net.Mail;
+using Abp.Users;
 using Taskever.Application.Services.Dto.Friendships;
 using Taskever.Friendships;
 

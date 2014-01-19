@@ -1,7 +1,6 @@
 ﻿using Abp.Domain.Repositories;
-using Abp.Modules.Core.Domain.Entities;
 
-namespace Abp.Modules.Core.Domain.Repositories
+namespace Abp.Users
 {
     /// <summary>
     /// Used to perform <see cref="User"/> related database operations.

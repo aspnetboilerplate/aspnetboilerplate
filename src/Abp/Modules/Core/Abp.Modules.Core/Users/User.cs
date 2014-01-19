@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using Abp.Domain.Entities;
-using Abp.Exceptions;
-using Abp.Modules.Core.Domain.Entities.Utils;
-using Abp.Modules.Core.Security;
+using Abp.Security;
+using Abp.Tenants;
+using Abp.Utils.Helpers;
 
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Users
 {
     /// <summary>
     /// Represents a user in entire system.

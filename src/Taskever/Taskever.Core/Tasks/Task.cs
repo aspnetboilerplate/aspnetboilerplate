@@ -1,5 +1,6 @@
-﻿using Abp.Modules.Core.Domain.Entities;
-using Abp.Modules.Core.Domain.Entities.Utils;
+﻿using Abp.Domain.Entities;
+using Abp.Tenants;
+using Abp.Users;
 
 namespace Taskever.Tasks
 {

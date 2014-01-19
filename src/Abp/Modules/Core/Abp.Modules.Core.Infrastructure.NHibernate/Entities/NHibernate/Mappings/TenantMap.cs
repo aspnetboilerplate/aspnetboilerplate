@@ -1,4 +1,4 @@
-using Abp.Modules.Core.Domain.Entities;
+using Abp.Tenants;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {

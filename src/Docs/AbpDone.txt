@@ -1,7 +1,14 @@
-ABP
-----------------------------------
+DONE:
 
+- Dependency Injection infrastructure
+- Module system
+- Localization
+- EventBus
+- Domain driven design
+- Repository layer
+- WebApi generation
 
+TODO:
 
-TE
-----------------------------------
+- Edition & feature system
+- Tenant & Role & User system

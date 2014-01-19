@@ -1,6 +1,7 @@
-﻿using Abp.Modules.Core.Domain.Entities.Utils;
+﻿using Abp.Domain.Entities;
+using Abp.Tenants;
 
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Roles
 {
     /// <summary>
     /// Represents a role in an application.

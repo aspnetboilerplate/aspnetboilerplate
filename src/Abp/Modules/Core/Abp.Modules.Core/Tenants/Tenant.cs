@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Abp.Domain.Entities;
-using Abp.Modules.Core.Security;
+using Abp.Security;
 
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Tenants
 {
     /// <summary>
     /// Represents a tenant account. A tenant is used in the cloud to identify a seperated application in the system.

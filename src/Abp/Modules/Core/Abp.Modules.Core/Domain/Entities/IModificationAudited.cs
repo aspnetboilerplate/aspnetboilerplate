@@ -1,6 +1,7 @@
 using System;
+using Abp.Users;
 
-namespace Abp.Modules.Core.Domain.Entities.Utils
+namespace Abp.Domain.Entities
 {
     /// <summary>
     /// This interface is implemented by entities which's modification informations (who and when modified) must be stored.

@@ -1,4 +1,4 @@
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Tenants
 {
     /// <summary>
     /// Indicates membershipt status of a user for a tenant.

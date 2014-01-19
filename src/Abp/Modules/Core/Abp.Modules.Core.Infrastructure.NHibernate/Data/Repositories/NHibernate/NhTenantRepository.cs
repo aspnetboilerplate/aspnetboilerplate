@@ -1,7 +1,6 @@
 using Abp.Domain.Repositories.NHibernate;
-using Abp.Modules.Core.Domain.Entities;
-using Abp.Modules.Core.Domain.Repositories;
 using Abp.Modules.Core.Entities;
+using Abp.Tenants;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {

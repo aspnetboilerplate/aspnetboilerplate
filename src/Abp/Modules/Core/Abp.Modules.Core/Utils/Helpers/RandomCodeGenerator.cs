@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Utils.Helpers
 {
     public class RandomCodeGenerator
     {

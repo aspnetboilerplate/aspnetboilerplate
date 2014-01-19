@@ -1,6 +1,7 @@
-using Abp.Modules.Core.Domain.Entities.Utils;
+using Abp.Domain.Entities;
+using Abp.Users;
 
-namespace Abp.Modules.Core.Domain.Entities
+namespace Abp.Roles
 {
     /// <summary>
     /// Represents role record of a user.

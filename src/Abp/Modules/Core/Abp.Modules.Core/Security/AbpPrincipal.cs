@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace Abp.Modules.Core.Security
+namespace Abp.Security
 {
     //TODO: Inherit from GenericPrincipal and move this class out of Core!
     public class AbpPrincipal : IPrincipal

@@ -1,7 +1,7 @@
 using System;
-using Abp.Domain.Entities;
+using Abp.Users;
 
-namespace Abp.Modules.Core.Domain.Entities.Utils
+namespace Abp.Domain.Entities
 {
     /// <summary>
     /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (Int32).

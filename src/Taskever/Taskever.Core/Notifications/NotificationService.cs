@@ -1,4 +1,4 @@
-using Abp.Modules.Core.Domain.Services;
+using Abp.Net.Mail;
 
 namespace Taskever.Notifications
 {
