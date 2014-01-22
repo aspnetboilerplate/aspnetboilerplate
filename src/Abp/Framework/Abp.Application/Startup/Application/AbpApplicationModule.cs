@@ -1,6 +1,10 @@
 ﻿using Abp.Application.Authorization;
+using Abp.Application.Authorization.Permissions;
 using Abp.Application.Services.Dto.Validation;
+using Abp.Dependency;
 using Abp.Modules;
+using Abp.Utils.Extensions;
+using Castle.Windsor.Installer;
 
 namespace Abp.Startup.Application
 {
@@ -19,8 +23,8 @@ namespace Abp.Startup.Application
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new ValidationInstaller());
-            initializationContext.IocContainer.Install(new AuthorizationInstaller());
+            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocHelper.Resolve<IPermissionManager>().Initialize();
         }
     }
 }

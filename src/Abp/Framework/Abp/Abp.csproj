@@ -61,6 +61,7 @@
     <Compile Include="Caching\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IocManager.cs" />
+    <Compile Include="Dependency\ISingletonDependency.cs" />
     <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\IEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Policies\IPolicy.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Modules\AbpModuleCollection.cs" />
     <Compile Include="Utils\Extensions\Collections\CollectionExtensions.cs" />
     <Compile Include="Utils\Extensions\Collections\DictionaryExtensions.cs" />
+    <Compile Include="Utils\Extensions\ObjectExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Extensions\Reflection\TypeExtensions.cs" />
     <Compile Include="Utils\Extensions\Xml\XmlExtensions.cs" />

@@ -4,7 +4,7 @@ using Castle.Windsor;
 
 namespace Abp.Application.Services.Dto.Validation
 {
-    internal class ValidationInstaller : IWindsorInstaller
+    public class ValidationInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

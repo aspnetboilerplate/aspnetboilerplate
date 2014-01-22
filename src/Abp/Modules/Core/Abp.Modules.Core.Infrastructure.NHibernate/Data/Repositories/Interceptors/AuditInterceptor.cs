@@ -4,7 +4,6 @@ using Abp.Users;
 using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
 using Castle.DynamicProxy;
-using NHibernate.Linq;
 
 namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {

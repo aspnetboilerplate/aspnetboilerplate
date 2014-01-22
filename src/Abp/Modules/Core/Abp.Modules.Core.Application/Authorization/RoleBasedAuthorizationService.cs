@@ -15,7 +15,6 @@ namespace Abp.Authorization
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleService _userRoleService;
-
         private readonly IPermissionManager _permissionManager;
 
         public ILogger Logger { get; set; }
@@ -62,7 +61,7 @@ namespace Abp.Authorization
             var roles = _userRoleService.GetRolesOfUser(currentUser);
             foreach (var role in roles)
             {
-                foreach (var rolePermission in role.Permissions)
+                foreach (var rolePermission in role.Permissions) //TODO: Permissions are not laoded!
                 {
                     if (permission.Name == rolePermission.PermissionName && rolePermission.IsGranted)
                     {
