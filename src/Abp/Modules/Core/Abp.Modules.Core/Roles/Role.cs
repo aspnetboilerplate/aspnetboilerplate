@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities;
+﻿using System.Collections.Generic;
+using Abp.Domain.Entities;
 using Abp.Tenants;
 
 namespace Abp.Roles
@@ -24,15 +25,8 @@ namespace Abp.Roles
         public virtual string DisplayName { get; set; }
 
         /// <summary>
-        /// Is this role static (can not be deleted).
-        /// Static roles can be used programmatically.
+        /// List of permissions of this role.
         /// </summary>
-        public virtual bool IsStatic { get; set; }
-
-        /// <summary>
-        /// Is this role frozen (can not edit it's features).
-        /// Only static (see <see cref="IsStatic"/>) roles can be frozen!
-        /// </summary>
-        public virtual bool IsFrozen { get; set; }
+        public virtual List<RolePermission> Permissions { get; set; }
     }
 }

@@ -56,10 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\RoleBasedAuthorizationService.cs" />
     <Compile Include="Users\Dto\ConfirmEmailInput.cs" />
     <Compile Include="Users\Dto\ChangePasswordInput.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
-    <Compile Include="Users\Dto\Mapper.cs" />
+    <Compile Include="Users\Dto\UserDtosMapper.cs" />
     <Compile Include="Users\Dto\RegisterUserInput.cs" />
     <Compile Include="Users\Dto\UserDto.cs" />
     <Compile Include="Users\Dto\GetCurrentUserInfoInput.cs" />

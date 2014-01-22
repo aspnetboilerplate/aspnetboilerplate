@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using Abp.Application.Authorization;
+using Abp.Application.Authorization.Permissions;
 
 namespace Abp.WebApi.Authorization
 {
@@ -8,28 +9,21 @@ namespace Abp.WebApi.Authorization
     /// to make that method usable only by authorized users.
     /// TODO: This class is not implemented yet.
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute, IFeatureBasedAuthorization
+    public class AbpAuthorizeAttribute : AuthorizeAttribute
     {
         /// <summary>
-        /// A list of features to authorize.
-        /// A user is authorized if any of the features is allowed.
+        /// A list of permissions to authorize.
+        /// A user is authorized if any of the permissions is granted.
         /// </summary>
-        public string[] Features { get; set; }
+        public string[] Permissions { get; set; }
 
-        /// <param name="singleFeature">
-        /// A shortcut to create a AbpAuthorizeAttribute that has only one feature.
-        /// If more than one feature is added, <see cref="Features"/> should be used.
-        /// </param>
-        public AbpAuthorizeAttribute(string singleFeature = null)
+        /// <summary>
+        /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
+        /// </summary>
+        /// <param name="permissions">A list of permissions to authorize</param>
+        public AbpAuthorizeAttribute(params string[] permissions)
         {
-            if (!string.IsNullOrEmpty(singleFeature))
-            {
-                Features = new[] { singleFeature };
-            }
-            else
-            {
-                Features = new string[0];
-            }
+            Permissions = permissions;
         }
 
         protected override bool IsAuthorized(System.Web.Http.Controllers.HttpActionContext actionContext)

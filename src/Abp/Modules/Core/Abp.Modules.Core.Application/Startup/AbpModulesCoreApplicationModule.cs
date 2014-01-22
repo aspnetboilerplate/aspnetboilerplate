@@ -2,6 +2,7 @@
 using Abp.Startup.Dependency;
 using Abp.Users;
 using Abp.Users.Dto;
+using Castle.Windsor.Installer;
 
 namespace Abp.Startup
 {
@@ -11,8 +12,8 @@ namespace Abp.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new AbpCoreModuleApplicationDependencyInstaller());
-            Mapper.Map();
+            initializationContext.IocContainer.Install(FromAssembly.This());
+            UserDtosMapper.Map();
         }
     }
 }

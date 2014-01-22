@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Application.Authorization.Permissions;
 using Abp.Application.Services;
 
 namespace Abp.Application.Authorization
@@ -7,28 +8,27 @@ namespace Abp.Application.Authorization
     /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)
     /// to make that method usable only by authorized users.
     /// </summary>
-    public class AbpAuthorizeAttribute : Attribute, IFeatureBasedAuthorization
+    public class AbpAuthorizeAttribute : Attribute
     {
         /// <summary>
-        /// A list of features to authorize.
-        /// A user is authorized if any of the features is allowed.
+        /// A list of permissions to authorize.
         /// </summary>
-        public string[] Features { get; set; }
+        public string[] Permissions { get; private set; }
 
-        /// <param name="singleFeature">
-        /// A shortcut to create a AbpAuthorizeAttribute that has only one feature.
-        /// If more than one feature is added, <see cref="Features"/> should be used.
-        /// </param>
-        public AbpAuthorizeAttribute(string singleFeature = null)
+        /// <summary>
+        /// If this property is set to true, all of the <see cref="Permissions"/> must be granted.
+        /// If it's false, at least one of the <see cref="Permissions"/> must be granted.
+        /// Default: false.
+        /// </summary>
+        public bool RequireAll { get; set; }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
+        /// </summary>
+        /// <param name="permissions">A list of permissions to authorize</param>
+        public AbpAuthorizeAttribute(params string[] permissions)
         {
-            if (!string.IsNullOrEmpty(singleFeature))
-            {
-                Features = new[]{singleFeature};
-            }
-            else
-            {
-                Features = new string[0];                
-            }
+            Permissions = permissions;
         }
     }
 }

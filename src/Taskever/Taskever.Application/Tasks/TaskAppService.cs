@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Abp.Application.Authorization;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Datas.Entities;
@@ -11,6 +12,7 @@ using Taskever.Activities;
 using Taskever.Notifications;
 using Taskever.Tasks.Dto;
 using Taskever.Tasks.Events;
+using Taskever.Authorization;
 
 namespace Taskever.Tasks
 {
@@ -105,6 +107,7 @@ namespace Taskever.Tasks
         }
 
         [UnitOfWork]
+        [AbpAuthorize(TaskeverPermissions.CreateTask)]
         public virtual CreateTaskOutput CreateTask(CreateTaskInput input)
         {
             //Get entities from database

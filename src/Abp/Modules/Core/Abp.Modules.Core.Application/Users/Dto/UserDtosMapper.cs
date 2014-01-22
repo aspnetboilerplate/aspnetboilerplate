@@ -1,6 +1,6 @@
 ﻿namespace Abp.Users.Dto
 {
-    public static class Mapper
+    public static class UserDtosMapper
     {
         public static void Map()
         {
