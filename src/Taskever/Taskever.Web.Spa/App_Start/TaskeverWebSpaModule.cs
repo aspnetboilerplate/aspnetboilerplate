@@ -1,6 +1,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Taskever.Web.App_Start.Dependency.Installers;
@@ -13,6 +14,8 @@ namespace Taskever.Web.App_Start
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
+
+            DependencyManager.RegisterAllByConvension();
 
             AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);

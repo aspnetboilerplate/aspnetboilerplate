@@ -10,7 +10,7 @@ namespace Abp.Startup.Dependency.Installers
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Classes.FromThisAssembly().BasedOn<IDomainService>().WithService.DefaultInterfaces().WithService.Self().LifestyleTransient()
+                //Classes.FromThisAssembly().BasedOn<IDomainService>().WithService.DefaultInterfaces().WithService.Self().LifestyleTransient()
                 );
         }
     }

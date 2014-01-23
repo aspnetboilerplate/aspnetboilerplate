@@ -1,0 +1,37 @@
+DONE:
+
+- Dependency Injection infrastructure
+- Module system
+- Localization
+- EventBus
+- Domain driven design
+- Repository layer
+- WebApi generation
+
+TODO (primary):
+
+- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention!
+- Make use of NHibernate auto mapping
+- Test & Use NHibernate L2 caching
+- Authorization/Permission system
+- MULTITHREAD UNITOFWORK TEST!
+- Check Unitofwork and transaction scope best practices!
+- Taskever LOCALIZATION
+- NHibernate Session / db connection timeouts!
+
+* ADMIN Pages
+- User, Role and permission management interfaces
+
+TODO (secondary):
+
+- Implement Specification pattern classes
+- Handling validation errors
+- VALUE TYPES!
+- Operation time measurement & db logging
+- Make auto mapping (for DTO and other classes) easier to use and standard to implement!
+- Learn & test require.js bundling
+- Create 403 & 404 (maybe others) special error pages!
+- Edition system (Standart edition, Premium edition v.s.)
+- Membership statuses (Gold member, Standart member v.s.) ?
+- Implement best practices for guard clauses?
+- Develop ASP.NET MVC Widget System!

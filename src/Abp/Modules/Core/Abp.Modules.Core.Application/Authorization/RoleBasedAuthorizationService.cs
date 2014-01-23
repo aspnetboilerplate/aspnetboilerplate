@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Authorization;
 using Abp.Application.Authorization.Permissions;
+using Abp.Domain.Uow;
 using Abp.Roles;
 using Abp.Users;
 using Castle.Core.Logging;
@@ -36,6 +37,7 @@ namespace Abp.Authorization
             return permissionNames.All(HasPermission);
         }
 
+        [UnitOfWork]
         public bool HasPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);

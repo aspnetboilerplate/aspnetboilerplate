@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abp", "Abp", "{14B060A2-2D57-4FDA-8869-57A8FBF5783C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434FA4-ED3F-4A7B-A0D3-8CBB900B1609}"
@@ -12,10 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{76AA2897-D756-415C-A0CB-D00E90061FFF}"
 	ProjectSection(SolutionItems) = preProject
-		Docs\AbpDone.txt = Docs\AbpDone.txt
+		Docs\Abp_TODO.txt = Docs\Abp_TODO.txt
 		Docs\Modules.txt = Docs\Modules.txt
 		Docs\Notes.txt = Docs\Notes.txt
-		Docs\Todo.txt = Docs\Todo.txt
 		Docs\Tools.txt = Docs\Tools.txt
 		Docs\WebProject Layout.txt = Docs\WebProject Layout.txt
 	EndProjectSection

@@ -1,4 +1,5 @@
-﻿using Abp.Modules;
+﻿using Abp.Dependency;
+using Abp.Modules;
 
 namespace Abp.Startup
 {
@@ -21,6 +22,8 @@ namespace Abp.Startup
         /// </summary>
         public virtual void Initialize()
         {
+            DependencyManager.AddConventionalRegisterer(new DomainServicesRegisterer()); //TODO: Remove somewhere else!
+
             var initializationContext = new AbpInitializationContext(_modules);
             _moduleManager.Initialize(initializationContext);
         }

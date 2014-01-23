@@ -22,14 +22,14 @@ namespace Taskever.Startup.Dependency.Installers
                     .WithService.DefaultInterfaces()
                     .LifestyleTransient()
                     .WithService.Self()
-                    .LifestyleTransient(),
+                    .LifestyleTransient()
 
-                Classes.FromThisAssembly()
-                    .BasedOn<IDomainService>()
-                    .WithService.DefaultInterfaces()
-                    .LifestyleTransient()
-                    .WithService.Self()
-                    .LifestyleTransient()
+                //Classes.FromThisAssembly()
+                //    .BasedOn<IDomainService>()
+                //    .WithService.DefaultInterfaces()
+                //    .LifestyleTransient()
+                //    .WithService.Self()
+                //    .LifestyleTransient()
 
                 );
         }
