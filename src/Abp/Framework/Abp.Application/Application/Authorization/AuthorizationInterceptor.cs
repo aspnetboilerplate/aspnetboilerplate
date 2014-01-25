@@ -7,7 +7,7 @@ namespace Abp.Application.Authorization
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
     /// </summary>
-    internal class AuthorizationInterceptor : IInterceptor
+    internal class AuthorizationInterceptor : IInterceptor, ITransientDependency
     {
         public void Intercept(IInvocation invocation)
         {

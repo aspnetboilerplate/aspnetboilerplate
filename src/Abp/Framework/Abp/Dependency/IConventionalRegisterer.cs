@@ -1,35 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Abp.Domain.Services;
-using Castle.MicroKernel.Registration;
+﻿using System.Reflection;
+using Castle.Windsor;
 
 namespace Abp.Dependency
 {
     /// <summary>
-    /// 
+    /// This interface is used to register dependencies by conventions.
     /// </summary>
     public interface IConventionalRegisterer
     {
-        void Register(Assembly assembly);
-    }
-
-    public class DomainServicesRegisterer : IConventionalRegisterer
-    {
-        public void Register(Assembly assembly)
-        {
-            if (!assembly.GetTypes().Any(t => typeof(IDomainService).IsAssignableFrom(t)))
-            {
-                return;
-            }
-
-            IocManager.Instance.IocContainer.Register(
-                Classes.FromAssembly(assembly)
-                    .BasedOn<IDomainService>()
-                    .WithService.DefaultInterfaces()
-                    .WithService.Self()
-                    .LifestyleTransient()
-                );
-        }
+        /// <summary>
+        /// Registers types of given assembly by convention.
+        /// </summary>
+        /// <param name="container">Dependency container</param>
+        /// <param name="assembly">Assembly to register</param>
+        void RegisterAssembly(IWindsorContainer container, Assembly assembly);
     }
 }

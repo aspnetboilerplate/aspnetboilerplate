@@ -1,8 +1,9 @@
-﻿using Abp.Domain.Services;
+﻿using Abp.Dependency;
+using Abp.Domain.Services;
 
 namespace Abp.Application.Authorization
 {
-    public interface IAuthorizationService
+    public interface IAuthorizationService //: ITransientDependency
     {
         bool HasAnyOfPermissions(string[] permissionNames);
         bool HasAllOfPermissions(string[] permissionNames);

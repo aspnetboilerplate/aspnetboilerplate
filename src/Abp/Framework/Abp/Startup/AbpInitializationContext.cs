@@ -12,7 +12,7 @@ namespace Abp.Startup
         /// <summary>
         /// Gets a reference to the Ioc container. A shortcut for Abp.Dependency.IocManager.Instance.IocContainer.
         /// </summary>
-        public WindsorContainer IocContainer { get { return IocManager.Instance.IocContainer; } }
+        public IWindsorContainer IocContainer { get { return IocManager.Instance.IocContainer; } }
 
         private readonly AbpModuleCollection _modules;
 

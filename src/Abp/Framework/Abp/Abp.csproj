@@ -59,8 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\ThreadSafeObjectCache.cs" />
-    <Compile Include="Dependency\DependencyManager.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Dependency\ITransientDependency.cs" />
+    <Compile Include="Dependency\SimpleConventionalRegisterer.cs" />
     <Compile Include="Dependency\IConventionalRegisterer.cs" />
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\ISingletonDependency.cs" />

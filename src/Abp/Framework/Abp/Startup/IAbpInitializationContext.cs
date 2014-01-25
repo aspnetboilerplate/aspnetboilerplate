@@ -11,7 +11,7 @@ namespace Abp.Startup
         /// <summary>
         /// Gets a reference to the Ioc container. A shortcut for Abp.Dependency.IocManager.Instance.IocContainer.
         /// </summary>
-        WindsorContainer IocContainer { get; }
+        IWindsorContainer IocContainer { get; }
 
         /// <summary>
         /// Gets a reference to a module instance.

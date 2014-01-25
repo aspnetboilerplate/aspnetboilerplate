@@ -16,7 +16,7 @@ namespace Abp.Modules.Core.Startup
     [AbpModule("Abp.Modules.Core.Infrastructure.NHibernate", Dependencies = new[] { "Abp.Infrastructure.NHibernate" })]
     public class AbpModulesCoreDataModule : AbpModule
     {
-        private WindsorContainer IocContainer { get; set; }
+        private IWindsorContainer IocContainer { get; set; }
 
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {

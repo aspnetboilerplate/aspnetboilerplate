@@ -8,7 +8,7 @@ namespace Abp.Modules.Core.Mvc.Web.Authentication
 {
     public class AbpMembershipProvider : MembershipProvider
     {
-        internal static WindsorContainer IocContainer { get; set; } //TODO: Find a better way!
+        internal static IWindsorContainer IocContainer { get; set; } //TODO: Find a better way!
 
         #region Implemented members
 
