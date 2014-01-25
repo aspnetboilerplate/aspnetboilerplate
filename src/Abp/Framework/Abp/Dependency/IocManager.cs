@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Abp.Dependency.Conventions;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 
@@ -56,6 +57,25 @@ namespace Abp.Dependency
             }
 
             IocContainer.Install(FromAssembly.Instance(assembly));
+
+            RegisterAssemblyByConvention(assembly, new ConventionalRegistrationConfig());
+        }
+
+        /// <summary>
+        /// Registers types of given assembly by all conventional registerers. See <see cref="AddConventionalRegisterer"/> method.
+        /// </summary>
+        /// <param name="assembly">Assembly to register</param>
+        public void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config)
+        {
+            foreach (var registerer in _conventionalRegisterers)
+            {
+                registerer.RegisterAssembly(IocContainer, assembly);
+            }
+
+            if (config.InstallInstallers)
+            {
+                IocContainer.Install(FromAssembly.Instance(assembly));                
+            }
         }
 
         public void Dispose()

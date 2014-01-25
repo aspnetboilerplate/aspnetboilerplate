@@ -1,4 +1,5 @@
-﻿using Abp.Modules.Core.Startup.Dependency.Installers;
+﻿using System.Reflection;
+using Abp.Dependency;
 using Abp.Startup;
 using Abp.Users;
 using Abp.WebApi.Controllers.Dynamic.Builders;
@@ -11,7 +12,8 @@ namespace Abp.Modules.Core.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new AbpCoreModuleWebApiInstaller());
+
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             //TODO: Remove this for security reasons!
             DyanmicApiControllerBuilder

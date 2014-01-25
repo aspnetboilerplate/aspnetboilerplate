@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Roles;
-using Abp.Startup.Dependency.Installers;
 
 namespace Abp.Startup
 {
@@ -12,8 +10,7 @@ namespace Abp.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetAssembly(typeof(UserRoleService)));
-            initializationContext.IocContainer.Install(new AbpCoreModuleDependencyInstaller());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

@@ -17,14 +17,14 @@ namespace Abp.Domain.Uow
         /// Gets current <see cref="IUnitOfWork"/> instance.
         /// It gets the right instance that is related to current thread.
         /// </summary>
-        public static IUnitOfWork Current
+        public static IUnitOfWork CurrentUow
         {
-            get { return _current; }
-            set { _current = value; }
+            get { return _currentUow; }
+            set { _currentUow = value; }
         }
 
         [ThreadStatic]
-        private static IUnitOfWork _current;
+        private static IUnitOfWork _currentUow;
 
         private readonly DisposableDependencyObjectWrapper<IUnitOfWork> _unitOfWorkWrapper;
 
@@ -36,14 +36,14 @@ namespace Abp.Domain.Uow
         public UnitOfWorkScope()
         {
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
-            Current = _unitOfWorkWrapper.Object;
+            CurrentUow = _unitOfWorkWrapper.Object;
             try
             {
-                Current.BeginTransaction();
+                CurrentUow.BeginTransaction();
             }
             catch
             {
-                Current = null;
+                CurrentUow = null;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Abp.Domain.Uow
                 catch { }
             }
 
-            Current = null;
+            CurrentUow = null;
             _unitOfWorkWrapper.Dispose();
         }
     }

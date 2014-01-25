@@ -1,8 +1,7 @@
-﻿using Abp.Modules;
-using Abp.Startup.Dependency;
-using Abp.Users;
+﻿using System.Reflection;
+using Abp.Dependency;
+using Abp.Modules;
 using Abp.Users.Dto;
-using Castle.Windsor.Installer;
 
 namespace Abp.Startup
 {
@@ -12,7 +11,7 @@ namespace Abp.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             UserDtosMapper.Map();
         }
     }

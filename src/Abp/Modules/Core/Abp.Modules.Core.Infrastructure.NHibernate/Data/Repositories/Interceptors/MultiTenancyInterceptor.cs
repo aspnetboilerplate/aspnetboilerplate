@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Tenants;
 using Abp.Utils.Extensions;

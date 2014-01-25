@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
-using Abp.Modules.Core.Startup.Dependency;
 using Abp.Startup;
 using Abp.Startup.Infrastructure.NHibernate;
 using Abp.Tenants;
@@ -57,8 +57,7 @@ namespace Abp.Modules.Core.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new RepositoryInstaller());
-            initializationContext.IocContainer.Install(new AbpCoreDataModuleDependencyInstaller());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

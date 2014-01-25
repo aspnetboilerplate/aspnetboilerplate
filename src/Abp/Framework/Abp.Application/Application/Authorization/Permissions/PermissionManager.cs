@@ -25,12 +25,7 @@ namespace Abp.Application.Authorization.Permissions
             return _permissions.GetOrDefault(permissionName);
         }
 
-        //public bool IsPermissionDefined(string permissionName)
-        //{
-        //    return _permissions.ContainsKey(permissionName);
-        //}
-
-        public void Initialize()
+        public void Initialize() //TODO: Call initialize from constructor?
         {
             if (_isInitialized)
             {

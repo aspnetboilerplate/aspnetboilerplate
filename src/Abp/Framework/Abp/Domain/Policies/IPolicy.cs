@@ -1,9 +1,11 @@
-﻿namespace Abp.Domain.Policies
+﻿using Abp.Dependency;
+
+namespace Abp.Domain.Policies
 {
     /// <summary>
     /// This interface must be implemented by all Policy classes/interfaces to identify them by convention.
     /// </summary>
-    public interface IPolicy
+    public interface IPolicy : ITransientDependency
     {
     }
 }

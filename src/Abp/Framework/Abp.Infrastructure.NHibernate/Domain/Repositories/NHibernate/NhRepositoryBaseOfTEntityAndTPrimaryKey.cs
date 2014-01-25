@@ -19,7 +19,7 @@ namespace Abp.Domain.Repositories.NHibernate
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
         /// </summary>
-        protected ISession Session { get { return ((NhUnitOfWork)UnitOfWorkScope.Current).Session; } }
+        protected ISession Session { get { return ((NhUnitOfWork)UnitOfWorkScope.CurrentUow).Session; } }
 
         public virtual IQueryable<TEntity> GetAll()
         {

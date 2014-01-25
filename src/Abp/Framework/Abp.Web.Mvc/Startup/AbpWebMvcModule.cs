@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Reflection;
+using System.Web.Mvc;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Web.Mvc.Controllers;
@@ -13,11 +15,17 @@ namespace Abp.Web.Mvc.Startup
     [AbpModule("Abp.Web.Mvc")]
     public class AbpWebMvcModule : AbpModule
     {
+        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        {
+            base.PreInitialize(initializationContext);
+            IocManager.Instance.AddConventionalRegisterer(new MvcConventionalRegisterer());
+        }
+
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
 
-            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(initializationContext.IocContainer.Kernel));
             GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());

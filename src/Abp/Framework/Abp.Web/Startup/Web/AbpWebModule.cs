@@ -1,7 +1,8 @@
-﻿using Abp.Localization;
+﻿using System.Reflection;
+using Abp.Dependency;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.Web.Localization;
-using Castle.Windsor.Installer;
 
 namespace Abp.Startup.Web
 {
@@ -15,7 +16,7 @@ namespace Abp.Startup.Web
         { 
             base.Initialize(initializationContext);
 
-            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             LocalizationHelper.RegisterSource<AbpWebLocalizationSource>();
         }
     }

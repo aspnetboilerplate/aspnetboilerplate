@@ -107,7 +107,7 @@
     <Compile Include="Controllers\Dynamic\DynamicApiControllerInfo.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiControllerManager.cs" />
     <Compile Include="Controllers\Dynamic\Builders\DyanmicApiControllerBuilder.cs" />
-    <Compile Include="Dependency\Installers\AbpWebApiInstaller.cs" />
+    <Compile Include="Dependency\Registerers\ApiControllerConventionalRegisterer.cs" />
     <Compile Include="Dependency\Interceptors\AbpApiControllerInterceptor.cs" />
     <Compile Include="Dependency\IocControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

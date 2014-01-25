@@ -59,10 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\ThreadSafeObjectCache.cs" />
+    <Compile Include="Dependency\Conventions\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />
-    <Compile Include="Dependency\SimpleConventionalRegisterer.cs" />
-    <Compile Include="Dependency\IConventionalRegisterer.cs" />
+    <Compile Include="Dependency\Conventions\BasicConventionalRegisterer.cs" />
+    <Compile Include="Dependency\Conventions\IConventionalRegisterer.cs" />
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\ISingletonDependency.cs" />
     <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Events\Bus\Datas\Entities\EntityUpdatedEventData.cs" />
     <Compile Include="Events\Bus\Datas\EventData.cs" />
     <Compile Include="Events\Bus\Datas\IEventData.cs" />
+    <Compile Include="Events\Bus\EventBusInstaller.cs" />
     <Compile Include="Events\Bus\Factories\Internals\FactoryUnregisterer.cs" />
     <Compile Include="Events\Bus\Handlers\Internals\ActionEventHandler.cs" />
     <Compile Include="Events\Bus\Datas\Entities\EntityEventData.cs" />
@@ -99,7 +101,6 @@
     <Compile Include="Events\Bus\IEventBus.cs" />
     <Compile Include="Exceptions\AbpException.cs" />
     <Compile Include="Exceptions\UserFriendlyException.cs" />
-    <Compile Include="Localization\LocalizationInstaller.cs" />
     <Compile Include="Localization\Sources\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Sources\Resource\ResourceFileLocalizationSource.cs" />

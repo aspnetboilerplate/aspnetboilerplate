@@ -102,7 +102,6 @@
     <Compile Include="Tasks\Dto\UpdateTaskInput.cs" />
     <Compile Include="Friendships\Dto\UpdateLastVisitTimeInput.cs" />
     <Compile Include="Users\TaskeverUserAppService.cs" />
-    <Compile Include="Startup\Dependency\Installers\TaskeverAppInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\TaskeverAppModule.cs" />
   </ItemGroup>

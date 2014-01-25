@@ -172,7 +172,6 @@
     <Compile Include="Controllers\WidgetsController.cs" />
     <Compile Include="App_Start\TaskeverWebSpaModule.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="App_Start\Dependency\Installers\TaskeverWebSpaInstaller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

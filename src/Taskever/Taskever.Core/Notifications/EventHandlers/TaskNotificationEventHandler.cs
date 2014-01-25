@@ -1,4 +1,5 @@
-﻿using Abp.Events.Bus.Datas.Entities;
+﻿using Abp.Dependency;
+using Abp.Events.Bus.Datas.Entities;
 using Abp.Events.Bus.Handlers;
 using Taskever.Notifications.Tasks;
 using Taskever.Tasks;
@@ -6,7 +7,10 @@ using Taskever.Tasks.Events;
 
 namespace Taskever.Notifications.EventHandlers
 {
-    public class TaskNotificationEventHandler : IEventHandler<EntityCreatedEventData<Task>>, IEventHandler<TaskCompletedEventData>
+    public class TaskNotificationEventHandler : 
+        IEventHandler<EntityCreatedEventData<Task>>, 
+        IEventHandler<TaskCompletedEventData>,
+        ITransientDependency
     {
         private readonly INotificationService _notificationService;
         

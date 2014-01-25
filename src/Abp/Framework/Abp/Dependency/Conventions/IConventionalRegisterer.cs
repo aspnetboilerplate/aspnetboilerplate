@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Castle.Windsor;
 
-namespace Abp.Dependency
+namespace Abp.Dependency.Conventions
 {
     /// <summary>
-    /// This interface is used to register dependencies by conventions.
+    /// This interface is used to register dependencies by conventions. 
     /// </summary>
     public interface IConventionalRegisterer
     {

@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public interface IMustInitialize
+    public interface IMustInitialize //TODO: Think on this interface, is it useful?
     {
         void Initialize();
     }

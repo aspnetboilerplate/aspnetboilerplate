@@ -64,7 +64,6 @@
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryInstaller.cs" />
     <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateModule.cs" />
     <Compile Include="Domain\Uow\NHibernate\NHibernateUnitOfWorkRegistrer.cs" />
-    <Compile Include="Domain\Uow\NHibernate\NhUnitOfWorkInstaller.cs" />
     <Compile Include="Domain\Uow\NHibernate\NhUnitOfWorkInterceptor.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhUnitOfWork.cs" />

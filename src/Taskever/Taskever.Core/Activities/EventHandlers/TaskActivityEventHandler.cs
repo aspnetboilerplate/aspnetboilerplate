@@ -1,11 +1,15 @@
-﻿using Abp.Events.Bus.Datas.Entities;
+﻿using Abp.Dependency;
+using Abp.Events.Bus.Datas.Entities;
 using Abp.Events.Bus.Handlers;
 using Taskever.Tasks;
 using Taskever.Tasks.Events;
 
 namespace Taskever.Activities.EventHandlers
 {
-    public class TaskActivityEventHandler : IEventHandler<EntityCreatedEventData<Task>>, IEventHandler<TaskCompletedEventData>
+    public class TaskActivityEventHandler : 
+        IEventHandler<EntityCreatedEventData<Task>>, 
+        IEventHandler<TaskCompletedEventData>,
+        ITransientDependency
     {
         private readonly IActivityService _activityService;
 

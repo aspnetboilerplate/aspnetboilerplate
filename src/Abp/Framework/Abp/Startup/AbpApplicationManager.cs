@@ -1,4 +1,5 @@
 ﻿using Abp.Dependency;
+using Abp.Dependency.Conventions;
 using Abp.Domain.Services;
 using Abp.Modules;
 
@@ -23,8 +24,6 @@ namespace Abp.Startup
         /// </summary>
         public virtual void Initialize()
         {
-            IocManager.Instance.AddConventionalRegisterer(new SimpleConventionalRegisterer()); //TODO: Remove somewhere else!
-
             var initializationContext = new AbpInitializationContext(_modules);
             _moduleManager.Initialize(initializationContext);
         }

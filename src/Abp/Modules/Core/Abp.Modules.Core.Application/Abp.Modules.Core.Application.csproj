@@ -81,7 +81,6 @@
     <Compile Include="Authorization\Roles\StaticRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreApplicationModule.cs" />
-    <Compile Include="Startup\Dependency\AbpCoreModuleApplicationDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Abp.Application\Abp.Application.csproj">

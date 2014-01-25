@@ -1,9 +1,11 @@
+using Abp.Dependency;
+
 namespace Abp.Domain.Uow
 {
     /// <summary>
     /// Represents a transactional job.
     /// </summary>
-    public interface IUnitOfWork
+    public interface IUnitOfWork : ITransientDependency
     {
         /// <summary>
         /// Opens database connection and begins transaction.

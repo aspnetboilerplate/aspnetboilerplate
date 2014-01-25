@@ -1,4 +1,5 @@
-﻿using Castle.DynamicProxy;
+﻿using Abp.Dependency;
+using Castle.DynamicProxy;
 
 namespace Abp.Application.Services.Dto.Validation
 {

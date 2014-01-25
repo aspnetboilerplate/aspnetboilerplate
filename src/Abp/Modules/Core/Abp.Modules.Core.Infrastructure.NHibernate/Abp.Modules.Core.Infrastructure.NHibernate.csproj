@@ -79,7 +79,6 @@
     <Compile Include="Data\Repositories\NHibernate\NhTenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserRoleRepository.cs" />
-    <Compile Include="Data\Repositories\RepositoryInstaller.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RolePermissionMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RoleMap.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreDataModule.cs" />
-    <Compile Include="Startup\Dependency\AbpCoreDataModuleDependencyInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -112,6 +110,9 @@
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Modules.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Startup\Dependency\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Repositories.NHibernate;
+﻿using System.Reflection;
+using Abp.Dependency;
+using Abp.Domain.Repositories.NHibernate;
 using Abp.Domain.Uow.NHibernate;
 using Abp.Modules;
 using FluentNHibernate.Cfg;
@@ -34,10 +36,11 @@ namespace Abp.Startup.Infrastructure.NHibernate
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-
             _sessionFactory = Configuration.BuildSessionFactory();
-            initializationContext.IocContainer.Install(new NhUnitOfWorkInstaller());
+
             initializationContext.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
+
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
         public override void Shutdown()

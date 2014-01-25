@@ -5,8 +5,6 @@ using System.Web.Routing;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
-using Taskever.Friendships;
-using Taskever.Web.App_Start.Dependency.Installers;
 
 namespace Taskever.Web.App_Start    
 {
@@ -21,7 +19,7 @@ namespace Taskever.Web.App_Start
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            initializationContext.IocContainer.Install(new TaskeverWebSpaInstaller());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Abp.Dependency;
-using Abp.Domain.Repositories.NHibernate;
 using Castle.DynamicProxy;
-using NHibernate;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
 
 namespace Abp.Domain.Uow.NHibernate
@@ -18,7 +16,7 @@ namespace Abp.Domain.Uow.NHibernate
         public void Intercept(IInvocation invocation)
         {
             //If there isalready  a running transaction (or no need to a db connection), just run the method
-            if (UnitOfWorkScope.Current != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
+            if (UnitOfWorkScope.CurrentUow != null || !UnitOfWorkHelper.ShouldPerformUnitOfWork(invocation.MethodInvocationTarget))
             {
                 invocation.Proceed();
                 return;
@@ -29,23 +27,23 @@ namespace Abp.Domain.Uow.NHibernate
                 try
                 {
 
-                    UnitOfWorkScope.Current = unitOfWork.Object;
-                    UnitOfWorkScope.Current.BeginTransaction();
+                    UnitOfWorkScope.CurrentUow = unitOfWork.Object;
+                    UnitOfWorkScope.CurrentUow.BeginTransaction();
 
                     try
                     {
                         invocation.Proceed();
-                        UnitOfWorkScope.Current.Commit();
+                        UnitOfWorkScope.CurrentUow.Commit();
                     }
                     catch
                     {
-                        try { UnitOfWorkScope.Current.Rollback(); } catch { }
+                        try { UnitOfWorkScope.CurrentUow.Rollback(); } catch { }
                         throw;
                     }
                 }
                 finally
                 {
-                    UnitOfWorkScope.Current = null;
+                    UnitOfWorkScope.CurrentUow = null;
                 }
             }
         }

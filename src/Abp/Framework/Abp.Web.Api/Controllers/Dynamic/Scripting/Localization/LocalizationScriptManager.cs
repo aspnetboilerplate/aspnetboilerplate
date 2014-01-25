@@ -5,6 +5,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Abp.Caching;
+using Abp.Dependency;
 using Abp.Localization.Sources;
 using Abp.Utils.Extensions;
 
@@ -13,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
     /// <summary>
     /// This class is used to build and cache localization script.
     /// </summary>
-    public class LocalizationScriptManager : ILocalizationScriptManager //TODO: Make it internal?
+    public class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency //TODO: Make it internal?
     {
         private readonly ILocalizationSourceManager _localizationSourceManager;
 

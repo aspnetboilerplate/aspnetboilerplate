@@ -1,5 +1,6 @@
-﻿using System.Web;
-using Abp.Modules.Core.Mvc.Dependency.Installers;
+﻿using System.Reflection;
+using System.Web;
+using Abp.Dependency;
 using Abp.Modules.Core.Mvc.Startup;
 using Abp.Modules.Core.Mvc.Web.Authentication;
 using Abp.Startup;
@@ -14,7 +15,7 @@ namespace Abp.Modules.Core.Mvc.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(new AbpCoreModuleWebMvcInstaller());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             AbpMembershipProvider.IocContainer = initializationContext.IocContainer;
         }
     }

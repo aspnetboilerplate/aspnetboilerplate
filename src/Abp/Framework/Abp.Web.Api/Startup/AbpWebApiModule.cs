@@ -1,15 +1,17 @@
 ﻿using System.Net.Http.Formatting;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Dependency;
-using Abp.WebApi.Dependency.Installers;
 using Abp.WebApi.Dependency.Interceptors;
+using Abp.WebApi.Dependency.Registerers;
 using Abp.WebApi.Routing;
 using Castle.Core;
 using Castle.Windsor.Installer;
@@ -24,13 +26,14 @@ namespace Abp.WebApi.Startup
         {
             base.PreInitialize(initializationContext);
             AbpApiControllerInterceptorRegisterer.Initialize(initializationContext);
+            IocManager.Instance.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
 
-            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             InitializeAspNetServices();
             InitializeFilters();

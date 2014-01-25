@@ -8,8 +8,6 @@ using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Users;
 using Abp.Utils.Extensions.Collections;
-using Taskever.Activities;
-using Taskever.Notifications;
 using Taskever.Tasks.Dto;
 using Taskever.Tasks.Events;
 using Taskever.Authorization;
@@ -18,25 +16,19 @@ namespace Taskever.Tasks
 {
     public class TaskAppService : ITaskAppService
     {
-        private readonly IActivityService _activityService;
         private readonly ITaskPolicy _taskPolicy;
         private readonly ITaskRepository _taskRepository;
         private readonly IUserRepository _userRepository;
-        private readonly INotificationService _notificationService;
         private readonly IEventBus _eventBus;
 
         public TaskAppService(
-            IActivityService activityService,
             ITaskPolicy taskPolicy,
             ITaskRepository taskRepository,
             IUserRepository userRepository,
-            INotificationService notificationService,
             IEventBus eventBus)
         {
-            _activityService = activityService;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
-            _notificationService = notificationService;
             _eventBus = eventBus;
             _taskPolicy = taskPolicy;
         }

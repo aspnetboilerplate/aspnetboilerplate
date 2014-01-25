@@ -1,4 +1,5 @@
 using System;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Users;
 using Abp.Utils.Extensions;
@@ -7,7 +8,6 @@ using Castle.DynamicProxy;
 
 namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {
-    /// TODO: Don't forget! Must intercept classes, not interfaces to be able to intercept virtual methods not called from outside of the class!
     public class AuditInterceptor : IInterceptor
     {
         private readonly IUserRepository _userRepository;

@@ -1,6 +1,7 @@
+using System.Reflection;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
-using Castle.Windsor.Installer;
 using Taskever.Mapping;
 
 namespace Taskever.Startup
@@ -11,7 +12,7 @@ namespace Taskever.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            initializationContext.IocContainer.Install(FromAssembly.This());
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             TaskeverDtoMapper.Map();
         }
     }
