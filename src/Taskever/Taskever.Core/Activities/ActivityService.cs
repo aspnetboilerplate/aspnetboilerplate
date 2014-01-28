@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Uow;
+using Abp.Security.Users;
 using Abp.Users;
 using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;

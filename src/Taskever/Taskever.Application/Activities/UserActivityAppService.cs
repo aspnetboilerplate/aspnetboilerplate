@@ -1,7 +1,7 @@
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
-using Abp.Users;
+using Abp.Security.Users;
 using Taskever.Activities.Dto;
 using Taskever.Friendships;
 
@@ -11,14 +11,12 @@ namespace Taskever.Activities
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserFollowedActivityRepository _followedActivityRepository;
-        private readonly IActivityRepository _activityRepository;
         private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public UserActivityAppService(IUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IActivityRepository activityRepository, IFriendshipDomainService friendshipDomainService)
+        public UserActivityAppService(IUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IFriendshipDomainService friendshipDomainService)
         {
             _userRepository = userRepository;
             _followedActivityRepository = followedActivityRepository;
-            _activityRepository = activityRepository;
             _friendshipDomainService = friendshipDomainService;
         }
 

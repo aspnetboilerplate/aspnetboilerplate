@@ -493,6 +493,10 @@
       <Project>{5c377732-2dbc-43c2-b9e5-009bd460fce9}</Project>
       <Name>Abp.Modules.Core.Web.Mvc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Web\Abp.Modules.Core.Web.csproj">
+      <Project>{12C9EA02-CD50-4115-A043-74461F656F73}</Project>
+      <Name>Abp.Modules.Core.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
       <Name>Abp.Modules.Core</Name>

@@ -1,5 +1,5 @@
 using Abp.Domain.Entities;
-using Abp.Tenants;
+using Abp.Security.Tenants;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Text;
+using Abp.Domain.Repositories.NHibernate;
 using Taskever.Activities;
 using Taskever.Data.Repositories.NHibernate.Base;
 
 namespace Taskever.Data.Repositories.NHibernate
 {
-    public class UserFollowedActivityRepository : TaskeverRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
+    public class UserFollowedActivityRepository : NhRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
     {
         public IList<UserFollowedActivity> Getactivities(int userId, bool? isActor, long beforeId, int maxResultCount)
         {

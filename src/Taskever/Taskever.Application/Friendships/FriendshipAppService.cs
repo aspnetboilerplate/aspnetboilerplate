@@ -6,21 +6,27 @@ using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Net.Mail;
+using Abp.Security.Users;
 using Abp.Users;
 using Taskever.Friendships.Dto;
+using Taskever.Users;
 
 namespace Taskever.Friendships
 {
     public class FriendshipAppService : IFriendshipAppService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITaskeverUserRepository _taskeverUserRepository;
         private readonly IFriendshipRepository _friendshipRepository;
         private readonly IEmailService _emailService;
         private readonly IFriendshipPolicy _friendshipPolicy;
 
-        public FriendshipAppService(IUserRepository userRepository, IFriendshipRepository friendshipRepository, IFriendshipPolicy friendshipPolicy, IEmailService emailService)
+        public FriendshipAppService(
+            ITaskeverUserRepository taskeverUserRepository, 
+            IFriendshipRepository friendshipRepository, 
+            IFriendshipPolicy friendshipPolicy, 
+            IEmailService emailService)
         {
-            _userRepository = userRepository;
+            _taskeverUserRepository = taskeverUserRepository;
             _friendshipRepository = friendshipRepository;
             _friendshipPolicy = friendshipPolicy;
             _emailService = emailService;
@@ -50,7 +56,7 @@ namespace Taskever.Friendships
         [UnitOfWork]
         public virtual void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(User.CurrentUserId);
             var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanChangeFriendshipProperties(currentUser, friendShip))
@@ -74,13 +80,13 @@ namespace Taskever.Friendships
         [UnitOfWork]
         public virtual SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
         {
-            var friendUser = _userRepository.FirstOrDefault(user => user.EmailAddress == input.EmailAddress);
+            var friendUser = _taskeverUserRepository.FirstOrDefault(user => user.EmailAddress == input.EmailAddress);
             if (friendUser == null)
             {
                 throw new AbpUserFriendlyException("Can not find a user with email address: " + input.EmailAddress);
             }
 
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(User.CurrentUserId);
 
             //Check if they are already friends
             var friendship = _friendshipRepository.GetOrNull(currentUser.Id, friendUser.Id);
@@ -106,7 +112,7 @@ namespace Taskever.Friendships
         [UnitOfWork] //TODO: Need UnitOfWork, I think no!
         public virtual void RemoveFriendship(RemoveFriendshipInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(User.CurrentUserId);
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
@@ -121,7 +127,7 @@ namespace Taskever.Friendships
         public virtual void AcceptFriendship(AcceptFriendshipInput input)
         {
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(User.CurrentUserId);
             friendship.AcceptBy(currentUser);
             SendAcceptEmail(friendship.Pair);
         }

@@ -1,16 +1,21 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Abp.Dependency;
 using Abp.Exceptions;
 using Abp.Modules.Core.Mvc.Models;
-using Abp.Security;
+using Abp.Security.Identity;
 using Abp.Users;
 using Abp.Users.Dto;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
+using Taskever.Users;
 using Taskever.Web.Mvc.Models.Account;
 
 namespace Taskever.Web.Mvc.Controllers
@@ -19,9 +24,20 @@ namespace Taskever.Web.Mvc.Controllers
     {
         private readonly IUserAppService _userAppService;
 
+        private readonly UserManager<TaskeverUser, int> _userManager;
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
         public AccountController(IUserAppService userAppService)
         {
             _userAppService = userAppService;
+            _userManager = new UserManager<TaskeverUser, int>(IocHelper.Resolve<UserStore<TaskeverUser, ITaskeverUserRepository>>());
         }
 
         public virtual ActionResult Login(string returnUrl = "/", string loginMessage = null)
@@ -32,27 +48,29 @@ namespace Taskever.Web.Mvc.Controllers
         }
 
         [HttpPost]
-        public virtual JsonResult Login(LoginModel loginModel, string returnUrl = "/")
+        public virtual async Task<JsonResult> Login(LoginModel loginModel, string returnUrl = "/")
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (!Membership.ValidateUser(loginModel.EmailAddress, loginModel.Password))
-                {
-                    throw new AbpUserFriendlyException("No user name or password!");
-                }
-
-                FormsAuthentication.SetAuthCookie(loginModel.EmailAddress, loginModel.RememberMe);
-                var user = _userAppService.GetActiveUserOrNull(loginModel.EmailAddress, loginModel.Password);
-                var identity = new AbpIdentity(1, user.Id, user.EmailAddress);
-                var authTicket = new FormsAuthenticationTicket(1, loginModel.EmailAddress, DateTime.Now, DateTime.Now.AddDays(2), loginModel.RememberMe, identity.SerializeToString()); //TODO: true/false?
-                var encTicket = FormsAuthentication.Encrypt(authTicket);
-                var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                Response.Cookies.Add(faCookie);
-
-                return Json(new AbpMvcAjaxResponse { TargetUrl = returnUrl });
+                throw new AbpUserFriendlyException("Your form is invalid!");
             }
 
-            throw new AbpUserFriendlyException("Your form is invalid!");
+            var user = await _userManager.FindAsync(loginModel.EmailAddress, loginModel.Password);
+            if (user == null)
+            {
+                throw new AbpUserFriendlyException("Invalid user name or password!");
+            }
+            
+            await SignInAsync(user, loginModel.RememberMe);
+
+            return Json(new AbpMvcAjaxResponse { TargetUrl = returnUrl });
+        }
+
+        private async Task SignInAsync(TaskeverUser user, bool isPersistent)
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, identity);
         }
 
         public ActionResult ConfirmEmail(ConfirmEmailInput input)
@@ -78,6 +96,11 @@ namespace Taskever.Web.Mvc.Controllers
         {
             //TODO: Return better exception messages!
             //TODO: Show captcha after filling register form, not on startup!
+
+            if (!ModelState.IsValid)
+            {
+                throw new AbpUserFriendlyException("Your form is invalid!");
+            }
 
             var recaptchaHelper = this.GetRecaptchaVerificationHelper();
             if (String.IsNullOrEmpty(recaptchaHelper.Response))
@@ -107,7 +130,7 @@ namespace Taskever.Web.Mvc.Controllers
         [HttpGet]
         public ActionResult ResetPassword(int userId, string resetCode)
         {
-            return View(new ResetPasswordViewModel {UserId = userId, ResetCode = resetCode});
+            return View(new ResetPasswordViewModel { UserId = userId, ResetCode = resetCode });
         }
 
         [HttpPost]

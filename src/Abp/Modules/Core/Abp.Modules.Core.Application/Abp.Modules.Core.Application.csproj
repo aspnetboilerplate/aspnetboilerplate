@@ -47,6 +47,9 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.Identity.Core.2.0.0-alpha1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -58,7 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\RoleBasedAuthorizationService.cs" />
+    <Compile Include="Security\Authorization\RoleBasedAuthorizationService.cs" />
     <Compile Include="Users\Dto\ConfirmEmailInput.cs" />
     <Compile Include="Users\Dto\ChangePasswordInput.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
@@ -76,11 +79,11 @@
     <Compile Include="Users\UserAppService.cs" />
     <Compile Include="Users\IUserAppService.cs" />
     <Compile Include="Users\Dto\SendPasswordResetLinkInput.cs" />
-    <Compile Include="Authorization\Roles\ApplicationOwner.cs" />
-    <Compile Include="Authorization\Roles\ApplicationRole.cs" />
-    <Compile Include="Authorization\Roles\ApplicationUser.cs" />
-    <Compile Include="Authorization\Roles\BasicRoles.cs" />
-    <Compile Include="Authorization\Roles\StaticRole.cs" />
+    <Compile Include="Security\Authorization\Roles\ApplicationOwner.cs" />
+    <Compile Include="Security\Authorization\Roles\ApplicationRole.cs" />
+    <Compile Include="Security\Authorization\Roles\ApplicationUser.cs" />
+    <Compile Include="Security\Authorization\Roles\BasicRoles.cs" />
+    <Compile Include="Security\Authorization\Roles\StaticRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreApplicationModule.cs" />
   </ItemGroup>

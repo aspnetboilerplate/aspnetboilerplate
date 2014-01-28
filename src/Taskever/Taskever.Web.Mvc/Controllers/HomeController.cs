@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Abp.Web.Mvc.Authorization;
+using Microsoft.AspNet.Identity;
 
 namespace Taskever.Web.Mvc.Controllers
 {
@@ -8,6 +9,7 @@ namespace Taskever.Web.Mvc.Controllers
     {
         public ActionResult Index()
         {
+            var userId = User.Identity.GetUserId();
             return View("Index");
         }
     }

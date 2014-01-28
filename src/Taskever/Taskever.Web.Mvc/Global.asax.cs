@@ -1,26 +1,19 @@
-﻿using System.Web.Security;
-using Abp.Security;
+﻿using System;
 using Abp.Startup.Web;
+using Microsoft.AspNet.Identity;
 
 namespace Taskever.Web.Mvc
 {
     public class MvcApplication : AbpWebApplication
     {
-        protected override void Application_AuthenticateRequest(object sender, System.EventArgs e)
+        //TODO: Create a module in Abp.Modules.Core.Web and move this method there!
+        protected virtual void Application_PostAuthenticateRequest(object sender, EventArgs e)
         {
-            base.Application_AuthenticateRequest(sender, e);
-
-            var authCookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (authCookie == null)
+            var userId = User.Identity.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
             {
-                return;
+                Abp.Security.Users.User.CurrentUserId = Convert.ToInt32(userId);
             }
-
-            var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-            var userIdentity = new AbpIdentity();
-            userIdentity.DeserializeFromString(authTicket.UserData);
-            var userPrincipal = new AbpPrincipal(userIdentity);
-            Context.User = userPrincipal;
         }
     }
 }

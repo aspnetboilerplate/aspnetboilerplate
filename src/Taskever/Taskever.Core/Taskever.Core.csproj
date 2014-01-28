@@ -50,6 +50,9 @@
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.0.0-alpha1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -84,6 +87,8 @@
     <Compile Include="Notifications\INotification.cs" />
     <Compile Include="Notifications\INotificationService.cs" />
     <Compile Include="Users\ITaskeverUserPolicy.cs" />
+    <Compile Include="Users\ITaskeverUserRepository.cs" />
+    <Compile Include="Users\TaskeverUser.cs" />
     <Compile Include="Users\TaskeverUserPolicy.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Activities\Activity.cs" />

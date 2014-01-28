@@ -1,4 +1,6 @@
-﻿namespace Abp.Users.Dto
+﻿using Abp.Security.Users;
+
+namespace Abp.Users.Dto
 {
     public static class UserDtosMapper
     {

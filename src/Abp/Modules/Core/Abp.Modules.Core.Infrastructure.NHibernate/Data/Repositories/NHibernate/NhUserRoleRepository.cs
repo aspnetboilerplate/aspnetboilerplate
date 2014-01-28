@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Repositories.NHibernate;
-using Abp.Roles;
+using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {

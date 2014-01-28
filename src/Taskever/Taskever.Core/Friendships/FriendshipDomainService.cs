@@ -1,4 +1,5 @@
 using System.Linq;
+using Abp.Security.Users;
 using Abp.Users;
 
 namespace Taskever.Friendships

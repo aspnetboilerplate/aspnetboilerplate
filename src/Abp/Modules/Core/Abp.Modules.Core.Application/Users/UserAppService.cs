@@ -5,7 +5,8 @@ using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Net.Mail;
-using Abp.Tenants;
+using Abp.Security.Tenants;
+using Abp.Security.Users;
 using Abp.Users.Dto;
 
 namespace Abp.Users

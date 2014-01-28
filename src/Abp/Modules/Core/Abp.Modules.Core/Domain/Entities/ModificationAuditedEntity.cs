@@ -1,5 +1,5 @@
 using System;
-using Abp.Users;
+using Abp.Security.Users;
 
 namespace Abp.Domain.Entities
 {

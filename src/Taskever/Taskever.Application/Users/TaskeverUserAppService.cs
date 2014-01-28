@@ -1,5 +1,6 @@
 using Abp.Exceptions;
 using Abp.Mapping;
+using Abp.Security.Users;
 using Abp.Users;
 using Abp.Users.Dto;
 using Taskever.Friendships;

@@ -1,12 +1,13 @@
-﻿using Abp.Users;
+﻿using Abp.Security.Users;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class UserMap : EntityMap<User>
+    public abstract class UserMap<TUser> : EntityMap<TUser> where TUser : User
     {
-        public UserMap()
+        protected UserMap()
             : base("AbpUsers")
         {
+            Map(x => x.UserName);
             Map(x => x.Name);
             Map(x => x.Surname);
             Map(x => x.EmailAddress);
@@ -17,5 +18,10 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.ProfileImage);
             Map(x => x.IsTenantOwner);
         }
+    }
+
+    public class UserMap : UserMap<User>
+    {
+
     }
 }

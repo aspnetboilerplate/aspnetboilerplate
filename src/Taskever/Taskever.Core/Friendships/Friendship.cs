@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Domain.Entities;
+using Abp.Security.Users;
 using Abp.Users;
 
 namespace Taskever.Friendships

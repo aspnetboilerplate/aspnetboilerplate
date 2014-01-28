@@ -1,14 +1,8 @@
-﻿using System.Linq;
-using Abp.Domain.Repositories.NHibernate;
-using Abp.Users;
-using NHibernate.Linq;
+using Abp.Security.Users;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
-    /// <summary>
-    /// Implements <see cref="IUserRepository"/> for NHibernate.
-    /// </summary>
-    public class NhUserRepository : NhRepositoryBase<User>, IUserRepository
+    public class NhUserRepository : NhUserRepository<User>, IUserRepository
     {
 
     }

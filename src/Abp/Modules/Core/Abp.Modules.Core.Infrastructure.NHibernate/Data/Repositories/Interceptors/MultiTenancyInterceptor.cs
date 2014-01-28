@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.Tenants;
+using Abp.Security.Tenants;
 using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
 using Castle.DynamicProxy;

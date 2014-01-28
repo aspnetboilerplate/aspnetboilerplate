@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.Identity.Core.2.0.0-alpha1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.30.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,23 +60,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Roles\IUserRoleRepository.cs" />
-    <Compile Include="Roles\IUserRoleService.cs" />
-    <Compile Include="Roles\RolePermission.cs" />
-    <Compile Include="Roles\UserRoleService.cs" />
+    <Compile Include="Security\Roles\IUserRoleRepository.cs" />
+    <Compile Include="Security\Roles\IUserRoleService.cs" />
+    <Compile Include="Security\Roles\RolePermission.cs" />
+    <Compile Include="Security\Roles\UserRoleService.cs" />
+    <Compile Include="Security\Identity\UserStore.cs" />
+    <Compile Include="Security\Users\IUserLoginRepository.cs" />
+    <Compile Include="Security\Users\IUserLoginRepositoryOfTUser.cs" />
+    <Compile Include="Security\Users\IUserRepository.cs" />
+    <Compile Include="Security\Users\UserLogin.cs" />
     <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
-    <Compile Include="Tenants\ITenantRepository.cs" />
-    <Compile Include="Users\IUserRepository.cs" />
-    <Compile Include="Tenants\TenantMembershipStatus.cs" />
-    <Compile Include="Roles\UserRole.cs" />
+    <Compile Include="Security\Tenants\ITenantRepository.cs" />
+    <Compile Include="Security\Users\IUserRepositoryOfTUser.cs" />
+    <Compile Include="Security\Tenants\TenantMembershipStatus.cs" />
+    <Compile Include="Security\Roles\UserRole.cs" />
     <Compile Include="Domain\Entities\AuditedEntity.cs" />
-    <Compile Include="Roles\Role.cs" />
-    <Compile Include="Tenants\Tenant.cs" />
-    <Compile Include="Users\User.cs" />
+    <Compile Include="Security\Roles\Role.cs" />
+    <Compile Include="Security\Tenants\Tenant.cs" />
+    <Compile Include="Security\Users\User.cs" />
     <Compile Include="Domain\Entities\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\IAudited.cs" />
     <Compile Include="Domain\Entities\ICreationAudited.cs" />
-    <Compile Include="Tenants\IHasTenant.cs" />
+    <Compile Include="Security\Tenants\IHasTenant.cs" />
     <Compile Include="Domain\Entities\IModificationAudited.cs" />
     <Compile Include="Domain\Entities\ModificationAuditedEntity.cs" />
     <Compile Include="Net\Mail\IEmailService.cs" />

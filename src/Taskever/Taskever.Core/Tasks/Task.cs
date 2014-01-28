@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
-using Abp.Tenants;
+using Abp.Security.Tenants;
+using Abp.Security.Users;
 using Abp.Users;
 
 namespace Taskever.Tasks

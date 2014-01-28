@@ -6,6 +6,7 @@ using Abp.Events.Bus;
 using Abp.Events.Bus.Datas.Entities;
 using Abp.Exceptions;
 using Abp.Mapping;
+using Abp.Security.Users;
 using Abp.Users;
 using Abp.Utils.Extensions.Collections;
 using Taskever.Tasks.Dto;

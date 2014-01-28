@@ -10,6 +10,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
             Create.Table("AbpUsers")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
+                .WithColumn("UserName").AsString(32).NotNullable()
                 .WithColumn("Name").AsString(30).NotNullable()
                 .WithColumn("Surname").AsString(30).NotNullable()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
@@ -27,11 +28,20 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                         Password = "123"
                     }
                 );
-        }
 
-        //public override void Down()
-        //{
-        //    Delete.Table("AbpUsers");
-        //}
+            Create.Index("AbpUsers_UserName")
+                .OnTable("AbpUsers")
+                .OnColumn("UserName")
+                .Ascending()
+                .WithOptions().Unique()
+                .WithOptions().NonClustered();
+
+            Create.Index("AbpUsers_EmailAddress")
+                .OnTable("AbpUsers")
+                .OnColumn("EmailAddress")
+                .Ascending()
+                .WithOptions().Unique()
+                .WithOptions().NonClustered();
+        }
     }
 }
