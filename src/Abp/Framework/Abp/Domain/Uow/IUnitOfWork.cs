@@ -3,7 +3,7 @@ using Abp.Dependency;
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// Represents a transactional job.
+    /// Represents a transactional job (unit of work).
     /// </summary>
     public interface IUnitOfWork : ITransientDependency
     {

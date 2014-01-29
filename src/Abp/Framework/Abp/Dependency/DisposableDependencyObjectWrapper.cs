@@ -1,48 +1,44 @@
 using System;
-using Abp.Exceptions;
 
 namespace Abp.Dependency
 {
-    /// <summary>
-    /// This class is used to wrap an object that is resolved from IOC container.
-    /// It implementes <see cref="IDisposable"/>, so resolved object can be easily released.
-    /// In <see cref="Dispose"/> method, <see cref="IocHelper.Release"/> is called to dispose the object.
-    /// This object is created by using <see cref="IocHelper.ResolveAsDisposable{T}()"/> method. 
-    /// </summary>
-    /// <typeparam name="T">Type of the service</typeparam>
-    public class DisposableDependencyObjectWrapper<T> : IDisposable
+    internal class DisposableDependencyObjectWrapper<T> : IDisposableDependencyObjectWrapper<T>
     {
-        /// <summary>
-        /// The resolved object.
-        /// </summary>
         public T Object { get; private set; }
 
-        internal DisposableDependencyObjectWrapper()
+        public DisposableDependencyObjectWrapper()
         {
             Object = IocHelper.Resolve<T>();
         }
 
-        internal DisposableDependencyObjectWrapper(Type type)
-        {
-            if (!typeof (T).IsAssignableFrom(type))
-            {
-                throw new AbpException("Given type is compatible with generic type definition!");
-            }
-
-            Object = (T) IocHelper.Resolve(type);
-        }
-
-        internal DisposableDependencyObjectWrapper(object argumentsAsAnonymousType)
+        public DisposableDependencyObjectWrapper(object argumentsAsAnonymousType)
         {
             Object = IocHelper.Resolve<T>(argumentsAsAnonymousType);
         }
 
-        /// <summary>
-        /// Releases the <see cref="Object"/> object.
-        /// </summary>
+        public DisposableDependencyObjectWrapper(Type type)
+        {
+            CheckType(type);
+            Object = (T)IocHelper.Resolve(type);
+        }
+
+        public DisposableDependencyObjectWrapper(Type type, object argumentsAsAnonymousType)
+        {
+            CheckType(type);
+            Object = (T)IocHelper.Resolve(type, argumentsAsAnonymousType);
+        }
+
         public void Dispose()
         {
             IocHelper.Release(Object);
+        }
+
+        private static void CheckType(Type type)
+        {
+            if (!typeof(T).IsAssignableFrom(type))
+            {
+                throw new ArgumentException("Given type is not convertible to generic type definition!", "type");
+            }
         }
     }
 }

@@ -10,11 +10,6 @@ namespace Abp.Dependency.Conventions
     /// </summary>
     internal class BasicConventionalRegisterer : IConventionalRegisterer
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="windsorContainer"></param>
-        /// <param name="assembly"></param>
         public void RegisterAssembly(IWindsorContainer windsorContainer, Assembly assembly)
         {
             //Transient

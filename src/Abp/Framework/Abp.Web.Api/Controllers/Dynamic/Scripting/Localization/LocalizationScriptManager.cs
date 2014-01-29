@@ -4,9 +4,9 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
-using Abp.Caching;
 using Abp.Dependency;
 using Abp.Localization.Sources;
+using Abp.Runtime.Caching;
 using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization

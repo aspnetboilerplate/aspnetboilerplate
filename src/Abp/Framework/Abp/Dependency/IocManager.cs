@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Abp.Dependency.Conventions;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 
@@ -65,6 +66,7 @@ namespace Abp.Dependency
         /// Registers types of given assembly by all conventional registerers. See <see cref="AddConventionalRegisterer"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
+        /// <param name="config">Additional configuration</param>
         public void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config)
         {
             foreach (var registerer in _conventionalRegisterers)

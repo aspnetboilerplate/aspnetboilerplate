@@ -1,14 +1,17 @@
+using Castle.DynamicProxy;
+
 namespace Abp.Dependency.Conventions
 {
     /// <summary>
-    /// 
+    /// This class is used to pass configuration/options while registering classes in conventional way.
     /// </summary>
     public class ConventionalRegistrationConfig
     {
         /// <summary>
-        /// Install all Installers or not? 
+        /// Install all <see cref="IInterceptor"/> implementations automatically or not.
+        /// Default: true. 
         /// </summary>
-        public bool InstallInstallers { get; set; } // TODO: Document better
+        public bool InstallInstallers { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="ConventionalRegistrationConfig"/> object.

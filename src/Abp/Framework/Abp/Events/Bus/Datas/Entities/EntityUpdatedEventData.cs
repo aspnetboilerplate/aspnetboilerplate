@@ -7,6 +7,7 @@ namespace Abp.Events.Bus.Datas.Entities
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class EntityUpdatedEventData<TEntity> : EntityEventData<TEntity>
+        where TEntity : IEntity
     {
         /// <summary>
         /// Constructor.

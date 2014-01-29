@@ -26,7 +26,7 @@ namespace Abp.Domain.Uow
         [ThreadStatic]
         private static IUnitOfWork _currentUow;
 
-        private readonly DisposableDependencyObjectWrapper<IUnitOfWork> _unitOfWorkWrapper;
+        private readonly IDisposableDependencyObjectWrapper<IUnitOfWork> _unitOfWorkWrapper;
 
         private bool _isCommited;
 

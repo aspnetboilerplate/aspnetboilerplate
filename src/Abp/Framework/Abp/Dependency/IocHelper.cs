@@ -4,9 +4,12 @@ namespace Abp.Dependency
 {
     /// <summary>
     /// This class is a helper to direcly use basic functionallity of dependency injection.
+    /// Use <see cref="IocManager.IocContainer"/> to register dependencies.
     /// </summary>
     public static class IocHelper
     {
+        #region Resolve
+
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
@@ -53,12 +56,16 @@ namespace Abp.Dependency
             return IocManager.Instance.IocContainer.Resolve(type, argumentsAsAnonymousType);
         }
 
+        #endregion
+
+        #region ResolveAsDisposable
+
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>()
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>()
         {
             return new DisposableDependencyObjectWrapper<T>();
         }
@@ -67,9 +74,9 @@ namespace Abp.Dependency
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <param name="type">Type of the object to resolve. This type must be type of <see cref="T"/> or inherit/implement <see cref="T"/>.</param>
+        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type)
         {
             return new DisposableDependencyObjectWrapper<T>(type);
         }
@@ -80,10 +87,26 @@ namespace Abp.Dependency
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static DisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
         {
             return new DisposableDependencyObjectWrapper<T>(argumentsAsAnonymousType);
         }
+
+        /// <summary>
+        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type, object argumentsAsAnonymousType)
+        {
+            return new DisposableDependencyObjectWrapper<T>(type, argumentsAsAnonymousType);
+        }
+
+        #endregion
+
+        #region Release
 
         /// <summary>
         /// Releases a pre-resolved (see <see cref="Resolve{T}()"/>) object.
@@ -93,5 +116,7 @@ namespace Abp.Dependency
         {
             IocManager.Instance.IocContainer.Release(obj);
         }
+
+        #endregion
     }
 }

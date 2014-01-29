@@ -8,6 +8,6 @@ namespace Abp.Domain.Repositories
     /// </summary>
     public interface IRepository : ITransientDependency
     {
-        //TODO: Can we remove this and use generic version to identify repositories?
+        
     }
 }
