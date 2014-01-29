@@ -6,7 +6,7 @@ namespace Abp.Security.Users
     /// TODO: Add a unique index for UserId, RoleId
     /// </summary>
     /// <typeparam name="TUser"></typeparam>
-    public class UserLogin<TUser> : Entity<long> where TUser : User
+    public class UserLogin<TUser> : Entity<long> where TUser : AbpUser
     {
         public virtual TUser User { get; set; }
 

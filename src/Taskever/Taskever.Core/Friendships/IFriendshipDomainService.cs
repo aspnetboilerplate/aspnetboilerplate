@@ -6,6 +6,6 @@ namespace Taskever.Friendships
 {
     public interface IFriendshipDomainService : IDomainService
     {
-        bool HasFriendship(User user, User probableFriend);
+        bool HasFriendship(AbpUser user, AbpUser probableFriend);
     }
 }

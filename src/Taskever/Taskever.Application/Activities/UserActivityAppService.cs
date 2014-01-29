@@ -9,11 +9,11 @@ namespace Taskever.Activities
 {
     public class UserActivityAppService : IUserActivityAppService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly IUserFollowedActivityRepository _followedActivityRepository;
         private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public UserActivityAppService(IUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IFriendshipDomainService friendshipDomainService)
+        public UserActivityAppService(IAbpUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IFriendshipDomainService friendshipDomainService)
         {
             _userRepository = userRepository;
             _followedActivityRepository = followedActivityRepository;
@@ -23,7 +23,7 @@ namespace Taskever.Activities
         [UnitOfWork]
         public GetFollowedActivitiesOutput GetFollowedActivities(GetFollowedActivitiesInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             var user = _userRepository.Load(input.UserId);
 
             //Can see activities of this user?

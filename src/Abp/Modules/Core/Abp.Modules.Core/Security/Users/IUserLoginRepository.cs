@@ -1,6 +1,6 @@
 namespace Abp.Security.Users
 {
-    public interface IUserLoginRepository : IUserLoginRepository<User>
+    public interface IUserLoginRepository : IUserLoginRepository<AbpUser>
     {
 
     }

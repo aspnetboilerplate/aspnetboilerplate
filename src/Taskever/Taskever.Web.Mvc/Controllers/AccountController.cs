@@ -15,6 +15,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
+using Taskever.Security.Identity;
+using Taskever.Security.Users;
 using Taskever.Users;
 using Taskever.Web.Mvc.Models.Account;
 
@@ -24,7 +26,7 @@ namespace Taskever.Web.Mvc.Controllers
     {
         private readonly IUserAppService _userAppService;
 
-        private readonly UserManager<TaskeverUser, int> _userManager;
+        private readonly TaskeverUserManager _userManager;
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -34,10 +36,10 @@ namespace Taskever.Web.Mvc.Controllers
             }
         }
 
-        public AccountController(IUserAppService userAppService)
+        public AccountController(IUserAppService userAppService, TaskeverUserManager userManager)
         {
             _userAppService = userAppService;
-            _userManager = new UserManager<TaskeverUser, int>(IocHelper.Resolve<UserStore<TaskeverUser, ITaskeverUserRepository>>());
+            _userManager = userManager;
         }
 
         public virtual ActionResult Login(string returnUrl = "/", string loginMessage = null)

@@ -1,5 +1,5 @@
 ﻿using Abp.Modules.Core.Entities.NHibernate.Mappings;
-using Taskever.Users;
+using Taskever.Security.Users;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {

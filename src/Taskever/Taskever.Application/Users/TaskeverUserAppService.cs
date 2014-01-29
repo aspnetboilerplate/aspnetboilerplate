@@ -4,17 +4,18 @@ using Abp.Security.Users;
 using Abp.Users;
 using Abp.Users.Dto;
 using Taskever.Friendships;
+using Taskever.Security.Users;
 using Taskever.Users.Dto;
 
 namespace Taskever.Users
 {
     public class TaskeverUserAppService : ITaskeverUserAppService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly ITaskeverUserPolicy _taskeverUserPolicy;
         private readonly IFriendshipRepository _friendshipRepository;
 
-        public TaskeverUserAppService(IUserRepository userRepository, ITaskeverUserPolicy taskeverUserPolicy, IFriendshipRepository friendshipRepository)
+        public TaskeverUserAppService(IAbpUserRepository userRepository, ITaskeverUserPolicy taskeverUserPolicy, IFriendshipRepository friendshipRepository)
         {
             _userRepository = userRepository;
             _taskeverUserPolicy = taskeverUserPolicy;
@@ -23,7 +24,7 @@ namespace Taskever.Users
 
         public GetUserProfileOutput GetUserProfile(GetUserProfileInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
 
             var profileUser = _userRepository.Get(input.UserId);
             if (profileUser == null)

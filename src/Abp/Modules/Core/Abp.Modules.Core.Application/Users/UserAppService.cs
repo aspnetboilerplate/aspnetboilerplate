@@ -16,11 +16,11 @@ namespace Abp.Users
     /// </summary>
     public class UserAppService : IUserAppService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IEmailService _emailService;
 
-        public UserAppService(IUserRepository questionRepository, ITenantRepository tenantRepository, IEmailService emailService)
+        public UserAppService(IAbpUserRepository questionRepository, ITenantRepository tenantRepository, IEmailService emailService)
         {
             _userRepository = questionRepository;
             _tenantRepository = tenantRepository;
@@ -29,7 +29,7 @@ namespace Abp.Users
 
         public IList<UserDto> GetAllUsers()
         {
-            return _userRepository.GetAllList().MapIList<User, UserDto>();
+            return _userRepository.GetAllList().MapIList<AbpUser, UserDto>();
         }
 
         public UserDto GetActiveUserOrNull(string emailAddress, string password) //TODO: Make this GetUserOrNullInput and GetUserOrNullOutput
@@ -59,7 +59,7 @@ namespace Abp.Users
                 throw new AbpUserFriendlyException("There is already a user with this email address (" + registerUser.EmailAddress + ")! Select another email address!");
             }
 
-            var userEntity = registerUser.MapTo<User>();
+            var userEntity = registerUser.MapTo<AbpUser>();
             userEntity.Tenant = _tenantRepository.Load(1); //TODO: Get from subdomain or ?
             userEntity.GenerateEmailConfirmationCode();
             _userRepository.Insert(userEntity);
@@ -76,13 +76,13 @@ namespace Abp.Users
         public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
         {
             //TODO: Use GetUser?
-            return new GetCurrentUserInfoOutput { User = _userRepository.Get(User.CurrentUserId).MapTo<UserDto>() };
+            return new GetCurrentUserInfoOutput { User = _userRepository.Get(AbpUser.CurrentUserId).MapTo<UserDto>() };
         }
 
         [UnitOfWork]
         public void ChangePassword(ChangePasswordInput input)
         {
-            var currentUser = _userRepository.Get(User.CurrentUserId);
+            var currentUser = _userRepository.Get(AbpUser.CurrentUserId);
             if (currentUser.Password != input.CurrentPassword)
             {
                 throw new AbpUserFriendlyException("Current password is invalid!");
@@ -94,7 +94,7 @@ namespace Abp.Users
         [UnitOfWork]
         public ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input)
         {
-            var currentUser = _userRepository.Get(User.CurrentUserId); //TODO: test Load method
+            var currentUser = _userRepository.Get(AbpUser.CurrentUserId); //TODO: test Load method
             var oldFileName = currentUser.ProfileImage;
 
             currentUser.ProfileImage = input.FileName;
@@ -133,7 +133,7 @@ namespace Abp.Users
             user.PasswordResetCode = null;
         }
 
-        private void SendConfirmationEmail(User user)
+        private void SendConfirmationEmail(AbpUser user)
         {
             var mail = new MailMessage();
             mail.To.Add(user.EmailAddress);
@@ -177,7 +177,7 @@ namespace Abp.Users
             _emailService.SendEmail(mail);
         }
 
-        private void SendPasswordResetLinkEmail(User user)
+        private void SendPasswordResetLinkEmail(AbpUser user)
         {
             var mail = new MailMessage();
             mail.To.Add(user.EmailAddress);

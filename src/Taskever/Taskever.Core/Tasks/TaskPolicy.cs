@@ -15,13 +15,13 @@ namespace Taskever.Tasks
             _friendshipRepository = friendshipRepository;
         }
 
-        public bool CanSeeTasksOfUser(User requesterUser, User userOfTasks)
+        public bool CanSeeTasksOfUser(AbpUser requesterUser, AbpUser userOfTasks)
         {
             return requesterUser.Id == userOfTasks.Id ||
                    _friendshipDomainService.HasFriendship(requesterUser, userOfTasks);
         }
 
-        public bool CanAssignTask(User assignerUser, User userToAssign)
+        public bool CanAssignTask(AbpUser assignerUser, AbpUser userToAssign)
         {
             if (assignerUser.Id == userToAssign.Id) //TODO: Override == to be able to write just assignerUser == userToAssign
             {
@@ -37,12 +37,12 @@ namespace Taskever.Tasks
             return friendship.CanAssignTask;
         }
 
-        public bool CanUpdateTask(User user, Task task)
+        public bool CanUpdateTask(AbpUser user, Task task)
         {
             return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
         }
 
-        public bool CanDeleteTask(User user, Task task)
+        public bool CanDeleteTask(AbpUser user, Task task)
         {
             return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
         }

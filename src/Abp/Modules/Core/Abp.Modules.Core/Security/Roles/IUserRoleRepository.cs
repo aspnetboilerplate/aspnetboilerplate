@@ -5,6 +5,6 @@ namespace Abp.Security.Roles
 {
     public interface IUserRoleRepository : IRepository<UserRole, long>
     {
-        List<Role> GetRolesOfUser(int userId);
+        List<AbpRole> GetRolesOfUser(int userId);
     }
 }

@@ -7,7 +7,7 @@ namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
     public class NhUserRoleRepository : NhRepositoryBase<UserRole, long>, IUserRoleRepository
     {
-        public List<Role> GetRolesOfUser(int userId)
+        public List<AbpRole> GetRolesOfUser(int userId)
         {
             var query = from userRole in GetAll()
                         where userRole.User.Id == userId

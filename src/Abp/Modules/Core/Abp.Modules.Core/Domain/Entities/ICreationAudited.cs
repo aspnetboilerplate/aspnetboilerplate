@@ -16,6 +16,6 @@ namespace Abp.Domain.Entities
         /// <summary>
         /// Creator of this entity.
         /// </summary>
-        User CreatorUser { get; set; }
+        AbpUser CreatorUser { get; set; }
     }
 }

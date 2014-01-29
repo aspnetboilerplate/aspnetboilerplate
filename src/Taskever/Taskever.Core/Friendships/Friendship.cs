@@ -7,9 +7,9 @@ namespace Taskever.Friendships
 {
     public class Friendship : Entity
     {
-        public virtual User User { get; set; }
+        public virtual AbpUser User { get; set; }
 
-        public virtual User Friend { get; set; }
+        public virtual AbpUser Friend { get; set; }
 
         public virtual Friendship Pair { get; set; }
 
@@ -43,7 +43,7 @@ namespace Taskever.Friendships
             FollowActivities = true;
         }
 
-        public static Friendship CreateAsRequest(User user, User friend)
+        public static Friendship CreateAsRequest(AbpUser user, AbpUser friend)
         {
             if (user.Id == friend.Id)
             {
@@ -66,7 +66,7 @@ namespace Taskever.Friendships
             return Status == FriendshipStatus.Accepted;
         }
 
-        public virtual bool CanBeAcceptedBy(User acceptorUser)
+        public virtual bool CanBeAcceptedBy(AbpUser acceptorUser)
         {
             switch (Status)
             {
@@ -81,7 +81,7 @@ namespace Taskever.Friendships
             }
         }
 
-        public virtual void AcceptBy(User acceptorUser)
+        public virtual void AcceptBy(AbpUser acceptorUser)
         {
             if (IsAccepted())
             {

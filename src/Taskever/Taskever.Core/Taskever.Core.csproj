@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\Identity\TaskeverUserManager.cs" />
     <Compile Include="Startup\Dependency\Installers\Log4NetInstaller.cs" />
     <Compile Include="Tasks\Events\TaskCompletedEventData.cs" />
     <Compile Include="Activities\EventHandlers\TaskActivityEventHandler.cs" />
@@ -86,10 +87,10 @@
     <Compile Include="Notifications\NotificationService.cs" />
     <Compile Include="Notifications\INotification.cs" />
     <Compile Include="Notifications\INotificationService.cs" />
-    <Compile Include="Users\ITaskeverUserPolicy.cs" />
-    <Compile Include="Users\ITaskeverUserRepository.cs" />
-    <Compile Include="Users\TaskeverUser.cs" />
-    <Compile Include="Users\TaskeverUserPolicy.cs" />
+    <Compile Include="Security\Users\ITaskeverUserPolicy.cs" />
+    <Compile Include="Security\Users\ITaskeverUserRepository.cs" />
+    <Compile Include="Security\Users\TaskeverUser.cs" />
+    <Compile Include="Security\Users\TaskeverUserPolicy.cs" />
     <Compile Include="Exceptions\TaskeverException.cs" />
     <Compile Include="Activities\Activity.cs" />
     <Compile Include="Activities\UserFollowedActivity.cs" />

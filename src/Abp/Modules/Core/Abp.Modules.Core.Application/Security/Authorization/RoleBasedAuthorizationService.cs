@@ -10,13 +10,13 @@ namespace Abp.Security.Authorization
 {
     public class RoleBasedAuthorizationService : IAuthorizationService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly IUserRoleService _userRoleService;
         private readonly IPermissionManager _permissionManager;
 
         public ILogger Logger { get; set; }
 
-        public RoleBasedAuthorizationService(IUserRoleService userRoleService, IUserRepository userRepository, IPermissionManager permissionManager)
+        public RoleBasedAuthorizationService(IUserRoleService userRoleService, IAbpUserRepository userRepository, IPermissionManager permissionManager)
         {
             _userRoleService = userRoleService;
             _userRepository = userRepository;
@@ -55,7 +55,7 @@ namespace Abp.Security.Authorization
 
         private bool IsGrantedForPermission(Permission permission)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             var roles = _userRoleService.GetRolesOfUser(currentUser);
             foreach (var role in roles)
             {
@@ -73,7 +73,7 @@ namespace Abp.Security.Authorization
 
         private bool IsDeniedForPermission(Permission permission)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             var roles = _userRoleService.GetRolesOfUser(currentUser);
             foreach (var role in roles)
             {

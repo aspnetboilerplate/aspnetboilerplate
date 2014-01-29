@@ -13,7 +13,7 @@ namespace Taskever.Friendships
             _friendshipRepository = friendshipRepository;
         }
 
-        public bool HasFriendship(User user, User probableFriend)
+        public bool HasFriendship(AbpUser user, AbpUser probableFriend)
         {
             return _friendshipRepository.Query( //TODO: Create Index: UserId, FriendId, Status
                q => q.Any(friendship =>

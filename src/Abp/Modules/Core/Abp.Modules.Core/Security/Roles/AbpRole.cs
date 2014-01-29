@@ -8,7 +8,7 @@ namespace Abp.Security.Roles
     /// <summary>
     /// Represents a role in an application.
     /// </summary>
-    public class Role : AuditedEntity, IHasTenant, IRole<int>
+    public class AbpRole : AuditedEntity, IHasTenant, IRole<int>
     {
         /// <summary>
         /// Tenant of this role.

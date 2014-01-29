@@ -2,7 +2,7 @@ using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class RoleMap : EntityMap<Role>
+    public class RoleMap : EntityMap<AbpRole>
     {
         public RoleMap()
             : base("AbpRoles")

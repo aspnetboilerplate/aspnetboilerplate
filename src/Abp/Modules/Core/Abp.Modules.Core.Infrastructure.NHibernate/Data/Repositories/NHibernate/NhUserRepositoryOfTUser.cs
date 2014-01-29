@@ -6,7 +6,7 @@ namespace Abp.Modules.Core.Data.Repositories.NHibernate
     /// <summary>
     /// Implements <see cref="IUserRepository{TUser}"/> for NHibernate.
     /// </summary>
-    public abstract class NhUserRepository<TUser> : NhRepositoryBase<TUser>, IUserRepository<TUser> where TUser : User
+    public abstract class NhUserRepository<TUser> : NhRepositoryBase<TUser>, IUserRepository<TUser> where TUser : AbpUser
     {
         public void UpdatePassword(int userId, string password)
         {

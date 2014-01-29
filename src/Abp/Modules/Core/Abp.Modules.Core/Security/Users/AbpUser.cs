@@ -9,9 +9,8 @@ namespace Abp.Security.Users
 {
     /// <summary>
     /// Represents a user.
-    /// TODO: Change Id from int to long?
     /// </summary>
-    public class User : Entity, IHasTenant, IUser<int>
+    public class AbpUser : Entity, IHasTenant, IUser<int> // TODO: Change Id from int to long?
     {
         /// <summary>
         /// Tenant of this role.

@@ -11,7 +11,7 @@ namespace Abp.Security.Roles
         /// <summary>
         /// The role.
         /// </summary>
-        public virtual Role Role { get; set; }
+        public virtual AbpRole Role { get; set; }
 
         /// <summary>
         /// Unique name of the permission.

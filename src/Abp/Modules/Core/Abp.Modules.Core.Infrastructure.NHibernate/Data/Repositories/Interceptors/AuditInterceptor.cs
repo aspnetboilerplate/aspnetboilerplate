@@ -10,9 +10,9 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {
     public class AuditInterceptor : IInterceptor
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
 
-        public AuditInterceptor(IUserRepository userRepository)
+        public AuditInterceptor(IAbpUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -28,7 +28,7 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
                         invocation.Arguments[0].As<ICreationAudited>().CreationTime = DateTime.Now;
                         if (invocation.Arguments[0].As<ICreationAudited>().CreatorUser == null)
                         {
-                            invocation.Arguments[0].As<ICreationAudited>().CreatorUser = _userRepository.Load(User.CurrentUserId);
+                            invocation.Arguments[0].As<ICreationAudited>().CreatorUser = _userRepository.Load(AbpUser.CurrentUserId);
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
                         invocation.Arguments[0].As<IModificationAudited>().LastModificationTime = DateTime.Now;
                         if (invocation.Arguments[0].As<IModificationAudited>().LastModifierUser == null)
                         {
-                            invocation.Arguments[0].As<IModificationAudited>().LastModifierUser = _userRepository.Load(User.CurrentUserId);
+                            invocation.Arguments[0].As<IModificationAudited>().LastModifierUser = _userRepository.Load(AbpUser.CurrentUserId);
                         }
                     }
                 }

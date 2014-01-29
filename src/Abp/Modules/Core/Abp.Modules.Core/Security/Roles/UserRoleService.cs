@@ -13,7 +13,7 @@ namespace Abp.Security.Roles
             _userRoleRepository = userRoleRepository;
         }
 
-        public IReadOnlyCollection<Role> GetRolesOfUser(User user)
+        public IReadOnlyCollection<AbpRole> GetRolesOfUser(AbpUser user)
         {
             return _userRoleRepository
                 .GetRolesOfUser(user.Id)

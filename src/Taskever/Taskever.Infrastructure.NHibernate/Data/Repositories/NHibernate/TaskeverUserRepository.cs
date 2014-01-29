@@ -1,5 +1,5 @@
 using Abp.Modules.Core.Data.Repositories.NHibernate;
-using Taskever.Users;
+using Taskever.Security.Users;
 
 namespace Taskever.Data.Repositories.NHibernate
 {

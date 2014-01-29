@@ -11,7 +11,7 @@ namespace Taskever.Activities
 {
     public class ActivityService : IActivityService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly IFriendshipRepository _friendshipRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IUserFollowedActivityRepository _userFollowedActivityRepository;
@@ -19,7 +19,7 @@ namespace Taskever.Activities
         public ILogger Logger { get; set; }
 
         public ActivityService(
-            IUserRepository userRepository,
+            IAbpUserRepository userRepository,
             IFriendshipRepository friendshipRepository,
             IActivityRepository activityRepository,
             IUserFollowedActivityRepository userFollowedActivityRepository)

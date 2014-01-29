@@ -22,7 +22,7 @@ namespace Abp.Security.Tenants
         /// <summary>
         /// Creation time of this tenant.
         /// </summary>
-        public virtual DateTime CreationTime { get; set; }
+        public virtual DateTime CreationTime { get; set; } //TODO: Make IHasCreationTime interface!
 
         #region Static properties
 
@@ -31,21 +31,7 @@ namespace Abp.Security.Tenants
         /// </summary>
         public static int CurrentTenantId
         {
-            get
-            {
-                if (Thread.CurrentPrincipal == null)
-                {
-                    throw new ApplicationException("Thread.CurrentPrincipal is null!");
-                }
-
-                var identity = Thread.CurrentPrincipal.Identity as AbpIdentity;
-                if (identity == null)
-                {
-                    throw new ApplicationException("Thread.CurrentPrincipal.Identity is not type of AbpIdentity!");
-                }
-
-                return identity.TenantId;
-            }
+            get { return 1; } //TODO: Implement Tenant claim!
         }
 
         #endregion

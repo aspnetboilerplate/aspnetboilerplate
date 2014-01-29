@@ -8,12 +8,12 @@ namespace Taskever.Tasks
     //TODO: Renamt this to Policy ?
     public interface ITaskPolicy : IPolicy
     {
-        bool CanSeeTasksOfUser(User requesterUser, User userOfTasks);
+        bool CanSeeTasksOfUser(AbpUser requesterUser, AbpUser userOfTasks);
 
-        bool CanAssignTask(User assignerUser, User userToAssign);
+        bool CanAssignTask(AbpUser assignerUser, AbpUser userToAssign);
 
-        bool CanUpdateTask(User user, Task task);
+        bool CanUpdateTask(AbpUser user, Task task);
 
-        bool CanDeleteTask(User user, Task task);
+        bool CanDeleteTask(AbpUser user, Task task);
     }
 }

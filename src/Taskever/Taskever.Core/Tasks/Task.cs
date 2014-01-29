@@ -25,7 +25,7 @@ namespace Taskever.Tasks
         /// </summary>
         public virtual string Description { get; set; }
 
-        public virtual User AssignedUser { get; set; }
+        public virtual AbpUser AssignedUser { get; set; }
 
         public virtual TaskPriority Priority { get; set; }
 

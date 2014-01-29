@@ -15,21 +15,33 @@ namespace Abp.Security.Identity
         IUserLoginStore<TUser, int>,
         IUserRoleStore<TUser, int>,
         ITransientDependency
-        where TUser : User
+        where TUser : AbpUser
         where TUserRepository : IUserRepository<TUser>
     {
+        #region Private fields
+
         private readonly TUserRepository _userRepository;
+        private readonly IUserLoginRepository<TUser> _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IUserLoginRepository<TUser> _userLoginRepository;
 
-        public UserStore(TUserRepository userRepository, IUserLoginRepository<TUser> userLoginRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository)
+        #endregion
+
+        #region Constructor
+
+        public UserStore(
+            TUserRepository userRepository,
+            IUserLoginRepository<TUser> userLoginRepository,
+            IUserRoleRepository userRoleRepository,
+            IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
         }
+
+        #endregion
 
         #region IUserStore
 
@@ -207,6 +219,5 @@ namespace Abp.Security.Identity
         }
 
         #endregion
-
     }
 }

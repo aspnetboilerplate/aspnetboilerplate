@@ -6,7 +6,7 @@ namespace Taskever.Activities
 {
     public class CompleteTaskActivity : Activity
     {
-        public virtual User AssignedUser { get; set; }
+        public virtual AbpUser AssignedUser { get; set; }
 
         public virtual Task Task { get; set; }
 
@@ -15,12 +15,12 @@ namespace Taskever.Activities
             ActivityType = ActivityType.CompleteTask;            
         }
 
-        public override User[] GetActors()
+        public override AbpUser[] GetActors()
         {
             return new [] { AssignedUser };
         }
 
-        public override User[] GetRelatedUsers()
+        public override AbpUser[] GetRelatedUsers()
         {
             return new[] {Task.CreatorUser};
         }

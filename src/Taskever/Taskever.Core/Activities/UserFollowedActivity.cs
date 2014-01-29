@@ -7,7 +7,7 @@ namespace Taskever.Activities
 {
     public class UserFollowedActivity : Entity<long>
     {
-        public virtual User User { get; set; }
+        public virtual AbpUser User { get; set; }
 
         public virtual Activity Activity { get; set; }
 

@@ -6,9 +6,9 @@ namespace Taskever.Activities
 {
     public class CreateTaskActivity : Activity
     {
-        public virtual User CreatorUser { get; set; }
+        public virtual AbpUser CreatorUser { get; set; }
 
-        public virtual User AssignedUser { get; set; }
+        public virtual AbpUser AssignedUser { get; set; }
 
         public virtual Task Task { get; set; } //TODO: Create abstract TaskActivity class and put Task there?
 
@@ -17,14 +17,14 @@ namespace Taskever.Activities
             ActivityType = ActivityType.CreateTask;
         }
 
-        public override User[] GetActors()
+        public override AbpUser[] GetActors()
         {
             return new [] {CreatorUser, AssignedUser};
         }
 
-        public override User[] GetRelatedUsers()
+        public override AbpUser[] GetRelatedUsers()
         {
-            return new User[] { };
+            return new AbpUser[] { };
         }
     }
 }

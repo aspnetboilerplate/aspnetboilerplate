@@ -16,8 +16,8 @@ namespace Taskever.Activities
             CreationTime = DateTime.Now;
         }
 
-        public abstract User[] GetActors();
+        public abstract AbpUser[] GetActors();
 
-        public abstract User[] GetRelatedUsers();
+        public abstract AbpUser[] GetRelatedUsers();
     }
 }

@@ -6,6 +6,6 @@ namespace Abp.Security.Roles
 {
     public interface IUserRoleService : IDomainService
     {
-        IReadOnlyCollection<Role> GetRolesOfUser(User user);
+        IReadOnlyCollection<AbpRole> GetRolesOfUser(AbpUser user);
     }
 }

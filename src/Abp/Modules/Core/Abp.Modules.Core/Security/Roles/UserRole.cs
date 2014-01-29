@@ -12,11 +12,11 @@ namespace Abp.Security.Roles
         /// <summary>
         /// User.
         /// </summary>
-        public virtual User User { get; set; }
+        public virtual AbpUser User { get; set; }
 
         /// <summary>
         /// Role.
         /// </summary>
-        public virtual Role Role { get; set; }
+        public virtual AbpRole Role { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Abp.Domain.Repositories;
 
 namespace Abp.Security.Roles
 {
-    public interface IRoleRepository : IRepository<Role>
+    public interface IRoleRepository : IRepository<AbpRole>
     {
 
     }

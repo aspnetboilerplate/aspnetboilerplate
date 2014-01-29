@@ -6,7 +6,7 @@ namespace Abp.Users.Dto
     {
         public static void Map()
         {
-            AutoMapper.Mapper.CreateMap<User, UserDto>()
+            AutoMapper.Mapper.CreateMap<AbpUser, UserDto>()
                 .ForMember(
                     user => user.ProfileImage,
                     configuration => configuration.ResolveUsing(
@@ -17,7 +17,7 @@ namespace Abp.Users.Dto
                                          )
                 ).ReverseMap();
 
-            AutoMapper.Mapper.CreateMap<RegisterUserInput, User>();
+            AutoMapper.Mapper.CreateMap<RegisterUserInput, AbpUser>();
         }
     }
 }

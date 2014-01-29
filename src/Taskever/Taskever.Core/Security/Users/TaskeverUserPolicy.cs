@@ -1,8 +1,7 @@
 using Abp.Security.Users;
-using Abp.Users;
 using Taskever.Friendships;
 
-namespace Taskever.Users
+namespace Taskever.Security.Users
 {
     public class TaskeverUserPolicy : ITaskeverUserPolicy
     {
@@ -13,7 +12,7 @@ namespace Taskever.Users
             _friendshipDomainService = friendshipDomainService;
         }
 
-        public bool CanSeeProfile(User requesterUser, User targetUser)
+        public bool CanSeeProfile(AbpUser requesterUser, AbpUser targetUser)
         {
             return requesterUser.Id == targetUser.Id || _friendshipDomainService.HasFriendship(requesterUser, targetUser);
         }

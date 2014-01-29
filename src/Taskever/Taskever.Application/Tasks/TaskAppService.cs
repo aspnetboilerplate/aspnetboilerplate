@@ -19,13 +19,13 @@ namespace Taskever.Tasks
     {
         private readonly ITaskPolicy _taskPolicy;
         private readonly ITaskRepository _taskRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly IEventBus _eventBus;
 
         public TaskAppService(
             ITaskPolicy taskPolicy,
             ITaskRepository taskRepository,
-            IUserRepository userRepository,
+            IAbpUserRepository userRepository,
             IEventBus eventBus)
         {
             _taskRepository = taskRepository;
@@ -37,7 +37,7 @@ namespace Taskever.Tasks
         [UnitOfWork]
         public GetTaskOutput GetTask(GetTaskInput input)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             var task = _taskRepository.FirstOrDefault(input.Id);
 
             if (task == null)
@@ -104,7 +104,7 @@ namespace Taskever.Tasks
         public virtual CreateTaskOutput CreateTask(CreateTaskInput input)
         {
             //Get entities from database
-            var creatorUser = _userRepository.Get(User.CurrentUserId);
+            var creatorUser = _userRepository.Get(AbpUser.CurrentUserId);
             var assignedUser = _userRepository.Get(input.Task.AssignedUserId);
 
             if (!_taskPolicy.CanAssignTask(creatorUser, assignedUser))
@@ -143,7 +143,7 @@ namespace Taskever.Tasks
                 throw new Exception("Can not found the task!");
             }
 
-            var currentUser = _userRepository.Load(User.CurrentUserId); //TODO: Add method LoadCurrentUser and GetCurrentUser
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId); //TODO: Add method LoadCurrentUser and GetCurrentUser
             if (!_taskPolicy.CanUpdateTask(currentUser, task))
             {
                 throw new AbpUserFriendlyException("You can not update this task!");
@@ -186,7 +186,7 @@ namespace Taskever.Tasks
                 throw new Exception("Can not found the task!");
             }
 
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             if (!_taskPolicy.CanDeleteTask(currentUser, task))
             {
                 throw new AbpUserFriendlyException("You can not delete this task!");
@@ -199,7 +199,7 @@ namespace Taskever.Tasks
 
         private IQueryable<Task> CreateQueryForAssignedTasksOfUser(int assignedUserId)
         {
-            var currentUser = _userRepository.Load(User.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
             var userOfTasks = _userRepository.Load(assignedUserId);
 
             if (!_taskPolicy.CanSeeTasksOfUser(currentUser, userOfTasks))
