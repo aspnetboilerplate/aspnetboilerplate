@@ -63,7 +63,10 @@
     <Compile Include="Domain\Entities\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\ModificationAuditedEntity.cs" />
-    <Compile Include="Security\Identity\AbpUserManager.cs" />
+    <Compile Include="Security\Identity\AbpRoleManagerBase.cs" />
+    <Compile Include="Security\Identity\AbpUserManagerBase.cs" />
+    <Compile Include="Security\Identity\RoleStore.cs" />
+    <Compile Include="Security\Roles\IAbpRoleRepository.cs" />
     <Compile Include="Security\Roles\IRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleService.cs" />

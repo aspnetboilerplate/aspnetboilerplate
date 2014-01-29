@@ -5,8 +5,14 @@ namespace Abp.Dependency.Conventions
     /// </summary>
     public class ConventionalRegistrationConfig
     {
-        public bool InstallInstallers { get; set; }
+        /// <summary>
+        /// Install all Installers or not? 
+        /// </summary>
+        public bool InstallInstallers { get; set; } // TODO: Document better
 
+        /// <summary>
+        /// Creates a new <see cref="ConventionalRegistrationConfig"/> object.
+        /// </summary>
         public ConventionalRegistrationConfig()
         {
             InstallInstallers = true;

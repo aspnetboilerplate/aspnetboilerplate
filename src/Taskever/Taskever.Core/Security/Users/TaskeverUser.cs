@@ -4,6 +4,6 @@ namespace Taskever.Security.Users
 {
     public class TaskeverUser : AbpUser
     {
-        public virtual string TaskField { get; set; }
+        //Add your additional fields here
     }
 }

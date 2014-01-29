@@ -2,9 +2,9 @@ using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class RoleMap : EntityMap<AbpRole>
+    public abstract class RoleMapBase<TRole> : EntityMap<TRole> where TRole : AbpRole
     {
-        public RoleMap()
+        protected RoleMapBase()
             : base("AbpRoles")
         {
             Map(x => x.Name);

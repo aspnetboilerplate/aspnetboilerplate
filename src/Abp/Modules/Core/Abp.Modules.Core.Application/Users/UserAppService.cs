@@ -60,7 +60,7 @@ namespace Abp.Users
             }
 
             var userEntity = registerUser.MapTo<AbpUser>();
-            userEntity.Tenant = _tenantRepository.Load(1); //TODO: Get from subdomain or ?
+            userEntity.Tenant = _tenantRepository.Load(Tenant.CurrentTenantId); //TODO: Get from subdomain or ?
             userEntity.GenerateEmailConfirmationCode();
             _userRepository.Insert(userEntity);
             SendConfirmationEmail(userEntity);
@@ -133,6 +133,8 @@ namespace Abp.Users
             user.PasswordResetCode = null;
         }
 
+        #region Private methods
+
         private void SendConfirmationEmail(AbpUser user)
         {
             var mail = new MailMessage();
@@ -143,7 +145,7 @@ namespace Abp.Users
 
             var mailBuilder = new StringBuilder();
             mailBuilder.Append(
-@"<!DOCTYPE html>
+                @"<!DOCTYPE html>
 <html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
 <head>
     <meta charset=""utf-8"" />
@@ -167,7 +169,8 @@ namespace Abp.Users
 
             mailBuilder.Replace("{TEXT_HTML_TITLE}", "Email confirmation for Taskever");
             mailBuilder.Replace("{TEXT_WELCOME}", "Welcome to Taskever.com!");
-            mailBuilder.Replace("{TEXT_DESCRIPTION}", "Click the link below to confirm your email address and login to the Taskever.com");
+            mailBuilder.Replace("{TEXT_DESCRIPTION}",
+                "Click the link below to confirm your email address and login to the Taskever.com");
             mailBuilder.Replace("{USER_ID}", user.Id.ToString());
             mailBuilder.Replace("{CONFIRMATION_CODE}", user.EmailConfirmationCode);
 
@@ -187,7 +190,7 @@ namespace Abp.Users
 
             var mailBuilder = new StringBuilder();
             mailBuilder.Append(
-@"<!DOCTYPE html>
+                @"<!DOCTYPE html>
 <html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">
 <head>
     <meta charset=""utf-8"" />
@@ -220,5 +223,7 @@ namespace Abp.Users
 
             _emailService.SendEmail(mail);
         }
+
+        #endregion
     }
 }

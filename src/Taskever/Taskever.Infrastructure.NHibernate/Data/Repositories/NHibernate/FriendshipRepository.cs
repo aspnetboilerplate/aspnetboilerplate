@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Repositories.NHibernate;
 using NHibernate.Linq;
-using Taskever.Data.Repositories.NHibernate.Base;
 using Taskever.Friendships;
 
 namespace Taskever.Data.Repositories.NHibernate

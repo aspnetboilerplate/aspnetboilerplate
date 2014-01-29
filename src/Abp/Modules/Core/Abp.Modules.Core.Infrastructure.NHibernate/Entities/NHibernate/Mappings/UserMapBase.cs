@@ -2,9 +2,9 @@
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public abstract class UserMap<TUser> : EntityMap<TUser> where TUser : AbpUser
+    public abstract class UserMapBase<TUser> : EntityMap<TUser> where TUser : AbpUser
     {
-        protected UserMap()
+        protected UserMapBase()
             : base("AbpUsers")
         {
             Map(x => x.UserName);
@@ -18,10 +18,5 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.ProfileImage);
             Map(x => x.IsTenantOwner);
         }
-    }
-
-    public class UserMap : UserMap<AbpUser>
-    {
-
     }
 }

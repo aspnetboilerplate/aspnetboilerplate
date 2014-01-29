@@ -7,7 +7,7 @@ namespace Abp.Modules.Core.Data.Repositories.NHibernate
     /// <summary>
     /// Implements <see cref="ITenantRepository"/> for NHibernate.
     /// </summary>
-    public class NhTenantRepository : NhRepositoryBase<Tenant>, ITenantRepository
+    public class TenantRepository : NhRepositoryBase<Tenant>, ITenantRepository
     {
 
     }

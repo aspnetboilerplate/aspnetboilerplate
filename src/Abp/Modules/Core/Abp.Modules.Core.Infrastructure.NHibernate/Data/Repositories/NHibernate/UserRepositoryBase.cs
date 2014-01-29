@@ -6,7 +6,7 @@ namespace Abp.Modules.Core.Data.Repositories.NHibernate
     /// <summary>
     /// Implements <see cref="IUserRepository{TUser}"/> for NHibernate.
     /// </summary>
-    public abstract class NhUserRepository<TUser> : NhRepositoryBase<TUser>, IUserRepository<TUser> where TUser : AbpUser
+    public abstract class UserRepositoryBase<TUser> : NhRepositoryBase<TUser>, IUserRepository<TUser> where TUser : AbpUser
     {
         public void UpdatePassword(int userId, string password)
         {
@@ -18,6 +18,12 @@ namespace Abp.Modules.Core.Data.Repositories.NHibernate
         {
             var user = Load(userId);
             user.EmailAddress = emailAddress; //TODO: Test
+        }
+
+        public void UpdateIsEmailConfirmed(int userId, bool confirmed)
+        {
+            var user = Load(userId);
+            user.IsEmailConfirmed = confirmed; //TODO: Test
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Abp.Security.Identity
         IUserEmailStore<TUser, int>,
         IUserLoginStore<TUser, int>,
         IUserRoleStore<TUser, int>,
+        IUserConfirmationStore<TUser, int>,
         ITransientDependency
         where TUser : AbpUser
         where TUserRepository : IUserRepository<TUser>
@@ -23,7 +24,7 @@ namespace Abp.Security.Identity
         private readonly TUserRepository _userRepository;
         private readonly IUserLoginRepository<TUser> _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IRoleRepository _roleRepository;
+        private readonly IAbpRoleRepository _abpRoleRepository;
 
         #endregion
 
@@ -33,12 +34,12 @@ namespace Abp.Security.Identity
             TUserRepository userRepository,
             IUserLoginRepository<TUser> userLoginRepository,
             IUserRoleRepository userRoleRepository,
-            IRoleRepository roleRepository)
+            IAbpRoleRepository abpRoleRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
-            _roleRepository = roleRepository;
+            _abpRoleRepository = abpRoleRepository;
         }
 
         #endregion
@@ -47,7 +48,7 @@ namespace Abp.Security.Identity
 
         public void Dispose()
         {
-            //TODO: Dispose if UserManager is not injected!
+           //No need to dispose since using dependency injection manager
         }
 
         public Task CreateAsync(TUser user)
@@ -86,12 +87,12 @@ namespace Abp.Security.Identity
 
         public Task<string> GetPasswordHashAsync(TUser user)
         {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).Password);
+            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).Password); //TODO: Optimize
         }
 
         public Task<bool> HasPasswordAsync(TUser user)
         {
-            return Task.Factory.StartNew(() => !string.IsNullOrEmpty(_userRepository.Get(user.Id).Password));
+            return Task.Factory.StartNew(() => !string.IsNullOrEmpty(_userRepository.Get(user.Id).Password)); //TODO: Optimize
         }
 
         #endregion
@@ -173,7 +174,7 @@ namespace Abp.Security.Identity
                         new UserRole
                         {
                             User = user,
-                            Role = _roleRepository.Single(role => role.Name == roleName)
+                            Role = _abpRoleRepository.Single(role => role.Name == roleName) //TODO: Can find another way?
                         })
                 );
         }
@@ -216,6 +217,20 @@ namespace Abp.Security.Identity
                     ur => ur.User.Id == user.Id && ur.Role.Name == roleName
                     ) != null
                 );
+        }
+
+        #endregion
+
+        #region IUserConfirmationStore
+
+        public Task<bool> IsConfirmedAsync(TUser user)
+        {
+            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize
+        }
+
+        public Task SetConfirmedAsync(TUser user, bool confirmed)
+        {
+            return Task.Factory.StartNew(() => _userRepository.UpdateIsEmailConfirmed(user.Id, confirmed));
         }
 
         #endregion

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Web.Optimization;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Taskever.Security.Identity;
 
 namespace Taskever.Web.Mvc
 {

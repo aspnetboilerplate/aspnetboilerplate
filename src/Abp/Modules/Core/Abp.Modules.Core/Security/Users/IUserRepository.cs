@@ -10,5 +10,7 @@ namespace Abp.Security.Users
         void UpdatePassword(int userId, string password);
 
         void UpdateEmail(int userId, string emailAddress);
+
+        void UpdateIsEmailConfirmed(int userId, bool confirmed);
     }
 }

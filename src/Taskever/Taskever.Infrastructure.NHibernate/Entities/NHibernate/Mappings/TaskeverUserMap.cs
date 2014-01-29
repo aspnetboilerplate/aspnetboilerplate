@@ -3,11 +3,11 @@ using Taskever.Security.Users;
 
 namespace Taskever.Entities.NHibernate.Mappings
 {
-    public class TaskeverUserMap : UserMap<TaskeverUser>
+    public class TaskeverUserMap : UserMapBase<TaskeverUser>
     {
         public TaskeverUserMap()
         {
-            Map(x => x.TaskField);
+            //Add your additional field mappings here
         }
     }
 }

@@ -9,9 +9,9 @@ namespace Abp.Security.Roles
     public class RolePermission : CreationAuditedEntity
     {
         /// <summary>
-        /// The role.
+        /// Role Id.
         /// </summary>
-        public virtual AbpRole Role { get; set; }
+        public virtual int RoleId { get; set; }
 
         /// <summary>
         /// Unique name of the permission.

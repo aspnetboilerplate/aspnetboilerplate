@@ -3,8 +3,8 @@ using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
-    public class NhRoleRepository : NhRepositoryBase<AbpRole>, IRoleRepository
+    public abstract class RoleRepositoryBase<TRole> : NhRepositoryBase<TRole>, IRoleRepository<TRole> where TRole : AbpRole
     {
-        
+
     }
 }

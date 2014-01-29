@@ -4,12 +4,12 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.Identity
 {
-    public abstract class AbpUserManager<TUser> :
+    public abstract class AbpUserManagerBase<TUser> :
         UserManager<TUser, int>,
         ITransientDependency
         where TUser : AbpUser
     {
-        protected AbpUserManager(IUserStore<TUser, int> store)
+        protected AbpUserManagerBase(IUserStore<TUser, int> store)
             : base(store)
         {
 

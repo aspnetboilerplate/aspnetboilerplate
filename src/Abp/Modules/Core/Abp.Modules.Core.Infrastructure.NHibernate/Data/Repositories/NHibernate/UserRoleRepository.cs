@@ -5,7 +5,7 @@ using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
-    public class NhUserRoleRepository : NhRepositoryBase<UserRole, long>, IUserRoleRepository
+    public class UserRoleRepository : NhRepositoryBase<UserRole, long>, IUserRoleRepository
     {
         public List<AbpRole> GetRolesOfUser(int userId)
         {

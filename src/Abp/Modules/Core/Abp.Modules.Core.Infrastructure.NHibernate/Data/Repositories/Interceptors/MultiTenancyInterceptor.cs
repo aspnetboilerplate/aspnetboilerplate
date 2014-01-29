@@ -9,7 +9,7 @@ using Castle.DynamicProxy;
 namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {
     /// <summary>
-    /// TODO: Don't forget! Must intercept classes, not interfaces to be able to intercept virtual methods not called from outside of the class!
+    /// 
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TPrimaryKey"></typeparam>
@@ -24,11 +24,13 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
 
         public void Intercept(IInvocation invocation)
         {
+            //TODO: Implement better...
+
             if (invocation.MethodInvocationTarget.Name == "GetAll" && invocation.Arguments.IsNullOrEmpty())
             {
                 invocation.Proceed();
                 var returnValue = (IQueryable<TEntity>)invocation.ReturnValue;
-                invocation.ReturnValue = returnValue.Where(entity => entity.Tenant.Id == 1); //TODO: Set Real Tenant ID
+                invocation.ReturnValue = returnValue.Where(entity => entity.Tenant.Id == Tenant.CurrentTenantId);
             }
             else if (invocation.MethodInvocationTarget.Name == "Insert")
             {
@@ -36,7 +38,7 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
                 {
                     if (invocation.Arguments[0] is IHasTenant && invocation.Arguments[0].As<IHasTenant>().Tenant == null)
                     {
-                        invocation.Arguments[0].As<IHasTenant>().Tenant = _tenantRepository.Load(1);  //TODO: Get Real Tenant                            
+                        invocation.Arguments[0].As<IHasTenant>().Tenant = _tenantRepository.Load(Tenant.CurrentTenantId);
                     }
                 }
 
