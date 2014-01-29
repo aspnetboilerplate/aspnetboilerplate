@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Security.Tenants;
 using Abp.Utils.Helpers;
@@ -79,11 +80,8 @@ namespace Abp.Security.Users
         /// </summary>
         public static int CurrentUserId
         {
-            get { return _currentUserId; }
-            set { _currentUserId = value; }
+            get { return Convert.ToInt32(Thread.CurrentPrincipal.Identity.GetUserId() ?? "0"); }
         }
-        [ThreadStatic]
-        private static int _currentUserId; //TODO: It's not working!!!
 
         public virtual void GenerateEmailConfirmationCode()
         {

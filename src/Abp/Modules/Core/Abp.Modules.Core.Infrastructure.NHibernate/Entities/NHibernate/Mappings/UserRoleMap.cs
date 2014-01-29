@@ -2,7 +2,7 @@
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class UserRoleMap : EntityMap<UserRole>
+    public class UserRoleMap : EntityMap<UserRole, long>
     {
         public UserRoleMap()
             : base("AbpUserRoles")

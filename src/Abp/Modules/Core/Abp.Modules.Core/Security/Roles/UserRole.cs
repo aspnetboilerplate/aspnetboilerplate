@@ -5,8 +5,9 @@ namespace Abp.Security.Roles
 {
     /// <summary>
     /// Represents role record of a user.
+    /// TODO: Add a unique index for UserId, RoleId
     /// </summary>
-    public class UserRole : CreationAuditedEntity
+    public class UserRole : CreationAuditedEntity<long>
     {
         /// <summary>
         /// User.

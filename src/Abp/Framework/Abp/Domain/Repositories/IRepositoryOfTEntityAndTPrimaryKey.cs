@@ -55,6 +55,14 @@ namespace Abp.Domain.Repositories
         TEntity Get(TPrimaryKey key);
 
         /// <summary>
+        /// Gets exactly one entity with given predicate.
+        /// Throws exception if no entity or more than one entity.
+        /// </summary>
+        /// <param name="predicate">Entity</param>
+        /// <returns></returns>
+        TEntity Single(Func<TEntity, bool> predicate);
+
+        /// <summary>
         /// Gets an entity with given primary key.
         /// </summary>
         /// <param name="key">Primary key of the entity to get</param>

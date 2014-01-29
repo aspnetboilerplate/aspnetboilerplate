@@ -80,6 +80,7 @@
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Data\Repositories\Interceptors\MultiTenancyInterceptor.cs" />
+    <Compile Include="Data\Repositories\NHibernate\NhRoleRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhTenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserLoginRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\NhUserLoginRepositoryOfTUser.cs" />

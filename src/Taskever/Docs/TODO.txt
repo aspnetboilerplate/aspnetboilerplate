@@ -2,6 +2,12 @@ TODO (primary):
 --------------------------------------
 
 
+DB migrations:
+
+Manual TODO:
+- AbpUsers.UserName (new column)
+- AbpUserRoles.Id -> to bigint
+
 
 TODO (secondary)
 - Email alýp almama ayarlarý!!! -> SETTING management ile yapýlacaktýr!

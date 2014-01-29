@@ -52,6 +52,11 @@ namespace Abp.Domain.Repositories.NHibernate
             return entity;
         }
 
+        public virtual TEntity Single(Func<TEntity, bool> predicate)
+        {
+            return GetAll().Single(predicate);
+        }
+
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
             return Session.Get<TEntity>(key);

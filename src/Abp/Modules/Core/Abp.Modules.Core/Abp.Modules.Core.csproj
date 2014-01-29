@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\Roles\IRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleService.cs" />
     <Compile Include="Security\Roles\RolePermission.cs" />

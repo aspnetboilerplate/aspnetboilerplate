@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.Security.Tenants;
+using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.Roles
 {
     /// <summary>
     /// Represents a role in an application.
     /// </summary>
-    public class Role : AuditedEntity, IHasTenant
+    public class Role : AuditedEntity, IHasTenant, IRole<int>
     {
         /// <summary>
         /// Tenant of this role.
