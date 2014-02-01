@@ -56,7 +56,6 @@
     <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
     <Compile Include="Application\Authorization\IAuthorizationService.cs" />
     <Compile Include="Application\Authorization\NullAuthorizationService.cs" />
-    <Compile Include="Application\Authorization\Permissions\IMustInitialize.cs" />
     <Compile Include="Application\Authorization\Permissions\IPermissionProvider.cs" />
     <Compile Include="Application\Authorization\Permissions\Permission.cs" />
     <Compile Include="Application\Authorization\Permissions\IPermissionManager.cs" />
@@ -66,15 +65,12 @@
     <Compile Include="Application\Features\ApplicationFeature.cs" />
     <Compile Include="Application\Services\Dto\EntityDto.cs" />
     <Compile Include="Application\Services\Dto\EntityDtoOfTPrimaryKey.cs" />
-    <Compile Include="Application\Services\Dto\Validation\ICustomValidate.cs" />
     <Compile Include="Application\Services\Dto\IDoubleWayDto.cs" />
     <Compile Include="Application\Services\Dto\IDto.cs" />
     <Compile Include="Application\Services\Dto\IInputDto.cs" />
     <Compile Include="Application\Services\Dto\ILimitedResultRequest.cs" />
     <Compile Include="Application\Services\Dto\IOutputDto.cs" />
     <Compile Include="Application\Services\Dto\IPagedResultRequest.cs" />
-    <Compile Include="Application\Services\Dto\Validation\IValidate.cs" />
-    <Compile Include="Application\Services\Dto\Validation\AbpValidationException.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Application\Services\Dto\Validation\ValidationInterceptor.cs" />
     <Compile Include="Startup\Application\ApplicationLayerInterceptorRegisterer.cs" />

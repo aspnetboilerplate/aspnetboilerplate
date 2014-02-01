@@ -4,47 +4,51 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using Abp.Runtime.Validation;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Services.Dto.Validation
 {
-    /* TODO:
-     * - A method may allow null arguments, how to handle it?
-     * - Optional parameters & default values
-     * - Out/Ref parameters
-     */
-
-
-    public class MethodInvocationValidator
+    /// <summary>
+    /// This class is used to validate a method call (invocation) for method arguments.
+    /// </summary>
+    internal class MethodInvocationValidator
     {
-        private readonly MethodInfo _method;
         private readonly object[] _arguments;
         private readonly ParameterInfo[] _parameters;
 
         private readonly ValidationContext _validationContext;
         private readonly List<ValidationResult> _validationErrors;
 
+        /// <summary>
+        /// Creates a new <see cref="MethodInvocationValidator"/> instance.
+        /// </summary>
+        /// <param name="instance">The object which's method is being validated</param>
+        /// <param name="method">Method to be validated</param>
+        /// <param name="arguments">List of arguments those are used to call the <see cref="method"/>.</param>
         public MethodInvocationValidator(object instance, MethodInfo method, object[] arguments)
         {
-            _method = method;
             _arguments = arguments;
+            _parameters = method.GetParameters();
 
             _validationContext = new ValidationContext(instance);
             _validationErrors = new List<ValidationResult>();
-            _parameters = _method.GetParameters();
         }
 
-        public virtual void Validate()
+        /// <summary>
+        /// Validates the method invocation.
+        /// </summary>
+        public void Validate()
         {
             if (_parameters.IsNullOrEmpty())
             {
+                //Object has no parameter, no need to validate.
                 return;
             }
 
             if (_parameters.Length != _arguments.Length)
             {
-                //This is not possible! Remove check?
-                throw new Exception("Method parameter count does not matche with argument count!");
+                throw new Exception("Method parameter count does not match with argument count!");
             }
 
             for (var i = 0; i < _parameters.Length; i++)
@@ -58,11 +62,20 @@ namespace Abp.Application.Services.Dto.Validation
             }
         }
 
+        /// <summary>
+        /// Validates given parameter for given argument.
+        /// </summary>
+        /// <param name="parameter">Parameter of the method to validate</param>
+        /// <param name="argument">Argument to validate</param>
         private void Validate(ParameterInfo parameter, object argument)
         {
             if (argument == null)
             {
-                _validationErrors.Add(new ValidationResult(parameter.Name + " is null!"));
+                if (!parameter.IsOptional && !parameter.IsOut)
+                {
+                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!")); //TODO: What if null value is acceptable?
+                }
+                
                 return;
             }
 
@@ -85,7 +98,7 @@ namespace Abp.Application.Services.Dto.Validation
             var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
+                 foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
                 {
                     var result = attribute.GetValidationResult(property.GetValue(argument), _validationContext);
                     if (result != null)

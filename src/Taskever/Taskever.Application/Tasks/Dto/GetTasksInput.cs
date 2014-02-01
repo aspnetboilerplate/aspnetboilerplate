@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.Application.Services.Dto.Validation;
+using Abp.Runtime.Validation;
 
 namespace Taskever.Tasks.Dto
 {

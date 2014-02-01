@@ -4,14 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Abp.Exceptions;
 
-namespace Abp.Application.Services.Dto.Validation
+namespace Abp.Runtime.Validation
 {
     /// <summary>
-    /// This exception type is directly shown to the user.
+    /// This exception type is used to throws validation exceptions.
     /// </summary>
     [Serializable]
     public class AbpValidationException : AbpException
     {
+        /// <summary>
+        /// Detailed list of validation errors for this exception.
+        /// </summary>
         public List<ValidationResult> ValidationErrors { get; set; }
 
         /// <summary>

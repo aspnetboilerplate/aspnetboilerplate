@@ -48,6 +48,7 @@
     <Reference Include="System.Collections.Immutable">
       <HintPath>..\..\..\packages\Microsoft.Bcl.Immutable.1.0.30\lib\portable-net45+win8+wp8\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Transactions" />
@@ -97,6 +98,9 @@
     <Compile Include="Events\Bus\Handlers\IEventHandlerOfTEventData.cs" />
     <Compile Include="Localization\Dictionaries\LocalizationDictionary.cs" />
     <Compile Include="Localization\Dictionaries\Xml\XmlLocalizationDictionary.cs" />
+    <Compile Include="Runtime\Validation\AbpValidationException.cs" />
+    <Compile Include="Runtime\Validation\ICustomValidate.cs" />
+    <Compile Include="Runtime\Validation\IValidate.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

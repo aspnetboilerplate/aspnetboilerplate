@@ -5,7 +5,7 @@ using Abp.Exceptions;
 namespace Abp.Application.Authorization
 {
     /// <summary>
-    /// 
+    /// This exception is thrown on an unauthorized request.
     /// </summary>
     [Serializable]
     public class AbpAuthorizationException : AbpException

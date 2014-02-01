@@ -1,6 +1,4 @@
 ﻿using Abp.Dependency;
-using Abp.Dependency.Conventions;
-using Castle.Core.Logging;
 using Castle.DynamicProxy;
 
 namespace Abp.Application.Authorization
@@ -20,7 +18,7 @@ namespace Abp.Application.Authorization
             invocation.Proceed();
         }
 
-        private void Authorize(IInvocation invocation)
+        private static void Authorize(IInvocation invocation)
         {
             using (var authorizationService = IocHelper.ResolveAsDisposable<IAuthorizationService>())
             {

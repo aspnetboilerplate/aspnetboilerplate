@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.Application.Authorization.Permissions;
 using Abp.Application.Services;
 
 namespace Abp.Application.Authorization

@@ -7,8 +7,10 @@ using Abp.Dependency.Conventions;
 
 namespace Abp.Application.Authorization.Permissions
 {
-    public interface IPermissionManager : ISingletonDependency, IMustInitialize
+    public interface IPermissionManager : ISingletonDependency
     {
         Permission GetPermissionOrNull(string permissionName);
+
+        void Initialize();
     }
 }

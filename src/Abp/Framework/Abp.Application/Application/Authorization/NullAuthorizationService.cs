@@ -24,8 +24,7 @@
         /// 
         /// </summary>
         public static NullAuthorizationService Instance { get { return _instance; } }
-
-        private static NullAuthorizationService _instance;
+        private static readonly NullAuthorizationService _instance;
 
         static NullAuthorizationService()
         {

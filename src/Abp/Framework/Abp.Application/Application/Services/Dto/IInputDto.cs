@@ -1,4 +1,4 @@
-using Abp.Application.Services.Dto.Validation;
+using Abp.Runtime.Validation;
 
 namespace Abp.Application.Services.Dto
 {
