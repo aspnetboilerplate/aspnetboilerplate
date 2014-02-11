@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Abp.Application.Authorization;
 using Abp.Application.Authorization.Permissions;
-using Abp.Domain.Uow;
 using Abp.Security.Roles;
 using Abp.Security.Users;
 using Castle.Core.Logging;
@@ -13,14 +12,22 @@ namespace Abp.Security.Authorization
         private readonly IAbpUserRepository _userRepository;
         private readonly IUserRoleService _userRoleService;
         private readonly IPermissionManager _permissionManager;
+        private readonly IRoleManager _roleManager;
+        private readonly IUserRoleManager _userRoleManager;
 
         public ILogger Logger { get; set; }
 
-        public RoleBasedAuthorizationService(IUserRoleService userRoleService, IAbpUserRepository userRepository, IPermissionManager permissionManager)
+        public RoleBasedAuthorizationService(
+            IUserRoleService userRoleService, 
+            IAbpUserRepository userRepository, 
+            IPermissionManager permissionManager,
+            IRoleManager roleManager, IUserRoleManager userRoleManager)
         {
             _userRoleService = userRoleService;
             _userRepository = userRepository;
             _permissionManager = permissionManager;
+            _roleManager = roleManager;
+            _userRoleManager = userRoleManager;
         }
 
         public bool HasAnyOfPermissions(string[] permissionNames)
@@ -33,7 +40,6 @@ namespace Abp.Security.Authorization
             return permissionNames.All(HasPermission);
         }
 
-        [UnitOfWork]
         public bool HasPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);
@@ -55,16 +61,13 @@ namespace Abp.Security.Authorization
 
         private bool IsGrantedForPermission(Permission permission)
         {
-            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
-            var roles = _userRoleService.GetRolesOfUser(currentUser);
-            foreach (var role in roles)
+            var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId);
+            foreach (var roleName in roleNames)
             {
-                foreach (var rolePermission in role.Permissions) //TODO: Permissions are not laoded!
+                var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permission.Name);
+                if (permissionSetting != null && permissionSetting.IsGranted)
                 {
-                    if (permission.Name == rolePermission.PermissionName && rolePermission.IsGranted)
-                    {
-                        return true;
-                    }
+                    return true;                    
                 }
             }
 
@@ -73,16 +76,13 @@ namespace Abp.Security.Authorization
 
         private bool IsDeniedForPermission(Permission permission)
         {
-            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
-            var roles = _userRoleService.GetRolesOfUser(currentUser);
-            foreach (var role in roles)
+            var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId);
+            foreach (var roleName in roleNames)
             {
-                foreach (var rolePermission in role.Permissions)
+                var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permission.Name);
+                if (permissionSetting != null && !permissionSetting.IsGranted)
                 {
-                    if (permission.Name == rolePermission.PermissionName && !rolePermission.IsGranted)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

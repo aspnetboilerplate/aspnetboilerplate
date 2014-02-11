@@ -67,10 +67,15 @@
     <Compile Include="Security\Identity\AbpUserManagerBase.cs" />
     <Compile Include="Security\Identity\RoleStore.cs" />
     <Compile Include="Security\Roles\IAbpRoleRepository.cs" />
+    <Compile Include="Security\Roles\IRoleManager.cs" />
     <Compile Include="Security\Roles\IRoleRepository.cs" />
+    <Compile Include="Security\Roles\IUserRoleManager.cs" />
     <Compile Include="Security\Roles\IUserRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleService.cs" />
+    <Compile Include="Security\Roles\PermissionSettingEntityBase.cs" />
+    <Compile Include="Security\Roles\RoleManager.cs" />
     <Compile Include="Security\Roles\RolePermission.cs" />
+    <Compile Include="Security\Roles\UserRoleManager.cs" />
     <Compile Include="Security\Roles\UserRoleService.cs" />
     <Compile Include="Security\Identity\UserStore.cs" />
     <Compile Include="Security\Users\IUserLoginRepository.cs" />
