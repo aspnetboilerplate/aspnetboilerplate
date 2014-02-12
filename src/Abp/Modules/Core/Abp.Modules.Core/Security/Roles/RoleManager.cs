@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using Abp.Dependency;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Security.Roles

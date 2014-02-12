@@ -18,6 +18,7 @@ namespace Abp.Application.Authorization.Permissions
         public PermissionManager()
         {
             _permissions = new Dictionary<string, Permission>();
+            Initialize();
         }
 
         public Permission GetPermissionOrNull(string permissionName)
@@ -25,7 +26,7 @@ namespace Abp.Application.Authorization.Permissions
             return _permissions.GetOrDefault(permissionName);
         }
 
-        public void Initialize() //TODO: Call initialize from constructor?
+        private void Initialize()
         {
             if (_isInitialized)
             {

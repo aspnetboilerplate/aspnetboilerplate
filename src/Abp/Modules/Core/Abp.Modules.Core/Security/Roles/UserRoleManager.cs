@@ -1,8 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Utils.Extensions.Collections;
+using System.Runtime.Caching;
+using Abp.Runtime.Caching;
 
 namespace Abp.Security.Roles
 {
@@ -10,32 +11,23 @@ namespace Abp.Security.Roles
     {
         private readonly IUserRoleRepository _userRoleRepository;
 
-        private readonly ConcurrentDictionary<int, UserRoleInfo> _roles;
+        private readonly ThreadSafeObjectCache<UserRoleInfo> _userInfoCache;
 
         public UserRoleManager(IUserRoleRepository userRoleRepository)
         {
             _userRoleRepository = userRoleRepository;
-            _roles = new ConcurrentDictionary<int, UserRoleInfo>();
+            _userInfoCache = new ThreadSafeObjectCache<UserRoleInfo>(MemoryCache.Default, TimeSpan.FromMinutes(30));
         }
-        
+
         public IReadOnlyList<string> GetRolesOfUser(int userId)
         {
-            UserRoleInfo roleInfo = _roles.GetOrDefault(userId);
-            if (roleInfo == null)
-            {
-                lock (_roles)
-                {
-                    roleInfo = _roles.GetOrDefault(userId);
-                    if (roleInfo == null)
-                    {
-                        roleInfo = new UserRoleInfo
-                                   {
-                                       UserId = userId,
-                                       Roles = _userRoleRepository.Query(q =>q.Where(ur => ur.User.Id == userId).Select(ur => ur.Role.Name).ToList())
-                                   };
-                    }
-                }
-            }
+            UserRoleInfo roleInfo = _userInfoCache.Get(
+                userId.ToString(),
+                () => new UserRoleInfo
+                      {
+                          UserId = userId,
+                          Roles = _userRoleRepository.Query(q => q.Where(ur => ur.User.Id == userId).Select(ur => ur.Role.Name).ToList())
+                      });
 
             return roleInfo.Roles.ToImmutableList();
         }

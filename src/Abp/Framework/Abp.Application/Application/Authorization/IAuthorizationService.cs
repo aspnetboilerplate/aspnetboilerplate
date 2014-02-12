@@ -7,7 +7,5 @@ namespace Abp.Application.Authorization
         bool HasAnyOfPermissions(string[] permissionNames);
 
         bool HasAllOfPermissions(string[] permissionNames);
-
-        bool HasPermission(string permissionName);
     }
 }

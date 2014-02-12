@@ -21,7 +21,6 @@ namespace Abp.Startup.Application
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            IocHelper.Resolve<IPermissionManager>().Initialize();
         }
     }
 }

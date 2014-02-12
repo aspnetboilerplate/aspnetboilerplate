@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Abp.Application.Authorization.Permissions;
 
 namespace Taskever.Authorization
@@ -15,7 +14,7 @@ namespace Taskever.Authorization
             AllPermissions = new[]
                              {
                                  new Permission(CreateTask, "CreateTaskPermissionDisplayName")
-                             };
+                             }; 
         }
 
         public IEnumerable<Permission> GetPermissions()

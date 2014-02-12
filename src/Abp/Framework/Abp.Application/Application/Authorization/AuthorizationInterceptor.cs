@@ -38,7 +38,7 @@ namespace Abp.Application.Authorization
                         if (!authorizationService.Object.HasAnyOfPermissions(authorizeAttribute.Permissions))
                         {
                             var requiredPermissions = string.Join(", ", authorizeAttribute.Permissions);
-                            throw new AbpAuthorizationException("Required permissions are not granted. At lease one of these permissions must be granted: " + requiredPermissions);
+                            throw new AbpAuthorizationException("Required permissions are not granted. At least one of these permissions must be granted: " + requiredPermissions);
                         }
                     }
                 }

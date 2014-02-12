@@ -9,8 +9,6 @@ namespace Abp.Security.Authorization
 {
     public class RoleBasedAuthorizationService : IAuthorizationService
     {
-        private readonly IAbpUserRepository _userRepository;
-        private readonly IUserRoleService _userRoleService;
         private readonly IPermissionManager _permissionManager;
         private readonly IRoleManager _roleManager;
         private readonly IUserRoleManager _userRoleManager;
@@ -18,13 +16,10 @@ namespace Abp.Security.Authorization
         public ILogger Logger { get; set; }
 
         public RoleBasedAuthorizationService(
-            IUserRoleService userRoleService, 
-            IAbpUserRepository userRepository, 
             IPermissionManager permissionManager,
-            IRoleManager roleManager, IUserRoleManager userRoleManager)
+            IRoleManager roleManager,
+            IUserRoleManager userRoleManager)
         {
-            _userRoleService = userRoleService;
-            _userRepository = userRepository;
             _permissionManager = permissionManager;
             _roleManager = roleManager;
             _userRoleManager = userRoleManager;
@@ -40,53 +35,40 @@ namespace Abp.Security.Authorization
             return permissionNames.All(HasPermission);
         }
 
-        public bool HasPermission(string permissionName)
+        private bool HasPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);
+
             if (permission == null)
             {
                 Logger.Warn("Permission is not defined: " + permissionName);
                 return true;
             }
 
-            if (permission.IsGrantedByDefault)
-            {
-                return !IsDeniedForPermission(permission);
-            }
-            else
-            {
-                return IsGrantedForPermission(permission);                
-            }
+            return HasPermission(permission);
         }
 
-        private bool IsGrantedForPermission(Permission permission)
+        private bool HasPermission(Permission permission)
         {
             var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId);
+            var granted = permission.IsGrantedByDefault;
             foreach (var roleName in roleNames)
             {
                 var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permission.Name);
-                if (permissionSetting != null && permissionSetting.IsGranted)
+                if (permissionSetting == null)
                 {
-                    return true;                    
+                    continue;
                 }
+
+                if (permissionSetting.IsGranted)
+                {
+                    return true; //Granted if any of role is granted
+                }
+
+                granted = false; //Denied for this role. Set false but check other roles
             }
 
-            return false;
-        }
-
-        private bool IsDeniedForPermission(Permission permission)
-        {
-            var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId);
-            foreach (var roleName in roleNames)
-            {
-                var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permission.Name);
-                if (permissionSetting != null && !permissionSetting.IsGranted)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return granted;
         }
     }
 }
