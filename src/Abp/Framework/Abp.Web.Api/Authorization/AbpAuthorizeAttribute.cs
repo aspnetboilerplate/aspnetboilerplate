@@ -9,13 +9,11 @@ namespace Abp.WebApi.Authorization
     /// to make that method usable only by authorized users.
     /// TODO: This class is not implemented yet.
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute
+    public class AbpAuthorizeAttribute : AuthorizeAttribute , IAbpAuthorizeAttribute
     {
-        /// <summary>
-        /// A list of permissions to authorize.
-        /// A user is authorized if any of the permissions is granted.
-        /// </summary>
         public string[] Permissions { get; set; }
+
+        public bool RequireAllPermissions { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
@@ -33,11 +31,6 @@ namespace Abp.WebApi.Authorization
                 return false;
             }
 
-            return HasAccessToOneOfFeatures();
-        }
-
-        private bool HasAccessToOneOfFeatures()
-        {
             return true;
         }
     }

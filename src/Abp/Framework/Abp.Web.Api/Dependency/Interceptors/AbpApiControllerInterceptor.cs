@@ -3,6 +3,9 @@ using Castle.DynamicProxy;
 
 namespace Abp.WebApi.Dependency.Interceptors
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AbpApiControllerInterceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
@@ -13,7 +16,7 @@ namespace Abp.WebApi.Dependency.Interceptors
                 return;                
             }
 
-            AuthorizationInterceptionHelper.Authorize<AbpAuthorizeAttribute>(invocation);
+            AuthorizationInterceptionHelper.Authorize<Abp.WebApi.Authorization.AbpAuthorizeAttribute>(invocation);
             invocation.Proceed();
         }
     }

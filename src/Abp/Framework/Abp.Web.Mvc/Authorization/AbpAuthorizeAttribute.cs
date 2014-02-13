@@ -1,21 +1,17 @@
 ﻿using System.Web.Mvc;
 using Abp.Application.Authorization;
-using Abp.Application.Authorization.Permissions;
 
 namespace Abp.Web.Mvc.Authorization
 {
     /// <summary>
     /// This attribute is used on an action of an MVC <see cref="Controller"/>
     /// to make that action usable only by authorized users.
-    /// TODO: Implement MVC interceptor
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute
+    public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
-        /// <summary>
-        /// A list of permissions to authorize.
-        /// A user is authorized if any of the permissions is granted.
-        /// </summary>
         public string[] Permissions { get; set; }
+
+        public bool RequireAllPermissions { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.

@@ -16,7 +16,7 @@ namespace Abp.Web.Mvc.Dependency.Interceptors
                 return;                
             }
 
-            AuthorizationInterceptionHelper.Authorize<AbpAuthorizeAttribute>(invocation);
+            AuthorizationInterceptionHelper.Authorize<Abp.Web.Mvc.Authorization.AbpAuthorizeAttribute>(invocation);
             invocation.Proceed();
         }
     }
