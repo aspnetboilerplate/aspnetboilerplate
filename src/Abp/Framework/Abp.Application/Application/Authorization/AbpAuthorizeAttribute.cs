@@ -7,7 +7,7 @@ namespace Abp.Application.Authorization
     /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)
     /// to make that method usable only by authorized users.
     /// </summary>
-    public class AbpAuthorizeAttribute : Attribute
+    public class AbpAuthorizeAttribute : Attribute, IAbpAuthorizeAttribute
     {
         /// <summary>
         /// A list of permissions to authorize.
@@ -19,7 +19,7 @@ namespace Abp.Application.Authorization
         /// If it's false, at least one of the <see cref="Permissions"/> must be granted.
         /// Default: false.
         /// </summary>
-        public bool RequireAll { get; set; }
+        public bool RequireAllPermissions { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.

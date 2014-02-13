@@ -1,10 +1,13 @@
 ﻿using Abp.Application.Authorization;
 using Castle.DynamicProxy;
 
-namespace Abp.WebApi.Dependency.Interceptors
+namespace Abp.Web.Mvc.Dependency.Interceptors
 {
-    public class AbpApiControllerInterceptor : IInterceptor
-    {
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AbpControllerInterceptor : IInterceptor
+    { 
         public void Intercept(IInvocation invocation)
         {
             if (!invocation.MethodInvocationTarget.IsPublic)

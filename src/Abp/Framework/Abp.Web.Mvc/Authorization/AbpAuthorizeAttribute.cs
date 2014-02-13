@@ -7,6 +7,7 @@ namespace Abp.Web.Mvc.Authorization
     /// <summary>
     /// This attribute is used on an action of an MVC <see cref="Controller"/>
     /// to make that action usable only by authorized users.
+    /// TODO: Implement MVC interceptor
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute
     {

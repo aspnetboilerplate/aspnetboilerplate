@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Authorization\AbpAuthorizationException.cs" />
+    <Compile Include="Application\Authorization\AuthorizationInterceptionHelper.cs" />
     <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Application\Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Authorization\IAuthorizationService.cs" />
     <Compile Include="Application\Authorization\NullAuthorizationService.cs" />
     <Compile Include="Application\Authorization\Permissions\IPermissionProvider.cs" />

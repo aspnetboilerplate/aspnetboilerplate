@@ -10,10 +10,9 @@ DONE:
 
 TODO (primary):
 
-- Register all Repositories (OK), Domain Services, Application Services, Api controllers, MVC controllers by convention!
+- Authorization/Permission system
 - Make use of NHibernate auto mapping
 - Test & Use NHibernate L2 caching
-- Authorization/Permission system
 - MULTITHREAD UNITOFWORK TEST!
 - Check Unitofwork and transaction scope best practices!
 - Taskever LOCALIZATION

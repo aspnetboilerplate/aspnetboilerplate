@@ -1,13 +1,13 @@
 ﻿using Abp.Startup;
-using Abp.WebApi.Controllers;
+using Abp.Web.Mvc.Controllers;
 using Castle.Core;
 
-namespace Abp.WebApi.Dependency.Interceptors
+namespace Abp.Web.Mvc.Dependency.Interceptors
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class AbpApiControllerInterceptorRegisterer
+    public static class AbpControllerInterceptorRegisterer
     {
         public static void Initialize(IAbpInitializationContext initializationContext)
         {
@@ -16,9 +16,9 @@ namespace Abp.WebApi.Dependency.Interceptors
 
         private static void ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
         {
-            if (handler.ComponentModel.Implementation.IsSubclassOf(typeof(AbpApiController)))
+            if (handler.ComponentModel.Implementation.IsSubclassOf(typeof(AbpController)))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpApiControllerInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpControllerInterceptor)));
             }
         }
     }

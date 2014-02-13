@@ -9,6 +9,7 @@ using Abp.Modules.Core.Mvc.Models;
 using Abp.Security.Identity;
 using Abp.Users;
 using Abp.Users.Dto;
+using Abp.Web.Mvc.Authorization;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Models;
 using Microsoft.AspNet.Identity;
@@ -40,9 +41,13 @@ namespace Taskever.Web.Mvc.Controllers
         {
             _userAppService = userAppService;
             _userManager = userManager;
+
+            var type = GetType();
+            var method = type.GetMethod("Login", new Type[] {typeof (string), typeof (string)});
+            var prms = method.GetParameters();
         }
 
-        public virtual ActionResult Login(string returnUrl = "/", string loginMessage = null)
+        public virtual ActionResult Login(string returnUrl = "/", string loginMessage = "")
         {
             ViewBag.ReturnUrl = returnUrl;
             ViewBag.LoginMessage = loginMessage;
@@ -81,7 +86,7 @@ namespace Taskever.Web.Mvc.Controllers
             return RedirectToAction("Login", new { loginMessage = "Congratulations! Your account is activated. Enter your email address and password to login" });
         }
 
-        [Abp.Web.Mvc.Authorization.AbpAuthorize]
+        [AbpAuthorize]
         public virtual ActionResult Logout()
         {
             FormsAuthentication.SignOut();

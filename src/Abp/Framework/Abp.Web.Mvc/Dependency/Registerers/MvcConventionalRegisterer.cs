@@ -4,7 +4,7 @@ using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace Abp.Web.Mvc.Startup
+namespace Abp.Web.Mvc.Dependency.Registerers
 {
     /// <summary>
     /// 
