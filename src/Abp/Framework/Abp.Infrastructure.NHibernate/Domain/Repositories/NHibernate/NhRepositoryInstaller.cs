@@ -21,6 +21,7 @@ namespace Abp.Domain.Repositories.NHibernate
                 //Nhibernate session factory
                 Component.For<ISessionFactory>().UsingFactoryMethod(() => _sessionFactory).LifeStyle.Singleton//,
 
+                //TODO: Implement and test it!
                 //Generic repositories (So, user can directly inject a IRepository<TEntity> or IRepository<TEntity,TPrimaryKey>) without defining a class for it.
                 //Component.For(typeof (IRepository<>), typeof (NhRepositoryBase<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
                 //Component.For(typeof (IRepository<,>), typeof (NhRepositoryBase<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()

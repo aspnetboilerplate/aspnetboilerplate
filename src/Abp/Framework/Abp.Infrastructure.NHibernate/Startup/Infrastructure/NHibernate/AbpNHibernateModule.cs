@@ -36,17 +36,15 @@ namespace Abp.Startup.Infrastructure.NHibernate
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
+
             _sessionFactory = Configuration.BuildSessionFactory();
-
             initializationContext.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
-
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
         public override void Shutdown()
         {
             base.Shutdown();
-            
             _sessionFactory.Dispose();
         }
     }
