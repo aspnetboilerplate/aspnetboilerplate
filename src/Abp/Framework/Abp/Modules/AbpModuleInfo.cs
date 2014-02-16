@@ -53,7 +53,7 @@ namespace Abp.Modules
                         type.FullName));
             }
 
-            return new AbpModuleInfo(type, type.GetSingleAttribute<AbpModuleAttribute>(), (IAbpModule)Activator.CreateInstance(type, new object[] { }));
+            return new AbpModuleInfo(type, type.GetSingleAttributeOrNull<AbpModuleAttribute>(), (IAbpModule)Activator.CreateInstance(type, new object[] { }));
         }
 
         public override string ToString()

@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace Abp.Utils.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions to <see cref="MemberInfo"/>.
+    /// </summary>
     public static class MemberInfoExtensions
     {
         /// <summary>
@@ -12,7 +15,7 @@ namespace Abp.Utils.Extensions.Reflection
         /// <param name="memberInfo">The member that will be checked for the attribute</param>
         /// <param name="inherit">Include inherited attrbiutes</param>
         /// <returns>Returns the attribute object if found. Returns null if not found.</returns>
-        public static T GetSingleAttribute<T>(this MemberInfo memberInfo, bool inherit = true) where T : class
+        public static T GetSingleAttributeOrNull<T>(this MemberInfo memberInfo, bool inherit = true) where T : class
         {
             if (memberInfo == null)
             {
