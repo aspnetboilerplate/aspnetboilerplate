@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 using Abp.Application.Authorization;
-using Abp.Application.Authorization.Permissions;
+using Abp.Logging;
 
 namespace Abp.WebApi.Authorization
 {
@@ -31,7 +31,16 @@ namespace Abp.WebApi.Authorization
                 return false;
             }
 
-            return true;
+            try
+            {
+                AuthorizeAttributeHelper.Authorize(this);
+                return true;
+            }
+            catch (AbpAuthorizationException ex)
+            {
+                LogHelper.Logger.Warn(ex.Message, ex);
+                return false;
+            }
         }
     }
 }

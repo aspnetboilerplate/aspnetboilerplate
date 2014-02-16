@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Abp.Modules;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization.Permissions
@@ -42,8 +40,7 @@ namespace Abp.Application.Authorization.Permissions
                     if (typeof(IPermissionProvider).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(type);
-                        var permissions = provider.GetPermissions();
-                        foreach (var permission in permissions)
+                        foreach (var permission in provider.GetPermissions())
                         {
                             _permissions[permission.Name] = permission;
                         }

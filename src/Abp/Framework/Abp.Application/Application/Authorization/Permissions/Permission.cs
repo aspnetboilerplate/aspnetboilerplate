@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Represents a permission.
-    /// A permission is used to restrict functionalities of the application from unauthorized users. 
+    /// A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
     public class Permission
     {

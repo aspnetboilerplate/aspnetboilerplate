@@ -16,7 +16,6 @@ namespace Abp.WebApi.Dependency.Interceptors
                 return;                
             }
 
-            AuthorizationInterceptionHelper.Authorize<Abp.WebApi.Authorization.AbpAuthorizeAttribute>(invocation);
             invocation.Proceed();
         }
     }

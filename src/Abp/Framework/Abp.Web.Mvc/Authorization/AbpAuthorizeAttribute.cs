@@ -1,5 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Abp.Application.Authorization;
+using Abp.Dependency;
+using Abp.Logging;
+using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Authorization
 {
@@ -29,7 +33,16 @@ namespace Abp.Web.Mvc.Authorization
                 return false;
             }
 
-            return true;
+            try
+            {
+                AuthorizeAttributeHelper.Authorize(this);
+                return true;
+            }
+            catch (AbpAuthorizationException ex)
+            {
+                LogHelper.Logger.Warn(ex.Message, ex);
+                return false;
+            }
         }
     }
 }
