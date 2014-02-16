@@ -84,7 +84,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">
       <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
-      <Name>Abp %28Abp\Framework\Abp%29</Name>
+      <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -84,7 +84,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Framework\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp %28Abp\Framework\Abp%29</Name>
+      <Name>Abp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core\Abp.Modules.Core.csproj">
       <Project>{B333D942-7600-4191-80E3-923A6144DF4F}</Project>
@@ -93,10 +93,6 @@
     <ProjectReference Include="..\Taskever.Application\Taskever.Application.csproj">
       <Project>{7A28A996-B52E-422D-B7EE-FC20B5C8C9D4}</Project>
       <Name>Taskever.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Taskever.Core\Taskever.Core.csproj">
-      <Project>{14754E90-96E2-4C25-AB71-B946ADE21163}</Project>
-      <Name>Taskever.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

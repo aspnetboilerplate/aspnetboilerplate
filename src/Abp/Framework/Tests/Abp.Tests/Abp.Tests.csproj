@@ -64,7 +64,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp %28Abp\Framework\Abp%29</Name>
+      <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

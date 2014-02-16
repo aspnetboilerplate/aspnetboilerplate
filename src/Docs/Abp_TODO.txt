@@ -2,35 +2,35 @@ DONE:
 
 - Dependency Injection infrastructure
 - Module system
-- Localization
-- EventBus
+- Localization system
+- EventBus (Server side events)
 - Domain driven design
 - Repository layer
-- WebApi generation
+- Dynamic WebApi generation
+- Authorization/Permission system
+- ASP.NET Identity implementation (active)
 
 TODO (primary):
 
-- Authorization/Permission system
+* Pages
+  - User management
+  - Role management
+  - Login page
+  - Layout
+
 - Make use of NHibernate auto mapping
 - Test & Use NHibernate L2 caching
 - MULTITHREAD UNITOFWORK TEST!
-- Check Unitofwork and transaction scope best practices!
-- Taskever LOCALIZATION
+- Unitofwork and transaction scope best practices!
 - NHibernate Session / db connection timeouts!
-
-* ADMIN Pages
-- User, Role and permission management interfaces
 
 TODO (secondary):
 
 - Implement Specification pattern classes
-- Handling validation errors
-- VALUE TYPES!
+- Value types
 - Operation time measurement & db logging
 - Make auto mapping (for DTO and other classes) easier to use and standard to implement!
 - Learn & test require.js bundling
 - Create 403 & 404 (maybe others) special error pages!
 - Edition system (Standart edition, Premium edition v.s.)
-- Membership statuses (Gold member, Standart member v.s.) ?
-- Implement best practices for guard clauses?
 - Develop ASP.NET MVC Widget System!

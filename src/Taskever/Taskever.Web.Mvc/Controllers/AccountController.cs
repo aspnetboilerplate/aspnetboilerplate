@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Abp.Dependency;
 using Abp.Exceptions;
 using Abp.Modules.Core.Mvc.Models;
-using Abp.Security.Identity;
 using Abp.Users;
 using Abp.Users.Dto;
 using Abp.Web.Mvc.Authorization;
@@ -18,7 +16,6 @@ using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
 using Taskever.Security.Identity;
 using Taskever.Security.Users;
-using Taskever.Users;
 using Taskever.Web.Mvc.Models.Account;
 
 namespace Taskever.Web.Mvc.Controllers
@@ -43,7 +40,7 @@ namespace Taskever.Web.Mvc.Controllers
             _userManager = userManager;
 
             var type = GetType();
-            var method = type.GetMethod("Login", new Type[] {typeof (string), typeof (string)});
+            var method = type.GetMethod("Login", new [] {typeof (string), typeof (string)});
             var prms = method.GetParameters();
         }
 

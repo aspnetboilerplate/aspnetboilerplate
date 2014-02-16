@@ -1,19 +1,24 @@
 Framework
 =======================================
-- "Abp.Core"
-- "Abp.Data"
-- "Abp.WebApi"
+- "Abp"
+- "Abp.Application"
+- "Abp.Web"
+- "Abp.Web.Api"
 - "Abp.Web.Mvc"
+- "Abp.Infrastructure.NHibernate"
 
 Core module
 =======================================
 - "Abp.Modules.Core"
-- "Abp.Modules.Core.Data"
-- "Abp.Modules.Core.WebApi"
+- "Abp.Modules.Core.Application"
+- "Abp.Modules.Core.Web"
+- "Abp.Modules.Core.Web.Api"
+- "Abp.Modules.Core.Web.Mvc"
+- "Abp.Modules.Core.Infrastructure.NHibernate"
 
-Taskever application module
+Taskever module
 =======================================
-- "Taskever.Core"
+- "Taskever"
 - "Taskever.Data"
 - "Taskever.WebApi"
 - "Taskever.Web.Spa"

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Taskever</RootNamespace>
-    <AssemblyName>Taskever.Core</AssemblyName>
+    <AssemblyName>Taskever</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -116,7 +116,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Framework\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp %28Abp\Framework\Abp%29</Name>
+      <Name>Abp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp\Modules\Core\Abp.Modules.Core.Application\Abp.Modules.Core.Application.csproj">
       <Project>{C543BB79-F01D-4FE6-89CB-A38BD8B255FD}</Project>
