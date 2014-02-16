@@ -1,4 +1,6 @@
+using System;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
 
 namespace Abp.Security.Roles
@@ -7,7 +9,7 @@ namespace Abp.Security.Roles
     /// Represents role record of a user.
     /// TODO: Add a unique index for UserId, RoleId
     /// </summary>
-    public class UserRole : CreationAuditedEntity<long>
+    public class UserRole : Entity<long>, ICreationAudited
     {
         /// <summary>
         /// User.
@@ -18,5 +20,15 @@ namespace Abp.Security.Roles
         /// Role.
         /// </summary>
         public virtual AbpRole Role { get; set; }
+
+        /// <summary>
+        /// Creation date of this entity.
+        /// </summary>
+        public virtual DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// Creator user of this entity.
+        /// </summary>
+        public virtual AbpUser CreatorUser { get; set; }
     }
 }

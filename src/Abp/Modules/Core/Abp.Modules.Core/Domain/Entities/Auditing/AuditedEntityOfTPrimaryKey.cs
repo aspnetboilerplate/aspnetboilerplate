@@ -1,7 +1,7 @@
 using System;
 using Abp.Security.Users;
 
-namespace Abp.Domain.Entities
+namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
     /// This class can be used to simplify implementing IAudited.

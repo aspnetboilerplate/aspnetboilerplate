@@ -61,9 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Entities\AuditedEntity.cs" />
-    <Compile Include="Domain\Entities\CreationAuditedEntity.cs" />
-    <Compile Include="Domain\Entities\ModificationAuditedEntity.cs" />
+    <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasCreatorUser.cs" />
     <Compile Include="Security\Identity\AbpRoleManagerBase.cs" />
     <Compile Include="Security\Identity\AbpUserManagerBase.cs" />
     <Compile Include="Security\Identity\RoleStore.cs" />
@@ -86,14 +86,12 @@
     <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
     <Compile Include="Security\Users\IUserRepository.cs" />
     <Compile Include="Security\Roles\UserRole.cs" />
-    <Compile Include="Domain\Entities\AuditedEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Security\Roles\AbpRole.cs" />
     <Compile Include="Security\Users\AbpUser.cs" />
-    <Compile Include="Domain\Entities\CreationAuditedEntityOfTPrimaryKey.cs" />
-    <Compile Include="Domain\Entities\IAudited.cs" />
-    <Compile Include="Domain\Entities\ICreationAudited.cs" />
-    <Compile Include="Domain\Entities\IModificationAudited.cs" />
-    <Compile Include="Domain\Entities\ModificationAuditedEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\Auditing\IAudited.cs" />
+    <Compile Include="Domain\Entities\Auditing\ICreationAudited.cs" />
+    <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
     <Compile Include="Net\Mail\IEmailService.cs" />
     <Compile Include="Net\Mail\EmailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

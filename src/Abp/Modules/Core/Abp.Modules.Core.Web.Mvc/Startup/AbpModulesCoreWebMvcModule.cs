@@ -2,7 +2,6 @@
 using System.Web;
 using Abp.Dependency;
 using Abp.Modules.Core.Mvc.Startup;
-using Abp.Modules.Core.Mvc.Web.Authentication;
 using Abp.Startup;
 
 [assembly: PreApplicationStartMethod(typeof(Test), "Start")]
@@ -16,7 +15,6 @@ namespace Abp.Modules.Core.Mvc.Startup
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            AbpMembershipProvider.IocContainer = initializationContext.IocContainer;
         }
     }
 

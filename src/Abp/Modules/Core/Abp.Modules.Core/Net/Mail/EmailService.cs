@@ -5,6 +5,7 @@ using Castle.Core.Logging;
 
 namespace Abp.Net.Mail
 {
+    //TODO: Get setting from configuration
     public class EmailService : IEmailService
     {
         public ILogger Logger { get; set; }

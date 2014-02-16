@@ -84,7 +84,6 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreWebMvcModule.cs" />
-    <Compile Include="Web\Authentication\AbpMembershipProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

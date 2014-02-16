@@ -1,6 +1,7 @@
 using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
 using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
@@ -8,6 +9,7 @@ using Castle.DynamicProxy;
 
 namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {
+    //TODO: Implement this in NHibernate events!
     public class AuditInterceptor : IInterceptor
     {
         private readonly IAbpUserRepository _userRepository;

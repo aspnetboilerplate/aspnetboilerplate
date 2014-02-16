@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings

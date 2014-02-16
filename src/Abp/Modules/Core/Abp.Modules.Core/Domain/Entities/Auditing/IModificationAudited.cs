@@ -1,7 +1,7 @@
 using System;
 using Abp.Security.Users;
 
-namespace Abp.Domain.Entities
+namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
     /// This interface is implemented by entities which's modification informations (who and when modified) must be stored.
@@ -16,6 +16,6 @@ namespace Abp.Domain.Entities
         /// <summary>
         /// Last modifier user for this entity.
         /// </summary>
-        AbpUser LastModifierUser { get; set; }
+        AbpUser LastModifierUser { get; set; } //TODO: Think to change this to "int LastModifierUserId"
     }
 }
