@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Controllers;
 using Abp.Application.Authorization;
 using Abp.Logging;
 
@@ -24,7 +25,7 @@ namespace Abp.WebApi.Authorization
             Permissions = permissions;
         }
 
-        protected override bool IsAuthorized(System.Web.Http.Controllers.HttpActionContext actionContext)
+        protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             if (!base.IsAuthorized(actionContext))
             {

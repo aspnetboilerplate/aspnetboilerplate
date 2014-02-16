@@ -4,10 +4,10 @@ using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace Abp.WebApi.Dependency.Registerers
+namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// Registers all Api controllers derived from <see cref="AbpApiController"/>.
     /// </summary>
     public class ApiControllerConventionalRegisterer : IConventionalRegisterer
     {

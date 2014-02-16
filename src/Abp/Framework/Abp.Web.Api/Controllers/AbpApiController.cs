@@ -30,7 +30,6 @@ namespace Abp.WebApi.Controllers
         protected string L(string name)
         {
             CheckForLocalizationSourceName();
-
             return LocalizationHelper.GetString(LocalizationSourceName, name);
         }
 
@@ -43,7 +42,6 @@ namespace Abp.WebApi.Controllers
         protected string L(string name, CultureInfo culture)
         {
             CheckForLocalizationSourceName();
-
             return LocalizationHelper.GetString(LocalizationSourceName, name, culture);
         }
 

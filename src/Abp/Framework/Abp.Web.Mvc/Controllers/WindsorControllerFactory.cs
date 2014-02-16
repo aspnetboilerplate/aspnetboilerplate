@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel;
 
-namespace Abp.Web.Mvc.Dependency
+namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
     /// This class is used to allow MVC to use dependency injection system while creating MVC controllers.
@@ -14,7 +14,7 @@ namespace Abp.Web.Mvc.Dependency
         /// <summary>
         /// Reference to DI kernel.
         /// </summary>
-        private readonly IKernel _kernel;
+        private readonly IKernel _kernel; //TODO: Remove this and use IocHelper?
 
         /// <summary>
         /// Creates a new instance of WindsorControllerFactory.

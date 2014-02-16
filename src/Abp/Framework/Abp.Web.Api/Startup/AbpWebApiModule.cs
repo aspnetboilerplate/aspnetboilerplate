@@ -6,26 +6,25 @@ using System.Web.Http.Dispatcher;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
+using Abp.WebApi.Controllers;
+using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
-using Abp.WebApi.Dependency;
-using Abp.WebApi.Dependency.Interceptors;
-using Abp.WebApi.Dependency.Registerers;
-using Abp.WebApi.Routing;
-using Castle.Core;
-using Castle.Windsor.Installer;
 using Newtonsoft.Json.Serialization;
 
 namespace Abp.WebApi.Startup
 {
+    /// <summary>
+    /// This module provides Abp features for ASP.NET Web API.
+    /// </summary>
     [AbpModule("Abp.Web.Api")]
     public class AbpWebApiModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            AbpApiControllerInterceptorRegisterer.Initialize(initializationContext);
+
             IocManager.Instance.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
         }
 
@@ -44,8 +43,8 @@ namespace Abp.WebApi.Startup
         private static void InitializeAspNetServices()
         {
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new IocControllerActivator());
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new AbpControllerActivator());
         }
 
         private static void InitializeFilters()
@@ -64,7 +63,7 @@ namespace Abp.WebApi.Startup
 
         private static void InitializeRoutes()
         {
-            RouteConfig.Register(GlobalConfiguration.Configuration);
+            DynamicApiRouteConfig.Register();
         }
     }
 }

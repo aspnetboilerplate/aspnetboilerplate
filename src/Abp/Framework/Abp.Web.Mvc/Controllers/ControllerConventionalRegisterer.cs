@@ -4,12 +4,12 @@ using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace Abp.Web.Mvc.Dependency.Registerers
+namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
     /// 
     /// </summary>
-    public class MvcConventionalRegisterer : IConventionalRegisterer
+    public class ControllerConventionalRegisterer : IConventionalRegisterer
     {
         public void RegisterAssembly(IWindsorContainer container, Assembly assembly)
         {

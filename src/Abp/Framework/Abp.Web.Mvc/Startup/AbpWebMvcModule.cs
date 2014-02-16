@@ -4,9 +4,6 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Web.Mvc.Controllers;
-using Abp.Web.Mvc.Dependency;
-using Abp.Web.Mvc.Dependency.Interceptors;
-using Abp.Web.Mvc.Dependency.Registerers;
 
 namespace Abp.Web.Mvc.Startup
 {
@@ -19,8 +16,7 @@ namespace Abp.Web.Mvc.Startup
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            AbpControllerInterceptorRegisterer.Initialize(initializationContext);
-            IocManager.Instance.AddConventionalRegisterer(new MvcConventionalRegisterer());
+            IocManager.Instance.AddConventionalRegisterer(new ControllerConventionalRegisterer());
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)
