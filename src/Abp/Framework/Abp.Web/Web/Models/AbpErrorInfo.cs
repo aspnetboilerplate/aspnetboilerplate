@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Exceptions;
+using Abp.Runtime.Validation;
 using Abp.Web.Localization;
 
 namespace Abp.Web.Models
@@ -60,8 +61,11 @@ namespace Abp.Web.Models
                 var userFriendlyException = exception as AbpUserFriendlyException;
                 return new AbpErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
             }
-
-            //TODO: How to show validation exceptions...?
+            
+            if (exception is AbpValidationException)
+            {
+                return new AbpErrorInfo(AbpWebLocalizedMessages.ValidationError);                
+            }
 
             return new AbpErrorInfo(AbpWebLocalizedMessages.InternalServerError);
         }

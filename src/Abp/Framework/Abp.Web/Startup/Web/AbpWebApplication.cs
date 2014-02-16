@@ -22,10 +22,10 @@ namespace Abp.Startup.Web
             AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();
         }
+
         /// <summary>
         /// This method is called by ASP.NET system on web application's end.
         /// </summary>
-
         protected virtual void Application_End(object sender, EventArgs e)
         {
             AbpBootstrapper.Dispose();
