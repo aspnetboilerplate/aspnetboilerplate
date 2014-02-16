@@ -37,32 +37,3 @@ Areas
 	  Views
 Content
 Scripts
-
----------------------------------------------------------
-
-cloud system (seperated web project?)
-- SPA: Contains pages to manage tenant accounts
-  - ABP Pages
-    - List of tenants, add/remove/update tenant
-	  - Tenancy status management (approve tenancy, so on)
-	- ...
-  - Application specific pages
-- MPA
-  - Application specific pages
-    - Describes the system
-    - Used to be a tenant (Abp makes a template?)
-	- Used to see all tenancies and so on...
-    - Login (to SPA) page (Abp makes a template)
-    - ...
-
-application (seperated web project?)
-- SPA: Contains administration & user pages
-  - Change tenancy
-- MPA
-  - Describes the application
-  - Used to be a member (Abp makes templates)
-  - Public pages of the application
-  - Login (to SPA) page (Abp makes a template)
-  - ...
-
---------------------------------------------------------

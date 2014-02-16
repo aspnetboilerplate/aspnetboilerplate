@@ -19,16 +19,7 @@ Core module
 Taskever module
 =======================================
 - "Taskever"
-- "Taskever.Data"
-- "Taskever.WebApi"
-- "Taskever.Web.Spa"
-
-------------------------------------------------------------------
-
-Dll's of a project:
-
-- Project.Core
-- Project.Infrastructure
-- Project.Application
-- Project.Web.Api
-- Project.Web.Mvc
+- "Taskever.Application"
+- "Taskever.Web.Api"
+- "Taskever.Web.Mvc"
+- "Taskever.Infrastructure.NHibernate"
