@@ -5,7 +5,6 @@ using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Net.Mail;
-using Abp.Security.Tenants;
 using Abp.Security.Users;
 using Abp.Users.Dto;
 
@@ -17,13 +16,11 @@ namespace Abp.Users
     public class UserAppService : IUserAppService
     {
         private readonly IAbpUserRepository _userRepository;
-        private readonly ITenantRepository _tenantRepository;
         private readonly IEmailService _emailService;
 
-        public UserAppService(IAbpUserRepository questionRepository, ITenantRepository tenantRepository, IEmailService emailService)
+        public UserAppService(IAbpUserRepository questionRepository, IEmailService emailService)
         {
             _userRepository = questionRepository;
-            _tenantRepository = tenantRepository;
             _emailService = emailService;
         }
 
@@ -60,7 +57,6 @@ namespace Abp.Users
             }
 
             var userEntity = registerUser.MapTo<AbpUser>();
-            userEntity.Tenant = _tenantRepository.Load(Tenant.CurrentTenantId); //TODO: Get from subdomain or ?
             userEntity.GenerateEmailConfirmationCode();
             _userRepository.Insert(userEntity);
             SendConfirmationEmail(userEntity);

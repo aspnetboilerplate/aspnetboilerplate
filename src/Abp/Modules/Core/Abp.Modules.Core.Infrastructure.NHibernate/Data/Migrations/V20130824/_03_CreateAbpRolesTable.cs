@@ -9,7 +9,6 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
         {
             Create.Table("AbpRoles")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("DisplayName").AsString(100).NotNullable()
                 .WithColumn("IsStatic").AsBoolean().NotNullable().WithDefaultValue(false)

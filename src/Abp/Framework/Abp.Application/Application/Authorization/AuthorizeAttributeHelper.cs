@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Dependency;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization
 {
@@ -17,6 +18,11 @@ namespace Abp.Application.Authorization
             {
                 foreach (IAbpAuthorizeAttribute authorizeAttribute in authorizeAttributes)
                 {
+                    if (authorizeAttribute.Permissions.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
                     if (authorizeAttribute.RequireAllPermissions)
                     {
                         if (!authorizationService.Object.HasAllOfPermissions(authorizeAttribute.Permissions))

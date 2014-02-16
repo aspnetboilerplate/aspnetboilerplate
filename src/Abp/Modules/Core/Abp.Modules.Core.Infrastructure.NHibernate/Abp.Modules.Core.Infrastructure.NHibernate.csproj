@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Migrations\V20130824\_02_CreateAbpUsersTable.cs" />
-    <Compile Include="Data\Migrations\V20130824\_01_CreateAbpTenantsTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_03_CreateAbpRolesTable.cs" />
     <Compile Include="Data\Migrations\V20130824\_04_CreateAbpUserRolesTable.cs" />
     <Compile Include="Data\Migrations\V20131215\_01_AddEmailConfirmationColumnsToUsersTable.cs" />
@@ -79,10 +78,8 @@
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Data\Repositories\Interceptors\AuditInterceptor.cs" />
-    <Compile Include="Data\Repositories\Interceptors\MultiTenancyInterceptor.cs" />
     <Compile Include="Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\RoleRepositoryBase.cs" />
-    <Compile Include="Data\Repositories\NHibernate\TenantRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\UserLoginRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Data\Repositories\NHibernate\AbpUserRepository.cs" />
@@ -93,7 +90,6 @@
     <Compile Include="Entities\NHibernate\Mappings\RolePermissionMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RoleMapBase.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\TenantMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserMapBase.cs" />
     <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />

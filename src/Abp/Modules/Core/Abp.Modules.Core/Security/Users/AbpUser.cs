@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Abp.Domain.Entities;
-using Abp.Security.Tenants;
 using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
 
@@ -10,13 +9,8 @@ namespace Abp.Security.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser : Entity, IHasTenant, IUser<int> // TODO: Change Id from int to long?
+    public class AbpUser : Entity, IUser<int> // TODO: Change Id from int to long?
     {
-        /// <summary>
-        /// Tenant of this role.
-        /// </summary>
-        public virtual Tenant Tenant { get; set; }
-
         /// <summary>
         /// User name.
         /// </summary>
@@ -63,11 +57,6 @@ namespace Abp.Security.Users
         /// Profile image of the user. 
         /// </summary>
         public virtual string ProfileImage { get; set; }
-
-        /// <summary>
-        /// Is this user owner of the <see cref="Tenant"/>.
-        /// </summary>
-        public virtual bool IsTenantOwner { get; set; }
 
         /// <summary>
         /// Gets Name and Surname joined by space.

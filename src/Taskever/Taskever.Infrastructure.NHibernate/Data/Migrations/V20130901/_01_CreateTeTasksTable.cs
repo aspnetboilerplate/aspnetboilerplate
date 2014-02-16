@@ -10,7 +10,6 @@ namespace Taskever.Data.Migrations.V20130901
         {
             Create.Table("TeTasks")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
                 .WithColumn("Title").AsString(200).NotNullable()
                 .WithColumn("Description").AsString(2000).Nullable()
                 .WithColumn("Priority").AsByte().NotNullable().WithDefaultValue(3) //TaskPriority.Normal

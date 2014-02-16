@@ -9,14 +9,12 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
         {
             Create.Table("AbpUsers")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id")
                 .WithColumn("UserName").AsString(32).NotNullable()
                 .WithColumn("Name").AsString(30).NotNullable()
                 .WithColumn("Surname").AsString(30).NotNullable()
                 .WithColumn("EmailAddress").AsString(100).NotNullable()
                 .WithColumn("Password").AsString(80).NotNullable()
-                .WithColumn("ProfileImage").AsString(100).Nullable()
-                .WithColumn("IsTenantOwner").AsBoolean().NotNullable().WithDefaultValue(false);
+                .WithColumn("ProfileImage").AsString(100).Nullable();
 
             Insert.IntoTable("AbpUsers").Row(
                 new

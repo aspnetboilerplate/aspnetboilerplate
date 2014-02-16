@@ -16,7 +16,6 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
             Map(x => x.ProfileImage);
-            Map(x => x.IsTenantOwner);
         }
     }
 }

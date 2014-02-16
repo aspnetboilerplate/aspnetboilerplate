@@ -1,5 +1,4 @@
 using Abp.Domain.Entities;
-using Abp.Security.Tenants;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
@@ -37,15 +36,6 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         {
             mapping.Map(x => (x as IModificationAudited).LastModificationTime);
             mapping.References(x => (x as IModificationAudited).LastModifierUser).Column("LastModifierUserId").LazyLoad();
-        }
-
-        /// <summary>
-        /// Maps Tenant column. See <see cref="IHasTenant"/>.
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public static void MapTenantColumn<TEntity>(this ClassMap<TEntity> mapping)
-        {
-            mapping.References(x => (x as IHasTenant).Tenant).Column("TenantId").LazyLoad();
         }
     }
 }

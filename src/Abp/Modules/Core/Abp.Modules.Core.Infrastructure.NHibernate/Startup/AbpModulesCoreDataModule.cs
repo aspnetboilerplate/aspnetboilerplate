@@ -2,9 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Modules.Core.Data.Repositories;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
-using Abp.Security.Tenants;
 using Abp.Startup;
 using Abp.Startup.Infrastructure.NHibernate;
 using Castle.Core;
@@ -40,11 +38,6 @@ namespace Abp.Modules.Core.Startup
                     if (implementedInterface.Name == "IRepository`2" && implementedInterface.IsGenericType && implementedInterface.GenericTypeArguments.Length == 2)
                     {
                         var typeArgs = implementedInterface.GenericTypeArguments;
-                        if ((typeof(IHasTenant)).IsAssignableFrom(typeArgs[0]))
-                        {
-                            var genType = (typeof(MultiTenancyInterceptor<,>)).MakeGenericType(typeArgs[0], typeArgs[1]);
-                            handler.ComponentModel.Interceptors.Add(new InterceptorReference(genType));
-                        }
                         if (typeof(ICreationAudited).IsAssignableFrom(typeArgs[0]) || typeof(IModificationAudited).IsAssignableFrom(typeArgs[0]))
                         {
                             handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditInterceptor)));

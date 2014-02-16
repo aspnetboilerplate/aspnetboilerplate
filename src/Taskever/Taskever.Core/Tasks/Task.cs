@@ -1,20 +1,13 @@
 ﻿using Abp.Domain.Entities;
-using Abp.Security.Tenants;
 using Abp.Security.Users;
-using Abp.Users;
 
 namespace Taskever.Tasks
 {
     /// <summary>
     /// Represents a task.
     /// </summary>
-    public class Task : AuditedEntity, IHasTenant
+    public class Task : AuditedEntity
     {
-        /// <summary>
-        /// The tenant account which this entity is belong to.
-        /// </summary>
-        public virtual Tenant Tenant { get; set; } 
-
         /// <summary>
         /// Task title.
         /// </summary>
