@@ -16,7 +16,7 @@ namespace Abp.Application.Authorization
         {
             using (var authorizationService = IocHelper.ResolveAsDisposable<IAuthorizationService>())
             {
-                foreach (IAbpAuthorizeAttribute authorizeAttribute in authorizeAttributes)
+                foreach (var authorizeAttribute in authorizeAttributes)
                 {
                     if (authorizeAttribute.Permissions.IsNullOrEmpty())
                     {

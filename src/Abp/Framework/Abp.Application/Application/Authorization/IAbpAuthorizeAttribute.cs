@@ -1,7 +1,7 @@
 ﻿namespace Abp.Application.Authorization
 {
     /// <summary>
-    /// 
+    /// Defines standard interface for authorization attributes.
     /// </summary>
     public interface IAbpAuthorizeAttribute
     {

@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Authorization\AbpAuthorizationException.cs" />
-    <Compile Include="Application\Authorization\AuthorizationInterceptionHelper.cs" />
     <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
     <Compile Include="Application\Authorization\AuthorizeAttributeHelper.cs" />
     <Compile Include="Application\Authorization\IAbpAuthorizeAttribute.cs" />
@@ -63,9 +62,6 @@
     <Compile Include="Application\Authorization\Permissions\Permission.cs" />
     <Compile Include="Application\Authorization\Permissions\IPermissionManager.cs" />
     <Compile Include="Application\Authorization\Permissions\PermissionManager.cs" />
-    <Compile Include="Application\Editions\Edition.cs" />
-    <Compile Include="Application\Editions\NullEdition.cs" />
-    <Compile Include="Application\Features\ApplicationFeature.cs" />
     <Compile Include="Application\Services\Dto\EntityDto.cs" />
     <Compile Include="Application\Services\Dto\EntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IDoubleWayDto.cs" />
