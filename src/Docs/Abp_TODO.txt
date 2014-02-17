@@ -18,6 +18,11 @@ TODO (primary):
   - Login page
   - Layout
 
+- Seperate codes from Taskever
+- Implement a simple application: TaskeverLite?
+- Create a project template
+  - Decide which part goes to template, which goes to dll's
+
 - Make use of NHibernate auto mapping
 - Test & Use NHibernate L2 caching
 - MULTITHREAD UNITOFWORK TEST!
