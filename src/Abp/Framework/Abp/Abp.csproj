@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\Conventions\ConventionalRegistrationConfig.cs" />

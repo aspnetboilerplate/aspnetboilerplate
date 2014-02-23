@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Localization;
+﻿using Abp.Dependency;
 using Abp.Localization.Sources.Resource;
 
 namespace Taskever.Localization.Resources
 {
     public class TaskeverLocalizationSource : ResourceFileLocalizationSource, ISingletonDependency
     {
+        public const string SourceName = "Taskever";
+
         public TaskeverLocalizationSource()
-            : base("Taskever", AppTexts.ResourceManager)
+            : base(SourceName, AppTexts.ResourceManager)
         {
         }
     }

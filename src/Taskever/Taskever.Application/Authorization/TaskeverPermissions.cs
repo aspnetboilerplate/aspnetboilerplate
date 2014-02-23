@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Authorization.Permissions;
+using Abp.Localization;
+using Taskever.Localization.Resources;
 
 namespace Taskever.Authorization
 {
@@ -11,10 +13,14 @@ namespace Taskever.Authorization
 
         static TaskeverPermissions()
         {
-            AllPermissions = new[]
-                             {
-                                 new Permission(CreateTask, "CreateTaskPermissionDisplayName")
-                             }; 
+            AllPermissions =
+                new[]
+                {
+                    new Permission(
+                        CreateTask,
+                        new LocalizableString("CreateTaskPermissionDisplayName", TaskeverLocalizationSource.SourceName)
+                        )
+                };
         }
 
         public IEnumerable<Permission> GetPermissions()

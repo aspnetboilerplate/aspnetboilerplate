@@ -1,4 +1,6 @@
-﻿namespace Abp.Application.Authorization.Permissions
+﻿using Abp.Localization;
+
+namespace Abp.Application.Authorization.Permissions
 {
     /// <summary>
     /// Represents a permission.
@@ -15,7 +17,7 @@
         /// Display name of the permission.
         /// This can be used to show permission to the user.
         /// </summary>
-        public string DisplayName { get; private set; }
+        public LocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// A brief description for this permission.
@@ -34,7 +36,7 @@
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default</param>
         /// <param name="description">A brief description for this permission</param>
-        public Permission(string name, string displayName, bool isGrantedByDefault = false, string description = null)
+        public Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, string description = null)
         {
             Name = name;
             DisplayName = displayName;
