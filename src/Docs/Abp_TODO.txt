@@ -19,6 +19,10 @@ TODO (primary):
   - Layout
 
 - Seperate codes from Taskever
+  - Abp folder
+  - Controllers?
+  - Views?
+
 - Implement a simple application: TaskeverLite?
 - Create a project template
   - Decide which part goes to template, which goes to dll's

@@ -56,8 +56,20 @@
 
     abp.notify = {};
 
-    abp.notify.info = function () {
+    abp.notify.success = function (title, message) {
+        abp.log.warn('abp.notify.success is not implemented!');
+    };
+
+    abp.notify.info = function (title, message) {
         abp.log.warn('abp.notify.info is not implemented!');
+    };
+
+    abp.notify.warn = function (title, message) {
+        abp.log.warn('abp.notify.warn is not implemented!');
+    };
+
+    abp.notify.error = function (title, message) {
+        abp.log.warn('abp.notify.error is not implemented!');
     };
 
     /* MESSAGE **************************************************/
@@ -71,7 +83,7 @@
     };
 
     abp.message.show = function (type, message, title) {
-        abp.log.warn('abp.message.show is not implemented! I shows alert as default!');
+        abp.log.warn('abp.message.show is not implemented!');
         alert((title || '') + ' ' + message);
     };
 
