@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Abp</id>
+    <version>$version$</version>
+    <title>Abp</title>
+    <authors>Halil İbrahim Kalkan</authors>
+    <owners>Halil İbrahim Kalkan</owners>
+    <description>ASP.NET Boilerplate</description>
+  </metadata>
+</package>

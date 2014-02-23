@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.WebApi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API Layer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.WebApi")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyProduct("Abp.Web.Api")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

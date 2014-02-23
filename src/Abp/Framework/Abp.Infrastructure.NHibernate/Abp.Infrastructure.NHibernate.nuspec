@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Abp.Infrastructure.NHibernate</id>
+    <version>$version$</version>
+    <title>Abp.Infrastructure.NHibernate</title>
+    <authors>Halil İbrahim Kalkan</authors>
+    <owners>Halil İbrahim Kalkan</owners>
+    <description>ASP.NET Boilerplate - Infrastructure Layer - NHibernate</description>
+    <projectUrl>https://github.com/hikalkan/aspnetboilerplate</projectUrl>
+  </metadata>
+</package>

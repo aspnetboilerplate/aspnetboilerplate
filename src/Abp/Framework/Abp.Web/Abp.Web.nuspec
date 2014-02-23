@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Abp.Web</id>
+    <version>$version$</version>
+    <title>Abp.Web</title>
+    <authors>Halil İbrahim Kalkan</authors>
+    <owners>Halil İbrahim Kalkan</owners>
+    <description>ASP.NET Boilerplate - Web Layer</description>
+    <projectUrl>https://github.com/hikalkan/aspnetboilerplate</projectUrl>
+  </metadata>
+</package>

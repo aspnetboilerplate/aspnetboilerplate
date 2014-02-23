@@ -119,6 +119,7 @@
     <Compile Include="Controllers\Dynamic\DynamicApiRouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Abp.Web.Api.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +138,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir).nuget\NuGet.exe" "pack" "$(SolutionDir)\Abp\Framework\Abp.Web.Api\Abp.Web.Api.csproj" "-outputdirectory" "$(SolutionDir)..\nupkg" -IncludeReferencedProjects</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
