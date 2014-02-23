@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Security.Roles;
 using Abp.Security.Users;
 using Microsoft.AspNet.Identity;
@@ -48,7 +49,7 @@ namespace Abp.Security.Identity
 
         public void Dispose()
         {
-           //No need to dispose since using dependency injection manager
+            //No need to dispose since using dependency injection manager
         }
 
         public Task CreateAsync(TUser user)
@@ -124,11 +125,11 @@ namespace Abp.Security.Identity
             return Task.Factory.StartNew(
                 () =>
                     _userLoginRepository.Insert(
-                        new UserLogin<TUser>
+                        new UserLogin
                         {
                             LoginProvider = login.LoginProvider,
                             ProviderKey = login.ProviderKey,
-                            User = user
+                            UserId = user.Id
                         })
                 );
         }
@@ -143,7 +144,7 @@ namespace Abp.Security.Identity
             return Task.Factory.StartNew<IList<UserLoginInfo>>(
                 () =>
                     _userLoginRepository
-                        .GetAllList(ul => ul.User.Id == user.Id)
+                        .GetAllList(ul => ul.UserId == user.Id)
                         .Select(ul => new UserLoginInfo(ul.LoginProvider, ul.ProviderKey))
                         .ToList()
                 );
@@ -152,13 +153,19 @@ namespace Abp.Security.Identity
         public Task<TUser> FindAsync(UserLoginInfo login)
         {
             return Task.Factory.StartNew(
-                () =>
-                    _userLoginRepository.Query(q => q
-                        .Where(ul => ul.ProviderKey == login.ProviderKey && ul.LoginProvider == login.LoginProvider)
-                        .Select(ul => ul.User)
-                        .FirstOrDefault()
-                        )
+                () => FindUser(login.LoginProvider, login.ProviderKey)
                 );
+        }
+
+        [UnitOfWork]
+        protected virtual TUser FindUser(string loginProvider, string providerKey)
+        {
+            var query =
+                from user in _userRepository.GetAll()
+                join userLogin in _userLoginRepository.GetAll() on user.Id equals userLogin.UserId
+                where userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey
+                select user;
+            return query.FirstOrDefault();
         }
 
         #endregion
