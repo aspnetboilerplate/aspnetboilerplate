@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Abp.Modules.Core</id>
+    <version>0.1.0-alpha1</version>
+    <title>Abp.Modules.Core</title>
+    <authors>Halil İbrahim Kalkan</authors>
+    <owners>Halil İbrahim Kalkan</owners>
+    <description>ASP.NET Boilerplate - Core Module</description>
+    <projectUrl>https://github.com/hikalkan/aspnetboilerplate</projectUrl>
+  </metadata>
+</package>

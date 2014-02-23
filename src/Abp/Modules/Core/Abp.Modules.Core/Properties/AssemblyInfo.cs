@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.Modules.Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Core Module")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Core Module")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
 [assembly: AssemblyProduct("Abp.Modules.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
