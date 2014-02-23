@@ -20,7 +20,7 @@ using Taskever.Web.Mvc.Models.Account;
 
 namespace Taskever.Web.Mvc.Controllers
 {
-    public class AccountController : AbpController
+    public class AccountController : TaskeverController
     {
         private readonly IUserAppService _userAppService;
 

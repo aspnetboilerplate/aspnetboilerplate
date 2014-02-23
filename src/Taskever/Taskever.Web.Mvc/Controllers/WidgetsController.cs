@@ -2,7 +2,7 @@
 
 namespace Taskever.Web.Mvc.Controllers
 {
-    public class WidgetsController : Controller
+    public class WidgetsController : TaskeverController
     {
         public ActionResult LoginBox()
         {
