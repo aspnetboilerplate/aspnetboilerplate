@@ -12,7 +12,9 @@ DONE:
 
 TODO (primary):
 
-- Create UserLogin table
++ Create UserLogin table
+- Move ProfilImage to TaskeverUser
+- Refactor AccountController
 
 - Seperate codes from Taskever
   - Abp folder

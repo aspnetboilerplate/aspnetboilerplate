@@ -4,6 +4,6 @@ namespace Taskever.Security.Users
 {
     public class TaskeverUser : AbpUser
     {
-        //Add your additional fields here
+        //public virtual string ProfileImage { get; set; }
     }
 }
