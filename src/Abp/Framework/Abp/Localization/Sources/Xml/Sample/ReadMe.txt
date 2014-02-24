@@ -1,1 +1,0 @@
-﻿XML files in this folder are just for examples. They are not compiled or used.

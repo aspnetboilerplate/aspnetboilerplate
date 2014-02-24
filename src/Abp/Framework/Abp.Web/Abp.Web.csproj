@@ -68,7 +68,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web\Localization\Abp.Web\Abp.Web.xml" />
+    <Content Include="Localization\Modules\Abp.Web\Abp.Web.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.nuspec" />

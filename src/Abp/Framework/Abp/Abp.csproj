@@ -147,12 +147,6 @@
     <None Include="Abp.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Localization\Sources\Xml\Sample\ReadMe.txt" />
-    <Content Include="Localization\Sources\Xml\Sample\SampleModule.tr-TR.xml" />
-    <Content Include="Localization\Sources\Xml\Sample\SampleModule.tr.xml" />
-    <Content Include="Localization\Sources\Xml\Sample\SampleModule.xml" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

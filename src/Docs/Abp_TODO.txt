@@ -13,8 +13,8 @@ DONE:
 TODO (primary):
 
 + Create UserLogin table
-- Move ProfilImage to TaskeverUser
-- Refactor AccountController
+- Move ProfileImage to TaskeverUser
+- Refactor AccountController according to MVC template
 - Remove xml files from nuget package (Abp.Web)
 
 - Seperate codes from Taskever
