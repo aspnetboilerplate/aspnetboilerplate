@@ -5,6 +5,9 @@
 # Logs
 Logs/
 
+# Nuget packages
+nupkg/
+
 # Profile images
 ProfileImages/
 
