@@ -6,7 +6,7 @@
 Logs/
 
 # Nuget packages
-nupkg/
+nupkg/*.nupkg
 
 # Profile images
 ProfileImages/
