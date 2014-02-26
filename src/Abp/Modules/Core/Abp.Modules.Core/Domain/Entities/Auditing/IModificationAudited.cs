@@ -1,5 +1,4 @@
 using System;
-using Abp.Security.Users;
 
 namespace Abp.Domain.Entities.Auditing
 {
