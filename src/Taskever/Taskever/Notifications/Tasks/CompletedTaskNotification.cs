@@ -17,7 +17,7 @@ namespace Taskever.Notifications.Tasks
         public MailMessage CreateMailMessage()
         {
             MailMessage mail = new MailMessage();
-            mail.To.Add(Task.CreatorUser.EmailAddress);
+            mail.To.Add(""); //TODO: Task.CreatorUser.EmailAddress
             mail.IsBodyHtml = true;
             mail.Subject = "Completed a task: " + HttpUtility.HtmlDecode(Task.Title);
             mail.SubjectEncoding = Encoding.UTF8;

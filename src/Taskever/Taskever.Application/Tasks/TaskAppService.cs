@@ -9,6 +9,7 @@ using Abp.Mapping;
 using Abp.Security.Users;
 using Abp.Users;
 using Abp.Utils.Extensions.Collections;
+using Taskever.Security.Users;
 using Taskever.Tasks.Dto;
 using Taskever.Tasks.Events;
 using Taskever.Authorization;
@@ -19,13 +20,13 @@ namespace Taskever.Tasks
     {
         private readonly ITaskPolicy _taskPolicy;
         private readonly ITaskRepository _taskRepository;
-        private readonly IAbpUserRepository _userRepository;
+        private readonly ITaskeverUserRepository _userRepository;
         private readonly IEventBus _eventBus;
 
         public TaskAppService(
             ITaskPolicy taskPolicy,
             ITaskRepository taskRepository,
-            IAbpUserRepository userRepository,
+            ITaskeverUserRepository userRepository,
             IEventBus eventBus)
         {
             _taskRepository = taskRepository;
@@ -115,7 +116,7 @@ namespace Taskever.Tasks
             //Create the task
             var taskEntity = input.Task.MapTo<Task>();
 
-            taskEntity.CreatorUser = creatorUser;
+            taskEntity.CreatorUserId = creatorUser.Id;
             taskEntity.AssignedUser = _userRepository.Load(input.Task.AssignedUserId);
             taskEntity.State = TaskState.New;
 

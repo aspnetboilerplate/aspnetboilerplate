@@ -54,11 +54,6 @@ namespace Abp.Security.Users
         public virtual string PasswordResetCode { get; set; }
 
         /// <summary>
-        /// Profile image of the user. 
-        /// </summary>
-        public virtual string ProfileImage { get; set; }
-
-        /// <summary>
         /// Gets Name and Surname joined by space.
         /// </summary>
         public virtual string NameAndSurname { get { return Name + " " + Surname; } }

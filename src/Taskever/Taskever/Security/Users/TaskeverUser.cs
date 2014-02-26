@@ -4,6 +4,9 @@ namespace Taskever.Security.Users
 {
     public class TaskeverUser : AbpUser
     {
-        //public virtual string ProfileImage { get; set; }
+        /// <summary>
+        /// Profile image of the user. 
+        /// </summary>
+        public virtual string ProfileImage { get; set; }
     }
 }

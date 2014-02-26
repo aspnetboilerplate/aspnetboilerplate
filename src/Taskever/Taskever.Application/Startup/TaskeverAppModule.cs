@@ -2,6 +2,7 @@ using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
+using Abp.Users.Dto;
 using Taskever.Mapping;
 
 namespace Taskever.Startup
@@ -14,6 +15,7 @@ namespace Taskever.Startup
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             TaskeverDtoMapper.Map();
+            UserDtosMapper.Map();
         }
     }
 }

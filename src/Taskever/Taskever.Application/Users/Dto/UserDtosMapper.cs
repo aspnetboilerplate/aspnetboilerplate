@@ -1,4 +1,5 @@
 ﻿using Abp.Security.Users;
+using Taskever.Security.Users;
 
 namespace Abp.Users.Dto
 {
@@ -6,7 +7,7 @@ namespace Abp.Users.Dto
     {
         public static void Map()
         {
-            AutoMapper.Mapper.CreateMap<AbpUser, UserDto>()
+            AutoMapper.Mapper.CreateMap<TaskeverUser, UserDto>()
                 .ForMember(
                     user => user.ProfileImage,
                     configuration => configuration.ResolveUsing(
@@ -16,6 +17,10 @@ namespace Abp.Users.Dto
                                     : "/ProfileImages/" + user.ProfileImage
                                          )
                 ).ReverseMap();
+
+            AutoMapper.Mapper.CreateMap<RegisterUserInput, TaskeverUser>();
+
+            AutoMapper.Mapper.CreateMap<AbpUser, UserDto>().ReverseMap();
 
             AutoMapper.Mapper.CreateMap<RegisterUserInput, AbpUser>();
         }

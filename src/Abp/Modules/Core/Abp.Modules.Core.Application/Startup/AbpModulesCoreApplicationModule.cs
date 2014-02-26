@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Users.Dto;
 
 namespace Abp.Startup
 {
@@ -12,7 +11,6 @@ namespace Abp.Startup
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            UserDtosMapper.Map();
         }
     }
 }

@@ -1,6 +1,5 @@
 using Abp.Modules;
 using Abp.Startup;
-using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Taskever.Activities;
 using Taskever.Friendships;
@@ -39,7 +38,6 @@ namespace Taskever.Web.Startup
             DyanmicApiControllerBuilder
                 .For<IUserActivityAppService>("taskever/userActivity")
                 .Build();
-
         }
     }
 }

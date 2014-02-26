@@ -21,7 +21,7 @@ namespace Taskever.Notifications.EventHandlers
 
         public void HandleEvent(EntityCreatedEventData<Task> eventData)
         {
-            if (eventData.Entity.AssignedUser.Id != eventData.Entity.CreatorUser.Id)
+            if (eventData.Entity.AssignedUser.Id != eventData.Entity.CreatorUserId)
             {
                 _notificationService.Notify(new AssignedToTaskNotification(eventData.Entity));
             }

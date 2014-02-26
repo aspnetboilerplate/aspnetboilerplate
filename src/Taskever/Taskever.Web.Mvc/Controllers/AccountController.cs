@@ -16,13 +16,14 @@ using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
 using Taskever.Security.Identity;
 using Taskever.Security.Users;
+using Taskever.Users;
 using Taskever.Web.Mvc.Models.Account;
 
 namespace Taskever.Web.Mvc.Controllers
 {
     public class AccountController : TaskeverController
     {
-        private readonly IUserAppService _userAppService;
+        private readonly ITaskeverUserAppService _userAppService;
 
         private readonly TaskeverUserManager _userManager;
 
@@ -34,7 +35,7 @@ namespace Taskever.Web.Mvc.Controllers
             }
         }
 
-        public AccountController(IUserAppService userAppService, TaskeverUserManager userManager)
+        public AccountController(ITaskeverUserAppService userAppService, TaskeverUserManager userManager)
         {
             _userAppService = userAppService;
             _userManager = userManager;

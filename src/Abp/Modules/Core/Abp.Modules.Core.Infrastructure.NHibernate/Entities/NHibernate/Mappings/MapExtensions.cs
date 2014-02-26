@@ -26,7 +26,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public static void MapCreationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
         {
             mapping.Map(x => (x as ICreationAudited).CreationTime);
-            mapping.References(x => (x as ICreationAudited).CreatorUser).Column("CreatorUserId").LazyLoad();
+            mapping.Map(x => (x as ICreationAudited).CreatorUserId);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public static void MapModificationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
         {
             mapping.Map(x => (x as IModificationAudited).LastModificationTime);
-            mapping.References(x => (x as IModificationAudited).LastModifierUser).Column("LastModifierUserId").LazyLoad();
+            mapping.Map(x => (x as IModificationAudited).LastModifierUserId);
         }
     }
 }

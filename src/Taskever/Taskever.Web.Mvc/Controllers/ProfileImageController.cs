@@ -6,15 +6,16 @@ using Abp.Users.Dto;
 using Abp.Utils.Helpers.IO;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Authorization;
+using Taskever.Users;
 
 namespace Taskever.Web.Mvc.Controllers
 {
     [AbpAuthorize]
     public class ProfileImageController : TaskeverController
     {
-        private readonly IUserAppService _userAppService;
+        private readonly ITaskeverUserAppService _userAppService;
 
-        public ProfileImageController(IUserAppService userAppService)
+        public ProfileImageController(ITaskeverUserAppService userAppService)
         {
             _userAppService = userAppService;
         }

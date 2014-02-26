@@ -4,7 +4,6 @@ using Abp.Localization;
 using Abp.Modules;
 using Abp.Startup;
 using Taskever.Localization.Resources;
-using Taskever.Startup.Dependency.Installers;
 
 namespace Taskever.Startup
 {

@@ -1,5 +1,4 @@
 using Abp.Security.Users;
-using Abp.Users;
 using Taskever.Tasks;
 
 namespace Taskever.Activities
@@ -15,14 +14,14 @@ namespace Taskever.Activities
             ActivityType = ActivityType.CompleteTask;            
         }
 
-        public override AbpUser[] GetActors()
+        public override int?[] GetActors()
         {
-            return new [] { AssignedUser };
+            return new [] { (int?)AssignedUser.Id };
         }
 
-        public override AbpUser[] GetRelatedUsers()
+        public override int?[] GetRelatedUsers()
         {
-            return new[] {Task.CreatorUser};
+            return new[] {Task.CreatorUserId};
         }
     }
 }

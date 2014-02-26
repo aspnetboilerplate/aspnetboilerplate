@@ -1,15 +1,15 @@
 ﻿using System;
 using Abp.Domain.Entities;
 using Abp.Security.Users;
-using Abp.Users;
+using Taskever.Security.Users;
 
 namespace Taskever.Friendships
 {
     public class Friendship : Entity
     {
-        public virtual AbpUser User { get; set; }
+        public virtual TaskeverUser User { get; set; }
 
-        public virtual AbpUser Friend { get; set; }
+        public virtual TaskeverUser Friend { get; set; }
 
         public virtual Friendship Pair { get; set; }
 
@@ -43,7 +43,7 @@ namespace Taskever.Friendships
             FollowActivities = true;
         }
 
-        public static Friendship CreateAsRequest(AbpUser user, AbpUser friend)
+        public static Friendship CreateAsRequest(TaskeverUser user, TaskeverUser friend)
         {
             if (user.Id == friend.Id)
             {
@@ -66,7 +66,7 @@ namespace Taskever.Friendships
             return Status == FriendshipStatus.Accepted;
         }
 
-        public virtual bool CanBeAcceptedBy(AbpUser acceptorUser)
+        public virtual bool CanBeAcceptedBy(TaskeverUser acceptorUser)
         {
             switch (Status)
             {
@@ -81,7 +81,7 @@ namespace Taskever.Friendships
             }
         }
 
-        public virtual void AcceptBy(AbpUser acceptorUser)
+        public virtual void AcceptBy(TaskeverUser acceptorUser)
         {
             if (IsAccepted())
             {

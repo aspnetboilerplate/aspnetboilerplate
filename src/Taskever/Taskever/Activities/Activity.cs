@@ -1,7 +1,6 @@
 ﻿using System;
 using Abp.Domain.Entities;
 using Abp.Security.Users;
-using Abp.Users;
 
 namespace Taskever.Activities
 {
@@ -16,8 +15,8 @@ namespace Taskever.Activities
             CreationTime = DateTime.Now;
         }
 
-        public abstract AbpUser[] GetActors();
+        public abstract int?[] GetActors();
 
-        public abstract AbpUser[] GetRelatedUsers();
+        public abstract int?[] GetRelatedUsers();
     }
 }

@@ -7,7 +7,7 @@ namespace Taskever.Entities.NHibernate.Mappings
     {
         public TaskeverUserMap()
         {
-            //Add your additional field mappings here
+            Map(x => x.ProfileImage);
         }
     }
 }

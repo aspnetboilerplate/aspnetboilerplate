@@ -1,5 +1,4 @@
 using Abp.Security.Users;
-using Abp.Users;
 
 namespace Taskever.Friendships
 {

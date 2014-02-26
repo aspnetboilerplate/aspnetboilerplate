@@ -26,7 +26,7 @@ namespace Abp.Security.Roles
         /// <summary>
         /// Creator user of this entity.
         /// </summary>
-        public virtual AbpUser CreatorUser { get; set; }
+        public virtual int? CreatorUserId { get; set; }
         
         /// <summary>
         /// Creates a new <see cref="RolePermission"/> instance.

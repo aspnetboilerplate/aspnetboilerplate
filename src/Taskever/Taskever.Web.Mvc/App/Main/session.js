@@ -1,4 +1,4 @@
-﻿define(["knockout", "service!abp/user"], function (ko, userService) {
+﻿define(["knockout", "service!taskever/user"], function (ko, userService) {
     var currentUser = ko.mapping.fromJS({});
     
     var start = function () {

@@ -1,6 +1,6 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
+using Taskever.Security.Users;
 
 namespace Taskever.Tasks
 {
@@ -19,7 +19,7 @@ namespace Taskever.Tasks
         /// </summary>
         public virtual string Description { get; set; }
 
-        public virtual AbpUser AssignedUser { get; set; }
+        public virtual TaskeverUser AssignedUser { get; set; }
 
         public virtual TaskPriority Priority { get; set; }
 

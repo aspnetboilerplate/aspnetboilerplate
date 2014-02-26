@@ -91,6 +91,14 @@
     <Compile Include="Tasks\Dto\GetTasksByImportanceOutput.cs" />
     <Compile Include="Friendships\Dto\GetFriendshipsByMostActiveInput.cs" />
     <Compile Include="Friendships\Dto\GetFriendshipsByMostActiveOutput.cs" />
+    <Compile Include="Users\Dto\ChangePasswordInput.cs" />
+    <Compile Include="Users\Dto\ChangeProfileImageInput.cs" />
+    <Compile Include="Users\Dto\ChangeProfileImageOutput.cs" />
+    <Compile Include="Users\Dto\ConfirmEmailInput.cs" />
+    <Compile Include="Users\Dto\GetCurrentUserInfoInput.cs" />
+    <Compile Include="Users\Dto\GetCurrentUserInfoOutput.cs" />
+    <Compile Include="Users\Dto\GetUserInput.cs" />
+    <Compile Include="Users\Dto\GetUserOutput.cs" />
     <Compile Include="Users\Dto\GetUserProfileInput.cs" />
     <Compile Include="Users\Dto\GetUserProfileOutput.cs" />
     <Compile Include="Friendships\IFriendshipAppService.cs" />
@@ -98,6 +106,11 @@
     <Compile Include="Friendships\FriendshipAppService.cs" />
     <Compile Include="Friendships\Dto\GetFriendshipsInput.cs" />
     <Compile Include="Tasks\TaskAppService.cs" />
+    <Compile Include="Users\Dto\RegisterUserInput.cs" />
+    <Compile Include="Users\Dto\ResetPasswordInput.cs" />
+    <Compile Include="Users\Dto\SendPasswordResetLinkInput.cs" />
+    <Compile Include="Users\Dto\UserDto.cs" />
+    <Compile Include="Users\Dto\UserDtosMapper.cs" />
     <Compile Include="Users\ITaskeverUserAppService.cs" />
     <Compile Include="Tasks\ITaskAppService.cs" />
     <Compile Include="Activities\IUserActivityAppService.cs" />

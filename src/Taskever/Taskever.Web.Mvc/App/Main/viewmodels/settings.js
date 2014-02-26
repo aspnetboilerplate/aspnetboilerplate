@@ -1,5 +1,5 @@
 ﻿define(
-    ["knockout", 'session', 'service!abp/user', 'plugins/dialog'],
+    ["knockout", 'session', 'service!taskever/user', 'plugins/dialog'],
     function (ko, session, userService, dialogs) {
 
         return function () {

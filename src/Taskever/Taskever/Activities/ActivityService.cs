@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Security.Users;
-using Abp.Users;
 using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 using Taskever.Friendships;
@@ -44,7 +43,7 @@ namespace Taskever.Activities
             //TODO: Maybe optimized by creating a stored procedure?
 
             //Get user id's of all actors of this activity
-            var actorUserIds = activity.GetActors().Select(user => user.Id).ToList();
+            var actorUserIds = activity.GetActors().Cast<int>().ToList();
             if (actorUserIds.IsNullOrEmpty())
             {
                 //No actor of this activity, so, no one will follow it.
@@ -58,7 +57,7 @@ namespace Taskever.Activities
             followerUserIds = followerUserIds.Union(actorUserIds).ToList();
 
             //Get id's of all related users of this activity
-            var relatedUserIds = activity.GetRelatedUsers().Select(user => user.Id).ToList();
+            var relatedUserIds = activity.GetRelatedUsers().Cast<int>().ToList();
 
             //Add also related users (if not includes)
             followerUserIds = followerUserIds.Union(relatedUserIds).ToList();

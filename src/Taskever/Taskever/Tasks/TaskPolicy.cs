@@ -1,5 +1,4 @@
 using Abp.Security.Users;
-using Abp.Users;
 using Taskever.Friendships;
 
 namespace Taskever.Tasks
@@ -39,12 +38,12 @@ namespace Taskever.Tasks
 
         public bool CanUpdateTask(AbpUser user, Task task)
         {
-            return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
+            return (task.CreatorUserId == user.Id) || (task.AssignedUser.Id == user.Id);
         }
 
         public bool CanDeleteTask(AbpUser user, Task task)
         {
-            return (task.CreatorUser.Id == user.Id) || (task.AssignedUser.Id == user.Id);
+            return (task.CreatorUserId == user.Id) || (task.AssignedUser.Id == user.Id);
         }
     }
 }

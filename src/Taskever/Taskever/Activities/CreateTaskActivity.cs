@@ -1,14 +1,14 @@
 using Abp.Security.Users;
-using Abp.Users;
+using Taskever.Security.Users;
 using Taskever.Tasks;
 
 namespace Taskever.Activities
 {
     public class CreateTaskActivity : Activity
     {
-        public virtual AbpUser CreatorUser { get; set; }
+        public virtual TaskeverUser CreatorUser { get; set; }
 
-        public virtual AbpUser AssignedUser { get; set; }
+        public virtual TaskeverUser AssignedUser { get; set; }
 
         public virtual Task Task { get; set; } //TODO: Create abstract TaskActivity class and put Task there?
 
@@ -17,14 +17,14 @@ namespace Taskever.Activities
             ActivityType = ActivityType.CreateTask;
         }
 
-        public override AbpUser[] GetActors()
+        public override int?[] GetActors()
         {
-            return new [] {CreatorUser, AssignedUser};
+            return new[] { (int?)CreatorUser.Id, (int?)AssignedUser.Id };
         }
 
-        public override AbpUser[] GetRelatedUsers()
+        public override int?[] GetRelatedUsers()
         {
-            return new AbpUser[] { };
+            return new int?[] { };
         }
     }
 }

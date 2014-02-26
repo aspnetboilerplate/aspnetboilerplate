@@ -16,6 +16,6 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Last modifier user for this entity.
         /// </summary>
-        AbpUser LastModifierUser { get; set; } //TODO: Think to change this to "int LastModifierUserId"
+        int? LastModifierUserId { get; set; }
     }
 }

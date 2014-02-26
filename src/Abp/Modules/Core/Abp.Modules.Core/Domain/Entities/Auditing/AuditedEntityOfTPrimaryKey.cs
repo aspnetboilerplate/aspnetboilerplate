@@ -17,7 +17,7 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Creator user of this entity.
         /// </summary>
-        public virtual AbpUser CreatorUser { get; set; }
+        public virtual int? CreatorUserId { get; set; }
 
         /// <summary>
         /// Last modification date of this entity.
@@ -27,7 +27,7 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
-        public virtual AbpUser LastModifierUser { get; set; }
+        public virtual int? LastModifierUserId { get; set; }
 
         /// <summary>
         /// Constructor.
