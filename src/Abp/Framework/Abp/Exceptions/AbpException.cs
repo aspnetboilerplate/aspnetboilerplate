@@ -5,6 +5,7 @@ namespace Abp.Exceptions
 {
     /// <summary>
     /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
+    /// TODO: Move to Abp namespace
     /// </summary>
     [Serializable]
     public class AbpException : Exception

@@ -3,7 +3,7 @@
 namespace Abp.Modules.Core.Data.Migrations.V20140223
 {
     [Migration(2014022301)]
-    public class _01_CreateUserLoginsTable : ForwardOnlyMigration
+    public class _01_CreateAbpUserLoginsTable : AutoReversingMigration
     {
         public override void Up()
         {

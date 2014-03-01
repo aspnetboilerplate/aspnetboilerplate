@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 
@@ -34,7 +35,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
         /// <returns>List of all entities</returns>
-        List<TEntity> GetAllList(Func<TEntity, bool> predicate);
+        List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Used to run a query over entire entities.
@@ -59,7 +60,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">Entity</param>
         /// <returns></returns>
-        TEntity Single(Func<TEntity, bool> predicate);
+        TEntity Single(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Gets an entity with given primary key.
@@ -73,7 +74,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        TEntity FirstOrDefault(Func<TEntity, bool> predicate);
+        TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Creates an entity with given primary key without database access.
@@ -133,7 +134,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
-        int Count(Func<TEntity, bool> predicate);
+        int Count(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
@@ -146,7 +147,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
-        long LongCount(Func<TEntity, bool> predicate);
+        long LongCount(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
 

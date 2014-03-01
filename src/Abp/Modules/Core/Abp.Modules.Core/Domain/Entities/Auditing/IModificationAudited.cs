@@ -4,6 +4,7 @@ namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
     /// This interface is implemented by entities which's modification informations (who and when modified) must be stored.
+    /// Properties are automatically set when updating the <see cref="IEntity"/>.
     /// </summary>
     public interface IModificationAudited
     {

@@ -59,6 +59,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpConst.cs" />
+    <Compile Include="Configuration\ISettingManager.cs" />
+    <Compile Include="Configuration\ISettingProvider.cs" />
+    <Compile Include="Configuration\ISettingValueSource.cs" />
+    <Compile Include="Configuration\Setting.cs" />
+    <Compile Include="Configuration\SettingGroup.cs" />
+    <Compile Include="Configuration\SettingManager.cs" />
+    <Compile Include="Configuration\SettingScope.cs" />
+    <Compile Include="Configuration\SettingValue.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />

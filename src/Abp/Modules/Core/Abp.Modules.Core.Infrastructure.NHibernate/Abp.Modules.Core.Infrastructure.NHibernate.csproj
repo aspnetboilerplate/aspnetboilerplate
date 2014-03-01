@@ -75,6 +75,7 @@
     <Compile Include="Data\Migrations\V20131219\_01_AddPasswordResetColumnToUsersTable.cs" />
     <Compile Include="Data\Migrations\V20140122\_02_CreateRolePermissionsTable.cs" />
     <Compile Include="Data\Migrations\V20140122\_01_RemoveColumnsFromRoleTable.cs" />
+    <Compile Include="Data\Migrations\V20140301\_01_CreateAbpSettingValuesTable.cs" />
     <Compile Include="Data\Migrations\V20140223\_01_CreateUserLoginsTable.cs" />
     <Compile Include="Data\Migrations\VersionTable.cs" />
     <Compile Include="Data\Migrations\MigrationExtensions.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\RoleRepositoryBase.cs" />
     <Compile Include="Data\Repositories\NHibernate\AbpUserLoginRepository.cs" />
+    <Compile Include="Data\Repositories\NHibernate\SettingValueRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Data\Repositories\NHibernate\AbpUserRepository.cs" />
     <Compile Include="Data\Repositories\NHibernate\UserRepositoryBase.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Entities\NHibernate\Mappings\AbpRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\AbpUserMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RolePermissionMap.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\SettingValueRecordMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RoleMapBase.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserMapBase.cs" />

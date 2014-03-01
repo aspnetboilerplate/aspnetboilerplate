@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
@@ -31,7 +32,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return GetAll().ToList();
         }
 
-        public virtual List<TEntity> GetAllList(Func<TEntity, bool> predicate)
+        public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).ToList();
         }
@@ -52,7 +53,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return entity;
         }
 
-        public virtual TEntity Single(Func<TEntity, bool> predicate)
+        public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
         }
@@ -62,7 +63,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return Session.Get<TEntity>(key);
         }
 
-        public TEntity FirstOrDefault(Func<TEntity, bool> predicate)
+        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
         }
@@ -97,7 +98,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return GetAll().Count();
         }
 
-        public virtual int Count(Func<TEntity, bool> predicate)
+        public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).Count();
         }
@@ -107,7 +108,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return GetAll().LongCount();
         }
 
-        public virtual long LongCount(Func<TEntity, bool> predicate)
+        public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).LongCount();
         }

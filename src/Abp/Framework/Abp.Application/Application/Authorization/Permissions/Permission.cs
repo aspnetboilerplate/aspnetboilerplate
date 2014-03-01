@@ -22,7 +22,7 @@ namespace Abp.Application.Authorization.Permissions
         /// <summary>
         /// A brief description for this permission.
         /// </summary>
-        public string Description { get; private set; }
+        public LocalizableString Description { get; private set; }
 
         /// <summary>
         /// Is this permission granted by default.
@@ -36,7 +36,7 @@ namespace Abp.Application.Authorization.Permissions
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default</param>
         /// <param name="description">A brief description for this permission</param>
-        public Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, string description = null)
+        public Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
             Name = name;
             DisplayName = displayName;

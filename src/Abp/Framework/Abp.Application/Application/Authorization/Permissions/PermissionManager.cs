@@ -11,8 +11,6 @@ namespace Abp.Application.Authorization.Permissions
     {
         private readonly IDictionary<string, Permission> _permissions;
 
-        private bool _isInitialized;
-
         public PermissionManager()
         {
             _permissions = new Dictionary<string, Permission>();
@@ -26,13 +24,6 @@ namespace Abp.Application.Authorization.Permissions
 
         private void Initialize()
         {
-            if (_isInitialized)
-            {
-                return;
-            }
-
-            _isInitialized = true;
-
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())

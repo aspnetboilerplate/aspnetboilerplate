@@ -15,8 +15,10 @@ TODO (primary):
 + Create UserLogin table
 + Remove xml files from nuget package (Abp.Web)
 
-- Move ProfileImage to TaskeverUser
++ Move ProfileImage to TaskeverUser
 - Refactor AccountController according to MVC template
+
+- Create a setting system
 
 - Seperate codes from Taskever
   - Abp folder

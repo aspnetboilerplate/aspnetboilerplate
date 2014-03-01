@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+using Abp;
+
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Core Module")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Core Module")]
 [assembly: AssemblyConfiguration("")]
@@ -13,6 +15,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: InternalsVisibleTo("Abp.Modules.Core.Application")]
+[assembly: InternalsVisibleTo("Abp.Modules.Core.Infrastructure.NHibernate")]
+[assembly: InternalsVisibleTo("Abp.Modules.Core.Web")]
+[assembly: InternalsVisibleTo("Abp.Modules.Core.Web.Api")]
+[assembly: InternalsVisibleTo("Abp.Modules.Core.Web.Mvc")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -32,5 +40,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion(AbpCoreModuleConst.CurrentVersion)]
+[assembly: AssemblyFileVersion(AbpCoreModuleConst.CurrentVersion)]

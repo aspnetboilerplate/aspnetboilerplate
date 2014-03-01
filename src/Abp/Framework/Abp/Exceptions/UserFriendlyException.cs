@@ -5,6 +5,7 @@ namespace Abp.Exceptions
 {
     /// <summary>
     /// This exception type is directly shown to the user.
+    /// TODO: Move to Abp namespace
     /// </summary>
     [Serializable]
     public class AbpUserFriendlyException : AbpException

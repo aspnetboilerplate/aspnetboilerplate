@@ -63,7 +63,7 @@ namespace Abp.Security.Users
         /// </summary>
         public static int CurrentUserId
         {
-            get { return Convert.ToInt32(Thread.CurrentPrincipal.Identity.GetUserId() ?? "0"); }
+            get { return Convert.ToInt32(Thread.CurrentPrincipal.Identity.GetUserId() ?? "0"); } //TODO: Check if not authenticated
         }
 
         public virtual void GenerateEmailConfirmationCode()
