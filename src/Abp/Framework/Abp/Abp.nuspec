@@ -7,5 +7,6 @@
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
     <description>ASP.NET Boilerplate</description>
+    <projectUrl>https://github.com/hikalkan/aspnetboilerplate</projectUrl>
   </metadata>
 </package>
