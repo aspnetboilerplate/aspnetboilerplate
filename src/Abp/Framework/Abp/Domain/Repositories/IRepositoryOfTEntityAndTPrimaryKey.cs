@@ -12,7 +12,7 @@ namespace Abp.Domain.Repositories
     /// </summary>
     /// <typeparam name="TEntity">Main Entity type this repository works on</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public interface IRepository<TEntity, in TPrimaryKey> : IRepository where TEntity : IEntity<TPrimaryKey>
+    public interface IRepository<TEntity, in TPrimaryKey> : IRepository where TEntity : class, IEntity<TPrimaryKey>
     {
         #region Select/Get/Query
 

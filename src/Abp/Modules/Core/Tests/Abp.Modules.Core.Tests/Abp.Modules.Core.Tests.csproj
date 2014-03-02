@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1E31E85-0F7E-43BC-91E2-F9E544ECEBD5}</ProjectGuid>
+    <ProjectGuid>{111BBE88-A97F-439B-A2BE-05F86A9F5585}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Tests</RootNamespace>
-    <AssemblyName>Abp.Tests</AssemblyName>
+    <RootNamespace>Abp.Modules.Core.Tests</RootNamespace>
+    <AssemblyName>Abp.Modules.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,10 +32,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\..\..\..\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\..\..\..\packages\Microsoft.Bcl.Immutable.1.0.30\lib\portable-net45+win8+wp8\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,32 +53,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Department.cs" />
-    <Compile Include="Entities\Manager.cs" />
-    <Compile Include="Entities\Test_Entities.cs" />
-    <Compile Include="Entities\Worker.cs" />
-    <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
-    <Compile Include="Events\Bus\EventBusTest.cs" />
-    <Compile Include="Events\Bus\MySimpleEventData.cs" />
-    <Compile Include="Events\Bus\MySimpleTransientEventHandler.cs" />
-    <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
-    <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
-    <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />
-    <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\IPrimaryKeyGenerator.cs" />
+    <Compile Include="Settings\LongPrimaryKeyGenerator.cs" />
+    <Compile Include="Settings\MemoryBasedRepository.cs" />
+    <Compile Include="Settings\MemorySettingValueRepository.cs" />
+    <Compile Include="Settings\SampleSettingManager.cs" />
+    <Compile Include="Settings\TestHelper.cs" />
+    <Compile Include="Settings\Test_SettingValueManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Abp.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+    <ProjectReference Include="..\..\..\..\Framework\Abp\Abp.csproj">
+      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Abp.Modules.Core\Abp.Modules.Core.csproj">
+      <Project>{b333d942-7600-4191-80e3-923a6144df4f}</Project>
+      <Name>Abp.Modules.Core</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -16,12 +16,12 @@ namespace Abp.Security.Roles
         public UserRoleManager(IUserRoleRepository userRoleRepository)
         {
             _userRoleRepository = userRoleRepository;
-            _userInfoCache = new ThreadSafeObjectCache<UserRoleInfo>(MemoryCache.Default, TimeSpan.FromMinutes(30));
+            _userInfoCache = new ThreadSafeObjectCache<UserRoleInfo>(new MemoryCache(GetType().Name), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
         }
 
         public IReadOnlyList<string> GetRolesOfUser(int userId)
         {
-            UserRoleInfo roleInfo = _userInfoCache.Get(
+            var roleInfo = _userInfoCache.Get(
                 userId.ToString(),
                 () => new UserRoleInfo
                       {

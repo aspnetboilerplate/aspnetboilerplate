@@ -62,7 +62,7 @@
     <Compile Include="AbpConst.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\ISettingProvider.cs" />
-    <Compile Include="Configuration\ISettingValueSource.cs" />
+    <Compile Include="Configuration\ISettingValueManager.cs" />
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingGroup.cs" />
     <Compile Include="Configuration\SettingManager.cs" />

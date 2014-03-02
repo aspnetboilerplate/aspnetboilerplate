@@ -67,7 +67,7 @@
     <Compile Include="Configuration\ISettingValueRepository.cs" />
     <Compile Include="Configuration\SettingValue.cs" />
     <Compile Include="Configuration\SettingValueRecord.cs" />
-    <Compile Include="Configuration\SettingValueSource.cs" />
+    <Compile Include="Configuration\SettingValueManager.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
     <Compile Include="Security\Identity\AbpRoleManagerBase.cs" />

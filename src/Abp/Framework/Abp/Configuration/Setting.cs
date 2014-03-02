@@ -51,7 +51,7 @@ namespace Abp.Configuration
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting</param>
-        public Setting(string name, string defaultValue, LocalizableString displayName, SettingGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application | SettingScopes.User)
+        public Setting(string name, string defaultValue, LocalizableString displayName = null, SettingGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application | SettingScopes.User)
         {
             Name = name;
             DefaultValue = defaultValue;

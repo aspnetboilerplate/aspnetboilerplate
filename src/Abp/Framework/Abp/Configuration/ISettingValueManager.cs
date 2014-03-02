@@ -6,13 +6,14 @@ namespace Abp.Configuration
     /// <summary>
     /// This is the main interface that must be implemented to be able to get/store values of settings.
     /// </summary>
-    public interface ISettingValueSource : ISingletonDependency
+    public interface ISettingValueManager : ISingletonDependency
     {
         /// <summary>
-        /// Gets value of a setting.
+        /// Gets current value of a setting.
+        /// It gets the setting value, overwrited by application and the current user if exists.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
-        /// <returns>Value of the setting or null if not found</returns>
+        /// <returns>Current value of the setting</returns>
         string GetSettingValue(string name);
 
         /// <summary>
@@ -48,5 +49,20 @@ namespace Abp.Configuration
         /// <param name="userId">User to get settings</param>
         /// <returns>All settings of the user</returns>
         IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(int userId);
+
+        /// <summary>
+        /// Changes setting for the application level.
+        /// </summary>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="value">Value of the setting</param>
+        void ChangeSettingForApplication(string name, string value);
+
+        /// <summary>
+        /// Changes setting for a user.
+        /// </summary>
+        /// <param name="userId">UserId</param>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="value">Value of the setting</param>
+        void ChangeSettingForUser(int userId, string name, string value);
     }
 }

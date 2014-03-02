@@ -12,16 +12,16 @@ namespace Abp.Net.Mail
     /// </summary>
     public class EmailService : IEmailService
     {
-        private readonly ISettingValueSource _settingValueSource;
+        private readonly ISettingValueManager _settingValueManager;
 
         public ILogger Logger { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="EmailService"/>.
         /// </summary>
-        public EmailService(ISettingValueSource settingValueSource)
+        public EmailService(ISettingValueManager settingValueManager)
         {
-            _settingValueSource = settingValueSource;
+            _settingValueManager = settingValueManager;
             Logger = NullLogger.Instance;
         }
 
@@ -29,11 +29,11 @@ namespace Abp.Net.Mail
         {
             try
             {
-                mail.From = new MailAddress(_settingValueSource.GetSettingValue("Email.SenderAddress"), _settingValueSource.GetSettingValue("Email.DisplayName"));
-                using (var client = new SmtpClient(_settingValueSource.GetSettingValue("Email.Server"), _settingValueSource.GetSettingValue<int>("Email.Port")))
+                mail.From = new MailAddress(_settingValueManager.GetSettingValue("Email.SenderAddress"), _settingValueManager.GetSettingValue("Email.DisplayName"));
+                using (var client = new SmtpClient(_settingValueManager.GetSettingValue("Email.Server"), _settingValueManager.GetSettingValue<int>("Email.Port")))
                 {
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new System.Net.NetworkCredential(_settingValueSource.GetSettingValue("Email.SenderAddress"), _settingValueSource.GetSettingValue("Email.SenderPassword"));
+                    client.Credentials = new System.Net.NetworkCredential(_settingValueManager.GetSettingValue("Email.SenderAddress"), _settingValueManager.GetSettingValue("Email.SenderPassword"));
                     client.Send(mail);
                 }
             }
