@@ -10,8 +10,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets all setting provided by this provider.
         /// </summary>
-        /// <param name="settingManager"></param>
         /// <returns>Settings</returns>
-        IEnumerable<Setting> GetSettings(SettingManager settingManager);
+        IEnumerable<Setting> GetSettings();
     }
 }

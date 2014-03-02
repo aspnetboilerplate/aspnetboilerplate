@@ -65,6 +65,7 @@
     <Compile Include="Configuration\ISettingValueManager.cs" />
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingGroup.cs" />
+    <Compile Include="Configuration\SettingHelper.cs" />
     <Compile Include="Configuration\SettingManager.cs" />
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\SettingValue.cs" />

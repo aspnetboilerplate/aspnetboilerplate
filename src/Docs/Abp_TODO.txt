@@ -19,6 +19,8 @@ TODO (primary):
 - Refactor AccountController according to MVC template
 
 - Create a setting system
+- Add SettingHelper
+- Change XML localization system to accept relative paths.
 
 - Seperate codes from Taskever
   - Abp folder

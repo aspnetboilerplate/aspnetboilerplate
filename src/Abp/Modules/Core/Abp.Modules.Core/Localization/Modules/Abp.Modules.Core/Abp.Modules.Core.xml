@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="UserName" value="User name" />
+    <text name="Password" value="Password" />
+    <text name="ServerAddress" value="Server address" />
+    <text name="ServerPort" value="Server port" />
+    <text name="DisplayName" value="Display name" />
+    <text name="SenderAddress" value="Sender address" />
+  </texts>
+</localizationDictionary>

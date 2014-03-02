@@ -28,6 +28,16 @@ namespace Abp.Localization
         }
 
         /// <summary>
+        /// Gets a localized string in current language.
+        /// </summary>
+        /// <param name="localizableString">LocalizableString object</param>
+        /// <returns>Localized string</returns>
+        public static string GetString(LocalizableString localizableString)
+        {
+            return GetString(localizableString.SourceName, localizableString.Name);
+        }
+
+        /// <summary>
         /// Gets a localized string in specified language.
         /// </summary>
         /// <param name="sourceName">Name of the localization source</param>
@@ -37,6 +47,17 @@ namespace Abp.Localization
         public static string GetString(string sourceName, string name, CultureInfo culture)
         {
             return LocalizationSourceManager.GetSource(sourceName).GetString(name, culture);
+        }
+
+        /// <summary>
+        /// Gets a localized string in specified language.
+        /// </summary>
+        /// <param name="localizableString">LocalizableString object</param>
+        /// <param name="culture">culture</param>
+        /// <returns>Localized string</returns>
+        public static string GetString(LocalizableString localizableString, CultureInfo culture)
+        {
+            return LocalizationSourceManager.GetSource(localizableString.SourceName).GetString(localizableString.Name, culture);
         }
 
         /// <summary>
