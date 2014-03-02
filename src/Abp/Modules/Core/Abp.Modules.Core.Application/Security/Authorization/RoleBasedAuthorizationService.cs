@@ -7,6 +7,7 @@ using Castle.Core.Logging;
 
 namespace Abp.Security.Authorization
 {
+    //TODO: Make this class Singleton and create a Helper method to check permissions.
     public class RoleBasedAuthorizationService : IAuthorizationService
     {
         private readonly IPermissionManager _permissionManager;

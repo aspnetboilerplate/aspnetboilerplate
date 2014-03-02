@@ -16,12 +16,12 @@ TODO (primary):
 + Remove xml files from nuget package (Abp.Web)
 
 + Move ProfileImage to TaskeverUser
-- Refactor AccountController according to MVC template
-
-- Create a setting system
-- Add SettingHelper
++ Add SettingHelper
++ Create a setting system
+  - Test more
 - Change XML localization system to accept relative paths.
-
+- Implement AuditInterceptor using NHibernate events
+- Refactor AccountController according to MVC template
 - Seperate codes from Taskever
   - Abp folder
   - Controllers?

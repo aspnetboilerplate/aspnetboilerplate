@@ -13,7 +13,7 @@ using Castle.Windsor;
 namespace Abp.Modules.Core.Startup
 {
     [AbpModule("Abp.Modules.Core.Infrastructure.NHibernate", Dependencies = new[] { "Abp.Infrastructure.NHibernate" })]
-    public class AbpModulesCoreDataModule : AbpModule
+    public class AbpModulesCoreInfrastructureNHibernateModule : AbpModule
     {
         private IWindsorContainer IocContainer { get; set; }
 

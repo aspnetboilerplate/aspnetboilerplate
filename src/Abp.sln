@@ -76,6 +76,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{05621A8F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Modules.Core.Tests", "Abp\Modules\Core\Tests\Abp.Modules.Core.Tests\Abp.Modules.Core.Tests.csproj", "{111BBE88-A97F-439B-A2BE-05F86A9F5585}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeProject_Article", "CodeProject_Article", "{2619381F-4FE8-4F0F-A3FF-9FB12B434B52}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\CodeProject_Article\abp_article.html = Docs\CodeProject_Article\abp_article.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +170,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A} = {14B060A2-2D57-4FDA-8869-57A8FBF5783C}
 		{AF82CE76-8F81-4816-B195-33B27E433655} = {14B060A2-2D57-4FDA-8869-57A8FBF5783C}
+		{2619381F-4FE8-4F0F-A3FF-9FB12B434B52} = {76AA2897-D756-415C-A0CB-D00E90061FFF}
 		{78FC0C9B-C5A9-4900-9A46-A8F544AC5343} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{71962F97-5E4B-465C-9A21-2153D31992CF} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}

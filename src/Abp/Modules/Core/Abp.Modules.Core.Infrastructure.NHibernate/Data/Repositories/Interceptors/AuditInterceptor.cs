@@ -12,13 +12,6 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
     //TODO: Implement this in NHibernate events!
     public class AuditInterceptor : IInterceptor
     {
-        private readonly IAbpUserRepository _userRepository;
-
-        public AuditInterceptor(IAbpUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
         public void Intercept(IInvocation invocation)
         {
             if (invocation.MethodInvocationTarget.Name == "Insert")
