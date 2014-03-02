@@ -29,11 +29,11 @@ namespace Abp.Net.Mail
         {
             try
             {
-                mail.From = new MailAddress(_settingValueManager.GetSettingValue("Email.SenderAddress"), _settingValueManager.GetSettingValue("Email.DisplayName"));
-                using (var client = new SmtpClient(_settingValueManager.GetSettingValue("Email.Server"), _settingValueManager.GetSettingValue<int>("Email.Port")))
+                mail.From = new MailAddress(_settingValueManager.GetSettingValue("Abp.Net.Mail.SenderAddress"), _settingValueManager.GetSettingValue("Abp.Net.Mail.DisplayName"));
+                using (var client = new SmtpClient(_settingValueManager.GetSettingValue("Abp.Net.Mail.ServerAddress"), _settingValueManager.GetSettingValue<int>("Abp.Net.Mail.ServerPort")))
                 {
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new System.Net.NetworkCredential(_settingValueManager.GetSettingValue("Email.SenderAddress"), _settingValueManager.GetSettingValue("Email.SenderPassword"));
+                    client.Credentials = new System.Net.NetworkCredential(_settingValueManager.GetSettingValue("Abp.Net.Mail.Username"), _settingValueManager.GetSettingValue("Abp.Net.Mail.Password"));
                     client.Send(mail);
                 }
             }

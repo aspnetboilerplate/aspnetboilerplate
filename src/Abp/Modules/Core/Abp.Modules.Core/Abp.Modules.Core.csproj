@@ -70,6 +70,7 @@
     <Compile Include="Configuration\SettingValueManager.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
+    <Compile Include="Net\Mail\EmailSettingProvider.cs" />
     <Compile Include="Security\Identity\AbpRoleManagerBase.cs" />
     <Compile Include="Security\Identity\AbpUserManagerBase.cs" />
     <Compile Include="Security\Identity\RoleStore.cs" />

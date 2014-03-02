@@ -46,7 +46,7 @@ namespace Abp.Configuration
                     if (typeof(ISettingProvider).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
                     {
                         var provider = (ISettingProvider)Activator.CreateInstance(type);
-                        foreach (var settings in provider.GetSettings())
+                        foreach (var settings in provider.GetSettings(this))
                         {
                             _settings[settings.Name] = settings;
                         }
