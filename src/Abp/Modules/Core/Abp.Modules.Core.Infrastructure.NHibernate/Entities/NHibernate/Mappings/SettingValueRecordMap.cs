@@ -5,7 +5,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
     public class SettingValueRecordMap : EntityMap<SettingValueRecord, long>
     {
         public SettingValueRecordMap()
-            : base("AbpSettingValues")
+            : base("AbpSettings")
         {
             Map(x => x.UserId);
             Map(x => x.Name);

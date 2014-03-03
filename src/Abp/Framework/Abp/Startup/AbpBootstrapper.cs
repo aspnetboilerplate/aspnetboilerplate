@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Modules;

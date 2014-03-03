@@ -13,7 +13,7 @@ namespace Abp.Web.Localization
         /// Constrictor.
         /// </summary>
         public AbpWebLocalizationSource()
-            : base("Abp.Web", HttpContext.Current.Server.MapPath("Localization\\Modules\\Abp.Web"))
+            : base("Abp.Web", "Localization\\Modules\\Abp.Web")
         {
 
         }

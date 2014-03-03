@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Web;
 using Abp.Dependency;
 using Abp.Localization;
+using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Web.Localization;
 
@@ -12,6 +14,12 @@ namespace Abp.Startup.Web
     [AbpModule("Abp.Web")]
     public class AbpWebModule : AbpModule
     {
+        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        {
+            base.PreInitialize(initializationContext);
+            XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
+        }
+
         public override void Initialize(IAbpInitializationContext initializationContext)
         { 
             base.Initialize(initializationContext);

@@ -1,14 +1,14 @@
 DONE:
 
-- Dependency Injection infrastructure
-- Module system
-- Localization system
-- EventBus (Server side events)
-- Domain driven design
-- Repository layer
-- Dynamic WebApi generation
-- Authorization/Permission system
-- ASP.NET Identity implementation (active)
++ Dependency Injection infrastructure
++ Module system
++ Localization system
++ EventBus (Server side events)
++ Domain driven design
++ Repository layer
++ Dynamic WebApi generation
++ Authorization/Permission system
++ ASP.NET Identity implementation (active)
 
 TODO (primary):
 
@@ -19,7 +19,7 @@ TODO (primary):
 + Add SettingHelper
 + Create a setting system
   - Test more
-- Change XML localization system to accept relative paths.
++ Change XML localization system to accept relative paths.
 - Implement AuditInterceptor using NHibernate events
 - Refactor AccountController according to MVC template
 - Seperate codes from Taskever

@@ -1,5 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Reflection;
+using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Exceptions;
 using Abp.Localization.Dictionaries.Xml;
 
@@ -11,10 +14,17 @@ namespace Abp.Localization.Sources.Xml
     /// </summary>
     public class XmlLocalizationSource : DictionaryBasedLocalizationSource
     {
+        internal static string RootDirectoryOfApplication { get; set; } //TODO: Find a better way of passing root directory
+
         /// <summary>
         /// Gets directory
         /// </summary>
         public string DirectoryPath { get; private set; }
+
+        static XmlLocalizationSource()
+        {
+            RootDirectoryOfApplication = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
 
         /// <summary>
         /// Creates an Xml based localization source.
@@ -24,6 +34,11 @@ namespace Abp.Localization.Sources.Xml
         public XmlLocalizationSource(string name, string directory)
             : base(name)
         {
+            if (!Path.IsPathRooted(directory))
+            {
+                directory = Path.Combine(RootDirectoryOfApplication, directory);
+            }
+
             DirectoryPath = directory;
             Initialize();
         }
