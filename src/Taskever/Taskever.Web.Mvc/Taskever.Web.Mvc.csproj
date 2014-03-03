@@ -232,13 +232,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Abp\Framework\images\user.png" />
-    <Content Include="Abp\Framework\scripts\abp.blockUI.js" />
-    <Content Include="Abp\Framework\scripts\abp.jquery.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\abp.localization.js" />
-    <Content Include="Abp\Framework\scripts\abp.spin.js" />
-    <Content Include="Abp\Framework\scripts\abp.toastr.js" />
-    <Content Include="Abp\Framework\scripts\requirejs\plugins\service.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
+    <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
     <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
     <Content Include="Abp\Framework\styles\abp.css">
       <DependentUpon>abp.less</DependentUpon>

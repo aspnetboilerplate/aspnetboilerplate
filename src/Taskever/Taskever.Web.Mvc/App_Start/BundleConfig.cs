@@ -50,11 +50,11 @@ namespace Taskever.Web.Mvc
             bundles.Add(
                 new ScriptBundle("~/Scripts/abp")
                     .Include("~/abp/framework/scripts/abp.js")
-                    .Include("~/abp/framework/scripts/abp.jquery.js")
-                    .Include("~/abp/framework/scripts/abp.toastr.js")
-                    .Include("~/abp/framework/scripts/abp.blockUI.js")
-                    .Include("~/abp/framework/scripts/abp.spin.js")
                     .Include("~/abp/framework/scripts/abp.localization.js")
+                    .Include("~/abp/framework/scripts/libs/abp.jquery.js")
+                    .Include("~/abp/framework/scripts/libs/abp.toastr.js")
+                    .Include("~/abp/framework/scripts/libs/abp.blockUI.js")
+                    .Include("~/abp/framework/scripts/libs/abp.spin.js")
                 );
 
             bundles.Add(

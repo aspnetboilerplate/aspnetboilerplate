@@ -7,7 +7,7 @@ requirejs.config({
         'transitions': '../../Scripts/durandal/transitions',
         'abp': '../../Abp',
         'services': '/api/serviceproxies',
-        'service': '/Abp/Framework/scripts/requirejs/plugins/service'
+        'service': '/Abp/Framework/scripts/libs/requirejs/plugins/service'
     }
 });
 
