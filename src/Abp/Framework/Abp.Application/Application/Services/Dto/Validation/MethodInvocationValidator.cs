@@ -16,22 +16,19 @@ namespace Abp.Application.Services.Dto.Validation
     {
         private readonly object[] _arguments;
         private readonly ParameterInfo[] _parameters;
-
-        private readonly ValidationContext _validationContext;
+        
         private readonly List<ValidationResult> _validationErrors;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        /// <param name="instance">The object which's method is being validated</param>
         /// <param name="method">Method to be validated</param>
         /// <param name="arguments">List of arguments those are used to call the <see cref="method"/>.</param>
-        public MethodInvocationValidator(object instance, MethodInfo method, object[] arguments)
+        public MethodInvocationValidator(MethodInfo method, object[] arguments)
         {
             _arguments = arguments;
             _parameters = method.GetParameters();
 
-            _validationContext = new ValidationContext(instance);
             _validationErrors = new List<ValidationResult>();
         }
 
@@ -95,12 +92,14 @@ namespace Abp.Application.Services.Dto.Validation
         /// </summary>
         private void SetValidationAttributeErrors(object argument)
         {
+            var validationContext = new ValidationContext(argument);
+
             var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
                  foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
                 {
-                    var result = attribute.GetValidationResult(property.GetValue(argument), _validationContext);
+                    var result = attribute.GetValidationResult(property.GetValue(argument), validationContext);
                     if (result != null)
                     {
                         _validationErrors.Add(result);

@@ -10,7 +10,6 @@ namespace Abp.Application.Services.Dto.Validation
         public void Intercept(IInvocation invocation)
         {
             new MethodInvocationValidator(
-                invocation.InvocationTarget,
                 invocation.Method,
                 invocation.Arguments
                 ).Validate();

@@ -266,6 +266,7 @@
     <Content Include="App\Main\viewmodels\layout.js" />
     <Content Include="App\Main\viewmodels\settings.js" />
     <Content Include="App\Main\viewmodels\taskList.js" />
+    <Content Include="App\Main\viewmodels\task\create.js" />
     <Content Include="App\Main\viewmodels\task\edit.js" />
     <Content Include="App\Main\viewmodels\task\view.js" />
     <Content Include="App\Main\viewmodels\uploadProfilePictureDialog.js" />
@@ -301,7 +302,9 @@
     <Content Include="Content\jquery.fancybox-buttons.css" />
     <Content Include="Content\jquery.fancybox-thumbs.css" />
     <Content Include="Content\jquery.fancybox.css" />
-    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.css">
+      <DependentUpon>toastr.less</DependentUpon>
+    </Content>
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -411,6 +414,19 @@
     <Content Include="Content\toastr.less" />
     <Content Include="Widgets\LoginBox\LoginBox.js" />
     <Content Include="log4net.config" />
+    <Content Include="Content\toastr.css.map">
+      <DependentUpon>toastr.css</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\abp.css.map">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
+    <Content Include="App\Main\styles\briefFriendList.css.map">
+      <DependentUpon>briefFriendList.css</DependentUpon>
+    </Content>
+    <Content Include="App\_Common\styles\main.css.map">
+      <DependentUpon>main.css</DependentUpon>
+    </Content>
+    <Content Include="App\Main\views\task\create.cshtml" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />

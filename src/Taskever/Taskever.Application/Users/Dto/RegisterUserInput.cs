@@ -17,6 +17,10 @@ namespace Abp.Users.Dto
         [StringLength(100)]
         public string EmailAddress { get; set; }
 
+        [Required]
+        [StringLength(30)]
+        public string UserName { get; set; }
+        
         [StringLength(30, MinimumLength = 3)]
         public string Password { get; set; }
 

@@ -101,7 +101,7 @@ namespace Taskever.Tasks
         }
 
         [UnitOfWork]
-        [AbpAuthorize(TaskeverPermissions.CreateTask)]
+        //[AbpAuthorize(TaskeverPermissions.CreateTask)]
         public virtual CreateTaskOutput CreateTask(CreateTaskInput input)
         {
             //Get entities from database

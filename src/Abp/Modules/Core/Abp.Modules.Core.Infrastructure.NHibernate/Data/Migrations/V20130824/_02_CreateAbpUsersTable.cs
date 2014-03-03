@@ -18,11 +18,11 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
             Insert.IntoTable("AbpUsers").Row(
                 new
                     {
-                        TenantId = 1,
+                        UserName = "hikalkan",
                         Name = "Halil İbrahim",
                         Surname = "Kalkan",
                         EmailAddress = "hi_kalkan@yahoo.com",
-                        Password = "123"
+                        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                     }
                 );
 

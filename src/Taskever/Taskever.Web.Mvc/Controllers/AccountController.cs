@@ -39,10 +39,6 @@ namespace Taskever.Web.Mvc.Controllers
         {
             _userAppService = userAppService;
             _userManager = userManager;
-
-            var type = GetType();
-            var method = type.GetMethod("Login", new [] {typeof (string), typeof (string)});
-            var prms = method.GetParameters();
         }
 
         public virtual ActionResult Login(string returnUrl = "/", string loginMessage = "")
@@ -120,6 +116,7 @@ namespace Taskever.Web.Mvc.Controllers
             }
 
             input.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
+
             _userAppService.RegisterUser(input);
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = Url.Action("ActivationInfo") });
