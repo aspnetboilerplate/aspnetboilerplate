@@ -42,4 +42,4 @@ using Abp;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AbpConst.CurrentVersion)]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion(AbpConst.CurrentVersion)]

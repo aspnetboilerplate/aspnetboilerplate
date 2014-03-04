@@ -2,6 +2,6 @@
 {
     internal static class AbpConst
     {
-        public const string CurrentVersion = "0.1.1.0";
+        public const string CurrentVersion = "0.1.1.1";
     }
 }
