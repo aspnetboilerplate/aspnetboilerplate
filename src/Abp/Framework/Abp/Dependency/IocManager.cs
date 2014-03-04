@@ -52,13 +52,6 @@ namespace Abp.Dependency
         /// <param name="assembly">Assembly to register</param>
         public void RegisterAssemblyByConvention(Assembly assembly)
         {
-            foreach (var registerer in _conventionalRegisterers)
-            {
-                registerer.RegisterAssembly(IocContainer, assembly);
-            }
-
-            IocContainer.Install(FromAssembly.Instance(assembly));
-
             RegisterAssemblyByConvention(assembly, new ConventionalRegistrationConfig());
         }
 
