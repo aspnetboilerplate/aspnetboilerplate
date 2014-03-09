@@ -1,3 +1,4 @@
+using Abp.Domain.Entities.Mapping;
 using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using Taskever.Activities;
 

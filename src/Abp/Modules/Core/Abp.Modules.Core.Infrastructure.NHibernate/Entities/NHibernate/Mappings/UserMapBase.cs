@@ -1,4 +1,5 @@
-﻿using Abp.Security.Users;
+﻿using Abp.Domain.Entities.Mapping;
+using Abp.Security.Users;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {

@@ -21,7 +21,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/vie
 
     //TODO: Move to framework?
     viewEngine.convertViewIdToRequirePath = function (viewId) {
-        return this.viewPlugin + '!/DurandalView/GetAppView?viewUrl=' + viewId + '.cshtml';
+        return this.viewPlugin + '!/AbpAppView/Load?viewUrl=/App/Main/' + viewId + '.cshtml';
     };
 
     //TODO: Is that good?

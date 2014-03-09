@@ -96,8 +96,7 @@
     <Compile Include="Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Entities\NHibernate\Mappings\RoleMapBase.cs" />
     <Compile Include="Entities\NHibernate\Mappings\UserMapBase.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\EntityMap.cs" />
-    <Compile Include="Entities\NHibernate\Mappings\MapExtensions.cs" />
+    <Compile Include="Entities\NHibernate\Mappings\Extensions\MapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpModulesCoreInfrastructureNHibernateModule.cs" />
   </ItemGroup>

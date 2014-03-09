@@ -1,8 +1,7 @@
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using FluentNHibernate.Mapping;
 
-namespace Abp.Modules.Core.Entities.NHibernate.Mappings
+namespace Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions
 {
     /// <summary>
     /// This class is used to make mapping easier for standart columns.
@@ -13,27 +12,36 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         /// Maps audit columns. See <see cref="IAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public static void MapAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
+        public static void MapAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IAudited
         {
-            mapping.MapCreationAuditColumns();
-            mapping.MapModificationAuditColumns();
+            mapping.MapCreationAudited();
+            mapping.MapModificationAudited();
         }
 
         /// <summary>
         /// Maps creation audit columns. See <see cref="ICreationAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public static void MapCreationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
+        public static void MapCreationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : ICreationAudited
         {
-            mapping.Map(x => (x as ICreationAudited).CreationTime);
+            mapping.MapCreationTime();
             mapping.Map(x => (x as ICreationAudited).CreatorUserId);
+        }
+
+        /// <summary>
+        /// Maps creation audit columns. See <see cref="ICreationAudited"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapCreationTime<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IHasCreationTime
+        {
+            mapping.Map(x => (x as IHasCreationTime).CreationTime);
         }
 
         /// <summary>
         /// Maps modification audit columns. See <see cref="ICreationAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public static void MapModificationAuditColumns<TEntity>(this ClassMap<TEntity> mapping)
+        public static void MapModificationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IModificationAudited
         {
             mapping.Map(x => (x as IModificationAudited).LastModificationTime);
             mapping.Map(x => (x as IModificationAudited).LastModifierUserId);

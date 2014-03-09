@@ -1,8 +1,9 @@
+using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
 using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class RolePermissionMap : EntityMap<RolePermission>
+    public class RolePermissionMap : Domain.Entities.Mapping.EntityMap<RolePermission>
     {
         public RolePermissionMap()
             : base("AbpRolePermissions")
@@ -10,6 +11,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.RoleId);
             Map(x => x.PermissionName);
             Map(x => x.IsGranted);
+            this.MapCreationAudited();
         }
     }
 }

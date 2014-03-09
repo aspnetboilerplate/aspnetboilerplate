@@ -96,6 +96,7 @@
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AbpController.cs" />
     <Compile Include="Controllers\AbpHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\AbpAppViewController.cs" />
     <Compile Include="Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Controllers\WindsorControllerFactory.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />

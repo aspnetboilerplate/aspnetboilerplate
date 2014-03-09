@@ -1,5 +1,5 @@
-using Abp.Modules.Core.Entities.NHibernate.Mappings;
-using FluentNHibernate.Mapping;
+using Abp.Domain.Entities.Mapping;
+using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
 using Taskever.Friendships;
 
 namespace Taskever.Entities.NHibernate.Mappings
@@ -17,6 +17,7 @@ namespace Taskever.Entities.NHibernate.Mappings
             Map(x => x.LastVisitTime);
             Map(x => x.CreationTime);
             Map(x => x.Status).CustomType<FriendshipStatus>().Not.Nullable();
+            this.MapCreationTime();
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
 using Taskever.Security.Users;
 
 namespace Taskever.Friendships
 {
-    public class Friendship : Entity
+    public class Friendship : Entity, IHasCreationTime
     {
         public virtual TaskeverUser User { get; set; }
 

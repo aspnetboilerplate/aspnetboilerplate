@@ -1,3 +1,5 @@
+using Abp.Domain.Entities.Mapping;
+using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
 using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
@@ -9,6 +11,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         {
             Map(x => x.Name);
             Map(x => x.DisplayName);
+            this.MapAudited();
             HasMany(x => x.Permissions).KeyColumn("RoleId");
         }
     }

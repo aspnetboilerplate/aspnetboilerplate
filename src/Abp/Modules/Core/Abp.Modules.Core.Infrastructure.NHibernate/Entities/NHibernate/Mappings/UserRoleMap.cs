@@ -1,4 +1,6 @@
-﻿using Abp.Security.Roles;
+﻿using Abp.Domain.Entities.Mapping;
+using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
+using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
@@ -7,6 +9,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public UserRoleMap()
             : base("AbpUserRoles")
         {
+            this.MapCreationAudited();
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Role).Column("RoleId").LazyLoad();
         }

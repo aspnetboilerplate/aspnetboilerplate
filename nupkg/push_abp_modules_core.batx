@@ -1,7 +1,0 @@
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.0.1.2-alpha.nupkg" API-KEY
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.Application.0.1.2-alpha.nupkg" API-KEY
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.Web.0.1.2-alpha.nupkg" API-KEY
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.Infrastructure.NHibernate.0.1.2-alpha.nupkg" API-KEY
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.Web.Api.0.1.2-alpha.nupkg" API-KEY
-"..\src\.nuget\NuGet.exe" "push" "Abp.Modules.Core.Web.Mvc.0.1.2-alpha.nupkg" API-KEY
-pause

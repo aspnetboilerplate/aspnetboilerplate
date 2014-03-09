@@ -1,4 +1,5 @@
-﻿using Abp.Modules.Core.Entities.NHibernate.Mappings;
+﻿using Abp.Domain.Entities.Mapping;
+using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
 using Taskever.Tasks;
 
 namespace Taskever.Entities.NHibernate.Mappings
@@ -14,6 +15,7 @@ namespace Taskever.Entities.NHibernate.Mappings
             Map(x => x.Priority).CustomType<TaskPriority>().Not.Nullable();
             Map(x => x.Privacy).CustomType<TaskPrivacy>().Not.Nullable();
             Map(x => x.State).CustomType<TaskState>().Not.Nullable();
+            this.MapAudited();
         }
     }
 }
