@@ -33,7 +33,7 @@ namespace Abp.Web.Models
         /// </summary>
         /// <param name="message">Error message</param>
         public AbpErrorInfo(string message)
-            : this("", message)
+            : this(message, "")
         {
 
         }
