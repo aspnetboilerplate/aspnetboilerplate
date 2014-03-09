@@ -1,12 +1,12 @@
 using Abp.Domain.Entities.Auditing;
 using FluentNHibernate.Mapping;
 
-namespace Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions
+namespace Abp.Domain.Entities.Mapping
 {
     /// <summary>
     /// This class is used to make mapping easier for standart columns.
     /// </summary>
-    public static class MapExtensions
+    public static class CoreModuleMapExtensions
     {
         /// <summary>
         /// Maps audit columns. See <see cref="IAudited"/>.

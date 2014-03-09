@@ -1,5 +1,4 @@
 ﻿using Abp.Domain.Entities.Mapping;
-using Abp.Modules.Core.Entities.NHibernate.Mappings.Extensions;
 using Abp.Security.Roles;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
