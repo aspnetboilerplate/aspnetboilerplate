@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading" style="position: relative;">
             <div class="abp-dock-right abp-busy-indicator abp-busy-indicator-small" data-bind="visible: refreshing()" />
-            <a class="clickable pull-right" data-bind="click: refresh, visible: !refreshing()">refresh</a>
+            <a class="abp-clickable pull-right" data-bind="click: refresh, visible: !refreshing()">refresh</a>
             <!-- TODO: Change to icon ? -->
             <h3 class="panel-title">@L("MyTasks")</h3>
         </div>
@@ -12,7 +12,7 @@
         </ul>
         <!-- ko if: tasks().length <= 0 -->
         <div class="panel-body text-muted">
-            <a class="clickable text-muted" href="#task/create">+ No task, create one?</a>
+            <a class="abp-clickable text-muted" href="#task/create">+ No task, create one?</a>
         </div>
         <!-- /ko -->
         <div class="panel-footer">

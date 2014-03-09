@@ -244,7 +244,7 @@
       <DependentUpon>abp.less</DependentUpon>
     </Content>
     <Content Include="Abp\Framework\styles\abp.min.css">
-      <DependentUpon>abp.less</DependentUpon>
+      <DependentUpon>abp.css</DependentUpon>
     </Content>
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <Content Include="App\Main\images\profile\hikalkan.jpg" />

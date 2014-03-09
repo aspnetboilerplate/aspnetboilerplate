@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Abp.Modules.Core.Web.Api</id>
-    <version>0.1.2-alpha</version>
+    <version>0.1.3-alpha</version>
     <title>Abp.Modules.Core.Web.Api</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>

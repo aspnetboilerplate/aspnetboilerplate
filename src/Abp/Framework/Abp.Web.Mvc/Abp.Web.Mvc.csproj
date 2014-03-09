@@ -108,7 +108,18 @@
     <Compile Include="Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Abp\Framework\styles\abp.min.css">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <None Include="Abp.Web.Mvc.nuspec" />
+    <Content Include="Abp\Framework\styles\abp.css">
+      <DependentUpon>abp.less</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\abp.less" />
+    <Content Include="Abp\Framework\styles\abp.css.map">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -125,7 +136,26 @@
       <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Abp\Framework\images\user.png" />
+    <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="Abp\Framework\scripts\abp.localization.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
+    <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
+    <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
+    <Content Include="Localization\Modules\Abp.Web\Abp.Web.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Abp\Modules\Core\images\" />
+    <Folder Include="Abp\Modules\Core\models\" />
+    <Folder Include="Abp\Modules\Core\scripts\" />
+    <Folder Include="Abp\Modules\Core\styles\" />
+    <Folder Include="Abp\Modules\Core\viewmodels\" />
+    <Folder Include="Abp\Modules\Core\views\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
