@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Abp.Dependency;
 using Castle.DynamicProxy;
 
 namespace Abp.Application.Authorization
@@ -11,11 +12,10 @@ namespace Abp.Application.Authorization
         public void Intercept(IInvocation invocation)
         {
             Authorize(invocation);
-
             invocation.Proceed();
         }
 
-        public static void Authorize(IInvocation invocation)
+        public void Authorize(IInvocation invocation)
         {
             if (!invocation.MethodInvocationTarget.IsDefined(typeof(AbpAuthorizeAttribute), true))
             {
@@ -23,7 +23,10 @@ namespace Abp.Application.Authorization
             }
 
             var authorizeAttributes = invocation.MethodInvocationTarget.GetCustomAttributes(typeof(AbpAuthorizeAttribute), true);
-            AuthorizeAttributeHelper.Authorize(authorizeAttributes.Cast<IAbpAuthorizeAttribute>());
+            using (var authorizationAttributeHelper = IocHelper.ResolveAsDisposable<AuthorizeAttributeHelper>())
+            {
+                authorizationAttributeHelper.Object.Authorize(authorizeAttributes.Cast<IAbpAuthorizeAttribute>());
+            }
         }
     }
 }

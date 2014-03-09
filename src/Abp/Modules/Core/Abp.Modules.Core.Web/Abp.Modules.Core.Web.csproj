@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup\Web\AbpWebModule.cs" />
+    <Compile Include="Startup\Web\AbpCoreWebModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
@@ -66,7 +66,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir).nuget\NuGet.exe" "pack" "$(SolutionDir)Abp\Modules\Core\Abp.Modules.Core.Web\Abp.Modules.Core.Web.csproj" "-outputdirectory" "$(SolutionDir)..\nupkg" -IncludeReferencedProjects</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

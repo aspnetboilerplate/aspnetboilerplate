@@ -11,7 +11,6 @@ namespace Abp.Startup.Web
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
     /// </summary>
-    [AbpModule("Abp.Web")]
     public class AbpWebModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)

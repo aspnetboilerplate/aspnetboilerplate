@@ -11,7 +11,6 @@ namespace Abp.Startup.Infrastructure.NHibernate
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.
     /// </summary>
-    [AbpModule("Abp.Infrastructure.NHibernate")]
     public class AbpNHibernateModule : AbpModule
     {
         /// <summary>

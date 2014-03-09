@@ -5,39 +5,43 @@ using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization
 {
-    internal static class AuthorizeAttributeHelper
+    public class AuthorizeAttributeHelper : ITransientDependency //TODO: Make internal
     {
-        public static void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
+        public IAuthorizationService AuthorizationService { get; set; }
+
+        public AuthorizeAttributeHelper()
+        {
+            AuthorizationService = NullAuthorizationService.Instance;            
+        }
+
+        public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
         {
             Authorize(new[] { authorizeAttribute });
         }
 
-        public static void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
+        public void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
-            using (var authorizationService = IocHelper.ResolveAsDisposable<IAuthorizationService>())
+            foreach (var authorizeAttribute in authorizeAttributes)
             {
-                foreach (var authorizeAttribute in authorizeAttributes)
+                if (authorizeAttribute.Permissions.IsNullOrEmpty())
                 {
-                    if (authorizeAttribute.Permissions.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (authorizeAttribute.RequireAllPermissions)
+                if (authorizeAttribute.RequireAllPermissions)
+                {
+                    if (!AuthorizationService.HasAllOfPermissions(authorizeAttribute.Permissions))
                     {
-                        if (!authorizationService.Object.HasAllOfPermissions(authorizeAttribute.Permissions))
-                        {
-                            var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
-                            throw new AbpAuthorizationException("Required permissions are not granted. All of these permissions must be granted: " + requiredPermissions);
-                        }
+                        var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
+                        throw new AbpAuthorizationException("Required permissions are not granted. All of these permissions must be granted: " + requiredPermissions);
                     }
-                    else
+                }
+                else
+                {
+                    if (!AuthorizationService.HasAnyOfPermissions(authorizeAttribute.Permissions))
                     {
-                        if (!authorizationService.Object.HasAnyOfPermissions(authorizeAttribute.Permissions))
-                        {
-                            var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
-                            throw new AbpAuthorizationException("Required permissions are not granted. At least one of these permissions must be granted: " + requiredPermissions);
-                        }
+                        var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
+                        throw new AbpAuthorizationException("Required permissions are not granted. At least one of these permissions must be granted: " + requiredPermissions);
                     }
                 }
             }

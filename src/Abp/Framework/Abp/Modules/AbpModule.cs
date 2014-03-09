@@ -1,4 +1,6 @@
-﻿using Abp.Startup;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Startup;
 
 namespace Abp.Modules
 {
@@ -7,6 +9,15 @@ namespace Abp.Modules
     /// </summary>
     public abstract class AbpModule : IAbpModule
     {
+        /// <summary>
+        /// Gets all depended modules for this module.
+        /// </summary>
+        /// <returns>List of depended modules.</returns>
+        protected virtual Type[] GetDependedModules()
+        {
+            return new Type[] {};
+        } 
+
         /// <summary>
         /// What can be done in this method:
         /// - Make things those must be done before dependency registers.

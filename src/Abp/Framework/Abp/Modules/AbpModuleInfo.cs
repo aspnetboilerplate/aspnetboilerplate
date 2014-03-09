@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Abp.Exceptions;
 using Abp.Utils.Extensions.Reflection;
 
@@ -13,7 +14,7 @@ namespace Abp.Modules
         /// <summary>
         /// Unique Name of the module. Shortcut for <see cref="AbpModuleAttribute.Name"/>.
         /// </summary>
-        public string Name { get { return ModuleAttribute.Name; } }
+        public string Name { get { return Instance.GetType().Name; } }
 
         /// <summary>
         /// Type of the module.
@@ -25,22 +26,19 @@ namespace Abp.Modules
         /// </summary>
         public IAbpModule Instance { get; private set; }
 
-        /// <summary>
-        /// Declared AbpModuleAttribute attribute for this module.
-        /// </summary>
-        public AbpModuleAttribute ModuleAttribute { get; private set; }
+        public Assembly Assembly { get; private set; }
         
         /// <summary>
         /// All dependent modules of this module.
         /// </summary>
-        public IDictionary<string, AbpModuleInfo> Dependencies { get; private set; }
+        public List<AbpModuleInfo> Dependencies { get; private set; }
         
-        public AbpModuleInfo(Type type, AbpModuleAttribute moduleAttribute, IAbpModule instance)
+        public AbpModuleInfo(Type type, IAbpModule instance)
         {
-            Dependencies = new Dictionary<string, AbpModuleInfo>();
+            Dependencies = new List<AbpModuleInfo>();
             Type = type;
-            ModuleAttribute = moduleAttribute;
             Instance = instance;
+            Assembly = type.Assembly;
         }
 
         public static AbpModuleInfo CreateForType(Type type)
@@ -53,7 +51,7 @@ namespace Abp.Modules
                         type.FullName));
             }
 
-            return new AbpModuleInfo(type, type.GetSingleAttributeOrNull<AbpModuleAttribute>(), (IAbpModule)Activator.CreateInstance(type, new object[] { }));
+            return new AbpModuleInfo(type, (IAbpModule)Activator.CreateInstance(type, new object[] { }));
         }
 
         public override string ToString()

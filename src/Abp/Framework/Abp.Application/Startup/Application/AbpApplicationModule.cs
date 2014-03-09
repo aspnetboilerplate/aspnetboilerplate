@@ -7,7 +7,6 @@ namespace Abp.Startup.Application
     /// <summary>
     /// This module is used to simplify and standardize building the "Application Layer" of an application.
     /// </summary>
-    [AbpModule("Abp.Application")]
     public class AbpApplicationModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)

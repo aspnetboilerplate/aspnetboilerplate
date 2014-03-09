@@ -45,7 +45,7 @@ namespace Abp.Modules
                     for (var i = 0; i < orderedList.Count; i++)
                     {
                         //Check for dependency
-                        if (moduleInfo.Dependencies.ContainsKey(orderedList[i].Name))
+                        if (moduleInfo.Dependencies.Contains(orderedList[i]))
                         {
                             //If there is dependency, place after it
                             index = i + 1;

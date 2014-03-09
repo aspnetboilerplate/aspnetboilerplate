@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Controllers;
 using Abp.Application.Authorization;
+using Abp.Dependency;
 using Abp.Logging;
 
 namespace Abp.WebApi.Authorization
@@ -15,7 +16,7 @@ namespace Abp.WebApi.Authorization
         public string[] Permissions { get; set; }
 
         public bool RequireAllPermissions { get; set; }
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
         /// </summary>
@@ -34,7 +35,11 @@ namespace Abp.WebApi.Authorization
 
             try
             {
-                AuthorizeAttributeHelper.Authorize(this);
+                using (var authorizationAttributeHelper = IocHelper.ResolveAsDisposable<AuthorizeAttributeHelper>())
+                {
+                    authorizationAttributeHelper.Object.Authorize(this);                    
+                }
+
                 return true;
             }
             catch (AbpAuthorizationException ex)

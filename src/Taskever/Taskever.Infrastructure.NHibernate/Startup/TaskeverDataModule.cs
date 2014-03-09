@@ -8,7 +8,6 @@ using FluentNHibernate.Cfg.Db;
 
 namespace Taskever.Startup
 {
-    [AbpModule("Taskever.Infrastructure.Data.NHibernate", Dependencies = new[] { "Abp.Modules.Core.Infrastructure.NHibernate" })]
     public class TaskeverDataModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)

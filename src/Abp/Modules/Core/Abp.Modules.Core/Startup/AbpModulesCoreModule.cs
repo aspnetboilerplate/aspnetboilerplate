@@ -4,7 +4,6 @@ using Abp.Modules;
 
 namespace Abp.Startup
 {
-    [AbpModule("Abp.Modules.Core")]
     public class AbpModulesCoreModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)

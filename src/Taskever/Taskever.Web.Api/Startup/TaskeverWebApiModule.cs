@@ -9,7 +9,6 @@ using Taskever.Web.Dependency.Installers;
 
 namespace Taskever.Web.Startup
 {
-    [AbpModule("Taskever.Web.Api", Dependencies = new[] { "Abp.Web.Api" })]
     public class TaskeverWebApiModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)

@@ -8,8 +8,7 @@ using Abp.Startup;
 
 namespace Taskever.Web.Mvc    
 {
-    [AbpModule("Taskever.Web.Spa", Dependencies = new[] { "Abp.Web.Mvc", "Taskever.Web.Api" })]
-    public class TaskeverWebSpaModule : AbpModule
+    public class TaskeverWebMvcModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)
         {

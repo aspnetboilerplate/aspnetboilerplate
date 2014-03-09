@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Abp.Exceptions;
 using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
@@ -13,7 +16,7 @@ namespace Abp.Modules
         public ILogger Logger { get; set; }
 
         private readonly AbpModuleCollection _modules;
-        
+
         public AbpModuleLoader(AbpModuleCollection modules)
         {
             _modules = modules;
@@ -24,25 +27,12 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            var scannedAssemlies = new List<Assembly>();
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (!AbpModuleHelper.IsAbpModule(type))
-                    {
-                        continue;
-                    }
-
-                    var moduleInfo = AbpModuleInfo.CreateForType(type);
-                    if (_modules.ContainsKey(moduleInfo.Name))
-                    {
-                        Logger.Warn("Module is loaded before: " + type.FullName);
-                        continue;
-                    }
-
-                    _modules[moduleInfo.Name] = moduleInfo;
-                    Logger.Debug("Loaded module: " + moduleInfo);
-                }
+                FillModules(assembly, scannedAssemlies);
             }
 
             SetDependencies();
@@ -50,32 +40,52 @@ namespace Abp.Modules
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
         }
 
-        private void SetDependencies()
+        private void FillModules(Assembly assembly, List<Assembly> scannedAssemblies)
         {
-            foreach (var moduleInfo in _modules.Values)
+            if (scannedAssemblies.Contains(assembly))
             {
-                //Check if this module has no dependecies
-                if (moduleInfo.ModuleAttribute.Dependencies.IsNullOrEmpty())
+                return;
+            }
+
+            scannedAssemblies.Add(assembly);
+            var referencedAssemblyNames = assembly.GetReferencedAssemblies();
+            foreach (var referencedAssemblyName in referencedAssemblyNames)
+            {
+                var referencedAssembly = Assembly.Load(referencedAssemblyName);
+                FillModules(referencedAssembly, scannedAssemblies);
+            }
+
+            foreach (var type in assembly.GetTypes())
+            {
+                if (!AbpModuleHelper.IsAbpModule(type))
                 {
                     continue;
                 }
 
-                foreach (var dependencyModuleName in moduleInfo.ModuleAttribute.Dependencies)
+                var moduleInfo = AbpModuleInfo.CreateForType(type);
+                if (_modules.ContainsKey(moduleInfo.Name))
                 {
-                    //Check if there is a module with this name
-                    if (!_modules.ContainsKey(dependencyModuleName))
-                    {
-                        throw new AbpException(string.Format("Can not find dependent Abp module {0} for {1}.", dependencyModuleName, moduleInfo.Name));
-                    }
+                    Logger.Warn("Module is loaded before: " + type.FullName);
+                    continue;
+                }
 
-                    //Check if same dependency set before
-                    if (moduleInfo.Dependencies.ContainsKey(dependencyModuleName))
-                    {
-                        continue;
-                    }
+                _modules[moduleInfo.Name] = moduleInfo;
+                Logger.Debug("Loaded module: " + moduleInfo);
+            }
+        }
 
-                    //Set the dependency
-                    moduleInfo.Dependencies[dependencyModuleName] = _modules[dependencyModuleName];
+        private void SetDependencies()
+        {
+            foreach (var moduleInfo in _modules.Values)
+            {
+                foreach (var referencedAssemblyName in moduleInfo.Assembly.GetReferencedAssemblies())
+                {
+                    var referencedAssembly = Assembly.Load(referencedAssemblyName);
+                    var dependedModuleList = _modules.Values.Where(m => m.Assembly == referencedAssembly).ToList();
+                    if (dependedModuleList.Count > 0)
+                    {
+                        moduleInfo.Dependencies.AddRange(dependedModuleList);
+                    }
                 }
             }
         }

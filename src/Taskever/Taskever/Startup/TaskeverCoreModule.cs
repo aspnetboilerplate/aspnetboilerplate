@@ -7,7 +7,6 @@ using Taskever.Localization.Resources;
 
 namespace Taskever.Startup
 {
-    [AbpModule("Taskever.Core")]
     public class TaskeverCoreModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)

@@ -35,7 +35,11 @@ namespace Abp.Web.Mvc.Authorization
 
             try
             {
-                AuthorizeAttributeHelper.Authorize(this);
+                using (var authorizationAttributeHelper = IocHelper.ResolveAsDisposable<AuthorizeAttributeHelper>())
+                {
+                    authorizationAttributeHelper.Object.Authorize(this);
+                }
+
                 return true;
             }
             catch (AbpAuthorizationException ex)

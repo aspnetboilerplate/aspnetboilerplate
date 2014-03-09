@@ -1,12 +1,20 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
 
 namespace Abp.Startup
 {
-    [AbpModule("Abp.Modules.Core.Application", Dependencies = new[] { "Abp.Modules.Core" })]
     public class AbpModulesCoreApplicationModule : AbpModule
     {
+        protected override Type[] GetDependedModules()
+        {
+            return new[]
+                   {
+                       typeof(AbpModulesCoreModule)
+                   };
+        }
+
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);

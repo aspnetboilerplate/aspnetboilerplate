@@ -1,11 +1,9 @@
-﻿using Abp.Dependency;
-
-namespace Abp.Application.Authorization
+﻿namespace Abp.Application.Authorization
 {
     /// <summary>
     /// Defines interface to use authorization system.
     /// </summary>
-    public interface IAuthorizationService : ITransientDependency
+    public interface IAuthorizationService
     {
         /// <summary>
         /// Checks if current user is authorized for any of the given permissions.

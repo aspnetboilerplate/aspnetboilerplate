@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Abp.Modules.Core.Infrastructure.NHibernate</id>
-    <version>0.1.1-alpha1</version>
+    <version>0.1.2-alpha</version>
     <title>Abp.Modules.Core.Infrastructure.NHibernate</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>

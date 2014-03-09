@@ -12,7 +12,7 @@
     <strong>DRY </strong>- Don&#39;t Repeat Yourself! is one of the main ideas of a good developer while developing software. We&#39;re trying to implement it from simple methods to classes and modules. What about developing a new web based application? We, software developers, have similar needs when developing enterprise web applications.
 </p>
 <p>
-    <strong>Enterprise web applications</strong> need login pages, user/role management infrastructure, user/application setting management, localization and so on. Also, a high quality and large scale software implement <strong>best practices</strong> such as Layered Architecture, Domain Driven Design (DDD), dependency injection (DI). Also, we use <strong>tools</strong> for Object-Releational Mapping (ORM), database migrations, logging... etc. When it comes to the <strong>user interface</strong> (UI), it&#39;s not much different.
+    <strong>Enterprise web applications</strong> need login pages, user/role management infrastructure, user/application setting management, localization and so on. Also, a high quality and large scale software implements <strong>best practices</strong> such as Layered Architecture, Domain Driven Design (DDD), dependency injection (DI). Also, we use <strong>tools</strong> for Object-Releational Mapping (ORM), database migrations, logging... etc. When it comes to the <strong>user interface</strong> (UI), it&#39;s not much different.
 </p>
 <p>
     Starting a new enterprise web application is a hard work. Since all applications need some common tasks, we&#39;re repeating ourselves. Many companies are developing their own <strong>frameworks/libraries</strong> for such common tasks to do not re-develop same things. Others are <strong>copying</strong> some parts of existing applications and preparing <strong>a start point</strong> for their new application. First approach is pretty good if your company is big enough and has time to develop such a framework.
@@ -22,9 +22,10 @@
 </p>
 
 <h2 id="WhatIsAbp">What is ASP.NET Boilerplate?</h2>
-<p>ASP.NET Boilerplate is a starting point for new web applications using <strong>best practices </strong>and <strong>most popular tools</strong>. It&#39;s aimed to be a solid <strong>model</strong>, a general-purpose <strong>framework</strong> and a project <strong>template</strong>.</p>
+<p>ASP.NET Boilerplate is a starting point for new web applications using <strong>best practices </strong>and <strong>most popular tools</strong>. It&#39;s aimed to be a solid <strong>model</strong>, a general-purpose <strong>framework</strong> and a project <strong>template</strong>. What it does?</p>
 <ul>
     <li>Server side<ul>
+        <li>Based on <strong>ASP.NET MVC </strong>and <strong>Web API</strong>.</li>
         <li>Implements <strong>Domain Driven Design </strong>(Entities, Repositories, Domain Services, Application Services, DTOs, Unif Of Work... and so on)</li>
         <li>Implements <strong>Layered Architecture </strong>(Domain, Application, Presentation and Infrastructure Layers).</li>
         <li>Provides an infrastructure to develop reusable and composable <strong>modules </strong>for large projects.</li>
@@ -32,7 +33,7 @@
         <li>Provides an infrastructure for and make it easy to use <strong>Dependency Injection </strong>(uses Castle Windsor as DI container).</li>
         <li>Provides a strict model and base classes to use <strong>Object-Releational Mapping </strong>easily (uses NHibernate, can work with many DBMS).</li>
         <li>Implements <strong>database migrations </strong>(uses FluentMigrator).</li>
-        <li>Includes <strong>authentication </strong>and <strong>role-based authorization </strong>infrastructure.</li>
+        <li>Includes <strong>authentication </strong>and <strong>role-based authorization </strong>infrastructure (Implements ASP.NET Identity Framework).</li>
         <li>Includes a simple and flexible <strong>localization </strong>system.</li>
         <li>Includes <strong>EventBus </strong>for server-side global domain events.</li>
         <li>Includes a <strong>setting </strong>system (application/user level).</li>
