@@ -27,6 +27,8 @@ TODO (primary):
   - Controllers?
   - Views?
 
+*************** Merge localization to abp.js *****************
+
 - Implement a simple application: TaskeverLite?
 
 * Templates
@@ -57,3 +59,7 @@ TODO (secondary):
 - Create 403 & 404 (maybe others) special error pages!
 - Edition system (Standart edition, Premium edition v.s.)
 - Develop ASP.NET MVC Widget System!
+
+JTABLE
+- jquery.jtable.abp.js extension?
+- MVC helper to generate table/actions?
