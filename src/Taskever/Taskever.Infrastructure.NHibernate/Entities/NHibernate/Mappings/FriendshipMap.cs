@@ -14,7 +14,6 @@ namespace Taskever.Entities.NHibernate.Mappings
             Map(x => x.FollowActivities);
             Map(x => x.CanAssignTask);
             Map(x => x.LastVisitTime);
-            Map(x => x.CreationTime);
             Map(x => x.Status).CustomType<FriendshipStatus>().Not.Nullable();
             this.MapCreationTime();
         }

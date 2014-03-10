@@ -8,7 +8,7 @@ namespace Abp.Modules
     /// <summary>
     /// Used to store AbpModuleInfo objects as a dictionary.
     /// </summary>
-    public class AbpModuleCollection : Dictionary<string, AbpModuleInfo>
+    public class AbpModuleCollection : List<AbpModuleInfo>
     {
         /// <summary>
         /// Gets a reference to a module instance.
@@ -17,7 +17,7 @@ namespace Abp.Modules
         /// <returns>Reference to the module instance</returns>
         public TModule GetModule<TModule>() where TModule : AbpModule
         {
-            var module = Values.FirstOrDefault(m => m.Type == typeof(TModule));
+            var module = this.FirstOrDefault(m => m.Type == typeof(TModule));
             if (module == null)
             {
                 throw new AbpException("Can not find module for " + typeof(TModule).FullName);
@@ -35,7 +35,7 @@ namespace Abp.Modules
         {
             var orderedList = new List<AbpModuleInfo>();
 
-            foreach (var moduleInfo in Values)
+            foreach (var moduleInfo in this)
             {
                 var index = 0; //Order of this module (will be first module if there is no dependencies of it)
 

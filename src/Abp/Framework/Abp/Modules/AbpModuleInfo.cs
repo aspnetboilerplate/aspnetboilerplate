@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Abp.Exceptions;
-using Abp.Utils.Extensions.Reflection;
 
 namespace Abp.Modules
 {
@@ -12,9 +11,9 @@ namespace Abp.Modules
     public class AbpModuleInfo
     {
         /// <summary>
-        /// Unique Name of the module. Shortcut for <see cref="AbpModuleAttribute.Name"/>.
+        /// The assembly which contains the module definition.
         /// </summary>
-        public string Name { get { return Instance.GetType().Name; } }
+        public Assembly Assembly { get; private set; }
 
         /// <summary>
         /// Type of the module.
@@ -26,19 +25,22 @@ namespace Abp.Modules
         /// </summary>
         public IAbpModule Instance { get; private set; }
 
-        public Assembly Assembly { get; private set; }
-        
         /// <summary>
         /// All dependent modules of this module.
         /// </summary>
         public List<AbpModuleInfo> Dependencies { get; private set; }
-        
-        public AbpModuleInfo(Type type, IAbpModule instance)
+
+        /// <summary>
+        /// Creates a new AbpModuleInfo object.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="instance"></param>
+        public AbpModuleInfo(IAbpModule instance)
         {
             Dependencies = new List<AbpModuleInfo>();
-            Type = type;
+            Type = instance.GetType();
             Instance = instance;
-            Assembly = type.Assembly;
+            Assembly = Type.Assembly;
         }
 
         public static AbpModuleInfo CreateForType(Type type)
@@ -51,12 +53,12 @@ namespace Abp.Modules
                         type.FullName));
             }
 
-            return new AbpModuleInfo(type, (IAbpModule)Activator.CreateInstance(type, new object[] { }));
+            return new AbpModuleInfo((IAbpModule)Activator.CreateInstance(type, new object[] { }));
         }
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}]", Name, Type.FullName);
+            return string.Format("{0}", Type.AssemblyQualifiedName);
         }
     }
 }

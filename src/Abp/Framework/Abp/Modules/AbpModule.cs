@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Abp.Startup;
 
 namespace Abp.Modules
@@ -13,7 +12,7 @@ namespace Abp.Modules
         /// Gets all depended modules for this module.
         /// </summary>
         /// <returns>List of depended modules.</returns>
-        protected virtual Type[] GetDependedModules()
+        public virtual Type[] GetDependedModules()
         {
             return new Type[] {};
         } 

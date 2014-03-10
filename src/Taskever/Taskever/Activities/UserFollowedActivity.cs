@@ -1,10 +1,11 @@
 ﻿using System;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
 
 namespace Taskever.Activities
 {
-    public class UserFollowedActivity : Entity<long>
+    public class UserFollowedActivity : Entity<long>, IHasCreationTime
     {
         public virtual AbpUser User { get; set; }
 

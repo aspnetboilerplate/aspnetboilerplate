@@ -1,11 +1,8 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web.Mvc;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
-using Abp.Startup.Application;
-using Abp.Startup.Web;
 using Abp.Web.Mvc.Controllers;
 
 namespace Abp.Web.Mvc.Startup
@@ -15,15 +12,6 @@ namespace Abp.Web.Mvc.Startup
     /// </summary>
     public class AbpWebMvcModule : AbpModule
     {
-        protected override Type[] GetDependedModules()
-        {
-            return new[]
-                   {
-                       typeof(AbpApplicationModule),
-                       typeof(AbpWebModule)
-                   };
-        }
-
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);

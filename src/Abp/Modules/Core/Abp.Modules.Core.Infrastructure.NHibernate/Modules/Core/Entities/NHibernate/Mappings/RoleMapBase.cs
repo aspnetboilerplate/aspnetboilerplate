@@ -10,8 +10,8 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         {
             Map(x => x.Name);
             Map(x => x.DisplayName);
-            this.MapAudited();
             HasMany(x => x.Permissions).KeyColumn("RoleId");
+            this.MapAudited();
         }
     }
 }

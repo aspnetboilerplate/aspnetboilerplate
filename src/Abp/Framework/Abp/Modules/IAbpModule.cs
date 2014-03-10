@@ -1,3 +1,4 @@
+using System;
 using Abp.Startup;
 
 namespace Abp.Modules
@@ -7,6 +8,12 @@ namespace Abp.Modules
     /// </summary>
     public interface IAbpModule
     {
+        /// <summary>
+        /// Gets all depended modules for this module.
+        /// </summary>
+        /// <returns>List of depended modules.</returns>
+        Type[] GetDependedModules();
+
         /// <summary>
         /// What can be done in this method:
         /// - Make things those must be done before dependency registers.

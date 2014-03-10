@@ -1,5 +1,4 @@
 using Abp.Domain.Entities.Mapping;
-using Abp.Modules.Core.Entities.NHibernate.Mappings;
 using Taskever.Activities;
 
 namespace Taskever.Entities.NHibernate.Mappings
@@ -10,9 +9,7 @@ namespace Taskever.Entities.NHibernate.Mappings
             : base("TeActivities")
         {
             DiscriminateSubClassesOnColumn("ActivityType");
-            Map(x => x.CreationTime);
-
-            //Cache.ReadOnly(); //TODO: Try caches!
+            this.MapCreationTime();
         }
     }
 }
