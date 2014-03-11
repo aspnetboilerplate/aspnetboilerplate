@@ -4,8 +4,8 @@
         
         activate: function () {
             router.map([
-                { route: '', title: 'Page1', moduleId: 'viewmodels/page1', nav: true },
-                { route: 'page2', moduleId: 'viewmodels/page2', nav: true }
+                { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
+                { route: 'about', moduleId: 'viewmodels/about', nav: true }
             ]).buildNavigationModel();
 
             return router.activate();
