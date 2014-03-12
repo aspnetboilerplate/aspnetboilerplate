@@ -1,0 +1,42 @@
+﻿@using Abp.Web.Mvc.Helpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <title>My ASBP.NET Boilerplate Project!</title>
+
+    <link href="~/Content/bootstrap-cosmo.min.css" rel="stylesheet">
+    <link href="~/Content/durandal.css" rel="stylesheet" />
+    <link href="~/App/Common/styles/main.css" rel="stylesheet" />
+    
+    @RenderSection("styles", required: false)
+    
+    <script src="~/Abp/Framework/scripts/utils/ie10fix.js"></script>
+    <script src="~/Scripts/modernizr-2.7.2.js"></script>
+
+</head>
+
+<body>
+
+    @RenderBody()
+
+    <script src="~/Scripts/json2.min.js"></script>
+    <script src="~/Scripts/jquery-2.1.0.min.js"></script>
+    <script src="~/Scripts/knockout-3.1.0.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    
+    <script src="~/Abp/Framework/scripts/abp.js"></script>
+    <script src="~/Abp/Framework/scripts/abp.localization.js"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+    
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
