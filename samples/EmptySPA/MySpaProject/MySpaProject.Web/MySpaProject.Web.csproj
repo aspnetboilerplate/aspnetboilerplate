@@ -144,6 +144,7 @@
     </Content>
     <Content Include="Abp\Framework\styles\abp.min.css" />
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
+    <Content Include="App\Main\images\abp-logo.png" />
     <Content Include="App\Common\styles\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
@@ -152,8 +153,8 @@
     </Content>
     <Content Include="App\Main\main.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
-    <Content Include="App\Main\viewmodels\page1.js" />
-    <Content Include="App\Main\viewmodels\page2.js" />
+    <Content Include="App\Main\viewmodels\home.js" />
+    <Content Include="App\Main\viewmodels\about.js" />
     <Content Include="Content\bootstrap-cosmo.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -188,8 +189,8 @@
     <Content Include="Scripts\durandal\viewLocator.js" />
     <Content Include="App\Common\styles\main.less" />
     <Content Include="App\Main\views\layout.cshtml" />
-    <Content Include="App\Main\views\page1.cshtml" />
-    <Content Include="App\Main\views\page2.cshtml" />
+    <Content Include="App\Main\views\home.cshtml" />
+    <Content Include="App\Main\views\about.cshtml" />
     <Content Include="App\Main\views\web.config" />
     <Content Include="App\Common\styles\main.css.map">
       <DependentUpon>main.css</DependentUpon>
@@ -247,7 +248,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\Main\images\" />
     <Folder Include="App\Main\scripts\" />
     <Folder Include="App\Main\styles\" />
     <Folder Include="App_Data\" />
