@@ -139,7 +139,9 @@
     <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
     <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
     <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
-    <Content Include="Abp\Framework\styles\abp.css" />
+    <Content Include="Abp\Framework\styles\abp.css">
+      <DependentUpon>abp.less</DependentUpon>
+    </Content>
     <Content Include="Abp\Framework\styles\abp.min.css" />
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <Content Include="App\Common\styles\main.css">
@@ -189,6 +191,9 @@
     <Content Include="App\Main\views\page1.cshtml" />
     <Content Include="App\Main\views\page2.cshtml" />
     <Content Include="App\Main\views\web.config" />
+    <Content Include="App\Common\styles\main.css.map">
+      <DependentUpon>main.css</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -231,7 +236,9 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Abp\Framework\styles\abp.less" />
-    <Content Include="Abp\Framework\styles\abp.css.map" />
+    <Content Include="Abp\Framework\styles\abp.css.map">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
