@@ -69,7 +69,6 @@
     <Compile Include="Configuration\SettingValueRecord.cs" />
     <Compile Include="Configuration\SettingValueManager.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
-    <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
     <Compile Include="Localization\AbpCoreModuleLocalizationSource.cs" />
     <Compile Include="Net\Mail\EmailSettingProvider.cs" />
     <Compile Include="Security\Identity\AbpRoleManagerBase.cs" />

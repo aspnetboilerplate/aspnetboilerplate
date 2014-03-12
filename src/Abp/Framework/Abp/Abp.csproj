@@ -71,6 +71,7 @@
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\SettingValue.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
