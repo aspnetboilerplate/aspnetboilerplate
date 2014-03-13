@@ -97,6 +97,12 @@
   <ItemGroup>
     <Folder Include="WebApi\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySpaProject.Application\MySpaProject.Application.csproj">
+      <Project>{EDF5D964-4C0F-4F19-B674-58A38A5E5401}</Project>
+      <Name>MySpaProject.Application</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

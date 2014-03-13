@@ -1,0 +1,14 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading" style="position: relative;">
+        <h3 class="panel-title">All Active Tasks (<span data-bind="text: tasks().length"></span>)</h3>
+    </div>
+    <ul class="list-group" data-bind="foreach: tasks">
+        <div class="list-group-item">
+            "<span class="task-description" data-bind="html: description()"></span>"
+            <span data-bind="visible: assignedPersonId() != 0">
+                <br/>
+                <a data-bind="text: assignedPersonName, attr: { href: '#user/' + assignedPersonId() }"></a>
+            </span>
+        </div>
+    </ul>
+</div>

@@ -1,4 +1,6 @@
-﻿body {
-  padding-top: 50px;
+body {
+  padding-top: 80px;
 }
-/*# sourceMappingURL=main.css.map */
+.task-description {
+  font-weight: bold;
+}
