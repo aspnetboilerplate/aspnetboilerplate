@@ -2,6 +2,6 @@ namespace Abp
 {
     internal static class AbpConst
     {
-        public const string CurrentVersion = "0.1.4.0";
+        public const string CurrentVersion = "0.1.5.0";
     }
 }

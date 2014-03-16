@@ -27,7 +27,7 @@ TODO (primary):
   - Controllers?
   - Views?
 
-*************** Merge localization to abp.js *****************
+- Show better message on validation error!
 
 - Implement a simple application: TaskeverLite?
 
