@@ -1,6 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 
-namespace MySpaProject.Tasks
+namespace MySpaProject.Tasks.Dtos
 {
     public class GetTasksInput : IInputDto
     {

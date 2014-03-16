@@ -4,6 +4,7 @@ using Abp.Modules;
 using Abp.Startup;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
+using MySpaProject.People;
 using MySpaProject.Tasks;
 
 namespace MySpaProject
@@ -17,6 +18,10 @@ namespace MySpaProject
 
             DyanmicApiControllerBuilder
                 .For<ITaskAppService>("tasksystem/task")
+                .Build();
+
+            DyanmicApiControllerBuilder
+                .For<IPersonAppService>("tasksystem/person")
                 .Build();
         }
     }

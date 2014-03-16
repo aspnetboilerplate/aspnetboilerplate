@@ -1,5 +1,19 @@
 ﻿<div>
-    <h1><img src="~/App/Main/images/abp-logo.png" style="padding-right: 10px;" />About ASP.NET Boilerplate</h1>
-    <p>ASP.NET Boilerplate is a starting point for new web applications with best practices and most popular tools! ASP.NET Boilerplate implements provides an infrastructure for <strong>NLayer architecture</strong> and <strong>Domain Driven Design</strong>.</p>
-    <p>For more information, visit <a href="http://www.aspnetboilerplate.com"><strong>aspnetboilerplate.com</strong></a>.</p>
+    <form role="form">
+        <div class="form-group">
+            <label for="TaskDescription">Task description</label>
+            <textarea id="TaskDescription" data-bind="value: task.description" class="form-control" rows="3" placeholder="Enter description here"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="TaskAssignedPerson">Assign to</label>
+            <select id="TaskAssignedPerson" data-bind="options: people, optionsText: 'name', optionsValue: 'id', value: task.assignedPersonId, optionsCaption: 'Select person'" class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <button data-bind="click: saveTask" type="submit" class="btn btn-primary">Create the task</button>
+    </form>
 </div>

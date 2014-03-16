@@ -13,5 +13,11 @@ namespace MySpaProject.Tasks
         public virtual DateTime CreationTime { get; set; }
 
         public virtual TaskState State { get; set; }
+
+        public Task()
+        {
+            CreationTime = DateTime.Now;
+            State = TaskState.Active;
+        }
     }
 }

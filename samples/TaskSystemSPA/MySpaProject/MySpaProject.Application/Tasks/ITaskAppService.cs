@@ -8,5 +8,7 @@ namespace MySpaProject.Tasks
         GetTasksOutput GetTasks(GetTasksInput input);
 
         void UpdateTask(UpdateTaskInput input);
+
+        void CreateTask(CreateTaskInput input);
     }
 }

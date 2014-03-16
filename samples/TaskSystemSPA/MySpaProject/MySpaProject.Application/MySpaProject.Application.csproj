@@ -65,11 +65,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MySpaProjectApplicationModule.cs" />
+    <Compile Include="People\Dtos\GetAllPeopleOutput.cs" />
+    <Compile Include="People\IPersonAppService.cs" />
+    <Compile Include="People\Dtos\PersonDto.cs" />
+    <Compile Include="People\PersonAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\Dtos\DtoMapping.cs" />
+    <Compile Include="DtoMappings\DtoMapping.cs" />
+    <Compile Include="Tasks\Dtos\CreateTaskInput.cs" />
     <Compile Include="Tasks\Dtos\GetTasksOutput.cs" />
     <Compile Include="Tasks\Dtos\TaskDto.cs" />
-    <Compile Include="Tasks\GetTasksInput.cs" />
+    <Compile Include="Tasks\Dtos\GetTasksInput.cs" />
     <Compile Include="Tasks\ITaskAppService.cs" />
     <Compile Include="Tasks\TaskAppService.cs" />
     <Compile Include="Tasks\Dtos\UpdateTaskInput.cs" />
@@ -89,6 +94,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

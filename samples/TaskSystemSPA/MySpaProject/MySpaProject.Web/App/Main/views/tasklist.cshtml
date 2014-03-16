@@ -15,11 +15,11 @@
     </div>
     <ul class="list-group" data-bind="foreach: tasks">
         <div class="list-group-item">
-            <span class="task-state-icon glyphicon" data-bind="click: $parent.changeTaskState, css: { 'glyphicon-th': state() == 1, 'glyphicon-ok': state() == 2 }"></span>
+            <span class="task-state-icon glyphicon" data-bind="click: $parent.changeTaskState, css: { 'glyphicon-minus': state() == 1, 'glyphicon-ok': state() == 2 }"></span>
             <span data-bind="html: description(), css: { 'task-description-active': state() == 1, 'task-description-completed': state() == 2 }"></span>
             <br />
             <span data-bind="visible: assignedPersonId() != 0">
-                <a class="task-assignedto" data-bind="text: assignedPersonName, attr: { href: '#user/' + assignedPersonId() }"></a> 
+                <span class="task-assignedto" data-bind="text: assignedPersonName"></span>
             </span>
             <span class="task-creationtime" data-bind="text: creationTime()"></span>
         </div>

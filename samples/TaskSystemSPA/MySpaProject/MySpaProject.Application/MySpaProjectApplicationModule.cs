@@ -3,6 +3,7 @@ using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
+using MySpaProject.DtoMappings;
 using MySpaProject.Tasks.Dtos;
 
 namespace MySpaProject

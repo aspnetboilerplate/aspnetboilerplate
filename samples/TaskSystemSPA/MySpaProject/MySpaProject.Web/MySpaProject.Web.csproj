@@ -167,7 +167,6 @@
     <Content Include="App\Main\viewmodels\layout.js" />
     <Content Include="App\Main\viewmodels\tasklist.js" />
     <Content Include="App\Main\viewmodels\newtask.js" />
-    <Content Include="App\Main\viewmodels\user.js" />
     <Content Include="Content\bootstrap-cosmo.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -177,6 +176,8 @@
     <Content Include="Content\images\icon.png" />
     <Content Include="Content\images\ios-startup-image-landscape.png" />
     <Content Include="Content\images\ios-startup-image-portrait.png" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -203,12 +204,12 @@
     <Content Include="App\Common\styles\main.less" />
     <Content Include="App\Main\views\layout.cshtml" />
     <Content Include="App\Main\views\tasklist.cshtml" />
-    <Content Include="App\Main\views\user.cshtml" />
     <Content Include="App\Main\views\web.config" />
     <Content Include="App\Common\styles\main.css.map">
       <DependentUpon>main.css</DependentUpon>
     </Content>
     <Content Include="App\Main\views\newtask.cshtml" />
+    <Content Include="Content\toastr.less" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -216,6 +217,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="weyland-config.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -255,6 +258,7 @@
     <Content Include="Abp\Framework\styles\abp.css.map">
       <DependentUpon>abp.css</DependentUpon>
     </Content>
+    <Content Include="Scripts\toastr.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

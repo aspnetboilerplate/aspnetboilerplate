@@ -41,5 +41,17 @@ namespace MySpaProject.Tasks
                 task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
             }
         }
+
+        public void CreateTask(CreateTaskInput input)
+        {
+            var task = new Task { Description = input.Description };
+
+            if (input.AssignedPersonId.HasValue)
+            {
+                task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
+            }
+
+            _taskRepository.Insert(task);
+        }
     }
 }
