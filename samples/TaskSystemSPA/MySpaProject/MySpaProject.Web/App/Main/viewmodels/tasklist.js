@@ -1,4 +1,5 @@
-﻿define(['service!tasksystem/task'], function (taskService) {
+﻿define(['service!tasksystem/task'],
+    function (taskService) {
     return function () {
         var that = this;
 

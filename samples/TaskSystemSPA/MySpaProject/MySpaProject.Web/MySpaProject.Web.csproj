@@ -243,6 +243,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Localization\Modules\Abp.Web\Abp.Web.xml" />
+    <Content Include="Localization\MySpaProject\MySpaProject.tr.xml" />
+    <Content Include="Localization\MySpaProject\MySpaProject.xml" />
     <Content Include="README.txt" />
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -311,10 +313,13 @@
     <Compile Include="App_Start\MySpaProjectWebModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MySpaProjectControllerBase.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Localization\MySpaProject\MySpaProjectLocalizationSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MySpaProjectWebViewPageBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />

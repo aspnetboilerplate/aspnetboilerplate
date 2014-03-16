@@ -7,7 +7,14 @@
     abp.localization = abp.localization || {};
 
     abp.localization.localize = function (key, sourceName) {
-        return abp.localization.values[sourceName][key];
+        var source = abp.localization.values[sourceName];
+        if (source == undefined) {
+            abp.log.warn('Could not find localization source: ' + sourceName);
+            return key;
+        }
+
+        var value = source[key];
+        return value == undefined ? key : value;
     };
 
     abp.localization.getSource = function (sourceName) {

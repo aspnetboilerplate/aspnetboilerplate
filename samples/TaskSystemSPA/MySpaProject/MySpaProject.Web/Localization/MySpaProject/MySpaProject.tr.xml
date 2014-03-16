@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="TaskList" value="Görev Listesi" />
+    <text name="NewTask" value="Yeni Görev" />
+  </texts>
+</localizationDictionary>

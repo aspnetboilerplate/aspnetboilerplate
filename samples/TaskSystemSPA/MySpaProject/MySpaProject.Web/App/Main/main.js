@@ -37,7 +37,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/vie
             return value == undefined ? true : value;
         };
 
-        app.title = 'Kişisel TTS Admin Paneli';
+        app.title = 'MySpaProject';
 
         app.configurePlugins({
             router: true,

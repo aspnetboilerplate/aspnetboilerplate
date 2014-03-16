@@ -26,7 +26,10 @@
 
 
  TODO:
- - Implement Client side & Server side validation
- - Include jTable with extension
+ - View & Controller bases
+ - Localize the application!
+ - Spinjs and blocking UI!
  - Clear TaskSystem files & make it a template
  - Finish the article
+ - Upgrade ABP to 0.1.5.0 (localization.js removed)
+ 
