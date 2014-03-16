@@ -156,7 +156,6 @@
     </Content>
     <Content Include="Abp\Framework\styles\abp.min.css" />
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
-    <Content Include="App\Main\images\abp-logo.png" />
     <Content Include="App\Common\styles\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
@@ -210,6 +209,7 @@
     </Content>
     <Content Include="App\Main\views\newtask.cshtml" />
     <Content Include="Content\toastr.less" />
+    <Content Include="log4net.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -267,9 +267,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\Main\scripts\" />
-    <Folder Include="App\Main\styles\" />
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
