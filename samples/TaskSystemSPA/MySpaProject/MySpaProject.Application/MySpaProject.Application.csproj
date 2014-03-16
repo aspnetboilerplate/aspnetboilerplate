@@ -55,6 +55,7 @@
     <Reference Include="System.Collections.Immutable">
       <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.30\lib\portable-net45+win8+wp8\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,10 +67,12 @@
     <Compile Include="MySpaProjectApplicationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\Dtos\DtoMapping.cs" />
-    <Compile Include="Tasks\Dtos\GetAllTasksOutput.cs" />
+    <Compile Include="Tasks\Dtos\GetTasksOutput.cs" />
     <Compile Include="Tasks\Dtos\TaskDto.cs" />
+    <Compile Include="Tasks\GetTasksInput.cs" />
     <Compile Include="Tasks\ITaskAppService.cs" />
     <Compile Include="Tasks\TaskAppService.cs" />
+    <Compile Include="Tasks\Dtos\UpdateTaskInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -5,6 +5,6 @@ namespace MySpaProject.Tasks
 {
     public interface ITaskRepository : IRepository<Task, long>
     {
-        List<Task> GetAllWithPeople();
+        List<Task> GetAllWithPeople(int? assignedPersonId, TaskState? state);
     }
 }

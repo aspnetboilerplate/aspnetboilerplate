@@ -2,10 +2,7 @@
 {
     public enum TaskState : byte
     {
-        New = 1,
-
-        Active = 2,
-
-        Completed = 3
+        Active = 1,
+        Completed = 2
     }
 }
