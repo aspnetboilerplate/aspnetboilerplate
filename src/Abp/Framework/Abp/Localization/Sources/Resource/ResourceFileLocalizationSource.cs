@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
+using Abp.Dependency;
 
 namespace Abp.Localization.Sources.Resource 
 {
@@ -12,7 +13,7 @@ namespace Abp.Localization.Sources.Resource
     /// This class is used to simplify to create a localization source that
     /// uses resource a file.
     /// </summary>
-    public class ResourceFileLocalizationSource : ILocalizationSource
+    public abstract class ResourceFileLocalizationSource : ILocalizationSource, ISingletonDependency
     {
         /// <summary>
         /// Unique Name of the source.
@@ -26,7 +27,7 @@ namespace Abp.Localization.Sources.Resource
 
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
-        public ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
+        protected ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
         {
             Name = name;
             ResourceManager = resourceManager;
