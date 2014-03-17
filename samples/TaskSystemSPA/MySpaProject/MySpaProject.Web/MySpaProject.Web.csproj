@@ -48,9 +48,6 @@
     <Reference Include="Abp.Web">
       <HintPath>..\packages\Abp.Web.0.1.4.0\lib\net451\Abp.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Web.Mvc">
-      <HintPath>..\packages\Abp.Web.Mvc.0.1.4.0\lib\net451\Abp.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
@@ -142,20 +139,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Abp\Framework\images\user.png" />
-    <Content Include="Abp\Framework\scripts\abp.js" />
-    <Content Include="Abp\Framework\scripts\abp.localization.js" />
-    <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
-    <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
-    <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
-    <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
-    <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
-    <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
-    <Content Include="Abp\Framework\styles\abp.css">
-      <DependentUpon>abp.less</DependentUpon>
-    </Content>
-    <Content Include="Abp\Framework\styles\abp.min.css" />
-    <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <Content Include="App\Common\styles\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
@@ -242,7 +225,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Localization\Modules\Abp.Web\Abp.Web.xml" />
     <Content Include="Localization\MySpaProject\MySpaProject.tr.xml" />
     <Content Include="Localization\MySpaProject\MySpaProject.xml" />
     <Content Include="README.txt" />
@@ -328,10 +310,6 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Abp\Framework\styles\abp.less" />
-    <Content Include="Abp\Framework\styles\abp.css.map">
-      <DependentUpon>abp.css</DependentUpon>
-    </Content>
     <Content Include="Scripts\toastr.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
