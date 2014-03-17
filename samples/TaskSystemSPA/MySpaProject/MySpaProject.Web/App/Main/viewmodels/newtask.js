@@ -6,6 +6,7 @@
         return function () {
             var that = this;
 
+            var _$view = null;
             var _$form = null;
 
             that.people = ko.mapping.fromJS([]);
@@ -22,7 +23,8 @@
             };
 
             that.attached = function (view, parent) {
-                _$form = $(view).find('form');
+                _$view = $(view);
+                _$form = _$view.find('form');
                 _$form.validate();
             };
 
@@ -31,9 +33,12 @@
                     return;
                 }
 
-                taskService.createTask(ko.mapping.toJS(that.task)).done(function () {
-                    abp.notify.info(abp.utils.formatString(localize("TaskCreatedMessage"), that.task.description()));
-                    history.navigate('');
+                abp.ui.setBusy(_$view, {
+                    promise: taskService.createTask(ko.mapping.toJS(that.task))
+                        .done(function() {
+                            abp.notify.info(abp.utils.formatString(localize("TaskCreatedMessage"), that.task.description()));
+                            history.navigate('');
+                        })
                 });
             };
         };
