@@ -9,6 +9,7 @@
     <text name="ActiveTasks" value="Active tasks" />
     <text name="CompletedTasks" value="Completed tasks" />
     <text name="TaskDescription" value="Task description" />
+    <text name="EnterDescriptionHere" value="Task description" />
     <text name="AssignTo" value="Assign to" />
     <text name="SelectPerson" value="Select person" />
     <text name="CreateTheTask" value="Create the task" />

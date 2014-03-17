@@ -2,13 +2,13 @@
     <div class="panel-heading" style="position: relative;">
         <div class="row">
             <h3 class="panel-title col-xs-6">
-                Task List - <span data-bind="text: tasks().length"></span> task(s)
+                @L("TaskList") - <span data-bind="text: abp.utils.formatString(localize('Xtasks'), tasks().length)"></span>
             </h3>
             <div class="col-xs-6 text-right">
                 <select data-bind="value: selectedTaskState, event: { change: refreshTasks }">
-                    <option value="0">All tasks</option>
-                    <option value="1">Active tasks</option>
-                    <option value="2">Completed tasks</option>
+                    <option value="0">@L("AllTasks")</option>
+                    <option value="1">@L("ActiveTasks")</option>
+                    <option value="2">@L("CompletedTasks")</option>
                 </select>
             </div>
         </div>

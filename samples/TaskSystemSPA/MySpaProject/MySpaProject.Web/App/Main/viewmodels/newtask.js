@@ -1,37 +1,40 @@
 ﻿define(['service!tasksystem/person', 'service!tasksystem/task', 'plugins/history'],
     function (personService, taskService, history) {
-    return function () {
-        var that = this;
 
-        var _$form = null;
+        var localize = abp.localization.getSource('mySpaProject');
 
-        that.people = ko.mapping.fromJS([]);
+        return function () {
+            var that = this;
 
-        that.task = {
-            description: ko.observable(''),
-            assignedPersonId: ko.observable(0)
+            var _$form = null;
+
+            that.people = ko.mapping.fromJS([]);
+
+            that.task = {
+                description: ko.observable(''),
+                assignedPersonId: ko.observable(0)
+            };
+
+            that.canActivate = function () {
+                return personService.getAllPeople().done(function (data) {
+                    ko.mapping.fromJS(data.people, that.people);
+                });
+            };
+
+            that.attached = function (view, parent) {
+                _$form = $(view).find('form');
+                _$form.validate();
+            };
+
+            that.saveTask = function () {
+                if (!_$form.valid()) {
+                    return;
+                }
+
+                taskService.createTask(ko.mapping.toJS(that.task)).done(function () {
+                    abp.notify.info(abp.utils.formatString(localize("TaskCreatedMessage"), that.task.description()));
+                    history.navigate('');
+                });
+            };
         };
-
-        that.canActivate = function () {
-            return personService.getAllPeople().done(function (data) {
-                ko.mapping.fromJS(data.people, that.people);
-            });
-        };
-
-        that.attached = function (view, parent) {
-            _$form = $(view).find('form');
-            _$form.validate();
-        };
-
-        that.saveTask = function () {
-            if (!_$form.valid()) {
-                return;
-            }
-
-            taskService.createTask(ko.mapping.toJS(that.task)).done(function () {
-                abp.notify.info('Task "' + that.task.description() + '" has been created successfully.');
-                history.navigate('');
-            });
-        };
-    };
-});
+    });
