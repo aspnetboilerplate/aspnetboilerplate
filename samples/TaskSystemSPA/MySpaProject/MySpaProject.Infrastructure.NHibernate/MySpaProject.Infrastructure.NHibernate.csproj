@@ -30,11 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp">
-      <HintPath>..\packages\Abp.0.1.4.0\lib\net451\Abp.dll</HintPath>
+    <Reference Include="Abp, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Abp.0.1.5.0\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Infrastructure.NHibernate">
-      <HintPath>..\packages\Abp.Infrastructure.NHibernate.0.1.4.0\lib\net451\Abp.Infrastructure.NHibernate.dll</HintPath>
+    <Reference Include="Abp.Infrastructure.NHibernate, Version=0.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Abp.Infrastructure.NHibernate.0.1.5.0\lib\net451\Abp.Infrastructure.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
