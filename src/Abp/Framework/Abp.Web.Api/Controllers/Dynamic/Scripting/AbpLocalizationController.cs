@@ -8,11 +8,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     /// <summary>
     /// Used to get localization javascript from clients.
     /// </summary>
-    public class LocalizationController : AbpApiController
+    public class AbpLocalizationController : AbpApiController
     {
         private readonly ILocalizationScriptManager _localizationScriptManager;
 
-        public LocalizationController(ILocalizationScriptManager localizationScriptManager)
+        public AbpLocalizationController(ILocalizationScriptManager localizationScriptManager)
         {
             _localizationScriptManager = localizationScriptManager;
         }
