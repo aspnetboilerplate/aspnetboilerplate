@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using System.Web;
+using Abp.Utils.Helpers;
 
 namespace Abp.Startup.Web
 {
@@ -31,6 +34,21 @@ namespace Abp.Startup.Web
             AbpBootstrapper.Dispose();
         }
 
+        protected virtual void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var langCookie = Request.Cookies["Abp.Localization.Language"];
+            if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
+            }
+        }
+
+        protected virtual void Application_EndRequest(object sender, EventArgs e)
+        {
+            
+        }
+
         /// <summary>
         /// This method is called by ASP.NET system on an authentication request.
         /// </summary>
@@ -38,5 +56,7 @@ namespace Abp.Startup.Web
         {
 
         }
+
+        //TODO: Implement all events!
     }
 }

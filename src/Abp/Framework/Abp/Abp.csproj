@@ -150,6 +150,7 @@
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Extensions\Reflection\MemberInfoExtensions.cs" />
     <Compile Include="Utils\Extensions\Xml\XmlExtensions.cs" />
+    <Compile Include="Utils\Helpers\GlobalizationHelper.cs" />
     <Compile Include="Utils\Helpers\IO\DirectoryHelper.cs" />
     <Compile Include="Utils\Helpers\IO\FileHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
