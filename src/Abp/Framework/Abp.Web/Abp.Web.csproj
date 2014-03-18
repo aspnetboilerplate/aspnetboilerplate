@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,6 +56,8 @@
   <ItemGroup>
     <Compile Include="Web\HttpVerb.cs" />
     <Compile Include="Web\Localization\AbpWebLocalizedMessages.cs" />
+    <Compile Include="Web\Localization\ILocalizationScriptManager.cs" />
+    <Compile Include="Web\Localization\LocalizationScriptManager.cs" />
     <Compile Include="Web\Models\AbpAjaxResponse.cs" />
     <Compile Include="Web\Models\AbpErrorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

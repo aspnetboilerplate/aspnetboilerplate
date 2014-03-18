@@ -88,8 +88,6 @@
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiHelper.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Localization\ILocalizationScriptManager.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Localization\LocalizationScriptManager.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
