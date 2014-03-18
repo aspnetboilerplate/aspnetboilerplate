@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">
+<localizationDictionary culture="en-US">
   <texts>
     <text name="TaskSystem" value="Task System" />
     <text name="TaskList" value="Task List" />

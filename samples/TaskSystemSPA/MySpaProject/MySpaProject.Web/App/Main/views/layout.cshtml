@@ -17,15 +17,21 @@
                     <a data-bind="attr: { href: hash }, html: title"></a>
                 </li>
             </ul>
-            @*<div class="pull-right">
-                <i class="famfamfam-flag-england"></i>
-                <i class="famfamfam-flag-tr"></i>
-            </div>*@
         </div>
     </div>
 </div>
 
 <div class="container">
+
+    @*<div class="dropdown">
+        <a data-toggle="dropdown" href="#">Türkçe</a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="/Localization/ChangeLanguage?culture=en">English</a>
+            </li>
+        </ul>
+    </div>*@
+
     <div data-bind="router: { transition: 'entrance' }"></div>
 </div>
 
