@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="TaskSystem" value="Task System" />
+    <text name="TaskList" value="Task List" />
+    <text name="NewTask" value="New Task" />
+    <text name="Xtasks" value="{0} tasks" />
+    <text name="AllTasks" value="All tasks" />
+    <text name="ActiveTasks" value="Active tasks" />
+    <text name="CompletedTasks" value="Completed tasks" />
+    <text name="TaskDescription" value="Task description" />
+    <text name="EnterDescriptionHere" value="Task description" />
+    <text name="AssignTo" value="Assign to" />
+    <text name="SelectPerson" value="Select person" />
+    <text name="CreateTheTask" value="Create the task" />
+    <text name="TaskUpdatedMessage" value="Task has been successfully updated." />
+    <text name="TaskCreatedMessage" value="Task {0} has been created successfully." />
+  </texts>
+</localizationDictionary>

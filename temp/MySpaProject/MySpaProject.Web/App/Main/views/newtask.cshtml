@@ -1,0 +1,14 @@
+﻿<div>
+    <form id="NewTaskForm" role="form">
+        <div class="form-group">
+            <label for="TaskDescription">@L("TaskDescription")</label>
+            <textarea id="TaskDescription" data-bind="value: task.description" class="form-control" rows="3" placeholder="@L("EnterDescriptionHere")" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="TaskAssignedPerson">@L("AssignTo")</label>
+            <select id="TaskAssignedPerson" data-bind="options: people, optionsText: 'name', optionsValue: 'id', value: task.assignedPersonId, optionsCaption: '@L("SelectPerson")'" class="form-control">
+            </select>
+        </div>
+        <button data-bind="click: saveTask" type="submit" class="btn btn-primary">@L("CreateTheTask")</button>
+    </form>
+</div>

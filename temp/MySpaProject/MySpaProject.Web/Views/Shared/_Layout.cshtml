@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Standard meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <!-- Site title -->
+    <title>My ASBP.NET Boilerplate Project!</title>
+
+    <!-- Style for jQueryUI -->
+    <link href="~/Content/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+
+    <!-- Style for Bootstrap -->
+    <link href="~/Content/bootstrap-cosmo.min.css" rel="stylesheet">
+
+    <!-- Style for Durandal -->
+    <link href="~/Content/durandal.css" rel="stylesheet" />
+
+    <!-- Styles for jQuery plug-ins -->
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    
+    <!-- Country flags -->
+    <link href="~/Content/flags/famfamfam-flags.css" rel="stylesheet" />
+
+    <!-- Common styles for this application -->
+    <link href="~/App/Common/styles/main.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="@Url.Content("~/Scripts/others/html5shiv.js")"></script>
+        <script src="@Url.Content("~/Scripts/others/respond.min.js")"></script>
+    <![endif]-->
+    @RenderSection("styles", required: false)
+
+    <!-- Windows Phone 8 and Internet Explorer 10 FIX -->
+    <script src="~/Abp/Framework/scripts/utils/ie10fix.js"></script>
+
+    <!-- Modernizr: for feature detection (All other scripts are included at the end of file for faster page load) -->
+    <script src="~/Scripts/modernizr-2.7.2.js"></script>
+
+</head>
+
+<body>
+
+    @RenderBody()
+
+    <!-- jQuery and plugins -->
+    <script src="~/Scripts/json2.min.js"></script>
+    <script src="~/Scripts/jquery-2.1.0.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.10.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.min.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/Scripts/others/spinjs/spin.js"></script>
+    <script src="~/Scripts/others/spinjs/jquery.spin.js"></script>
+
+    <!-- Knockout -->
+    <script src="~/Scripts/knockout-3.1.0.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!-- Abp framework scripts -->
+    <script src="~/Abp/Framework/scripts/abp.js"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.toastr.js"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.spin.js"></script>
+
+    <!-- Dynamic script for client side localization (It's created on runtime) -->
+    <script src="/AbpLocalization/GetScripts" type="text/javascript"></script>
+
+    <!-- Custom scripts for views -->
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
