@@ -1,6 +1,5 @@
 ﻿<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
-
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -10,11 +9,19 @@
             </button>
             <a class="navbar-brand" href="#">@L("TaskSystem")!</a>
         </div>
-
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav" data-bind="foreach: router.navigationModel">
                 <li data-bind="css: { active: isActive }">
                     <a data-bind="attr: { href: hash }, html: title"></a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="famfamfam-flag-tr" data-bind="css: getLanguageFlagClass(abp.localization.currentCulture.name)"></i> <span data-bind="text: getLanguageName(abp.localization.currentCulture.name)"></span> <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li data-bind="visible: !abp.localization.isCurrentCulture('tr')"><a href="/AbpLocalization/ChangeCulture?cultureName=tr"><i class="famfamfam-flag-tr"></i> Türkçe</a></li>
+                        <li data-bind="visible: !abp.localization.isCurrentCulture('en')"><a href="/AbpLocalization/ChangeCulture?cultureName=en"><i class="famfamfam-flag-england"></i> English</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -22,16 +29,6 @@
 </div>
 
 <div class="container">
-
-    @*<div class="dropdown">
-        <a data-toggle="dropdown" href="#">Türkçe</a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" href="/Localization/ChangeLanguage?culture=en">English</a>
-            </li>
-        </ul>
-    </div>*@
-
     <div data-bind="router: { transition: 'entrance' }"></div>
 </div>
 
