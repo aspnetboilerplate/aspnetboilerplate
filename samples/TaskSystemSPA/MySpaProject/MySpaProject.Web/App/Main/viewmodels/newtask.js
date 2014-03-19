@@ -1,7 +1,7 @@
 ﻿define(['service!tasksystem/person', 'service!tasksystem/task', 'plugins/history'],
     function (personService, taskService, history) {
 
-        var localize = abp.localization.getSource('mySpaProject');
+        var localize = abp.localization.getSource('MySpaProject');
 
         return function () {
             var that = this;

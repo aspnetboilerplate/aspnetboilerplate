@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="InternalServerError" value="Sayfa işlenirken sunucu tarafında beklenmedik bir hata oluştu!" />
+    <text name="ValidationError" value="İşleminiz geçerli değil!" />
+  </texts>
+</localizationDictionary>

@@ -30,13 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.1.6.3, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.1.6.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.1.6.3\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.1.6.4\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Application, Version=0.1.6.3, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Application, Version=0.1.6.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Application.0.1.6.3\lib\net451\Abp.Application.dll</HintPath>
+      <HintPath>..\packages\Abp.Application.0.1.6.4\lib\net451\Abp.Application.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.dll</HintPath>

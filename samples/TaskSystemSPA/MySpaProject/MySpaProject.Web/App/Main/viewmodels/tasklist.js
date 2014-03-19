@@ -5,7 +5,7 @@
             var that = this;
 
             that.tasks = ko.mapping.fromJS([]);
-            that.localize = abp.localization.getSource('mySpaProject');
+            that.localize = abp.localization.getSource('MySpaProject');
 
             that.selectedTaskState = ko.observable(0); //All tasks
 
