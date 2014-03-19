@@ -39,33 +39,41 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
         public string BuildAll()
         {
             var script = new StringBuilder();
-
+            var currentCulture = Thread.CurrentThread.CurrentUICulture;
+            
             script.AppendLine("(function(){");
             script.AppendLine();
-            script.AppendLine("abp.localization.values = abp.localization.values || {};");
+            script.AppendLine("    abp.localization = abp.localization || {};");
+            script.AppendLine();
+            script.AppendLine("    abp.localization.currentCulture = {");
+            script.AppendLine("        name: '" + currentCulture.Name + "',");
+            script.AppendLine("        displayName: '" + currentCulture.DisplayName + "'");
+            script.AppendLine("    };");
+            script.AppendLine();
+            script.AppendLine("    abp.localization.values = abp.localization.values || {};");
             script.AppendLine();
 
             foreach (var source in _localizationSourceManager.GetAllSources().OrderBy(s => s.Name))
             {
-                script.AppendLine("abp.localization.values['" + source.Name.ToCamelCase() + "'] = {");
+                script.AppendLine("    abp.localization.values['" + source.Name.ToCamelCase() + "'] = {");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
                 for (var i = 0; i < stringValues.Count; i++)
                 {
                     script.AppendLine(
                         string.Format(
-                        "    '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
+                        "        '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
                             stringValues[i].Name,
                             stringValues[i].Value.Replace("'", "\\'").Replace(Environment.NewLine, string.Empty) //TODO: Allow new line?
                             ));
                 }
 
-                script.AppendLine("};");
+                script.AppendLine("    };");
                 script.AppendLine();
             }
 
             script.AppendLine();
-            script.AppendLine("})();");
+            script.Append("})();");
 
             return script.ToString();
         }
