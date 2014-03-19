@@ -146,7 +146,8 @@
     <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
     <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
     <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
-    <Content Include="Localization\Modules\Abp.Web\Abp.Web.xml" />
+    <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
+    <Content Include="Localization\AbpWeb\AbpWeb.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abp\Modules\Core\images\" />

@@ -7,9 +7,8 @@ using System.Threading;
 using Abp.Dependency;
 using Abp.Localization.Sources;
 using Abp.Runtime.Caching;
-using Abp.Utils.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
+namespace Abp.Web.Localization
 {
     /// <summary>
     /// This class is used to build and cache localization script.
@@ -55,7 +54,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
 
             foreach (var source in _localizationSourceManager.GetAllSources().OrderBy(s => s.Name))
             {
-                script.AppendLine("    abp.localization.values['" + source.Name.ToCamelCase() + "'] = {");
+                script.AppendLine("    abp.localization.values['" + source.Name + "'] = {");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
                 for (var i = 0; i < stringValues.Count; i++)

@@ -232,10 +232,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Abp\Framework\images\user.png" />
+    <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
-    <Content Include="Abp\Framework\scripts\abp.js" />
-    <Content Include="Abp\Framework\scripts\abp.localization.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
     <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
@@ -327,6 +326,8 @@
     <Content Include="Images\home\screens\06-profile-tasks.png" />
     <Content Include="Images\home\see_activities.png" />
     <Content Include="Images\loading_black.gif" />
+    <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
+    <Content Include="Localization\AbpWeb\AbpWeb.xml" />
     <Content Include="ProfileImages\predefined\user_blue.png" />
     <Content Include="ProfileImages\predefined\user_cyan.png" />
     <Content Include="ProfileImages\predefined\user_green.png" />
@@ -338,7 +339,6 @@
     <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Abp\Framework\styles\abp.less" />
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="App\Main\styles\briefFriendList.less" />
     <Content Include="App\Main\views\briefFriendList.cshtml" />
@@ -418,9 +418,6 @@
     <Content Include="Content\toastr.css.map">
       <DependentUpon>toastr.css</DependentUpon>
     </Content>
-    <Content Include="Abp\Framework\styles\abp.css.map">
-      <DependentUpon>abp.css</DependentUpon>
-    </Content>
     <Content Include="App\Main\styles\briefFriendList.css.map">
       <DependentUpon>briefFriendList.css</DependentUpon>
     </Content>
@@ -428,6 +425,10 @@
       <DependentUpon>main.css</DependentUpon>
     </Content>
     <Content Include="App\Main\views\task\create.cshtml" />
+    <Content Include="Abp\Framework\styles\abp.less" />
+    <Content Include="Abp\Framework\styles\abp.css.map">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />

@@ -4,8 +4,8 @@ using System.Web;
 using System.Web.Mvc;
 using Abp.Exceptions;
 using Abp.Utils.Helpers;
+using Abp.Web.Localization;
 using Abp.Web.Mvc.Models;
-using Abp.WebApi.Controllers.Dynamic.Scripting.Localization;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {

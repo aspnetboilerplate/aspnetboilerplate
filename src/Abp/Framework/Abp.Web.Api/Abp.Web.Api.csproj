@@ -91,7 +91,6 @@
     <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\AbpLocalizationController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Actions\ActionScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ControllerScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Actions\HttpDeleteActionScriptProxyGenerator.cs" />

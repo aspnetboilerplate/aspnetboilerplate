@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.Localization
+namespace Abp.Web.Localization
 {
     /// <summary>
     /// Define interface to get localization javascript.

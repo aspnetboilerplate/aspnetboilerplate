@@ -9,7 +9,7 @@ namespace Abp.Web.Localization
     /// </summary>
     internal static class AbpWebLocalizedMessages
     {
-        private const string SourceName = "Abp.Web";
+        private const string SourceName = "AbpWeb";
 
         public static string InternalServerError { get { return L("InternalServerError"); } }
         public static string ValidationError { get { return L("ValidationError"); } }

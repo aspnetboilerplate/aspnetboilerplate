@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Formatting;
+﻿using System;
+using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -6,6 +7,8 @@ using System.Web.Http.Dispatcher;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
+using Abp.Startup.Application;
+using Abp.Startup.Web;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
@@ -20,6 +23,15 @@ namespace Abp.WebApi.Startup
     /// </summary>
     public class AbpWebApiModule : AbpModule
     {
+        public override Type[] GetDependedModules()
+        {
+            return new[]
+                   {
+                       typeof(AbpWebModule),
+                       typeof(AbpApplicationModule),
+                   };
+        }
+
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
