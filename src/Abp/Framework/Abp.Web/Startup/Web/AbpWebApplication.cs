@@ -36,7 +36,7 @@ namespace Abp.Startup.Web
 
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            var langCookie = Request.Cookies["Abp.Localization.Language"];
+            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
             if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);

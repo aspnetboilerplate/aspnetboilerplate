@@ -9,7 +9,7 @@ namespace MySpaProject.Web.Controllers
     public class HomeController : MySpaProjectControllerBase
     {
         public ActionResult Index()
-        {
+        { 
             return View();
         }
 	}
