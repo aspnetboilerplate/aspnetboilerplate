@@ -23,7 +23,7 @@ namespace Abp.Security.Identity
         #region Private fields
 
         private readonly TUserRepository _userRepository;
-        private readonly IUserLoginRepository<TUser> _userLoginRepository;
+        private readonly IUserLoginRepository _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAbpRoleRepository _abpRoleRepository;
 
@@ -33,7 +33,7 @@ namespace Abp.Security.Identity
 
         public UserStore(
             TUserRepository userRepository,
-            IUserLoginRepository<TUser> userLoginRepository,
+            IUserLoginRepository userLoginRepository,
             IUserRoleRepository userRoleRepository,
             IAbpRoleRepository abpRoleRepository)
         {

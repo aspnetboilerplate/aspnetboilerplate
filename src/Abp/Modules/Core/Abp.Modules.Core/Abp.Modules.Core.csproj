@@ -87,7 +87,6 @@
     <Compile Include="Security\Roles\UserRoleService.cs" />
     <Compile Include="Security\Identity\UserStore.cs" />
     <Compile Include="Security\Users\IUserLoginRepository.cs" />
-    <Compile Include="Security\Users\IUserLoginRepositoryOfTUser.cs" />
     <Compile Include="Security\Users\IAbpUserRepository.cs" />
     <Compile Include="Security\Users\UserLogin.cs" />
     <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
@@ -115,7 +114,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Localization\Modules\Abp.Modules.Core\Abp.Modules.Core.xml" />
+    <Content Include="Localization\AbpModulesCore\AbpModulesCore.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
