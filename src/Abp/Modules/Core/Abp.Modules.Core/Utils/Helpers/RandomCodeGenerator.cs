@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Abp.Utils.Helpers
 {
-    public class RandomCodeGenerator
+    internal class RandomCodeGenerator
     {
         private static readonly Random Rnd = new Random();
 

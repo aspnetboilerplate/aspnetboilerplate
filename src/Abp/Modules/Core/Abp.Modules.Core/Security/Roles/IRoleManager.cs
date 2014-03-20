@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 
 namespace Abp.Security.Roles
 {

@@ -1,11 +1,10 @@
 ﻿using System;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.Security.Users;
 
 namespace Abp.Security.Roles
 {
-    public abstract class PermissionSettingEntityBase : Entity, ICreationAudited
+    public abstract class PermissionSettingEntity : Entity, ICreationAudited
     {
         /// <summary>
         /// Unique name of the permission.
@@ -31,7 +30,7 @@ namespace Abp.Security.Roles
         /// <summary>
         /// Creates a new <see cref="RolePermission"/> instance.
         /// </summary>
-        protected PermissionSettingEntityBase()
+        protected PermissionSettingEntity()
         {
             IsGranted = true;
         }

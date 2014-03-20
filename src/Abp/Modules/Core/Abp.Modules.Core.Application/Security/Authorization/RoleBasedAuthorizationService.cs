@@ -40,7 +40,6 @@ namespace Abp.Security.Authorization
         private bool HasPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);
-
             if (permission == null)
             {
                 Logger.Warn("Permission is not defined: " + permissionName);

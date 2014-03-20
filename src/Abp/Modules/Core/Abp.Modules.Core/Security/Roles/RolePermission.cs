@@ -4,7 +4,7 @@
     /// Represents a permission for a role.
     /// Used to grant/deny a permission for a role.
     /// </summary>
-    public class RolePermission : PermissionSettingEntityBase
+    public class RolePermission : PermissionSettingEntity
     {
         /// <summary>
         /// Role Id.

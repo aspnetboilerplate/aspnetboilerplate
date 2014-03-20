@@ -1,6 +1,4 @@
 using System;
-using Abp.Dependency;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
 using Abp.Utils.Extensions;

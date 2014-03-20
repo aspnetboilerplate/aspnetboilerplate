@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Microsoft.AspNet.Identity;
 

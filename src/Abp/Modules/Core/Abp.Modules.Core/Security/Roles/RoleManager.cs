@@ -15,7 +15,16 @@ namespace Abp.Security.Roles
             _roles = new ConcurrentDictionary<string, RoleInfo>();
             Initialize();
         }
-        
+
+        private void Initialize()
+        {
+            var roles = _roleRepository.GetAllListWithPermissions();
+            foreach (var role in roles)
+            {
+                _roles[role.Name] = new RoleInfo(role);
+            }
+        }
+
         public RolePermission GetPermissionOrNull(string roleName, string permissionName)
         {
             RoleInfo roleInfo;
@@ -26,15 +35,6 @@ namespace Abp.Security.Roles
             }
 
             return roleInfo.Permissions.GetOrDefault(permissionName);
-        }
-
-        private void Initialize()
-        {
-            var roles = _roleRepository.GetAllListWithPermissions();
-            foreach (var role in roles)
-            {
-                _roles[role.Name] = new RoleInfo(role);
-            }
         }
 
         private class RoleInfo
