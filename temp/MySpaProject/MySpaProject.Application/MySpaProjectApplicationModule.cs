@@ -3,8 +3,6 @@ using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
-using MySpaProject.DtoMappings;
-using MySpaProject.Tasks.Dtos;
 
 namespace MySpaProject
 {
@@ -22,7 +20,6 @@ namespace MySpaProject
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            DtoMapping.Map();
         }
     }
 }

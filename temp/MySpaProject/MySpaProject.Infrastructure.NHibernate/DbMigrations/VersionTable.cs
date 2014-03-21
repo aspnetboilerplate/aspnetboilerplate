@@ -9,7 +9,7 @@ namespace MySpaProject.DbMigrations
         {
             get
             {
-                return "TsVersionInfo";
+                return "MyAppVersionInfo";
             }
         }
     }

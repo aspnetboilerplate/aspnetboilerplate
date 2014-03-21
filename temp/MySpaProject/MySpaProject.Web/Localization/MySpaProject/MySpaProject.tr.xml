@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="tr">
   <texts>
-    <text name="TaskSystem" value="Görev Sistemi" />
-    <text name="TaskList" value="Görev Listesi" />
-    <text name="NewTask" value="Yeni Görev" />
-    <text name="Xtasks" value="{0} görev" />
-    <text name="AllTasks" value="Tüm görevler" />
-    <text name="ActiveTasks" value="Aktif görevler" />
-    <text name="CompletedTasks" value="Tamamlanmış görevler" />
-    <text name="TaskDescription" value="Görev tanımı" />
-    <text name="EnterDescriptionHere" value="Tanımı buraya giriniz" />
-    <text name="AssignTo" value="Atanan kişi" />
-    <text name="SelectPerson" value="Kişi seçin" />
-    <text name="CreateTheTask" value="Görevi oluştur" />
-    <text name="TaskUpdatedMessage" value="Görev başarıyla güncellendi." />
-    <text name="TaskCreatedMessage" value="{0} görevi başarıyla oluşturuldu." />
+    <text name="HomePage" value="Ana Sayfa" />
+    <text name="About" value="Hakkında" />
+    <text name="WellcomeMessage" value="MySpaProject projesine hoşgeldiniz!" />
+    <text name="Home_ThisIsATemplate" value="Bu proje şablonu, aşağıdaki teknolojileri kullanarak bir web uygulaması geliştirmek için başlangıç noktasıdır:" />
+    <text name="Home_AspNetDescription" value="ASP.NET MVC, tasarım desenlerine uygun, kavramların birbirinden net bir şekilde ayırıldığı, size HTML üzerinde tam kontrol sunan, eğlenceli, çevik ve dinamik bir web framework'üdür." />
+    <text name="Home_AspNetBoilerplateDescription" value="ASP.NET Boilerplate, en iyi teknikler ve araçlar kullanarak web uygulamaları geliştirmek için bir framework'dür." />
+    <text name="LearnMore" value="Daha fazlası" />
+    <text name="Home_DurandalDescription" value="SPA (Single Page Application - Tek Sayfalı Uygulama) geliştirmek için güçlü ancak öğrenmesi kolay bir framework'dür. Durandal, zaten bildiğiniz ve sevdiğiniz jQuery, Knockout ve RequireJS kütüphaneleri üzerine bina edilmiştir." />
+    <text name="AboutFormat" value="{0} Hakkında" />
+    <text name="About_AspNetBoilerplateDescription" value="ASP.NET Boilerplate, en iyi teknikler ve araçlar kullanarak web uygulamaları geliştirmek için bir başlangıç noktasıdır! ASP.NET Boilerplate &lt;strong&gt;Katmanlı Mimari&lt;/strong&gt; ve &lt;strong&gt;Domain Driven Design (DDD)&lt;/strong&gt; teknikleri kullanarak uygulama geliştirme için temel altyapıyı sağlar." />
+    <text name="ForMoreInformation" value="Daha fazla bilgi için" />
   </texts>
 </localizationDictionary>

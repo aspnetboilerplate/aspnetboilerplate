@@ -72,14 +72,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbMigrations\V20140312\_01_CreatePersonTable.cs" />
-    <Compile Include="DbMigrations\V20140312\_02_CreateTasksTable.cs" />
     <Compile Include="DbMigrations\VersionTable.cs" />
     <Compile Include="MySpaProjectNHibernateModule.cs" />
-    <Compile Include="NHibernate\EntityMappings\PersonMap.cs" />
-    <Compile Include="NHibernate\EntityMappings\TaskMap.cs" />
-    <Compile Include="NHibernate\Repositories\PersonRepository.cs" />
-    <Compile Include="NHibernate\Repositories\TaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +85,10 @@
       <Project>{17298ea0-af73-4f30-b6f1-2066100d7d74}</Project>
       <Name>MySpaProject.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NHibernate\EntityMappings\" />
+    <Folder Include="NHibernate\Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

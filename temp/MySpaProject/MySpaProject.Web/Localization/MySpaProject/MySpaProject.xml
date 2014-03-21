@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    <text name="TaskSystem" value="Task System" />
-    <text name="TaskList" value="Task List" />
-    <text name="NewTask" value="New Task" />
-    <text name="Xtasks" value="{0} tasks" />
-    <text name="AllTasks" value="All tasks" />
-    <text name="ActiveTasks" value="Active tasks" />
-    <text name="CompletedTasks" value="Completed tasks" />
-    <text name="TaskDescription" value="Task description" />
-    <text name="EnterDescriptionHere" value="Task description" />
-    <text name="AssignTo" value="Assign to" />
-    <text name="SelectPerson" value="Select person" />
-    <text name="CreateTheTask" value="Create the task" />
-    <text name="TaskUpdatedMessage" value="Task has been successfully updated." />
-    <text name="TaskCreatedMessage" value="Task {0} has been created successfully." />
+    <text name="HomePage" value="Home page" />
+    <text name="About" value="About" />
+    <text name="WellcomeMessage" value="Wellcome to MySpaProject!" />
+    <text name="Home_ThisIsATemplate" value="This project template is a starting point to develop web applicatins using..." />
+    <text name="Home_AspNetDescription" value="ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup for enjoyable, agile development." />
+    <text name="Home_AspNetBoilerplateDescription" value="ASP.NET Boilerplate is a framework to build web based applications with best practices and most popular tools." />
+    <text name="LearnMore" value="Learn more" />
+    <text name="Home_DurandalDescription" value="A powerful yet easy-to-learn Single Page Application (SPA) framework. Durandal is built on libs you know and love like jQuery, Knockout and RequireJS." />
+    <text name="AboutFormat" value="About {0}" />
+    <text name="About_AspNetBoilerplateDescription" value="ASP.NET Boilerplate is a starting point for new web applications with best practices and most popular tools! ASP.NET Boilerplate provides an infrastructure for &lt;strong&gt;NLayer architecture&lt;/strong&gt; and &lt;strong&gt;Domain Driven Design&lt;/strong&gt;." />
+    <text name="ForMoreInformation" value="For more information" />
   </texts>
 </localizationDictionary>

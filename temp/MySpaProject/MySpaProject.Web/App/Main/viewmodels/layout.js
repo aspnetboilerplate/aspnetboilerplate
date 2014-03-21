@@ -41,8 +41,8 @@
 
             that.activate = function () {
                 router.map([
-                    { route: '', title: abp.localization.localize('TaskList', 'MySpaProject'), moduleId: 'viewmodels/tasklist', nav: true },
-                    { route: 'newtask', title: abp.localization.localize('NewTask', 'MySpaProject'), moduleId: 'viewmodels/newtask', nav: true }
+                    { route: '', title: abp.localization.localize('HomePage', 'MySpaProject'), moduleId: 'viewmodels/home', nav: true },
+                    { route: 'about', title: abp.localization.localize('About', 'MySpaProject'), moduleId: 'viewmodels/about', nav: true }
                 ]).buildNavigationModel();
 
                 return that.router.activate();

@@ -98,9 +98,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebApi\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\MySpaProject.Application\MySpaProject.Application.csproj">
       <Project>{EDF5D964-4C0F-4F19-B674-58A38A5E5401}</Project>

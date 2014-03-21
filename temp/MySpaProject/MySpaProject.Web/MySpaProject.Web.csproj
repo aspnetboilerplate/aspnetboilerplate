@@ -58,6 +58,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
@@ -147,6 +154,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll">
+      <Link>AutoMapper.Net4.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Abp\Framework\images\user.png" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
@@ -158,16 +169,17 @@
     <Content Include="Abp\Framework\styles\abp.css" />
     <Content Include="Abp\Framework\styles\abp.min.css" />
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
-    <Content Include="App\Common\styles\main.css">
+    <Content Include="App\Main\styles\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
-    <Content Include="App\Common\styles\main.min.css">
+    <Content Include="App\Main\styles\main.min.css">
       <DependentUpon>main.css</DependentUpon>
     </Content>
+    <Content Include="App\Main\images\abp-logo.png" />
     <Content Include="App\Main\main.js" />
     <Content Include="App\Main\viewmodels\layout.js" />
-    <Content Include="App\Main\viewmodels\tasklist.js" />
-    <Content Include="App\Main\viewmodels\newtask.js" />
+    <Content Include="App\Main\viewmodels\home.js" />
+    <Content Include="App\Main\viewmodels\about.js" />
     <Content Include="Content\bootstrap-cosmo.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -270,14 +282,14 @@
     <Content Include="Scripts\durandal\transitions\entrance.js" />
     <Content Include="Scripts\durandal\viewEngine.js" />
     <Content Include="Scripts\durandal\viewLocator.js" />
-    <Content Include="App\Common\styles\main.less" />
+    <Content Include="App\Main\styles\main.less" />
     <Content Include="App\Main\views\layout.cshtml" />
-    <Content Include="App\Main\views\tasklist.cshtml" />
+    <Content Include="App\Main\views\home.cshtml" />
     <Content Include="App\Main\views\web.config" />
-    <Content Include="App\Common\styles\main.css.map">
+    <Content Include="App\Main\styles\main.css.map">
       <DependentUpon>main.css</DependentUpon>
     </Content>
-    <Content Include="App\Main\views\newtask.cshtml" />
+    <Content Include="App\Main\views\about.cshtml" />
     <Content Include="Content\toastr.less" />
     <Content Include="log4net.config" />
     <Content Include="Abp\Framework\styles\abp.less" />
@@ -347,6 +359,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App\Common\images\" />
+    <Folder Include="App\Common\scripts\" />
+    <Folder Include="App\Common\styles\" />
+    <Folder Include="App\Main\scripts\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
