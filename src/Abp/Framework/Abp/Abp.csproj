@@ -71,7 +71,12 @@
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\SettingValue.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
+    <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\Auditing\IAudited.cs" />
+    <Compile Include="Domain\Entities\Auditing\ICreationAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
+    <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
