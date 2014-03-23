@@ -1,4 +1,5 @@
-﻿using Abp.Modules.Core.Data.Migrations;
+﻿using Abp.Data.Migrations.FluentMigrator;
+using Abp.Modules.Core.Data.Migrations;
 using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20130901

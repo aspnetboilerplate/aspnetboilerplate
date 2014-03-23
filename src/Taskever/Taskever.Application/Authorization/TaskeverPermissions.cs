@@ -5,27 +5,27 @@ using Taskever.Localization.Resources;
 
 namespace Taskever.Authorization
 {
-    public class TaskeverPermissions : IPermissionProvider
+    public class TaskeverPermissions : IPermissionDefinitionProvider
     {
         public const string CreateTask = "Taskever.Tasks.Create";
 
-        private static readonly Permission[] AllPermissions;
+        private static readonly PermissionDefinition[] AllPermissionsDefinition;
 
         static TaskeverPermissions()
         {
-            AllPermissions =
+            AllPermissionsDefinition =
                 new[]
                 {
-                    new Permission(
+                    new PermissionDefinition(
                         CreateTask,
                         new LocalizableString("CreateTaskPermissionDisplayName", TaskeverLocalizationSource.SourceName)
                         )
                 };
         }
 
-        public IEnumerable<Permission> GetPermissions()
+        public IEnumerable<PermissionDefinition> GetPermissions(PermissionDefinitionProviderContext context)
         {
-            return AllPermissions;
+            return AllPermissionsDefinition;
         }
     }
 }

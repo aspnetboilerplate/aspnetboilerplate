@@ -12,6 +12,11 @@ namespace Abp.Security.Users
     public class AbpUser : Entity, IUser<int> // TODO: Change Id from int to long?
     {
         /// <summary>
+        /// Tenant of this user.
+        /// </summary>
+        public virtual int? TenantId { get; set; }
+
+        /// <summary>
         /// User name.
         /// </summary>
         public virtual string UserName { get; set; }
@@ -37,7 +42,7 @@ namespace Abp.Security.Users
         public virtual bool IsEmailConfirmed { get; set; }
 
         /// <summary>
-        /// Is the <see cref="EmailAddress"/> confirmed.
+        /// Confirmation code for email.
         /// </summary>
         public virtual string EmailConfirmationCode { get; set; }
 

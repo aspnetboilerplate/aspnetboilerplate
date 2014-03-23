@@ -1,9 +1,10 @@
+using Abp.Data.Migrations.FluentMigrator;
 using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20130824
+namespace Abp.Modules.Core.Data.Migrations.V20140323
 {
-    [Migration(2013082404)]
-    public class _04_CreateAbpUserRolesTable : AutoReversingMigration
+    [Migration(2014032304)]
+    public class _20140323_04_CreateAbpUserRolesTable : AutoReversingMigration
     {
         public override void Up()
         {

@@ -8,6 +8,7 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         protected UserMapBase()
             : base("AbpUsers")
         {
+            Map(x => x.TenantId);
             Map(x => x.UserName);
             Map(x => x.Name);
             Map(x => x.Surname);

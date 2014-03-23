@@ -3,11 +3,12 @@ using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class SettingValueRecordMap : EntityMap<SettingValue, long>
+    public class SettingValueMap : EntityMap<SettingValue, long>
     {
-        public SettingValueRecordMap()
+        public SettingValueMap()
             : base("AbpSettings")
         {
+            Map(x => x.TenantId);
             Map(x => x.UserId);
             Map(x => x.Name);
             Map(x => x.Value);

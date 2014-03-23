@@ -42,6 +42,9 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="FluentMigrator">
+      <HintPath>..\..\..\packages\FluentMigrator.1.1.2.1\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
@@ -62,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Migrations\FluentMigrator\MigrationExtensions.cs" />
+    <Compile Include="Domain\Entities\Mapping\CoreModuleMapExtensions.cs" />
     <Compile Include="Domain\Entities\Mapping\EntityMapOfTEntity.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryInstaller.cs" />

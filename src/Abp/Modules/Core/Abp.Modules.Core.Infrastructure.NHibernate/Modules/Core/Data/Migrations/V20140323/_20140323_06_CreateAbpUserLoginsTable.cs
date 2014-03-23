@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20140223
+namespace Abp.Modules.Core.Data.Migrations.V20140323
 {
-    [Migration(2014022301)]
-    public class _01_CreateAbpUserLoginsTable : AutoReversingMigration
+    [Migration(2014032306)]
+    public class _20140323_06_CreateAbpUserLoginsTable : AutoReversingMigration
     {
         public override void Up()
         {

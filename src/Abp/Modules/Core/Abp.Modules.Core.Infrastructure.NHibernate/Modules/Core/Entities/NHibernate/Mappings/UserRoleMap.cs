@@ -8,9 +8,9 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         public UserRoleMap()
             : base("AbpUserRoles")
         {
-            this.MapCreationAudited();
             References(x => x.User).Column("UserId").LazyLoad();
             References(x => x.Role).Column("RoleId").LazyLoad();
+            this.MapCreationAudited();
         }
     }
 }

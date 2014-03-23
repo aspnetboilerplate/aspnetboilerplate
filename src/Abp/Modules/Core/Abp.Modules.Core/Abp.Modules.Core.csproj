@@ -77,9 +77,8 @@
     <Compile Include="Security\Roles\IRoleRepository.cs" />
     <Compile Include="Security\Roles\IUserRoleManager.cs" />
     <Compile Include="Security\Roles\IUserRoleRepository.cs" />
-    <Compile Include="Security\Roles\PermissionSettingEntity.cs" />
     <Compile Include="Security\Roles\RoleManager.cs" />
-    <Compile Include="Security\Roles\RolePermission.cs" />
+    <Compile Include="Security\Roles\Permission.cs" />
     <Compile Include="Security\Roles\UserRoleManager.cs" />
     <Compile Include="Security\Identity\UserStore.cs" />
     <Compile Include="Security\Tenants\AbpTenant.cs" />

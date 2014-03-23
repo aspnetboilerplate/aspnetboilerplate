@@ -25,7 +25,7 @@ namespace Abp.Security.Roles
             }
         }
 
-        public RolePermission GetPermissionOrNull(string roleName, string permissionName)
+        public Permission GetPermissionOrNull(string roleName, string permissionName)
         {
             RoleInfo roleInfo;
             if (!_roles.TryGetValue(roleName, out roleInfo))
@@ -41,12 +41,12 @@ namespace Abp.Security.Roles
         {
             public AbpRole Role { get; private set; }
 
-            public ConcurrentDictionary<string, RolePermission> Permissions { get; private set; }
+            public ConcurrentDictionary<string, Permission> Permissions { get; private set; }
 
             public RoleInfo(AbpRole role)
             {
                 Role = role;
-                Permissions = new ConcurrentDictionary<string, RolePermission>();
+                Permissions = new ConcurrentDictionary<string, Permission>();
                 foreach (var permission in role.Permissions)
                 {
                     Permissions[permission.PermissionName] = permission;

@@ -4,6 +4,6 @@ namespace Abp.Security.Roles
 {
     public interface IRoleManager : ISingletonDependency
     {
-        RolePermission GetPermissionOrNull(string roleName, string permissionName);
+        Permission GetPermissionOrNull(string roleName, string permissionName);
     }
 }

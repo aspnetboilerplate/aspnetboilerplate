@@ -4,8 +4,22 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Security.Roles
 {
-    public abstract class PermissionSettingEntity : Entity, ICreationAudited
+    /// <summary>
+    /// Represents a permission for a role.
+    /// Used to grant/deny a permission for a role.
+    /// </summary>
+    public class Permission : Entity, ICreationAudited
     {
+        /// <summary>
+        /// Role Id.
+        /// </summary>
+        public virtual int? RoleId { get; set; }
+
+        /// <summary>
+        /// User Id.
+        /// </summary>
+        public virtual int? UserId { get; set; }
+
         /// <summary>
         /// Unique name of the permission.
         /// </summary>
@@ -26,11 +40,8 @@ namespace Abp.Security.Roles
         /// Creator user of this entity.
         /// </summary>
         public virtual int? CreatorUserId { get; set; }
-        
-        /// <summary>
-        /// Creates a new <see cref="RolePermission"/> instance.
-        /// </summary>
-        protected PermissionSettingEntity()
+
+        public Permission()
         {
             IsGranted = true;
         }

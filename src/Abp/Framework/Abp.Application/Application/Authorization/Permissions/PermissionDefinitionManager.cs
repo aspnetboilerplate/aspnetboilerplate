@@ -7,31 +7,33 @@ namespace Abp.Application.Authorization.Permissions
     /// <summary>
     /// 
     /// </summary>
-    public class PermissionManager : IPermissionManager
+    public class PermissionDefinitionManager : IPermissionDefinitionManager
     {
-        private readonly IDictionary<string, Permission> _permissions;
+        private readonly IDictionary<string, PermissionDefinition> _permissions;
 
-        public PermissionManager()
+        public PermissionDefinitionManager()
         {
-            _permissions = new Dictionary<string, Permission>();
+            _permissions = new Dictionary<string, PermissionDefinition>();
             Initialize();
         }
 
-        public Permission GetPermissionOrNull(string permissionName)
+        public PermissionDefinition GetPermissionOrNull(string permissionName)
         {
             return _permissions.GetOrDefault(permissionName);
         }
 
         private void Initialize()
         {
+            var context = new PermissionDefinitionProviderContext();
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (typeof(IPermissionProvider).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                    if (typeof(IPermissionDefinitionProvider).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
                     {
-                        var provider = (IPermissionProvider)Activator.CreateInstance(type);
-                        foreach (var permission in provider.GetPermissions())
+                        var provider = (IPermissionDefinitionProvider)Activator.CreateInstance(type);
+                        foreach (var permission in provider.GetPermissions(context))
                         {
                             _permissions[permission.Name] = permission;
                         }

@@ -69,17 +69,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\Core\Data\Migrations\V20130824\_02_CreateAbpUsersTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20130824\_03_CreateAbpRolesTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20130824\_04_CreateAbpUserRolesTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20131215\_01_AddEmailConfirmationColumnsToUsersTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20131219\_01_AddPasswordResetColumnToUsersTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20140122\_02_CreateRolePermissionsTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20140122\_01_RemoveColumnsFromRoleTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20140301\_01_CreateAbpSettingValuesTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20140223\_01_CreateUserLoginsTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_03_CreateAbpUsersTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_02_CreateAbpRolesTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_04_CreateAbpUserRolesTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_05_CreateRolePermissionsTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_07_CreateAbpSettingsTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_06_CreateAbpUserLoginsTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_01_CreateAbpTenantsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\VersionTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Modules\Core\Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpTenantRepository.cs" />
@@ -91,12 +88,13 @@
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserRoleRepository.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\AbpRoleMap.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\AbpUserMap.cs" />
-    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\RolePermissionMap.cs" />
-    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\SettingValueRecordMap.cs" />
+    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\PermissionMap.cs" />
+    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\SettingValueMap.cs" />
+    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\TenantMap.cs" />
+    <Compile Include="Modules\Core\Entities\NHibernate\Mappings\TenantMapBase.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\UserRoleMap.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\RoleMapBase.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\UserMapBase.cs" />
-    <Compile Include="Domain\Entities\Mapping\CoreModuleMapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\Core\Startup\AbpModulesCoreInfrastructureNHibernateModule.cs" />
   </ItemGroup>

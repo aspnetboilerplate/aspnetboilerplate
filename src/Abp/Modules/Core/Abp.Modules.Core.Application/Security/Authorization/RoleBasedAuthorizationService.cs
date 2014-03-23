@@ -11,18 +11,18 @@ namespace Abp.Security.Authorization
     //TODO: Make this class Singleton and create a Helper method to check permissions.
     public class RoleBasedAuthorizationService : IAuthorizationService, ITransientDependency
     {
-        private readonly IPermissionManager _permissionManager;
+        private readonly IPermissionDefinitionManager _permissionDefinitionManager;
         private readonly IRoleManager _roleManager;
         private readonly IUserRoleManager _userRoleManager;
 
         public ILogger Logger { get; set; }
 
         public RoleBasedAuthorizationService(
-            IPermissionManager permissionManager,
+            IPermissionDefinitionManager permissionDefinitionManager,
             IRoleManager roleManager,
             IUserRoleManager userRoleManager)
         {
-            _permissionManager = permissionManager;
+            _permissionDefinitionManager = permissionDefinitionManager;
             _roleManager = roleManager;
             _userRoleManager = userRoleManager;
         }
@@ -39,7 +39,7 @@ namespace Abp.Security.Authorization
 
         private bool HasPermission(string permissionName)
         {
-            var permission = _permissionManager.GetPermissionOrNull(permissionName);
+            var permission = _permissionDefinitionManager.GetPermissionOrNull(permissionName);
             if (permission == null)
             {
                 Logger.Warn("Permission is not defined: " + permissionName);
@@ -49,13 +49,13 @@ namespace Abp.Security.Authorization
             return HasPermission(permission);
         }
 
-        private bool HasPermission(Permission permission)
+        private bool HasPermission(PermissionDefinition permissionDefinition)
         {
             var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId.Value);
-            var granted = permission.IsGrantedByDefault;
+            var granted = permissionDefinition.IsGrantedByDefault;
             foreach (var roleName in roleNames)
             {
-                var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permission.Name);
+                var permissionSetting = _roleManager.GetPermissionOrNull(roleName, permissionDefinition.Name);
                 if (permissionSetting == null)
                 {
                     continue;

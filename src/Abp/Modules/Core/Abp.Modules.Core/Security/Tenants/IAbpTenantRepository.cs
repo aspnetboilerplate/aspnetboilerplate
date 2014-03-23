@@ -3,7 +3,7 @@
 namespace Abp.Security.Tenants
 {
     /// <summary>
-    /// Repository for AbpTenant entity.
+    /// Repository for Tenant entity.
     /// </summary>
     public interface IAbpTenantRepository : IRepository<AbpTenant>
     {

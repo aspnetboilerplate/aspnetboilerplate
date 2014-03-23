@@ -6,7 +6,7 @@ namespace Abp.Application.Authorization.Permissions
     /// Represents a permission.
     /// A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
-    public class Permission
+    public class PermissionDefinition
     {
         /// <summary>
         /// Unique name of the permission.
@@ -36,7 +36,7 @@ namespace Abp.Application.Authorization.Permissions
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default</param>
         /// <param name="description">A brief description for this permission</param>
-        public Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        public PermissionDefinition(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
             Name = name;
             DisplayName = displayName;

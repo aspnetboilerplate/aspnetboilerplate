@@ -22,6 +22,6 @@ namespace Abp.Security.Roles
         /// <summary>
         /// List of permissions of this role.
         /// </summary>
-        public virtual IList<RolePermission> Permissions { get; set; }
+        public virtual IList<Permission> Permissions { get; set; }
     }
 }

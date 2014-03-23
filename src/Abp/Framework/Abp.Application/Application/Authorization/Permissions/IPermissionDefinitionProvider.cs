@@ -5,12 +5,12 @@ namespace Abp.Application.Authorization.Permissions
     /// <summary>
     /// This interface defines a class that provide a list of permissions those are used for authorization in the application.
     /// </summary>
-    public interface IPermissionProvider
+    public interface IPermissionDefinitionProvider
     {
         /// <summary>
-        /// Gets a list of <see cref="Permission"/> objects.
+        /// Gets a list of <see cref="PermissionDefinition"/> objects.
         /// </summary>
         /// <returns>Permissions</returns>
-        IEnumerable<Permission> GetPermissions();
+        IEnumerable<PermissionDefinition> GetPermissions(PermissionDefinitionProviderContext context);
     }
 }

@@ -1,9 +1,10 @@
-﻿using FluentMigrator;
+﻿using Abp.Data.Migrations.FluentMigrator;
+using FluentMigrator;
 
-namespace Abp.Modules.Core.Data.Migrations.V20130824
+namespace Abp.Modules.Core.Data.Migrations.V20140323
 {
-    [Migration(2013082403)]
-    public class _03_CreateAbpRolesTable : AutoReversingMigration
+    [Migration(2014032303)]
+    public class _20140323_03_CreateAbpRolesTable : AutoReversingMigration
     {
         public override void Up()
         {
@@ -11,8 +12,6 @@ namespace Abp.Modules.Core.Data.Migrations.V20130824
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("DisplayName").AsString(100).NotNullable()
-                .WithColumn("IsStatic").AsBoolean().NotNullable().WithDefaultValue(false)
-                .WithColumn("IsFrozen").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithAuditColumns();
 
             Insert.IntoTable("AbpRoles").Row(
