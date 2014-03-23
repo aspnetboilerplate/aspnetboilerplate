@@ -15,7 +15,6 @@ namespace Abp.Security.Identity
         IUserEmailStore<TUser, int>,
         IUserLoginStore<TUser, int>,
         IUserRoleStore<TUser, int>,
-        IUserConfirmationStore<TUser, int>,
         ITransientDependency
         where TUser : AbpUser
         where TUserRepository : IUserRepository<TUser>
@@ -108,6 +107,16 @@ namespace Abp.Security.Identity
         public Task<string> GetEmailAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).EmailAddress);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        {
+            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize
+        }
+
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        {
+            return Task.Factory.StartNew(() => _userRepository.UpdateIsEmailConfirmed(user.Id, confirmed));
         }
 
         public Task<TUser> FindByEmailAsync(string email)
@@ -224,20 +233,6 @@ namespace Abp.Security.Identity
                     ur => ur.User.Id == user.Id && ur.Role.Name == roleName
                     ) != null
                 );
-        }
-
-        #endregion
-
-        #region IUserConfirmationStore
-
-        public Task<bool> IsConfirmedAsync(TUser user)
-        {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize
-        }
-
-        public Task SetConfirmedAsync(TUser user, bool confirmed)
-        {
-            return Task.Factory.StartNew(() => _userRepository.UpdateIsEmailConfirmed(user.Id, confirmed));
         }
 
         #endregion

@@ -2,7 +2,7 @@
 using Abp.Dependency;
 using Abp.Modules;
 
-namespace Abp.Startup
+namespace Abp.Startup.Modules.Core
 {
     public class AbpModulesCoreModule : AbpModule
     {

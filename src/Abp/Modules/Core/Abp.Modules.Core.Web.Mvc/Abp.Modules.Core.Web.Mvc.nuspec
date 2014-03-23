@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Abp.Modules.Core.Web.Mvc</id>
-    <version>0.1.7-alpha</version>
+    <version>$version$</version>
     <title>Abp.Modules.Core.Web.Mvc</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
