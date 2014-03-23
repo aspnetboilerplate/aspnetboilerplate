@@ -2,13 +2,13 @@
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Security.Roles
+namespace Abp.Security.Permissions
 {
     /// <summary>
     /// Represents a permission for a role.
     /// Used to grant/deny a permission for a role.
     /// </summary>
-    public class Permission : Entity, ICreationAudited
+    public class Permission : Entity<long>, ICreationAudited
     {
         /// <summary>
         /// Role Id.
@@ -23,7 +23,7 @@ namespace Abp.Security.Roles
         /// <summary>
         /// Unique name of the permission.
         /// </summary>
-        public virtual string PermissionName { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Is this role granted for this permission.

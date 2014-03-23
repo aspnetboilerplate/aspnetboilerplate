@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Abp.Domain.Entities.Auditing;
+using Abp.Security.Permissions;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.Roles

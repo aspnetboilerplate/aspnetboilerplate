@@ -2,7 +2,7 @@
 using Abp.Application.Authorization;
 using Abp.Application.Authorization.Permissions;
 using Abp.Dependency;
-using Abp.Security.Roles;
+using Abp.Security.Roles.Management;
 using Abp.Security.Users;
 using Castle.Core.Logging;
 

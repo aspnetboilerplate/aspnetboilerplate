@@ -10,8 +10,15 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         {
             Create.Table("AbpTenants")
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("Name").AsAnsiString(128).NotNullable()
+                .WithColumn("TenancyName").AsString(32).NotNullable()
+                .WithColumn("Name").AsString(128).NotNullable()
                 .WithCreationTimeColumn();
+
+            Create.Index("AbpTenants_TenancyName")
+                .OnTable("AbpTenants")
+                .OnColumn("TenancyName").Ascending()
+                .WithOptions().Unique()
+                .WithOptions().NonClustered();
         }
     }
 }

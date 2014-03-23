@@ -68,6 +68,7 @@
     <Compile Include="Activities\Dto\CreateTaskActivityDto.cs" />
     <Compile Include="Activities\Dto\UserFollowedActivityDto.cs" />
     <Compile Include="Authorization\TaskeverPermissions.cs" />
+    <Compile Include="Mapping\AutoMapExtensions.cs" />
     <Compile Include="Tasks\Dto\DeleteTaskInput.cs" />
     <Compile Include="Friendships\Dto\AcceptFriendshipInput.cs" />
     <Compile Include="Friendships\Dto\CancelFriendshipRequestInput.cs" />

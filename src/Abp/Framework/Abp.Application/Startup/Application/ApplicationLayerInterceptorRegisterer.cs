@@ -1,6 +1,6 @@
 using Abp.Application.Authorization;
 using Abp.Application.Services;
-using Abp.Application.Validation;
+using Abp.Runtime.Validation.Interception;
 using Castle.Core;
 
 namespace Abp.Startup.Application

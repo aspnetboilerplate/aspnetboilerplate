@@ -10,10 +10,15 @@ namespace Abp.Security.Tenants
     public class AbpTenant : Entity, IHasCreationTime
     {
         /// <summary>
+        /// Tenancy name. This peoperty is the UNIQUE name of this Tenant.
+        /// </summary>
+        public virtual string TenancyName { get; set; }
+
+        /// <summary>
         /// Name of the Tenant.
         /// </summary>
         public virtual string Name { get; set; }
-
+        
         /// <summary>
         /// Creation time of this Tenant.
         /// </summary>

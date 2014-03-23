@@ -73,7 +73,7 @@
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_03_CreateAbpUsersTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_02_CreateAbpRolesTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_04_CreateAbpUserRolesTable.cs" />
-    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_05_CreateRolePermissionsTable.cs" />
+    <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_05_CreatePermissionsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_07_CreateAbpSettingsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_06_CreateAbpUserLoginsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_01_CreateAbpTenantsTable.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Modules\Core\Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpTenantRepository.cs" />
+    <Compile Include="Modules\Core\Data\Repositories\NHibernate\PermissionRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\RoleRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\SettingValueRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />

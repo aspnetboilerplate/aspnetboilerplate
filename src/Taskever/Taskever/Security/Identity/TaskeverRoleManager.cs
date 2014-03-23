@@ -1,4 +1,4 @@
-using Abp.Security.Identity;
+using Abp.Security.IdentityFramework;
 using Taskever.Security.Roles;
 
 namespace Taskever.Security.Identity

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using Abp.Security.Permissions;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.Security.Roles
+namespace Abp.Security.Roles.Management
 {
     public class RoleManager : IRoleManager
     {
@@ -49,7 +50,7 @@ namespace Abp.Security.Roles
                 Permissions = new ConcurrentDictionary<string, Permission>();
                 foreach (var permission in role.Permissions)
                 {
-                    Permissions[permission.PermissionName] = permission;
+                    Permissions[permission.Name] = permission;
                 }
             }
         }

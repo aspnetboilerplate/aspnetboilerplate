@@ -8,7 +8,7 @@ using Abp.Security.Roles;
 using Abp.Security.Users;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.Identity
+namespace Abp.Security.IdentityFramework
 {
     public class UserStore<TUser, TUserRepository> :
         IUserPasswordStore<TUser, int>,

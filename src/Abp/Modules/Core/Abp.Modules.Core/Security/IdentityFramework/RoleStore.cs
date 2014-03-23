@@ -2,7 +2,7 @@
 using Abp.Security.Roles;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.Identity
+namespace Abp.Security.IdentityFramework
 {
     public class RoleStore<TRole, TRoleRepository> : 
         IRoleStore<TRole, int> 

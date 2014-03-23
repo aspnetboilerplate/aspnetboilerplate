@@ -2,7 +2,7 @@ using Abp.Dependency;
 using Abp.Security.Users;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.Identity
+namespace Abp.Security.IdentityFramework
 {
     public abstract class AbpUserManagerBase<TUser> :
         UserManager<TUser, int>,

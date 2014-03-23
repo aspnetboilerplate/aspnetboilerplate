@@ -12,7 +12,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("RoleId").AsInt32().Nullable().ForeignKey("AbpRoles", "Id")
                 .WithColumn("UserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("PermissionName").AsString(100).NotNullable()
+                .WithColumn("Name").AsAnsiString(128).NotNullable()
                 .WithColumn("IsGranted").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithCreationAuditColumns();
         }

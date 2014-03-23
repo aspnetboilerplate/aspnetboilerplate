@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Web.Mvc;
 using Abp.Web.Mvc.Authorization;
 
 namespace Taskever.Web.Mvc.Controllers
@@ -8,6 +11,9 @@ namespace Taskever.Web.Mvc.Controllers
     {
         public ActionResult Index()
         {
+            //var prinicpal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            //var tenantId = prinicpal.Claims.Where(c => c.Type == "TenantId").Select(c => c.Value).SingleOrDefault();
+
             return View("Index");
         }
     }

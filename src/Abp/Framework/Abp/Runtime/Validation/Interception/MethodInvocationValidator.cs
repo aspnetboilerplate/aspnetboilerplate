@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Abp.Runtime.Validation;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.Application.Validation
+namespace Abp.Runtime.Validation.Interception
 {
     /// <summary>
     /// This class is used to validate a method call (invocation) for method arguments.
