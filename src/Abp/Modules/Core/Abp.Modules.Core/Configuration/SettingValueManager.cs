@@ -34,8 +34,8 @@ namespace Abp.Configuration
             _settingValueRepository = settingValueRepository;
             _settingDefinitionManager = settingDefinitionManager;
             _applicationSettings = new Lazy<Dictionary<string, SettingValue>>(GetApplicationSettingsFromDatabase, true);
-            _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_ForTenants"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
-            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_ForUser"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
+            _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
+            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_UserSettings"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
         }
 
         #endregion
