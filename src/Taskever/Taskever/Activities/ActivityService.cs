@@ -27,6 +27,7 @@ namespace Taskever.Activities
             _friendshipRepository = friendshipRepository;
             _activityRepository = activityRepository;
             _userFollowedActivityRepository = userFollowedActivityRepository;
+            Logger = NullLogger.Instance;
         }
 
         [UnitOfWork]

@@ -25,6 +25,7 @@ namespace Abp.Security.Authorization
             _permissionDefinitionManager = permissionDefinitionManager;
             _roleManager = roleManager;
             _userRoleManager = userRoleManager;
+            Logger = NullLogger.Instance;
         }
 
         public bool HasAnyOfPermissions(string[] permissionNames)

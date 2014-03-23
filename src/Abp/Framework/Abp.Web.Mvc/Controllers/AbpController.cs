@@ -14,12 +14,24 @@ namespace Abp.Web.Mvc.Controllers
     /// </summary>
     public abstract class AbpController : Controller
     {
+        /// <summary>
+        /// Gets/sets name of the localization source that is used in this controller.
+        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// </summary>
         public string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Reference to the logger to write logs.
         /// </summary>
-        public virtual ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected AbpController()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <summary>
         /// Gets localized string for given key name and current language.

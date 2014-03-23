@@ -23,6 +23,14 @@ namespace Abp.WebApi.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected AbpApiController()
+        {
+            Logger = NullLogger.Instance;
+        }
+
+        /// <summary>
         /// Gets localized string for given key name and current language.
         /// </summary>
         /// <param name="name">Key name</param>
