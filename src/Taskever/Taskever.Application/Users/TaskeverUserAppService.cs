@@ -4,13 +4,13 @@ using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
-using Abp.Net.Mail;
 using Abp.Security.Users;
 using Abp.Users;
 using Abp.Users.Dto;
 using Taskever.Friendships;
 using Taskever.Security.Users;
 using Taskever.Users.Dto;
+using Taskever.Utils.Mail;
 
 namespace Taskever.Users
 {

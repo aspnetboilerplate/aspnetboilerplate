@@ -2,6 +2,6 @@
 {
     internal static class AbpCoreModuleConst
     {
-        public const string CurrentVersion = "0.1.1.0";
+        public const string CurrentVersion = "0.1.7.0";
     }
 }

@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace Taskever.Localization.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -58,6 +61,15 @@ namespace Taskever.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display name.
+        /// </summary>
+        internal static string DisplayName {
+            get {
+                return ResourceManager.GetString("DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hello World!.
         /// </summary>
         internal static string HelloWorld {
@@ -94,6 +106,15 @@ namespace Taskever.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See all friends.
         /// </summary>
         internal static string SeeAllFriends {
@@ -108,6 +129,33 @@ namespace Taskever.Localization.Resources {
         internal static string SeeAllTasks {
             get {
                 return ResourceManager.GetString("SeeAllTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sender address.
+        /// </summary>
+        internal static string SenderAddress {
+            get {
+                return ResourceManager.GetString("SenderAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server address.
+        /// </summary>
+        internal static string ServerAddress {
+            get {
+                return ResourceManager.GetString("ServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server port.
+        /// </summary>
+        internal static string ServerPort {
+            get {
+                return ResourceManager.GetString("ServerPort", resourceCulture);
             }
         }
         
@@ -198,6 +246,15 @@ namespace Taskever.Localization.Resources {
         internal static string TaskState_WorkingOn {
             get {
                 return ResourceManager.GetString("TaskState_WorkingOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User nama.
+        /// </summary>
+        internal static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
     }

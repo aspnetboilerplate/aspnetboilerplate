@@ -1,4 +1,4 @@
-using Abp.Net.Mail;
+using Taskever.Utils.Mail;
 
 namespace Taskever.Notifications
 {

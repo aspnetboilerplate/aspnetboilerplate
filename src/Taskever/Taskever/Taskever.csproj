@@ -113,6 +113,9 @@
     <Compile Include="Tasks\ITaskPolicy.cs" />
     <Compile Include="Tasks\TaskPolicy.cs" />
     <Compile Include="Startup\TaskeverCoreModule.cs" />
+    <Compile Include="Utils\Mail\EmailService.cs" />
+    <Compile Include="Utils\Mail\EmailSettingDefinitionProvider.cs" />
+    <Compile Include="Utils\Mail\IEmailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp\Framework\Abp\Abp.csproj">

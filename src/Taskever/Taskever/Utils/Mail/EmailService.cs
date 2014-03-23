@@ -3,7 +3,7 @@ using System.Net.Mail;
 using Abp.Configuration;
 using Castle.Core.Logging;
 
-namespace Abp.Net.Mail
+namespace Taskever.Utils.Mail
 {
     //TODO: Get setting from configuration
     /// <summary>

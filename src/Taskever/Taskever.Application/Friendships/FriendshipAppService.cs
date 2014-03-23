@@ -5,12 +5,12 @@ using System.Text;
 using Abp.Domain.Uow;
 using Abp.Exceptions;
 using Abp.Mapping;
-using Abp.Net.Mail;
 using Abp.Security.Users;
 using Abp.Users;
 using Taskever.Friendships.Dto;
 using Taskever.Security.Users;
 using Taskever.Users;
+using Taskever.Utils.Mail;
 
 namespace Taskever.Friendships
 {
