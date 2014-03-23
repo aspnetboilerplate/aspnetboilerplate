@@ -45,7 +45,7 @@ namespace Taskever.Friendships
         {
             var friendships =
                 _friendshipRepository
-                    .GetAllWithFriendUser(AbpUser.CurrentUserId)
+                    .GetAllWithFriendUser(AbpUser.CurrentUserId.Value)
                     .Where(f => f.Status == FriendshipStatus.Accepted)
                     .OrderByDescending(friendship => friendship.LastVisitTime)
                     .Take(input.MaxResultCount)
@@ -57,7 +57,7 @@ namespace Taskever.Friendships
         [UnitOfWork]
         public virtual void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
-            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
             var friendShip = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanChangeFriendshipProperties(currentUser, friendShip))
@@ -87,7 +87,7 @@ namespace Taskever.Friendships
                 throw new AbpUserFriendlyException("Can not find a user with email address: " + input.EmailAddress);
             }
 
-            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
 
             //Check if they are already friends
             var friendship = _friendshipRepository.GetOrNull(currentUser.Id, friendUser.Id);
@@ -113,7 +113,7 @@ namespace Taskever.Friendships
         [UnitOfWork] //TODO: Need UnitOfWork, I think no!
         public virtual void RemoveFriendship(RemoveFriendshipInput input)
         {
-            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
 
             if (!_friendshipPolicy.CanRemoveFriendship(currentUser, friendship)) //TODO: Maybe this method can throw exception!
@@ -128,7 +128,7 @@ namespace Taskever.Friendships
         public virtual void AcceptFriendship(AcceptFriendshipInput input)
         {
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
-            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
             friendship.AcceptBy(currentUser);
             SendAcceptEmail(friendship.Pair);
         }
@@ -146,7 +146,7 @@ namespace Taskever.Friendships
         [UnitOfWork]
         public void UpdateLastVisitTime(UpdateLastVisitTimeInput input)
         {
-            var friendship = _friendshipRepository.GetOrNull(AbpUser.CurrentUserId, input.FriendUserId);
+            var friendship = _friendshipRepository.GetOrNull(AbpUser.CurrentUserId.Value, input.FriendUserId);
             if (friendship != null)
             {
                 friendship.LastVisitTime = DateTime.Now;

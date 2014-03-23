@@ -10,7 +10,7 @@ namespace Abp.Configuration
     /// A setting group is used to group some settings togehter.
     /// A group can be child of another group and can has child groups.
     /// </summary>
-    public class SettingGroup
+    public class SettingDefinitionGroup
     {
         /// <summary>
         /// Unique name of the setting group.
@@ -26,24 +26,23 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets parent of this group.
         /// </summary>
-        public SettingGroup Parent { get; private set; }
+        public SettingDefinitionGroup Parent { get; private set; }
 
         /// <summary>
         /// Gets a list of all children of this group.
         /// </summary>
-        public IReadOnlyList<SettingGroup> Children
+        public IReadOnlyList<SettingDefinitionGroup> Children
         {
             get { return _children.ToImmutableList(); }
         }
-
-        private readonly List<SettingGroup> _children;
+        private readonly List<SettingDefinitionGroup> _children;
 
         /// <summary>
-        /// Creates a new <see cref="SettingGroup"/> object.
+        /// Creates a new <see cref="SettingDefinitionGroup"/> object.
         /// </summary>
         /// <param name="name">Unique name of the setting group</param>
         /// <param name="displayName">Display name of the setting</param>
-        public SettingGroup(string name, LocalizableString displayName)
+        public SettingDefinitionGroup(string name, LocalizableString displayName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -52,15 +51,15 @@ namespace Abp.Configuration
 
             Name = name;
             DisplayName = displayName;
-            _children = new List<SettingGroup>();
+            _children = new List<SettingDefinitionGroup>();
         }
 
         /// <summary>
-        /// Adds a <see cref="SettingGroup"/> as child of this group.
+        /// Adds a <see cref="SettingDefinitionGroup"/> as child of this group.
         /// </summary>
         /// <param name="child">Child to be added</param>
         /// <returns>This child group to be able to add more child</returns>
-        public SettingGroup AddChild(SettingGroup child)
+        public SettingDefinitionGroup AddChild(SettingDefinitionGroup child)
         {
             if (child.Parent != null)
             {

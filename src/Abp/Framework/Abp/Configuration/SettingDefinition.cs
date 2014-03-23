@@ -3,10 +3,10 @@
 namespace Abp.Configuration
 {
     /// <summary>
-    /// Represents a Setting.
-    /// A setting is used to configure or change behaviour of the application.
+    /// Defines a setting.
+    /// A setting is used to configure and change behaviour of the application.
     /// </summary>
-    public class Setting
+    public class SettingDefinition
     {
         /// <summary>
         /// Unique name of the setting.
@@ -32,18 +32,15 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets/sets group for this setting.
         /// </summary>
-        public SettingGroup Group { get; private set; }
+        public SettingDefinitionGroup Group { get; private set; }
 
         /// <summary>
         /// Default value of the setting.
         /// </summary>
         public string DefaultValue { get; private set; }
 
-        //public List<string> RestrictedValues { get; set; } TODO: Implement this?
-        //public string RegularExpression { get; set; } TODO: Implement this?
-
         /// <summary>
-        /// Creates a new <see cref="Setting"/> object.
+        /// Creates a new <see cref="SettingDefinition"/> object.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="defaultValue">Default value of the setting</param>
@@ -51,7 +48,7 @@ namespace Abp.Configuration
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting</param>
-        public Setting(string name, string defaultValue, LocalizableString displayName = null, SettingGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application | SettingScopes.User)
+        public SettingDefinition(string name, string defaultValue, LocalizableString displayName = null, SettingDefinitionGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application)
         {
             Name = name;
             DefaultValue = defaultValue;

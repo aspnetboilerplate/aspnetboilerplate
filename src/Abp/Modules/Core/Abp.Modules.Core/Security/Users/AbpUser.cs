@@ -61,9 +61,18 @@ namespace Abp.Security.Users
         /// <summary>
         /// Gets current user id.
         /// </summary>
-        public static int CurrentUserId
+        public static int? CurrentUserId
         {
-            get { return Convert.ToInt32(Thread.CurrentPrincipal.Identity.GetUserId() ?? "0"); } //TODO: Check if not authenticated
+            get
+            {
+                var userId = Thread.CurrentPrincipal.Identity.GetUserId();
+                if (userId == null)
+                {
+                    return null;
+                }
+
+                return Convert.ToInt32(userId);
+            } 
         }
 
         public virtual void GenerateEmailConfirmationCode()

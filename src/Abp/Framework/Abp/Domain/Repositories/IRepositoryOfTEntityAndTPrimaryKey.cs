@@ -91,7 +91,7 @@ namespace Abp.Domain.Repositories
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Insert(TEntity entity);
+        TEntity Insert(TEntity entity);
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace Abp.Domain.Repositories
         /// Updates an existing entity.
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Update(TEntity entity);
+        TEntity Update(TEntity entity);
 
         #endregion
 

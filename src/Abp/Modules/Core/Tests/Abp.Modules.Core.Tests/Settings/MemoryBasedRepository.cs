@@ -73,15 +73,17 @@ namespace Abp.Modules.Core.Tests.Settings
             return Get(key);
         }
 
-        public void Insert(TEntity entity)
+        public TEntity Insert(TEntity entity)
         {
             entity.Id = _primaryKeyGenerator.Generate();
             _entities[entity.Id] = entity;
+            return entity;
         }
 
-        public void Update(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
             _entities[entity.Id] = entity;
+            return entity;
         }
 
         public void Delete(TEntity entity)

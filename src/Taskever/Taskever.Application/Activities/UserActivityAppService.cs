@@ -23,7 +23,7 @@ namespace Taskever.Activities
         [UnitOfWork]
         public GetFollowedActivitiesOutput GetFollowedActivities(GetFollowedActivitiesInput input)
         {
-            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value);
             var user = _userRepository.Load(input.UserId);
 
             //Can see activities of this user?

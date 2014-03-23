@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
+using Abp.Security.Tenants;
 using Abp.Security.Users;
 using Abp.Utils.Extensions.Collections;
 
@@ -18,21 +19,23 @@ namespace Abp.Configuration
         #region Private fields
 
         private readonly ISettingValueRepository _settingValueRepository;
-        private readonly ISettingManager _settingManager;
+        private readonly ISettingDefinitionManager _settingDefinitionManager;
 
-        private readonly Lazy<Dictionary<string, SettingValueRecord>> _applicationSettings;
-        private readonly ThreadSafeObjectCache<Dictionary<string, SettingValueRecord>> _userSettingCache;
+        private readonly Lazy<Dictionary<string, SettingValue>> _applicationSettings;
+        private readonly ThreadSafeObjectCache<Dictionary<string, SettingValue>> _tenantSettingCache;
+        private readonly ThreadSafeObjectCache<Dictionary<string, SettingValue>> _userSettingCache;
 
         #endregion
 
         #region Constructor
 
-        public SettingValueManager(ISettingValueRepository settingValueRepository, ISettingManager settingManager)
+        public SettingValueManager(ISettingValueRepository settingValueRepository, ISettingDefinitionManager settingDefinitionManager)
         {
             _settingValueRepository = settingValueRepository;
-            _settingManager = settingManager;
-            _applicationSettings = new Lazy<Dictionary<string, SettingValueRecord>>(GetApplicationSettingsFromDatabase, true);
-            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValueRecord>>(new MemoryCache(GetType().Name), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
+            _settingDefinitionManager = settingDefinitionManager;
+            _applicationSettings = new Lazy<Dictionary<string, SettingValue>>(GetApplicationSettingsFromDatabase, true);
+            _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_ForTenants"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
+            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_ForUser"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
         }
 
         #endregion
@@ -41,23 +44,30 @@ namespace Abp.Configuration
 
         public string GetSettingValue(string name)
         {
-            var setting = _settingManager.GetSetting(name);
+            var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
 
-            //Check if defined for current user
-            if (setting.Scopes.HasFlag(SettingScopes.User))
+            //Get for user if defined
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && AbpUser.CurrentUserId.HasValue)
             {
-                if (AbpUser.CurrentUserId > 0)
+                var settingValue = GetSettingValueForUserOrNull(AbpUser.CurrentUserId.Value, name);
+                if (settingValue != null)
                 {
-                    var settingValue = GetSettingValueForUserOrNull(AbpUser.CurrentUserId, name);
-                    if (settingValue != null)
-                    {
-                        return settingValue.Value;
-                    }
+                    return settingValue.Value;
                 }
             }
 
-            //Check if defined for the application
-            if (setting.Scopes.HasFlag(SettingScopes.Application))
+            //Get for tenant if defined
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && AbpTenant.CurrentTenantId.HasValue)
+            {
+                var settingValue = GetSettingValueForTenantOrNull(AbpTenant.CurrentTenantId.Value, name);
+                if (settingValue != null)
+                {
+                    return settingValue.Value;
+                }
+            }
+
+            //Get for application if defined
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.Application))
             {
                 var settingValue = GetSettingValueForApplicationOrNull(name);
                 if (settingValue != null)
@@ -66,7 +76,8 @@ namespace Abp.Configuration
                 }
             }
 
-            return setting.DefaultValue;
+            //Not defined, get default value
+            return settingDefinition.DefaultValue;
         }
 
         public T GetSettingValue<T>(string name)
@@ -76,36 +87,50 @@ namespace Abp.Configuration
 
         public IReadOnlyList<ISettingValue> GetAllSettingValues()
         {
-            var settings = new Dictionary<string, Setting>();
+            var settingDefinitions = new Dictionary<string, SettingDefinition>();
             var settingValues = new Dictionary<string, ISettingValue>();
 
             //Fill all setting with default values.
-            foreach (var setting in _settingManager.GetAllSettings())
+            foreach (var setting in _settingDefinitionManager.GetAllSettingDefinitions())
             {
-                settings[setting.Name] = setting;
-                settingValues[setting.Name] = new SettingValue(setting.Name, setting.DefaultValue);
+                settingDefinitions[setting.Name] = setting;
+                settingValues[setting.Name] = new SettingValueObject(setting.Name, setting.DefaultValue);
             }
 
             //Overwrite application settings
             foreach (var settingValue in GetAllSettingValuesForApplication())
             {
-                var setting = settings.GetOrDefault(settingValue.Name);
+                var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                 if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
                 {
-                    settingValues[settingValue.Name] = new SettingValue(settingValue.Name, settingValue.Value);
+                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                }
+            }
+
+            //Overwrite tenant settings
+            var tenantId = AbpTenant.CurrentTenantId;
+            if (tenantId.HasValue)
+            {
+                foreach (var settingValue in GetAllSettingValuesForTenant(tenantId.Value))
+                {
+                    var setting = settingDefinitions.GetOrDefault(settingValue.Name);
+                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Tenant))
+                    {
+                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                    }
                 }
             }
 
             //Overwrite user settings
             var userId = AbpUser.CurrentUserId;
-            if (userId > 0)
+            if (userId.HasValue)
             {
-                foreach (var settingValue in GetAllSettingValuesForUser(userId))
+                foreach (var settingValue in GetAllSettingValuesForUser(userId.Value))
                 {
-                    var setting = settings.GetOrDefault(settingValue.Name);
+                    var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.User))
                     {
-                        settingValues[settingValue.Name] = new SettingValue(settingValue.Name, settingValue.Value);
+                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                     }
                 }
             }
@@ -118,22 +143,29 @@ namespace Abp.Configuration
             lock (_applicationSettings.Value)
             {
                 return _applicationSettings.Value.Values
-                    .Select(setting => new SettingValue(setting.Name, setting.Value))
+                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
                     .ToImmutableList();
             }
+        }
+
+        public IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(int tenantId)
+        {
+            return GetReadOnlyTenantSettings(tenantId).Values
+                .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                .ToImmutableList();
         }
 
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(int userId)
         {
             return GetReadOnlyUserSettings(userId).Values
-                .Select(setting => new SettingValue(setting.Name, setting.Value))
+                .Select(setting => new SettingValueObject(setting.Name, setting.Value))
                 .ToImmutableList();
         }
 
         [UnitOfWork]
         public void ChangeSettingForApplication(string name, string value)
         {
-            var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, null);
+            var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, null, null);
             lock (_applicationSettings.Value)
             {
                 if (settingValue == null)
@@ -148,9 +180,27 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
+        public void ChangeSettingForTenant(int tenantId, string name, string value)
+        {
+            var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, tenantId, null);
+            var cachedDictionary = GetTenantSettingsFromCache(tenantId);
+            lock (cachedDictionary)
+            {
+                if (settingValue == null)
+                {
+                    cachedDictionary.Remove(name);
+                }
+                else
+                {
+                    cachedDictionary[name] = settingValue;
+                }
+            }
+        }
+
+        [UnitOfWork]
         public void ChangeSettingForUser(int userId, string name, string value)
         {
-            var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, userId);
+            var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, null, userId);
             var cachedDictionary = GetUserSettingsFromCache(userId);
             lock (cachedDictionary)
             {
@@ -169,16 +219,46 @@ namespace Abp.Configuration
 
         #region Private methods
 
-        private SettingValueRecord InsertOrUpdateOrDeleteSettingValue(string name, string value, int? userId)
+        private SettingValue InsertOrUpdateOrDeleteSettingValue(string name, string value, int? tenantId, int? userId)
         {
-            var setting = _settingManager.GetSetting(name);
-            var settingValue = _settingValueRepository.FirstOrDefault(sv => sv.UserId == userId && sv.Name == name);
-            var applicationSettingValue = userId == null ? settingValue : GetSettingValueForApplicationOrNull(name);
-
-            if ((userId == null && setting.DefaultValue == value) 
-                || (userId != null && ((applicationSettingValue != null && applicationSettingValue.Value == value) || (applicationSettingValue == null && setting.DefaultValue == value))))
+            if (tenantId.HasValue && userId.HasValue)
             {
-                //No need to store a setting value since it's default value.
+                throw new ApplicationException("Both of tenantId and userId can not be set!");
+            }
+
+            var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
+            var settingValue = _settingValueRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
+
+            //Determine defaultValue
+            var defaultValue = settingDefinition.DefaultValue;
+
+            //For Tenant and User, Application's value overrides Setting Definition's default value.
+            if (tenantId.HasValue || userId.HasValue) 
+            {
+                var applicationValue = GetSettingValueForApplicationOrNull(name);
+                if (applicationValue != null)
+                {
+                    defaultValue = applicationValue.Value;
+                }
+            }
+
+            //For User, Tenants's value overrides Application's default value.
+            if (userId.HasValue)
+            {
+                var currentTenantId = AbpTenant.CurrentTenantId;
+                if (currentTenantId.HasValue)
+                {
+                    var tenantValue = GetSettingValueForTenantOrNull(currentTenantId.Value, name);
+                    if (tenantValue != null)
+                    {
+                        defaultValue = tenantValue.Value;
+                    }
+                }
+            }
+
+            //No need to store on database if the value is the default value
+            if (value == defaultValue)
+            {
                 if (settingValue != null)
                 {
                     _settingValueRepository.Delete(settingValue);
@@ -187,28 +267,34 @@ namespace Abp.Configuration
                 return null;
             }
 
-            if (settingValue != null)
+            //It's not default value and not stored on database, so insert it
+            if (settingValue == null)
             {
-                //A record exists, update it
-                settingValue.Value = value;
-            }
-            else
-            {
-                //No record found, create one
-                settingValue = new SettingValueRecord
+                settingValue = new SettingValue
                 {
+                    TenantId = tenantId,
                     UserId = userId,
                     Name = name,
                     Value = value
                 };
 
                 _settingValueRepository.Insert(settingValue);
+                return settingValue;
             }
 
+            //It's same value as it's, no need to update
+            if (settingValue.Value == value)
+            {
+                return settingValue;                
+            }
+
+            //Update the setting on database.
+            settingValue.Value = value;
+            
             return settingValue;
         }
 
-        private SettingValueRecord GetSettingValueForApplicationOrNull(string name)
+        private SettingValue GetSettingValueForApplicationOrNull(string name)
         {
             lock (_applicationSettings.Value)
             {
@@ -216,14 +302,19 @@ namespace Abp.Configuration
             }
         }
 
-        private SettingValueRecord GetSettingValueForUserOrNull(int userId, string name)
+        private SettingValue GetSettingValueForTenantOrNull(int tenantId, string name)
+        {
+            return GetReadOnlyTenantSettings(tenantId).GetOrDefault(name);
+        }
+
+        private SettingValue GetSettingValueForUserOrNull(int userId, string name)
         {
             return GetReadOnlyUserSettings(userId).GetOrDefault(name);
         }
 
-        private Dictionary<string, SettingValueRecord> GetApplicationSettingsFromDatabase()
+        private Dictionary<string, SettingValue> GetApplicationSettingsFromDatabase()
         {
-            var dictionary = new Dictionary<string, SettingValueRecord>();
+            var dictionary = new Dictionary<string, SettingValue>();
 
             var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == null);
             foreach (var settingValue in settingValues)
@@ -234,7 +325,16 @@ namespace Abp.Configuration
             return dictionary;
         }
 
-        private ImmutableDictionary<string, SettingValueRecord> GetReadOnlyUserSettings(int userId)
+
+        private ImmutableDictionary<string, SettingValue> GetReadOnlyTenantSettings(int tenantId)
+        {
+            var cachedDictionary = GetTenantSettingsFromCache(tenantId);
+            lock (cachedDictionary)
+            {
+                return cachedDictionary.ToImmutableDictionary();
+            }
+        }
+        private ImmutableDictionary<string, SettingValue> GetReadOnlyUserSettings(int userId)
         {
             var cachedDictionary = GetUserSettingsFromCache(userId);
             lock (cachedDictionary)
@@ -243,13 +343,31 @@ namespace Abp.Configuration
             }
         }
 
-        private Dictionary<string, SettingValueRecord> GetUserSettingsFromCache(int userId)
+        private Dictionary<string, SettingValue> GetTenantSettingsFromCache(int tenantId)
+        {
+            return _tenantSettingCache.Get(
+                tenantId.ToString(),
+                () =>
+                {   //Getting from database
+                    var dictionary = new Dictionary<string, SettingValue>();
+
+                    var settingValues = _settingValueRepository.GetAllList(setting => setting.TenantId == tenantId);
+                    foreach (var settingValue in settingValues)
+                    {
+                        dictionary[settingValue.Name] = settingValue;
+                    }
+
+                    return dictionary;
+                });
+        }
+
+        private Dictionary<string, SettingValue> GetUserSettingsFromCache(int userId)
         {
             return _userSettingCache.Get(
                 userId.ToString(),
                 () =>
                 {   //Getting from database
-                    var dictionary = new Dictionary<string, SettingValueRecord>();
+                    var dictionary = new Dictionary<string, SettingValue>();
 
                     var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == userId);
                     foreach (var settingValue in settingValues)
@@ -259,6 +377,23 @@ namespace Abp.Configuration
 
                     return dictionary;
                 });
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        private class SettingValueObject : ISettingValue
+        {
+            public string Name { get; private set; }
+
+            public string Value { get; private set; }
+
+            public SettingValueObject(string name, string value)
+            {
+                Value = value;
+                Name = name;
+            }
         }
 
         #endregion

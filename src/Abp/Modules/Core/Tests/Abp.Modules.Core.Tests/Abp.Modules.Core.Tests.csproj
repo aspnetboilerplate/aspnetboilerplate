@@ -58,7 +58,7 @@
     <Compile Include="Settings\LongPrimaryKeyGenerator.cs" />
     <Compile Include="Settings\MemoryBasedRepository.cs" />
     <Compile Include="Settings\MemorySettingValueRepository.cs" />
-    <Compile Include="Settings\SampleSettingManager.cs" />
+    <Compile Include="Settings\SampleSettingDefinitionManager.cs" />
     <Compile Include="Settings\TestHelper.cs" />
     <Compile Include="Settings\Test_SettingValueManager.cs" />
   </ItemGroup>

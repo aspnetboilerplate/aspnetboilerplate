@@ -17,7 +17,7 @@ namespace Abp.Modules.Core.Tests.Settings
         public void Initialize()
         {
             _repository = new MemorySettingValueRepository(new LongPrimaryKeyGenerator());
-            _settingValueManager = new SettingValueManager(_repository, new SampleSettingManager());
+            _settingValueManager = new SettingValueManager(_repository, new SampleSettingDefinitionManager());
             FillTestData(_repository);
         }
 
@@ -72,7 +72,7 @@ namespace Abp.Modules.Core.Tests.Settings
         {
             //Language setting for application
             repository.Insert(
-                new SettingValueRecord
+                new SettingValue
                 {
                     UserId = null,
                     Name = "Language",
@@ -81,7 +81,7 @@ namespace Abp.Modules.Core.Tests.Settings
 
             //Language setting for UserId = 1
             repository.Insert(
-                new SettingValueRecord
+                new SettingValue
                 {
                     UserId = 1,
                     Name = "Language",

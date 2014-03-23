@@ -51,7 +51,7 @@ namespace Abp.Security.Authorization
 
         private bool HasPermission(Permission permission)
         {
-            var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId);
+            var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId.Value);
             var granted = permission.IsGrantedByDefault;
             foreach (var roleName in roleNames)
             {

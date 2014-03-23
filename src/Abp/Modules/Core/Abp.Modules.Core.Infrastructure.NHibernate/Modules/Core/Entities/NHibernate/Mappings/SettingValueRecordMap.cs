@@ -3,7 +3,7 @@ using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public class SettingValueRecordMap : EntityMap<SettingValueRecord, long>
+    public class SettingValueRecordMap : EntityMap<SettingValue, long>
     {
         public SettingValueRecordMap()
             : base("AbpSettings")

@@ -17,21 +17,19 @@ namespace Taskever.Users
     public class TaskeverUserAppService : ITaskeverUserAppService
     {
         private readonly ITaskeverUserRepository _userRepository;
-        private readonly ITaskeverUserPolicy _taskeverUserPolicy;
         private readonly IEmailService _emailService;
         private readonly IFriendshipRepository _friendshipRepository;
 
-        public TaskeverUserAppService(ITaskeverUserRepository userRepository, ITaskeverUserPolicy taskeverUserPolicy, IFriendshipRepository friendshipRepository, IEmailService emailService)
+        public TaskeverUserAppService(ITaskeverUserRepository userRepository, IFriendshipRepository friendshipRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
-            _taskeverUserPolicy = taskeverUserPolicy;
             _friendshipRepository = friendshipRepository;
             _emailService = emailService;
         }
 
         public GetUserProfileOutput GetUserProfile(GetUserProfileInput input)
         {
-            var currentUser = _userRepository.Load(AbpUser.CurrentUserId);
+            var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value);
 
             var profileUser = _userRepository.Get(input.UserId);
             if (profileUser == null)
@@ -59,7 +57,7 @@ namespace Taskever.Users
         [UnitOfWork]
         public ChangeProfileImageOutput ChangeProfileImage(ChangeProfileImageInput input)
         {
-            var currentUser = _userRepository.Get(AbpUser.CurrentUserId); //TODO: test Load method
+            var currentUser = _userRepository.Get(AbpUser.CurrentUserId.Value); //TODO: test Load method
             var oldFileName = currentUser.ProfileImage;
 
             currentUser.ProfileImage = input.FileName;
@@ -116,13 +114,13 @@ namespace Taskever.Users
         public GetCurrentUserInfoOutput GetCurrentUserInfo(GetCurrentUserInfoInput input)
         {
             //TODO: Use GetUser?
-            return new GetCurrentUserInfoOutput { User = _userRepository.Get(AbpUser.CurrentUserId).MapTo<UserDto>() };
+            return new GetCurrentUserInfoOutput { User = _userRepository.Get(AbpUser.CurrentUserId.Value).MapTo<UserDto>() };
         }
 
         [UnitOfWork]
         public void ChangePassword(ChangePasswordInput input)
         {
-            var currentUser = _userRepository.Get(AbpUser.CurrentUserId);
+            var currentUser = _userRepository.Get(AbpUser.CurrentUserId.Value);
             if (currentUser.Password != input.CurrentPassword)
             {
                 throw new AbpUserFriendlyException("Current password is invalid!");

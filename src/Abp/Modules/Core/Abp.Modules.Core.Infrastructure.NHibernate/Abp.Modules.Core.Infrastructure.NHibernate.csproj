@@ -82,6 +82,7 @@
     <Compile Include="Modules\Core\Data\Migrations\MigrationExtensions.cs" />
     <Compile Include="Modules\Core\Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpRoleRepository.cs" />
+    <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\RoleRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\SettingValueRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />

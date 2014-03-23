@@ -9,13 +9,19 @@ namespace Abp.Configuration
     public enum SettingScopes
     {
         /// <summary>
-        /// Represents a setting that can be configured/changed for the application.
+        /// Represents a setting that can be configured/changed for the application level.
         /// </summary>
-        Application,
+        Application = 1,
 
         /// <summary>
-        /// Represents a setting that can be configured/changed for every user.
+        /// Represents a setting that can be configured/changed for each Tenant.
+        /// This is reserved
         /// </summary>
-        User
+        Tenant = 2,
+
+        /// <summary>
+        /// Represents a setting that can be configured/changed for each User.
+        /// </summary>
+        User = 4
     }
 }

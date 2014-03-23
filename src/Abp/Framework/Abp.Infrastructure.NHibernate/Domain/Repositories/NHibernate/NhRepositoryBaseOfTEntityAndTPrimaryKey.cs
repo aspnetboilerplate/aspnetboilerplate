@@ -73,14 +73,16 @@ namespace Abp.Domain.Repositories.NHibernate
             return Session.Load<TEntity>(key);
         }
 
-        public virtual void Insert(TEntity entity)
+        public virtual TEntity Insert(TEntity entity)
         {
             Session.Save(entity);
+            return entity;
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
             Session.Update(entity);
+            return entity;
         }
 
         public virtual void Delete(TEntity entity)

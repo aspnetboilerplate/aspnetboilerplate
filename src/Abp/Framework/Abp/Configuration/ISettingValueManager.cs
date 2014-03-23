@@ -4,7 +4,7 @@ using Abp.Dependency;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// This is the main interface that must be implemented to be able to get/store values of settings.
+    /// This is the main interface that must be implemented to be able to load/store values of settings for a data source.
     /// </summary>
     public interface ISettingValueManager : ISingletonDependency
     {
@@ -41,6 +41,16 @@ namespace Abp.Configuration
         IReadOnlyList<ISettingValue> GetAllSettingValuesForApplication();
 
         /// <summary>
+        /// Gets a list of all setting values specified for a tenant.
+        /// It returns only settings those are explicitly set for the tenant.
+        /// If a setting's default value is used, it's not included the result list.
+        /// If you want to get current values of all settings, use <see cref="GetAllSettingValues"/> method.
+        /// </summary>
+        /// <param name="tenantId">Tenant to get settings</param>
+        /// <returns>List of setting values</returns>
+        IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(int tenantId);
+
+        /// <summary>
         /// Gets a list of all setting values specified for a user.
         /// It returns only settings those are explicitly set for the user.
         /// If a setting's value is not set for the user (for example if user uses the default value), it's not included the result list.
@@ -56,6 +66,14 @@ namespace Abp.Configuration
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
         void ChangeSettingForApplication(string name, string value);
+
+        /// <summary>
+        /// Changes setting for a Tenant.
+        /// </summary>
+        /// <param name="tenantId">TenantId</param>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="value">Value of the setting</param>
+        void ChangeSettingForTenant(int tenantId, string name, string value);
 
         /// <summary>
         /// Changes setting for a user.
