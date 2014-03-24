@@ -10,6 +10,8 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
         {
             Map(x => x.Name);
             Map(x => x.CreationTime);
+
+            Polymorphism.Explicit();
         }
     }
 }

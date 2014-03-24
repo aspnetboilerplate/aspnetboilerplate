@@ -17,6 +17,8 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
+
+            Polymorphism.Explicit();
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Abp.Modules.Core.Entities.NHibernate.Mappings
             Map(x => x.DisplayName);
             HasMany(x => x.Permissions).KeyColumn("RoleId");
             this.MapAudited();
+
+            Polymorphism.Explicit();
         }
     }
 }
