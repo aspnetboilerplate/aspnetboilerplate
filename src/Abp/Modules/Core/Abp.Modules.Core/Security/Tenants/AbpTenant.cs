@@ -31,5 +31,13 @@ namespace Abp.Security.Tenants
         {
             get { return null; } //TODO: Add Claim to Identity and check for it!
         }
+
+        /// <summary>
+        /// Creates a new <see cref="AbpTenant"/> object.
+        /// </summary>
+        public AbpTenant()
+        {
+            CreationTime = DateTime.Now;
+        }
     }
 }
