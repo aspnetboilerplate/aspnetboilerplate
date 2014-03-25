@@ -22,7 +22,7 @@ namespace Abp.Web.Localization
         public LocalizationScriptManager(ILocalizationSourceManager localizationSourceManager)
         {
             _localizationSourceManager = localizationSourceManager;
-            _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(2));
+            _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
         }
 
         public string GetLocalizationScript()

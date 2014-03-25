@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization.Permissions
@@ -20,6 +22,11 @@ namespace Abp.Application.Authorization.Permissions
         public PermissionDefinition GetPermissionOrNull(string permissionName)
         {
             return _permissions.GetOrDefault(permissionName);
+        }
+
+        public IReadOnlyList<PermissionDefinition> GetAllPermissions()
+        {
+            return _permissions.Values.ToImmutableList();
         }
 
         private void Initialize()

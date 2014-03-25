@@ -38,13 +38,23 @@ namespace Abp.Security.Authorization
             return permissionNames.All(HasPermission);
         }
 
+        public string[] GetAllPermissionNames()
+        {
+            return _permissionDefinitionManager.GetAllPermissions().Select(permission => permission.Name).ToArray();
+        }
+
+        public string[] GetGrantedPermissionNames()
+        {
+            return GetAllPermissionNames().Where(HasPermission).ToArray(); //TODO: Can be optimized?
+        }
+
         private bool HasPermission(string permissionName)
         {
             var permission = _permissionDefinitionManager.GetPermissionOrNull(permissionName);
             if (permission == null)
             {
                 Logger.Warn("Permission is not defined: " + permissionName);
-                return true;
+                return false;
             }
 
             return HasPermission(permission);
@@ -52,6 +62,11 @@ namespace Abp.Security.Authorization
 
         private bool HasPermission(PermissionDefinition permissionDefinition)
         {
+            if (!AbpUser.CurrentUserId.HasValue)
+            {
+                return false;
+            }
+
             var roleNames = _userRoleManager.GetRolesOfUser(AbpUser.CurrentUserId.Value);
             var granted = permissionDefinition.IsGrantedByDefault;
             foreach (var roleName in roleNames)

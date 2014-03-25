@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Authentication\AuthenticationScriptManager.cs" />
+    <Compile Include="Web\Authentication\IAuthenticationScriptManager.cs" />
     <Compile Include="Web\HttpVerb.cs" />
     <Compile Include="Web\Localization\AbpWebLocalizedMessages.cs" />
     <Compile Include="Web\Localization\ILocalizationScriptManager.cs" />
@@ -66,6 +68,10 @@
     <Compile Include="Startup\Web\AbpWebApplication.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Abp.Application\Abp.Application.csproj">
+      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
+      <Name>Abp.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp</Name>
@@ -75,6 +81,7 @@
     <None Include="Abp.Web.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

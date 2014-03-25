@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Generic;
+using Abp.Dependency;
 
 namespace Abp.Application.Authorization.Permissions
 {
@@ -13,5 +14,10 @@ namespace Abp.Application.Authorization.Permissions
         /// </summary>
         /// <param name="permissionName">Unique name of the permission</param>
         PermissionDefinition GetPermissionOrNull(string permissionName);
+
+        /// <summary>
+        /// Gets all permission definitions.
+        /// </summary>
+        IReadOnlyList<PermissionDefinition> GetAllPermissions();
     }
 }

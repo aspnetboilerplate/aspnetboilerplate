@@ -18,5 +18,17 @@
         /// <param name="permissionNames">Name of the permissions</param>
         /// <returns>True: Yes, False: No.</returns>
         bool HasAllOfPermissions(string[] permissionNames);
+
+        /// <summary>
+        /// Gets all permission names.
+        /// </summary>
+        /// <returns></returns>
+        string[] GetAllPermissionNames();
+
+        /// <summary>
+        /// Gets all granted permission names for current user.
+        /// </summary>
+        /// <returns></returns>
+        string[] GetGrantedPermissionNames();
     }
 }
