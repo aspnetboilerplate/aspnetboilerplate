@@ -24,7 +24,14 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual IQueryable<TEntity> GetAll()
         {
-            return Session.Query<TEntity>();
+            var query = Session.Query<TEntity>();
+
+            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                query = query.Where(entity => !(entity as ISoftDeleteEntity).IsDeleted);
+            }
+
+            return query;
         }
 
         public virtual List<TEntity> GetAllList()
@@ -60,7 +67,7 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
-            return Session.Get<TEntity>(key);
+            return Session.Get<TEntity>(key); //TODO: Implement ISoftDeleteEntity?
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -70,7 +77,7 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual TEntity Load(TPrimaryKey key)
         {
-            return Session.Load<TEntity>(key);
+            return Session.Load<TEntity>(key); //TODO: Implement ISoftDeleteEntity?
         }
 
         public virtual TEntity Insert(TEntity entity)
@@ -87,12 +94,28 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual void Delete(TEntity entity)
         {
-            Session.Delete(entity);
+            if (entity is ISoftDeleteEntity)
+            {
+                (entity as ISoftDeleteEntity).IsDeleted = true;
+                Update(entity);
+            }
+            else
+            {
+                Session.Delete(entity);
+            }
         }
 
         public virtual void Delete(TPrimaryKey id)
         {
-            Session.Delete(Session.Load<TEntity>(id));
+            var entity = Session.Load<TEntity>(id);
+            if (entity is ISoftDeleteEntity)
+            {
+                (entity as ISoftDeleteEntity).IsDeleted = true;
+            }
+            else
+            {
+                Session.Delete(entity);
+            }
         }
 
         public virtual int Count()
