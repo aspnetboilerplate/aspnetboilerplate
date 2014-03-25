@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Migrations\FluentMigrator\AbpFluentMigratorExtensions.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_03_CreateAbpUsersTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_02_CreateAbpRolesTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_04_CreateAbpUserRolesTable.cs" />

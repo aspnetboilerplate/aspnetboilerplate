@@ -65,7 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Migrations\FluentMigrator\MigrationExtensions.cs" />
+    <Compile Include="Data\Migrations\FluentMigrator\AbpFluentMigratorExtensions.cs" />
     <Compile Include="Domain\Entities\Mapping\CoreModuleMapExtensions.cs" />
     <Compile Include="Domain\Entities\Mapping\EntityMapOfTEntity.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
