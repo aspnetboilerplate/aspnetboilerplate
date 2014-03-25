@@ -83,7 +83,7 @@ namespace Taskever.Web.Mvc.Controllers
         [AbpAuthorize]
         public virtual ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             return RedirectToAction("Login");
         }
 
