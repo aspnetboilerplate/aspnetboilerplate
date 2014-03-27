@@ -1,3 +1,8 @@
+# Multi-Page Template TODO:
+- Error page, 404 pages... etc.
+
+------------------------------
+
 DONE:
 
 + Dependency Injection infrastructure
