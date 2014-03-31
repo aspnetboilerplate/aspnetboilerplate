@@ -7,6 +7,6 @@
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
     <description>ASP.NET Boilerplate - Core Module - Web Api Layer</description>
-    <projectUrl>https://github.com/hikalkan/aspnetboilerplate</projectUrl>
+    <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
   </metadata>
 </package>

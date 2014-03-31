@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>Abp.Modules.Core.Web.Mvc</id>
+    <id>Abp.Infrastructure.EntityFramework</id>
     <version>$version$</version>
-    <title>Abp.Modules.Core.Web.Mvc</title>
+    <title>Abp.Infrastructure.EntityFramework</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET Boilerplate - Core Module - MVC</description>
+    <description>ASP.NET Boilerplate - Infrastructure Layer - Entity framework</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
   </metadata>
 </package>
