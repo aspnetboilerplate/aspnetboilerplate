@@ -15,7 +15,7 @@ namespace Abp.Domain.Repositories.EntityFramework
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public class EfRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>, new()
+    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>, new()
     {
         protected AbpDbContext Context { get { return ((EfUnitOfWork)UnitOfWorkScope.CurrentUow).Context; } }
 
