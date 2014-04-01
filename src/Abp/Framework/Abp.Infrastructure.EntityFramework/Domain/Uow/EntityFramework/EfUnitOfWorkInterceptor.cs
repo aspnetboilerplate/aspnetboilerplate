@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System;
+using Abp.Dependency;
 using Castle.DynamicProxy;
 
 namespace Abp.Domain.Uow.EntityFramework
@@ -34,7 +35,7 @@ namespace Abp.Domain.Uow.EntityFramework
                         invocation.Proceed();
                         UnitOfWorkScope.CurrentUow.Commit();
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         try { UnitOfWorkScope.CurrentUow.Rollback(); } catch { }
                         throw;

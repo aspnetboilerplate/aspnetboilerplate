@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +9,7 @@ using Abp.Exceptions;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
-    public abstract class AbpDbContext : DbContext, ITransientDependency
+    public class AbpDbContext : DbContext, ITransientDependency
     {
         private static readonly List<Assembly> _entityAssemblies = new List<Assembly>();
 
@@ -40,7 +41,7 @@ namespace Abp.Domain.Repositories.EntityFramework
             foreach (var entityAssembly in _entityAssemblies)
             {
                 var entityTypes = entityAssembly.GetTypes()
-                    .Where(type => (!type.IsAbstract && (typeof(IEntity<>).IsAssignableFrom(type))))
+                    .Where(type => (!type.IsAbstract && IsAssignableToGenericType(type, typeof(IEntity<>))))
                     .ToList();
 
                 foreach (var entityType in entityTypes)
@@ -50,6 +51,25 @@ namespace Abp.Domain.Repositories.EntityFramework
                     method.Invoke(modelBuilder, null);
                 }
             }
+        }
+
+        private static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        {
+            var interfaceTypes = givenType.GetInterfaces();
+
+            foreach (var it in interfaceTypes)
+            {
+                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+                    return true;
+            }
+
+            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+                return true;
+
+            Type baseType = givenType.BaseType;
+            if (baseType == null) return false;
+
+            return IsAssignableToGenericType(baseType, genericType);
         }
     }
 }

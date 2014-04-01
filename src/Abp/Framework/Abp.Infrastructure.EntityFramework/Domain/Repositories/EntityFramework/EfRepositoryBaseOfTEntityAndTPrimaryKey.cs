@@ -15,7 +15,7 @@ namespace Abp.Domain.Repositories.EntityFramework
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>, new()
+    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
         protected AbpDbContext Context { get { return ((EfUnitOfWork)UnitOfWorkScope.CurrentUow).Context; } }
 
@@ -112,7 +112,12 @@ namespace Abp.Domain.Repositories.EntityFramework
             var entity = Table.Local.FirstOrDefault(ent => EqualityComparer<TPrimaryKey>.Default.Equals(ent.Id, id));
             if (entity == null)
             {
-                entity = new TEntity { Id = id };
+                entity = FirstOrDefault(id);
+                if (entity == null)
+                {
+                    return;
+                }
+
                 Table.Attach(entity);
             }
 

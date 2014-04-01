@@ -2,26 +2,28 @@
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
+using Abp.Domain.Repositories.EntityFramework;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
+using Abp.Security.Users;
 using Abp.Startup;
-using Abp.Startup.Infrastructure.NHibernate;
 using Castle.Core;
 using Castle.MicroKernel;
 
 namespace Abp.Modules.Core.Startup
 {
-    public class AbpModulesCoreInfrastructureNHibernateModule : AbpModule
+    public class AbpModulesCoreInfrastructureEntityFrameworkModule : AbpModule
     {
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-
             initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+        }
 
-            initializationContext.GetModule<AbpNHibernateModule>().Configuration
-                .Mappings(
-                    m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly())
-                );
+        public override void Initialize(IAbpInitializationContext initializationContext)
+        {
+            base.Initialize(initializationContext);
+            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            AbpDbContext.AddEntityAssembly(Assembly.GetAssembly(typeof (AbpUser)));
         }
 
         private void ComponentRegistered(string key, IHandler handler)
@@ -40,12 +42,6 @@ namespace Abp.Modules.Core.Startup
                     }
                 }
             }
-        }
-
-        public override void Initialize(IAbpInitializationContext initializationContext)
-        {
-            base.Initialize(initializationContext);
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Abp.Security.Permissions
     /// Represents a permission for a role.
     /// Used to grant/deny a permission for a role.
     /// </summary>
+    //[Table("AbpPermissions")]
     public class Permission : Entity<long>, ICreationAudited
     {
         /// <summary>

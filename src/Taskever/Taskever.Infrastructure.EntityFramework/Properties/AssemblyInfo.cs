@@ -5,23 +5,14 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
-
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Core Module")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Core Module")]
+[assembly: AssemblyTitle("Taskever.Infrastructure.EntityFramework")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Modules.Core")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Taskever.Infrastructure.EntityFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Application")]
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Infrastructure.EntityFramework")]
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Infrastructure.NHibernate")]
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Web")]
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Web.Api")]
-[assembly: InternalsVisibleTo("Abp.Modules.Core.Web.Mvc")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -29,7 +20,7 @@ using Abp;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a73e9bd0-393c-4450-a6b0-42ec1a8bfb90")]
+[assembly: Guid("c757be90-91c4-4120-93f6-b4c52f8553a7")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -41,5 +32,5 @@ using Abp;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AbpCoreModuleConst.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpCoreModuleConst.CurrentVersion)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
