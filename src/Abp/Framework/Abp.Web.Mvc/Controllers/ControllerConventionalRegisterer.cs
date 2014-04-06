@@ -1,20 +1,20 @@
-﻿using System.Reflection;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 
 namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
-    /// 
+    /// Registers all MVC Controllers derived from <see cref="Controller"/>.
     /// </summary>
     public class ControllerConventionalRegisterer : IConventionalRegisterer
     {
-        public void RegisterAssembly(IWindsorContainer container, Assembly assembly)
+        public void RegisterAssembly(ConventionalRegistrationContext context)
         {
-            container.Register(
-                Classes.FromAssembly(assembly).BasedOn<Controller>().LifestyleTransient()
+            context.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
+                    .BasedOn<Controller>()
+                    .LifestyleTransient()
                 );
         }
     }

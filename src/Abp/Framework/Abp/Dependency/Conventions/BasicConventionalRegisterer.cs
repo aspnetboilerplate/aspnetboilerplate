@@ -1,7 +1,5 @@
-﻿using System.Reflection;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 
 namespace Abp.Dependency.Conventions
 {
@@ -10,11 +8,11 @@ namespace Abp.Dependency.Conventions
     /// </summary>
     internal class BasicConventionalRegisterer : IConventionalRegisterer
     {
-        public void RegisterAssembly(IWindsorContainer windsorContainer, Assembly assembly)
+        public void RegisterAssembly(ConventionalRegistrationContext context)
         {
             //Transient
-            windsorContainer.Register(
-                Classes.FromAssembly(assembly)
+            context.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ITransientDependency>()
                     .WithService.Self()
@@ -23,8 +21,8 @@ namespace Abp.Dependency.Conventions
                 );
 
             //Singleton
-            windsorContainer.Register(
-                Classes.FromAssembly(assembly)
+            context.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ISingletonDependency>()
                     .WithService.Self()
@@ -33,8 +31,8 @@ namespace Abp.Dependency.Conventions
                 );
 
             //Windsor Interceptors
-            windsorContainer.Register(
-                Classes.FromAssembly(assembly)
+            context.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<IInterceptor>()
                     .WithService.Self()

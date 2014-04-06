@@ -1,20 +1,20 @@
-﻿using System.Reflection;
-using System.Web.Http;
+﻿using System.Web.Http;
 using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Registers all Api controllers derived from <see cref="AbpApiController"/>.
+    /// Registers all Web API Controllers derived from <see cref="ApiController"/>.
     /// </summary>
     public class ApiControllerConventionalRegisterer : IConventionalRegisterer
     {
-        public void RegisterAssembly(IWindsorContainer container, Assembly assembly)
+        public void RegisterAssembly(ConventionalRegistrationContext context)
         {
-            container.Register(
-                Classes.FromAssembly(assembly).BasedOn<ApiController>().LifestyleTransient()
+            context.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
+                    .BasedOn<ApiController>()
+                    .LifestyleTransient()
                 );
         }
     }

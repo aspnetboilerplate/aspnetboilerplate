@@ -62,9 +62,11 @@ namespace Abp.Dependency
         /// <param name="config">Additional configuration</param>
         public void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config)
         {
+            var context = new ConventionalRegistrationContext(assembly, IocContainer, config);
+
             foreach (var registerer in _conventionalRegisterers)
             {
-                registerer.RegisterAssembly(IocContainer, assembly);
+                registerer.RegisterAssembly(context);
             }
 
             if (config.InstallInstallers)

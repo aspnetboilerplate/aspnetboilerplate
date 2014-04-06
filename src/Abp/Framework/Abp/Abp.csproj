@@ -71,6 +71,7 @@
     <Compile Include="Configuration\SettingDefinitionProviderContext.cs" />
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
+    <Compile Include="Dependency\Conventions\ConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
