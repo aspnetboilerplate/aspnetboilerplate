@@ -1,6 +1,6 @@
 using System;
 using System.Web.Mvc;
-using Abp.Exceptions;
+using Abp.UI;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -77,7 +77,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             //TODO: Move this to another class to be able to share!
-            var message = context.Exception is AbpUserFriendlyException
+            var message = context.Exception is UserFriendlyException
                               ? context.Exception.Message
                               : "General exception message here!";
 

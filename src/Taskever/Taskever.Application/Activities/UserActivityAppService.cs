@@ -1,7 +1,8 @@
+using Abp;
 using Abp.Domain.Uow;
-using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Security.Users;
+using Abp.UI;
 using Taskever.Activities.Dto;
 using Taskever.Friendships;
 using Taskever.Security.Users;
@@ -30,7 +31,7 @@ namespace Taskever.Activities
             //Can see activities of this user?
             if (currentUser.Id != user.Id && !_friendshipDomainService.HasFriendship(user, currentUser))
             {
-                throw new AbpUserFriendlyException("Can not see activities of this user!");
+                throw new UserFriendlyException("Can not see activities of this user!");
             }
 
             //TODO: Think on private activities? When a private task is created or completed?

@@ -1,4 +1,3 @@
-using Abp.Exceptions;
 using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions

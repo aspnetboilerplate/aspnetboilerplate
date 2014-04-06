@@ -14,34 +14,34 @@ namespace Abp.Events.Bus
     {
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
-            return new NullDisposable();
+            return NullDisposable.Instance;
         }
 
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
-            return new NullDisposable();            
+            return NullDisposable.Instance;            
         }
 
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
             where THandler : IEventHandler<TEventData>, new()
         {
-            return new NullDisposable();
+            return NullDisposable.Instance;
         }
 
         public IDisposable Register(Type eventType, IEventHandler handler)
         {
-            return new NullDisposable();
+            return NullDisposable.Instance;
         }
 
         public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
         {
-            return new NullDisposable();
+            return NullDisposable.Instance;
         }
 
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
-            return new NullDisposable();
+            return NullDisposable.Instance;
         }
 
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData

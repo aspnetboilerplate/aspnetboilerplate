@@ -7,6 +7,9 @@ using Castle.Windsor;
 
 namespace Abp.Events.Bus
 {
+    /// <summary>
+    /// Installs event bus system and registers all handlers automatically.
+    /// </summary>
     public class EventBusInstaller : IWindsorInstaller
     {
         private IEventBus _eventBus;

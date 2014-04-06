@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
-using Abp.Exceptions;
 using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Sources.Xml

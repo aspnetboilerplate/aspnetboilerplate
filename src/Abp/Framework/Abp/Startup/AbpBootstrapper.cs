@@ -1,8 +1,5 @@
 ﻿using System;
-using Abp.Configuration;
 using Abp.Dependency;
-using Abp.Localization;
-using Abp.Modules;
 using Castle.Windsor.Installer;
 
 namespace Abp.Startup

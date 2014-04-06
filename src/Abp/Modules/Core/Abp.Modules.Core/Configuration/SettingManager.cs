@@ -12,13 +12,13 @@ using Abp.Utils.Extensions.Collections;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// This class implements <see cref="ISettingValueManager"/> to manage setting values in the database.
+    /// This class implements <see cref="ISettingManager"/> to manage setting values in the database.
     /// </summary>
-    public class SettingValueManager : ISettingValueManager
+    public class SettingManager : ISettingManager
     {
         #region Private fields
 
-        private readonly ISettingValueRepository _settingValueRepository;
+        private readonly ISettingRepository _settingRepository;
         private readonly ISettingDefinitionManager _settingDefinitionManager;
 
         private readonly Lazy<Dictionary<string, Setting>> _applicationSettings;
@@ -29,9 +29,9 @@ namespace Abp.Configuration
 
         #region Constructor
 
-        public SettingValueManager(ISettingValueRepository settingValueRepository, ISettingDefinitionManager settingDefinitionManager)
+        public SettingManager(ISettingRepository settingRepository, ISettingDefinitionManager settingDefinitionManager)
         {
-            _settingValueRepository = settingValueRepository;
+            _settingRepository = settingRepository;
             _settingDefinitionManager = settingDefinitionManager;
             _applicationSettings = new Lazy<Dictionary<string, Setting>>(GetApplicationSettingsFromDatabase, true);
             _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, Setting>>(new MemoryCache(GetType().Name + "_TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
@@ -227,7 +227,7 @@ namespace Abp.Configuration
             }
 
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
-            var settingValue = _settingValueRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
+            var settingValue = _settingRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
 
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
@@ -261,7 +261,7 @@ namespace Abp.Configuration
             {
                 if (settingValue != null)
                 {
-                    _settingValueRepository.Delete(settingValue);
+                    _settingRepository.Delete(settingValue);
                 }
 
                 return null;
@@ -278,7 +278,7 @@ namespace Abp.Configuration
                     Value = value
                 };
 
-                _settingValueRepository.Insert(settingValue);
+                _settingRepository.Insert(settingValue);
                 return settingValue;
             }
 
@@ -316,7 +316,7 @@ namespace Abp.Configuration
         {
             var dictionary = new Dictionary<string, Setting>();
 
-            var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == null);
+            var settingValues = _settingRepository.GetAllList(setting => setting.UserId == null);
             foreach (var settingValue in settingValues)
             {
                 dictionary[settingValue.Name] = settingValue;
@@ -351,7 +351,7 @@ namespace Abp.Configuration
                 {   //Getting from database
                     var dictionary = new Dictionary<string, Setting>();
 
-                    var settingValues = _settingValueRepository.GetAllList(setting => setting.TenantId == tenantId);
+                    var settingValues = _settingRepository.GetAllList(setting => setting.TenantId == tenantId);
                     foreach (var settingValue in settingValues)
                     {
                         dictionary[settingValue.Name] = settingValue;
@@ -369,7 +369,7 @@ namespace Abp.Configuration
                 {   //Getting from database
                     var dictionary = new Dictionary<string, Setting>();
 
-                    var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == userId);
+                    var settingValues = _settingRepository.GetAllList(setting => setting.UserId == userId);
                     foreach (var settingValue in settingValues)
                     {
                         dictionary[settingValue.Name] = settingValue;

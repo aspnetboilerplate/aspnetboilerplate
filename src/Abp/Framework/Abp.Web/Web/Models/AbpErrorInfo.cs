@@ -1,6 +1,6 @@
 ﻿using System;
-using Abp.Exceptions;
 using Abp.Runtime.Validation;
+using Abp.UI;
 using Abp.Web.Localization;
 
 namespace Abp.Web.Models
@@ -56,9 +56,9 @@ namespace Abp.Web.Models
         /// <returns>Created <see cref="AbpErrorInfo"/> object</returns>
         public static AbpErrorInfo ForException(Exception exception)
         {
-            if (exception is AbpUserFriendlyException)
+            if (exception is UserFriendlyException)
             {
-                var userFriendlyException = exception as AbpUserFriendlyException;
+                var userFriendlyException = exception as UserFriendlyException;
                 return new AbpErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
             }
             

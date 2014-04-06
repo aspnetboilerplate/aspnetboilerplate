@@ -3,7 +3,7 @@ using Abp.Domain.Entities;
 namespace Abp.Events.Bus.Datas.Entities
 {
     /// <summary>
-    /// Used to store data for an event that is related to with an <see cref="IEntity"/> object.
+    /// Used to pass data for an event that is related to with an <see cref="IEntity"/> object.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     public abstract class EntityEventData<TEntity> : EventData

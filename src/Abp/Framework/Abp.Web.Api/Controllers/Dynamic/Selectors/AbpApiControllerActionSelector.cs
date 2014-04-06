@@ -1,5 +1,4 @@
 using System.Web.Http.Controllers;
-using Abp.Exceptions;
 using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors

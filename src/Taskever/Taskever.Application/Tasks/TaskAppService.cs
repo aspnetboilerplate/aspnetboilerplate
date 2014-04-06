@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
+using Abp;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Datas.Entities;
-using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Security.Users;
+using Abp.UI;
 using Abp.Utils.Extensions.Collections;
 using Taskever.Security.Users;
 using Taskever.Tasks.Dto;
@@ -40,17 +41,17 @@ namespace Taskever.Tasks
 
             if (task == null)
             {
-                throw new AbpUserFriendlyException("Can not found the task!");
+                throw new UserFriendlyException("Can not found the task!");
             }
 
             if (!_taskPolicy.CanSeeTasksOfUser(currentUser, task.AssignedUser))
             {
-                throw new AbpUserFriendlyException("Can not see tasks of " + task.AssignedUser.Name);
+                throw new UserFriendlyException("Can not see tasks of " + task.AssignedUser.Name);
             }
 
             if (task.AssignedUser.Id != currentUser.Id && task.Privacy == TaskPrivacy.Private)
             {
-                throw new AbpUserFriendlyException("Can not see this task since it's private!");
+                throw new UserFriendlyException("Can not see this task since it's private!");
             }
 
             return new GetTaskOutput
@@ -107,7 +108,7 @@ namespace Taskever.Tasks
 
             if (!_taskPolicy.CanAssignTask(creatorUser, assignedUser))
             {
-                throw new AbpUserFriendlyException("You can not assign task to this user!");
+                throw new UserFriendlyException("You can not assign task to this user!");
             }
 
             //Create the task
@@ -144,7 +145,7 @@ namespace Taskever.Tasks
             var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value); //TODO: Add method LoadCurrentUser and GetCurrentUser ???
             if (!_taskPolicy.CanUpdateTask(currentUser, task))
             {
-                throw new AbpUserFriendlyException("You can not update this task!");
+                throw new UserFriendlyException("You can not update this task!");
             }
 
             if (task.AssignedUser.Id != input.AssignedUserId)
@@ -153,7 +154,7 @@ namespace Taskever.Tasks
 
                 if (!_taskPolicy.CanAssignTask(currentUser, userToAssign))
                 {
-                    throw new AbpUserFriendlyException("You can not assign task to this user!");
+                    throw new UserFriendlyException("You can not assign task to this user!");
                 }
 
                 task.AssignedUser = userToAssign;
@@ -187,7 +188,7 @@ namespace Taskever.Tasks
             var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value);
             if (!_taskPolicy.CanDeleteTask(currentUser, task))
             {
-                throw new AbpUserFriendlyException("You can not delete this task!");
+                throw new UserFriendlyException("You can not delete this task!");
             }
 
             _taskRepository.Delete(task);

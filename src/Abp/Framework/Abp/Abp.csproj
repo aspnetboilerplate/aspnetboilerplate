@@ -63,7 +63,7 @@
     <Compile Include="AbpConst.cs" />
     <Compile Include="Configuration\ISettingDefinitionManager.cs" />
     <Compile Include="Configuration\ISettingDefinitionProvider.cs" />
-    <Compile Include="Configuration\ISettingValueManager.cs" />
+    <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\SettingDefinition.cs" />
     <Compile Include="Configuration\SettingDefinitionGroup.cs" />
     <Compile Include="Configuration\SettingHelper.cs" />
@@ -128,8 +128,8 @@
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
-    <Compile Include="Exceptions\AbpException.cs" />
-    <Compile Include="Exceptions\UserFriendlyException.cs" />
+    <Compile Include="AbpException.cs" />
+    <Compile Include="UI\UserFriendlyException.cs" />
     <Compile Include="Localization\Sources\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Sources\Resource\ResourceFileLocalizationSource.cs" />
@@ -160,9 +160,9 @@
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Extensions\Reflection\MemberInfoExtensions.cs" />
     <Compile Include="Utils\Extensions\Xml\XmlExtensions.cs" />
-    <Compile Include="Utils\Helpers\GlobalizationHelper.cs" />
-    <Compile Include="Utils\Helpers\IO\DirectoryHelper.cs" />
-    <Compile Include="Utils\Helpers\IO\FileHelper.cs" />
+    <Compile Include="Localization\GlobalizationHelper.cs" />
+    <Compile Include="IO\DirectoryHelper.cs" />
+    <Compile Include="IO\FileHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

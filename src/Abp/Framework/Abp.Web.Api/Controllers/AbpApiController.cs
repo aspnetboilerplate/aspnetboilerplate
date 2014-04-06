@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Web.Http;
-using Abp.Exceptions;
 using Abp.Localization;
 using Castle.Core.Logging;
 

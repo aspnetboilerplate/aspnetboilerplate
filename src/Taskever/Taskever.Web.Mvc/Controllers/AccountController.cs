@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Abp.Exceptions;
+using Abp;
 using Abp.Modules.Core.Mvc.Models;
+using Abp.UI;
 using Abp.Users.Dto;
 using Abp.Web.Mvc.Authorization;
 using Abp.Web.Mvc.Models;
@@ -52,13 +53,13 @@ namespace Taskever.Web.Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                throw new AbpUserFriendlyException("Your form is invalid!");
+                throw new UserFriendlyException("Your form is invalid!");
             }
 
             var user = await _userManager.FindAsync(loginModel.EmailAddress, loginModel.Password);
             if (user == null)
             {
-                throw new AbpUserFriendlyException("Invalid user name or password!");
+                throw new UserFriendlyException("Invalid user name or password!");
             }
             
             await SignInAsync(user, loginModel.RememberMe);
@@ -100,19 +101,19 @@ namespace Taskever.Web.Mvc.Controllers
 
             if (!ModelState.IsValid)
             {
-                throw new AbpUserFriendlyException("Your form is invalid!");
+                throw new UserFriendlyException("Your form is invalid!");
             }
 
             var recaptchaHelper = this.GetRecaptchaVerificationHelper();
             if (String.IsNullOrEmpty(recaptchaHelper.Response))
             {
-                throw new AbpUserFriendlyException("Captcha answer cannot be empty.");
+                throw new UserFriendlyException("Captcha answer cannot be empty.");
             }
 
             var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
             if (recaptchaResult != RecaptchaVerificationResult.Success)
             {
-                throw new AbpUserFriendlyException("Incorrect captcha answer.");
+                throw new UserFriendlyException("Incorrect captcha answer.");
             }
 
             input.ProfileImage = ProfileImageHelper.GenerateRandomProfileImage();
@@ -141,13 +142,13 @@ namespace Taskever.Web.Mvc.Controllers
             var recaptchaHelper = this.GetRecaptchaVerificationHelper();
             if (String.IsNullOrEmpty(recaptchaHelper.Response))
             {
-                throw new AbpUserFriendlyException("Captcha answer cannot be empty.");
+                throw new UserFriendlyException("Captcha answer cannot be empty.");
             }
 
             var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
             if (recaptchaResult != RecaptchaVerificationResult.Success)
             {
-                throw new AbpUserFriendlyException("Incorrect captcha answer.");
+                throw new UserFriendlyException("Incorrect captcha answer.");
             }
 
             _userAppService.ResetPassword(input);

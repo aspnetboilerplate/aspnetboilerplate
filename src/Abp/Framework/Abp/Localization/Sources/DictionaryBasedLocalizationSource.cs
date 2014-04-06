@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
-using Abp.Exceptions;
 using Abp.Localization.Dictionaries;
 
 namespace Abp.Localization.Sources

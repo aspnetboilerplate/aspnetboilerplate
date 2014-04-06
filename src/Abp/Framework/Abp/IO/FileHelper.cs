@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Abp.Utils.Helpers.IO
+namespace Abp.IO
 {
     /// <summary>
     /// A helper class for File operations.

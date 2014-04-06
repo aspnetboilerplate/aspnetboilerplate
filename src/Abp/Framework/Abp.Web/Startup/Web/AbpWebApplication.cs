@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 using System.Web;
-using Abp.Utils.Helpers;
+using Abp.Localization;
 
 namespace Abp.Startup.Web
 {

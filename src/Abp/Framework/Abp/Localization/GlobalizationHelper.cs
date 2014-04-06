@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Abp.Utils.Helpers
+namespace Abp.Localization
 {
     internal static class GlobalizationHelper
     {

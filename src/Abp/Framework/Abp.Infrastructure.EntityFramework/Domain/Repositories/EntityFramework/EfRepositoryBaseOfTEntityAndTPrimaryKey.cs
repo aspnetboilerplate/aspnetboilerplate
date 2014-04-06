@@ -6,7 +6,6 @@ using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.Exceptions;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {

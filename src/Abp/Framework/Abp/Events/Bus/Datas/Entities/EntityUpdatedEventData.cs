@@ -5,7 +5,7 @@ namespace Abp.Events.Bus.Datas.Entities
     /// <summary>
     /// This type of event can be used to notify update of an Entity.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">Entity type</typeparam>
     public class EntityUpdatedEventData<TEntity> : EntityEventData<TEntity>
         where TEntity : IEntity
     {
@@ -16,6 +16,7 @@ namespace Abp.Events.Bus.Datas.Entities
         public EntityUpdatedEventData(TEntity entity)
             : base(entity)
         {
+
         }
     }
 }

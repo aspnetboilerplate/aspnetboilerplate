@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Exceptions;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Modules.Core.Tests.Settings

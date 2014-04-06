@@ -3,7 +3,10 @@ using System.Xml;
 
 namespace Abp.Utils.Extensions.Xml
 {
-    internal static class XmlNodeExtensions
+    /// <summary>
+    /// Extension methods for <see cref="XmlNode"/> class.
+    /// </summary>
+    public static class XmlNodeExtensions
     {
         /// <summary>
         /// Gets an attribute's value from an Xml node.

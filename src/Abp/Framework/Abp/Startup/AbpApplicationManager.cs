@@ -1,7 +1,4 @@
-﻿using Abp.Dependency;
-using Abp.Dependency.Conventions;
-using Abp.Domain.Services;
-using Abp.Modules;
+﻿using Abp.Modules;
 
 namespace Abp.Startup
 {

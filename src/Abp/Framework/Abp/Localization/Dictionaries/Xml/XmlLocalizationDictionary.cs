@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using Abp.Exceptions;
 using Abp.Utils.Extensions.Xml;
 
 namespace Abp.Localization.Dictionaries.Xml

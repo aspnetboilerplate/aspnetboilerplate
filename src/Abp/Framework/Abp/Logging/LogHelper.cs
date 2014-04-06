@@ -6,8 +6,9 @@ namespace Abp.Logging
     /// <summary>
     /// This class can be used to write logs from somewhere where it's a little hard to get a reference to the <see cref="ILogger"/>.
     /// Normally, get <see cref="ILogger"/> using property injection.
+    /// TODO: Remove this class
     /// </summary>
-    public class LogHelper
+    internal class LogHelper
     {
         /// <summary>
         /// A reference to the logger.

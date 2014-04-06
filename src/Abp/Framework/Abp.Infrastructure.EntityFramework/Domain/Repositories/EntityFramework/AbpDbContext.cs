@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.Exceptions;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {

@@ -3,7 +3,7 @@ using System;
 namespace Abp.Events.Bus.Datas
 {
     /// <summary>
-    /// All event data objects must be inherited by this class.
+    /// Implements <see cref="IEventData"/> and provides a base for event data classes.
     /// </summary>
     public abstract class EventData : IEventData
     {
@@ -11,6 +11,9 @@ namespace Abp.Events.Bus.Datas
 
         public object EventSource { get; set; }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected EventData()
         {
             EventTime = DateTime.Now;

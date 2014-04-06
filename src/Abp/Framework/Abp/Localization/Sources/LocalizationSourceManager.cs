@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Exceptions;
 
 namespace Abp.Localization.Sources
 {

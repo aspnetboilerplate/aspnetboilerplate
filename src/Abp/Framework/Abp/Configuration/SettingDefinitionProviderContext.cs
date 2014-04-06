@@ -5,6 +5,9 @@
     /// </summary>
     public class SettingDefinitionProviderContext
     {
-        
+        internal SettingDefinitionProviderContext()
+        {
+            
+        }
     }
 }

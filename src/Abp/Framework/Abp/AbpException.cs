@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Abp.Exceptions
+namespace Abp
 {
     /// <summary>
     /// Base exception type for those are thrown by Abp system for Abp specific exceptions.

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
+using Abp;
 using Abp.Domain.Uow;
-using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Security.Users;
+using Abp.UI;
 using Abp.Users;
 using Abp.Users.Dto;
 using Taskever.Friendships;
@@ -34,7 +35,7 @@ namespace Taskever.Users
             var profileUser = _userRepository.Get(input.UserId);
             if (profileUser == null)
             {
-                throw new AbpUserFriendlyException("Can not found the user!");
+                throw new UserFriendlyException("Can not found the user!");
             }
 
             if (profileUser.Id != currentUser.Id)
@@ -92,10 +93,10 @@ namespace Taskever.Users
                 if (!existingUser.IsEmailConfirmed)
                 {
                     SendConfirmationEmail(existingUser);
-                    throw new AbpUserFriendlyException("You registere with this email address before (" + registerUser.EmailAddress + ")! We re-sent an activation code to your email!");
+                    throw new UserFriendlyException("You registere with this email address before (" + registerUser.EmailAddress + ")! We re-sent an activation code to your email!");
                 }
 
-                throw new AbpUserFriendlyException("There is already a user with this email address (" + registerUser.EmailAddress + ")! Select another email address!");
+                throw new UserFriendlyException("There is already a user with this email address (" + registerUser.EmailAddress + ")! Select another email address!");
             }
 
             var userEntity = registerUser.MapTo<TaskeverUser>();
@@ -123,7 +124,7 @@ namespace Taskever.Users
             var currentUser = _userRepository.Get(AbpUser.CurrentUserId.Value);
             if (currentUser.Password != input.CurrentPassword)
             {
-                throw new AbpUserFriendlyException("Current password is invalid!");
+                throw new UserFriendlyException("Current password is invalid!");
             }
 
             currentUser.Password = input.NewPassword;
@@ -135,7 +136,7 @@ namespace Taskever.Users
             var user = _userRepository.FirstOrDefault(u => u.EmailAddress == input.EmailAddress);
             if (user == null)
             {
-                throw new AbpUserFriendlyException("Can not find this email address in the system.");
+                throw new UserFriendlyException("Can not find this email address in the system.");
             }
 
             user.GeneratePasswordResetCode();
@@ -148,12 +149,12 @@ namespace Taskever.Users
             var user = _userRepository.Get(input.UserId);
             if (string.IsNullOrWhiteSpace(user.PasswordResetCode))
             {
-                throw new AbpUserFriendlyException("You can not reset your password. You must first send a reset password link to your email.");
+                throw new UserFriendlyException("You can not reset your password. You must first send a reset password link to your email.");
             }
 
             if (input.PasswordResetCode != user.PasswordResetCode)
             {
-                throw new AbpUserFriendlyException("Password reset code is invalid!");
+                throw new UserFriendlyException("Password reset code is invalid!");
             }
 
             user.Password = input.Password;

@@ -5,7 +5,7 @@ namespace Abp.Configuration
     /// <summary>
     /// Repository to manage setting records.
     /// </summary>
-    public interface ISettingValueRepository : IRepository<Setting, long>
+    public interface ISettingRepository : IRepository<Setting, long>
     {
 
     }

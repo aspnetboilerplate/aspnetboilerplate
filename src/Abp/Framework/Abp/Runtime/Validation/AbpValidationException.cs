@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Abp.Exceptions;
 
 namespace Abp.Runtime.Validation
 {

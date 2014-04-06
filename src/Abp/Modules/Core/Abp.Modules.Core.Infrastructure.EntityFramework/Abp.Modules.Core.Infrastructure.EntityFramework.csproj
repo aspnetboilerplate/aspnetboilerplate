@@ -63,7 +63,7 @@
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpUserRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\PermissionRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\RoleRepositoryBase.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\EntityFramework\SettingValueRepository.cs" />
+    <Compile Include="Modules\Core\Data\Repositories\EntityFramework\SettingRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserRoleRepository.cs" />

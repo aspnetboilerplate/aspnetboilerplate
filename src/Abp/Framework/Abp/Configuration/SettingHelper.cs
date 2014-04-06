@@ -7,11 +7,11 @@ namespace Abp.Configuration
     /// </summary>
     public static class SettingHelper
     {
-        private static readonly ISettingValueManager SettingValueManager;
+        private static readonly ISettingManager SettingManager;
 
         static SettingHelper()
         {
-            SettingValueManager = IocHelper.Resolve<ISettingValueManager>();
+            SettingManager = IocHelper.Resolve<ISettingManager>();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Abp.Configuration
         /// <returns>Current value of the setting</returns>
         public static string GetSettingValue(string name)
         {
-            return SettingValueManager.GetSettingValue(name);
+            return SettingManager.GetSettingValue(name);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Abp.Configuration
         /// <returns>Value of the setting</returns>
         public static T GetSettingValue<T>(string name)
         {
-            return SettingValueManager.GetSettingValue<T>(name);
+            return SettingManager.GetSettingValue<T>(name);
         }
     }
 }

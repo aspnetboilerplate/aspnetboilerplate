@@ -1,14 +1,14 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Abp.Exceptions
+namespace Abp.UI
 {
     /// <summary>
     /// This exception type is directly shown to the user.
     /// TODO: Move to Abp namespace
     /// </summary>
     [Serializable]
-    public class AbpUserFriendlyException : AbpException
+    public class UserFriendlyException : AbpException
     {
         /// <summary>
         /// Additional information about the exception.
@@ -18,7 +18,7 @@ namespace Abp.Exceptions
         /// <summary>
         /// Contstructor.
         /// </summary>
-        public AbpUserFriendlyException()
+        public UserFriendlyException()
         {
 
         }
@@ -26,7 +26,7 @@ namespace Abp.Exceptions
         /// <summary>
         /// Contstructor for serializing.
         /// </summary>
-        public AbpUserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
+        public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
 
@@ -36,7 +36,7 @@ namespace Abp.Exceptions
         /// Contstructor.
         /// </summary>
         /// <param name="message">Exception message</param>
-        public AbpUserFriendlyException(string message)
+        public UserFriendlyException(string message)
             : base(message)
         {
 
@@ -47,7 +47,7 @@ namespace Abp.Exceptions
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>
-        public AbpUserFriendlyException(string message, string details)
+        public UserFriendlyException(string message, string details)
             : base(message)
         {
             Details = details;
@@ -58,7 +58,7 @@ namespace Abp.Exceptions
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
-        public AbpUserFriendlyException(string message, Exception innerException)
+        public UserFriendlyException(string message, Exception innerException)
             : base(message, innerException)
         {
 
@@ -70,7 +70,7 @@ namespace Abp.Exceptions
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>
         /// <param name="innerException">Inner exception</param>
-        public AbpUserFriendlyException(string message, string details, Exception innerException)
+        public UserFriendlyException(string message, string details, Exception innerException)
             : base(message, innerException)
         {
             Details = details;

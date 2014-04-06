@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Dependency;
-using Abp.Exceptions;
 
 namespace Abp.Configuration
 {
     /// <summary>
     /// Implements <see cref="ISettingDefinitionManager"/>.
     /// </summary>
-    public class SettingDefinitionManager : ISettingDefinitionManager, ISingletonDependency
+    internal class SettingDefinitionManager : ISettingDefinitionManager, ISingletonDependency
     {
         private readonly IDictionary<string, SettingDefinition> _settings;
 

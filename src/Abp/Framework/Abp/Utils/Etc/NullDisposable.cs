@@ -7,9 +7,17 @@ namespace Abp.Utils.Etc
     /// </summary>
     internal class NullDisposable : IDisposable
     {
-        public void Dispose()
+        public static NullDisposable Instance { get { return SingletonInstance; } }
+        private static readonly NullDisposable SingletonInstance = new NullDisposable();
+
+        private NullDisposable()
         {
             
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

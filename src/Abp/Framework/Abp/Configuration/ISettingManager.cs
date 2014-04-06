@@ -6,7 +6,7 @@ namespace Abp.Configuration
     /// <summary>
     /// This is the main interface that must be implemented to be able to load/store values of settings for a data source.
     /// </summary>
-    public interface ISettingValueManager : ISingletonDependency
+    public interface ISettingManager : ISingletonDependency
     {
         /// <summary>
         /// Gets current value of a setting.

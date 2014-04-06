@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.Exceptions;
 using NHibernate;
 using NHibernate.Linq;
 

@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using Abp;
 using Abp.Domain.Uow;
-using Abp.Exceptions;
 using Abp.Mapping;
 using Abp.Security.Users;
+using Abp.UI;
 using Abp.Users;
 using Taskever.Friendships.Dto;
 using Taskever.Security.Users;
@@ -84,7 +85,7 @@ namespace Taskever.Friendships
             var friendUser = _taskeverUserRepository.FirstOrDefault(user => user.EmailAddress == input.EmailAddress);
             if (friendUser == null)
             {
-                throw new AbpUserFriendlyException("Can not find a user with email address: " + input.EmailAddress);
+                throw new UserFriendlyException("Can not find a user with email address: " + input.EmailAddress);
             }
 
             var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
