@@ -5,12 +5,13 @@ using Abp.Security.Users;
 using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 using Taskever.Friendships;
+using Taskever.Security.Users;
 
 namespace Taskever.Activities
 {
     public class ActivityService : IActivityService
     {
-        private readonly IAbpUserRepository _userRepository;
+        private readonly ITaskeverUserRepository _userRepository;
         private readonly IFriendshipRepository _friendshipRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IUserFollowedActivityRepository _userFollowedActivityRepository;
@@ -18,7 +19,7 @@ namespace Taskever.Activities
         public ILogger Logger { get; set; }
 
         public ActivityService(
-            IAbpUserRepository userRepository,
+            ITaskeverUserRepository userRepository,
             IFriendshipRepository friendshipRepository,
             IActivityRepository activityRepository,
             IUserFollowedActivityRepository userFollowedActivityRepository)

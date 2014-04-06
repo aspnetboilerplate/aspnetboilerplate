@@ -5,7 +5,7 @@ namespace Abp.Configuration
     /// <summary>
     /// This class is used to store setting values on the database.
     /// </summary>
-    public class SettingValue : AuditedEntity<long>, ISettingValue
+    public class Setting : AuditedEntity<long>, ISettingValue
     {
         /// <summary>
         /// TenantId for this setting.

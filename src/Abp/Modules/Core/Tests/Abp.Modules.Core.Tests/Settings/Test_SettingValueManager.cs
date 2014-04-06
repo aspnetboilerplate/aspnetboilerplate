@@ -72,7 +72,7 @@ namespace Abp.Modules.Core.Tests.Settings
         {
             //Language setting for application
             repository.Insert(
-                new SettingValue
+                new Setting
                 {
                     UserId = null,
                     Name = "Language",
@@ -81,7 +81,7 @@ namespace Abp.Modules.Core.Tests.Settings
 
             //Language setting for UserId = 1
             repository.Insert(
-                new SettingValue
+                new Setting
                 {
                     UserId = 1,
                     Name = "Language",

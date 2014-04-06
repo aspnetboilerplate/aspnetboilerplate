@@ -66,7 +66,7 @@
   <ItemGroup>
     <Compile Include="AbpCoreModuleConst.cs" />
     <Compile Include="Configuration\ISettingValueRepository.cs" />
-    <Compile Include="Configuration\SettingValue.cs" />
+    <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingValueManager.cs" />
     <Compile Include="Security\IdentityFramework\AbpRoleManagerBase.cs" />
     <Compile Include="Security\IdentityFramework\AbpUserManagerBase.cs" />

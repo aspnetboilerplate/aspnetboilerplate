@@ -25,7 +25,7 @@ namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Permission>().ToTable("AbpPermissions");
             modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
-            modelBuilder.Entity<SettingValue>().ToTable("AbpSettings");
+            modelBuilder.Entity<Setting>().ToTable("AbpSettings");
             modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
             modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
             modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");

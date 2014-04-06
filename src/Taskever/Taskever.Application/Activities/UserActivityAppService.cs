@@ -4,16 +4,17 @@ using Abp.Mapping;
 using Abp.Security.Users;
 using Taskever.Activities.Dto;
 using Taskever.Friendships;
+using Taskever.Security.Users;
 
 namespace Taskever.Activities
 {
     public class UserActivityAppService : IUserActivityAppService
     {
-        private readonly IAbpUserRepository _userRepository;
+        private readonly ITaskeverUserRepository _userRepository;
         private readonly IUserFollowedActivityRepository _followedActivityRepository;
         private readonly IFriendshipDomainService _friendshipDomainService;
 
-        public UserActivityAppService(IAbpUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IFriendshipDomainService friendshipDomainService)
+        public UserActivityAppService(ITaskeverUserRepository userRepository, IUserFollowedActivityRepository followedActivityRepository, IFriendshipDomainService friendshipDomainService)
         {
             _userRepository = userRepository;
             _followedActivityRepository = followedActivityRepository;

@@ -21,9 +21,9 @@ namespace Abp.Configuration
         private readonly ISettingValueRepository _settingValueRepository;
         private readonly ISettingDefinitionManager _settingDefinitionManager;
 
-        private readonly Lazy<Dictionary<string, SettingValue>> _applicationSettings;
-        private readonly ThreadSafeObjectCache<Dictionary<string, SettingValue>> _tenantSettingCache;
-        private readonly ThreadSafeObjectCache<Dictionary<string, SettingValue>> _userSettingCache;
+        private readonly Lazy<Dictionary<string, Setting>> _applicationSettings;
+        private readonly ThreadSafeObjectCache<Dictionary<string, Setting>> _tenantSettingCache;
+        private readonly ThreadSafeObjectCache<Dictionary<string, Setting>> _userSettingCache;
 
         #endregion
 
@@ -33,9 +33,9 @@ namespace Abp.Configuration
         {
             _settingValueRepository = settingValueRepository;
             _settingDefinitionManager = settingDefinitionManager;
-            _applicationSettings = new Lazy<Dictionary<string, SettingValue>>(GetApplicationSettingsFromDatabase, true);
-            _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
-            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, SettingValue>>(new MemoryCache(GetType().Name + "_UserSettings"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
+            _applicationSettings = new Lazy<Dictionary<string, Setting>>(GetApplicationSettingsFromDatabase, true);
+            _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, Setting>>(new MemoryCache(GetType().Name + "_TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
+            _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, Setting>>(new MemoryCache(GetType().Name + "_UserSettings"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
         }
 
         #endregion
@@ -219,7 +219,7 @@ namespace Abp.Configuration
 
         #region Private methods
 
-        private SettingValue InsertOrUpdateOrDeleteSettingValue(string name, string value, int? tenantId, int? userId)
+        private Setting InsertOrUpdateOrDeleteSettingValue(string name, string value, int? tenantId, int? userId)
         {
             if (tenantId.HasValue && userId.HasValue)
             {
@@ -270,7 +270,7 @@ namespace Abp.Configuration
             //It's not default value and not stored on database, so insert it
             if (settingValue == null)
             {
-                settingValue = new SettingValue
+                settingValue = new Setting
                 {
                     TenantId = tenantId,
                     UserId = userId,
@@ -294,7 +294,7 @@ namespace Abp.Configuration
             return settingValue;
         }
 
-        private SettingValue GetSettingValueForApplicationOrNull(string name)
+        private Setting GetSettingValueForApplicationOrNull(string name)
         {
             lock (_applicationSettings.Value)
             {
@@ -302,19 +302,19 @@ namespace Abp.Configuration
             }
         }
 
-        private SettingValue GetSettingValueForTenantOrNull(int tenantId, string name)
+        private Setting GetSettingValueForTenantOrNull(int tenantId, string name)
         {
             return GetReadOnlyTenantSettings(tenantId).GetOrDefault(name);
         }
 
-        private SettingValue GetSettingValueForUserOrNull(int userId, string name)
+        private Setting GetSettingValueForUserOrNull(int userId, string name)
         {
             return GetReadOnlyUserSettings(userId).GetOrDefault(name);
         }
 
-        private Dictionary<string, SettingValue> GetApplicationSettingsFromDatabase()
+        private Dictionary<string, Setting> GetApplicationSettingsFromDatabase()
         {
-            var dictionary = new Dictionary<string, SettingValue>();
+            var dictionary = new Dictionary<string, Setting>();
 
             var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == null);
             foreach (var settingValue in settingValues)
@@ -326,7 +326,7 @@ namespace Abp.Configuration
         }
 
 
-        private ImmutableDictionary<string, SettingValue> GetReadOnlyTenantSettings(int tenantId)
+        private ImmutableDictionary<string, Setting> GetReadOnlyTenantSettings(int tenantId)
         {
             var cachedDictionary = GetTenantSettingsFromCache(tenantId);
             lock (cachedDictionary)
@@ -334,7 +334,7 @@ namespace Abp.Configuration
                 return cachedDictionary.ToImmutableDictionary();
             }
         }
-        private ImmutableDictionary<string, SettingValue> GetReadOnlyUserSettings(int userId)
+        private ImmutableDictionary<string, Setting> GetReadOnlyUserSettings(int userId)
         {
             var cachedDictionary = GetUserSettingsFromCache(userId);
             lock (cachedDictionary)
@@ -343,13 +343,13 @@ namespace Abp.Configuration
             }
         }
 
-        private Dictionary<string, SettingValue> GetTenantSettingsFromCache(int tenantId)
+        private Dictionary<string, Setting> GetTenantSettingsFromCache(int tenantId)
         {
             return _tenantSettingCache.Get(
                 tenantId.ToString(),
                 () =>
                 {   //Getting from database
-                    var dictionary = new Dictionary<string, SettingValue>();
+                    var dictionary = new Dictionary<string, Setting>();
 
                     var settingValues = _settingValueRepository.GetAllList(setting => setting.TenantId == tenantId);
                     foreach (var settingValue in settingValues)
@@ -361,13 +361,13 @@ namespace Abp.Configuration
                 });
         }
 
-        private Dictionary<string, SettingValue> GetUserSettingsFromCache(int userId)
+        private Dictionary<string, Setting> GetUserSettingsFromCache(int userId)
         {
             return _userSettingCache.Get(
                 userId.ToString(),
                 () =>
                 {   //Getting from database
-                    var dictionary = new Dictionary<string, SettingValue>();
+                    var dictionary = new Dictionary<string, Setting>();
 
                     var settingValues = _settingValueRepository.GetAllList(setting => setting.UserId == userId);
                     foreach (var settingValue in settingValues)

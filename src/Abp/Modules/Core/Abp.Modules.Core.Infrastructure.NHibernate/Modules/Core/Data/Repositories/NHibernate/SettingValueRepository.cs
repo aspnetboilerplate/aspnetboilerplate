@@ -3,7 +3,7 @@ using Abp.Domain.Repositories.NHibernate;
 
 namespace Abp.Modules.Core.Data.Repositories.NHibernate
 {
-    public class SettingValueRepository : NhRepositoryBase<SettingValue, long>, ISettingValueRepository
+    public class SettingValueRepository : NhRepositoryBase<Setting, long>, ISettingValueRepository
     {
 
     }
