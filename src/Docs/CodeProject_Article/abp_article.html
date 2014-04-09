@@ -1,35 +1,37 @@
+<head>
+</head>
 <h2>Contents</h2>
 <ul>
     <li><a href="#Introduction">Introduction to the problem</a></li>
     <li><a href="#WhatIsAbp">What is ASP.NET Boilerplate?</a></li>
-    <li>Getting started<ul>
-        <li>Creating a new web application</li>
-        <li>Creating database &amp; migrations</li>
-        <li>Domain Layer</li>
-        <li>Infrastructure Layer</li>
-        <li>Application Layer</li>
-        <li>Presentation Layer</li>
-        </ul>
-    </li>
-    <li>ABP in details<ul>
-        <li>DB migrations</li>
-        <li>Module System</li>
-        <li>Dependency Injection</li>
-        <li>Entities &amp; Mapping</li>
+    <li><a href="#GettingStarted">Getting started</a></li>
+    <li><a href="#CreateEmptyApp">Creating empty web application from template</a></li>
+    <li>Domain Layer<ul>
+        <li>Entities</li>
         <li>Repositories</li>
-        <li>Unit Of Work</li>
-        <li>Domain Services</li>
-        <li>Event Bus</li>
-        <li>Localization</li>
-        <li>Application Services &amp; DTOs</li>
-        <li>Dynamic Web API</li>
+        <li>About namespaces (<strong>TODO</strong>)</li>
+        <li>Unit of Work (<strong>TODO</strong>)</li>
         </ul>
     </li>
-    <li>More<ul>
-        <li>Single Page Applications</li>
-        <li>Core Module</li>
+    <li>Infrastructure Layer<ul>
+        <li>Database migrations</li>
+        <li>Entity mappings</li>
+        <li>Repository implementations</li>
         </ul>
     </li>
+    <li>Application Layer<ul>
+        <li>Application services</li>
+        <li>Data transfer objects (DTO)</li>
+        <li>Dynamic Web API Controllers</li>
+        </ul>
+    </li>
+    <li>Presentation Layer<ul>
+        <li>Single page applications</li>
+        <li>Durandal views</li>
+        <li>Calling application services from javascript</li>
+        </ul>
+    </li>
+    <li>More</li>
     <li><a href="#ArticleHistory">Article history</a></li>
     <li><a href="#References">References</a></li>
 </ul>
@@ -43,14 +45,14 @@
     <strong>Enterprise web applications</strong> need login pages, user/role management infrastructure, user/application setting management, localization and so on. Also, a high quality and large scale software implements <strong>best practices</strong> such as Layered Architecture, Domain Driven Design (DDD), dependency injection (DI). Also, we use <strong>tools</strong> for Object-Releational Mapping (ORM), database migrations, logging... etc. When it comes to the <strong>user interface</strong> (UI), it&#39;s not much different.
 </p>
 <p>
-    Starting a new enterprise web application is a hard work. Since all applications need some common tasks, we&#39;re repeating ourselves. Many companies are developing their own <strong>frameworks/libraries</strong> for such common tasks to do not re-develop same things. Others are <strong>copying</strong> some parts of existing applications and preparing <strong>a start point</strong> for their new application. First approach is pretty good if your company is big enough and has time to develop such a framework.
+    Starting a new enterprise web application is a hard work. Since all applications need some common tasks, we&#39;re repeating ourselves. Many companies are developing their own <strong>Application Frameworks or Libraries</strong> for such common tasks to do not re-develop same things. Others are <strong>copying</strong> some parts of existing applications and preparing <strong>a start point</strong> for their new application. First approach is pretty good if your company is big enough and has time to develop such a framework.
 </p>
 <p>
     As a software architect, I also developed such a framework im my company. But, there is some point it feels me bad: Many company repeats same tasks. What if we can <strong>share more, repeat less</strong>? What if DRY principle is implemented <strong>universally</strong> instead of per company? It sounds utopian, but I think there may be a starting point for that!
 </p>
 
 <h2 id="WhatIsAbp">What is ASP.NET Boilerplate?</h2>
-<p>ASP.NET Boilerplate is a starting point for new web applications using <strong>best practices </strong>and <strong>most popular tools</strong>. It&#39;s aimed to be a solid <strong>model</strong>, a general-purpose <strong>framework</strong> and a project <strong>template</strong>. What it does?</p>
+<p>ASP.NET Boilerplate is a starting point for new web applications using <strong>best practices </strong>and <strong>most popular tools</strong>. It&#39;s aimed to be a <strong>solid model</strong>, a general-purpose <strong>application framework</strong> and a <strong>project template</strong>. What it does?</p>
 <ul>
     <li>Server side<ul>
         <li>Based on <strong>ASP.NET MVC </strong>and <strong>Web API</strong>.</li>
@@ -61,10 +63,8 @@
         <li>Provides an infrastructure and make it easy to use <strong>Dependency Injection </strong>(uses Castle Windsor as DI container).</li>
         <li>Provides a strict model and base classes to use <strong>Object-Releational Mapping </strong>easily (uses NHibernate, can work with many DBMS).</li>
         <li>Implements <strong>database migrations </strong>(uses FluentMigrator).</li>
-        <li>Includes <strong>authentication </strong>and <strong>role-based authorization </strong>infrastructure (Implements ASP.NET Identity Framework).</li>
         <li>Includes a simple and flexible <strong>localization </strong>system.</li>
         <li>Includes <strong>EventBus </strong>for server-side global domain events.</li>
-        <li>Includes a <strong>setting </strong>system (application/user level).</li>
         <li>Manages <strong>exception handling</strong> and <strong>validation</strong>.</li>
         <li>Provides <strong>base classes </strong>to implement some common tasks.</li>
         <li>Uses <strong>conventions </strong>over configurations.</li>
@@ -72,17 +72,102 @@
     </li>
     <li>Client side<ul>
         <li>Provides two <strong>project templates</strong>. One for <strong>Single-Page Applications </strong>using <strong>Durandaljs</strong>, other one is a <strong>Multi-Page Application</strong>. Both templates uses Twitter <strong>Bootstrap</strong>.</li>
+        <li>Most used libraries are included by default: <strong>Knockout.js</strong>, <strong>Require.js</strong>, <strong>jQuery </strong>and some useful plug-ins.</li>
         <li>Includes <strong>unique APIs </strong>for some sommon tasks: showing alerts &amp; notifications, blocking UI, making AJAX requests.</li>
         </ul>
     </li>
 </ul>
 
-<h2>Gettin Started</h2>
 <p>
-    For a starting point, ASP.NET Boilerplate (I call it <strong>ABP </strong>from now) provides a project template to deleveop <strong>Single-Page, Responsive Web Application</strong>. Download template here:</p>
-<p>
-    &nbsp;</p>
+    Beside these common infrastructure, the &quot;Core Module&quot; is being developed. It will provide an authentication system (implementing ASP.NET Identity Framework), a setting systems and so on.</p>
 
+<h2 id="GettingStarted">Getting Started</h2>
+<p>
+    In this article, I&#39;ll show to deleveop a simple <strong>Single-Page and Responsive Web Application </strong>using ASP.NET Boilerplate (I&#39;ll call it as <strong>ABP </strong>from now). This sample application is named as &quot;Simple Task System&quot; and it&#39;s consist of 2 pages: one for list of tasks, other one is to add new tasks. A Task can be related to a person, can be completed. Screenshot of Task List in the application is shown below:</p>
+<p>
+    <img alt="A screenshot of 'Simple Task System'" width="596" height="263" src="tasksystem.png" /></p>
+<h2 id="CreateEmptyApp">
+    Creating empty web application from template</h2>
+<p>
+    ABP provides two template to start a new project (Even if you can manually create your project and get ABP packages from nuget, template way is much more easy). Go to <a href="http://www.aspnetboilerplate.com/Templates" target="_blank"><strong>www.aspnetboilerplate.com/Templates</strong></a> to create your application from one of two 
+    <strong>templates</strong> (one for SPA, one for MPA projects):</p>
+<p>
+    <img alt="Creating template from ABP web site" width="524" height="505" src="create_template.png" /></p>
+<p>
+    I named my project as <strong>SimpleTaskSystem</strong> and created a <strong>SPA</strong> project. It downloaded project as a <strong>zip</strong> file. When I open the zip file, I see the solution is ready consists of assemblies for each layer of <strong>Domain Driven Design</strong>:</p>
+<p>
+    <img alt="Project files" width="271" height="158" src="project_files.png" /></p>
+<p>
+    Created project&#39;s runtime is <strong>.NET Framework 4.5.1</strong>, I advice to open with <strong>Visual Studio 2013</strong>. The only prerequise to be able to run the project is to create a database. SPA template assumes that you&#39;re using <strong>SQL Server 2008</strong> or later. But you can change it easily to another DBMS. See the connection string in web.config file of Web project:</p>
+<pre lang="xml">&lt;add name="MainDb" connectionString="Server=localhost; Database=<strong>SimpleTaskSystemDb</strong>; Trusted_Connection=True;" /&gt;</pre>
+<p>
+    You can change connection string here. I don&#39;t change the database name, so I&#39;m creating an empty database, named <strong>SimpleTaskSystemDb</strong>, in SQL Server:</p>
+<p>
+    <img alt="Empty database" width="174" height="200" src="empty_db.png" /></p>
+<p>
+    <strong>That&#39;s it</strong>, your project is ready to run! Open it in VS2013 and press F5:</p>
+<p>
+    <img alt="First run" width="596" height="199" src="first_run.png" /></p>
+<p>
+    Template consists of two pages: One for <strong>Home p</strong>age, other is <strong>About</strong> page. It&#39;s <strong>localized </strong>in English and Turkish. And it&#39;s <strong>Single-Page Application</strong>! Try to navigate between pages, you&#39;ll see that only the content are changes, navigation menu is fixed.</p>
+<p>
+    Now, I&#39;ll show to change the application to a Simple Task System application layer by layer.</p>
+<h2>
+    Domain Layer</h2>
+<p>
+    In the Domain Driven Design (<strong>DDD</strong>), the core layer is the <strong>Domain Layer</strong>. Domain Layer defines your <strong>Entities </strong>and implements your <strong>Business </strong>rules.</p>
+<h3>
+    Entities</h3>
+<p>
+    Entities are one of the core concepts of DDD. Eric Evans describe it as &quot;<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>&quot;. So, entities have Id&#39;s and stored in a database.</p>
+<p>
+    My first entity is the <strong>Task</strong>:</p>
+<pre lang="cs">public class Task : Entity&lt;long&gt;
+{
+    public virtual Person AssignedPerson { get; set; }
+
+    public virtual string Description { get; set; }
+
+    public virtual DateTime CreationTime { get; set; }
+
+    public virtual TaskState State { get; set; }
+
+    public Task()
+    {
+        CreationTime = DateTime.Now;
+        State = TaskState.Active;
+    }
+}</pre>
+<p>
+    It&#39;s simple class that does not need to be explained. <strong>TaskState</strong> is an enum that has membes as &#39;<strong>Active</strong>&#39; and &#39;<strong>Completed</strong>&#39;. Second entity is the <strong>Person</strong>:</p>
+<pre lang="cs">public class Person : Entity
+{
+    public virtual string Name { get; set; }
+}</pre>
+<p>
+    A task has a relation to a person and that&#39;s all for this simple application.</p>
+<p>
+    Entities implements <strong>IEntity&lt;TPrimaryKey&gt;</strong> interface in ABP. So, if type of your primary key is long for an Entity, it must implement <strong>IEntity&lt;long&gt;</strong>. If your Entity&#39;s primary key is <strong>int</strong>, you may not define primary key type and directly implement <strong>IEntity</strong> interface. In practice, you can easily derive from <strong>Entity </strong>or <strong>Entity&lt;TPrimaryKey&gt; </strong>classes as shown above (Task and Person). IEntity defines <strong>Id </strong>property for the Entity.</p>
+<h3>
+    Repositories</h3>
+<p>
+    &quot;<em>Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects</em>&quot; (Martin Fowler). Repositories, in practice, are used to perform database operations for domain object (Entities or Value Types).</p>
+<p>
+    Generally, a seperated repository is used for each Entity (or Aggregate root). I define repositories for Task and Person:</p>
+<pre lang="cs">public interface ITaskRepository : IRepository&lt;Task, long&gt;
+{
+    List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state);
+}
+
+public interface IPersonRepository : IRepository&lt;Person&gt;
+{
+
+}</pre>
+<p>
+    It&#39;s good to define an interface for each Repository. Thus, we can seperate interface from implementation. A Repository interface inherits <strong>IRepository </strong>as shown above. IRepository interface defines most-used methods for repositories:</p>
+<p><img alt="Project files" width="459" height="315" src="repository_interface.png" /></p>
+<p>
+    It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implements all these methods (Note that GetAll() methods returns IQueryable&lt;T&gt;, you can write LINQ over return value).</p>
 <h2 id="ArticleHistory">Article History </h2>
 
 <ul>
@@ -91,4 +176,8 @@
 
 <h2 id="References">References</h2>
 
-<p>[1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a></p>
+<p>[1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a><br />
+    [2] Book: &quot;Domain Driven Design: Tackling Complexity in the Heart of Software&quot; by Eric Evans.<br />
+    [3] Martin Fowler&#39;s web site: <a href="http://martinfowler.com/">http://martinfowler.com</a> </p>
+
+

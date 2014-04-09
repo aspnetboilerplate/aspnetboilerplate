@@ -79,6 +79,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeProject_Article", "CodeProject_Article", "{2619381F-4FE8-4F0F-A3FF-9FB12B434B52}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\CodeProject_Article\abp_article.html = Docs\CodeProject_Article\abp_article.html
+		Docs\CodeProject_Article\create_template.png = Docs\CodeProject_Article\create_template.png
+		Docs\CodeProject_Article\empty_db.png = Docs\CodeProject_Article\empty_db.png
+		Docs\CodeProject_Article\first_run.png = Docs\CodeProject_Article\first_run.png
+		Docs\CodeProject_Article\project_files.png = Docs\CodeProject_Article\project_files.png
+		Docs\CodeProject_Article\repository_interface.png = Docs\CodeProject_Article\repository_interface.png
+		Docs\CodeProject_Article\tasksystem.png = Docs\CodeProject_Article\tasksystem.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Infrastructure.EntityFramework", "Abp\Framework\Abp.Infrastructure.EntityFramework\Abp.Infrastructure.EntityFramework.csproj", "{948F0CAF-3382-4E03-9A0F-0DDB206FE40D}"
