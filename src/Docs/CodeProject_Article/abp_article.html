@@ -3,14 +3,14 @@
 <h2>Contents</h2>
 <ul>
     <li><a href="#Introduction">Introduction to the problem</a></li>
-    <li><a href="#WhatIsAbp">What is ASP.NET Boilerplate?</a></li>
+    <li><a href="#WhatIsAbp">What is ASP.NET Boilerplate</a></li>
+    <li>What ASP.NET Boilerplate is not (<strong>TODO</strong>)</li>
     <li><a href="#GettingStarted">Getting started</a></li>
     <li><a href="#CreateEmptyApp">Creating empty web application from template</a></li>
     <li>Domain Layer<ul>
         <li>Entities</li>
         <li>Repositories</li>
         <li>About namespaces (<strong>TODO</strong>)</li>
-        <li>Unit of Work (<strong>TODO</strong>)</li>
         </ul>
     </li>
     <li>Infrastructure Layer<ul>
@@ -20,8 +20,8 @@
         </ul>
     </li>
     <li>Application Layer<ul>
-        <li>Application services</li>
-        <li>Data transfer objects (DTO)</li>
+        <li>Application services and Data Transfer Objects (DTOs)</li>
+        <li>Unit of Work (<strong>TODO</strong>)</li>
         <li>Dynamic Web API Controllers</li>
         </ul>
     </li>
@@ -31,7 +31,11 @@
         <li>Calling application services from javascript</li>
         </ul>
     </li>
-    <li>More</li>
+    <li>Details (<strong>TODO</strong>)<ul>
+        <li>Unit of work ?</li>
+        <li>Dependency Injection</li>
+        </ul>
+    </li>
     <li><a href="#ArticleHistory">Article history</a></li>
     <li><a href="#References">References</a></li>
 </ul>
@@ -81,7 +85,7 @@
 <p>
     Beside these common infrastructure, the &quot;Core Module&quot; is being developed. It will provide an authentication system (implementing ASP.NET Identity Framework), a setting systems and so on.</p>
 
-<h2 id="GettingStarted">Getting Started</h2>
+<h2 id="GettingStarted">Getting started</h2>
 <p>
     In this article, I&#39;ll show to deleveop a simple <strong>Single-Page and Responsive Web Application </strong>using ASP.NET Boilerplate (I&#39;ll call it as <strong>ABP </strong>from now). This sample application is named as &quot;Simple Task System&quot; and it&#39;s consist of 2 pages: one for list of tasks, other one is to add new tasks. A Task can be related to a person, can be completed. Screenshot of Task List in the application is shown below:</p>
 <p>
@@ -113,9 +117,10 @@
 <p>
     Now, I&#39;ll show to change the application to a Simple Task System application layer by layer.</p>
 <h2>
-    Domain Layer</h2>
+    Domain layer</h2>
 <p>
-    In the Domain Driven Design (<strong>DDD</strong>), the core layer is the <strong>Domain Layer</strong>. Domain Layer defines your <strong>Entities </strong>and implements your <strong>Business </strong>rules.</p>
+    &quot;<em>Responsible for representing concepts of the business, information about the business situation, and business rules</em>&quot; (Eric Evans).
+    In the Domain Driven Design (<strong>DDD</strong>), the core layer is the <strong>Domain Layer</strong>. Domain Layer defines your <strong>Entities,</strong> implements your <strong>business rules </strong>and so on.</p>
 <h3>
     Entities</h3>
 <p>
@@ -151,7 +156,7 @@
 <h3>
     Repositories</h3>
 <p>
-    &quot;<em>Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects</em>&quot; (Martin Fowler). Repositories, in practice, are used to perform database operations for domain object (Entities or Value Types).</p>
+    &quot;<em>Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects</em>&quot; (Martin Fowler). Repositories, in practice, are used to perform database operations for domain objects (Entities or Value Types).</p>
 <p>
     Generally, a seperated repository is used for each Entity (or Aggregate root). I define repositories for Task and Person:</p>
 <pre lang="cs">public interface ITaskRepository : IRepository&lt;Task, long&gt;
@@ -167,8 +172,197 @@ public interface IPersonRepository : IRepository&lt;Person&gt;
     It&#39;s good to define an interface for each Repository. Thus, we can seperate interface from implementation. A Repository interface inherits <strong>IRepository </strong>as shown above. IRepository interface defines most-used methods for repositories:</p>
 <p><img alt="Project files" width="459" height="315" src="repository_interface.png" /></p>
 <p>
-    It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implements all these methods (Note that GetAll() methods returns IQueryable&lt;T&gt;, you can write LINQ over return value).</p>
-<h2 id="ArticleHistory">Article History </h2>
+    It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implement all these methods.</p>
+<h2>
+    Infrastructure layer</h2>
+<p>
+    &quot;<em>Provides generic technical capabilities that support the higher layers</em>&quot; (Eric Evans). It&#39;s used to implement abstractions of your application using third-party libraries &amp; frameworks such as Object-Relational Mapping. In this application, I&#39;ll use Infrastructure Layer for:</p>
+<ul>
+    <li>Creating database migration system using <strong>FluentMigrator</strong>.</li>
+    <li>Implementing Repositories in <strong>NHibernate</strong> and <strong>FluentNHibernate</strong>.</li>
+</ul>
+<h3>
+    Database Migrations</h3>
+<p>
+    &quot;<em><strong>Evolutionary Database Design</strong>: Over the last few years we've developed a number of techniques that allow a database design to evolve as an application develops. This is a very important capability for agile methodologies.</em>&quot; Martin Fowler says in his web site. Database migration is an important technique to support this idea. It&#39;s very hard to maintain an application&#39;s database in more than one production environment without such techniques. Even if you&#39;ve only one live system, it&#39;s critical.</p>
+<p>
+    FluentMigrator is a good tool for database migrations. It supports most common database systems. Here, my migration codes for <strong>Person </strong>and <strong>Task </strong>tables.</p>
+<pre lang="cs">[Migration(2014041001)]
+public class _01_CreatePersonTable : AutoReversingMigration
+{
+    public override void Up()
+    {
+        Create.Table("StsPeople")
+            .WithColumn("Id").AsInt32().Identity().PrimaryKey().NotNullable()
+            .WithColumn("Name").AsString(32).NotNullable();
+
+        Insert.IntoTable("StsPeople")
+            .Row(new { Name = "Douglas Adams" })
+            .Row(new { Name = "Isaac Asimov" })
+            .Row(new { Name = "George Orwell" })
+            .Row(new { Name = "Thomas More" });
+    }
+}
+
+[Migration(2014041002)]
+public class _02_CreateTasksTable : AutoReversingMigration
+{
+    public override void Up()
+    {
+        Create.Table("StsTasks")
+            .WithColumn("Id").AsInt64().Identity().PrimaryKey().NotNullable()
+            .WithColumn("AssignedPersonId").AsInt32().ForeignKey("TsPeople", "Id").Nullable()
+            .WithColumn("Description").AsString(256).NotNullable()
+            .WithColumn("State").AsByte().NotNullable().WithDefaultValue(1) //1: TaskState.New
+            .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+    }
+}
+</pre>
+<p>
+    In FluentMigrator, a migration is defined in a class derived from <strong>Migration</strong>. <strong>AutoReversingMigration </strong>is a shortcut if your migration can be automatically rolled back. A migration class should has <strong>MigrationAttribute</strong>. It defines <strong>version number </strong>of the migration class. All migrations are applied ordered by this version number. It can a any <strong>long </strong>number. I use a number that identify the migration class&#39;s creation date plus an incremental value for same day. It&#39;s completely up to you. Only important thing is their order.</p>
+<p>
+    FluentMigrator stores latest applied version number in a table in the database. So, it applies only migrations those are bigger than the version of the database. By default, it uses &#39;VersionInfo&#39; table. If you want to change the table name, you can create such a class:</p>
+<pre lang="cs">[VersionTableMetaData]
+public class VersionTable : DefaultVersionTableMetaData
+{
+    public override string TableName
+    {
+        get
+        {
+            return "StsVersionInfo";
+        }
+    }
+}</pre>
+<p>
+    As you see, I write a prefix <strong>Sts</strong> (<strong>S</strong>imple <strong>T</strong>ask <strong>S</strong>ystem) for all tables. That is important for a modular application so all modules can have their specific prefix to identify the module-specific tables.</p>
+<p>
+    To create database my tables, I use Migrate.exe tool of FluentMigrator with such a &#39;command line&#39; command:</p>
+<pre>Migrate.exe /connection "Server=localhost; Database=SimpleTaskSystemDb; Trusted_Connection=True;" /db sqlserver /target "SimpleTaskSystem.Infrastructure.NHibernate.dll"</pre>
+<p>
+    For a shortcut, ABP template includes RunMigrations.bat file. After I compile the project in Debug mode, I run the &quot;RunMigrations.bat&quot;:</p>
+<p><img alt="Database migrations" width="596" height="598" src="migration.png"/></p>
+<p>
+    As you see, two migration file are executed and tables are created:</p>
+<p><img alt="Database after migrations" width="188" height="148" src="db_after_migration.png"/></p>
+<p>
+    For more information on FluentMigrator, see it&#39;s web site [4].</p>
+<h3>
+    Entity mappings</h3>
+<p>
+    In order to get/store Entities into database, we should map Entities with database tables. NHibernate has several options to accomplish that. Here, I&#39;ll use Fluent Mapping (You can use conventional auto-mapping, see FluentNHibernate&#39;s web site [5]):</p>
+<pre>public class PersonMap : EntityMap&lt;Person&gt;
+{
+    public PersonMap()
+        : base("StsPeople")
+    {
+        Map(x => x.Name);
+    }
+}
+    
+public class TaskMap : EntityMap&lt;Task, long&gt;
+{
+    public TaskMap()
+        : base("StsTasks")
+    {
+        Map(x => x.Description);
+        Map(x => x.CreationTime);
+        Map(x => x.State).CustomType&lt;TaskState&gt;();
+        References(x => x.AssignedPerson).Column("AssignedPersonId").LazyLoad();
+    }
+}
+</pre>
+<p>
+    <strong>EntityMap</strong> is a class of ABP that automatically maps <strong>Id </strong>property and gets <strong>table name </strong>in the constructor. So, I&#39;m deriving from ABP and mapping other properties.</p>
+<h3>
+    Repository implementations</h3>
+<p>
+    I defined interfaces for each Entity in the domain layer. Here, I&#39;ll implement repositories in NHibernate. It&#39;s pretty easy:</p>
+<pre>public class PersonRepository : NhRepositoryBase&lt;Person&gt;, IPersonRepository
+{
+
+}
+
+public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;ITaskRepository
+{
+    public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
+    {
+        var query = GetAll();
+            
+        if (assignedPersonId.HasValue)
+        {
+            query = query.Where(task => task.AssignedPerson.Id == assignedPersonId.Value);
+        }
+
+        if (state.HasValue)
+        {
+            query = query.Where(task => task.State == state);
+        }
+
+        return query
+            .OrderByDescending(task => task.CreationTime)
+            .Fetch(task => task.AssignedPerson)
+            .ToList();
+    }
+}</pre>
+<p>
+    <strong>NhRepositoryBase </strong>implements all methods those are defined in <strong>IRepository </strong>interface. So, you must only implement your custom methods as I implemented for <strong>GetAllWithPeople</strong>. <strong>GetAll()</strong> method returns <strong>IQueryable&lt;TEntity&gt;</strong>, so you can write additional conditions until invoke <strong>ToList()</strong>.</p>
+<p>
+    That&#39;s all, you can use repositories for database operations for now.</p>
+<h2>
+    &nbsp;Application layer</h2>
+<p>
+    &quot;<em>Defines the jobs the software is supposed to do and directs the expressive domain objects to work out problems</em>&quot; (Eric Evans). Application layer does not includes domain information or business rules an ideal world. It mediates between presentation layer and domain layer.</p>
+<h3>
+    Application services and Data Transfer Objects (DTOs)</h3>
+<p>
+    Application services provides base funictionality of the application layer. It gets data transfer objects as arguments and returns data transfer objects. Returning Entities has many problems (Because of data hiding, serialization, lazy loading... etc.). I strongly recommend to not get/return Entities from Application services. Thus, Presentation layer is completely isolated from Domain layer.</p>
+<p>
+    So, let&#39;s start by easy, person application service:</p>
+<pre>public interface IPersonAppService : IApplicationService
+{
+    GetAllPeopleOutput GetAllPeople();
+}</pre>
+<p>
+    All application services implements <strong>IApplicationService </strong>by convention. It ensures dependency injection and provides some built-in features of ABP. I defined only one method <strong>GetAllPeople()</strong> and it returns a DTO named <strong>GetAllPeopleOutput</strong>. I name DTOs as like that: <strong>method name </strong>plus <strong>Input </strong>or <strong>Output </strong>postfix. See <strong>GetAllPeopleOutput </strong>class:</p>
+<pre>public class GetAllPeopleOutput : IOutputDto
+{
+    public List&lt;PersonDto&gt; People { get; set; }
+}</pre>
+<p>
+    An output DTO implements <strong>IOutputDto</strong> (and it inherits IDto). It does nothing but used to identify DTOs by convention. <strong>PersonDto </strong>is another DTO class to pass a <strong>Person </strong>information to the presentation layer:</p>
+<pre>public class PersonDto : EntityDto
+{
+    public string Name { get; set; }
+}</pre>
+<p>
+    <strong>EntityDto </strong>is another helper class of ABP that defines <strong>Id </strong>property and implements <strong>IDto </strong>interface automatically. <strong>IPersonAppService</strong> is implemented as shown below:</p>
+<pre>public class PersonAppService : IPersonAppService
+{
+    private readonly IPersonRepository _personRepository;
+
+    public PersonAppService(IPersonRepository personRepository)
+    {
+        _personRepository = personRepository;
+    }
+
+    public GetAllPeopleOutput GetAllPeople()
+    {
+        return new GetAllPeopleOutput
+                {
+                    People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(_personRepository.GetAllList())
+                };
+    }
+}</pre>
+<p>
+    <strong>PersonAppService </strong>gets <strong>IPersonRepository</strong> in it&#39;s constructor. ABP&#39;s built-in <strong>dependency injection </strong>system handles it using <strong>Castle Windsor</strong>. All repositories and application services are automatically registered to IOC (Inversion of Control) container as transient objects. So, you&#39;re not thinking on DI details.</p>
+<p>
+    <strong>GetAllPeople()</strong> method simply gets a list of all people (using ABP&#39;s out of the box implementation) from database and converts it to list of <strong>PersonDto </strong>objects using <strong>AutoMapper </strong>library. AutoMapper makes it incredibly easy to map one class to other using conventions (and configurations if needed). I just defined a single line of code to configure mapping:</p>
+<pre>Mapper.CreateMap&lt;Person, PersonDto&gt;();</pre>
+<p>
+    This code works when application starts and creates mapping. Then, when I need, I call the Mapper.Map method to create a <strong>PersonDto </strong>object using an existing <strong>Person </strong>object. To get more informatin about AutoMapper, see it&#39;s web site [7].</p>
+<p>
+    TODO: Task System and UOW</p>
+<h2 id="ArticleHistory">Article history </h2>
 
 <ul>
     <li><strong>05.05.2014</strong>: First publish of the article.</li>
@@ -177,7 +371,15 @@ public interface IPersonRepository : IRepository&lt;Person&gt;
 <h2 id="References">References</h2>
 
 <p>[1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a><br />
-    [2] Book: &quot;Domain Driven Design: Tackling Complexity in the Heart of Software&quot; by Eric Evans.<br />
-    [3] Martin Fowler&#39;s web site: <a href="http://martinfowler.com/">http://martinfowler.com</a> </p>
+    [2] Book: &quot;<a href="http://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215">Domain Driven Design: Tackling Complexity in the Heart of Software</a>&quot; by Eric Evans.<br />
+    [3] Martin Fowler&#39;s web site: <a href="http://martinfowler.com/">http://martinfowler.com</a>
+    <br />
+    [4] Fleunt Migrator: <a href="https://github.com/schambers/fluentmigrator">https://github.com/schambers/fluentmigrator</a><br />
+    [5] FluentNHibernate: <a href="http://www.fluentnhibernate.org/">http://www.fluentnhibernate.org/</a><br />
+    [6] Eric Evans: <a href="http://dddcommunity.org/tag/eric-evans/">http://dddcommunity.org/tag/eric-evans/</a>
+    <br />
+    [7] AutoMapper: <a href="http://automapper.org/">http://automapper.org/</a> </p>
+
+
 
 
