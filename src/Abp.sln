@@ -80,14 +80,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeProject_Article", "Code
 	ProjectSection(SolutionItems) = preProject
 		Docs\CodeProject_Article\abp_article.html = Docs\CodeProject_Article\abp_article.html
 		Article_TODO.txt = Article_TODO.txt
+		Docs\CodeProject_Article\calling_webapi_ajax.png = Docs\CodeProject_Article\calling_webapi_ajax.png
 		Docs\CodeProject_Article\create_template.png = Docs\CodeProject_Article\create_template.png
 		Docs\CodeProject_Article\db_after_migration.png = Docs\CodeProject_Article\db_after_migration.png
 		Docs\CodeProject_Article\empty_db.png = Docs\CodeProject_Article\empty_db.png
 		Docs\CodeProject_Article\first_run.png = Docs\CodeProject_Article\first_run.png
+		Docs\CodeProject_Article\localization_files.png = Docs\CodeProject_Article\localization_files.png
 		Docs\CodeProject_Article\migration.png = Docs\CodeProject_Article\migration.png
 		Docs\CodeProject_Article\project_files.png = Docs\CodeProject_Article\project_files.png
 		Docs\CodeProject_Article\repository_interface.png = Docs\CodeProject_Article\repository_interface.png
+		Docs\CodeProject_Article\sts_spa_files.png = Docs\CodeProject_Article\sts_spa_files.png
 		Docs\CodeProject_Article\tasksystem.png = Docs\CodeProject_Article\tasksystem.png
+		Docs\CodeProject_Article\template_spa_files.png = Docs\CodeProject_Article\template_spa_files.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Infrastructure.EntityFramework", "Abp\Framework\Abp.Infrastructure.EntityFramework\Abp.Infrastructure.EntityFramework.csproj", "{948F0CAF-3382-4E03-9A0F-0DDB206FE40D}"

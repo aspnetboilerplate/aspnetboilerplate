@@ -11,31 +11,36 @@
         <li>Entities</li>
         <li>Repositories</li>
         <li>About namespaces (<strong>TODO</strong>)</li>
-        </ul>
+    </ul>
     </li>
     <li>Infrastructure Layer<ul>
         <li>Database migrations</li>
         <li>Entity mappings</li>
         <li>Repository implementations</li>
-        </ul>
+    </ul>
     </li>
     <li>Application Layer<ul>
         <li>Application services and Data Transfer Objects (DTOs)</li>
-        <li>Unit of Work (<strong>TODO</strong>)</li>
         <li>Dynamic Web API Controllers</li>
-        </ul>
+    </ul>
     </li>
     <li>Presentation Layer<ul>
         <li>Single page applications</li>
-        <li>Durandal views</li>
-        <li>Calling application services from javascript</li>
-        </ul>
+        <li>Views and ViewModels<ul>
+            <li>Task list</li>
+            <li>New task</li>
+            </ul>
+        </li>
+        <li>Localization (<strong>TODO</strong>)</li>
+    </ul>
     </li>
     <li>Details (<strong>TODO</strong>)<ul>
-        <li>Unit of work ?</li>
-        <li>Dependency Injection</li>
-        </ul>
+        <li>Module System</li>
+        <li>Dependency Injection and conventions.</li>
+        <li>Unit of work</li>
+    </ul>
     </li>
+    <li>Summary</li>
     <li><a href="#ArticleHistory">Article history</a></li>
     <li><a href="#References">References</a></li>
 </ul>
@@ -72,61 +77,78 @@
         <li>Manages <strong>exception handling</strong> and <strong>validation</strong>.</li>
         <li>Provides <strong>base classes </strong>to implement some common tasks.</li>
         <li>Uses <strong>conventions </strong>over configurations.</li>
-        </ul>
+    </ul>
     </li>
     <li>Client side<ul>
         <li>Provides two <strong>project templates</strong>. One for <strong>Single-Page Applications </strong>using <strong>Durandaljs</strong>, other one is a <strong>Multi-Page Application</strong>. Both templates uses Twitter <strong>Bootstrap</strong>.</li>
         <li>Most used libraries are included by default: <strong>Knockout.js</strong>, <strong>Require.js</strong>, <strong>jQuery </strong>and some useful plug-ins.</li>
         <li>Includes <strong>unique APIs </strong>for some sommon tasks: showing alerts &amp; notifications, blocking UI, making AJAX requests.</li>
-        </ul>
+    </ul>
     </li>
 </ul>
 
 <p>
-    Beside these common infrastructure, the &quot;Core Module&quot; is being developed. It will provide an authentication system (implementing ASP.NET Identity Framework), a setting systems and so on.</p>
+    Beside these common infrastructure, the &quot;Core Module&quot; is being developed. It will provide an authentication system (implementing ASP.NET Identity Framework), a setting systems and so on.
+</p>
 
 <h2 id="GettingStarted">Getting started</h2>
 <p>
-    In this article, I&#39;ll show to deleveop a simple <strong>Single-Page and Responsive Web Application </strong>using ASP.NET Boilerplate (I&#39;ll call it as <strong>ABP </strong>from now). This sample application is named as &quot;Simple Task System&quot; and it&#39;s consist of 2 pages: one for list of tasks, other one is to add new tasks. A Task can be related to a person, can be completed. Screenshot of Task List in the application is shown below:</p>
+    In this article, I&#39;ll show to deleveop a simple <strong>Single-Page and Responsive Web Application </strong>using ASP.NET Boilerplate (I&#39;ll call it as <strong>ABP </strong>from now). This sample application is named as &quot;Simple Task System&quot; and it consists of two pages: one for list of tasks, other one is to add new tasks. A Task can be related to a person, can be completed. Screenshot of Task List in the application is shown below:
+</p>
 <p>
-    <img alt="A screenshot of 'Simple Task System'" width="596" height="263" src="tasksystem.png" /></p>
-<h2 id="CreateEmptyApp">
-    Creating empty web application from template</h2>
+    <img alt="A screenshot of 'Simple Task System'" width="596" height="263" src="tasksystem.png" />
+</p>
+<h2 id="CreateEmptyApp">Creating empty web application from template</h2>
 <p>
     ABP provides two template to start a new project (Even if you can manually create your project and get ABP packages from nuget, template way is much more easy). Go to <a href="http://www.aspnetboilerplate.com/Templates" target="_blank"><strong>www.aspnetboilerplate.com/Templates</strong></a> to create your application from one of two 
-    <strong>templates</strong> (one for SPA, one for MPA projects):</p>
+    <strong>templates</strong> (one for SPA, one for MPA projects):
+</p>
 <p>
-    <img alt="Creating template from ABP web site" width="524" height="505" src="create_template.png" /></p>
+    <img alt="Creating template from ABP web site" width="524" height="505" src="create_template.png" />
+</p>
 <p>
-    I named my project as <strong>SimpleTaskSystem</strong> and created a <strong>SPA</strong> project. It downloaded project as a <strong>zip</strong> file. When I open the zip file, I see the solution is ready consists of assemblies for each layer of <strong>Domain Driven Design</strong>:</p>
+    I named my project as <strong>SimpleTaskSystem</strong> and created a <strong>SPA</strong> project. It downloaded project as a <strong>zip</strong> file. When I open the zip file, I see a solution is ready that contains assemblies (projects) for each layer of <strong>Domain Driven Design</strong>:
+</p>
 <p>
-    <img alt="Project files" width="271" height="158" src="project_files.png" /></p>
+    <img alt="Project files" width="271" height="158" src="project_files.png" />
+</p>
 <p>
-    Created project&#39;s runtime is <strong>.NET Framework 4.5.1</strong>, I advice to open with <strong>Visual Studio 2013</strong>. The only prerequise to be able to run the project is to create a database. SPA template assumes that you&#39;re using <strong>SQL Server 2008</strong> or later. But you can change it easily to another DBMS. See the connection string in web.config file of Web project:</p>
+    Created project&#39;s runtime is <strong>.NET Framework 4.5.1</strong>, I advice to open with <strong>Visual Studio 2013</strong>. The only prerequise to be able to run the project is to create a <strong>database</strong>. SPA template assumes that you&#39;re using <strong>SQL Server 2008 or later</strong>. But you can change it easily to another DBMS.
+</p>
+<p>
+    See the connection string in web.config file of the web project:
+</p>
 <pre lang="xml">&lt;add name="MainDb" connectionString="Server=localhost; Database=<strong>SimpleTaskSystemDb</strong>; Trusted_Connection=True;" /&gt;</pre>
 <p>
-    You can change connection string here. I don&#39;t change the database name, so I&#39;m creating an empty database, named <strong>SimpleTaskSystemDb</strong>, in SQL Server:</p>
+    You can change connection string here. I don&#39;t change the database name, so I&#39;m creating an empty database, named <strong>SimpleTaskSystemDb</strong>, in SQL Server:
+</p>
 <p>
-    <img alt="Empty database" width="174" height="200" src="empty_db.png" /></p>
+    <img alt="Empty database" width="174" height="200" src="empty_db.png" />
+</p>
 <p>
-    <strong>That&#39;s it</strong>, your project is ready to run! Open it in VS2013 and press F5:</p>
+    <strong>That&#39;s it</strong>, your project is ready to run! Open it in VS2013 and press F5:
+</p>
 <p>
-    <img alt="First run" width="596" height="199" src="first_run.png" /></p>
+    <img alt="First run" width="596" height="199" src="first_run.png" />
+</p>
 <p>
-    Template consists of two pages: One for <strong>Home p</strong>age, other is <strong>About</strong> page. It&#39;s <strong>localized </strong>in English and Turkish. And it&#39;s <strong>Single-Page Application</strong>! Try to navigate between pages, you&#39;ll see that only the content are changes, navigation menu is fixed.</p>
+    Template consists of two pages: One for <strong>Home p</strong>age, other is <strong>About</strong> page. It&#39;s <strong>localized </strong>in English and Turkish. And it&#39;s <strong>Single-Page Application</strong>! Try to navigate between pages, you&#39;ll see that only the contents are changing, navigation menu is fixed, all scripts and styles are loaded only once.
+</p>
 <p>
-    Now, I&#39;ll show to change the application to a Simple Task System application layer by layer.</p>
-<h2>
-    Domain layer</h2>
+    Now, I&#39;ll show to change the application to a Simple Task System application <strong>layer by layer</strong>.
+</p>
+<h2>Domain layer</h2>
 <p>
     &quot;<em>Responsible for representing concepts of the business, information about the business situation, and business rules</em>&quot; (Eric Evans).
-    In the Domain Driven Design (<strong>DDD</strong>), the core layer is the <strong>Domain Layer</strong>. Domain Layer defines your <strong>Entities,</strong> implements your <strong>business rules </strong>and so on.</p>
-<h3>
-    Entities</h3>
+    In the Domain Driven Design (<strong>DDD</strong>), the core layer is the <strong>Domain Layer</strong>. Domain Layer defines your <strong>Entities,</strong> implements your <strong>business rules </strong>and so on.
+</p>
+<h3>Entities</h3>
 <p>
-    Entities are one of the core concepts of DDD. Eric Evans describe it as &quot;<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>&quot;. So, entities have Id&#39;s and stored in a database.</p>
+    Entities are one of the core concepts of DDD. Eric Evans describe it as &quot;<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>&quot;. So, entities have Id&#39;s and stored in a database.
+</p>
 <p>
-    My first entity is the <strong>Task</strong>:</p>
+    My first entity is the <strong>Task</strong>:
+</p>
 <pre lang="cs">public class Task : Entity&lt;long&gt;
 {
     public virtual Person AssignedPerson { get; set; }
@@ -144,21 +166,25 @@
     }
 }</pre>
 <p>
-    It&#39;s simple class that does not need to be explained. <strong>TaskState</strong> is an enum that has membes as &#39;<strong>Active</strong>&#39; and &#39;<strong>Completed</strong>&#39;. Second entity is the <strong>Person</strong>:</p>
+    It&#39;s simple class that does not need to be explained. <strong>TaskState</strong> is an enum that has membes as &#39;<strong>Active</strong>&#39; and &#39;<strong>Completed</strong>&#39;. Second entity is the <strong>Person</strong>:
+</p>
 <pre lang="cs">public class Person : Entity
 {
     public virtual string Name { get; set; }
 }</pre>
 <p>
-    A task has a relation to a person and that&#39;s all for this simple application.</p>
+    A task has a relation to a person and that&#39;s all for this simple application.
+</p>
 <p>
-    Entities implements <strong>IEntity&lt;TPrimaryKey&gt;</strong> interface in ABP. So, if type of your primary key is long for an Entity, it must implement <strong>IEntity&lt;long&gt;</strong>. If your Entity&#39;s primary key is <strong>int</strong>, you may not define primary key type and directly implement <strong>IEntity</strong> interface. In practice, you can easily derive from <strong>Entity </strong>or <strong>Entity&lt;TPrimaryKey&gt; </strong>classes as shown above (Task and Person). IEntity defines <strong>Id </strong>property for the Entity.</p>
-<h3>
-    Repositories</h3>
+    Entities implements <strong>IEntity&lt;TPrimaryKey&gt;</strong> interface in ABP. So, if type of your primary key is long for an Entity, it must implement <strong>IEntity&lt;long&gt;</strong>. If your Entity&#39;s primary key is <strong>int</strong>, you may not define primary key type and directly implement <strong>IEntity</strong> interface. In practice, you can easily derive from <strong>Entity </strong>or <strong>Entity&lt;TPrimaryKey&gt; </strong>classes as shown above (Task and Person). IEntity defines <strong>Id </strong>property for the Entity.
+</p>
+<h3>Repositories</h3>
 <p>
-    &quot;<em>Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects</em>&quot; (Martin Fowler). Repositories, in practice, are used to perform database operations for domain objects (Entities or Value Types).</p>
+    &quot;<em>Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects</em>&quot; (Martin Fowler). Repositories, in practice, are used to perform database operations for domain objects (Entities or Value Types).
+</p>
 <p>
-    Generally, a seperated repository is used for each Entity (or Aggregate root). I define repositories for Task and Person:</p>
+    Generally, a seperated repository is used for each Entity (or Aggregate root). I define repositories for Task and Person:
+</p>
 <pre lang="cs">public interface ITaskRepository : IRepository&lt;Task, long&gt;
 {
     List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state);
@@ -169,24 +195,29 @@ public interface IPersonRepository : IRepository&lt;Person&gt;
 
 }</pre>
 <p>
-    It&#39;s good to define an interface for each Repository. Thus, we can seperate interface from implementation. A Repository interface inherits <strong>IRepository </strong>as shown above. IRepository interface defines most-used methods for repositories:</p>
-<p><img alt="Project files" width="459" height="315" src="repository_interface.png" /></p>
+    It&#39;s good to define an interface for each Repository. Thus, we can seperate interface from implementation. A Repository interface inherits <strong>IRepository </strong>as shown above. IRepository interface defines most-used methods for repositories:
+</p>
 <p>
-    It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implement all these methods.</p>
-<h2>
-    Infrastructure layer</h2>
+    <img alt="Project files" width="459" height="315" src="repository_interface.png" />
+</p>
 <p>
-    &quot;<em>Provides generic technical capabilities that support the higher layers</em>&quot; (Eric Evans). It&#39;s used to implement abstractions of your application using third-party libraries &amp; frameworks such as Object-Relational Mapping. In this application, I&#39;ll use Infrastructure Layer for:</p>
+    It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implement all these methods.
+</p>
+<h2>Infrastructure layer</h2>
+<p>
+    &quot;<em>Provides generic technical capabilities that support the higher layers</em>&quot; (Eric Evans). It&#39;s used to implement abstractions of your application using third-party libraries &amp; frameworks such as Object-Relational Mapping. In this application, I&#39;ll use Infrastructure Layer for:
+</p>
 <ul>
     <li>Creating database migration system using <strong>FluentMigrator</strong>.</li>
-    <li>Implementing Repositories in <strong>NHibernate</strong> and <strong>FluentNHibernate</strong>.</li>
+    <li>Implementing Repositories and mapping Entities with <strong>NHibernate</strong> and <strong>FluentNHibernate</strong>.</li>
 </ul>
-<h3>
-    Database Migrations</h3>
+<h3>Database Migrations</h3>
 <p>
-    &quot;<em><strong>Evolutionary Database Design</strong>: Over the last few years we've developed a number of techniques that allow a database design to evolve as an application develops. This is a very important capability for agile methodologies.</em>&quot; Martin Fowler says in his web site. Database migration is an important technique to support this idea. It&#39;s very hard to maintain an application&#39;s database in more than one production environment without such techniques. Even if you&#39;ve only one live system, it&#39;s critical.</p>
+    &quot;<em><strong>Evolutionary Database Design</strong>: Over the last few years we've developed a number of techniques that allow a database design to evolve as an application develops. This is a very important capability for agile methodologies.</em>&quot; Martin Fowler says in his web site. Database migration is an important technique to support this idea. It&#39;s very hard to maintain an application&#39;s database in more than one production environment without such techniques. Even if you&#39;ve only one live system, it&#39;s critical.
+</p>
 <p>
-    FluentMigrator is a good tool for database migrations. It supports most common database systems. Here, my migration codes for <strong>Person </strong>and <strong>Task </strong>tables.</p>
+    FluentMigrator is a good tool for database migrations. It supports most common database systems. Here, my migration codes for <strong>Person </strong>and <strong>Task </strong>tables.
+</p>
 <pre lang="cs">[Migration(2014041001)]
 public class _01_CreatePersonTable : AutoReversingMigration
 {
@@ -219,9 +250,11 @@ public class _02_CreateTasksTable : AutoReversingMigration
 }
 </pre>
 <p>
-    In FluentMigrator, a migration is defined in a class derived from <strong>Migration</strong>. <strong>AutoReversingMigration </strong>is a shortcut if your migration can be automatically rolled back. A migration class should has <strong>MigrationAttribute</strong>. It defines <strong>version number </strong>of the migration class. All migrations are applied ordered by this version number. It can a any <strong>long </strong>number. I use a number that identify the migration class&#39;s creation date plus an incremental value for same day. It&#39;s completely up to you. Only important thing is their order.</p>
+    In FluentMigrator, a migration is defined in a class derived from <strong>Migration</strong>. <strong>AutoReversingMigration </strong>is a shortcut if your migration can be automatically rolled back. A migration class should has <strong>MigrationAttribute</strong>. It defines <strong>version number </strong>of the migration class. All migrations are applied ordered by this version number. It can a any <strong>long </strong>number. I use a number that identify the migration class&#39;s creation date plus an incremental value for same day. It&#39;s completely up to you. Only important thing is their order.
+</p>
 <p>
-    FluentMigrator stores latest applied version number in a table in the database. So, it applies only migrations those are bigger than the version of the database. By default, it uses &#39;VersionInfo&#39; table. If you want to change the table name, you can create such a class:</p>
+    FluentMigrator stores latest applied version number in a table in the database. So, it applies only migrations those are bigger than the version of the database. By default, it uses &#39;VersionInfo&#39; table. If you want to change the table name, you can create such a class:
+</p>
 <pre lang="cs">[VersionTableMetaData]
 public class VersionTable : DefaultVersionTableMetaData
 {
@@ -234,22 +267,31 @@ public class VersionTable : DefaultVersionTableMetaData
     }
 }</pre>
 <p>
-    As you see, I write a prefix <strong>Sts</strong> (<strong>S</strong>imple <strong>T</strong>ask <strong>S</strong>ystem) for all tables. That is important for a modular application so all modules can have their specific prefix to identify the module-specific tables.</p>
+    As you see, I write a prefix <strong>Sts</strong> (<strong>S</strong>imple <strong>T</strong>ask <strong>S</strong>ystem) for all tables. That is important for a modular application so all modules can have their specific prefix to identify the module-specific tables.
+</p>
 <p>
-    To create database my tables, I use Migrate.exe tool of FluentMigrator with such a &#39;command line&#39; command:</p>
+    To create database my tables, I use Migrate.exe tool of FluentMigrator with such a &#39;command line&#39; command:
+</p>
 <pre>Migrate.exe /connection "Server=localhost; Database=SimpleTaskSystemDb; Trusted_Connection=True;" /db sqlserver /target "SimpleTaskSystem.Infrastructure.NHibernate.dll"</pre>
 <p>
-    For a shortcut, ABP template includes RunMigrations.bat file. After I compile the project in Debug mode, I run the &quot;RunMigrations.bat&quot;:</p>
-<p><img alt="Database migrations" width="596" height="598" src="migration.png"/></p>
+    For a shortcut, ABP template includes RunMigrations.bat file. After I compile the project in Debug mode, I run the &quot;RunMigrations.bat&quot;:
+</p>
 <p>
-    As you see, two migration file are executed and tables are created:</p>
-<p><img alt="Database after migrations" width="188" height="148" src="db_after_migration.png"/></p>
+    <img alt="Database migrations" width="596" height="598" src="migration.png" />
+</p>
 <p>
-    For more information on FluentMigrator, see it&#39;s web site [4].</p>
-<h3>
-    Entity mappings</h3>
+    As you see, two migration file are executed and tables are created:
+</p>
 <p>
-    In order to get/store Entities into database, we should map Entities with database tables. NHibernate has several options to accomplish that. Here, I&#39;ll use Fluent Mapping (You can use conventional auto-mapping, see FluentNHibernate&#39;s web site [5]):</p>
+    <img alt="Database after migrations" width="188" height="148" src="db_after_migration.png" />
+</p>
+<p>
+    For more information on FluentMigrator, see it&#39;s web site [4].
+</p>
+<h3>Entity mappings</h3>
+<p>
+    In order to get/store Entities into database, we should map Entities with database tables. NHibernate has several options to accomplish that. Here, I&#39;ll use Fluent Mapping (You can use conventional auto-mapping, see FluentNHibernate&#39;s web site [5]):
+</p>
 <pre>public class PersonMap : EntityMap&lt;Person&gt;
 {
     public PersonMap()
@@ -272,11 +314,12 @@ public class TaskMap : EntityMap&lt;Task, long&gt;
 }
 </pre>
 <p>
-    <strong>EntityMap</strong> is a class of ABP that automatically maps <strong>Id </strong>property and gets <strong>table name </strong>in the constructor. So, I&#39;m deriving from ABP and mapping other properties.</p>
-<h3>
-    Repository implementations</h3>
+    <strong>EntityMap</strong> is a class of ABP that automatically maps <strong>Id </strong>property and gets <strong>table name </strong>in the constructor. So, I&#39;m deriving from ABP and mapping other properties.
+</p>
+<h3>Repository implementations</h3>
 <p>
-    I defined interfaces for each Entity in the domain layer. Here, I&#39;ll implement repositories in NHibernate. It&#39;s pretty easy:</p>
+    I defined interfaces for each Entity in the domain layer. Here, I&#39;ll implement repositories in NHibernate. It&#39;s pretty easy:
+</p>
 <pre>public class PersonRepository : NhRepositoryBase&lt;Person&gt;, IPersonRepository
 {
 
@@ -305,37 +348,43 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;ITaskRepository
     }
 }</pre>
 <p>
-    <strong>NhRepositoryBase </strong>implements all methods those are defined in <strong>IRepository </strong>interface. So, you must only implement your custom methods as I implemented for <strong>GetAllWithPeople</strong>. <strong>GetAll()</strong> method returns <strong>IQueryable&lt;TEntity&gt;</strong>, so you can write additional conditions until invoke <strong>ToList()</strong>.</p>
+    <strong>NhRepositoryBase </strong>implements all methods those are defined in <strong>IRepository </strong>interface. So, you must only implement your custom methods as I implemented for <strong>GetAllWithPeople</strong>. <strong>GetAll()</strong> method returns <strong>IQueryable&lt;TEntity&gt;</strong>, so you can write additional conditions until invoke <strong>ToList()</strong>.
+</p>
 <p>
-    That&#39;s all, you can use repositories for database operations for now.</p>
-<h2>
-    &nbsp;Application layer</h2>
+    That&#39;s all, you can use repositories for database operations for now.
+</p>
+<h2>&nbsp;Application layer</h2>
 <p>
-    &quot;<em>Defines the jobs the software is supposed to do and directs the expressive domain objects to work out problems</em>&quot; (Eric Evans). Application layer does not includes domain information or business rules an ideal world. It mediates between presentation layer and domain layer.</p>
-<h3>
-    Application services and Data Transfer Objects (DTOs)</h3>
+    &quot;<em>Defines the jobs the software is supposed to do and directs the expressive domain objects to work out problems</em>&quot; (Eric Evans). Application layer does not includes domain information or business rules an ideal world. It mediates between presentation layer and domain layer.
+</p>
+<h3>Application services and Data Transfer Objects (DTOs)</h3>
 <p>
-    Application services provides base funictionality of the application layer. It gets data transfer objects as arguments and returns data transfer objects. Returning Entities has many problems (Because of data hiding, serialization, lazy loading... etc.). I strongly recommend to not get/return Entities from Application services. Thus, Presentation layer is completely isolated from Domain layer.</p>
+    Application services provides base funictionality of the application layer. It gets data transfer objects as arguments and returns data transfer objects. Returning Entities has many problems (Because of data hiding, serialization, lazy loading... etc.). I strongly recommend to not get/return Entities from Application services. Thus, Presentation layer is completely isolated from Domain layer.
+</p>
 <p>
-    So, let&#39;s start by easy, person application service:</p>
+    So, let&#39;s start by easy, person application service:
+</p>
 <pre>public interface IPersonAppService : IApplicationService
 {
     GetAllPeopleOutput GetAllPeople();
 }</pre>
 <p>
-    All application services implements <strong>IApplicationService </strong>by convention. It ensures dependency injection and provides some built-in features of ABP. I defined only one method <strong>GetAllPeople()</strong> and it returns a DTO named <strong>GetAllPeopleOutput</strong>. I name DTOs as like that: <strong>method name </strong>plus <strong>Input </strong>or <strong>Output </strong>postfix. See <strong>GetAllPeopleOutput </strong>class:</p>
+    All application services implements <strong>IApplicationService </strong>by convention. It ensures dependency injection and provides some built-in features of ABP. I defined only one method <strong>GetAllPeople()</strong> and it returns a DTO named <strong>GetAllPeopleOutput</strong>. I name DTOs as like that: <strong>method name </strong>plus <strong>Input </strong>or <strong>Output </strong>postfix. See <strong>GetAllPeopleOutput </strong>class:
+</p>
 <pre>public class GetAllPeopleOutput : IOutputDto
 {
     public List&lt;PersonDto&gt; People { get; set; }
 }</pre>
 <p>
-    An output DTO implements <strong>IOutputDto</strong> (and it inherits IDto). It does nothing but used to identify DTOs by convention. <strong>PersonDto </strong>is another DTO class to pass a <strong>Person </strong>information to the presentation layer:</p>
+    An output DTO implements <strong>IOutputDto</strong> (and it inherits IDto). It does nothing but used to identify DTOs by convention. <strong>PersonDto </strong>is another DTO class to pass a <strong>Person </strong>information to the presentation layer:
+</p>
 <pre>public class PersonDto : EntityDto
 {
     public string Name { get; set; }
 }</pre>
 <p>
-    <strong>EntityDto </strong>is another helper class of ABP that defines <strong>Id </strong>property and implements <strong>IDto </strong>interface automatically. <strong>IPersonAppService</strong> is implemented as shown below:</p>
+    <strong>EntityDto </strong>is another helper class of ABP that defines <strong>Id </strong>property and implements <strong>IDto </strong>interface automatically. <strong>IPersonAppService</strong> is implemented as shown below:
+</p>
 <pre>public class PersonAppService : IPersonAppService
 {
     private readonly IPersonRepository _personRepository;
@@ -354,14 +403,252 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;ITaskRepository
     }
 }</pre>
 <p>
-    <strong>PersonAppService </strong>gets <strong>IPersonRepository</strong> in it&#39;s constructor. ABP&#39;s built-in <strong>dependency injection </strong>system handles it using <strong>Castle Windsor</strong>. All repositories and application services are automatically registered to IOC (Inversion of Control) container as transient objects. So, you&#39;re not thinking on DI details.</p>
+    <strong>PersonAppService </strong>gets <strong>IPersonRepository</strong> in it&#39;s constructor. ABP&#39;s built-in <strong>dependency injection </strong>system handles it using <strong>Castle Windsor</strong>. All repositories and application services are automatically registered to IOC (Inversion of Control) container as transient objects. So, you&#39;re not thinking on DI details.
+</p>
 <p>
-    <strong>GetAllPeople()</strong> method simply gets a list of all people (using ABP&#39;s out of the box implementation) from database and converts it to list of <strong>PersonDto </strong>objects using <strong>AutoMapper </strong>library. AutoMapper makes it incredibly easy to map one class to other using conventions (and configurations if needed). I just defined a single line of code to configure mapping:</p>
+    <strong>GetAllPeople()</strong> method simply gets a list of all people (using ABP&#39;s out of the box implementation) from database and converts it to list of <strong>PersonDto </strong>objects using <strong>AutoMapper </strong>library. AutoMapper makes it incredibly easy to map one class to other using conventions (and configurations if needed). I just defined a single line of code to configure mapping:
+</p>
 <pre>Mapper.CreateMap&lt;Person, PersonDto&gt;();</pre>
 <p>
-    This code works when application starts and creates mapping. Then, when I need, I call the Mapper.Map method to create a <strong>PersonDto </strong>object using an existing <strong>Person </strong>object. To get more informatin about AutoMapper, see it&#39;s web site [7].</p>
+    This code works when application starts and creates mapping. Then, when I need, I call the Mapper.Map method to create a <strong>PersonDto </strong>object using an existing <strong>Person </strong>object. To get more informatin about AutoMapper, see it&#39;s web site [7]. Other application service is <strong>TaskAppService </strong>implemented as below:
+</p>
+<pre>public class TaskAppService : ITaskAppService
+{
+    private readonly ITaskRepository _taskRepository;
+    private readonly IPersonRepository _personRepository;
+
+    public TaskAppService(ITaskRepository taskRepository, IPersonRepository personRepository)
+    {
+        _taskRepository = taskRepository;
+        _personRepository = personRepository;
+    }
+
+    [UnitOfWork]
+    public void UpdateTask(UpdateTaskInput input)
+    {
+        var task = _taskRepository.Get(input.TaskId);
+
+        if (input.State.HasValue)
+        {
+            task.State = input.State.Value;
+        }
+
+        if (input.AssignedPersonId.HasValue)
+        {
+            task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
+        }
+    }
+
+    public void CreateTask(CreateTaskInput input)
+    {
+        var task = new Task { Description = input.Description };
+
+        if (input.AssignedPersonId.HasValue)
+        {
+            task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
+        }
+
+        _taskRepository.Insert(task);
+    }
+    
+    //...other methods...
+}</pre>
 <p>
-    TODO: Task System and UOW</p>
+    In the <strong>UpdateTask </strong>method, &#39;m getting the <strong>Task </strong>Entity from task repository and setting changed properties. <strong>State </strong>or/and <strong>AssignedPersonId </strong>might be changed. Notice that I did not called _taskRepository.<strong>Update</strong> or any other method to save changes to database. I defined ABP&#39;s <strong>UnitOfWork </strong>attribute for the UpdateTask method. It basically opens a <strong>database connection</strong> and begins <strong>transaction</strong> at the beginning of the method and saves all changes to database at the end of the method automatically. It <strong>rollbacks</strong> the transaction if an Exception is thrown in the execution of the method. If a UnitOfWork method calls another UnitOfWork method, they use the same transaction.
+</p>
+<p>
+    In the <strong>CreateTask </strong>method, I created a new task and <strong>Insert</strong>ed to task repository. There is no need for UnitOfWork attribute here since Repository&#39;s <strong>Insert </strong>method manages db connection and transaction itself (All repository methods are unit of work by default). UnitOfWork mechanism in ABP is very similar to mechanism I described in <a href="http://www.codeproject.com/Articles/543810/Dependency-Injection-and-Unit-Of-Work-using-Castle">this article</a>. For more informatin, you can read it.
+</p>
+<h3>Dynamic Web API Controllers</h3>
+<p>
+    Application services are consumed by Presentation Layer. In a Single-Page application, all datas are sent/received using AJAX between javascript and the server. ABP extremely simplifies calling an application service method from javascript. So, how it does this, let me explain...
+</p>
+<p>
+    An application service can not directly called by javascript. We may use ASP.NET <strong>Web API </strong>to expose services to clients (There are many other frameworks for that such as Web Services, WCF, SignalR and so on). So, there may be such a flow:
+</p>
+<p>
+    <img alt="Calling Web API from Javascript using AJAX" width="270" height="327" src="calling_webapi_ajax.png" />
+</p>
+<p>
+    Javascript calls a Web API controller&#39;s action via AJAX, the Web API controller&#39;s action then calls corresponding application service&#39;s method, gets result and returns to the client. This is pretty robotic.ABP automates that and can <strong>dynamically </strong>create a Web API controller for an application service. Here the all code to create two Web API controller for my two Application Service: task service and person service (These codes are located in WebApi project in the solution).
+</p>
+<pre>DyanmicApiControllerBuilder
+    .For&lt;ITaskAppService&gt;("tasksystem/task")
+    .Build();
+
+DyanmicApiControllerBuilder
+    .For&lt;IPersonAppService&gt;("tasksystem/person")
+    .Build();</pre>
+<p>
+    Thus, all methods of task and person application services are exposed to clients using ASP.NET Web API. In the Presentation Layer section, We will see how to call these Web API controllers with ABP&#39;s dynamic javascript proxies.
+</p>
+<h2>Presentation layer</h2>
+<p>
+    &nbsp;&quot;<em>Responsible for showing information to the user and interpreting user&#39;s commands</em>&quot; (Eric Evans). The most obvious layer of the DDD is the Presentation Layer since we can see it, we can click it :).
+</p>
+<h3>Single page applications</h3>
+<p>
+    Wikipedia says about SPA:
+</p>
+<blockquote>
+    <p>
+        A single-page application (SPA), also known as single-page interface (SPI), is a web application or web site that fits on a single web page with the goal of providing a more fluid user experience akin to a desktop application.
+    </p>
+    <p>
+        In an SPA, either all necessary code – HTML, JavaScript, and CSS – is retrieved with a single page load, or the appropriate resources are dynamically loaded and added to the page as necessary, usually in response to user actions. The page does not reload at any point in the process, nor does control transfer to another page, although modern web technologies (such as those included in HTML5) can provide the perception and navigability of separate logical pages in the application. Interaction with the single page application often involves dynamic communication with the web server behind the scenes.
+    </p>
+</blockquote>
+<p>
+    There are many frameworks and libraries those provide an infrastructure to build SPAs. <strong>Durandal </strong>[8] is one of these frameworks and I think it&#39;s is a very successful open source project. It&#39;s built on successful and mostly used projects: <strong>jQuery</strong> (used for DOM manipulation and AJAX), <strong>knockout.js</strong> (used for MVVM, binding javascript models with HTML) and <strong>require.js</strong> (used to manage javascript dependencies and loading javascript from server dynamically). For mode information and rich documentation, visit to Durandal&#39;s web site.
+</p>
+<h3>
+    Views</h3>
+<p>
+    In Durandal, a part of a page consists of a <strong>view </strong>and a <strong>viewmodel</strong>.
+    For ABP startup template, files to create SPA is shown below:</p>
+<p>
+    <img alt="Durandal Views for ABP Single Page Application Template" width="205" height="398" src="template_spa_files.png" /></p>
+<p>
+    There is three views: <strong>layout</strong>, <strong>home </strong>and <strong>about</strong>. Layout provides menu and container for pages. home and about are views loaded dynamically into page. Surely, I changed views and models in order to create my Simple Task System application.</p>
+<p>
+    After changed views, here the all view and viewmodels:
+</p>
+<p>
+    &nbsp;
+    <img alt="Durandal Views for ABP Single Page Application 'Simple Task System'" width="219" height="381" src="sts_spa_files.png" /></p>
+<p>
+    I have a layout and two-views: <strong>task list </strong>and <strong>new task</strong>. Let&#39;s begin to investigate views.</p>
+<h4>
+    Task list</h4>
+<p>
+    In the task list, there is a list of all tasks with task description, assigned person and creation date. There is a <strong>combobox </strong>to show all/avtice/completed tasks. Completed tasks are shown as gray (with an OK icon), active tasks are shown as bold (with a minus icon). Only completed task is the &quot;Complete the Codeproject article!&quot; that&#39;s assigned to me :)</p>
+<p>
+    <img alt="A screenshot of 'Simple Task System'" width="596" height="263" src="tasksystem.png" /></p>
+<p>
+    Let me to start with the view model. View model is used to communicate with the server to perform user actions (listing tasks, changing combobox, clicking the icon to change status of the task) and provide a model to show in the view.</p>
+<pre lang="js">define(['service!tasksystem/task'],
+    function (taskService) {
+
+        return function () {
+            var that = this; //an alias of this
+
+            that.tasks = ko.mapping.fromJS([]); //list of tasks
+
+            that.localize = abp.localization.getSource('SimpleTaskSystem');
+
+            that.selectedTaskState = ko.observable(0); //&#39;All tasks&#39; option is selected in combobox as default
+
+            that.activate = function () {
+                that.refreshTasks();
+            };
+
+            that.refreshTasks = function () {
+                taskService.getTasks({
+                    state: that.selectedTaskState() > 0 ? that.selectedTaskState() : null
+                }).done(function (data) {
+                    ko.mapping.fromJS(data.tasks, that.tasks);
+                });
+            };
+
+            that.changeTaskState = function (task) {
+                var newState;
+                if (task.state() == 1) {
+                    newState = 2;
+                } else {
+                    newState = 1;
+                }
+
+                taskService.updateTask({
+                    taskId: task.id(),
+                    state: newState
+                }).done(function () {
+                    task.state(newState);
+                    abp.notify.info(that.localize('TaskUpdatedMessage'));
+                });
+            };
+        };
+    });</pre>
+<p>
+    First line calls require.js&#39;s <strong>define </strong>function to register the module and declare dependencies. a dependency is generally an another module (even maybe a view model). &#39;<strong>service!tasksystem/task</strong>&#39; is a special syntax of ABP that reference to the dynamic Web API controller for <strong>task application service</strong> (remember how I defined the task service in Dynamic Web API Controllers section).</p>
+<p>
+    Second parameter of define function is the module itself. It should be a function that defines the module. It&#39;s parameters are automatically filled by Durandal using your dependency list.</p>
+<p>
+    <strong>that.tasks </strong>is a <strong>knockout observable array</strong>. It&#39;s created using <strong>knockout.mapping</strong>&#39;s function. that.localize is used to get a function to be used to localize in javascript. It&#39;s a feature of ABP to localize texts dynamically in javascript. <strong>that.selectedTaskState </strong>is an <strong>observanle </strong>that is binded to combobox to show all/active/completed tasks.</p>
+<p>
+    <strong>activate</strong> is a special function of Durandal. This function is called automatically by Durandal when this view is activated. So, we can write some codes to run when user enters the view.</p>
+<p>
+    In the <strong>refreshTasks </strong>method, I called <strong>Task Application Service</strong>&#39;s <strong>getTasks</strong> method to load tasks from server. To call an application service from javascript is that easy through ABP&#39;s dynamic Web API controller and dynamic <strong>javascript client proxies</strong>. getTasks function gets same arguments of <strong>TaskAppService.GetTasks</strong>. The function will return a jQuery <strong>promise</strong>, so you can write a <strong>done </strong>handler to get <strong>return value </strong>of the GetTasks method of the task application service. So, calling a method of an application service from javascript is that easy by ABP. taskService.getTasks javascript call also handles errors and show error message to the used if needed. If your done handler is called, you can be sure there is no error. In the done handler, I added retrived tasks to the that.task array.</p>
+<p>
+    <strong>changeTaskState </strong>is also pretty similar. It&#39;s used to change a task&#39;s state from <strong>active </strong>to <strong>completed </strong>or vice verse. In the done handler, you see the usage of <strong>localization</strong>. See Localization section for details.</p>
+<p>
+    TODO: View of Task list.</p>
+<p>
+    TODO: New task!</p>
+<h3>
+    Localization</h3>
+<p>
+    ABP provides a strong and elastic localization system. You can store your localization texts in resource files, XML files or even in a custom place. In this section, I&#39;ll show using XML files. Simple Task System project includes XML files in the Localization folder:</p>
+<p>
+    <img alt="Localization files" width="307" height="142" src="localization_files.png" /></p>
+<p>
+    Here, the content of the SimpleTaskSystem.xml:</p>
+<pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;localizationDictionary culture=&quot;en&quot;&gt;
+  &lt;texts&gt;
+    &lt;text name=&quot;TaskSystem&quot; value=&quot;Task System&quot; /&gt;
+    &lt;text name=&quot;TaskList&quot; value=&quot;Task List&quot; /&gt;
+    &lt;text name=&quot;NewTask&quot; value=&quot;New Task&quot; /&gt;
+    &lt;text name=&quot;Xtasks&quot; value=&quot;{0} tasks&quot; /&gt;
+    &lt;text name=&quot;AllTasks&quot; value=&quot;All tasks&quot; /&gt;
+    &lt;text name=&quot;ActiveTasks&quot; value=&quot;Active tasks&quot; /&gt;
+    &lt;text name=&quot;CompletedTasks&quot; value=&quot;Completed tasks&quot; /&gt;
+    &lt;text name=&quot;TaskDescription&quot; value=&quot;Task description&quot; /&gt;
+    &lt;text name=&quot;EnterDescriptionHere&quot; value=&quot;Task description&quot; /&gt;
+    &lt;text name=&quot;AssignTo&quot; value=&quot;Assign to&quot; /&gt;
+    &lt;text name=&quot;SelectPerson&quot; value=&quot;Select person&quot; /&gt;
+    &lt;text name=&quot;CreateTheTask&quot; value=&quot;Create the task&quot; /&gt;
+    &lt;text name=&quot;TaskUpdatedMessage&quot; value=&quot;Task has been successfully updated.&quot; /&gt;
+    &lt;text name=&quot;TaskCreatedMessage&quot; value=&quot;Task {0} has been created successfully.&quot; /&gt;
+  &lt;/texts&gt;
+&lt;/localizationDictionary&gt;</pre>
+<p>
+    It&#39;s a simple XML file includes name-value pairs for all localizable texts. culture attribute defines culture of the file. There is also an XML file for Turkish localization in the solution. Localization files should be registered to ABP in order to be usable in the C# and javascript. First, I defined a class derived from <strong>XmlLocalizationSource</strong>:</p>
+<pre lang="cs">public class SimpleTaskSystemLocalizationSource : XmlLocalizationSource
+{
+    public SimpleTaskSystemLocalizationSource()
+        : base("SimpleTaskSystem", HttpContext.Current.Server.MapPath("/Localization/SimpleTaskSystem"))
+    {
+    }
+}</pre>
+<p>
+    A localization source must be a <strong>unique name</strong> (SimpleTaskSystem in this project). Thus, different sources (stored in different format) can be used in the application. XmlLocalization source also needs a folder (/Localization/SimpleTaskSystem in this project) to read localization files. Lastly, we must register this class to <strong>ABP localization system </strong>before use it:</p>
+<pre lang="cs">LocalizationHelper.RegisterSource&lt;SimpleTaskSystemLocalizationSource&gt;();</pre>
+<p>
+    Then we can get localized texts when we need. In C#, we have two option to get a localizaed text:</p>
+<pre lang="cs">//Use directly
+var s1 = LocalizationHelper.GetString("SimpleTaskSystem", "NewTask");
+
+//Use after get source
+var source = LocalizationHelper.GetSource("SimpleTaskSystem");
+var s2 = source.GetString("NewTask");
+</pre>
+<p>
+    It returns the localized text in <strong>current language </strong>(by using CurrentUICulture of the current thread). There are also overrides to get text in a specific culture. There is a similar API in the javascript to get localized texts:</p>
+<pre lang="js">//Use directly
+var s1 = abp.localization.localize('NewTask', 'SimpleTaskSystem');
+
+//Use after get source
+var source = abp.localization.getSource('SimpleTaskSystem');
+var s2 = source('NewTask');
+</pre>
+<p>
+    These methods also gets the localized text in the current language.</p>
+<h2>
+    Summary</h2>
+<p>
+    ...</p>
+
+
 <h2 id="ArticleHistory">Article history </h2>
 
 <ul>
@@ -370,7 +657,8 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;ITaskRepository
 
 <h2 id="References">References</h2>
 
-<p>[1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a><br />
+<p>
+    [1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a><br />
     [2] Book: &quot;<a href="http://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215">Domain Driven Design: Tackling Complexity in the Heart of Software</a>&quot; by Eric Evans.<br />
     [3] Martin Fowler&#39;s web site: <a href="http://martinfowler.com/">http://martinfowler.com</a>
     <br />
@@ -378,7 +666,10 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;ITaskRepository
     [5] FluentNHibernate: <a href="http://www.fluentnhibernate.org/">http://www.fluentnhibernate.org/</a><br />
     [6] Eric Evans: <a href="http://dddcommunity.org/tag/eric-evans/">http://dddcommunity.org/tag/eric-evans/</a>
     <br />
-    [7] AutoMapper: <a href="http://automapper.org/">http://automapper.org/</a> </p>
+    [7] AutoMapper: <a href="http://automapper.org/">http://automapper.org/</a>
+    <br />
+    [8] Durandaljs: <a href="http://durandaljs.com/">http://durandaljs.com/</a>
+</p>
 
 
 
