@@ -1,0 +1,5 @@
+- ABP 0.2.0'ı tamamla, nuget'e yükle.
+- Makalenin 1. versiyonunu paketle
+- Makalenin 2. ve 3. versiyonunu hazırla
+- Abp.com'u düzenle.
+--> 05.05.2014: Makalenin 1. versiyonunu yayınla.

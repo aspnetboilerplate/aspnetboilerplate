@@ -1,1 +1,0 @@
-- Add an image that shows layers and tools.
