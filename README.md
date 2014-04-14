@@ -1,8 +1,6 @@
 ASP.NET Boilerplate
 ===
 
-> Current status: __Developing. Not appropriate for usage yet__.
-
 ASP.NET Boilerplate is a starting point for new web applications with best practices and most popular tools!
 
 ASP.NET Boilerplate implements __NLayer architecture__ and __Domain Driven Design__ with these tools:
@@ -33,7 +31,7 @@ Also adds standard stuff:
 - User & Role management
 - Exception handling
 
-and so on...
+and so on... See http://www.aspnetboilerplate.com for more.
 
 An overall view of layers and tools:
 
