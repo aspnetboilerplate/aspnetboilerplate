@@ -1,3 +1,4 @@
+using System;
 using Abp.Domain.Entities;
 
 namespace Abp.Events.Bus.Datas.Entities
@@ -6,6 +7,7 @@ namespace Abp.Events.Bus.Datas.Entities
     /// Used to pass data for an event that is related to with an <see cref="IEntity"/> object.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
+    [Serializable]
     public abstract class EntityEventData<TEntity> : EventData
     {
         /// <summary>

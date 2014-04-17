@@ -1,3 +1,4 @@
+using System;
 using Abp.Domain.Entities;
 
 namespace Abp.Events.Bus.Datas.Entities
@@ -6,6 +7,7 @@ namespace Abp.Events.Bus.Datas.Entities
     /// This type of event can be used to notify update of an Entity.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
+    [Serializable]
     public class EntityUpdatedEventData<TEntity> : EntityEventData<TEntity>
         where TEntity : IEntity
     {
