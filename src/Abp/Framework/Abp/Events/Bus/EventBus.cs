@@ -207,6 +207,40 @@ namespace Abp.Events.Bus
             }
         }
 
+        //public void Trigger(Type eventType, object eventSource, EventData eventData)
+        //{
+        //    eventData.EventSource = eventSource;
+        //    IEventHandlerFactory[] factoriesToTrigger;
+        //    lock (_handlerFactories)
+        //    {
+        //        List<IEventHandlerFactory> handlerFactoryList;
+        //        if (!_handlerFactories.TryGetValue(eventType, out handlerFactoryList))
+        //        {
+        //            return;
+        //        }
+
+        //        factoriesToTrigger = handlerFactoryList.ToArray();
+        //    }
+
+        //    foreach (var factoryToTrigger in factoriesToTrigger)
+        //    {
+        //        var eventHandler = factoryToTrigger.GetHandler() as IEventHandler<TEventData>;
+        //        if (eventHandler == null)
+        //        {
+        //            throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
+        //        }
+
+        //        try
+        //        {
+        //            eventHandler.HandleEvent(eventData);
+        //        }
+        //        finally
+        //        {
+        //            factoryToTrigger.ReleaseHandler(eventHandler);
+        //        }
+        //    }
+        //}
+
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
             return TriggerAsync(null, eventData);
