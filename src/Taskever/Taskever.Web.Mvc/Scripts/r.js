@@ -1,5 +1,5 @@
 /**
- * @license r.js 2.1.10 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
+ * @license r.js 2.1.11 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
@@ -20,7 +20,7 @@ var requirejs, require, define, xpcUtil;
 (function (console, args, readFileFunc) {
     var fileName, env, fs, vm, path, exec, rhinoContext, dir, nodeRequire,
         nodeDefine, exists, reqMain, loadedOptimizedLib, existsForNode, Cc, Ci,
-        version = '2.1.10',
+        version = '2.1.11',
         jsSuffixRegExp = /\.js$/,
         commandOption = '',
         useLibLoaded = {},
@@ -238,7 +238,7 @@ var requirejs, require, define, xpcUtil;
     }
 
     /** vim: et:ts=4:sw=4:sts=4
- * @license RequireJS 2.1.10 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS 2.1.11 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
@@ -251,7 +251,7 @@ var requirejs, require, define, xpcUtil;
 (function (global) {
     var req, s, head, baseElement, dataMain, src,
         interactiveScript, currentlyAddingScript, mainScript, subPath,
-        version = '2.1.10',
+        version = '2.1.11',
         commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
         cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,
         jsSuffixRegExp = /\.js$/,
@@ -380,7 +380,7 @@ var requirejs, require, define, xpcUtil;
         throw err;
     }
 
-    //Allow getting a global that expressed in
+    //Allow getting a global that is expressed in
     //dot notation, like 'a.b.c'.
     function getGlobal(value) {
         if (!value) {
@@ -806,7 +806,7 @@ var requirejs, require, define, xpcUtil;
                 mod.usingExports = true;
                 if (mod.map.isDefine) {
                     if (mod.exports) {
-                        return mod.exports;
+                        return (defined[mod.map.id] = mod.exports);
                     } else {
                         return (mod.exports = defined[mod.map.id] = {});
                     }
@@ -822,7 +822,7 @@ var requirejs, require, define, xpcUtil;
                         config: function () {
                             return  getOwn(config.config, mod.map.id) || {};
                         },
-                        exports: handlers.exports(mod)
+                        exports: mod.exports || (mod.exports = {})
                     });
                 }
             }
@@ -1741,7 +1741,7 @@ var requirejs, require, define, xpcUtil;
             /**
              * Called to enable a module if it is still in the registry
              * awaiting enablement. A second arg, parent, the parent module,
-             * is passed in for context, when this method is overriden by
+             * is passed in for context, when this method is overridden by
              * the optimizer. Not shown here to keep code compact.
              */
             enable: function (depMap) {
@@ -13839,6 +13839,7 @@ define('source-map/source-map-consumer', function (require, exports, module) {
         }
       }
 
+      this.__generatedMappings.sort(util.compareByGeneratedPositions);
       this.__originalMappings.sort(util.compareByOriginalPositions);
     };
 
@@ -14309,7 +14310,7 @@ define('source-map/source-map-generator', function (require, exports, module) {
         throw new Error('Invalid mapping: ' + JSON.stringify({
           generated: aGenerated,
           source: aSource,
-          orginal: aOriginal,
+          original: aOriginal,
           name: aName
         }));
       }
@@ -16360,7 +16361,7 @@ TreeWalker.prototype = {
 
 var KEYWORDS = 'break case catch const continue debugger default delete do else finally for function if in instanceof new return switch throw try typeof var void while with';
 var KEYWORDS_ATOM = 'false null true';
-var RESERVED_WORDS = 'abstract boolean byte char class double enum export extends final float goto implements import int interface long native package private protected public short static super synchronized this throws transient volatile'
+var RESERVED_WORDS = 'abstract boolean byte char class double enum export extends final float goto implements import int interface long native package private protected public short static super synchronized this throws transient volatile yield'
     + " " + KEYWORDS_ATOM + " " + KEYWORDS;
 var KEYWORDS_BEFORE_EXPRESSION = 'return new delete throw else case';
 
@@ -17695,7 +17696,7 @@ function parse($TEXT, options) {
                 condition   : expr,
                 consequent  : yes,
                 alternative : expression(false, no_in),
-                end         : peek()
+                end         : prev()
             });
         }
         return expr;
@@ -18601,22 +18602,23 @@ AST_Toplevel.DEFMETHOD("scope_warnings", function(options){
 function OutputStream(options) {
 
     options = defaults(options, {
-        indent_start  : 0,
-        indent_level  : 4,
-        quote_keys    : false,
-        space_colon   : true,
-        ascii_only    : false,
-        inline_script : false,
-        width         : 80,
-        max_line_len  : 32000,
-        beautify      : false,
-        source_map    : null,
-        bracketize    : false,
-        semicolons    : true,
-        comments      : false,
-        preserve_line : false,
-        screw_ie8     : false,
-        preamble      : null,
+        indent_start     : 0,
+        indent_level     : 4,
+        quote_keys       : false,
+        space_colon      : true,
+        ascii_only       : false,
+        unescape_regexps : false,
+        inline_script    : false,
+        width            : 80,
+        max_line_len     : 32000,
+        beautify         : false,
+        source_map       : null,
+        bracketize       : false,
+        semicolons       : true,
+        comments         : false,
+        preserve_line    : false,
+        screw_ie8        : false,
+        preamble         : null,
     }, true);
 
     var indentation = 0;
@@ -18941,13 +18943,20 @@ function OutputStream(options) {
                 var comments = start.comments_before || [];
 
                 // XXX: ugly fix for https://github.com/mishoo/UglifyJS2/issues/112
-                //      if this node is `return` or `throw`, we cannot allow comments before
-                //      the returned or thrown value.
-                if (self instanceof AST_Exit && self.value
-                    && self.value.start.comments_before
-                    && self.value.start.comments_before.length > 0) {
-                    comments = comments.concat(self.value.start.comments_before);
-                    self.value.start.comments_before = [];
+                //               and https://github.com/mishoo/UglifyJS2/issues/372
+                if (self instanceof AST_Exit && self.value) {
+                    self.value.walk(new TreeWalker(function(node){
+                        if (node.start && node.start.comments_before) {
+                            comments = comments.concat(node.start.comments_before);
+                            node.start.comments_before = [];
+                        }
+                        if (node instanceof AST_Function ||
+                            node instanceof AST_Array ||
+                            node instanceof AST_Object)
+                        {
+                            return true; // don't go inside.
+                        }
+                    }));
                 }
 
                 if (c.test) {
@@ -19011,7 +19020,7 @@ function OutputStream(options) {
             || p instanceof AST_Unary            // !(foo, bar, baz)
             || p instanceof AST_Binary           // 1 + (2, 3) + 4 ==> 8
             || p instanceof AST_VarDef           // var a = (1, 2), b = a + a; ==> b == 4
-            || p instanceof AST_Dot              // (1, {foo:2}).foo ==> 2
+            || p instanceof AST_PropAccess       // (1, {foo:2}).foo or (1, {foo:2})["foo"] ==> 2
             || p instanceof AST_Array            // [ 1, (2, 3), 4 ] ==> [ 1, 3, 4 ]
             || p instanceof AST_ObjectProperty   // { foo: (1, 2) }.foo ==> 2
             || p instanceof AST_Conditional      /* (false, true) ? (a = 10, b = 20) : (c = 30)
@@ -19666,10 +19675,47 @@ function OutputStream(options) {
     DEFPRINT(AST_Number, function(self, output){
         output.print(make_num(self.getValue()));
     });
+
+    function regexp_safe_literal(code) {
+        return [
+            0x5c   , // \
+            0x2f   , // /
+            0x2e   , // .
+            0x2b   , // +
+            0x2a   , // *
+            0x3f   , // ?
+            0x28   , // (
+            0x29   , // )
+            0x5b   , // [
+            0x5d   , // ]
+            0x7b   , // {
+            0x7d   , // }
+            0x24   , // $
+            0x5e   , // ^
+            0x3a   , // :
+            0x7c   , // |
+            0x21   , // !
+            0x0a   , // \n
+            0x0d   , // \r
+            0x00   , // \0
+            0xfeff , // Unicode BOM
+            0x2028 , // unicode "line separator"
+            0x2029 , // unicode "paragraph separator"
+        ].indexOf(code) < 0;
+    };
+
     DEFPRINT(AST_RegExp, function(self, output){
         var str = self.getValue().toString();
-        if (output.option("ascii_only"))
+        if (output.option("ascii_only")) {
             str = output.to_ascii(str);
+        } else if (output.option("unescape_regexps")) {
+            str = str.split("\\\\").map(function(str){
+                return str.replace(/\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}/g, function(s){
+                    var code = parseInt(s.substr(2), 16);
+                    return regexp_safe_literal(code) ? String.fromCharCode(code) : s;
+                });
+            }).join("\\\\");
+        }
         output.print(str);
         var p = output.parent();
         if (p instanceof AST_Binary && /^in/.test(p.operator) && p.left === self)
@@ -19882,6 +19928,7 @@ function Compressor(options, false_by_default) {
         negate_iife   : !false_by_default,
         screw_ie8     : false,
         drop_console  : false,
+        angular       : false,
 
         warnings      : true,
         global_defs   : {}
@@ -20009,6 +20056,9 @@ merge(Compressor.prototype, {
         var CHANGED;
         do {
             CHANGED = false;
+            if (compressor.option("angular")) {
+                statements = process_for_angular(statements);
+            }
             statements = eliminate_spurious_blocks(statements);
             if (compressor.option("dead_code")) {
                 statements = eliminate_dead_code(statements, compressor);
@@ -20029,6 +20079,50 @@ merge(Compressor.prototype, {
         }
 
         return statements;
+
+        function process_for_angular(statements) {
+            function make_injector(func, name) {
+                return make_node(AST_SimpleStatement, func, {
+                    body: make_node(AST_Assign, func, {
+                        operator: "=",
+                        left: make_node(AST_Dot, name, {
+                            expression: make_node(AST_SymbolRef, name, name),
+                            property: "$inject"
+                        }),
+                        right: make_node(AST_Array, func, {
+                            elements: func.argnames.map(function(sym){
+                                return make_node(AST_String, sym, { value: sym.name });
+                            })
+                        })
+                    })
+                });
+            }
+            return statements.reduce(function(a, stat){
+                a.push(stat);
+                var token = stat.start;
+                var comments = token.comments_before;
+                if (comments && comments.length > 0) {
+                    var last = comments.pop();
+                    if (/@ngInject/.test(last.value)) {
+                        // case 1: defun
+                        if (stat instanceof AST_Defun) {
+                            a.push(make_injector(stat, stat.name));
+                        }
+                        else if (stat instanceof AST_Definitions) {
+                            stat.definitions.forEach(function(def){
+                                if (def.value && def.value instanceof AST_Lambda) {
+                                    a.push(make_injector(def.value, def.name));
+                                }
+                            });
+                        }
+                        else {
+                            compressor.warn("Unknown statement marked with @ngInject [{file}:{line},{col}]", token);
+                        }
+                    }
+                }
+                return a;
+            }, []);
+        }
 
         function eliminate_spurious_blocks(statements) {
             var seen_dirs = [];
@@ -21647,6 +21741,18 @@ merge(Compressor.prototype, {
                 return self.car;
             }
         }
+        if (self.cdr instanceof AST_UnaryPrefix
+            && self.cdr.operator == "void"
+            && !self.cdr.expression.has_side_effects(compressor)) {
+            self.cdr.operator = self.car;
+            return self.cdr;
+        }
+        if (self.cdr instanceof AST_Undefined) {
+            return make_node(AST_UnaryPrefix, self, {
+                operator   : "void",
+                expression : self.car
+            });
+        }
         return self;
     });
 
@@ -22018,7 +22124,7 @@ merge(Compressor.prototype, {
              * ==>
              * exp = foo ? something : something_else;
              */
-            self = make_node(AST_Assign, self, {
+            return make_node(AST_Assign, self, {
                 operator: consequent.operator,
                 left: consequent.left,
                 right: make_node(AST_Conditional, self, {
@@ -22027,6 +22133,25 @@ merge(Compressor.prototype, {
                     alternative: alternative.right
                 })
             });
+        }
+        if (consequent instanceof AST_Call
+            && alternative.TYPE === consequent.TYPE
+            && consequent.args.length == alternative.args.length
+            && consequent.expression.equivalent_to(alternative.expression)) {
+            if (consequent.args.length == 0) {
+                return make_node(AST_Seq, self, {
+                    car: self.condition,
+                    cdr: consequent
+                });
+            }
+            if (consequent.args.length == 1) {
+                consequent.args[0] = make_node(AST_Conditional, self, {
+                    condition: self.condition,
+                    consequent: consequent.args[0],
+                    alternative: alternative.args[0]
+                });
+                return consequent;
+            }
         }
         return self;
     });
@@ -22065,6 +22190,12 @@ merge(Compressor.prototype, {
                 return make_node(AST_Dot, self, {
                     expression : self.expression,
                     property   : prop
+                });
+            }
+            var v = parseFloat(prop);
+            if (!isNaN(v) && v.toString() == prop) {
+                self.property = make_node(AST_Number, self.property, {
+                    value: v
                 });
             }
         }
@@ -22439,6 +22570,7 @@ function SourceMap(options) {
 AST_Node.warn_function = function(txt) { logger.error("uglifyjs2 WARN: " + txt); };
 exports.minify = function(files, options, name) {
     options = defaults(options, {
+        spidermonkey : false,
         outSourceMap : null,
         sourceRoot   : null,
         inSourceMap  : null,
@@ -22448,22 +22580,26 @@ exports.minify = function(files, options, name) {
         output       : null,
         compress     : {}
     });
-    if (typeof files == "string")
-        files = [ files ];
-
     base54.reset();
 
     // 1. parse
     var toplevel = null;
-    files.forEach(function(file){
-        var code = options.fromString
-            ? file
-            : rjsFile.readFile(file, "utf8");
-        toplevel = parse(code, {
-            filename: options.fromString ? name : file,
-            toplevel: toplevel
+
+    if (options.spidermonkey) {
+        toplevel = AST_Node.from_mozilla_ast(files);
+    } else {
+        if (typeof files == "string")
+            files = [ files ];
+        files.forEach(function(file){
+            var code = options.fromString
+                ? file
+                : rjsFile.readFile(file, "utf8");
+            toplevel = parse(code, {
+                filename: options.fromString ? name : file,
+                toplevel: toplevel
+            });
         });
-    });
+    }
 
     // 2. compress
     if (options.compress) {
@@ -22624,7 +22760,7 @@ define('parse', ['./esprimaAdapter', 'lang'], function (esprima, lang) {
             if (object.hasOwnProperty(key)) {
                 child = object[key];
                 if (typeof child === 'object' && child !== null) {
-                    traverse(child, visitor);
+                    traverseBroad(child, visitor);
                 }
             }
         }
@@ -23515,7 +23651,16 @@ function (esprima, parse, logger, lang) {
                 foundAnon,
                 scanCount = 0,
                 scanReset = false,
-                defineInfos = [];
+                defineInfos = [],
+                applySourceUrl = function (contents) {
+                    if (options.useSourceUrl) {
+                        contents = 'eval("' + lang.jsEscape(contents) +
+                            '\\n//# sourceURL=' + (path.indexOf('/') === 0 ? '' : '/') +
+                            path +
+                            '");\n';
+                    }
+                    return contents;
+                };
 
             try {
                 astRoot = esprima.parse(contents, {
@@ -23528,7 +23673,7 @@ function (esprima, parse, logger, lang) {
             }
 
             //Find the define calls and their position in the files.
-            parse.traverseBroad(astRoot, function (node) {
+            parse.traverse(astRoot, function (node) {
                 var args, firstArg, firstArgLoc, factoryNode,
                     needsId, depAction, foundId, init,
                     sourceUrlData, range,
@@ -23681,8 +23826,9 @@ function (esprima, parse, logger, lang) {
                 }
             });
 
+
             if (!defineInfos.length) {
-                return contents;
+                return applySourceUrl(contents);
             }
 
             //Reverse the matches, need to start from the bottom of
@@ -23754,14 +23900,7 @@ function (esprima, parse, logger, lang) {
 
             contents = contentLines.join('\n');
 
-            if (options.useSourceUrl) {
-                contents = 'eval("' + lang.jsEscape(contents) +
-                    '\\n//# sourceURL=' + (path.indexOf('/') === 0 ? '' : '/') +
-                    path +
-                    '");\n';
-            }
-
-            return contents;
+            return applySourceUrl(contents);
         },
 
         /**
@@ -25022,18 +25161,45 @@ define('requirePatch', [ 'env!env/file', 'pragma', 'parse', 'lang', 'logger', 'c
                 //spit out strings that can be used in the stringified
                 //build output.
                 context.makeShimExports = function (value) {
-                    function fn() {
-                        return '(function (global) {\n' +
-                            '    return function () {\n' +
-                            '        var ret, fn;\n' +
-                            (value.init ?
-                                    ('       fn = ' + value.init.toString() + ';\n' +
-                                    '        ret = fn.apply(global, arguments);\n') : '') +
-                            (value.exports ?
-                                    '        return ret || global.' + value.exports + ';\n' :
-                                    '        return ret;\n') +
-                            '    };\n' +
-                            '}(this))';
+                    var fn;
+                    if (context.config.wrapShim) {
+                        fn = function () {
+                            var str = 'return ';
+                            // If specifies an export that is just a global
+                            // name, no dot for a `this.` and such, then also
+                            // attach to the global, for `var a = {}` files
+                            // where the function closure would hide that from
+                            // the global object.
+                            if (value.exports && value.exports.indexOf('.') === -1) {
+                                str += 'root.' + value.exports + ' = ';
+                            }
+
+                            if (value.init) {
+                                str += '(' + value.init.toString() + '.apply(this, arguments))';
+                            }
+                            if (value.init && value.exports) {
+                                str += ' || ';
+                            }
+                            if (value.exports) {
+                                str += value.exports;
+                            }
+                            str += ';';
+                            return str;
+                        };
+                    } else {
+                        fn = function () {
+                            return '(function (global) {\n' +
+                                '    return function () {\n' +
+                                '        var ret, fn;\n' +
+                                (value.init ?
+                                        ('       fn = ' + value.init.toString() + ';\n' +
+                                        '        ret = fn.apply(global, arguments);\n') : '') +
+                                (value.exports ?
+                                        '        return ret || global.' + value.exports + ';\n' :
+                                        '        return ret;\n') +
+                                '    };\n' +
+                                '}(this))';
+                        };
                     }
 
                     return fn;
@@ -26611,6 +26777,9 @@ define('build', function (require) {
         //Set final output dir
         if (hasProp(config, "baseUrl")) {
             if (config.appDir) {
+                if (!config.originalBaseUrl) {
+                    throw new Error('Please set a baseUrl in the build config');
+                }
                 config.dirBaseUrl = build.makeAbsPath(config.originalBaseUrl, config.dir);
             } else {
                 config.dirBaseUrl = config.dir || config.baseUrl;
@@ -26666,15 +26835,20 @@ define('build', function (require) {
             // Make sure the output dir is not set to a parent of the
             // source dir or the same dir, as it will result in source
             // code deletion.
-            if (config.dir === config.baseUrl ||
+            if (!config.allowSourceOverwrites && (config.dir === config.baseUrl ||
                 config.dir === config.appDir ||
                 (config.baseUrl && build.makeRelativeFilePath(config.dir,
                                            config.baseUrl).indexOf('..') !== 0) ||
                 (config.appDir &&
-                    build.makeRelativeFilePath(config.dir, config.appDir).indexOf('..') !== 0)) {
+                    build.makeRelativeFilePath(config.dir, config.appDir).indexOf('..') !== 0))) {
                 throw new Error('"dir" is set to a parent or same directory as' +
                                 ' "appDir" or "baseUrl". This can result in' +
-                                ' the deletion of source code. Stopping.');
+                                ' the deletion of source code. Stopping. If' +
+                                ' you want to allow possible overwriting of' +
+                                ' source code, set "allowSourceOverwrites"' +
+                                ' to true in the build config, but do so at' +
+                                ' your own risk. In that case, you may want' +
+                                ' to also set "keepBuildDir" to true.');
             }
         }
 
@@ -27255,7 +27429,7 @@ define('build', function (require) {
 
                                 //Semicolon is for files that are not well formed when
                                 //concatenated with other content.
-                                singleContents += "\n" + addSemiColon(currContents, config);
+                                singleContents += addSemiColon(currContents, config);
                             });
                         }
                     }).then(function () {
@@ -27273,15 +27447,35 @@ define('build', function (require) {
                         if (moduleName && falseProp(layer.modulesWithNames, moduleName) && !config.skipModuleInsertion) {
                             shim = config.shim && (getOwn(config.shim, moduleName) || (packageMain && getOwn(config.shim, moduleName) || getOwn(config.shim, packageName)));
                             if (shim) {
-                                singleContents += '\n' + namespaceWithDot + 'define("' + moduleName + '", ' +
-                                                 (shim.deps && shim.deps.length ?
-                                                        build.makeJsArrayString(shim.deps) + ', ' : '') +
-                                                 (shim.exportsFn ? shim.exportsFn() : 'function(){}') +
-                                                 ');\n';
+                                if (config.wrapShim) {
+                                    singleContents = '(function(root) {' +
+                                                     '\n' + namespaceWithDot + 'define("' + moduleName + '", ' +
+                                                     (shim.deps && shim.deps.length ?
+                                                            build.makeJsArrayString(shim.deps) + ', ' : '[], ') +
+                                                    'function() {\n' +
+                                                    '      return (function() {\n' +
+                                                             singleContents +
+                                                             (shim.exportsFn ? shim.exportsFn() : '') +
+                                                    '      }).apply(root, arguments);\n' +
+                                                    '    });\n' +
+                                                    '}(this));\n';
+                                } else {
+                                    singleContents += '\n' + namespaceWithDot + 'define("' + moduleName + '", ' +
+                                                     (shim.deps && shim.deps.length ?
+                                                            build.makeJsArrayString(shim.deps) + ', ' : '') +
+                                                     (shim.exportsFn ? shim.exportsFn() : 'function(){}') +
+                                                     ');\n';
+                                }
                             } else {
                                 singleContents += '\n' + namespaceWithDot + 'define("' + moduleName + '", function(){});\n';
                             }
                         }
+
+                        //Add line break at end of file, instead of at beginning,
+                        //so source map line numbers stay correct, but still allow
+                        //for some space separation between files in case ASI issues
+                        //for concatenation would cause an error otherwise.
+                        singleContents += '\n';
 
                         //Add to the source map
                         if (sourceMapGenerator) {
@@ -27575,7 +27769,7 @@ function (args, quit, logger, build) {
     } else if (commandOption === 'v') {
         console.log('r.js: ' + version +
                     ', RequireJS: ' + this.requirejsVars.require.version +
-                    ', UglifyJS2: 2.4.8, UglifyJS: 1.3.4');
+                    ', UglifyJS2: 2.4.12, UglifyJS: 1.3.4');
     } else if (commandOption === 'convert') {
         loadLib();
 

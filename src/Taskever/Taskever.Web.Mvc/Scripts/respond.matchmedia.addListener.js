@@ -21,6 +21,55 @@
   }(w.document);
 })(this);
 
+/*! matchMedia() polyfill addListener/removeListener extension. Author & copyright (c) 2012: Scott Jehl. Dual MIT/BSD license */
+(function(w) {
+  "use strict";
+  if (w.matchMedia && w.matchMedia("all").addListener) {
+    return false;
+  }
+  var localMatchMedia = w.matchMedia, hasMediaQueries = localMatchMedia("only all").matches, isListening = false, timeoutID = 0, queries = [], handleChange = function(evt) {
+    w.clearTimeout(timeoutID);
+    timeoutID = w.setTimeout(function() {
+      for (var i = 0, il = queries.length; i < il; i++) {
+        var mql = queries[i].mql, listeners = queries[i].listeners || [], matches = localMatchMedia(mql.media).matches;
+        if (matches !== mql.matches) {
+          mql.matches = matches;
+          for (var j = 0, jl = listeners.length; j < jl; j++) {
+            listeners[j].call(w, mql);
+          }
+        }
+      }
+    }, 30);
+  };
+  w.matchMedia = function(media) {
+    var mql = localMatchMedia(media), listeners = [], index = 0;
+    mql.addListener = function(listener) {
+      if (!hasMediaQueries) {
+        return;
+      }
+      if (!isListening) {
+        isListening = true;
+        w.addEventListener("resize", handleChange, true);
+      }
+      if (index === 0) {
+        index = queries.push({
+          mql: mql,
+          listeners: listeners
+        });
+      }
+      listeners.push(listener);
+    };
+    mql.removeListener = function(listener) {
+      for (var i = 0, il = listeners.length; i < il; i++) {
+        if (listeners[i] === listener) {
+          listeners.splice(i, 1);
+        }
+      }
+    };
+    return mql;
+  };
+})(this);
+
 /*! Respond.js v1.4.0: min/max-width media query polyfill. (c) Scott Jehl. MIT Lic. j.mp/respondjs  */
 (function(w) {
   "use strict";
