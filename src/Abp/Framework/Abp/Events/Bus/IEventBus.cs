@@ -131,6 +131,21 @@ namespace Abp.Events.Bus
         void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData;
 
         /// <summary>
+        /// Triggers an event.
+        /// </summary>
+        /// <param name="eventType">Event type</param>
+        /// <param name="eventData">Related data for the event</param>
+        void Trigger(Type eventType, EventData eventData);
+
+        /// <summary>
+        /// Triggers an event.
+        /// </summary>
+        /// <param name="eventType">Event type</param>
+        /// <param name="eventSource">The object which triggers the event</param>
+        /// <param name="eventData">Related data for the event</param>
+        void Trigger(Type eventType, object eventSource, EventData eventData);
+
+        /// <summary>
         /// Triggers an event asynchronously.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
@@ -146,6 +161,24 @@ namespace Abp.Events.Bus
         /// <param name="eventData">Related data for the event</param>
         /// <returns>The task to handle async operation</returns>
         Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData;
+
+        /// <summary>
+        /// Triggers an event asynchronously.
+        /// </summary>
+        /// <param name="eventType">Event type</param>
+        /// <param name="eventData">Related data for the event</param>
+        /// <returns>The task to handle async operation</returns>
+        Task TriggerAsync(Type eventType, EventData eventData);
+
+        /// <summary>
+        /// Triggers an event asynchronously.
+        /// </summary>
+        /// <param name="eventType">Event type</param>
+        /// <param name="eventSource">The object which triggers the event</param>
+        /// <param name="eventData">Related data for the event</param>
+        /// <returns>The task to handle async operation</returns>
+        Task TriggerAsync(Type eventType, object eventSource, EventData eventData);
+
 
         #endregion
     }

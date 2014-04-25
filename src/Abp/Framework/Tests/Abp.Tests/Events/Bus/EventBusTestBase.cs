@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Abp.Tests.Events.Bus
 {
-    public abstract class EventBusTest
+    public abstract class EventBusTestBase
     {
         protected IEventBus EventBus;
 

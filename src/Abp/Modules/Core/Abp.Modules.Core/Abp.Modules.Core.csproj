@@ -68,6 +68,7 @@
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingManager.cs" />
+    <Compile Include="Security\IdentityFramework\AbpClaims.cs" />
     <Compile Include="Security\IdentityFramework\AbpRoleManagerBase.cs" />
     <Compile Include="Security\IdentityFramework\AbpUserManagerBase.cs" />
     <Compile Include="Security\IdentityFramework\RoleStore.cs" />

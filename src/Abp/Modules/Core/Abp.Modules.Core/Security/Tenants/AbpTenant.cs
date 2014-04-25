@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Security.IdentityFramework;
 
 namespace Abp.Security.Tenants
 {
@@ -29,7 +33,22 @@ namespace Abp.Security.Tenants
         /// </summary>
         public static int? CurrentTenantId
         {
-            get { return null; } //TODO: Add Claim to Identity and check for it!
+            get
+            {
+                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
+                if (claimsPrincipal == null)
+                {
+                    return null;
+                }
+
+                var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
+                if (claim == null)
+                {
+                    return null;
+                }
+
+                return Convert.ToInt32(claim.Value);
+            }
         }
 
         /// <summary>

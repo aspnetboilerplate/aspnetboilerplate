@@ -3,7 +3,7 @@ using NUnit.Framework;
 namespace Abp.Tests.Events.Bus
 {
     [TestFixture]
-    public class TransientDisposableEventHandlerTest : EventBusTest
+    public class TransientDisposableEventHandlerTest : EventBusTestBase
     {
         [Test]
         public void Should_Call_Handler_AndDispose()

@@ -79,6 +79,7 @@
     <Compile Include="Domain\Entities\Auditing\ICreationAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
+    <Compile Include="Domain\Entities\EntityExtensions.cs" />
     <Compile Include="Domain\Entities\ISoftDeleteEntity.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />

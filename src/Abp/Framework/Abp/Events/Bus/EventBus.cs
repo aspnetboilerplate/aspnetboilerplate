@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Datas;
 using Abp.Events.Bus.Factories;
@@ -67,9 +68,11 @@ namespace Abp.Events.Bus
             return Register(typeof(TEventData), handler);
         }
 
-        public IDisposable Register<TEventData, THandler>() where TEventData : IEventData where THandler : IEventHandler<TEventData>, new()
+        public IDisposable Register<TEventData, THandler>()
+            where TEventData : IEventData
+            where THandler : IEventHandler<TEventData>, new()
         {
-            return Register(typeof (TEventData), new TransientEventHandlerFactory<THandler>());
+            return Register(typeof(TEventData), new TransientEventHandlerFactory<THandler>());
         }
 
         public IDisposable Register(Type eventType, IEventHandler handler)
@@ -175,25 +178,16 @@ namespace Abp.Events.Bus
 
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
+            var eventType = typeof(TEventData);
+
             eventData.EventSource = eventSource;
-            IEventHandlerFactory[] factoriesToTrigger;
-            lock (_handlerFactories)
-            {
-                List<IEventHandlerFactory> handlerFactoryList;
-                if (!_handlerFactories.TryGetValue(typeof(TEventData), out handlerFactoryList))
-                {
-                    return;
-                }
 
-                factoriesToTrigger = handlerFactoryList.ToArray();
-            }
-
-            foreach (var factoryToTrigger in factoriesToTrigger)
+            foreach (var factoryToTrigger in GetHandlerFactories(eventType))
             {
                 var eventHandler = factoryToTrigger.GetHandler() as IEventHandler<TEventData>;
                 if (eventHandler == null)
                 {
-                    throw new Exception("Registered event handler for event type " + typeof(TEventData).Name + " does not implement IEventHandler<" + typeof(TEventData).Name + "> interface!");
+                    throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
                 }
 
                 try
@@ -207,39 +201,50 @@ namespace Abp.Events.Bus
             }
         }
 
-        //public void Trigger(Type eventType, object eventSource, EventData eventData)
-        //{
-        //    eventData.EventSource = eventSource;
-        //    IEventHandlerFactory[] factoriesToTrigger;
-        //    lock (_handlerFactories)
-        //    {
-        //        List<IEventHandlerFactory> handlerFactoryList;
-        //        if (!_handlerFactories.TryGetValue(eventType, out handlerFactoryList))
-        //        {
-        //            return;
-        //        }
+        public void Trigger(Type eventType, EventData eventData)
+        {
+            Trigger(eventType, null, eventData);
+        }
 
-        //        factoriesToTrigger = handlerFactoryList.ToArray();
-        //    }
+        public void Trigger(Type eventType, object eventSource, EventData eventData)
+        {
+            eventData.EventSource = eventSource;
 
-        //    foreach (var factoryToTrigger in factoriesToTrigger)
-        //    {
-        //        var eventHandler = factoryToTrigger.GetHandler() as IEventHandler<TEventData>;
-        //        if (eventHandler == null)
-        //        {
-        //            throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
-        //        }
+            foreach (var factoryToTrigger in GetHandlerFactories(eventType))
+            {
+                var eventHandler = factoryToTrigger.GetHandler();
+                if (eventHandler == null)
+                {
+                    throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
+                }
 
-        //        try
-        //        {
-        //            eventHandler.HandleEvent(eventData);
-        //        }
-        //        finally
-        //        {
-        //            factoryToTrigger.ReleaseHandler(eventHandler);
-        //        }
-        //    }
-        //}
+                var handlerType = typeof (IEventHandler<>).MakeGenericType(eventType);
+
+                try
+                {
+                    var method = handlerType.GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance);
+                    method.Invoke(eventHandler, new object[] { eventData });
+                }
+                finally
+                {
+                    factoryToTrigger.ReleaseHandler(eventHandler);
+                }
+            }
+        }
+
+        private IEnumerable<IEventHandlerFactory> GetHandlerFactories(Type eventType)
+        {
+            lock (_handlerFactories)
+            {
+                List<IEventHandlerFactory> handlerFactoryList;
+                if (!_handlerFactories.TryGetValue(eventType, out handlerFactoryList))
+                {
+                    return new IEventHandlerFactory[0];
+                }
+
+                return handlerFactoryList.ToArray();
+            }
+        }
 
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
@@ -254,6 +259,27 @@ namespace Abp.Events.Bus
                     try
                     {
                         Trigger(eventSource, eventData);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn(ex.Message, ex);
+                    }
+                });
+        }
+
+        public Task TriggerAsync(Type eventType, EventData eventData)
+        {
+            return TriggerAsync(eventType, null, eventData);
+        }
+
+        public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
+        {
+            return Task.Factory.StartNew(
+                () =>
+                {
+                    try
+                    {
+                        Trigger(eventType, eventSource, eventData);
                     }
                     catch (Exception ex)
                     {

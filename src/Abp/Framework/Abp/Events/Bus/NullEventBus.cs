@@ -89,6 +89,16 @@ namespace Abp.Events.Bus
             
         }
 
+        public void Trigger(Type eventType, EventData eventData)
+        {
+            
+        }
+
+        public void Trigger(Type eventType, object eventSource, EventData eventData)
+        {
+            
+        }
+
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
             return new Task(() => {});
@@ -97,6 +107,16 @@ namespace Abp.Events.Bus
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             return new Task(() => { });            
+        }
+
+        public Task TriggerAsync(Type eventType, EventData eventData)
+        {
+            return new Task(() => { });
+        }
+
+        public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
+        {
+            return new Task(() => { });
         }
     }
 }

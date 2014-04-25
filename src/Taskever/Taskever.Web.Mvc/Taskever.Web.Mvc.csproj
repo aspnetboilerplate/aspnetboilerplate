@@ -63,13 +63,6 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.2.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
@@ -522,9 +515,9 @@
       <Project>{7a28a996-b52e-422d-b7ee-fc20b5c8c9d4}</Project>
       <Name>Taskever.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Taskever.Infrastructure.EntityFramework\Taskever.Infrastructure.EntityFramework.csproj">
-      <Project>{8a7df1a0-5ef4-467a-af01-50391f958e57}</Project>
-      <Name>Taskever.Infrastructure.EntityFramework</Name>
+    <ProjectReference Include="..\Taskever.Infrastructure.NHibernate\Taskever.Infrastructure.NHibernate.csproj">
+      <Project>{89714409-e64f-4439-909a-415867494d16}</Project>
+      <Name>Taskever.Infrastructure.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\Taskever.Web.Api\Taskever.Web.Api.csproj">
       <Project>{0c8b3e9f-3ba5-4f0c-a6f2-9436ec8314b5}</Project>

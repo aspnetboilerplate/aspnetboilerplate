@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Abp;
 using Abp.Modules.Core.Mvc.Models;
+using Abp.Security.IdentityFramework;
 using Abp.UI;
 using Abp.Users.Dto;
 using Abp.Web.Mvc.Authorization;
@@ -71,7 +72,7 @@ namespace Taskever.Web.Mvc.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            //identity.AddClaim(new Claim("TenantId", "42"));
+            identity.AddClaim(new Claim(AbpClaimTypes.TenantId, "42"));
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, identity);
         }
 
