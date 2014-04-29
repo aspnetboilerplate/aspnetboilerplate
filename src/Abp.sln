@@ -79,6 +79,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeProject_Article", "CodeProject_Article", "{2619381F-4FE8-4F0F-A3FF-9FB12B434B52}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\CodeProject_Article\abp_article.html = Docs\CodeProject_Article\abp_article.html
+		Docs\CodeProject_Article\abp_article_v2.html = Docs\CodeProject_Article\abp_article_v2.html
 		Docs\CodeProject_Article\Article_TODO.txt = Docs\CodeProject_Article\Article_TODO.txt
 		Docs\CodeProject_Article\calling_webapi_ajax.png = Docs\CodeProject_Article\calling_webapi_ajax.png
 		Docs\CodeProject_Article\create_template.png = Docs\CodeProject_Article\create_template.png

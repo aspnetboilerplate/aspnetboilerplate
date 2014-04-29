@@ -2,13 +2,13 @@
 <ul>
     <li><a href="#Introduction">Introduction to the problem</a></li>
     <li><a href="#WhatIsAbp">What is ASP.NET Boilerplate</a></li>
-    <li>What ASP.NET Boilerplate is not (<strong>TODO</strong>)</li>
+    <li><a href="#WhatAbpIsNot">What ASP.NET Boilerplate is not</a></li>
     <li><a href="#GettingStarted">Getting started</a></li>
     <li><a href="#CreateEmptyApp">Creating empty web application from template</a></li>
     <li><a href="#DomainLayer">Domain Layer</a><ul>
         <li><a href="#DomainEntities">Entities</a></li>
         <li><a href="#DomainRepositories">Repositories</a></li>
-        <li>About namespaces (<strong>TODO</strong>)</li>
+        <li><a href="#AboutNamespaces">About namespaces</a></li>
     </ul>
     </li>
     <li><a href="#InfrastructureLayer">Infrastructure Layer</a><ul>
@@ -19,7 +19,7 @@
     </li>
     <li><a href="#AppLayer">Application Layer</a><ul>
         <li><a href="#AppServices">Application services and Data Transfer Objects (DTOs)</a></li>
-        <li>DTO validation (<strong>TODO</strong>)</li>
+        <li><a href="#DTOValidation">DTO validation</a></li>
         <li><a href="#AppWebApi">Dynamic Web API Controllers</a></li>
     </ul>
     </li>
@@ -27,10 +27,11 @@
         <li><a href="#PresentSpa">Single page applications</a></li>
         <li><a href="#PresentViewModels">Views and ViewModels</a><ul>
             <li><a href="#PresentTaskList">Task list</a></li>
-            <li>New task (<strong>TODO</strong>)</li>
+            <li><a href="#PresentNewTask">New task</a></li>
             </ul>
         </li>
         <li><a href="#Localization">Localization</a></li>
+		<li>Javascript API (<strong>TODO</strong>)</li>
     </ul>
     </li>
     <li>Details (<strong>TODO</strong>)<ul>
@@ -58,7 +59,6 @@
 <p>
     As a software architect, I also developed such a framework im my company. But, there is some point it feels me bad: Many company repeats same tasks. What if we can <strong>share more, repeat less</strong>? What if DRY principle is implemented <strong>universally</strong> instead of per project or per company? It sounds utopian, but I think there may be a starting point for that!
 </p>
-
 <h2 id="WhatIsAbp">What is ASP.NET Boilerplate?</h2>
 <p>ASP.NET Boilerplate [1] is a starting point for new modern web applications using <strong>best practices </strong>and <strong>most popular tools</strong>. It&#39;s aimed to be a <strong>solid model</strong>, a general-purpose <strong>application framework</strong> and a <strong>project template</strong>. What it does?</p>
 <ul>
@@ -90,6 +90,23 @@
 
 <p>
     Beside these common infrastructure, the &quot;Core Module&quot; is being developed. It will provide an role and permission based <strong>authorization</strong> system (implementing ASP.NET Identity Framework), a <strong>setting</strong> systems and so on.</p>
+
+<h2 id="WhatAbpIsNot">
+    What ASP.NET Boilerplate is not?</h2>
+<p>
+    ASP.NET Boilerplate provides an application development model with best 
+	practices. It has base classes, interfaces and tools that makes easy to 
+	build maintainable large-scale applications. But..</p>
+<ul>
+	<li>It's not one of RAD (Rapid Application Development) tools those provide 
+	infrastructure for building applications without coding. Instead, it 
+	provides an infrastructure to code in best practices.</li>
+	<li>It's not a code generation tool. While it has several features those 
+	build dynamic code in run-time, it does not generate codes.</li>
+	<li>It's not a all-in-one framework. Instead, it uses well known 
+	tools/libraries for specific tasks (like NHibernate for O/RM, Log4Net for 
+	logging, Castle Windsor as DI container).</li>
+</ul>
 
 <h2 id="GettingStarted">Getting started</h2>
 <p>
@@ -132,7 +149,7 @@
 </p>
 <p>
     Template consists of two pages: One for <strong>Home </strong>page, other is <strong>About</strong> page. It&#39;s <strong>localized </strong>in English and Turkish. And it&#39;s <strong>Single-Page Application</strong>! Try to navigate between pages, you&#39;ll see that only the contents are changing, navigation menu is fixed, all scripts and styles are loaded only once.
-</p>
+	And it's <strong>responsive.</strong> Try to change size of the browser.</p>
 <p>
     Now, I&#39;ll show how to change the application to a Simple Task System application <strong>layer by layer</strong>.
 </p>
@@ -202,6 +219,24 @@ public interface IPersonRepository : IRepository&lt;Person&gt;
 <p>
     It defines basic <strong>CRUD </strong>methods. So, all repositories are automatically implement all these methods.
 </p>
+<h3 id="AboutNamespaces">
+    About namespaces</h3>
+<p>
+    When you investigate source code of the sample application, you'll see that 
+	classes packaged by intention and domain, related classes/interfaces/enums 
+	are in same namespace instead of packaging by infrastructure. I would place
+	<strong>Task 	</strong>class to TaskSystem.Entities namespace, <strong>ITaskRepository </strong>to TaskSystem.Repositories namespace, <strong>
+	TaskState </strong>to TaskSystem.Enums namespace and so 
+	on... Instead, I placed all of these classes to <strong>TTaskSystem.Tasks
+	</strong>namespace since all of these are related to each other. This is 
+	more appropriate to nature of Domain Driven Design. So, I think it's not a 
+	good practice to place all Entities to TaskSystem.Entities namespace. Some 
+	of you may not think like that. I can understand they since I was doing it 
+	like that until short time ago. But I did see the problems and I strongly 
+	advice to place related classes/interfaces/enums to same namespace, maybe 
+	different assemblies but the same namespace. You can read &quot;The pitfalls of 
+	Infrastructure-Driven Packaging&quot; section of Domain Driven Design [2] book of 
+	Eric Evans.</p>
 <h2 id="InfrastructureLayer">Infrastructure layer</h2>
 <p>
     &quot;<em>Provides generic technical capabilities that support the higher layers</em>&quot; (Eric Evans). It&#39;s used to implement abstractions of your application using third-party libraries &amp; frameworks such as Object-Relational Mapping. In this application, I&#39;ll use Infrastructure Layer for:
@@ -454,6 +489,59 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;, ITaskRepositor
     In the <strong>UpdateTask </strong>method, I&#39;m getting the <strong>Task </strong>Entity from task repository and setting changed properties. <strong>State </strong>or/and <strong>AssignedPersonId </strong>might be changed. Notice that I did not call _taskRepository.<strong>Update</strong> or any other method to save changes to database. I defined ABP&#39;s <strong>UnitOfWork </strong>attribute for the UpdateTask method. It basically opens a <strong>database connection</strong> and begins <strong>transaction</strong> at the beginning of the method and saves all changes (commits the transaction) to database at the end of the method automatically. It <strong>rollbacks</strong> the transaction if an Exception is thrown in the execution of the method. If a UnitOfWork method calls another UnitOfWork method, they use the same transaction. First called UnitOfWork method handles connection and transaction automatically.</p>
 <p>
     In the <strong>CreateTask </strong>method, I created a new task and <strong>Insert</strong>ed to task repository. There is no need for UnitOfWork attribute here since Repository&#39;s <strong>Insert </strong>method manages db connection and transaction itself (All repository methods are unit of work by default). UnitOfWork mechanism in ABP is very similar to mechanism I described in <a href="http://www.codeproject.com/Articles/543810/Dependency-Injection-and-Unit-Of-Work-using-Castle">this article</a>. For more informatin, you can read it.</p>
+<h3 id="DTOValidation">
+    DTO Validation</h3>
+<p>
+    Validation is an important and critical but a little tedious concept in 
+	application development. ABP provides infrastructure to make validation 
+	easier and nicer. Validating the user input is an application-layer task. An 
+	application service method should validate inputs and throw exceptions if 
+	given input is not valid. ASP.NET MVC and Web API has built-in validation 
+	system that can be achived using data annotations (like Required). But an 
+	Application service is a plain class, not derived from Controller. 
+	Fortunately, ABP provides similar mechanism for ordinary application service 
+	methods (using Castle Dynamic proxies and interception). Your method's input 
+	parameter should be marked as IValidate. IInputDto is already derived from 
+	IValidate, so you can mark your DTO class as IInputDto to enable validation:</p>
+<pre lang="cs">public class CreateTaskInput : IInputDto
+{
+    public int? AssignedPersonId { get; set; }
+
+    [Required]
+    public string Description { get; set; }
+}</pre>
+<p>
+    In this input DTO, only the Description property is required. ABP 
+	automatically checks it before calling the application service method and 
+	throws exception if it's null or empty. All of validation attributes in 
+	<strong>System.ComponentModel.DataAnnotations</strong> namespace can be used here. If these 
+	standard attributes are not enough for you, you can implement <strong>ICustomValidate</strong>:</p>
+<pre lang="cs">public class CreateTaskInput : IInputDto, ICustomValidate
+{
+    public int? AssignedPersonId { get; set; }
+
+    public bool SendEmailToAssignedPerson { get; set; }
+
+    [Required]
+    public string Description { get; set; }
+
+    public void AddValidationErrors(List&lt;ValidationResult&gt; results)
+    {
+        if (SendEmailToAssignedPerson && (!AssignedPersonId.HasValue || AssignedPersonId.Value <= 0))
+        {
+            results.Add(new ValidationResult("AssignedPersonId must be set if SendEmailToAssignedPerson is true!"));
+        }
+    }
+}</pre>
+<p>
+    One more thing: ABP checks if input parameter is null that is sent to 
+	service method. So, you don't need to write guard clauses for that.</p>
+<p>
+    I advice to create seperated input and output classes for each application 
+	service method even it has only one input argument. This is good when 
+	extending the application by adding other arguments to this method. It 
+	provides a way of adding parameters to the application service method 
+	without breaking existing clients.</p>
 <h3 id="AppWebApi">Dynamic Web API Controllers</h3>
 <p>
     Application services are consumed by Presentation Layer. In a Single-Page application, all datas are sent/received using AJAX between javascript and the server. ABP extremely simplifies calling an application service method from javascript. So, how it does this, let me explain...
@@ -561,13 +649,14 @@ DyanmicApiControllerBuilder
         };
     });</pre>
 <p>
-    First line calls require.js&#39;s <strong>define </strong>function to register the module and declare dependencies. a dependency is generally an another module (even maybe a view model). &#39;<strong>service!tasksystem/task</strong>&#39; is a special syntax of ABP that reference to the dynamic Web API controller for <strong>task application service</strong> (remember how I defined the task service in Dynamic Web API Controllers section).</p>
+    First line calls require.js&#39;s <strong>define </strong>function to register the module and declare dependencies. a dependency is generally an another module (even maybe a view model). &#39;<strong>service!tasksystem/task</strong>&#39; is a special syntax of ABP that reference to the dynamic Web API controller for <strong>task application service</strong> (remember how I defined the task service in Dynamic Web API Controllers section). 
+	getTasks function is dynamically created by ABP.</p>
 <p>
     Second parameter of define function is the module itself. It should be a function that defines the module. It&#39;s parameters are automatically filled by Durandal using your dependency list.</p>
 <p>
     <strong>that.tasks </strong>is a <strong>knockout observable array</strong>. It&#39;s created using <strong>knockout.mapping</strong> function. <strong>that.localize</strong> is used to get a function to be used to localize in javascript. It&#39;s a feature of ABP to localize texts dynamically in javascript (Will be detailed in Localization section). <strong>that.selectedTaskState State </strong>is an <strong>observable </strong>that is binded to the combobox to show all/active/completed tasks.</p>
 <p>
-    <strong>activatetivate</strong> is a special function of Durandal. This function is called automatically by Durandal when this view is activated. So, we can write some codes to run when user enters the view.</p>
+    <strong>activate</strong> is a special function of Durandal. This function is called automatically by Durandal when this view is activated. So, we can write some codes to run when user enters the view.</p>
 <p>
     In the <strong>refreshTasks </strong>method, I called <strong>Task Application Service</strong>&#39;s <strong>getTasks</strong> method to load tasks from server. To call an application service from javascript is that easy through ABP&#39;s dynamic Web API controller and dynamic <strong>javascript client proxies</strong>. getTasks function gets same arguments of <strong>TaskAppService.GetTasks</strong>. The function will return a jQuery <strong>promise</strong>, so you can write a <strong>done </strong>handler to get <strong>return value</strong>  the GetTasks method of the task application service. taskService.getTasks javascript call also handles errors and show error message to the user if needed. If your done handler is called, you can be sure that there is no error. In the done handler, I added retrived tasks to the that.task observable array.</p>
 <p>
@@ -606,6 +695,84 @@ DyanmicApiControllerBuilder
     <strong>First</strong>: We can use <strong>@L(&quot;TaskList&quot;)quot;)</strong> to get a localized string. <strong>L</strong> method is defined in <strong>AbpWebViewPage</strong> class (See SimpleTaskSystemWebViewPageBase class that is derived from AbpWebViewPage). You can use <strong>L</strong> shortcut of <strong>LocalizationHelper.GetString(...)</strong> in views (See Localization section for details). Since this is a Razor View, we can directly use C# code in the view. Thus, we can create dynamic HTML in the server side. Remember that this View will be loaded only one time since this is a SPA!</p>
 <p>
     <strong>Second</strong>: We can use fields of the javascript ViewModel using knockout <strong>data-bind -bind </strong>atribute (like data-bind=&quot;<strong>foreach: tasks</strong>&quot;) and other javascript methods (like <strong>abp.utils.formatString</strong>). Thus, we can create dynamic HTML in the client side. See &quot;<strong>click: $parent.changeTaskState</strong>&quot;, this is used to bind click event of the icon to the <strong>changeTaskState </strong>function in the javascript ViewModel code. As similar, we&#39;re binding <strong>change </strong>event of the <strong>combobox </strong>to <strong>refreshTasks </strong>function. For more information, see <strong>knockout.js</strong> web site.</p>
+<h4 id="PresentNewTask">
+    New task</h4>
+<p>
+    &quot;New Task&quot; view is relatively simple. There is a task description and an 
+	optional person selection:</p>
+<p>
+    <img alt="New task screen" height="345" src="new_task_screen.png" width="596"></p>
+<p>
+    ViewModel for this page is shown below:</p>
+<pre lang="js">define([&#39;service!tasksystem/person&#39;, &#39;service!tasksystem/task&#39;, &#39;plugins/history&#39;],
+    function (personService, taskService, history) {
+
+        var localize = abp.localization.getSource(&#39;SimpleTaskSystem&#39;);
+
+        return function () {
+            var that = this;
+
+            var _$view = null;
+            var _$form = null;
+
+            that.people = ko.mapping.fromJS([]);
+
+            that.task = {
+                description: ko.observable(&#39;&#39;),
+                assignedPersonId: ko.observable(0)
+            };
+
+            that.canActivate = function () {
+                return personService.getAllPeople().done(function (data) {
+                    ko.mapping.fromJS(data.people, that.people);
+                });
+            };
+
+            that.attached = function (view, parent) {
+                _$view = $(view);
+                _$form = _$view.find(&#39;form&#39;);
+                _$form.validate();
+            };
+
+            that.saveTask = function () {
+                if (!_$form.valid()) {
+                    return;
+                }
+
+                abp.ui.setBusy(_$view, {
+                    promise: taskService.createTask(ko.mapping.toJS(that.task))
+                        .done(function () {
+                            abp.notify.info(abp.utils.formatString(localize(&quot;TaskCreatedMessage&quot;), that.task.description()));
+                            history.navigate(&#39;&#39;);
+                        })
+                });
+            };
+        };
+    });</pre>
+<p>
+    <strong>canActivate </strong>is a special function of Durandal. In this 
+	function, you can return true/false to allow/prevent to enter to the page. 
+	Durandal also accept a <strong>promise</strong>. In this case, it waits 
+	result of the promise to decide to activate the view or not. Your promise 
+	should return true/false. ABP overrides this behaviour to accept promises 
+	any other data type beside true/false. Thus, we can directly return promises 
+	returned from dynamic javascript proxies of ABP (as shown in canActivate 
+	method above).</p>
+<p>
+    <strong>attached</strong> is also another special function of Durandal that 
+	is called when your view is attached to DOM (Document Object Model) and safe 
+	to manipulate it.</p>
+<p>
+    <strong>saveTask</strong> is used to save given task to the server. It first 
+	validates the form and then calls <strong>taskService.createTask </strong>
+	function (Remember that this function is automatically and dynamically 
+	created by ABP and it returns a promise). Here, you see two API calls of 
+	ABP. <strong>abp.notify.info</strong> is used to show notifications after 
+	save task to the server. <strong>abp.ui.setBusy </strong>is used to set a 
+	DOM element as busy (shows loading indicator and blocks the UI element, all 
+	view in this case). It accepts a promise and cancels busy when promise 
+	returned (either fail or success). ABP uses several jQuery plug-ins for 
+	that.</p>
 <h3 id="Localization">
     Localization</h3>
 <p>
