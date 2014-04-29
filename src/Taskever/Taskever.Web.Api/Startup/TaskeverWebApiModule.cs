@@ -22,19 +22,19 @@ namespace Taskever.Web.Startup
         {
             //TODO: must be able to exclude/include all methods option
 
-            DyanmicApiControllerBuilder
+            DynamicApiControllerBuilder
                 .For<ITaskeverUserAppService>("taskever/user")
                 .Build();
 
-            DyanmicApiControllerBuilder
+            DynamicApiControllerBuilder
                 .For<ITaskAppService>("taskever/task")
                 .Build(); 
 
-            DyanmicApiControllerBuilder
+            DynamicApiControllerBuilder
                 .For<IFriendshipAppService>("taskever/friendship")
                 .Build();
 
-            DyanmicApiControllerBuilder
+            DynamicApiControllerBuilder
                 .For<IUserActivityAppService>("taskever/userActivity")
                 .Build();
         }
