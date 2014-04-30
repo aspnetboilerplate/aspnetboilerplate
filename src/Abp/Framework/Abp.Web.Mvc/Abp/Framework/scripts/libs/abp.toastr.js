@@ -11,24 +11,24 @@
 
     /* NOTIFICATION *********************************************/
 
-    var showNotification = function (type, title, message) {
-        toastr[type](title, message);
+    var showNotification = function (type, message, title) {
+        toastr[type](message, title);
     };
 
-    abp.notify.success = function (title, message) {
-        showNotification('success', title, message);
+    abp.notify.success = function (message, title) {
+        showNotification('success', message, title);
     };
 
-    abp.notify.info = function (title, message) {
-        showNotification('info', title, message);
+    abp.notify.info = function (message, title) {
+        showNotification('info', message, title);
     };
 
-    abp.notify.warn = function (title, message) {
-        showNotification('warning', title, message);
+    abp.notify.warn = function (message, title) {
+        showNotification('warning', message, title);
     };
 
-    abp.notify.error = function (title, message) {
-        showNotification('error', title, message);
+    abp.notify.error = function (message, title) {
+        showNotification('error', message, title);
     };
 
 })();
