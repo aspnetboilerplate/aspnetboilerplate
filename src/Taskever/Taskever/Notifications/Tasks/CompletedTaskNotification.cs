@@ -1,6 +1,7 @@
 using System.Net.Mail;
 using System.Text;
 using System.Web;
+using Taskever.Security.Users;
 using Taskever.Tasks;
 
 namespace Taskever.Notifications.Tasks
@@ -8,16 +9,18 @@ namespace Taskever.Notifications.Tasks
     public class CompletedTaskNotification : INotification
     {
         public Task Task { get; private set; }
+        public TaskeverUser CreatorUser { get; set; }
 
-        public CompletedTaskNotification(Task task)
+        public CompletedTaskNotification(Task task, TaskeverUser creatorUser)
         {
             Task = task;
+            CreatorUser = creatorUser;
         }
 
         public MailMessage CreateMailMessage()
         {
             MailMessage mail = new MailMessage();
-            mail.To.Add(""); //TODO: Task.CreatorUser.EmailAddress
+            mail.To.Add(CreatorUser.EmailAddress);
             mail.IsBodyHtml = true;
             mail.Subject = "Completed a task: " + HttpUtility.HtmlDecode(Task.Title);
             mail.SubjectEncoding = Encoding.UTF8;

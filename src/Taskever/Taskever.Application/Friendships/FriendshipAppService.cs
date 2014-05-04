@@ -2,15 +2,12 @@ using System;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using Abp;
 using Abp.Domain.Uow;
 using Abp.Mapping;
 using Abp.Security.Users;
 using Abp.UI;
-using Abp.Users;
 using Taskever.Friendships.Dto;
 using Taskever.Security.Users;
-using Taskever.Users;
 using Taskever.Utils.Mail;
 
 namespace Taskever.Friendships

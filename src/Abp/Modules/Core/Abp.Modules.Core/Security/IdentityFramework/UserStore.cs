@@ -73,7 +73,7 @@ namespace Abp.Security.IdentityFramework
 
         public Task<TUser> FindByNameAsync(string userName)
         {
-            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.UserName == userName || user.EmailAddress == userName));
+            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
         }
 
         #endregion
@@ -111,7 +111,7 @@ namespace Abp.Security.IdentityFramework
 
         public Task<bool> GetEmailConfirmedAsync(TUser user)
         {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize
+            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize?
         }
 
         public Task SetEmailConfirmedAsync(TUser user, bool confirmed)

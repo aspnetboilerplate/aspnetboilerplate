@@ -3,8 +3,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using Abp;
 using Abp.Modules.Core.Mvc.Models;
 using Abp.Security.IdentityFramework;
 using Abp.UI;
@@ -85,7 +83,7 @@ namespace Taskever.Web.Mvc.Controllers
         [AbpAuthorize]
         public virtual ActionResult Logout()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            AuthenticationManager.SignOut();
             return RedirectToAction("Login");
         }
 

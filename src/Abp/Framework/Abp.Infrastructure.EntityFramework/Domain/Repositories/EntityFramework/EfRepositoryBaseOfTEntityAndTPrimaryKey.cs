@@ -24,10 +24,10 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             IQueryable<TEntity> query = Table;
 
-            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
-            {
-                query = query.Where(entity => !(entity as ISoftDeleteEntity).IsDeleted);
-            }
+            //if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
+            //{
+            //    query = query.Where(entity => !(entity as ISoftDeleteEntity).IsDeleted);
+            //}
 
             return query;
         }
@@ -95,15 +95,15 @@ namespace Abp.Domain.Repositories.EntityFramework
         public virtual void Delete(TEntity entity)
         {
 
-            if (entity is ISoftDeleteEntity)
-            {
-                (entity as ISoftDeleteEntity).IsDeleted = true;
-                Update(entity);
-            }
-            else
-            {
+            //if (entity is ISoftDeleteEntity)
+            //{
+            //    (entity as ISoftDeleteEntity).IsDeleted = true;
+            //    Update(entity);
+            //}
+            //else
+            //{
                 Table.Remove(entity);
-            }
+            //}
         }
 
         public virtual void Delete(TPrimaryKey id)

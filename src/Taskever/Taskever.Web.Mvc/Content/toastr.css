@@ -1,4 +1,15 @@
-﻿.toast-title {
+﻿/*
+ * Toastr
+ * Version 2.0.2
+ * Copyright 2012-2014 John Papa and Hans Fjällemark.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * Author: John Papa and Hans Fjällemark
+ * Project: https://github.com/CodeSeven/toastr
+ */
+.toast-title {
   font-weight: bold;
 }
 .toast-message {
@@ -76,6 +87,7 @@ button.toast-close-button {
   position: fixed;
   z-index: 999999;
   /*overrides*/
+
 }
 #toast-container * {
   -moz-box-sizing: border-box;
@@ -167,4 +179,3 @@ button.toast-close-button {
     width: 25em;
   }
 }
-/*# sourceMappingURL=toastr.css.map */

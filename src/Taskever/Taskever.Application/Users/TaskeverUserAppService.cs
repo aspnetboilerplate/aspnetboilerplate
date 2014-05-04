@@ -8,6 +8,7 @@ using Abp.Security.Users;
 using Abp.UI;
 using Abp.Users;
 using Abp.Users.Dto;
+using Microsoft.AspNet.Identity;
 using Taskever.Friendships;
 using Taskever.Security.Users;
 using Taskever.Users.Dto;
@@ -100,6 +101,7 @@ namespace Taskever.Users
             }
 
             var userEntity = registerUser.MapTo<TaskeverUser>();
+            userEntity.Password = new PasswordHasher().HashPassword(userEntity.Password);
             userEntity.GenerateEmailConfirmationCode();
             _userRepository.Insert(userEntity);
             SendConfirmationEmail(userEntity);
@@ -128,6 +130,7 @@ namespace Taskever.Users
             }
 
             currentUser.Password = input.NewPassword;
+            currentUser.Password = new PasswordHasher().HashPassword(currentUser.Password);
         }
 
         [UnitOfWork]
