@@ -69,7 +69,7 @@ namespace Abp.Runtime.Validation.Interception
             {
                 if (!parameter.IsOptional && !parameter.IsOut)
                 {
-                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!")); //TODO: What if null value is acceptable?
+                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!")); //TODO@Halil: What if null value is acceptable?
                 }
                 
                 return;
