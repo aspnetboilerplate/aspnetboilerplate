@@ -34,7 +34,7 @@ namespace Taskever.Web.Mvc
             bundles.Add(
                 new ScriptBundle("~/Scripts/baselibs")
                     .Include("~/Scripts/json2.min.js")
-                    .Include("~/Scripts/jquery-2.1.0.min.js") //TODO: Use with {version} and minimized
+                    .Include("~/Scripts/jquery-2.1.1.min.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/underscore-min.js")
                     .Include("~/Scripts/knockout-3.1.0.js") //TODO: Use with {version} and minimized
                     .Include("~/Scripts/knockout.mapping-latest.js")
