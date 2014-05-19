@@ -56,6 +56,17 @@ namespace Abp.Web.Models
         /// <returns>Created <see cref="AbpErrorInfo"/> object</returns>
         public static AbpErrorInfo ForException(Exception exception)
         {
+            //TODO@Halil: I can find a better way...
+
+            if (exception is AggregateException && exception.InnerException != null)
+            {
+                var aggException = exception as AggregateException;
+                if (aggException.InnerException is UserFriendlyException || aggException.InnerException is AbpValidationException)
+                {
+                    exception = aggException.InnerException;
+                }
+            }
+
             if (exception is UserFriendlyException)
             {
                 var userFriendlyException = exception as UserFriendlyException;
