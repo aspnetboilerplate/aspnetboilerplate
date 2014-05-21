@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Utils.Extensions;
-using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 
 namespace Abp.Modules
@@ -64,15 +62,12 @@ namespace Abp.Modules
                 }
 
                 //Prevent multiple adding same module
-                if (_modules.FirstOrDefault(m => m.Type == type) != null)
+                var moduleInfo = _modules.FirstOrDefault(m => m.Type == type);
+                if (moduleInfo == null)
                 {
-                    Logger.Warn("Module is loaded before: " + type.FullName);
-                    continue;
+                    moduleInfo = AbpModuleInfo.CreateForType(type);
+                    _modules.Add(moduleInfo);
                 }
-
-                //Add to module collection
-                var moduleInfo = AbpModuleInfo.CreateForType(type);
-                _modules.Add(moduleInfo);
 
                 //Check for depended modules
                 var dependedModuleTypes = moduleInfo.Instance.GetDependedModules();
