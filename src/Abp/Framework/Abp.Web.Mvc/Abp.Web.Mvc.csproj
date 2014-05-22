@@ -103,6 +103,7 @@
     <Compile Include="Controllers\Authentication\AbpAuthorizationController.cs" />
     <Compile Include="Controllers\Localization\AbpLocalizationController.cs" />
     <Compile Include="Controllers\Results\AbpJsonResult.cs" />
+    <Compile Include="Controllers\Settings\AbpSettingsController.cs" />
     <Compile Include="Controllers\WindsorControllerFactory.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Models\AbpMvcAjaxResponse.cs" />

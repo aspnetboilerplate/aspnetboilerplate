@@ -66,6 +66,8 @@
     <Compile Include="Web\Localization\AbpWebLocalizationSource.cs" />
     <Compile Include="Startup\Web\AbpWebModule.cs" />
     <Compile Include="Startup\Web\AbpWebApplication.cs" />
+    <Compile Include="Web\Settings\ISettingScriptManager.cs" />
+    <Compile Include="Web\Settings\SettingScriptManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp.Application\Abp.Application.csproj">
