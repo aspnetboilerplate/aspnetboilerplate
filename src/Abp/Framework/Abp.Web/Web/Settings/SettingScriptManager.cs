@@ -43,7 +43,7 @@ namespace Abp.Web.Settings
                     script.AppendLine();
                 }
 
-                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "' = '" + _settingManager.GetSettingValue(settingDefinition.Name).Replace("'", @"\'") + "'");
+                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + _settingManager.GetSettingValue(settingDefinition.Name).Replace("'", @"\'") + "'");
 
                 ++added;
             }
