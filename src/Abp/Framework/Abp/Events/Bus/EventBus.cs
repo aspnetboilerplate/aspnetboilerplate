@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Datas;
@@ -7,6 +8,7 @@ using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
 using Abp.Events.Bus.Handlers.Internals;
+using Castle.Core.Internal;
 using Castle.Core.Logging;
 
 namespace Abp.Events.Bus
@@ -234,16 +236,20 @@ namespace Abp.Events.Bus
 
         private IEnumerable<IEventHandlerFactory> GetHandlerFactories(Type eventType)
         {
+            var handlerFactoryList = new List<IEventHandlerFactory>();
+
             lock (_handlerFactories)
             {
-                List<IEventHandlerFactory> handlerFactoryList;
-                if (!_handlerFactories.TryGetValue(eventType, out handlerFactoryList))
+                foreach (var handlerFactory in _handlerFactories)
                 {
-                    return new IEventHandlerFactory[0];
+                    if (handlerFactory.Key.IsAssignableFrom(eventType))
+                    {
+                        handlerFactoryList.AddRange(handlerFactory.Value);
+                    }
                 }
-
-                return handlerFactoryList.ToArray();
             }
+
+            return handlerFactoryList.ToArray();
         }
 
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData

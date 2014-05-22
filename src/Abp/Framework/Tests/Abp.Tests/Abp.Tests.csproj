@@ -51,6 +51,8 @@
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
     <Compile Include="Events\Bus\EventBusTestBase.cs" />
+    <Compile Include="Events\Bus\InheritanceTest.cs" />
+    <Compile Include="Events\Bus\MyDerivedEventData.cs" />
     <Compile Include="Events\Bus\MySimpleEventData.cs" />
     <Compile Include="Events\Bus\MySimpleTransientEventHandler.cs" />
     <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
