@@ -26,6 +26,7 @@ namespace Abp.Configuration
 
         /// <summary>
         /// Scopes of this setting.
+        /// Default value: <see cref="SettingScopes.Application"/>.
         /// </summary>
         public SettingScopes Scopes { get; private set; }
 
@@ -40,6 +41,13 @@ namespace Abp.Configuration
         public string DefaultValue { get; private set; }
 
         /// <summary>
+        /// Can clients see this setting and it's value.
+        /// It maybe dangerous for some settings to be visible to clients (such as email server password).
+        /// Defaut: false.
+        /// </summary>
+        public bool IsVisibleToClients { get; private set; }
+
+        /// <summary>
         /// Creates a new <see cref="SettingDefinition"/> object.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
@@ -47,8 +55,9 @@ namespace Abp.Configuration
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
-        /// <param name="scopes">Scopes of this setting</param>
-        public SettingDefinition(string name, string defaultValue, LocalizableString displayName = null, SettingDefinitionGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application)
+        /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>
+        /// <param name="isVisibleToClients">Can clients see this setting and it's value</param>
+        public SettingDefinition(string name, string defaultValue, LocalizableString displayName = null, SettingDefinitionGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false)
         {
             Name = name;
             DefaultValue = defaultValue;
@@ -56,6 +65,7 @@ namespace Abp.Configuration
             Group = @group;
             Description = description;
             Scopes = scopes;
+            IsVisibleToClients = isVisibleToClients;
         }
     }
 }
