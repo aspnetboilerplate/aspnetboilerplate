@@ -8,18 +8,15 @@
     //TODO: Think to implement success, error and complete callbacks
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
-
-        var defer = $.Deferred();
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
-
-        $.ajax(options)
-            .done(function (data) {
-                abpAjaxHelper.handleData(data, userOptions, defer);
-            }).fail(function () {
-                defer.reject.apply(this, arguments);
-            });
-
-        return defer.promise();
+        return $.Deferred(function ($dfd) {
+            $.ajax(options)
+                .done(function (data) {
+                    abpAjaxHelper.handleData(data, userOptions, $dfd);
+                }).fail(function () {
+                    $dfd.reject.apply(this, arguments);
+                });
+        });
     };
 
     abp.ajax.defaultOpts = {
@@ -49,7 +46,7 @@
         options.success = function (data) {
             abpAjaxHelper.handleData(data, userOptions);
         };
-        
+
         //TODO: Error?
 
         options.complete = function () {
@@ -61,7 +58,7 @@
     };
 
     $.fn.abpAjaxForm.defaults = {
-        method: 'POST',
+        method: 'POST'
     };
 
     /* PRIVATE METHODS *******************************************************/
@@ -72,83 +69,48 @@
     var abpAjaxHelper = {
 
         blockUI: function (options) {
-            if ($.blockUI && options.blockUI) {
+            if (options.blockUI) {
                 if (options.blockUI === true) { //block whole page
-                    $.blockUI(options.blockOptions);
+                    abp.ui.setBusy();
                 } else { //block an element
-                    var $blockUI = $(options.blockUI);
-                    if ($blockUI.find('.abp-busy-indicator').length) {
-                        $blockUI.find('.abp-busy-indicator').spin({
-                            lines: 11,
-                            length: 0,
-                            width: 4,
-                            radius: 7,
-                            corners: 1.0,
-                            trail: 60,
-                            speed: 1.2
-                        });
-                    } else {
-                        $(options.blockUI).block(options.blockOptions || { message: ' ' });
-                        $(options.blockUI).spin({
-                            lines: 11,
-                            length: 0,
-                            width: 10,
-                            radius: 20,
-                            corners: 1.0,
-                            trail: 60,
-                            speed: 1.2
-                        });
-                    }
+                    abp.ui.setBusy(options.blockUI);
                 }
             }
         },
 
         unblockUI: function (options) {
-            if ($.blockUI && options.blockUI) {
+            if (options.blockUI) {
                 if (options.blockUI === true) { //unblock whole page
-                    $.unblockUI();
+                    abp.ui.clearBusy();
                 } else { //unblock an element
-                    var $blockUI = $(options.blockUI);
-                    if ($blockUI.find('.abp-busy-indicator').length) {
-                        $blockUI.find('.abp-busy-indicator').spin(false);
-                    } else {
-                        $(options.blockUI).unblock();
-                        $(options.blockUI).spin(false);
-                    }
+                    abp.ui.clearBusy(options.blockUI);
                 }
             }
         },
 
-        handleData: function (data, userOptions, defer) {
+        handleData: function (data, userOptions, $dfd) {
             if (data) {
-
-                if (data.success === false) {
-
+                if (data.success === true) {
+                    $dfd && $dfd.resolve(data.result, data);
+                    userOptions.success && userOptions.success(data.result, data);
+                } else { //data.success === false
                     if (data.error) {
-
                         abp.message.error(data.error.message);
-                        
-                        defer && defer.reject(data.error);
+                        $dfd && $dfd.reject(data.error);
                         userOptions.error && userOptions.error(data.error);
                     }
 
-                    if (data.unAuthorizedRequest) {
-                        if (data.TargetUrl) {
-                            location.href = data.targetUrl;
-                        } else {
-                            location.reload();
-                        }
+                    if (data.unAuthorizedRequest && !data.targetUrl) {
+                        location.reload();
                     }
-
-                    return;
                 }
-            }
 
-            defer && defer.resolve(data.result, data);
-            userOptions.success && userOptions.success(data.result, data);
-
-            if (data.targetUrl) {
-                location.href = data.targetUrl;
+                if (data.targetUrl) {
+                    location.href = data.targetUrl;
+                }
+            } else { //no data sent to back
+                $dfd && $dfd.resolve();
+                userOptions.success && userOptions.success();
             }
         }
     };

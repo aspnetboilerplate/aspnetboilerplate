@@ -1,11 +1,17 @@
 ﻿var abp = abp || {};
 (function () {
 
-    //TODO: Make blockUI optional?
+    if (!$.fn.spin) {
+        return;
+    }
 
     abp.ui.setBusy = function (elm, options) {
+        options = $.extend({}, options);
         if (!elm) {
-            abp.ui.block();
+            if (options.blockUI != false) {
+                abp.ui.block();
+            }
+
             $('body').spin({
                 lines: 11,
                 length: 0,
@@ -29,7 +35,10 @@
                     speed: 1.2
                 });
             } else {
-                abp.ui.block(elm);
+                if (options.blockUI != false) {
+                    abp.ui.block(elm);
+                }
+
                 $elm.spin({
                     lines: 11,
                     length: 0,
@@ -50,6 +59,7 @@
     };
     
     abp.ui.clearBusy = function (elm) {
+        //TODO@Halil: Maybe better to do not call unblock if it's not blocked by setBusy
         if (!elm) {
             abp.ui.unblock();
             $('body').spin(false);
