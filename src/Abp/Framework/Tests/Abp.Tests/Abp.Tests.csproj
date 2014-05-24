@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\DictionaryBasedConfig_Test.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\Manager.cs" />
     <Compile Include="Entities\Test_Entities.cs" />

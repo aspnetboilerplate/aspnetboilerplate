@@ -1,3 +1,4 @@
+using Abp.Configuration;
 using Castle.DynamicProxy;
 
 namespace Abp.Dependency.Conventions
@@ -5,7 +6,7 @@ namespace Abp.Dependency.Conventions
     /// <summary>
     /// This class is used to pass configuration/options while registering classes in conventional way.
     /// </summary>
-    public class ConventionalRegistrationConfig
+    public class ConventionalRegistrationConfig : DictionayBasedConfig
     {
         /// <summary>
         /// Install all <see cref="IInterceptor"/> implementations automatically or not.
