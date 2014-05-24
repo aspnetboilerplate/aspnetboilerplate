@@ -10,6 +10,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     internal class ApiControllerActionBuilder<T> : IApiControllerActionBuilder<T>
     {
         /// <summary>
+        /// Selected action name.
+        /// </summary>
+        public string ActionName { get; private set; }
+
+        /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
         /// </summary>
         private readonly ApiControllerBuilder<T> _controllerBuilder;
@@ -23,11 +28,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Selected Http verd.
         /// </summary>
         private HttpVerb? _verb;
-
-        /// <summary>
-        /// Selected action name
-        /// </summary>
-        private string _actionName;
 
         /// <summary>
         /// A flag to set if no action will be created for this method.
@@ -48,6 +48,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             _controllerBuilder = apiControllerBuilder;
             _methodInfo = methodInfo;
+            ActionName = _methodInfo.Name;
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public IApiControllerActionBuilder<T> WithActionName(string name)
         {
-            _actionName = name;
+            ActionName = name;
             return this;
         }
 
@@ -107,17 +108,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public DynamicApiActionInfo BuildActionInfo()
         {
-            if (string.IsNullOrWhiteSpace(_actionName))
-            {
-                _actionName = _methodInfo.Name;
-            }
-
             if (_verb == null)
             {
                 _verb = DefaultVerb;
             }
 
-            return new DynamicApiActionInfo(_actionName, _verb.Value, _methodInfo);
+            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo);
         }
     }
 }

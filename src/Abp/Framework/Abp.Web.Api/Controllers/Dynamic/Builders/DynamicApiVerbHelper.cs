@@ -1,12 +1,11 @@
-﻿using Abp.Web;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
-    /// A helper class for dynamic api controllers.
-    /// NOTE: This class is not used.
+    /// NOTE: This is not used (as all members are private)
     /// </summary>
-    internal static class DynamicApiHelper
+    internal static class DynamicApiVerbHelper
     {
         private static HttpVerb GetConventionalVerbForMethodName(string methodName)
         {

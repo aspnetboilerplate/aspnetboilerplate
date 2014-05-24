@@ -5,49 +5,53 @@
         return;
     }
 
+    abp.libs = abp.libs || {};
+
+    abp.libs.spinjs = {
+
+        spinner_config: {
+            lines: 11,
+            length: 0,
+            width: 10,
+            radius: 20,
+            corners: 1.0,
+            trail: 60,
+            speed: 1.2
+        },
+
+        //Config for busy indicator in element's inner element that has '.abp-busy-indicator' class.
+        spinner_config_inner_busy_indicator: {
+            lines: 11,
+            length: 0,
+            width: 4,
+            radius: 7,
+            corners: 1.0,
+            trail: 60,
+            speed: 1.2
+        }
+
+    };
+
     abp.ui.setBusy = function (elm, options) {
         options = $.extend({}, options);
+
         if (!elm) {
             if (options.blockUI != false) {
                 abp.ui.block();
             }
 
-            $('body').spin({
-                lines: 11,
-                length: 0,
-                width: 10,
-                radius: 20,
-                corners: 1.0,
-                trail: 60,
-                speed: 1.2
-            });
+            $('body').spin(abp.libs.spinjs.spinner_config);
         } else {
             var $elm = $(elm);
-            var $busyIndicator = $elm.find('.abp-busy-indicator');
+            var $busyIndicator = $elm.find('.abp-busy-indicator'); //TODO@Halil: What if  more than one element. What if there are nested elements?
             if ($busyIndicator.length) {
-                $busyIndicator.spin({
-                    lines: 11,
-                    length: 0,
-                    width: 4,
-                    radius: 7,
-                    corners: 1.0,
-                    trail: 60,
-                    speed: 1.2
-                });
+                $busyIndicator.spin(abp.libs.spinjs.spinner_config_inner_busy_indicator);
             } else {
                 if (options.blockUI != false) {
                     abp.ui.block(elm);
                 }
 
-                $elm.spin({
-                    lines: 11,
-                    length: 0,
-                    width: 10,
-                    radius: 20,
-                    corners: 1.0,
-                    trail: 60,
-                    speed: 1.2
-                });
+                $elm.spin(abp.libs.spinjs.spinner_config);
             }
         }
 

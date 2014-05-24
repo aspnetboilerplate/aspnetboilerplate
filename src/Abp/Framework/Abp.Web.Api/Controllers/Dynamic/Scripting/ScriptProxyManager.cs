@@ -29,7 +29,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                     return Scripts[name].Script;
                 }
 
-                var controllerInfo = DynamicApiControllerManager.Find(name.ToPascalCase());
+                var controllerInfo = DynamicApiControllerManager.FindOrNull(name.ToPascalCase());
                 if (controllerInfo == null)
                 {
                     throw new HttpException(404, "There is no such a service: " + name);

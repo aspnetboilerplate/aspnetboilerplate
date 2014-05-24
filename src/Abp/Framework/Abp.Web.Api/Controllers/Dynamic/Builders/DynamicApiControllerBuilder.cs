@@ -8,10 +8,11 @@
         /// <summary>
         /// Generates a new dynamic api controller for given type.
         /// </summary>
+        /// <param name="serviceName">Name of the Api controller service. For example: 'myapplication/myservice'.</param>
         /// <typeparam name="T">Type of the proxied object</typeparam>
-        public static IApiControllerBuilder<T> For<T>(string controllerName)
+        public static IApiControllerBuilder<T> For<T>(string serviceName)
         {
-            return new ApiControllerBuilder<T>(controllerName);
+            return new ApiControllerBuilder<T>(serviceName);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
     internal class HttpDeleteActionScriptProxyGenerator : ActionScriptProxyGenerator
     {
-        private const string AjaxPatametersTemplate = 
+        private const string AjaxParametersTemplate = 
 @"            url: '{url}',
             type: '{type}'";
 
@@ -16,11 +16,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 
         protected override string GenerateAjaxCallParameters()
         {
-            var ajaxPatameters = AjaxPatametersTemplate
+            var ajaxParameters = AjaxParametersTemplate
                 .Replace("{url}", GenerateUrlWithParameters())
                 .Replace("{type}", ActionInfo.Verb.ToString().ToUpperInvariant());
 
-            return ajaxPatameters;
+            return ajaxParameters;
         }
 
         private string GenerateUrlWithParameters()

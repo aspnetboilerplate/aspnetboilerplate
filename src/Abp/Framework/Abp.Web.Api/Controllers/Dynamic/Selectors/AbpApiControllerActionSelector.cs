@@ -1,5 +1,5 @@
 using System.Web.Http.Controllers;
-using Abp.Utils.Extensions;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
@@ -15,8 +15,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <returns>Action to be used</returns>
         public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
-            //TODO: If method is not supplied, try to guess the method by Http Verb and parameters ?
-
             object controllerInfoObj;
             if (controllerContext.ControllerDescriptor.Properties.TryGetValue("__AbpDynamicApiControllerInfo", out  controllerInfoObj))
             {
@@ -28,20 +26,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 }
 
                 //Get action name
-                var actionName = (controllerContext.RouteData.Values["action"] as string);
-                if (string.IsNullOrWhiteSpace(actionName))
+                var serviceNameWithAction = (controllerContext.RouteData.Values["serviceNameWithAction"] as string);
+                if (serviceNameWithAction != null)
                 {
-                    throw new AbpException("There is no action specified.");
-                }
+                    var actionName = DynamicApiServiceNameHelper.GetActionNameInServiceNameWithAction(serviceNameWithAction);
 
-                //Get action information
-                actionName = (controllerContext.RouteData.Values["action"] as string).ToPascalCase();
-                if (!controllerInfo.Actions.ContainsKey(actionName))
-                {
-                    throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.Name);
+                    //Get action information
+                    if (!controllerInfo.Actions.ContainsKey(actionName))
+                    {
+                        throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.Name);
+                    }
+
+                    return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
                 }
-                
-                return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
             }
             
             return base.SelectAction(controllerContext);

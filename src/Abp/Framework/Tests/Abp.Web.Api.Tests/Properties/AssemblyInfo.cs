@@ -5,18 +5,14 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
-
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API Layer")]
+[assembly: AssemblyTitle("Abp.Web.Api.Tests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Web.Api")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Abp.Web.Api.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("Abp.Web.Mvc")]
-[assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -24,7 +20,7 @@ using Abp;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("879e21f8-d5ae-45c3-81ee-e68999dae914")]
+[assembly: Guid("9329035a-1b29-4347-b896-544bd3fa7365")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -36,5 +32,5 @@ using Abp;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AbpConst.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpConst.CurrentVersion)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

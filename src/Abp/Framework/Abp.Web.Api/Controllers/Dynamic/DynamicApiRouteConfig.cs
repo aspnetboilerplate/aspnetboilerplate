@@ -15,7 +15,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             //Dynamic Web APIs (with area name)
             GlobalConfiguration.Configuration.Routes.MapHttpRoute(
                 name: "AbpDynamicWebApi",
-                routeTemplate: "api/services/{areaName}/{serviceName}/{action}"
+                routeTemplate: "api/services/{*serviceNameWithAction}"
                 );
         }
     }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abp", "Abp", "{14B060A2-2D57-4FDA-8869-57A8FBF5783C}"
 EndProject
@@ -81,6 +81,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Modules.Core.Infrastructure.EntityFramework", "Abp\Modules\Core\Abp.Modules.Core.Infrastructure.EntityFramework\Abp.Modules.Core.Infrastructure.EntityFramework.csproj", "{E47DDC44-30FE-4DFD-9680-C39E9B9AF474}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskever.Infrastructure.EntityFramework", "Taskever\Taskever.Infrastructure.EntityFramework\Taskever.Infrastructure.EntityFramework.csproj", "{8A7DF1A0-5EF4-467A-AF01-50391F958E57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.Tests", "Abp\Framework\Tests\Abp.Web.Api.Tests\Abp.Web.Api.Tests.csproj", "{662A3C76-DC6E-425C-B389-23B1040AD2F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +178,10 @@ Global
 		{8A7DF1A0-5EF4-467A-AF01-50391F958E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A7DF1A0-5EF4-467A-AF01-50391F958E57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A7DF1A0-5EF4-467A-AF01-50391F958E57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,5 +215,6 @@ Global
 		{948F0CAF-3382-4E03-9A0F-0DDB206FE40D} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{E47DDC44-30FE-4DFD-9680-C39E9B9AF474} = {CAB3BBE0-3BCD-4581-A2F0-C175CCBAC45F}
 		{8A7DF1A0-5EF4-467A-AF01-50391F958E57} = {55698328-B079-4FC4-9CE5-88C6013F9952}
+		{662A3C76-DC6E-425C-B389-23B1040AD2F8} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal

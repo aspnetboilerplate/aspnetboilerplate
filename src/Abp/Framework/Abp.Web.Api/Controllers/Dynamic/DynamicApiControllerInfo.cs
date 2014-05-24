@@ -40,7 +40,7 @@ namespace Abp.WebApi.Controllers.Dynamic
             Type = type;
             ProxiedType = proxiedType;
 
-            Actions = new Dictionary<string, DynamicApiActionInfo>();
+            Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
         }
     }
 }

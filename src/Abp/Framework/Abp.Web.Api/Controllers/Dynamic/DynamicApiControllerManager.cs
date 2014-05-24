@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -12,7 +13,7 @@ namespace Abp.WebApi.Controllers.Dynamic
 
         static DynamicApiControllerManager()
         {
-            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO: Test it
+            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
         }
 
         /// <summary>
@@ -29,10 +30,9 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// </summary>
         /// <param name="controllerName">Name of the controller</param>
         /// <returns>Controller info</returns>
-        public static DynamicApiControllerInfo Find(string controllerName)
+        public static DynamicApiControllerInfo FindOrNull(string controllerName)
         {
-            DynamicApiControllerInfo controllerInfo;
-            return DynamicApiControllers.TryGetValue(controllerName, out controllerInfo) ? controllerInfo : null;
+            return DynamicApiControllers.GetOrDefault(controllerName);
         }
     }
 }

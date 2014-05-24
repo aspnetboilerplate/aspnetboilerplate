@@ -42,7 +42,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
         {
             get
             {
-                return "/api/services/" + ControllerInfo.Name.ToCamelCase() + "/" + ActionInfo.ActionName.ToCamelCase();
+                return "/api/services/" + ControllerInfo.Name + "/" + ActionInfo.ActionName;
             }
         }
 

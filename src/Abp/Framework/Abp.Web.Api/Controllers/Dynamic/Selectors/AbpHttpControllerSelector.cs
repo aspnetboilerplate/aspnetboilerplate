@@ -1,9 +1,10 @@
+using System;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Utils.Extensions;
 using Abp.Utils.Extensions.Collections;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
@@ -38,21 +39,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 var routeData = request.GetRouteData();
                 if (routeData != null)
                 {
-                    string serviceName;
-                    if (routeData.Values.TryGetValue("serviceName", out serviceName))
+                    string serviceNameWithAction;
+                    if (routeData.Values.TryGetValue("serviceNameWithAction", out serviceNameWithAction) && DynamicApiServiceNameHelper.IsValidServiceNameWithAction(serviceNameWithAction))
                     {
-                        string areaName;
-                        if (routeData.Values.TryGetValue("areaName", out areaName))
+                        var serviceName = DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
+                        var controllerInfo = DynamicApiControllerManager.FindOrNull(serviceName);
+                        if (controllerInfo != null)
                         {
-                            var controllerName = areaName.ToPascalCase() + "/" + serviceName.ToPascalCase();
-
-                            var controllerInfo = DynamicApiControllerManager.Find(controllerName);
-                            if (controllerInfo != null)
-                            {
-                                var controllerDescriptor = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
-                                controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
-                                return controllerDescriptor;
-                            }
+                            var controllerDescriptor = new HttpControllerDescriptor(_configuration, controllerInfo.Name, controllerInfo.Type);
+                            controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
+                            return controllerDescriptor;
                         }
                     }
                 }

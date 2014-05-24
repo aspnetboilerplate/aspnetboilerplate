@@ -5,7 +5,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 {
     internal class HttpPostActionScriptProxyGenerator : ActionScriptProxyGenerator
     {
-        private const string AjaxPatametersTemplate = 
+        private const string AjaxParametersTemplate = 
 @"            url: '{url}',
             type: '{type}',
             data: JSON.stringify({postData})";
@@ -18,12 +18,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
 
         protected override string GenerateAjaxCallParameters()
         {
-            var ajaxPatameters = AjaxPatametersTemplate
+            var ajaxParameters = AjaxParametersTemplate
                 .Replace("{url}", PlainActionUrl)
                 .Replace("{type}", ActionInfo.Verb.ToString().ToUpperInvariant())
                 .Replace("{postData}", GeneratePostData());
 
-            return ajaxPatameters;
+            return ajaxParameters;
         }
 
         private string GeneratePostData()

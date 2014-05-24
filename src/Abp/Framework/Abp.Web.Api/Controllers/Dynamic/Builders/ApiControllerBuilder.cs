@@ -16,7 +16,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        private readonly string _controllerName;
+        private readonly string _serviceName;
 
         /// <summary>
         /// List of all action builders for this controller.
@@ -26,15 +26,20 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
-        /// <param name="controllerName">Name of the controller</param>
-        public ApiControllerBuilder(string controllerName)
+        /// <param name="serviceName">Name of the controller</param>
+        public ApiControllerBuilder(string serviceName)
         {
-            if (string.IsNullOrWhiteSpace(controllerName) || !controllerName.Contains("/"))
+            if (string.IsNullOrWhiteSpace(serviceName))
             {
-                throw new ArgumentException("controllerName is not valid! It must be formatted as {areaName}/{serviceName}", "controllerName");
+                throw new ArgumentException("serviceName null or empty!", "serviceName");
             }
 
-            _controllerName = controllerName;
+            if (!DynamicApiServiceNameHelper.IsValidServiceName(serviceName))
+            {
+                throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
+            }
+
+            _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
             foreach (var methodInfo in GetPublicInstanceMethods())
@@ -64,7 +69,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_controllerName, typeof(DynamicApiController<T>), typeof(T));
+            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T));
+            
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
@@ -72,8 +78,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     continue;
                 }
 
-                var actionInfo = actionBuilder.BuildActionInfo();
-                controllerInfo.Actions[actionInfo.ActionName] = actionInfo;
+                controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo();
             }
 
             IocManager.Instance.IocContainer.Register(
