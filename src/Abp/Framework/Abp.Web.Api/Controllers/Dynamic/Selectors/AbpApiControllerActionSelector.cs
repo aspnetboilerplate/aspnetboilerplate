@@ -34,7 +34,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     //Get action information
                     if (!controllerInfo.Actions.ContainsKey(actionName))
                     {
-                        throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.Name);
+                        throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
                     }
 
                     return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);

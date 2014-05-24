@@ -212,6 +212,25 @@
 
     abp.utils = abp.utils || {};
 
+    /* Creates a name namespace.
+    *  Example:
+    *  var taskService = abp.utils.createNamespace(abp, 'services.task');
+    *  taskService will be equal to abp.services.task
+    *  first argument (root) must be defined first
+    ************************************************************/
+    abp.utils.createNamespace = function (root, ns) {
+        var parts = ns.split('.');
+        for (var i = 0; i < parts.length; i++) {
+            if (typeof root[parts[i]] == 'undefined') {
+                root[parts[i]] = {};
+            }
+
+            root = root[parts[i]];
+        }
+
+        return root;
+    };
+
     /* Formats a string just like string.format in C#.
     *  Example:
     *  _formatString('Hello {0}','Halil') = 'Hello Halil'

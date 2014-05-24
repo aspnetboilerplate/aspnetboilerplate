@@ -10,36 +10,40 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             var script = new StringBuilder();
 
-            //Module dependencies and start
-            script.AppendLine("define(['jquery'], function ($) {");
+            script.AppendLine("(function(){");
+            script.AppendLine();
+            script.AppendLine("    var serviceNamespace = abp.utils.createNamespace(abp, 'services." + controllerInfo.ServiceName.Replace("/", ".") + "');");
+            script.AppendLine();
 
             //all methods
             foreach (var methodInfo in controllerInfo.Actions.Values)
             {
-                script.AppendLine();
                 AppendMethod(script, controllerInfo, methodInfo);
+                script.AppendLine();
             }
 
-            //Return value of the module
-            script.AppendLine();
-            script.AppendLine("    return {");
+            //Define AMD (Requirejs) module
+            script.AppendLine("    if(define && typeof define === 'function' && define.amd){");
+            script.AppendLine("        define(function (require, exports, module) {");
+            script.AppendLine("            return {");
 
             var methodNo = 0;
             foreach (var methodInfo in controllerInfo.Actions.Values)
             {
-                script.AppendLine("        " + methodInfo.ActionName.ToCamelCase() + ": " + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
+                script.AppendLine("                " + methodInfo.ActionName.ToCamelCase() + ": serviceNamespace." + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
             }
 
-            script.AppendLine("    };");
+            script.AppendLine("            };");
+            script.AppendLine("        });");
+            script.AppendLine("    }");
+            
             script.AppendLine();
-
-            //Module end
-            script.AppendLine("});");
+            script.AppendLine("})();");
 
             return script.ToString();
         }
 
-        private void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
+        private static void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
             var generator = methodInfo.Verb.CreateActionScriptProxyGenerator(controllerInfo, methodInfo);
             script.AppendLine(generator.GenerateMethod());

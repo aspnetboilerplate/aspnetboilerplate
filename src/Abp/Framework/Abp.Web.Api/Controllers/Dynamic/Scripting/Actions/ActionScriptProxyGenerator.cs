@@ -11,7 +11,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
         protected DynamicApiActionInfo ActionInfo { get; private set; }
 
         private const string JsMethodTemplate =
-@"    var {jsMethodName} = function({jsMethodParameterList}) {
+@"    serviceNamespace.{jsMethodName} = function({jsMethodParameterList}) {
         return abp.ajax($.extend({
 {ajaxCallParameters}
         }, ajaxParams));
@@ -42,7 +42,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Actions
         {
             get
             {
-                return "/api/services/" + ControllerInfo.Name + "/" + ActionInfo.ActionName;
+                return "/api/services/" + ControllerInfo.ServiceName + "/" + ActionInfo.ActionName;
             }
         }
 

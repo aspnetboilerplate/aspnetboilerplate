@@ -225,7 +225,6 @@
     <Compile Include="Views\TaskeverViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Abp\Framework\images\user.png" />
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
@@ -465,6 +464,7 @@
     <Content Include="Scripts\toastr.min.js.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Abp\Framework\images\" />
     <Folder Include="Abp\Modules\Core\images\" />
     <Folder Include="Abp\Modules\Core\models\" />
     <Folder Include="Abp\Modules\Core\scripts\" />

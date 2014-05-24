@@ -22,7 +22,7 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public static void Register(DynamicApiControllerInfo controllerInfo)
         {
-            DynamicApiControllers[controllerInfo.Name] = controllerInfo;
+            DynamicApiControllers[controllerInfo.ServiceName] = controllerInfo;
         }
 
         /// <summary>

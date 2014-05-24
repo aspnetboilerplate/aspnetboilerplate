@@ -9,9 +9,9 @@ namespace Abp.WebApi.Controllers.Dynamic
     internal class DynamicApiControllerInfo
     {
         /// <summary>
-        /// Name of the controller.
+        /// Name of the service.
         /// </summary>
-        public string Name { get; private set; }
+        public string ServiceName { get; private set; }
 
         /// <summary>
         /// Controller type.
@@ -31,12 +31,12 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
-        /// <param name="name">Name of the controller</param>
+        /// <param name="serviceName">Name of the service</param>
         /// <param name="type">Controller type</param>
         /// <param name="proxiedType">Proxied type</param>
-        public DynamicApiControllerInfo(string name, Type type, Type proxiedType)
+        public DynamicApiControllerInfo(string serviceName, Type type, Type proxiedType)
         {
-            Name = name;
+            ServiceName = serviceName;
             Type = type;
             ProxiedType = proxiedType;
 
