@@ -154,15 +154,7 @@
     <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
     <Content Include="Localization\AbpWeb\AbpWeb.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Abp\Framework\images\" />
-    <Folder Include="Abp\Modules\Core\images\" />
-    <Folder Include="Abp\Modules\Core\models\" />
-    <Folder Include="Abp\Modules\Core\scripts\" />
-    <Folder Include="Abp\Modules\Core\styles\" />
-    <Folder Include="Abp\Modules\Core\viewmodels\" />
-    <Folder Include="Abp\Modules\Core\views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

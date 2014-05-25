@@ -92,6 +92,7 @@
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />

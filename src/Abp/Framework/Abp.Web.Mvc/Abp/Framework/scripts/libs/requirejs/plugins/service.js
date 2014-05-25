@@ -1,7 +1,7 @@
 ﻿define(function () {
     return {
         load: function (name, req, onload, config) {
-            var url = '/api/ServiceProxies/?name=' + name;
+            var url = '/api/AbpServiceProxies/Get?name=' + name;
             req([url], function (value) {
                 onload(value);
             });

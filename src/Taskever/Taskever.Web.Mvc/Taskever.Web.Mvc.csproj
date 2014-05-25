@@ -464,13 +464,6 @@
     <Content Include="Scripts\toastr.min.js.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abp\Framework\images\" />
-    <Folder Include="Abp\Modules\Core\images\" />
-    <Folder Include="Abp\Modules\Core\models\" />
-    <Folder Include="Abp\Modules\Core\scripts\" />
-    <Folder Include="Abp\Modules\Core\styles\" />
-    <Folder Include="Abp\Modules\Core\viewmodels\" />
-    <Folder Include="Abp\Modules\Core\views\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
