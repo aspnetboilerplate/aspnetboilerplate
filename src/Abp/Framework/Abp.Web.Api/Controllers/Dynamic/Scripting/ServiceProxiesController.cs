@@ -20,5 +20,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
             return response;
         }
+
+        /// <summary>
+        /// Gets javascript proxy for all services.
+        /// </summary>
+        public HttpResponseMessage GetAll()
+        {
+            var script = ScriptProxyManager.GetAllScript();
+            var response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
+            return response;
+        }
     }
 }

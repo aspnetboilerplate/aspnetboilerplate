@@ -6,7 +6,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
     internal class ControllerScriptProxyGenerator
     {
-        public string GenerateFor(DynamicApiControllerInfo controllerInfo)
+        public string GenerateFor(DynamicApiControllerInfo controllerInfo, bool defineAmdModule = true)
         {
             var script = new StringBuilder();
 
@@ -15,28 +15,31 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             script.AppendLine("    var serviceNamespace = abp.utils.createNamespace(abp, 'services." + controllerInfo.ServiceName.Replace("/", ".") + "');");
             script.AppendLine();
 
-            //all methods
+            //generate all methods
             foreach (var methodInfo in controllerInfo.Actions.Values)
             {
                 AppendMethod(script, controllerInfo, methodInfo);
                 script.AppendLine();
             }
 
-            //Define AMD (Requirejs) module
-            script.AppendLine("    if(define && typeof define === 'function' && define.amd){");
-            script.AppendLine("        define(function (require, exports, module) {");
-            script.AppendLine("            return {");
-
-            var methodNo = 0;
-            foreach (var methodInfo in controllerInfo.Actions.Values)
+            //generate amd module definition
+            if (defineAmdModule)
             {
-                script.AppendLine("                " + methodInfo.ActionName.ToCamelCase() + ": serviceNamespace." + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
+                script.AppendLine("    if(define && typeof define === 'function' && define.amd){");
+                script.AppendLine("        define(function (require, exports, module) {");
+                script.AppendLine("            return {");
+
+                var methodNo = 0;
+                foreach (var methodInfo in controllerInfo.Actions.Values)
+                {
+                    script.AppendLine("                " + methodInfo.ActionName.ToCamelCase() + ": serviceNamespace." + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
+                }
+
+                script.AppendLine("            };");
+                script.AppendLine("        });");
+                script.AppendLine("    }");
             }
 
-            script.AppendLine("            };");
-            script.AppendLine("        });");
-            script.AppendLine("    }");
-            
             script.AppendLine();
             script.AppendLine("})();");
 

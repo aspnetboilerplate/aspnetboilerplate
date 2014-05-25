@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.WebApi.Controllers.Dynamic
@@ -33,6 +35,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         public static DynamicApiControllerInfo FindOrNull(string controllerName)
         {
             return DynamicApiControllers.GetOrDefault(controllerName);
+        }
+
+        public static IReadOnlyList<DynamicApiControllerInfo> GetAll()
+        {
+            return DynamicApiControllers.Values.ToImmutableList();
         }
     }
 }
