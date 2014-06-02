@@ -67,7 +67,7 @@
     <Compile Include="Domain\Uow\EntityFramework\EfUnitOfWorkRegistrer.cs" />
     <Compile Include="Domain\Uow\EntityFramework\EfUnitOfWorkInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup\Infrastructure\NHibernate\AbpEntityFrameworkModule.cs" />
+    <Compile Include="Startup\Infrastructure\EntityFramework\AbpEntityFrameworkModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">

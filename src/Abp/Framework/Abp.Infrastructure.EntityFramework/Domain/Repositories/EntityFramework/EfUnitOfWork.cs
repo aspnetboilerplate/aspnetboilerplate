@@ -1,4 +1,3 @@
-using System.Data.Entity;
 using System.Transactions;
 using Abp.Domain.Uow;
 
