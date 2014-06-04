@@ -23,13 +23,22 @@ namespace Taskever.Activities.EventHandlers
 
         public void HandleEvent(EntityCreatedEventData<Task> eventData)
         {
-            _activityService.AddActivity(
-                new CreateTaskActivity
-                {
-                    CreatorUser = eventData.Entity.CreatorUserId.HasValue ? _userRepository.Load(eventData.Entity.CreatorUserId.Value) : null,
-                    AssignedUser = eventData.Entity.AssignedUser,
-                    Task = eventData.Entity
-                });
+            var activity = new CreateTaskActivity
+                           {
+                               CreatorUser =
+                                   eventData.Entity.CreatorUserId.HasValue
+                                       ? _userRepository.Load(eventData.Entity.CreatorUserId.Value)
+                                       : null,
+                               AssignedUser = eventData.Entity.AssignedUser,
+                               Task = eventData.Entity
+                           };
+
+
+            //activity.AssignedUserId = activity.AssignedUser.Id;
+            //activity.CreatorUserId = activity.CreatorUser.Id;
+            //activity.TaskId = activity.Task.Id;
+
+            _activityService.AddActivity(activity);
         }
         public void HandleEvent(TaskCompletedEventData eventData)
         {

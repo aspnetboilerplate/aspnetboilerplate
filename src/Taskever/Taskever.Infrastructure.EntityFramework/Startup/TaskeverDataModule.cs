@@ -24,7 +24,7 @@ namespace Taskever.Infrastructure.EntityFramework.Startup
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
             base.Initialize(initializationContext);
-            IocManager.Instance.IocContainer.Register(Component.For<AbpDbContext>().ImplementedBy<TaskeverDbContext>().LifestyleTransient());
+            //IocManager.Instance.IocContainer.Register(Component.For<AbpDbContext>().ImplementedBy<TaskeverDbContext>().LifestyleTransient());
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             //AbpDbContext.AddEntityAssembly(Assembly.GetAssembly(typeof(Task)));
         }

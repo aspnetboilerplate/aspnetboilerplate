@@ -23,5 +23,24 @@ namespace Abp.Modules.Core.Data.Repositories.EntityFramework
         public virtual IDbSet<Permission> Permissions { get; set; }
         
         public virtual IDbSet<Setting> Settings { get; set; }
+
+        public CoreModuleDbContext()
+            : base("Taskever")
+        {
+            
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AbpUser>().ToTable("AbpUsers");
+            modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");
+            modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
+            modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
+            modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
+            modelBuilder.Entity<Permission>().ToTable("AbpPermissions");
+            modelBuilder.Entity<Setting>().ToTable("AbpSettings");
+        }
     }
 }

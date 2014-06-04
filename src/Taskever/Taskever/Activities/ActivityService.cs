@@ -35,7 +35,7 @@ namespace Taskever.Activities
         public void AddActivity(Activity activity)
         {
             _activityRepository.Insert(activity);
-            CreateUserFollowedActivities(activity);
+            //CreateUserFollowedActivities(activity);
         }
 
         [UnitOfWork]

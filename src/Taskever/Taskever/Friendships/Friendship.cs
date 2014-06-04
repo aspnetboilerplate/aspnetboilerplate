@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
@@ -8,10 +9,18 @@ namespace Taskever.Friendships
 {
     public class Friendship : Entity, IHasCreationTime
     {
+        [ForeignKey("UserId")]
         public virtual TaskeverUser User { get; set; }
+        public virtual int UserId { get; set; }
 
+        public virtual int FriendUserId { get; set; }
+
+        public virtual int PairFriendshipId { get; set; }
+
+        [ForeignKey("FriendUserId")]
         public virtual TaskeverUser Friend { get; set; }
 
+        [ForeignKey("PairFriendshipId")]
         public virtual Friendship Pair { get; set; }
 
         /// <summary>

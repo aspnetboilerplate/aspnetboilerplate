@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Security.Users;
 using Taskever.Security.Users;
 using Taskever.Tasks;
@@ -6,15 +7,14 @@ namespace Taskever.Activities
 {
     public class CreateTaskActivity : Activity
     {
+        [ForeignKey("CreatorUserId")]
         public virtual TaskeverUser CreatorUser { get; set; }
 
-        public virtual TaskeverUser AssignedUser { get; set; }
-
-        public virtual Task Task { get; set; } //TODO: Create abstract TaskActivity class and put Task there?
+        public virtual int CreatorUserId { get; set; }
 
         public CreateTaskActivity()
         {
-            ActivityType = ActivityType.CreateTask;
+            //ActivityType = ActivityType.CreateTask;
         }
 
         public override int?[] GetActors()
