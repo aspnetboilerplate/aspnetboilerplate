@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Transactions;
+using Abp.Dependency;
 using Abp.Domain.Uow;
+using Castle.Core.Internal;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
@@ -8,7 +13,9 @@ namespace Abp.Domain.Repositories.EntityFramework
     /// </summary>
     public class EfUnitOfWork : IUnitOfWork
     {
-        public AbpDbContext Context { get; private set; }
+        //public AbpDbContext Context { get; private set; }
+
+        private IDictionary<Type, DbContext> _dbContexts;
 
         /// <summary>
         /// Reference to the currently running transcation.
@@ -18,10 +25,9 @@ namespace Abp.Domain.Repositories.EntityFramework
         /// <summary>
         /// Creates a new instance of EfUnitOfWork.
         /// </summary>
-        /// <param name="context"></param>
-        public EfUnitOfWork(AbpDbContext context)
+        public EfUnitOfWork()
         {
-            Context = context;
+            //Context = context;
         }
 
         /// <summary>
@@ -31,6 +37,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             try
             {
+                _dbContexts = new Dictionary<Type, DbContext>(); //TODO: Move to contrructor?
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
                 _transaction = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions);
             }
@@ -48,7 +55,9 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             try
             {
-                Context.SaveChanges();
+                _dbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+                
+                //Context.SaveChanges();
                 _transaction.Complete();
             }
             finally
@@ -72,10 +81,27 @@ namespace Abp.Domain.Repositories.EntityFramework
                 _transaction.Dispose();
             }
 
-            if (Context != null)
+            _dbContexts.Values.ForEach(dbContext =>
+                                       {
+                                           dbContext.Dispose();
+                                           IocHelper.Release(dbContext);
+                                       });
+
+            //if (Context != null)
+            //{
+            //    Context.Dispose();
+            //}
+        }
+
+        internal TDbContext GetOrCreateDbContext<TDbContext>() where TDbContext : DbContext
+        {
+            DbContext dbContext;
+            if (!_dbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                Context.Dispose();
+                _dbContexts[typeof(TDbContext)] = dbContext = IocHelper.Resolve<TDbContext>();
             }
+
+            return (TDbContext)dbContext;
         }
     }
 }

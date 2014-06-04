@@ -9,16 +9,14 @@ using Abp.Domain.Uow;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
-    /// <summary>
-    /// Base class for all repositories those uses Entity Framework.
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
-    {
-        protected AbpDbContext Context { get { return ((EfUnitOfWork)UnitOfWorkScope.CurrentUow).Context; } }
 
-        protected DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
+    public abstract class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>
+        where TDbContext : DbContext
+    {
+        protected virtual TDbContext Context { get { return UnitOfWorkScope.CurrentUow.GetDbContext<TDbContext>(); } }
+
+        protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
 
         public virtual IQueryable<TEntity> GetAll()
         {
@@ -68,7 +66,7 @@ namespace Abp.Domain.Repositories.EntityFramework
             return GetAll().Where("Id = @0", key).FirstOrDefault(); //TODO: Implement ISoftDeleteEntity?
         }
 
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
         }
@@ -102,7 +100,7 @@ namespace Abp.Domain.Repositories.EntityFramework
             //}
             //else
             //{
-                Table.Remove(entity);
+            Table.Remove(entity);
             //}
         }
 
@@ -149,5 +147,16 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             return GetAll().Where(predicate).LongCount();
         }
+
+    }
+
+    /// <summary>
+    /// Base class for all repositories those uses Entity Framework.
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
+    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<AbpDbContext, TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+    {
+
     }
 }

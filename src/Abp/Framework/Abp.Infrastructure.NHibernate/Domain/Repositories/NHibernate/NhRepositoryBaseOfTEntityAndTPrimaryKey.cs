@@ -69,7 +69,7 @@ namespace Abp.Domain.Repositories.NHibernate
             return Session.Get<TEntity>(key); //TODO: Implement ISoftDeleteEntity?
         }
 
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
         }

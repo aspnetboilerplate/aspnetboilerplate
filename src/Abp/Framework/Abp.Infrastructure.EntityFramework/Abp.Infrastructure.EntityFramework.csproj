@@ -64,6 +64,7 @@
     <Compile Include="Domain\Repositories\EntityFramework\EfRepositoryBase.cs" />
     <Compile Include="Domain\Repositories\EntityFramework\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\EntityFramework\EfUnitOfWork.cs" />
+    <Compile Include="Domain\Repositories\EntityFramework\UnitOfWorkExtensions.cs" />
     <Compile Include="Domain\Uow\EntityFramework\EfUnitOfWorkRegistrer.cs" />
     <Compile Include="Domain\Uow\EntityFramework\EfUnitOfWorkInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
