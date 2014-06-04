@@ -1,12 +1,10 @@
+using System.Data.Entity;
 using Abp.Domain.Entities;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
-    /// <summary>
-    /// A shortcut of <see cref="EfRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    public abstract class EfRepositoryBase<TEntity> : EfRepositoryBase<TEntity, int>, IRepository<TEntity> where TEntity : class, IEntity<int>
+    public abstract class EfRepositoryBase<TDbContext, TEntity> : EfRepositoryBase<TDbContext, TEntity, int>, IRepository<TEntity> where TEntity : class, IEntity<int>
+        where TDbContext : DbContext
     {
 
     }

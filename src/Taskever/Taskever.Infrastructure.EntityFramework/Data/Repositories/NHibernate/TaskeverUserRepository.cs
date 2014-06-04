@@ -3,7 +3,7 @@ using Taskever.Security.Users;
 
 namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
-    public class TaskeverUserRepository : UserRepositoryBase<TaskeverUser>, ITaskeverUserRepository
+    public class TaskeverUserRepository : TaskeverEfRepositoryBase<TaskeverUser>, ITaskeverUserRepository
     {
         
     }

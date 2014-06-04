@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Abp.Modules.Core.Mvc.Models;
 using Abp.Security.IdentityFramework;
+using Abp.Security.Users;
 using Abp.UI;
 using Abp.Users.Dto;
 using Abp.Web.Mvc.Authorization;
@@ -13,8 +14,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
-using Taskever.Security.Identity;
-using Taskever.Security.Users;
 using Taskever.Users;
 using Taskever.Web.Mvc.Models.Account;
 
@@ -24,7 +23,7 @@ namespace Taskever.Web.Mvc.Controllers
     {
         private readonly ITaskeverUserAppService _userAppService;
 
-        private readonly TaskeverUserManager _userManager;
+        private readonly AbpUserManager _userManager;
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -34,7 +33,7 @@ namespace Taskever.Web.Mvc.Controllers
             }
         }
 
-        public AccountController(ITaskeverUserAppService userAppService, TaskeverUserManager userManager)
+        public AccountController(ITaskeverUserAppService userAppService, AbpUserManager userManager)
         {
             _userAppService = userAppService;
             _userManager = userManager;
@@ -66,7 +65,7 @@ namespace Taskever.Web.Mvc.Controllers
             return Json(new AbpMvcAjaxResponse { TargetUrl = returnUrl });
         }
 
-        private async Task SignInAsync(TaskeverUser user, bool isPersistent)
+        private async Task SignInAsync(AbpUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);

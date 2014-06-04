@@ -4,14 +4,11 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.IdentityFramework
 {
-    public class RoleStore<TRole, TRoleRepository> : 
-        IRoleStore<TRole, int> 
-        where TRole: AbpRole
-        where TRoleRepository : IRoleRepository<TRole>
+    public class AbpRoleStore : IRoleStore<AbpRole, int> 
     {
-        private readonly TRoleRepository _roleRepository;
+        private readonly IAbpRoleRepository _roleRepository;
 
-        public RoleStore(TRoleRepository roleRepository)
+        public AbpRoleStore(IAbpRoleRepository roleRepository)
         {
             _roleRepository = roleRepository;
         }
@@ -21,27 +18,27 @@ namespace Abp.Security.IdentityFramework
             //No need to dispose since using dependency injection manager
         }
 
-        public Task CreateAsync(TRole role)
+        public Task CreateAsync(AbpRole role)
         {
             return Task.Factory.StartNew(() => _roleRepository.Insert(role));
         }
 
-        public Task UpdateAsync(TRole role)
+        public Task UpdateAsync(AbpRole role)
         {
             return Task.Factory.StartNew(() => _roleRepository.Update(role));
         }
 
-        public Task DeleteAsync(TRole role)
+        public Task DeleteAsync(AbpRole role)
         {
             return Task.Factory.StartNew(() => _roleRepository.Delete(role.Id));
         }
 
-        public Task<TRole> FindByIdAsync(int roleId)
+        public Task<AbpRole> FindByIdAsync(int roleId)
         {
             return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(roleId));
         }
 
-        public Task<TRole> FindByNameAsync(string roleName)
+        public Task<AbpRole> FindByNameAsync(string roleName)
         {
             return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName));
         }

@@ -13,22 +13,15 @@ namespace Abp.Domain.Repositories.EntityFramework
     /// </summary>
     public class EfUnitOfWork : IUnitOfWork
     {
-        //public AbpDbContext Context { get; private set; }
-
-        private IDictionary<Type, DbContext> _dbContexts;
+        /// <summary>
+        /// List of DbContexes actively used in this unit of work.
+        /// </summary>
+        private IDictionary<Type, DbContext> _activeDbContexts;
 
         /// <summary>
         /// Reference to the currently running transcation.
         /// </summary>
         private TransactionScope _transaction;
-
-        /// <summary>
-        /// Creates a new instance of EfUnitOfWork.
-        /// </summary>
-        public EfUnitOfWork()
-        {
-            //Context = context;
-        }
 
         /// <summary>
         /// Opens database connection and begins transaction.
@@ -37,7 +30,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             try
             {
-                _dbContexts = new Dictionary<Type, DbContext>(); //TODO: Move to contrructor?
+                _activeDbContexts = new Dictionary<Type, DbContext>(); //TODO: Move to contrructor?
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
                 _transaction = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions);
             }
@@ -55,9 +48,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             try
             {
-                _dbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
-                
-                //Context.SaveChanges();
+                _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
                 _transaction.Complete();
             }
             finally
@@ -79,26 +70,24 @@ namespace Abp.Domain.Repositories.EntityFramework
             if (_transaction != null)
             {
                 _transaction.Dispose();
+                _transaction = null;
             }
 
-            _dbContexts.Values.ForEach(dbContext =>
+            _activeDbContexts.Values.ForEach(dbContext =>
                                        {
                                            dbContext.Dispose();
                                            IocHelper.Release(dbContext);
                                        });
 
-            //if (Context != null)
-            //{
-            //    Context.Dispose();
-            //}
+            _activeDbContexts.Clear();
         }
 
         internal TDbContext GetOrCreateDbContext<TDbContext>() where TDbContext : DbContext
         {
             DbContext dbContext;
-            if (!_dbContexts.TryGetValue(typeof(TDbContext), out dbContext))
+            if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                _dbContexts[typeof(TDbContext)] = dbContext = IocHelper.Resolve<TDbContext>();
+                _activeDbContexts[typeof(TDbContext)] = dbContext = IocHelper.Resolve<TDbContext>();
             }
 
             return (TDbContext)dbContext;

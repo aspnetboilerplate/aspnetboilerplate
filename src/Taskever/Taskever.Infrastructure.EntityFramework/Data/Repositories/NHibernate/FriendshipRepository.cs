@@ -6,7 +6,7 @@ using Taskever.Friendships;
 
 namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
-    public class FriendshipRepository : EfRepositoryBase<Friendship>, IFriendshipRepository
+    public class FriendshipRepository : TaskeverEfRepositoryBase<Friendship>, IFriendshipRepository
     {
         public List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask)
         {

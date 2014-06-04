@@ -23,7 +23,7 @@ namespace Abp.Modules.Core.Startup
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            AbpDbContext.AddEntityAssembly(Assembly.GetAssembly(typeof (AbpUser)));
+            //AbpDbContext.AddEntityAssembly(Assembly.GetAssembly(typeof (AbpUser)));
         }
 
         private void ComponentRegistered(string key, IHandler handler)

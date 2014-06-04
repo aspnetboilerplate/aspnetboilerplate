@@ -23,23 +23,23 @@ namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Permission>().ToTable("AbpPermissions");
-            modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
-            modelBuilder.Entity<Setting>().ToTable("AbpSettings");
-            modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
-            modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
-            modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");
+            //modelBuilder.Entity<Permission>().ToTable("AbpPermissions");
+            //modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
+            //modelBuilder.Entity<Setting>().ToTable("AbpSettings");
+            //modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
+            //modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
+            //modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");
 
-            modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
+            //modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
 
-            modelBuilder.Entity<AbpRole>().HasMany(r => r.Permissions).WithRequired().HasForeignKey(p => p.RoleId);
+            //modelBuilder.Entity<AbpRole>().HasMany(r => r.Permissions).WithRequired().HasForeignKey(p => p.RoleId);
 
-            modelBuilder.Entity<UserRole>().HasRequired(ur => ur.Role);
-            modelBuilder.Entity<UserRole>().HasRequired(ur => ur.User);
+            //modelBuilder.Entity<UserRole>().HasRequired(ur => ur.Role);
+            //modelBuilder.Entity<UserRole>().HasRequired(ur => ur.User);
             
-            modelBuilder.Entity<AbpUser>().ToTable("AbpUsers");
+            //modelBuilder.Entity<AbpUser>().ToTable("AbpUsers");
 
-            modelBuilder.Entity<TaskeverUser>().ToTable("AbpUsers");
+            //modelBuilder.Entity<TaskeverUser>().ToTable("AbpUsers");
             //modelBuilder.Entity<Activity>().ToTable("TeActivities");
             //modelBuilder.Entity<Friendship>().ToTable("TeFriendships");
             //modelBuilder.Entity<Task>().ToTable("TeTasks");

@@ -149,14 +149,4 @@ namespace Abp.Domain.Repositories.EntityFramework
         }
 
     }
-
-    /// <summary>
-    /// Base class for all repositories those uses Entity Framework.
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class EfRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<AbpDbContext, TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
-    {
-
-    }
 }

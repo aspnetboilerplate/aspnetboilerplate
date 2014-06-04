@@ -84,11 +84,9 @@
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\PermissionRepository.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\NHibernate\RoleRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\SettingRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpUserRepository.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\UserRoleRepository.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\AbpRoleMap.cs" />
     <Compile Include="Modules\Core\Entities\NHibernate\Mappings\AbpUserMap.cs" />

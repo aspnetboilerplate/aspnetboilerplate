@@ -67,12 +67,10 @@
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpTenantRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpUserRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\PermissionRepository.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\EntityFramework\RoleRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\SettingRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserLoginRepositoryOfTUser.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserRepositoryBase.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\UserRoleRepository.cs" />
-    <Compile Include="Modules\Core\Startup\AbpModulesCoreInfrastructureNHibernateModule.cs" />
+    <Compile Include="Modules\Core\Startup\AbpModulesCoreInfrastructureEntityFrameworkModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,10 @@
+using Abp.Domain.Repositories;
 using Abp.Security.Roles;
 
 namespace Taskever.Security.Roles
 {
-    public interface ITaskeverRoleRepository : IRoleRepository<TaskeverRole>
+    public interface ITaskeverRoleRepository : IRepository<TaskeverRole>
     {
+
     }
 }

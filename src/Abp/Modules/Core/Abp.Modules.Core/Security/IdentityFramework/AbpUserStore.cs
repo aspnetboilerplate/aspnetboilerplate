@@ -10,18 +10,16 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.IdentityFramework
 {
-    public class UserStore<TUser, TUserRepository> :
-        IUserPasswordStore<TUser, int>,
-        IUserEmailStore<TUser, int>,
-        IUserLoginStore<TUser, int>,
-        IUserRoleStore<TUser, int>,
+    public class AbpUserStore :
+        IUserPasswordStore<AbpUser, int>,
+        IUserEmailStore<AbpUser, int>,
+        IUserLoginStore<AbpUser, int>,
+        IUserRoleStore<AbpUser, int>,
         ITransientDependency
-        where TUser : AbpUser
-        where TUserRepository : IUserRepository<TUser>
     {
         #region Private fields
 
-        private readonly TUserRepository _userRepository;
+        private readonly IAbpUserRepository _userRepository;
         private readonly IUserLoginRepository _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAbpRoleRepository _abpRoleRepository;
@@ -30,8 +28,8 @@ namespace Abp.Security.IdentityFramework
 
         #region Constructor
 
-        public UserStore(
-            TUserRepository userRepository,
+        public AbpUserStore(
+            IAbpUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             IUserRoleRepository userRoleRepository,
             IAbpRoleRepository abpRoleRepository)
@@ -51,27 +49,27 @@ namespace Abp.Security.IdentityFramework
             //No need to dispose since using dependency injection manager
         }
 
-        public Task CreateAsync(TUser user)
+        public Task CreateAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Insert(user));
         }
 
-        public Task UpdateAsync(TUser user)
+        public Task UpdateAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Update(user));
         }
 
-        public Task DeleteAsync(TUser user)
+        public Task DeleteAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Delete(user.Id));
         }
 
-        public Task<TUser> FindByIdAsync(int userId)
+        public Task<AbpUser> FindByIdAsync(int userId)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(userId));
         }
 
-        public Task<TUser> FindByNameAsync(string userName)
+        public Task<AbpUser> FindByNameAsync(string userName)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
         }
@@ -80,17 +78,17 @@ namespace Abp.Security.IdentityFramework
 
         #region IUserPasswordStore
 
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        public Task SetPasswordHashAsync(AbpUser user, string passwordHash)
         {
             return Task.Factory.StartNew(() => _userRepository.UpdatePassword(user.Id, passwordHash));
         }
 
-        public Task<string> GetPasswordHashAsync(TUser user)
+        public Task<string> GetPasswordHashAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).Password); //TODO: Optimize
         }
 
-        public Task<bool> HasPasswordAsync(TUser user)
+        public Task<bool> HasPasswordAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => !string.IsNullOrEmpty(_userRepository.Get(user.Id).Password)); //TODO: Optimize
         }
@@ -99,27 +97,27 @@ namespace Abp.Security.IdentityFramework
 
         #region IUserEmailStore
 
-        public Task SetEmailAsync(TUser user, string email)
+        public Task SetEmailAsync(AbpUser user, string email)
         {
             return Task.Factory.StartNew(() => _userRepository.UpdateEmail(user.Id, email));
         }
 
-        public Task<string> GetEmailAsync(TUser user)
+        public Task<string> GetEmailAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).EmailAddress);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        public Task<bool> GetEmailConfirmedAsync(AbpUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize?
         }
 
-        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        public Task SetEmailConfirmedAsync(AbpUser user, bool confirmed)
         {
             return Task.Factory.StartNew(() => _userRepository.UpdateIsEmailConfirmed(user.Id, confirmed));
         }
 
-        public Task<TUser> FindByEmailAsync(string email)
+        public Task<AbpUser> FindByEmailAsync(string email)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.EmailAddress == email));
         }
@@ -128,7 +126,7 @@ namespace Abp.Security.IdentityFramework
 
         #region IUserLoginStore
 
-        public Task AddLoginAsync(TUser user, UserLoginInfo login)
+        public Task AddLoginAsync(AbpUser user, UserLoginInfo login)
         {
             //TODO: Check if already exists?
             return Task.Factory.StartNew(
@@ -143,12 +141,12 @@ namespace Abp.Security.IdentityFramework
                 );
         }
 
-        public Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        public Task RemoveLoginAsync(AbpUser user, UserLoginInfo login)
         {
             throw new NotImplementedException(); //TODO: Implement!
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(AbpUser user)
         {
             return Task.Factory.StartNew<IList<UserLoginInfo>>(
                 () =>
@@ -159,7 +157,7 @@ namespace Abp.Security.IdentityFramework
                 );
         }
 
-        public Task<TUser> FindAsync(UserLoginInfo login)
+        public Task<AbpUser> FindAsync(UserLoginInfo login)
         {
             return Task.Factory.StartNew(
                 () => FindUser(login.LoginProvider, login.ProviderKey)
@@ -167,7 +165,7 @@ namespace Abp.Security.IdentityFramework
         }
 
         [UnitOfWork]
-        protected virtual TUser FindUser(string loginProvider, string providerKey)
+        protected virtual AbpUser FindUser(string loginProvider, string providerKey)
         {
             var query =
                 from user in _userRepository.GetAll()
@@ -181,7 +179,7 @@ namespace Abp.Security.IdentityFramework
 
         #region IUserRoleStore
 
-        public Task AddToRoleAsync(TUser user, string roleName)
+        public Task AddToRoleAsync(AbpUser user, string roleName)
         {
             //TODO: Check if already exists?
             return Task.Factory.StartNew(
@@ -195,7 +193,7 @@ namespace Abp.Security.IdentityFramework
                 );
         }
 
-        public Task RemoveFromRoleAsync(TUser user, string roleName)
+        public Task RemoveFromRoleAsync(AbpUser user, string roleName)
         {
             return Task.Factory.StartNew(
                 () =>
@@ -213,7 +211,7 @@ namespace Abp.Security.IdentityFramework
                 });
         }
 
-        public Task<IList<string>> GetRolesAsync(TUser user)
+        public Task<IList<string>> GetRolesAsync(AbpUser user)
         {
             return Task.Factory.StartNew<IList<string>>(
                 () =>
@@ -226,7 +224,7 @@ namespace Abp.Security.IdentityFramework
                 );
         }
 
-        public Task<bool> IsInRoleAsync(TUser user, string roleName)
+        public Task<bool> IsInRoleAsync(AbpUser user, string roleName)
         {
             return Task.Factory.StartNew(
                 () => _userRoleRepository.FirstOrDefault(

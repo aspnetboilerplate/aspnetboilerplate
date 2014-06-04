@@ -3,7 +3,7 @@ using Taskever.Activities;
 
 namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
-    public class ActivityRepository : EfRepositoryBase<Activity, long>, IActivityRepository
+    public class ActivityRepository : TaskeverEfRepositoryBase<Activity, long>, IActivityRepository
     {
 
     }

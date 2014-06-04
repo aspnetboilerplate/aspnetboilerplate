@@ -4,7 +4,7 @@ using Taskever.Activities;
 
 namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
-    public class UserFollowedActivityRepository : EfRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
+    public class UserFollowedActivityRepository : TaskeverEfRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
     {
         public IList<UserFollowedActivity> Getactivities(int userId, bool? isActor, long beforeId, int maxResultCount)
         {
