@@ -3,6 +3,8 @@ using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
+    /// TODO@Halil: Use upper-level scope instead of starting new when available.
+
     /// <summary>
     /// This class is used to create a manual unit of work scope.  
     /// </summary>
@@ -33,13 +35,22 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Create a new unit of work scope.
         /// </summary>
-        public UnitOfWorkScope()
+        public UnitOfWorkScope() 
+            : this(true)
+        {
+            
+        }
+
+        /// <summary>
+        /// Create a new unit of work scope.
+        /// </summary>
+        public UnitOfWorkScope(bool isTransactional)
         {
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
             CurrentUow = _unitOfWorkWrapper.Object;
             try
             {
-                CurrentUow.BeginTransaction();
+                CurrentUow.Begin(isTransactional);
             }
             catch
             {

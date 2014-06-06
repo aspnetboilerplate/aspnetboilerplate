@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
-using Abp.Domain.Uow.EntityFramework;
+using Abp.Domain.Uow;
 using Abp.Modules;
 
 namespace Abp.Startup.Infrastructure.EntityFramework
@@ -13,7 +13,7 @@ namespace Abp.Startup.Infrastructure.EntityFramework
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            EfUnitOfWorkRegistrer.Initialize(initializationContext);
+            UnitOfWorkRegistrer.Initialize(initializationContext);
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)

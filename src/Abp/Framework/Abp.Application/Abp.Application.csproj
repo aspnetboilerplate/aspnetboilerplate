@@ -78,7 +78,6 @@
     <Compile Include="Application\Services\Dto\ILimitedResultRequest.cs" />
     <Compile Include="Application\Services\Dto\IOutputDto.cs" />
     <Compile Include="Application\Services\Dto\IPagedResultRequest.cs" />
-    <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Startup\Application\ApplicationLayerInterceptorRegisterer.cs" />
     <Compile Include="Application\Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,22 +3,23 @@ using Abp.Dependency;
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// Represents a transactional job (unit of work).
+    /// Defines a unit of work.
     /// </summary>
     public interface IUnitOfWork : ITransientDependency
     {
         /// <summary>
-        /// Opens database connection and begins transaction.
+        /// Begins a new unit of work.
         /// </summary>
-        void BeginTransaction();
+        /// <param name="isTransactional"></param>
+        void Begin(bool isTransactional);
 
         /// <summary>
-        /// Commits transaction and closes database connection.
+        /// Commits the unit of work.
         /// </summary>
         void Commit();
 
         /// <summary>
-        /// Rollbacks transaction and closes database connection.
+        /// Rollbacks the unit of work.
         /// </summary>
         void Rollback();
     }

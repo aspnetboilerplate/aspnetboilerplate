@@ -1,7 +1,6 @@
-using Abp.Domain.Uow;
 using NHibernate;
 
-namespace Abp.Domain.Repositories.NHibernate
+namespace Abp.Domain.Uow.NHibernate
 {
     /// <summary>
     /// Implements Unit of work for NHibernate.
@@ -35,8 +34,12 @@ namespace Abp.Domain.Repositories.NHibernate
         /// <summary>
         /// Opens database connection and begins transaction.
         /// </summary>
-        public void BeginTransaction()
+        /// <param name="isTransactional"></param>
+        public void Begin(bool isTransactional)
         {
+            //Note that: isTransactional is not implemented for NHibernate since it's not considered as a best practice to not use transaction.
+            //See: http://www.hibernatingrhinos.com/products/nhprof/learn/alert/donotuseimplicittransactions
+
             Session = _sessionFactory.OpenSession();
             _transaction = Session.BeginTransaction();
         }

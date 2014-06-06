@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Transactions;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Castle.Core.Internal;
 
-namespace Abp.Domain.Repositories.EntityFramework
+namespace Abp.Domain.Uow.EntityFramework
 {
     /// <summary>
     /// Implements Unit of work for NHibernate.
@@ -26,13 +25,18 @@ namespace Abp.Domain.Repositories.EntityFramework
         /// <summary>
         /// Opens database connection and begins transaction.
         /// </summary>
-        public void BeginTransaction()
+        /// <param name="isTransactional"></param>
+        public void Begin(bool isTransactional)
         {
             try
             {
-                _activeDbContexts = new Dictionary<Type, DbContext>(); //TODO: Move to contrructor?
+                _activeDbContexts = new Dictionary<Type, DbContext>();
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
-                _transaction = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions);
+
+                if (isTransactional)
+                {
+                    _transaction = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions);                    
+                }
             }
             catch
             {
@@ -49,7 +53,10 @@ namespace Abp.Domain.Repositories.EntityFramework
             try
             {
                 _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
-                _transaction.Complete();
+                if (_transaction != null)
+                {
+                    _transaction.Complete();                    
+                }
             }
             finally
             {

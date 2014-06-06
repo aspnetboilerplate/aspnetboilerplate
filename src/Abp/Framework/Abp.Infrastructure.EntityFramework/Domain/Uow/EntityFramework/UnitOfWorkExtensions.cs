@@ -1,8 +1,7 @@
 using System;
 using System.Data.Entity;
-using Abp.Domain.Uow;
 
-namespace Abp.Domain.Repositories.EntityFramework
+namespace Abp.Domain.Uow.EntityFramework
 {
     public static class UnitOfWorkExtensions
     {

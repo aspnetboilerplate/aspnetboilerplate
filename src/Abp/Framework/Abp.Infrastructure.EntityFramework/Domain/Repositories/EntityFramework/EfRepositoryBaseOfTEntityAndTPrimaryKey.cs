@@ -6,10 +6,10 @@ using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.Domain.Uow.EntityFramework;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
-
     public abstract class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
