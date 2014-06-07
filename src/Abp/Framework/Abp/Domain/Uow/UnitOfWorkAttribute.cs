@@ -16,12 +16,13 @@ namespace Abp.Domain.Uow
     {
         /// <summary>
         /// Is this unit of work will be transactional?
-        /// Default: false.
+        /// Default: true.
         /// </summary>
         public bool IsTransactional { get; set; }
 
         /// <summary>
         /// Used to prevent starting a unit of work for the method.
+        /// If there is already a started unit of work, this property is ignored.
         /// Default: false.
         /// </summary>
         public bool IsDisabled { get; set; }

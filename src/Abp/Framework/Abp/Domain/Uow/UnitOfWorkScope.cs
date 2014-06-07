@@ -64,7 +64,7 @@ namespace Abp.Domain.Uow
         /// </summary>
         public void Commit()
         {
-            _unitOfWorkWrapper.Object.Commit();
+            _unitOfWorkWrapper.Object.End();
             _isCommited = true;
         }
         
@@ -72,7 +72,7 @@ namespace Abp.Domain.Uow
         {
             if (!_isCommited)
             {
-                try { _unitOfWorkWrapper.Object.Rollback(); }
+                try { _unitOfWorkWrapper.Object.Cancel(); }
                 catch { }
             }
 

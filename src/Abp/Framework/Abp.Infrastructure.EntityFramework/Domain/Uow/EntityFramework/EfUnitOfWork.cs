@@ -15,7 +15,7 @@ namespace Abp.Domain.Uow.EntityFramework
         /// <summary>
         /// List of DbContexes actively used in this unit of work.
         /// </summary>
-        private IDictionary<Type, DbContext> _activeDbContexts;
+        private readonly IDictionary<Type, DbContext> _activeDbContexts;
 
         /// <summary>
         /// Reference to the currently running transcation.
@@ -23,19 +23,25 @@ namespace Abp.Domain.Uow.EntityFramework
         private TransactionScope _transaction;
 
         /// <summary>
-        /// Opens database connection and begins transaction.
+        /// Is this object disposed?
+        /// Used to prevent multiple dispose.
         /// </summary>
-        /// <param name="isTransactional"></param>
+        private bool _disposed;
+
+        public EfUnitOfWork()
+        {
+            _activeDbContexts = new Dictionary<Type, DbContext>();            
+        }
+
         public void Begin(bool isTransactional)
         {
             try
             {
-                _activeDbContexts = new Dictionary<Type, DbContext>();
+                _activeDbContexts.Clear();
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
-
                 if (isTransactional)
                 {
-                    _transaction = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions);                    
+                    _transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions); //Required or RequiresNew?
                 }
             }
             catch
@@ -45,17 +51,14 @@ namespace Abp.Domain.Uow.EntityFramework
             }
         }
 
-        /// <summary>
-        /// Commits transaction and closes database connection.
-        /// </summary>
-        public void Commit()
+        public void End()
         {
             try
             {
                 _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
                 if (_transaction != null)
                 {
-                    _transaction.Complete();                    
+                    _transaction.Complete();
                 }
             }
             finally
@@ -64,16 +67,20 @@ namespace Abp.Domain.Uow.EntityFramework
             }
         }
 
-        /// <summary>
-        /// Rollbacks transaction and closes database connection.
-        /// </summary>
-        public void Rollback()
+        public void Cancel()
         {
             Dispose();
         }
-
-        private void Dispose()
+        
+        public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+
             if (_transaction != null)
             {
                 _transaction.Dispose();

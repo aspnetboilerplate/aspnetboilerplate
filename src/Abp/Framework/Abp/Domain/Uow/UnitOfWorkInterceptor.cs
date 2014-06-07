@@ -16,9 +16,21 @@ namespace Abp.Domain.Uow
         {
             if (UnitOfWorkScope.CurrentUow != null)
             {
-                //TODO@Halil: May upgrade to transaction fron non-transactional! Test for EF/NH and implement
                 //There is already a running unit of work
+                //var unitOfWorkAttr1 = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+                //var startedTransaction = false;
+                //if (unitOfWorkAttr1 != null && unitOfWorkAttr1.IsTransactional)
+                //{
+                //    startedTransaction = UnitOfWorkScope.CurrentUow.StartTransaction();
+                //}
+                
                 invocation.Proceed();
+
+                //if (startedTransaction)
+                //{
+                //    UnitOfWorkScope.CurrentUow.CommitTransaction();
+                //}
+
                 return;
             }
 
@@ -50,11 +62,11 @@ namespace Abp.Domain.Uow
                     try
                     {
                         invocation.Proceed();
-                        UnitOfWorkScope.CurrentUow.Commit();
+                        UnitOfWorkScope.CurrentUow.End();
                     }
                     catch
                     {
-                        try { UnitOfWorkScope.CurrentUow.Rollback(); }
+                        try { UnitOfWorkScope.CurrentUow.Cancel(); }
                         catch { }
                         throw;
                     }

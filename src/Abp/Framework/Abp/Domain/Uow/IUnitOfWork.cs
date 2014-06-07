@@ -1,3 +1,4 @@
+using System;
 using Abp.Dependency;
 
 namespace Abp.Domain.Uow
@@ -5,22 +6,24 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// Defines a unit of work.
     /// </summary>
-    public interface IUnitOfWork : ITransientDependency
+    public interface IUnitOfWork : ITransientDependency, IDisposable
     {
         /// <summary>
-        /// Begins a new unit of work.
+        /// Begins to the unit of work.
         /// </summary>
         /// <param name="isTransactional"></param>
         void Begin(bool isTransactional);
 
         /// <summary>
-        /// Commits the unit of work.
+        /// Ends tis unit of work.
+        /// It saves all changes and commit transaction if exists.
         /// </summary>
-        void Commit();
+        void End();
 
         /// <summary>
-        /// Rollbacks the unit of work.
+        /// Cancels current unit of work.
+        /// Rollbacks transaction if exists.
         /// </summary>
-        void Rollback();
+        void Cancel();
     }
 }

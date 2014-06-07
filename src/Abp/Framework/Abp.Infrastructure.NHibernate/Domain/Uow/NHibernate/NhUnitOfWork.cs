@@ -1,3 +1,4 @@
+using System;
 using NHibernate;
 
 namespace Abp.Domain.Uow.NHibernate
@@ -23,6 +24,12 @@ namespace Abp.Domain.Uow.NHibernate
         private ITransaction _transaction;
 
         /// <summary>
+        /// Is this object disposed?
+        /// Used to prevent multiple dispose.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Creates a new instance of NhUnitOfWork.
         /// </summary>
         /// <param name="sessionFactory"></param>
@@ -37,36 +44,65 @@ namespace Abp.Domain.Uow.NHibernate
         /// <param name="isTransactional"></param>
         public void Begin(bool isTransactional)
         {
-            //Note that: isTransactional is not implemented for NHibernate since it's not considered as a best practice to not use transaction.
-            //See: http://www.hibernatingrhinos.com/products/nhprof/learn/alert/donotuseimplicittransactions
-
             Session = _sessionFactory.OpenSession();
-            _transaction = Session.BeginTransaction();
+            if (isTransactional)
+            {
+                _transaction = Session.BeginTransaction();                
+            }
         }
 
         /// <summary>
         /// Commits transaction and closes database connection.
         /// </summary>
-        public void Commit()
+        public void End()
         {
             try
             {
-                _transaction.Commit();
+                if (_transaction != null)
+                {
+                    _transaction.Commit();                    
+                }
             }
             finally
             {
-                Session.Dispose();                
+                Dispose();
+            }
+        }
+
+        public void Cancel()
+        {
+            try
+            {
+                if (_transaction != null)
+                {
+                    _transaction.Rollback();
+                }
+            }
+            finally 
+            {
+                Dispose();
             }
         }
 
         /// <summary>
         /// Rollbacks transaction and closes database connection.
         /// </summary>
-        public void Rollback()
+        public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+
             try
             {
-                _transaction.Rollback();
+                if (_transaction != null)
+                {
+                    _transaction.Dispose();
+                    _transaction = null;
+                }
             }
             finally
             {
