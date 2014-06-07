@@ -10,7 +10,7 @@ namespace Abp.Domain.Uow.EntityFramework
     /// <summary>
     /// Implements Unit of work for NHibernate.
     /// </summary>
-    public class EfUnitOfWork : IUnitOfWork
+    public class EfUnitOfWork : UnitOfWorkBase
     {
         /// <summary>
         /// List of DbContexes actively used in this unit of work.
@@ -33,7 +33,7 @@ namespace Abp.Domain.Uow.EntityFramework
             _activeDbContexts = new Dictionary<Type, DbContext>();            
         }
 
-        public void Begin(bool isTransactional)
+        public override void Begin(bool isTransactional)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Abp.Domain.Uow.EntityFramework
             }
         }
 
-        public void End()
+        public override void End()
         {
             try
             {
@@ -60,6 +60,8 @@ namespace Abp.Domain.Uow.EntityFramework
                 {
                     _transaction.Complete();
                 }
+
+                TriggerSuccessHandlers();
             }
             finally
             {
@@ -67,12 +69,12 @@ namespace Abp.Domain.Uow.EntityFramework
             }
         }
 
-        public void Cancel()
+        public override void Cancel()
         {
             Dispose();
         }
-        
-        public void Dispose()
+
+        public override void Dispose()
         {
             if (_disposed)
             {

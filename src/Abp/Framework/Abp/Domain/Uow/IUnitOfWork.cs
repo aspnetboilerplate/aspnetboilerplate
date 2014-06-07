@@ -25,5 +25,11 @@ namespace Abp.Domain.Uow
         /// Rollbacks transaction if exists.
         /// </summary>
         void Cancel();
+
+        /// <summary>
+        /// Add a handler that will be called if unit of work succeed.
+        /// </summary>
+        /// <param name="action">Action to be executed</param>
+        void AddSuccessHandler(Action action);
     }
 }

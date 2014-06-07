@@ -14,23 +14,9 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            if (UnitOfWorkScope.CurrentUow != null)
-            {
-                //There is already a running unit of work
-                //var unitOfWorkAttr1 = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
-                //var startedTransaction = false;
-                //if (unitOfWorkAttr1 != null && unitOfWorkAttr1.IsTransactional)
-                //{
-                //    startedTransaction = UnitOfWorkScope.CurrentUow.StartTransaction();
-                //}
-                
+            if (UnitOfWorkScope.Current != null)
+            {               
                 invocation.Proceed();
-
-                //if (startedTransaction)
-                //{
-                //    UnitOfWorkScope.CurrentUow.CommitTransaction();
-                //}
-
                 return;
             }
 
@@ -57,23 +43,23 @@ namespace Abp.Domain.Uow
             {
                 try
                 {
-                    UnitOfWorkScope.CurrentUow = unitOfWork.Object;
-                    UnitOfWorkScope.CurrentUow.Begin(unitOfWorkAttr.IsTransactional);
+                    UnitOfWorkScope.Current = unitOfWork.Object;
+                    UnitOfWorkScope.Current.Begin(unitOfWorkAttr.IsTransactional);
                     try
                     {
                         invocation.Proceed();
-                        UnitOfWorkScope.CurrentUow.End();
+                        UnitOfWorkScope.Current.End();
                     }
                     catch
                     {
-                        try { UnitOfWorkScope.CurrentUow.Cancel(); }
+                        try { UnitOfWorkScope.Current.Cancel(); }
                         catch { }
                         throw;
                     }
                 }
                 finally
                 {
-                    UnitOfWorkScope.CurrentUow = null;
+                    UnitOfWorkScope.Current = null;
                 }
             }
         }

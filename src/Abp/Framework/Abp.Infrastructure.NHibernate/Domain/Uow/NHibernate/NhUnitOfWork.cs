@@ -1,4 +1,3 @@
-using System;
 using NHibernate;
 
 namespace Abp.Domain.Uow.NHibernate
@@ -6,7 +5,7 @@ namespace Abp.Domain.Uow.NHibernate
     /// <summary>
     /// Implements Unit of work for NHibernate.
     /// </summary>
-    public class NhUnitOfWork : IUnitOfWork
+    public class NhUnitOfWork : UnitOfWorkBase
     {
         /// <summary>
         /// Gets Nhibernate session object to perform queries.
@@ -42,7 +41,7 @@ namespace Abp.Domain.Uow.NHibernate
         /// Opens database connection and begins transaction.
         /// </summary>
         /// <param name="isTransactional"></param>
-        public void Begin(bool isTransactional)
+        public override void Begin(bool isTransactional)
         {
             Session = _sessionFactory.OpenSession();
             if (isTransactional)
@@ -54,7 +53,7 @@ namespace Abp.Domain.Uow.NHibernate
         /// <summary>
         /// Commits transaction and closes database connection.
         /// </summary>
-        public void End()
+        public override void End()
         {
             try
             {
@@ -62,6 +61,8 @@ namespace Abp.Domain.Uow.NHibernate
                 {
                     _transaction.Commit();                    
                 }
+
+                TriggerSuccessHandlers();
             }
             finally
             {
@@ -69,7 +70,7 @@ namespace Abp.Domain.Uow.NHibernate
             }
         }
 
-        public void Cancel()
+        public override void Cancel()
         {
             try
             {
@@ -87,7 +88,7 @@ namespace Abp.Domain.Uow.NHibernate
         /// <summary>
         /// Rollbacks transaction and closes database connection.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             if (_disposed)
             {

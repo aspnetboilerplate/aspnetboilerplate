@@ -14,7 +14,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
-        protected virtual TDbContext Context { get { return UnitOfWorkScope.CurrentUow.GetDbContext<TDbContext>(); } }
+        protected virtual TDbContext Context { get { return UnitOfWorkScope.Current.GetDbContext<TDbContext>(); } }
 
         protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
 

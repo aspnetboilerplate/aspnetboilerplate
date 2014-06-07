@@ -19,7 +19,7 @@ namespace Abp.Domain.Uow
         /// Gets current <see cref="IUnitOfWork"/> instance.
         /// It gets the right instance that is related to current thread.
         /// </summary>
-        public static IUnitOfWork CurrentUow
+        public static IUnitOfWork Current
         {
             get { return _currentUow; }
             set { _currentUow = value; }
@@ -47,14 +47,14 @@ namespace Abp.Domain.Uow
         public UnitOfWorkScope(bool isTransactional)
         {
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
-            CurrentUow = _unitOfWorkWrapper.Object;
+            Current = _unitOfWorkWrapper.Object;
             try
             {
-                CurrentUow.Begin(isTransactional);
+                Current.Begin(isTransactional);
             }
             catch
             {
-                CurrentUow = null;
+                Current = null;
             }
         }
 
@@ -76,7 +76,7 @@ namespace Abp.Domain.Uow
                 catch { }
             }
 
-            CurrentUow = null;
+            Current = null;
             _unitOfWorkWrapper.Dispose();
         }
     }
