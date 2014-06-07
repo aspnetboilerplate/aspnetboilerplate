@@ -173,7 +173,6 @@ namespace Taskever.Tasks
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
                 _eventBus.Trigger(this, new TaskCompletedEventData(task));
-                //_notificationService.Notify(new CompletedTaskNotification(task));
             }
         }
 

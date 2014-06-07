@@ -89,6 +89,7 @@
     <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkInterceptor.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkRegistrer.cs" />
+    <Compile Include="Domain\Uow\UowEventBusExtensions.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
