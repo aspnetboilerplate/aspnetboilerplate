@@ -57,6 +57,7 @@ namespace Abp.Domain.Uow.NHibernate
         {
             try
             {
+                Session.Flush();
                 if (_transaction != null)
                 {
                     _transaction.Commit();                    

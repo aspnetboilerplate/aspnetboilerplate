@@ -38,7 +38,6 @@ namespace Taskever.Friendships
             return new GetFriendshipsOutput { Friendships = friendships.MapIList<Friendship, FriendshipDto>() };
         }
 
-        [UnitOfWork]
         public GetFriendshipsByMostActiveOutput GetFriendshipsByMostActive(GetFriendshipsByMostActiveInput input)
         {
             var friendships =
@@ -52,7 +51,6 @@ namespace Taskever.Friendships
             return new GetFriendshipsByMostActiveOutput { Friendships = friendships.MapIList<Friendship, FriendshipDto>() };
         }
 
-        [UnitOfWork]
         public virtual void ChangeFriendshipProperties(ChangeFriendshipPropertiesInput input)
         {
             var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
@@ -76,7 +74,6 @@ namespace Taskever.Friendships
             }
         }
 
-        [UnitOfWork]
         public virtual SendFriendshipRequestOutput SendFriendshipRequest(SendFriendshipRequestInput input)
         {
             var friendUser = _taskeverUserRepository.FirstOrDefault(user => user.EmailAddress == input.EmailAddress);
@@ -108,7 +105,6 @@ namespace Taskever.Friendships
             return new SendFriendshipRequestOutput { Status = friendship.Status };
         }
 
-        [UnitOfWork] //TODO: Need UnitOfWork, I think no!
         public virtual void RemoveFriendship(RemoveFriendshipInput input)
         {
             var currentUser = _taskeverUserRepository.Load(AbpUser.CurrentUserId.Value);
@@ -122,7 +118,6 @@ namespace Taskever.Friendships
             _friendshipRepository.Delete(friendship);
         }
 
-        [UnitOfWork]
         public virtual void AcceptFriendship(AcceptFriendshipInput input)
         {
             var friendship = _friendshipRepository.Get(input.Id); //TODO: Call FirstOrDefault and throw a specific exception?
@@ -141,7 +136,6 @@ namespace Taskever.Friendships
             RemoveFriendship(new RemoveFriendshipInput { Id = input.Id });
         }
 
-        [UnitOfWork]
         public void UpdateLastVisitTime(UpdateLastVisitTimeInput input)
         {
             var friendship = _friendshipRepository.GetOrNull(AbpUser.CurrentUserId.Value, input.FriendUserId);

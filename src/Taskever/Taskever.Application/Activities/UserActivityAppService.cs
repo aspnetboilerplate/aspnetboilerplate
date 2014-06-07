@@ -1,5 +1,3 @@
-using Abp;
-using Abp.Domain.Uow;
 using Abp.Mapping;
 using Abp.Security.Users;
 using Abp.UI;
@@ -22,7 +20,6 @@ namespace Taskever.Activities
             _friendshipDomainService = friendshipDomainService;
         }
 
-        [UnitOfWork]
         public GetFollowedActivitiesOutput GetFollowedActivities(GetFollowedActivitiesInput input)
         {
             var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value);
