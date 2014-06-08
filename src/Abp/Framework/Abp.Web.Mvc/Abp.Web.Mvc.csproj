@@ -114,7 +114,18 @@
     <Compile Include="Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Abp\Framework\styles\abp.min.css">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
     <None Include="Abp.Web.Mvc.nuspec" />
+    <Content Include="Abp\Framework\styles\abp.css">
+      <DependentUpon>abp.less</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\abp.less" />
+    <Content Include="Abp\Framework\styles\abp.css.map">
+      <DependentUpon>abp.css</DependentUpon>
+    </Content>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -132,7 +143,17 @@
       <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
+    <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
+    <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
+    <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
+    <Content Include="Localization\AbpWeb\AbpWeb.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
