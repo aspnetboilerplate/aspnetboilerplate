@@ -6,8 +6,13 @@
 
     abp.localization = abp.localization || {};
 
+    abp.localization.defaultSourceName = undefined;
+
     abp.localization.localize = function (key, sourceName) {
+        sourceName = sourceName || abp.localization.defaultSourceName;
+
         var source = abp.localization.values[sourceName];
+
         if (source == undefined) {
             abp.log.warn('Could not find localization source: ' + sourceName);
             return key;
