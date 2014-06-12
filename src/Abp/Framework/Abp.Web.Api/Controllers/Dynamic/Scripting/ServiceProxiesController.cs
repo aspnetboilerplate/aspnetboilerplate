@@ -11,13 +11,20 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     [Obsolete("Use AbpServiceProxiesController. This will be removed in later versions.")]
     public class ServiceProxiesController : AbpApiController
     {
+        private readonly ScriptProxyManager _scriptProxyManager;
+
+        public ServiceProxiesController(ScriptProxyManager scriptProxyManager)
+        {
+            _scriptProxyManager = scriptProxyManager;
+        }
+
         /// <summary>
         /// Gets javascript proxy for given service name.
         /// </summary>
         /// <param name="name">Name of the service</param>
         public HttpResponseMessage Get(string name)
         {
-            var script = ScriptProxyManager.GetScript(name);
+            var script = _scriptProxyManager.GetScript(name, ProxyScriptType.JQuery);
             var response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
             return response;
@@ -28,7 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         /// </summary>
         public HttpResponseMessage GetAll()
         {
-            var script = ScriptProxyManager.GetAllScript();
+            var script = _scriptProxyManager.GetAllScript(ProxyScriptType.JQuery);
             var response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
             return response;
