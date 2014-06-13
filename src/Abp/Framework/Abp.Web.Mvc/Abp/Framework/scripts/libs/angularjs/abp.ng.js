@@ -21,30 +21,31 @@
                             return response;
                         }
 
+                        var originalData = response.data;
                         var defer = $q.defer();
 
-                        if (response.data.success === true) {
-                            response.data = response.data.result;
+                        if (originalData.success === true) {
+                            response.data = originalData.result;
                             defer.resolve(response);
                         } else { //data.success === false
-                            if (response.data.error) {
-                                abp.message.error(response.data.error.message);
+                            if (originalData.error) {
+                                abp.message.error(originalData.error.message);
                             } else {
-                                response.data.error = defaultError;
+                                originalData.error = defaultError;
                             }
 
-                            abp.log.error(response.data.error.message + ' | ' + response.data.error.details);
+                            abp.log.error(originalData.error.message + ' | ' + originalData.error.details);
 
-                            response.data = response.data.error;
+                            response.data = originalData.error;
                             defer.reject(response);
 
-                            if (response.data.unAuthorizedRequest && !response.data.targetUrl) {
+                            if (originalData.unAuthorizedRequest && !originalData.targetUrl) {
                                 location.reload();
                             }
                         }
 
-                        if (response.data.targetUrl) {
-                            location.href = data.targetUrl;
+                        if (originalData.targetUrl) {
+                            location.href = originalData.targetUrl;
                         }
 
                         return defer.promise;
