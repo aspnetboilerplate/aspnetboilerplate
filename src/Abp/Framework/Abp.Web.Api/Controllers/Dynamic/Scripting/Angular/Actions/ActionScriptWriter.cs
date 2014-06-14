@@ -17,5 +17,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular.Actions
         {
 
         }
+
+        public virtual string GetUrl()
+        {
+            return "/api/services/" + ControllerInfo.ServiceName + "/" + MethodInfo.ActionName;
+        }
     }
 }

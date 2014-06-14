@@ -100,6 +100,8 @@
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
+    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\GetActionScriptWriter.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\PostActionScriptWriter.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\IScriptProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
