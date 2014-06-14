@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
                 script.AppendLine("                this." + methodInfo.ActionName.ToCamelCase() + " = function (" + GenerateJsMethodParameterList(methodInfo.Method) + ") {");
                 script.AppendLine("                    return $http(angular.extend({");
                 script.AppendLine("                        abp: true,");
-                script.AppendLine("                        url: '" + actionWriter.GetUrl() + "',");
+                script.AppendLine("                        url: abp.appPath + '" + actionWriter.GetUrl() + "',");
                 actionWriter.WriteTo(script);
                 script.AppendLine("                    }, httpParams));");
                 script.AppendLine("                };");

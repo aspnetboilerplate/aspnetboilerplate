@@ -72,9 +72,9 @@
 @section scripts
 {
     <script src="~/Scripts/jquery.fancybox.js"></script>
-    <script src="~/Scripts/require.js" data-main="/ViewResources/main.js"></script>
+    <script src="~/Scripts/require.js" data-main="@(ApplicationPath)ViewResources/main.js"></script>
     <script>
-        require(['/ViewResources/Account/Login.js']);
+        require(['@(ApplicationPath)ViewResources/Account/Login.js']);
         //require(['/Widgets/LoginBox/LoginBox.js']);
     </script>
 }

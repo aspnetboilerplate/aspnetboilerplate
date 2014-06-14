@@ -5,8 +5,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery.Actions
 {
     internal class HttpGetActionScriptProxyGenerator : ActionScriptProxyGenerator
     {
-        private const string AjaxParametersTemplate = 
-@"            url: '{url}',
+        private const string AjaxParametersTemplate =
+@"            url: abp.appPath + '{url}',
             type: '{type}',
             data: {
 {getParams}

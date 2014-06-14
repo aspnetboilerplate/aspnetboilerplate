@@ -57,13 +57,10 @@ namespace Abp.Web.Mvc.Helpers
                 string result;
                 try
                 {
-                    if (path.StartsWith("~"))
-                    {
-                        path = path.Substring(1);
-                    }
-
                     var fullPath = HttpContext.Current.Server.MapPath(path.Replace("/", "\\"));
-                    result = path + "?v=" + new FileInfo(fullPath).LastWriteTime.Ticks;
+                    var fileVersion = new FileInfo(fullPath).LastWriteTime.Ticks;
+
+                    result = VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
                 }
                 catch (Exception ex)
                 {

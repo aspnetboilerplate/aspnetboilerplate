@@ -42,7 +42,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery.Actions
         {
             get
             {
-                return "/api/services/" + ControllerInfo.ServiceName + "/" + ActionInfo.ActionName;
+                return "api/services/" + ControllerInfo.ServiceName + "/" + ActionInfo.ActionName;
             }
         }
 

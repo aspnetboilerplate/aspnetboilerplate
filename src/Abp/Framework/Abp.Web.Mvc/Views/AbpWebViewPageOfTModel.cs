@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Web;
 using System.Web.Mvc;
 using Abp.Localization;
 
@@ -15,6 +16,28 @@ namespace Abp.Web.Mvc.Views
         /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
         public string LocalizationSourceName { get; set; }
+
+        /// <summary>
+        /// Gets the root path of the application.
+        /// </summary>
+        public string ApplicationPath
+        {
+            get
+            {
+                var appPath = HttpContext.Current.Request.ApplicationPath;
+                if (appPath == null)
+                {
+                    return "/";
+                }
+
+                if (!appPath.EndsWith("/"))
+                {
+                    appPath += "/";
+                }
+
+                return appPath;
+            }
+        }
 
         /// <summary>
         /// Gets localized string for given key name and current language.

@@ -5,7 +5,7 @@ requirejs.config({
         'durandal': '../../Scripts/durandal',
         'plugins': '../../Scripts/durandal/plugins',
         'transitions': '../../Scripts/durandal/transitions',
-        'service': '/Abp/Framework/scripts/libs/requirejs/plugins/service'
+        'service':  abp.appPath + 'Abp/Framework/scripts/libs/requirejs/plugins/service'
     }
 });
 
@@ -19,7 +19,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'durandal/vie
 
     //TODO: Move to framework?
     viewEngine.convertViewIdToRequirePath = function (viewId) {
-        return this.viewPlugin + '!/AbpAppView/Load?viewUrl=/App/Main/' + viewId + '.cshtml';
+        return this.viewPlugin + '!' + abp.appPath + 'AbpAppView/Load?viewUrl=/App/Main/' + viewId + '.cshtml';
     };
 
     //TODO: Is that good?

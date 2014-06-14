@@ -7,7 +7,7 @@
     <div class="tab-content" style="margin-top: 10px;">
         <div class="tab-pane active" id="UserProfileImageEdit">
             <div>
-                <img class="img-responsive" data-bind="attr: { src: user.profileImage() }" />
+                <img class="img-responsive" data-bind="attr: { src: abp.toAbsAppPath(user.profileImage()) }" />
             </div>
             <div style="margin-top: 10px;">
                 <button class="btn btn-default" data-bind="click: showUploadProfilePictureDialog">

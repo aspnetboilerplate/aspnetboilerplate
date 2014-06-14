@@ -6,7 +6,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery.Actions
     internal class HttpDeleteActionScriptProxyGenerator : ActionScriptProxyGenerator
     {
         private const string AjaxParametersTemplate = 
-@"            url: '{url}',
+@"            url: abp.appPath + '{url}',
             type: '{type}'";
 
         public HttpDeleteActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)

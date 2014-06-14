@@ -5,7 +5,7 @@
         </div>
         <ul class="list-group friend-list-brief" data-bind="foreach: friendships">
             <a class="list-group-item" data-bind="attr: { href: '#user/' + friend.id() }">
-                <img data-bind="attr: { src: friend.profileImage(), alt: friend.name() + ' ' + friend.surname() }" />
+                <img data-bind="attr: { src: abp.toAbsAppPath(friend.profileImage()), alt: friend.name() + ' ' + friend.surname() }" />
                 <div class="user-info">
                     <span data-bind="html: friend.name() + ' ' + friend.surname()"></span>
                 </div>

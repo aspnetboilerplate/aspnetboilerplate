@@ -18,6 +18,12 @@
     <link rel="apple-touch-icon" href="~/Content/images/icon.png" />
 
     <title>@ViewBag.Title</title>
+    
+    <script>
+    //This is used to get the application's root path from javascript. It's useful if you're running application in a virtual directory under IIS.
+    var abp = abp || {};
+    abp.appPath = '@ApplicationPath';
+    </script>
 
     @Styles.Render("~/styles/basestyles")
 
@@ -27,14 +33,14 @@
       <script src="@Url.Content("~/Scripts/libs/respond.min.js")"></script>
     <![endif]-->
 
-    @RenderSection("styles", required: false)
+    @RenderSection("styles", required: false)    
 
     @Html.IncludeScript("~/Abp/Framework/scripts/utils/ie10fix.js")
     @Scripts.Render("~/scripts/modernizr")
 </head>
 <body>
     @RenderBody()
-
+    
     @Scripts.Render("~/scripts/baselibs")
 
     <script src="~/Scripts/libs/spinjs/spin.js"></script>
@@ -43,23 +49,23 @@
 
     @Scripts.Render("~/scripts/abp")
     @Scripts.Render("~/scripts/taskever")
-    <script src="/AbpLocalization/GetScripts" type="text/javascript"></script>
-    <script src="/AbpAuthorization/GetScripts" type="text/javascript"></script>
-    <script src="/AbpSettings/GetScripts" type="text/javascript"></script>
+    <script src="~/AbpLocalization/GetScripts" type="text/javascript"></script>
+    <script src="~/AbpAuthorization/GetScripts" type="text/javascript"></script>
+    <script src="~/AbpSettings/GetScripts" type="text/javascript"></script>
     <!-- TODO: Find a better way! -->
     @RenderSection("scripts", required: false)
     
     <script type="text/javascript">
 
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-22169554-4']);
-      _gaq.push(['_trackPageview']);
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-22169554-4']);
+        _gaq.push(['_trackPageview']);
 
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
 
     </script>
 

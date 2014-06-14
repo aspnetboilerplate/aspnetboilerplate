@@ -42,7 +42,7 @@
 
         $('#PasswordResetLinkModalSubmitButton').click(function () {
             abp.ajax({
-                url: '/Account/SendPasswordResetLink',
+                url: abp.appPath + 'Account/SendPasswordResetLink',
                 data: JSON.stringify({ emailAddress: $('#PasswordResetEmailAddress').val() })
             }).done(function () {
                 $('#PasswordResetLinkModal').modal('hide');
