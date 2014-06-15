@@ -49,7 +49,6 @@ namespace Taskever.Web.Mvc
 
             bundles.Add(
                 new ScriptBundle("~/Scripts/abp")
-                    .Include("~/abp/framework/scripts/abp.polyfills.js")
                     .Include("~/abp/framework/scripts/abp.js")
                     .Include("~/abp/framework/scripts/abp.localization.js")
                     .Include("~/abp/framework/scripts/libs/abp.jquery.js")

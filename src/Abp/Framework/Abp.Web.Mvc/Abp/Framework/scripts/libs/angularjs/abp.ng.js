@@ -18,7 +18,7 @@
                 return {
 
                     'request': function (config) {
-                        if (config.url.endsWith('.cshtml')) {
+                        if (endsWith(config.url, '.cshtml')) {
                             config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url;
                         }
 
@@ -64,5 +64,13 @@
             });
         }
     ]);
+
+    function endsWith(str, suffix) {
+        if (suffix.length > str.length) {
+            return false;
+        }
+
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
 
 })((abp || (abp = {})), (angular || undefined));
