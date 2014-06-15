@@ -10,7 +10,7 @@
             <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 2 -->
                 <li class="list-group-item">
-                    <img data-bind="attr: { src: friend.profileImage() }" />
+                    <img data-bind="attr: { src: abp.toAbsAppPath(friend.profileImage()) }" />
                     <div class="row">
                         <div class="col-xs-8">
                             <div class="user-info">
@@ -39,7 +39,7 @@
             <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 1 -->
                 <li class="list-group-item">
-                    <img data-bind="attr: { src: friend.profileImage() }" />
+                    <img data-bind="attr: { src: abp.toAbsAppPath(friend.profileImage()) }" />
                     <div class="user-info">
                         <div>
                             <a data-bind="attr: { href: '#user/' + friend.id() }">
@@ -61,7 +61,7 @@
             <ul class="list-group friend-list-detailed" data-bind="foreach: friendships">
                 <!-- ko if: status() == 0 -->
                 <li class="list-group-item">
-                    <img data-bind="attr: { src: friend.profileImage() }" />
+                    <img data-bind="attr: { src: abp.toAbsAppPath(friend.profileImage()) }" />
                     <div class="user-info">
                         <div>
                             <a data-bind="attr: { href: '#user/' + friend.id() }">

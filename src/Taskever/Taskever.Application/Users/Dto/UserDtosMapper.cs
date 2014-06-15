@@ -13,8 +13,8 @@ namespace Abp.Users.Dto
                     configuration => configuration.ResolveUsing(
                         user => user.ProfileImage == null
                                     //TODO: How to implement this?
-                                    ? "/Abp/Framework/images/user.png"
-                                    : "/ProfileImages/" + user.ProfileImage
+                                    ? ""
+                                    : "ProfileImages/" + user.ProfileImage
                                          )
                 ).ReverseMap();
 

@@ -39,15 +39,20 @@ namespace Taskever.Web.Mvc.Controllers
             _userManager = userManager;
         }
 
-        public virtual ActionResult Login(string returnUrl = "/", string loginMessage = "")
+        public virtual ActionResult Login(string returnUrl = "", string loginMessage = "")
         {
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = Request.ApplicationPath;
+            }
+
             ViewBag.ReturnUrl = returnUrl;
             ViewBag.LoginMessage = loginMessage;
             return View();
         }
 
         [HttpPost]
-        public virtual async Task<JsonResult> Login(LoginModel loginModel, string returnUrl = "/")
+        public virtual async Task<JsonResult> Login(LoginModel loginModel, string returnUrl = "")
         {
             if (!ModelState.IsValid)
             {
@@ -61,6 +66,11 @@ namespace Taskever.Web.Mvc.Controllers
             }
             
             await SignInAsync(user, loginModel.RememberMe);
+
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = Request.ApplicationPath;
+            }
 
             return Json(new AbpMvcAjaxResponse { TargetUrl = returnUrl });
         }
