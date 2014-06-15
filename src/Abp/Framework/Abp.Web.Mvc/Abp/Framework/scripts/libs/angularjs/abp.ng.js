@@ -16,6 +16,15 @@
                 };
 
                 return {
+
+                    'request': function (config) {
+                        if (config.url.endsWith('.cshtml')) {
+                            config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url;
+                        }
+
+                        return config;
+                    },
+
                     'response': function (response) {
                         if (!response.config || !response.config.abp || !response.data) {
                             return response;
@@ -50,6 +59,7 @@
 
                         return defer.promise;
                     }
+
                 };
             });
         }

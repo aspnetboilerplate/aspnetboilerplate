@@ -114,6 +114,7 @@
     <Compile Include="Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Abp\Framework\scripts\abp.polyfills.js" />
     <Content Include="Abp\Framework\scripts\libs\angularjs\abp.ng.js" />
     <Content Include="Abp\Framework\styles\abp.min.css">
       <DependentUpon>abp.css</DependentUpon>
