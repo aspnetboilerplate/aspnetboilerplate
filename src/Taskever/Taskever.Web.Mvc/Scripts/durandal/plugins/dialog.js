@@ -1,5 +1,5 @@
 /**
- * Durandal 2.0.1 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Durandal 2.1.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
  * Available via the MIT license.
  * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
  */
@@ -16,17 +16,19 @@
  */
 define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/activator', 'durandal/viewEngine', 'jquery', 'knockout'], function (system, app, composition, activator, viewEngine, $, ko) {
     var contexts = {},
-        dialogCount = 0,
+        dialogCount = ko.observable(0),
         dialog;
 
     /**
      * Models a message box's message, title and options.
      * @class MessageBox
      */
-    var MessageBox = function(message, title, options) {
+    var MessageBox = function (message, title, options, autoclose, settings) {
         this.message = message;
         this.title = title || MessageBox.defaultTitle;
         this.options = options || MessageBox.defaultOptions;
+        this.autoclose = autoclose || false;
+        this.settings = $.extend({}, MessageBox.defaultSettings, settings);
     };
 
     /**
@@ -43,7 +45,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
      * @method getView
      * @return {DOMElement} The view of the message box.
      */
-    MessageBox.prototype.getView = function(){
+    MessageBox.prototype.getView = function () {
         return viewEngine.processMarkup(MessageBox.defaultViewMarkup);
     };
 
@@ -53,7 +55,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
      * @param {string} viewUrl The view url relative to the base url which the view locator will use to find the message box's view.
      * @static
      */
-    MessageBox.setViewUrl = function(viewUrl){
+    MessageBox.setViewUrl = function (viewUrl) {
         delete MessageBox.prototype.getView;
         MessageBox.prototype.viewUrl = viewUrl;
     };
@@ -67,12 +69,94 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
     MessageBox.defaultTitle = app.title || 'Application';
 
     /**
-     * The options to display in the message box of none are specified.
+     * The options to display in the message box if none are specified.
      * @property {string[]} defaultOptions
      * @default ['Ok']
      * @static
      */
     MessageBox.defaultOptions = ['Ok'];
+
+    
+    MessageBox.defaultSettings = { buttonClass: "btn btn-default", primaryButtonClass: "btn-primary autofocus", secondaryButtonClass: "", "class": "modal-content messageBox", style: null };
+
+    /**
+    * Sets the classes and styles used throughout the message box markup.
+    * @method setDefaults
+    * @param {object} settings A settings object containing the following optional properties: buttonClass, primaryButtonClass, secondaryButtonClass, class, style.
+    */
+    MessageBox.setDefaults = function (settings) {
+        $.extend(MessageBox.defaultSettings, settings);
+    };
+
+    MessageBox.prototype.getButtonClass = function ($index) {
+        var c = "";
+        if (this.settings) {
+            if (this.settings.buttonClass) {
+                c = this.settings.buttonClass;
+            }
+            if ($index() === 0 && this.settings.primaryButtonClass) {
+                if (c.length > 0) {
+                    c += " ";
+                }
+                c += this.settings.primaryButtonClass;
+            }
+            if ($index() > 0 && this.settings.secondaryButtonClass) {
+                if (c.length > 0) {
+                    c += " ";
+                }
+                c += this.settings.secondaryButtonClass;
+            }
+        }
+        return c;
+    };
+
+    MessageBox.prototype.getClass = function () {
+        if (this.settings) {
+            return this.settings["class"];
+        }
+        return "messageBox";
+    };
+
+    MessageBox.prototype.getStyle = function () {
+        if (this.settings) {
+            return this.settings.style;
+        }
+        return null;
+    };
+
+    MessageBox.prototype.getButtonText = function (stringOrObject) {
+        var t = $.type(stringOrObject);
+        if (t === "string") {
+            return stringOrObject;
+        }
+        else if (t === "object") {
+            if ($.type(stringOrObject.text) === "string") {
+                return stringOrObject.text;
+            } else {
+                system.error('The object for a MessageBox button does not have a text property that is a string.');
+                return null;
+            }
+        }
+        system.error('Object for a MessageBox button is not a string or object but ' + t + '.');
+        return null;
+    };
+
+    MessageBox.prototype.getButtonValue = function (stringOrObject) {
+        var t = $.type(stringOrObject);
+        if (t === "string") {
+            return stringOrObject;
+        }
+        else if (t === "object") {
+            if ($.type(stringOrObject.text) === "undefined") {
+                system.error('The object for a MessageBox button does not have a value property defined.');
+                return null;
+            } else {
+                return stringOrObject.value;
+            }
+        }
+        system.error('Object for a MessageBox button is not a string or object but ' + t + '.');
+        return null;
+    };
 
     /**
      * The markup for the message box's view.
@@ -80,25 +164,28 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
      * @static
      */
     MessageBox.defaultViewMarkup = [
-        '<div data-view="plugins/messageBox" class="messageBox">',
+        '<div data-view="plugins/messageBox" data-bind="css: getClass(), style: getStyle()">',
             '<div class="modal-header">',
-                '<h3 data-bind="text: title"></h3>',
+                '<h3 data-bind="html: title"></h3>',
             '</div>',
             '<div class="modal-body">',
-                '<p class="message" data-bind="text: message"></p>',
+                '<p class="message" data-bind="html: message"></p>',
             '</div>',
-            '<div class="modal-footer" data-bind="foreach: options">',
-                '<button class="btn" data-bind="click: function () { $parent.selectOption($data); }, text: $data, css: { \'btn-primary\': $index() == 0, autofocus: $index() == 0 }"></button>',
+            '<div class="modal-footer">',
+                '<!-- ko foreach: options -->',
+                '<button data-bind="click: function () { $parent.selectOption($parent.getButtonValue($data)); }, text: $parent.getButtonText($data), css: $parent.getButtonClass($index)"></button>',
+                '<!-- /ko -->',
+                '<div style="clear:both;"></div>',
             '</div>',
         '</div>'
     ].join('\n');
 
     function ensureDialogInstance(objOrModuleId) {
-        return system.defer(function(dfd) {
+        return system.defer(function (dfd) {
             if (system.isString(objOrModuleId)) {
                 system.acquire(objOrModuleId).then(function (module) {
                     dfd.resolve(system.resolveObject(module));
-                }).fail(function(err){
+                }).fail(function (err) {
                     system.error('Failed to load dialog module (' + objOrModuleId + '). Details: ' + err.message);
                 });
             } else {
@@ -116,7 +203,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * The constructor function used to create message boxes.
          * @property {MessageBox} MessageBox
          */
-        MessageBox:MessageBox,
+        MessageBox: MessageBox,
         /**
          * The css zIndex that the last dialog was displayed at.
          * @property {number} currentZIndex
@@ -135,16 +222,16 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @method isOpen
          * @return {boolean} True if a dialog is open. false otherwise.
          */
-        isOpen: function() {
-            return dialogCount > 0;
-        },
+        isOpen: ko.computed(function() {
+            return dialogCount() > 0;
+        }),
         /**
          * Gets the dialog context by name or returns the default context if no name is specified.
          * @method getContext
          * @param {string} [name] The name of the context to retrieve.
          * @return {DialogContext} True context.
          */
-        getContext: function(name) {
+        getContext: function (name) {
             return contexts[name || 'default'];
         },
         /**
@@ -153,7 +240,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @param {string} name The name of the context to add.
          * @param {DialogContext} dialogContext The context to add.
          */
-        addContext: function(name, dialogContext) {
+        addContext: function (name, dialogContext) {
             dialogContext.name = name;
             contexts[name] = dialogContext;
 
@@ -162,12 +249,16 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
                 return this.show(obj, activationData, name);
             };
         },
-        createCompositionSettings: function(obj, dialogContext) {
+        createCompositionSettings: function (obj, dialogContext) {
             var settings = {
-                model:obj,
-                activate:false,
+                model: obj,
+                activate: false,
                 transition: false
             };
+
+            if (dialogContext.binding) {
+                settings.binding = dialogContext.binding;
+            }
 
             if (dialogContext.attached) {
                 settings.attached = dialogContext.attached;
@@ -185,8 +276,8 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @param {object} obj The object for whom to retrieve the dialog.
          * @return {Dialog} The dialog model.
          */
-        getDialog:function(obj){
-            if(obj){
+        getDialog: function (obj) {
+            if (obj) {
                 return obj.__dialog__;
             }
 
@@ -198,9 +289,9 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @param {object} obj The object whose dialog should be closed.
          * @param {object} results* The results to return back to the dialog caller after closing.
          */
-        close:function(obj){
+        close: function (obj) {
             var theDialog = this.getDialog(obj);
-            if(theDialog){
+            if (theDialog) {
                 var rest = Array.prototype.slice.call(arguments, 1);
                 theDialog.close.apply(theDialog, rest);
             }
@@ -213,12 +304,12 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @param {string} [context] The name of the dialog context to use. Uses the default context if none is specified.
          * @return {Promise} A promise that resolves when the dialog is closed and returns any data passed at the time of closing.
          */
-        show: function(obj, activationData, context) {
+        show: function (obj, activationData, context) {
             var that = this;
             var dialogContext = contexts[context || 'default'];
 
-            return system.defer(function(dfd) {
-                ensureDialogInstance(obj).then(function(instance) {
+            return system.defer(function (dfd) {
+                ensureDialogInstance(obj).then(function (instance) {
                     var dialogActivator = activator.create();
 
                     dialogActivator.activateItem(instance, activationData).then(function (success) {
@@ -231,7 +322,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
                                     var args = arguments;
                                     dialogActivator.deactivateItem(instance, true).then(function (closeSuccess) {
                                         if (closeSuccess) {
-                                            dialogCount--;
+                                            dialogCount(dialogCount() - 1);
                                             dialogContext.removeHost(theDialog);
                                             delete instance.__dialog__;
 
@@ -250,7 +341,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
                             theDialog.settings = that.createCompositionSettings(instance, dialogContext);
                             dialogContext.addHost(theDialog);
 
-                            dialogCount++;
+                            dialogCount(dialogCount() + 1);
                             composition.compose(theDialog.host, theDialog.settings);
                         } else {
                             dfd.resolve(false);
@@ -265,41 +356,53 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @param {string} message The message to display in the dialog.
          * @param {string} [title] The title message.
          * @param {string[]} [options] The options to provide to the user.
+         * @param {boolean} [autoclose] Automatically close the the message box when clicking outside?
+         * @param {Object} [settings] Custom settings for this instance of the messsage box, used to change classes and styles.
          * @return {Promise} A promise that resolves when the message box is closed and returns the selected option.
          */
-        showMessage:function(message, title, options){
-            if(system.isString(this.MessageBox)){
+        showMessage: function (message, title, options, autoclose, settings) {
+            if (system.isString(this.MessageBox)) {
                 return dialog.show(this.MessageBox, [
                     message,
                     title || MessageBox.defaultTitle,
-                    options || MessageBox.defaultOptions
+                    options || MessageBox.defaultOptions,
+                    autoclose || false,
+                    settings || {}
                 ]);
             }
 
-            return dialog.show(new this.MessageBox(message, title, options));
+            return dialog.show(new this.MessageBox(message, title, options, autoclose, settings));
         },
         /**
          * Installs this module into Durandal; called by the framework. Adds `app.showDialog` and `app.showMessage` convenience methods.
          * @method install
-         * @param {object} [config] Add a `messageBox` property to supply a custom message box constructor. Add a `messageBoxView` property to supply custom view markup for the built-in message box.
+         * @param {object} [config] Add a `messageBox` property to supply a custom message box constructor. Add a `messageBoxView` property to supply custom view markup for the built-in message box. You can also use messageBoxViewUrl to specify the view url.
          */
-        install:function(config){
-            app.showDialog = function(obj, activationData, context) {
+        install: function (config) {
+            app.showDialog = function (obj, activationData, context) {
                 return dialog.show(obj, activationData, context);
             };
 
-            app.showMessage = function(message, title, options) {
-                return dialog.showMessage(message, title, options);
+            app.closeDialog = function () {
+                return dialog.close.apply(dialog, arguments);
             };
 
-            if(config.messageBox){
+            app.showMessage = function (message, title, options, autoclose, settings) {
+                return dialog.showMessage(message, title, options, autoclose, settings);
+            };
+
+            if (config.messageBox) {
                 dialog.MessageBox = config.messageBox;
             }
 
-            if(config.messageBoxView){
-                dialog.MessageBox.prototype.getView = function(){
-                    return config.messageBoxView;
+            if (config.messageBoxView) {
+                dialog.MessageBox.prototype.getView = function () {
+                    return viewEngine.processMarkup(config.messageBoxView);
                 };
+            }
+
+            if (config.messageBoxViewUrl) {
+                dialog.MessageBox.setViewUrl(config.messageBoxViewUrl);
             }
         }
     };
@@ -308,14 +411,14 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
      * @class DialogContext
      */
     dialog.addContext('default', {
-        blockoutOpacity: .2,
+        blockoutOpacity: 0.2,
         removeDelay: 200,
         /**
          * In this function, you are expected to add a DOM element to the tree which will serve as the "host" for the modal's composed view. You must add a property called host to the modalWindow object which references the dom element. It is this host which is passed to the composition module.
          * @method addHost
          * @param {Dialog} theDialog The dialog model.
          */
-        addHost: function(theDialog) {
+        addHost: function (theDialog) {
             var body = $('body');
             var blockout = $('<div class="modalBlockout"></div>')
                 .css({ 'z-index': dialog.getNextZIndex(), 'opacity': this.blockoutOpacity })
@@ -346,11 +449,11 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
          * @method removeHost
          * @param {Dialog} theDialog The dialog model.
          */
-        removeHost: function(theDialog) {
+        removeHost: function (theDialog) {
             $(theDialog.host).css('opacity', 0);
             $(theDialog.blockout).css('opacity', 0);
 
-            setTimeout(function() {
+            setTimeout(function () {
                 ko.removeNode(theDialog.host);
                 ko.removeNode(theDialog.blockout);
             }, this.removeDelay);
@@ -360,7 +463,7 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
                 var oldScrollTop = html.scrollTop(); // necessary for Firefox.
                 html.css("overflow-y", "").scrollTop(oldScrollTop);
 
-                if(theDialog.oldInlineMarginRight) {
+                if (theDialog.oldInlineMarginRight) {
                     $("body").css("margin-right", theDialog.oldBodyMarginRight);
                 } else {
                     $("body").css("margin-right", '');
@@ -389,48 +492,76 @@ define(['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/act
 
             $child.data("predefinedWidth", $child.get(0).style.width);
 
-            var setDialogPosition = function () {
+            var setDialogPosition = function (childView, objDialog) {
                 //Setting a short timeout is need in IE8, otherwise we could do this straight away
                 setTimeout(function () {
-                    //We will clear and then set width for dialogs without width set 
-                    if (!$child.data("predefinedWidth")) {
-                        $child.css({ width: '' }); //Reset width
-                    }
-                    var width = $child.outerWidth(false);
-                    var height = $child.outerHeight(false);
-                    var windowHeight = $(window).height();
-                    var constrainedHeight = Math.min(height, windowHeight);
+                    var $childView = $(childView);
 
-                    $child.css({
-                        'margin-top': (-constrainedHeight / 2).toString() + 'px',
-                        'margin-left': (-width / 2).toString() + 'px'
-                    });
+                    objDialog.context.reposition(childView);
 
-                    if (!$child.data("predefinedWidth")) {
-                        //Ensure the correct width after margin-left has been set
-                        $child.outerWidth(width);
-                    }
+                    $(objDialog.host).css('opacity', 1);
+                    $childView.css("visibility", "visible");
 
-                    if (height > windowHeight) {
-                        $child.css("overflow-y", "auto");
-                    } else {
-                        $child.css("overflow-y", "");
-                    }
-
-                    $(theDialog.host).css('opacity', 1);
-                    $child.css("visibility", "visible");
-
-                    $child.find('.autofocus').first().focus();
+                    $childView.find('.autofocus').first().focus();
                 }, 1);
             };
 
-            setDialogPosition();
-            loadables.load(setDialogPosition);
+            setDialogPosition(child, theDialog);
+            loadables.load(function () {
+                setDialogPosition(child, theDialog);
+            });
 
-            if ($child.hasClass('autoclose')) {
+            if ($child.hasClass('autoclose') || context.model.autoclose) {
                 $(theDialog.blockout).click(function () {
                     theDialog.close();
                 });
+            }
+        },
+        /**
+         * This function is called to reposition the model view.
+         * @method reposition
+         * @param {DOMElement} view The dialog view.
+         */
+        reposition: function (view) {
+            var $view = $(view),
+                $window = $(window);
+
+            //We will clear and then set width for dialogs without width set 
+            if (!$view.data("predefinedWidth")) {
+                $view.css({ width: '' }); //Reset width
+            }
+            var width = $view.outerWidth(false),
+                height = $view.outerHeight(false),
+                windowHeight = $window.height() - 10, //leave at least 10 pixels free
+                windowWidth = $window.width() - 10, //leave at least 10 pixels free
+                constrainedHeight = Math.min(height, windowHeight),
+                constrainedWidth = Math.min(width, windowWidth);
+
+            $view.css({
+                'margin-top': (-constrainedHeight / 2).toString() + 'px',
+                'margin-left': (-constrainedWidth / 2).toString() + 'px'
+            });
+
+            if (height > windowHeight) {
+                $view.css("overflow-y", "auto").outerHeight(windowHeight);
+            } else {
+                $view.css({
+                    "overflow-y": "",
+                    "height": ""
+                });
+            }
+
+            if (width > windowWidth) {
+                $view.css("overflow-x", "auto").outerWidth(windowWidth);
+            } else {
+                $view.css("overflow-x", "");
+
+                if (!$view.data("predefinedWidth")) {
+                    //Ensure the correct width after margin-left has been set
+                    $view.outerWidth(constrainedWidth);
+                } else {
+                    $view.css("width", $view.data("predefinedWidth"));
+                }
             }
         }
     });

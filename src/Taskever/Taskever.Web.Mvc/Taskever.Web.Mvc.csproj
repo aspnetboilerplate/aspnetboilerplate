@@ -324,7 +324,6 @@
     <Content Include="ProfileImages\predefined\user_red.png" />
     <Content Include="ProfileImages\predefined\user_yellow.png" />
     <Content Include="RecaptchaNet.ReadMe.txt" />
-    <Content Include="Scripts\almond-custom.js" />
     <Content Include="App\_Common\styles\main.less" />
     <Content Include="App\Main\styles\briefFriendList.less" />
     <Content Include="App\Main\views\briefFriendList.cshtml" />
@@ -342,6 +341,7 @@
     <Content Include="App\Main\views\uploadProfilePictureDialog.cshtml" />
     <Content Include="App\Main\views\user.cshtml" />
     <Content Include="App\Main\views\userActivityList.cshtml" />
+    <Content Include="Scripts\almond-custom.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\durandal\activator.js" />
@@ -358,9 +358,9 @@
     <Content Include="Scripts\durandal\plugins\widget.js" />
     <Content Include="Scripts\durandal\system.js" />
     <Content Include="Scripts\durandal\transitions\entrance.js" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\durandal\viewEngine.js" />
     <Content Include="Scripts\durandal\viewLocator.js" />
-    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
@@ -423,7 +423,6 @@
     <Content Include="ViewResources\Account\Login.js" />
     <Content Include="ViewResources\Account\ResetPassword.js" />
     <Content Include="ViewResources\main.js" />
-    <Content Include="weyland-config.js" />
     <Content Include="Widgets\LoginBox\LoginBox.js" />
     <Content Include="log4net.config" />
     <Content Include="App\Main\styles\briefFriendList.css.map">

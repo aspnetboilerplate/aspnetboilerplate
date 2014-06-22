@@ -1,5 +1,5 @@
 /**
- * Durandal 2.0.1 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Durandal 2.1.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
  * Available via the MIT license.
  * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
  */
@@ -27,7 +27,12 @@ define(['durandal/system', 'jquery'], function (system, $) {
     function updateHash(location, fragment, replace) {
         if (replace) {
             var href = location.href.replace(/(javascript:|#).*$/, '');
-            location.replace(href + '#' + fragment);
+
+            if (history.history.replaceState) {
+                history.history.replaceState({}, document.title, href + '#' + fragment); // using history.replaceState instead of location.replace to work around chrom bug
+            } else {
+                location.replace(href + '#' + fragment);
+            }
         } else {
             // Some browsers require that `hash` contains a leading #.
             location.hash = '#' + fragment;
@@ -160,7 +165,7 @@ define(['durandal/system', 'jquery'], function (system, $) {
         }
 
         if (!history.options.silent) {
-            return history.loadUrl();
+            return history.loadUrl(options.startRoute);
         }
     };
 
