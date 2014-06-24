@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Security.Users;
@@ -19,14 +18,21 @@ namespace Abp.Security.Roles
         [ForeignKey("UserId")]
         public virtual AbpUser User { get; set; }
 
-        public virtual int UserId { get; set; } //Remove later
+        /// <summary>
+        /// User Id.
+        /// </summary>
+        public virtual int UserId { get; set; } //Needed for EntityFramework. Try to remove if possible!
 
         /// <summary>
         /// Role.
         /// </summary>
         [ForeignKey("RoleId")]
         public virtual AbpRole Role { get; set; }
-        public virtual int RoleId { get; set; } //Remove later
+
+        /// <summary>
+        /// Role Id.
+        /// </summary>
+        public virtual int RoleId { get; set; } //Needed for EntityFramework. Try to remove if possible!
 
         /// <summary>
         /// Creation date of this entity.
