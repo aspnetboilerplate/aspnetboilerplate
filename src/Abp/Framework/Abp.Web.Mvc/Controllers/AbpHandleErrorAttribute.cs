@@ -2,6 +2,7 @@ using System;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Dependency;
+using Abp.Logging;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -33,8 +34,8 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             var exception = context.Exception;
-
-            LogError(exception);
+            
+            LogHelper.LogException(exception);
 
             // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
             // ignore it.
@@ -53,19 +54,11 @@ namespace Abp.Web.Mvc.Controllers
             context.Result = context.HttpContext.Request.IsAjaxRequest()
                 ? GenerateAjaxResult(context)
                 : GenerateNonAjaxResult(context);
-            
+
             // Certain versions of IIS will sometimes use their own error page when
             // they detect a server error. Setting this property indicates that we
             // want it to try to render ASP.NET MVC's error page instead.
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
-        }
-
-        private static void LogError(Exception exception)
-        {
-            using (var logger = IocHelper.ResolveAsDisposable<ILogger>())
-            {
-                logger.Object.Error(exception.Message, exception);
-            }
         }
 
         private ActionResult GenerateAjaxResult(ExceptionContext context)

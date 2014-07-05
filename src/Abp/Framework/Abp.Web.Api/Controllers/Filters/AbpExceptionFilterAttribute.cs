@@ -13,7 +13,7 @@ namespace Abp.WebApi.Controllers.Filters
     {
         public override void OnException(HttpActionExecutedContext context)
         {
-            LogHelper.Logger.Error(context.Exception.Message, context.Exception);
+            LogHelper.LogException(context.Exception);
             context.Response = context.Request.CreateResponse(
                 HttpStatusCode.OK,
                 new AbpAjaxResponse(AbpErrorInfo.ForException(context.Exception))
