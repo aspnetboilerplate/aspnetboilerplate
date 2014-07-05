@@ -10,9 +10,6 @@ using Castle.Core.Logging;
 namespace Abp.Web.Mvc.Controllers
 {
     /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
-    /// <summary>
-    /// 
-    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class AbpHandleErrorAttribute : HandleErrorAttribute
     {
@@ -61,7 +58,6 @@ namespace Abp.Web.Mvc.Controllers
             // they detect a server error. Setting this property indicates that we
             // want it to try to render ASP.NET MVC's error page instead.
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
-
         }
 
         private static void LogError(Exception exception)
