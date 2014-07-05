@@ -15,7 +15,7 @@ namespace Abp.Runtime.Validation.Interception
     {
         private readonly object[] _arguments;
         private readonly ParameterInfo[] _parameters;
-        
+
         private readonly List<ValidationResult> _validationErrors;
 
         /// <summary>
@@ -67,22 +67,39 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (argument == null)
             {
+                //TODO@Halil: What if null value is acceptable?
+                //TODO@Halil: What if has default value?
+
                 if (!parameter.IsOptional && !parameter.IsOut)
                 {
-                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!")); //TODO@Halil: What if null value is acceptable?
+                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!", new[] { parameter.Name }));
                 }
-                
+
                 return;
             }
 
-            if (argument is IValidate)
+            ValidateArgumentRecursively(argument);
+        }
+
+        private void ValidateArgumentRecursively(object argument)
+        {
+            if (!(argument is IValidate))
             {
-                SetValidationAttributeErrors(argument);
+                return;
             }
+
+            SetValidationAttributeErrors(argument);
 
             if (argument is ICustomValidate)
             {
                 (argument as ICustomValidate).AddValidationErrors(_validationErrors);
+            }
+
+            var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
+            foreach (var property in properties)
+            {
+                var propertyValue = property.GetValue(argument);
+                ValidateArgumentRecursively(propertyValue);
             }
         }
 
@@ -96,7 +113,7 @@ namespace Abp.Runtime.Validation.Interception
             var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                 foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
+                foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
                 {
                     var result = attribute.GetValidationResult(property.GetValue(argument), validationContext);
                     if (result != null)

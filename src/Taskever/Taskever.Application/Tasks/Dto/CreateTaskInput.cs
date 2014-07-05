@@ -12,6 +12,7 @@ namespace Taskever.Tasks.Dto
         
         public void AddValidationErrors(List<ValidationResult> results)
         {
+            //TODO: Add IShouldNormalize to ABP, then use it!
             Task.Title = HttpUtility.HtmlEncode(Task.Title);
             Task.Description = HttpUtility.HtmlEncode(Task.Description);
         }
