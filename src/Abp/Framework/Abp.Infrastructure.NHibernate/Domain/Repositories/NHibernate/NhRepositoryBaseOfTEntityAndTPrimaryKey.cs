@@ -24,14 +24,7 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual IQueryable<TEntity> GetAll()
         {
-            var query = Session.Query<TEntity>();
-
-            //if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
-            //{
-            //    query = query.Where(entity => !(entity as ISoftDeleteEntity).IsDeleted);
-            //}
-
-            return query;
+            return Session.Query<TEntity>();
         }
 
         public virtual List<TEntity> GetAllList()
@@ -94,28 +87,28 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual void Delete(TEntity entity)
         {
-            //if (entity is ISoftDeleteEntity)
-            //{
-            //    (entity as ISoftDeleteEntity).IsDeleted = true;
-            //    Update(entity);
-            //}
-            //else
-            //{
+            if (entity is ISoftDeleteEntity)
+            {
+                (entity as ISoftDeleteEntity).IsDeleted = true;
+                Update(entity);
+            }
+            else
+            {
                 Session.Delete(entity);
-            //}
+            }
         }
 
         public virtual void Delete(TPrimaryKey id)
         {
             var entity = Session.Load<TEntity>(id);
-            //if (entity is ISoftDeleteEntity)
-            //{
-            //    (entity as ISoftDeleteEntity).IsDeleted = true;
-            //}
-            //else
-            //{
+            if (entity is ISoftDeleteEntity)
+            {
+                (entity as ISoftDeleteEntity).IsDeleted = true;
+            }
+            else
+            {
                 Session.Delete(entity);
-            //}
+            }
         }
 
         public virtual int Count()
