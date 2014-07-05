@@ -107,6 +107,7 @@
     <Compile Include="Controllers\WindsorControllerFactory.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Models\AbpMvcAjaxResponse.cs" />
+    <Compile Include="Models\AbpMvcErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\AbpWebMvcModule.cs" />
     <Compile Include="Controllers\ControllerConventionalRegisterer.cs" />

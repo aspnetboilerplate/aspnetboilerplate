@@ -1,5 +1,4 @@
 using System;
-using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -19,6 +18,15 @@ namespace Abp.Web.Mvc.Controllers.Results
         public AbpJsonResult()
         {
             JsonRequestBehavior = JsonRequestBehavior.DenyGet;
+        }
+
+        /// <summary>
+        /// Constructor with JSON data.
+        /// </summary>
+        /// <param name="data">JSON data</param>
+        public AbpJsonResult(object data) : this()
+        {
+            Data = data;
         }
         
         public override void ExecuteResult(ControllerContext context)

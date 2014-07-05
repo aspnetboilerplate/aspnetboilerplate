@@ -64,7 +64,7 @@ namespace Taskever.Web.Mvc.Controllers
             {
                 throw new UserFriendlyException("Invalid user name or password!");
             }
-            
+
             await SignInAsync(user, loginModel.RememberMe);
 
             if (string.IsNullOrWhiteSpace(returnUrl))

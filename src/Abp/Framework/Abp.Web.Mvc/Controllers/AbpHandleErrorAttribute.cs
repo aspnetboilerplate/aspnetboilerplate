@@ -1,7 +1,7 @@
 using System;
+using System.Web;
 using System.Web.Mvc;
 using Abp.Dependency;
-using Abp.UI;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -14,30 +14,9 @@ namespace Abp.Web.Mvc.Controllers
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class AbpHandleErrorAttribute : FilterAttribute, IExceptionFilter
+    public class AbpHandleErrorAttribute : HandleErrorAttribute
     {
-        private const string DefaultView = "Error";
-
-        public string View { get; set; }
-
-        public string Master { get; set; }
-
-        /// <summary>
-        /// Default: true.
-        /// </summary>
-        public bool HandleErrors { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public AbpHandleErrorAttribute()
-        {
-            Master = String.Empty;
-            View = DefaultView;
-            HandleErrors = true;
-        }
-
-        public void OnException(ExceptionContext context)
+        public override void OnException(ExceptionContext context)
         {
             if (context == null)
             {
@@ -49,70 +28,66 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            if (!HandleErrors)
-            {
-                return;
-            }
-
-            using (var logger = IocHelper.ResolveAsDisposable<ILogger>())
-            {
-                logger.Object.Error(context.Exception.Message, context.Exception);
-            }
-
-            if (context.HttpContext.Request.IsAjaxRequest())
-            {
-                HandleAjaxError(context);
-            }
-            else
-            {
-                HandleNonAjaxError(context);
-            }
-        }
-
-        private void HandleAjaxError(ExceptionContext context)
-        {
-            context.Result = new AbpJsonResult
-                                 {
-                                     Data = new AbpMvcAjaxResponse(AbpErrorInfo.ForException(context.Exception))
-                                 };
-
-            context.ExceptionHandled = true;
-            context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = 500;
-
-            context.HttpContext.Response.TrySkipIisCustomErrors = true;
-        }
-
-        private void HandleNonAjaxError(ExceptionContext context)
-        {
             // If custom errors are disabled, we need to let the normal ASP.NET exception handler
             // execute so that the user can see useful debugging information.
-            if (!context.HttpContext.IsCustomErrorEnabled) //TODO: To check or not to check this?
+            if (!context.HttpContext.IsCustomErrorEnabled)
             {
                 return;
             }
 
-            //TODO: Move this to another class to be able to share!
-            var message = context.Exception is UserFriendlyException
-                              ? context.Exception.Message
-                              : "General exception message here!";
+            var exception = context.Exception;
 
-            context.Result = new ViewResult
-                                 {
-                                     ViewName = View,
-                                     MasterName = Master,
-                                     ViewData = new ViewDataDictionary<AbpErrorInfo>(AbpErrorInfo.ForException(context.Exception)),
-                                     TempData = context.Controller.TempData
-                                 };
+            LogError(exception);
+
+            // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
+            // ignore it.
+            if (new HttpException(null, exception).GetHttpCode() != 500)
+            {
+                return;
+            }
+
+            if (!ExceptionType.IsInstanceOfType(exception))
+            {
+                return;
+            }
 
             context.ExceptionHandled = true;
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = 500;
-
+            context.Result = context.HttpContext.Request.IsAjaxRequest()
+                ? GenerateAjaxResult(context)
+                : GenerateNonAjaxResult(context);
+            
             // Certain versions of IIS will sometimes use their own error page when
             // they detect a server error. Setting this property indicates that we
             // want it to try to render ASP.NET MVC's error page instead.
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+        }
+
+        private static void LogError(Exception exception)
+        {
+            using (var logger = IocHelper.ResolveAsDisposable<ILogger>())
+            {
+                logger.Object.Error(exception.Message, exception);
+            }
+        }
+
+        private ActionResult GenerateAjaxResult(ExceptionContext context)
+        {
+            context.HttpContext.Response.StatusCode = 200;
+            return new AbpJsonResult(new AbpMvcAjaxResponse(AbpErrorInfo.ForException(context.Exception)));
+        }
+
+        private ActionResult GenerateNonAjaxResult(ExceptionContext context)
+        {
+            context.HttpContext.Response.StatusCode = 500;
+            return new ViewResult
+                   {
+                       ViewName = View,
+                       MasterName = Master,
+                       ViewData = new ViewDataDictionary<AbpMvcErrorModel>(new AbpMvcErrorModel(context.Exception)),
+                       TempData = context.Controller.TempData
+                   };
         }
     }
 }
