@@ -108,12 +108,17 @@ namespace Abp.Runtime.Validation.Interception
         /// </summary>
         private void SetValidationAttributeErrors(object argument)
         {
-            var validationContext = new ValidationContext(argument);
-
             var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                foreach (var attribute in property.Attributes.OfType<ValidationAttribute>())
+                var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
+                if (validationAttributes.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                var validationContext = new ValidationContext(argument) { DisplayName = property.Name };
+                foreach (var attribute in validationAttributes)
                 {
                     var result = attribute.GetValidationResult(property.GetValue(argument), validationContext);
                     if (result != null)
