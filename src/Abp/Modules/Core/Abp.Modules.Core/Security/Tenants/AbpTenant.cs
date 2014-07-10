@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Security;
 using Abp.Security.IdentityFramework;
 
 namespace Abp.Security.Tenants

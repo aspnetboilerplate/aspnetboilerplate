@@ -66,10 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpCoreModuleConst.cs" />
-    <Compile Include="Configuration\AbpSession.cs" />
+    <Compile Include="Application\AbpSession.cs" />
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
-    <Compile Include="Security\IdentityFramework\AbpClaims.cs" />
     <Compile Include="Security\IdentityFramework\AbpUserManager.cs" />
     <Compile Include="Security\IdentityFramework\AbpRoleStore.cs" />
     <Compile Include="Security\Permissions\IPermissionRepository.cs" />

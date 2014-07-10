@@ -136,6 +136,7 @@
     <Compile Include="Events\Bus\Handlers\IEventHandlerOfTEventData.cs" />
     <Compile Include="Localization\Dictionaries\LocalizationDictionary.cs" />
     <Compile Include="Localization\Dictionaries\Xml\XmlLocalizationDictionary.cs" />
+    <Compile Include="Runtime\Security\AbpClaims.cs" />
     <Compile Include="Runtime\Validation\AbpValidationException.cs" />
     <Compile Include="Runtime\Validation\ICustomValidate.cs" />
     <Compile Include="Runtime\Validation\IValidate.cs" />

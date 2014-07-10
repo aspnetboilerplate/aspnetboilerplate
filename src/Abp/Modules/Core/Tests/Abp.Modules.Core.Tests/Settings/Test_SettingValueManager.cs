@@ -1,4 +1,5 @@
-﻿using Abp.Configuration;
+﻿using Abp.Application;
+using Abp.Configuration;
 using NUnit.Framework;
 
 namespace Abp.Modules.Core.Tests.Settings

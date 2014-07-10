@@ -3,7 +3,7 @@ using Abp.Dependency;
 using Abp.Security.Tenants;
 using Abp.Security.Users;
 
-namespace Abp.Configuration
+namespace Abp.Application
 {
     /// <summary>
     /// 

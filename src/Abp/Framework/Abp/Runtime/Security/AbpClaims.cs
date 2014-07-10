@@ -1,4 +1,4 @@
-﻿namespace Abp.Security.IdentityFramework
+﻿namespace Abp.Runtime.Security
 {
     /// <summary>
     /// Used to get ABP-specific claim type names.
