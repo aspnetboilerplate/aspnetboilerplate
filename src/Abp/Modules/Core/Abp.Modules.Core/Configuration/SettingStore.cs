@@ -25,9 +25,9 @@ namespace Abp.Configuration
             _settingRepository.Delete(setting);
         }
 
-        public Setting Add(Setting settingValue)
+        public void Add(Setting setting)
         {
-            return _settingRepository.Insert(settingValue);
+            _settingRepository.Insert(setting);
         }
 
         public List<Setting> GetAll(int? tenantId, int? userId)

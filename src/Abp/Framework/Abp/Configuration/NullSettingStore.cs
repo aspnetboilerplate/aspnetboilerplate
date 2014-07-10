@@ -3,10 +3,13 @@ using System.Collections.Generic;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// 
+    /// Implements null pattern for ISettingStore.
     /// </summary>
     public class NullSettingStore : ISettingStore
     {
+        /// <summary>
+        /// Gets singleton instance.
+        /// </summary>
         public static NullSettingStore Instance { get { return SingletonInstance; } }
         private static readonly NullSettingStore SingletonInstance = new NullSettingStore();
 
@@ -25,9 +28,9 @@ namespace Abp.Configuration
             
         }
 
-        public Setting Add(Setting settingValue)
+        public void Add(Setting setting)
         {
-            return settingValue;
+
         }
 
         public List<Setting> GetAll(int? tenantId, int? userId)

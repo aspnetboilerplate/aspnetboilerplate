@@ -15,10 +15,13 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingManager : ISettingManager
     {
+        /// <summary>
+        /// Reference to the current Session.
+        /// </summary>
         public IAbpSession Session { get; set; }
 
         /// <summary>
-        /// 
+        /// Reference to the setting store.
         /// </summary>
         public ISettingStore SettingStore { get; set; }
 
