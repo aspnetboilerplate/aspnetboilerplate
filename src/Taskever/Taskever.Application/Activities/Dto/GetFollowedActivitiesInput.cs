@@ -8,7 +8,7 @@ namespace Taskever.Activities.Dto
         private const int MaxMaxResultCount = 100;
 
         [Range(1, int.MaxValue)]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
         public bool? IsActor { get; set; }
 

@@ -23,7 +23,7 @@ namespace Taskever.Tasks
         [ForeignKey("AssignedUserId")]
         public virtual TaskeverUser AssignedUser { get; set; }
 
-        public virtual int? AssignedUserId { get; set; }
+        public virtual long? AssignedUserId { get; set; }
 
         public virtual TaskPriority Priority { get; set; }
 

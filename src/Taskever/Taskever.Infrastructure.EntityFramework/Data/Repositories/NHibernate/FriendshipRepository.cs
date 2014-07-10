@@ -8,7 +8,7 @@ namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
     public class FriendshipRepository : TaskeverEfRepositoryBase<Friendship>, IFriendshipRepository
     {
-        public List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask)
+        public List<Friendship> GetAllWithFriendUser(long userId, FriendshipStatus? status, bool? canAssignTask)
         {
             var query = GetAll()
                 .Include(f => f.Friend)
@@ -29,14 +29,14 @@ namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
             return query.ToList();
         }
 
-        public IQueryable<Friendship> GetAllWithFriendUser(int userId)
+        public IQueryable<Friendship> GetAllWithFriendUser(long userId)
         {
             return GetAll()
                 .Include(f => f.Friend)
                 .Where(f => f.User.Id == userId);
         }
 
-        public Friendship GetOrNull(int userId, int friendId, bool onlyAccepted = false)
+        public Friendship GetOrNull(long userId, long friendId, bool onlyAccepted = false)
         {
             var query = from friendship in GetAll()
                         where friendship.User.Id == userId && friendship.Friend.Id == friendId

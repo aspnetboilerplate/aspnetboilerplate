@@ -9,7 +9,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         public override void Up()
         {
             Create.Table("AbpTenants")
-                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithIdAsInt32()
                 .WithColumn("TenancyName").AsString(32).NotNullable()
                 .WithColumn("Name").AsString(128).NotNullable()
                 .WithCreationTimeColumn();

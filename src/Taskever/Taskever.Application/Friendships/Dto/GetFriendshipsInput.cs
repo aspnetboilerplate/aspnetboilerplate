@@ -6,7 +6,7 @@ namespace Taskever.Friendships.Dto
     public class GetFriendshipsInput : IInputDto
     {
         [Range(1, int.MaxValue)]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
         public FriendshipStatus? Status { get; set; }
 

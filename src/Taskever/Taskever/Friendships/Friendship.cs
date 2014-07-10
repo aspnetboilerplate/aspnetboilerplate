@@ -11,9 +11,9 @@ namespace Taskever.Friendships
     {
         [ForeignKey("UserId")]
         public virtual TaskeverUser User { get; set; }
-        public virtual int UserId { get; set; }
+        public virtual long UserId { get; set; }
 
-        public virtual int FriendUserId { get; set; }
+        public virtual long FriendUserId { get; set; }
 
         public virtual int PairFriendshipId { get; set; }
 

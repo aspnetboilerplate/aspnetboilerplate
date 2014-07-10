@@ -9,9 +9,9 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         public override void Up()
         {
             Create.Table("AbpPermissions")
-                .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
+                .WithIdAsInt64()
                 .WithColumn("RoleId").AsInt32().Nullable().ForeignKey("AbpRoles", "Id")
-                .WithColumn("UserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
+                .WithNullableUserId()
                 .WithColumn("Name").AsAnsiString(128).NotNullable()
                 .WithColumn("IsGranted").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithCreationAuditColumns();

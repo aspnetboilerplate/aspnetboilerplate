@@ -14,7 +14,7 @@ namespace Taskever.Tasks.Dto
 
         public string Description { get; set; }
 
-        public int AssignedUserId { get; set; }
+        public long AssignedUserId { get; set; }
 
         public byte Priority { get; set; }
 

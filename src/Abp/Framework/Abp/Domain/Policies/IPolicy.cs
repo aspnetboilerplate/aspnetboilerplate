@@ -7,5 +7,6 @@ namespace Abp.Domain.Policies
     /// </summary>
     public interface IPolicy : ITransientDependency
     {
+
     }
 }

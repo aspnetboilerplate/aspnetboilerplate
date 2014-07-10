@@ -68,9 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Security\Roles\ITaskeverRoleRepository.cs" />
-    <Compile Include="Security\Identity\TaskeverRoleManager.cs" />
     <Compile Include="Security\Roles\TaskeverRole.cs" />
-    <Compile Include="Security\Identity\TaskeverUserManager.cs" />
     <Compile Include="Startup\Dependency\Installers\Log4NetInstaller.cs" />
     <Compile Include="Tasks\Events\TaskCompletedEventData.cs" />
     <Compile Include="Activities\EventHandlers\TaskActivityEventHandler.cs" />

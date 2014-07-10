@@ -13,7 +13,7 @@ namespace Taskever.Activities
 
         [ForeignKey("AssignedUserId")]
         public virtual AbpUser AssignedUser { get; set; }
-        public virtual int AssignedUserId { get; set; }
+        public virtual long AssignedUserId { get; set; }
 
         [ForeignKey("TaskId")]
         public virtual Task Task { get; set; }
@@ -27,8 +27,8 @@ namespace Taskever.Activities
             CreationTime = DateTime.Now;
         }
 
-        public abstract int?[] GetActors();
+        public abstract long?[] GetActors();
 
-        public abstract int?[] GetRelatedUsers();
+        public abstract long?[] GetRelatedUsers();
     }
 }

@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets current UserId of null.
         /// </summary>
-        int? UserId { get; }
+        long? UserId { get; }
 
         /// <summary>
         /// Gets current TenantId or null.

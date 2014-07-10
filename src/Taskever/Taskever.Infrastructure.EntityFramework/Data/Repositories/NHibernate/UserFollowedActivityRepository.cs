@@ -6,7 +6,7 @@ namespace Taskever.Infrastructure.EntityFramework.Data.Repositories.NHibernate
 {
     public class UserFollowedActivityRepository : TaskeverEfRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
     {
-        public IList<UserFollowedActivity> Getactivities(int userId, bool? isActor, long beforeId, int maxResultCount)
+        public IList<UserFollowedActivity> Getactivities(long userId, bool? isActor, long beforeId, int maxResultCount)
         {
             return new UserFollowedActivity[0];
 

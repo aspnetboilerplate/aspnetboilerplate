@@ -6,10 +6,10 @@ namespace Taskever.Friendships
 {
     public interface IFriendshipRepository : IRepository<Friendship>
     {
-        List<Friendship> GetAllWithFriendUser(int userId, FriendshipStatus? status, bool? canAssignTask);
+        List<Friendship> GetAllWithFriendUser(long userId, FriendshipStatus? status, bool? canAssignTask);
 
-        IQueryable<Friendship> GetAllWithFriendUser(int userId);
+        IQueryable<Friendship> GetAllWithFriendUser(long userId);
 
-        Friendship GetOrNull(int userId, int friendId, bool onlyAccepted = false);
+        Friendship GetOrNull(long userId, long friendId, bool onlyAccepted = false);
     }
 }

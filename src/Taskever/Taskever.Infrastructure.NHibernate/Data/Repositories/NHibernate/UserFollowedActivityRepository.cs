@@ -7,7 +7,7 @@ namespace Taskever.Data.Repositories.NHibernate
 {
     public class UserFollowedActivityRepository : NhRepositoryBase<UserFollowedActivity, long>, IUserFollowedActivityRepository
     {
-        public IList<UserFollowedActivity> Getactivities(int userId, bool? isActor, long beforeId, int maxResultCount)
+        public IList<UserFollowedActivity> Getactivities(long userId, bool? isActor, long beforeId, int maxResultCount)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.AppendLine("from " + typeof(UserFollowedActivity).FullName + " as ufa");

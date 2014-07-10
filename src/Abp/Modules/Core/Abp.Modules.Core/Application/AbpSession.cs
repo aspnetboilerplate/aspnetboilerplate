@@ -10,7 +10,7 @@ namespace Abp.Application
     /// </summary>
     public class AbpSession : IAbpSession, ITransientDependency
     {
-        public int? UserId
+        public long? UserId
         {
             get { return AbpUser.CurrentUserId; }
         }

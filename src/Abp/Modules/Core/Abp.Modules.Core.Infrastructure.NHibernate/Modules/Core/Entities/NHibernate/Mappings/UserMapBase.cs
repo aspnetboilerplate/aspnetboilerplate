@@ -3,7 +3,7 @@ using Abp.Security.Users;
 
 namespace Abp.Modules.Core.Entities.NHibernate.Mappings
 {
-    public abstract class UserMapBase<TUser> : EntityMap<TUser> where TUser : AbpUser
+    public abstract class UserMapBase<TUser> : EntityMap<TUser, long> where TUser : AbpUser
     {
         protected UserMapBase()
             : base("AbpUsers")

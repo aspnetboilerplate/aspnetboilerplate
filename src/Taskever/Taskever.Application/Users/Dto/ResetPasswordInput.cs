@@ -5,8 +5,8 @@ namespace Abp.Users.Dto
 {
     public class ResetPasswordInput : IInputDto
     {
-        [Range(1, int.MaxValue)]
-        public int UserId { get; set; }
+        [Range(1, long.MaxValue)]
+        public long UserId { get; set; }
 
         [StringLength(30, MinimumLength = 3)]
         public string Password { get; set; }

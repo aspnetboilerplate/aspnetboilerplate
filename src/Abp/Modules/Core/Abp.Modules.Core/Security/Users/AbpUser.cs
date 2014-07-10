@@ -9,7 +9,7 @@ namespace Abp.Security.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser : Entity, IUser<int> // TODO: Change Id from int to long?
+    public class AbpUser : Entity<long>, IUser<long>
     {
         /// <summary>
         /// Tenant of this user.
@@ -61,12 +61,12 @@ namespace Abp.Security.Users
         /// <summary>
         /// Gets Name and Surname joined by space.
         /// </summary>
-        public virtual string NameAndSurname { get { return Name + " " + Surname; } }
+        public virtual string NameAndSurname { get { return Name + " " + Surname; } } //TODO@Halil: Remove this?
 
         /// <summary>
         /// Gets current user id.
         /// </summary>
-        public static int? CurrentUserId
+        public static long? CurrentUserId
         {
             get
             {

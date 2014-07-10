@@ -15,7 +15,7 @@ namespace Abp.Configuration
             _settingRepository = settingRepository;
         }
 
-        public Setting GetSettingOrNull(int? tenantId, int? userId, string name)
+        public Setting GetSettingOrNull(int? tenantId, long? userId, string name)
         {
             return _settingRepository.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
         }
@@ -30,7 +30,7 @@ namespace Abp.Configuration
             _settingRepository.Insert(setting);
         }
 
-        public List<Setting> GetAll(int? tenantId, int? userId)
+        public List<Setting> GetAll(int? tenantId, long? userId)
         {
             return _settingRepository.GetAllList(s => s.TenantId == tenantId && s.UserId == userId);
         }

@@ -4,7 +4,7 @@ using Taskever.Security.Users;
 
 namespace Taskever.Data.Repositories.NHibernate
 {
-    public class TaskeverUserRepository : NhRepositoryBase<TaskeverUser>, ITaskeverUserRepository
+    public class TaskeverUserRepository : NhRepositoryBase<TaskeverUser, long>, ITaskeverUserRepository
     {
         
     }

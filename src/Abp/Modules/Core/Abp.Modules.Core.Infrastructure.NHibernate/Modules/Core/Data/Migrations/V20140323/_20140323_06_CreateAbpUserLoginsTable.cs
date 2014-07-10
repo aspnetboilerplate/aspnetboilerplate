@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using Abp.Data.Migrations.FluentMigrator;
+using FluentMigrator;
 
 namespace Abp.Modules.Core.Data.Migrations.V20140323
 {
@@ -8,8 +9,8 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         public override void Up()
         {
             Create.Table("AbpUserLogins")
-                .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
-                .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
+                .WithIdAsInt64()
+                .WithUserId()
                 .WithColumn("LoginProvider").AsAnsiString(100).NotNullable()
                 .WithColumn("ProviderKey").AsAnsiString(100).NotNullable();
         }

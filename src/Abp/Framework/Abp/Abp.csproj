@@ -86,6 +86,8 @@
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
+    <Compile Include="Domain\Entities\Auditing\CreationAuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\IAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\ICreationAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />

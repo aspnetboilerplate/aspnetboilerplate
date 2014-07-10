@@ -7,8 +7,8 @@ namespace Taskever.Tasks.Dto
     {
         private const int MaxMaxResultCount = 100;
 
-        [Range(1, int.MaxValue)]
-        public int AssignedUserId { get; set; }
+        [Range(1, long.MaxValue)]
+        public long AssignedUserId { get; set; }
 
         [Range(1, MaxMaxResultCount)]
         public int MaxResultCount { get; set; }

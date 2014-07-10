@@ -1,5 +1,4 @@
 using System;
-using Abp.Domain.Entities;
 
 namespace Abp.Events.Bus.Datas.Entities
 {
@@ -9,7 +8,6 @@ namespace Abp.Events.Bus.Datas.Entities
     /// <typeparam name="TEntity">Entity type</typeparam>
     [Serializable]
     public class EntityDeletedEventData<TEntity> : EntityEventData<TEntity>
-        where TEntity : IEntity
     {
         /// <summary>
         /// Constructor.

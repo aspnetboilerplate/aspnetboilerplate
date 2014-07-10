@@ -188,7 +188,7 @@ namespace Taskever.Tasks
             return new DeleteTaskOutput();
         }
 
-        private IQueryable<Task> CreateQueryForAssignedTasksOfUser(int assignedUserId)
+        private IQueryable<Task> CreateQueryForAssignedTasksOfUser(long assignedUserId)
         {
             var currentUser = _userRepository.Load(AbpUser.CurrentUserId.Value);
             var userOfTasks = _userRepository.Load(assignedUserId);

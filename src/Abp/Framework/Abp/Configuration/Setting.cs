@@ -5,7 +5,7 @@ namespace Abp.Configuration
     /// <summary>
     /// This class is used to store setting values on the database.
     /// </summary>
-    public class Setting : AuditedEntity<long>, ISettingValue
+    public class Setting : AuditedEntity<long>, ISettingValue //TODO: Move to ABP.Core module and put an interface here to be used by SettingManager.
     {
         /// <summary>
         /// TenantId for this setting.
@@ -17,7 +17,7 @@ namespace Abp.Configuration
         /// UserId for this setting.
         /// UserId is null if this setting is not user level.
         /// </summary>
-        public virtual int? UserId { get; set; }
+        public virtual long? UserId { get; set; }
         
         /// <summary>
         /// Unique name of the setting.

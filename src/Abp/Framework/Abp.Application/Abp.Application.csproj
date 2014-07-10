@@ -69,10 +69,14 @@
     <Compile Include="Application\Authorization\Permissions\PermissionDefinitionManager.cs" />
     <Compile Include="Application\Authorization\Permissions\PermissionDefinitionProviderContext.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\AuditedEntityDtoOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\CreationAuditedEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\CreationAuditedEntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\EntityDto.cs" />
     <Compile Include="Application\Services\Dto\EntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IDoubleWayDto.cs" />
     <Compile Include="Application\Services\Dto\IDto.cs" />
+    <Compile Include="Application\Services\Dto\IHasLongTotalCount.cs" />
     <Compile Include="Application\Services\Dto\IHasTotalCount.cs" />
     <Compile Include="Application\Services\Dto\IInputDto.cs" />
     <Compile Include="Application\Services\Dto\ILimitedResultRequest.cs" />

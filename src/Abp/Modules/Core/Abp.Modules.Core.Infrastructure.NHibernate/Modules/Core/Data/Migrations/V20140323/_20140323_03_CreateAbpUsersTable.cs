@@ -9,7 +9,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         public override void Up()
         {
             Create.Table("AbpUsers")
-                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithIdAsInt64()
                 .WithNullableTenantId()
                 .WithColumn("UserName").AsString(32).NotNullable()
                 .WithColumn("Name").AsString(30).NotNullable()
@@ -51,6 +51,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
                     Name = "System",
                     Surname = "Administrator",
                     EmailAddress = "admin@aspnetboilerplate.com",
+                    IsEmailConfirmed = true,
                     Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                 });
         }

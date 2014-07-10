@@ -11,10 +11,10 @@ using Microsoft.AspNet.Identity;
 namespace Abp.Security.IdentityFramework
 {
     public class AbpUserStore :
-        IUserPasswordStore<AbpUser, int>,
-        IUserEmailStore<AbpUser, int>,
-        IUserLoginStore<AbpUser, int>,
-        IUserRoleStore<AbpUser, int>,
+        IUserPasswordStore<AbpUser, long>,
+        IUserEmailStore<AbpUser, long>,
+        IUserLoginStore<AbpUser, long>,
+        IUserRoleStore<AbpUser, long>,
         ITransientDependency
     {
         #region Private fields
@@ -64,7 +64,7 @@ namespace Abp.Security.IdentityFramework
             return Task.Factory.StartNew(() => _userRepository.Delete(user.Id));
         }
 
-        public Task<AbpUser> FindByIdAsync(int userId)
+        public Task<AbpUser> FindByIdAsync(long userId)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(userId));
         }

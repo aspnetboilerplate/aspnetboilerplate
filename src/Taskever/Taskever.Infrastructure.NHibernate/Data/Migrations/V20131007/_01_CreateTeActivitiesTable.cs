@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Abp.Data.Migrations.FluentMigrator;
 using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20131007
@@ -11,8 +12,8 @@ namespace Taskever.Data.Migrations.V20131007
             Create.Table("TeActivities")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
                 .WithColumn("ActivityType").AsInt32().NotNullable()
-                .WithColumn("CreatorUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
-                .WithColumn("AssignedUserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
+                .WithUserId("CreatorUserId")
+                .WithUserId("AssignedUserId")
                 .WithColumn("TaskId").AsInt32().Nullable().ForeignKey("TeTasks", "Id").OnDelete(Rule.Cascade)
                 .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
         }

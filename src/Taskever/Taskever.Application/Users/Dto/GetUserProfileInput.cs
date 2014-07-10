@@ -4,6 +4,6 @@ namespace Taskever.Users.Dto
 {
     public class GetUserProfileInput : IInputDto
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
     }
 }

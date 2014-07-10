@@ -4,6 +4,6 @@ namespace Taskever.Friendships.Dto
 {
     public class UpdateLastVisitTimeInput : IInputDto
     {
-        public int FriendUserId { get; set; }
+        public long FriendUserId { get; set; }
     }
 }

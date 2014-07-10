@@ -9,7 +9,7 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         public override void Up()
         {
             Create.Table("AbpRoles")
-                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithIdAsInt32()
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("DisplayName").AsString(100).NotNullable()
                 .WithAuditColumns();

@@ -18,7 +18,7 @@ namespace Abp.Configuration
             
         }
 
-        public Setting GetSettingOrNull(int? tenantId, int? userId, string name)
+        public Setting GetSettingOrNull(int? tenantId, long? userId, string name)
         {
             return null;
         }
@@ -33,7 +33,7 @@ namespace Abp.Configuration
 
         }
 
-        public List<Setting> GetAll(int? tenantId, int? userId)
+        public List<Setting> GetAll(int? tenantId, long? userId)
         {
             return new List<Setting>();
         }

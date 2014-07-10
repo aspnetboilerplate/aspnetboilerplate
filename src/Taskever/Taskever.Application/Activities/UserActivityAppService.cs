@@ -33,7 +33,7 @@ namespace Taskever.Activities
 
             //TODO: Think on private activities? When a private task is created or completed?
 
-            var activities = _followedActivityRepository.Getactivities(input.UserId,input.IsActor, input.BeforeId, input.MaxResultCount);
+            var activities = _followedActivityRepository.Getactivities(input.UserId, input.IsActor, input.BeforeId, input.MaxResultCount);
 
             return new GetFollowedActivitiesOutput
                        {

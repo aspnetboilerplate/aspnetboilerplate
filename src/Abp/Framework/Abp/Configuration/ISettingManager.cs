@@ -58,7 +58,7 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="userId">User to get settings</param>
         /// <returns>All settings of the user</returns>
-        IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(int userId);
+        IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(long userId);
 
         /// <summary>
         /// Changes setting for the application level.
@@ -81,6 +81,6 @@ namespace Abp.Configuration
         /// <param name="userId">UserId</param>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
-        void ChangeSettingForUser(int userId, string name, string value);
+        void ChangeSettingForUser(long userId, string name, string value);
     }
 }

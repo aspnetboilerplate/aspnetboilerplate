@@ -10,8 +10,8 @@ namespace Abp.Modules.Core.Data.Migrations.V20140323
         {
             Create.Table("AbpSettings")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
-                .WithColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id")
-                .WithColumn("UserId").AsInt32().Nullable().ForeignKey("AbpUsers", "Id")
+                .WithNullableTenantId()
+                .WithNullableUserId()
                 .WithColumn("Name").AsAnsiString(128).NotNullable()
                 .WithColumn("Value").AsString().NotNullable()
                 .WithAuditColumns();

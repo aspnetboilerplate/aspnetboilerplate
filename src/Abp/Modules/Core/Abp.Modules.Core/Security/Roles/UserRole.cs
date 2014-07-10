@@ -10,7 +10,7 @@ namespace Abp.Security.Roles
     /// Represents role record of a user.
     /// TODO: Add a unique index for UserId, RoleId
     /// </summary>
-    public class UserRole : Entity<long>, ICreationAudited
+    public class UserRole : CreationAuditedEntity<long>
     {
         /// <summary>
         /// User.
@@ -21,7 +21,7 @@ namespace Abp.Security.Roles
         /// <summary>
         /// User Id.
         /// </summary>
-        public virtual int UserId { get; set; } //Needed for EntityFramework. Try to remove if possible!
+        public virtual long UserId { get; set; } //Needed for EntityFramework. Try to remove if possible!
 
         /// <summary>
         /// Role.
@@ -33,15 +33,5 @@ namespace Abp.Security.Roles
         /// Role Id.
         /// </summary>
         public virtual int RoleId { get; set; } //Needed for EntityFramework. Try to remove if possible!
-
-        /// <summary>
-        /// Creation date of this entity.
-        /// </summary>
-        public virtual DateTime CreationTime { get; set; }
-
-        /// <summary>
-        /// Creator user of this entity.
-        /// </summary>
-        public virtual int? CreatorUserId { get; set; }
     }
 }

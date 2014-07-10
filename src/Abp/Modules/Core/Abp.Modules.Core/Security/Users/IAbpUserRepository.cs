@@ -2,12 +2,12 @@ using Abp.Domain.Repositories;
 
 namespace Abp.Security.Users
 {
-    public interface IAbpUserRepository : IRepository<AbpUser>
+    public interface IAbpUserRepository : IRepository<AbpUser, long>
     {
-        void UpdatePassword(int userId, string password);
+        void UpdatePassword(long userId, string password);
 
-        void UpdateEmail(int userId, string emailAddress);
+        void UpdateEmail(long userId, string emailAddress);
 
-        void UpdateIsEmailConfirmed(int userId, bool confirmed);
+        void UpdateIsEmailConfirmed(long userId, bool confirmed);
     }
 }

@@ -1,3 +1,4 @@
+using Abp.Data.Migrations.FluentMigrator;
 using FluentMigrator;
 
 namespace Taskever.Data.Migrations.V20130901
@@ -9,9 +10,9 @@ namespace Taskever.Data.Migrations.V20130901
         {
             Create.Table("TeFriendships") 
                 .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("UserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
+                .WithUserId()
                 .WithColumn("PairFriendshipId").AsInt32().Nullable().ForeignKey("TeFriendships", "Id") //TODO: Removed cascade update and delete! Test it!
-                .WithColumn("FriendUserId").AsInt32().NotNullable().ForeignKey("AbpUsers", "Id")
+                .WithUserId("FriendUserId")
                 .WithColumn("FollowActivities").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithColumn("CanAssignTask").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("LastVisitTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)

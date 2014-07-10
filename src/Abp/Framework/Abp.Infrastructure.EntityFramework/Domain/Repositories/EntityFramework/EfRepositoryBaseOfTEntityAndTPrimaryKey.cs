@@ -63,7 +63,7 @@ namespace Abp.Domain.Repositories.EntityFramework
 
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
-            return GetAll().Where("Id = @0", key).FirstOrDefault(); //TODO: Implement ISoftDeleteEntity?
+            return GetAll().Where("Id = @0", key).FirstOrDefault();
         }
 
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -73,14 +73,12 @@ namespace Abp.Domain.Repositories.EntityFramework
 
         public virtual TEntity Load(TPrimaryKey key)
         {
-            //TODO: 
-            return Get(key); //TODO: Implement ISoftDeleteEntity?
+            return Get(key); //EntityFramework has no Load as like NHibernate.
         }
 
         public virtual TEntity Insert(TEntity entity)
         {
-            Table.Add(entity);
-            return entity;
+            return Table.Add(entity);
         }
 
         public virtual TEntity Update(TEntity entity)
@@ -147,6 +145,5 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             return GetAll().Where(predicate).LongCount();
         }
-
     }
 }

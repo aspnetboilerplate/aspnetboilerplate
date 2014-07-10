@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Security.IdentityFramework
 {
-    public class AbpUserManager : UserManager<AbpUser, int>, ITransientDependency
+    public class AbpUserManager : UserManager<AbpUser, long>, ITransientDependency
     {
         public AbpUserManager(AbpUserStore store)
             : base(store)

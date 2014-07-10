@@ -45,7 +45,7 @@ namespace Taskever.Activities
             //TODO: Maybe optimized by creating a stored procedure?
 
             //Get user id's of all actors of this activity
-            var actorUserIds = activity.GetActors().Cast<int>().ToList();
+            var actorUserIds = activity.GetActors().Cast<long>().ToList();
             if (actorUserIds.IsNullOrEmpty())
             {
                 //No actor of this activity, so, no one will follow it.
@@ -59,7 +59,7 @@ namespace Taskever.Activities
             followerUserIds = followerUserIds.Union(actorUserIds).ToList();
 
             //Get id's of all related users of this activity
-            var relatedUserIds = activity.GetRelatedUsers().Cast<int>().ToList();
+            var relatedUserIds = activity.GetRelatedUsers().Cast<long>().ToList();
 
             //Add also related users (if not includes)
             followerUserIds = followerUserIds.Union(relatedUserIds).ToList();
@@ -78,7 +78,7 @@ namespace Taskever.Activities
             }
         }
 
-        private List<int> GetFollowersOfUserIds(ICollection<int> actorUserIds)
+        private List<long> GetFollowersOfUserIds(ICollection<long> actorUserIds)
         {
             return _friendshipRepository
                 .GetAll()

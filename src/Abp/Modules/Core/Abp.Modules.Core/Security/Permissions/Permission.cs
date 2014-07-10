@@ -19,7 +19,7 @@ namespace Abp.Security.Permissions
         /// <summary>
         /// User Id.
         /// </summary>
-        public virtual int? UserId { get; set; }
+        public virtual long? UserId { get; set; }
 
         /// <summary>
         /// Unique name of the permission.
@@ -40,7 +40,7 @@ namespace Abp.Security.Permissions
         /// <summary>
         /// Creator user of this entity.
         /// </summary>
-        public virtual int? CreatorUserId { get; set; }
+        public virtual long? CreatorUserId { get; set; }
 
         public Permission()
         {

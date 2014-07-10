@@ -5,6 +5,6 @@ namespace Abp.Security.Roles.Management
 {
     public interface IUserRoleManager : ISingletonDependency
     {
-        IReadOnlyList<string> GetRolesOfUser(int userId);
+        IReadOnlyList<string> GetRolesOfUser(long userId);
     }
 }

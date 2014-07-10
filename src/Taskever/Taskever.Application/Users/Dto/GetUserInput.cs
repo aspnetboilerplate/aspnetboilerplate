@@ -4,6 +4,6 @@ namespace Abp.Users.Dto
 {
     public class GetUserInput : IInputDto
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
     }
 }

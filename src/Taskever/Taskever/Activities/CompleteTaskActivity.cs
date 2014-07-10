@@ -12,12 +12,12 @@ namespace Taskever.Activities
             //ActivityType = ActivityType.CompleteTask;            
         }
 
-        public override int?[] GetActors()
+        public override long?[] GetActors()
         {
-            return new [] { (int?)AssignedUser.Id };
+            return new[] { (long?)AssignedUser.Id };
         }
 
-        public override int?[] GetRelatedUsers()
+        public override long?[] GetRelatedUsers()
         {
             return new[] {Task.CreatorUserId};
         }

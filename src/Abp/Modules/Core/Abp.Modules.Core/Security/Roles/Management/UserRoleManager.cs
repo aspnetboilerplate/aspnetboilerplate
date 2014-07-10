@@ -19,7 +19,7 @@ namespace Abp.Security.Roles.Management
             _userInfoCache = new ThreadSafeObjectCache<UserRoleInfo>(new MemoryCache(GetType().Name), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
         }
 
-        public IReadOnlyList<string> GetRolesOfUser(int userId)
+        public IReadOnlyList<string> GetRolesOfUser(long userId)
         {
             var roleInfo = _userInfoCache.Get(
                 userId.ToString(),
@@ -34,7 +34,7 @@ namespace Abp.Security.Roles.Management
 
         private class UserRoleInfo
         {
-            public int UserId { get; set; }
+            public long UserId { get; set; }
 
             public List<string> Roles { get; set; }
         }

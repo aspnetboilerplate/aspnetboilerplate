@@ -10,7 +10,7 @@ namespace Abp.Security.Users
         /// <summary>
         /// Id of the User.
         /// </summary>
-        public virtual int UserId { get; set; }
+        public virtual long UserId { get; set; }
 
         /// <summary>
         /// Login Provider.
