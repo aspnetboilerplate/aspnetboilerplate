@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Caching;
+using Abp.Application.Session;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
-using Abp.Security.Tenants;
-using Abp.Security.Users;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Configuration
@@ -16,9 +15,15 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingManager : ISettingManager
     {
+        public IAbpSession Session { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ISettingStore SettingStore { get; set; }
+
         #region Private fields
 
-        private readonly ISettingRepository _settingRepository;
         private readonly ISettingDefinitionManager _settingDefinitionManager;
 
         private readonly Lazy<Dictionary<string, Setting>> _applicationSettings;
@@ -29,10 +34,13 @@ namespace Abp.Configuration
 
         #region Constructor
 
-        public SettingManager(ISettingRepository settingRepository, ISettingDefinitionManager settingDefinitionManager)
+        public SettingManager(ISettingDefinitionManager settingDefinitionManager)
         {
-            _settingRepository = settingRepository;
             _settingDefinitionManager = settingDefinitionManager;
+
+            Session = NullAbpSession.Instance;
+            SettingStore = NullSettingStore.Instance;
+
             _applicationSettings = new Lazy<Dictionary<string, Setting>>(GetApplicationSettingsFromDatabase, true);
             _tenantSettingCache = new ThreadSafeObjectCache<Dictionary<string, Setting>>(new MemoryCache(GetType().Name + "_TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
             _userSettingCache = new ThreadSafeObjectCache<Dictionary<string, Setting>>(new MemoryCache(GetType().Name + "_UserSettings"), TimeSpan.FromMinutes(30)); //TODO: Get constant from somewhere else.
@@ -47,9 +55,9 @@ namespace Abp.Configuration
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
 
             //Get for user if defined
-            if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && AbpUser.CurrentUserId.HasValue)
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && Session.UserId.HasValue)
             {
-                var settingValue = GetSettingValueForUserOrNull(AbpUser.CurrentUserId.Value, name);
+                var settingValue = GetSettingValueForUserOrNull(Session.UserId.Value, name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
@@ -57,9 +65,9 @@ namespace Abp.Configuration
             }
 
             //Get for tenant if defined
-            if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && AbpTenant.CurrentTenantId.HasValue)
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && Session.TenantId.HasValue)
             {
-                var settingValue = GetSettingValueForTenantOrNull(AbpTenant.CurrentTenantId.Value, name);
+                var settingValue = GetSettingValueForTenantOrNull(Session.TenantId.Value, name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
@@ -108,7 +116,7 @@ namespace Abp.Configuration
             }
 
             //Overwrite tenant settings
-            var tenantId = AbpTenant.CurrentTenantId;
+            var tenantId = Session.TenantId;
             if (tenantId.HasValue)
             {
                 foreach (var settingValue in GetAllSettingValuesForTenant(tenantId.Value))
@@ -122,7 +130,7 @@ namespace Abp.Configuration
             }
 
             //Overwrite user settings
-            var userId = AbpUser.CurrentUserId;
+            var userId = Session.UserId;
             if (userId.HasValue)
             {
                 foreach (var settingValue in GetAllSettingValuesForUser(userId.Value))
@@ -227,7 +235,9 @@ namespace Abp.Configuration
             }
 
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
-            var settingValue = _settingRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
+            //var settingValue = _settingRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
+            var settingValue = SettingStore.GetSettingOrNull(tenantId, userId, name);
+            
 
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
@@ -245,7 +255,7 @@ namespace Abp.Configuration
             //For User, Tenants's value overrides Application's default value.
             if (userId.HasValue)
             {
-                var currentTenantId = AbpTenant.CurrentTenantId;
+                var currentTenantId = Session.TenantId;
                 if (currentTenantId.HasValue)
                 {
                     var tenantValue = GetSettingValueForTenantOrNull(currentTenantId.Value, name);
@@ -261,7 +271,8 @@ namespace Abp.Configuration
             {
                 if (settingValue != null)
                 {
-                    _settingRepository.Delete(settingValue);
+                    //_settingRepository.Delete(settingValue);
+                    SettingStore.Delete(settingValue);
                 }
 
                 return null;
@@ -278,7 +289,8 @@ namespace Abp.Configuration
                     Value = value
                 };
 
-                _settingRepository.Insert(settingValue);
+                //_settingRepository.Insert(settingValue);
+                SettingStore.Add(settingValue);
                 return settingValue;
             }
 
@@ -316,7 +328,7 @@ namespace Abp.Configuration
         {
             var dictionary = new Dictionary<string, Setting>();
 
-            var settingValues = _settingRepository.GetAllList(setting => setting.UserId == null);
+            var settingValues = SettingStore.GetAll(null, null);
             foreach (var settingValue in settingValues)
             {
                 dictionary[settingValue.Name] = settingValue;
@@ -351,7 +363,7 @@ namespace Abp.Configuration
                 {   //Getting from database
                     var dictionary = new Dictionary<string, Setting>();
 
-                    var settingValues = _settingRepository.GetAllList(setting => setting.TenantId == tenantId);
+                    var settingValues = SettingStore.GetAll(tenantId, null);
                     foreach (var settingValue in settingValues)
                     {
                         dictionary[settingValue.Name] = settingValue;
@@ -369,7 +381,7 @@ namespace Abp.Configuration
                 {   //Getting from database
                     var dictionary = new Dictionary<string, Setting>();
 
-                    var settingValues = _settingRepository.GetAllList(setting => setting.UserId == userId);
+                    var settingValues = SettingStore.GetAll(null, userId);
                     foreach (var settingValue in settingValues)
                     {
                         dictionary[settingValue.Name] = settingValue;

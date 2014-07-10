@@ -12,8 +12,8 @@ namespace Abp.Modules.Core.Tests.Settings
         {
             _settings = new Dictionary<string, SettingDefinition>
                         {
-                            {"Language", new SettingDefinition("Language", "en")},
-                            {"SiteTitle", new SettingDefinition("SiteTitle", "My Test Site", scopes: SettingScopes.Application)}
+                            {"Language", new SettingDefinition("Language", "en", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)},
+                            {"SiteTitle", new SettingDefinition("SiteTitle", "My Test Site")}
                         };
         }
 

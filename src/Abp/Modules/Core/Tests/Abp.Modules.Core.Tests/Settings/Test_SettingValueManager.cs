@@ -1,8 +1,4 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Dependency;
-using Castle.MicroKernel.Registration;
+﻿using Abp.Configuration;
 using NUnit.Framework;
 
 namespace Abp.Modules.Core.Tests.Settings
@@ -17,7 +13,11 @@ namespace Abp.Modules.Core.Tests.Settings
         public void Initialize()
         {
             _repository = new MemorySettingRepository(new LongPrimaryKeyGenerator());
-            _settingManager = new SettingManager(_repository, new SampleSettingDefinitionManager());
+            _settingManager = new SettingManager(new SampleSettingDefinitionManager())
+                              {
+                                  Session = new AbpSession(),
+                                  SettingStore = new SettingStore(_repository)
+                              };
             FillTestData(_repository);
         }
 

@@ -65,14 +65,20 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Application\Session\IAbpSession.cs" />
+    <Compile Include="Application\Session\NullAbpSession.cs" />
     <Compile Include="Configuration\ISettingDefinitionManager.cs" />
     <Compile Include="Configuration\ISettingDefinitionProvider.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />
+    <Compile Include="Configuration\ISettingStore.cs" />
+    <Compile Include="Configuration\NullSettingStore.cs" />
+    <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingDefinition.cs" />
     <Compile Include="Configuration\SettingDefinitionGroup.cs" />
     <Compile Include="Configuration\SettingHelper.cs" />
     <Compile Include="Configuration\SettingDefinitionManager.cs" />
     <Compile Include="Configuration\SettingDefinitionProviderContext.cs" />
+    <Compile Include="Configuration\SettingManager.cs" />
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
     <Compile Include="Dependency\Conventions\ConventionalRegistrationContext.cs" />
