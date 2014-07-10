@@ -70,7 +70,6 @@
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingManager.cs" />
     <Compile Include="Security\IdentityFramework\AbpClaims.cs" />
-    <Compile Include="Security\IdentityFramework\AbpRoleManagerBase.cs" />
     <Compile Include="Security\IdentityFramework\AbpUserManager.cs" />
     <Compile Include="Security\IdentityFramework\AbpRoleStore.cs" />
     <Compile Include="Security\Permissions\IPermissionRepository.cs" />

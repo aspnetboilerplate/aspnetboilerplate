@@ -7,7 +7,7 @@ using Castle.DynamicProxy;
 
 namespace Abp.Modules.Core.Data.Repositories.Interceptors
 {
-    //TODO: Implement this in NHibernate events!
+    //TODO: Implement this on SaveChanges!
     public class AuditInterceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
