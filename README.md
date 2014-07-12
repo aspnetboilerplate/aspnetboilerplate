@@ -31,6 +31,6 @@ Also adds standard stuff:
 
 and so on... See http://www.aspnetboilerplate.com for more.
 
-An overall view of layers and tools:
+An overall view of layers:
 
-![ScreenShot](https://raw.github.com/hikalkan/aspnetboilerplate/master/AbpOverall.png)
+![ScreenShot](https://raw.githubusercontent.com/aspnetboilerplate/aspnetboilerplate/master/AbpLayers.png)
