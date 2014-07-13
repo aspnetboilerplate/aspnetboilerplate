@@ -141,6 +141,7 @@
     <Compile Include="Runtime\Security\AbpClaims.cs" />
     <Compile Include="Runtime\Validation\AbpValidationException.cs" />
     <Compile Include="Runtime\Validation\ICustomValidate.cs" />
+    <Compile Include="Runtime\Validation\IShouldNormalize.cs" />
     <Compile Include="Runtime\Validation\IValidate.cs" />
     <Compile Include="Runtime\Validation\Interception\MethodInvocationValidator.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptor.cs" />

@@ -1,18 +1,15 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Web;
 using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
 
 namespace Taskever.Tasks.Dto
 {
-    public class CreateTaskInput : IInputDto, ICustomValidate
+    public class CreateTaskInput : IInputDto, IShouldNormalize
     {
         public TaskDto Task { get; set; }
-        
-        public void AddValidationErrors(List<ValidationResult> results)
+
+        public void Normalize()
         {
-            //TODO: Add IShouldNormalize to ABP, then use it!
             Task.Title = HttpUtility.HtmlEncode(Task.Title);
             Task.Description = HttpUtility.HtmlEncode(Task.Description);
         }

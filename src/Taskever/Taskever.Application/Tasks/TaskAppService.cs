@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Abp.Application.Services;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Datas.Entities;
 using Abp.Mapping;
@@ -12,7 +13,7 @@ using Taskever.Tasks.Events;
 
 namespace Taskever.Tasks
 {
-    public class TaskAppService : ITaskAppService
+    public class TaskAppService : ApplicationService, ITaskAppService
     {
         private readonly ITaskPolicy _taskPolicy;
         private readonly ITaskRepository _taskRepository;
@@ -118,6 +119,8 @@ namespace Taskever.Tasks
             }
 
             _taskRepository.Insert(taskEntity);
+
+            Logger.Debug("Creaded " + taskEntity);
 
             _eventBus.Trigger(this, new EntityCreatedEventData<Task>(taskEntity));
 

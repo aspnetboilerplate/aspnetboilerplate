@@ -15,7 +15,6 @@ namespace Abp.Runtime.Validation.Interception
     {
         private readonly object[] _arguments;
         private readonly ParameterInfo[] _parameters;
-
         private readonly List<ValidationResult> _validationErrors;
 
         /// <summary>
@@ -27,7 +26,6 @@ namespace Abp.Runtime.Validation.Interception
         {
             _arguments = arguments;
             _parameters = method.GetParameters();
-
             _validationErrors = new List<ValidationResult>();
         }
 
@@ -55,6 +53,11 @@ namespace Abp.Runtime.Validation.Interception
             if (_validationErrors.Any())
             {
                 throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.") { ValidationErrors = _validationErrors };
+            }
+
+            foreach (var argument in _arguments)
+            {
+                Normalize(argument);
             }
         }
 
@@ -126,6 +129,16 @@ namespace Abp.Runtime.Validation.Interception
                         _validationErrors.Add(result);
                     }
                 }
+            }
+        }
+
+        private static void Normalize(object argument)
+        {
+            //TODO: Maybe we should move Normalization to a specific interceptor and use not just for DTOs?
+
+            if (argument is IShouldNormalize)
+            {
+                (argument as IShouldNormalize).Normalize();
             }
         }
     }
