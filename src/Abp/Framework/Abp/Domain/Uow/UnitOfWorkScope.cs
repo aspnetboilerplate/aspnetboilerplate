@@ -48,9 +48,11 @@ namespace Abp.Domain.Uow
         {
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
             Current = _unitOfWorkWrapper.Object;
+            Current.Initialize(isTransactional);
+
             try
             {
-                Current.Begin(isTransactional);
+                Current.Begin();
             }
             catch
             {

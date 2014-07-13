@@ -11,16 +11,6 @@ namespace Abp.Domain.Uow
     internal static class UnitOfWorkHelper
     {
         /// <summary>
-        /// Determines if given method is a UnitOfWork method.
-        /// </summary>
-        /// <param name="methodInfo">Method information</param>
-        /// <returns>True if should perform unit of work</returns>
-        public static bool ShouldBeginUnitOfWork(MethodInfo methodInfo)
-        {
-            return HasUnitOfWorkAttribute(methodInfo) || IsConventionalUowClass(methodInfo.DeclaringType);
-        }
-
-        /// <summary>
         /// Returns true if UOW must be used for given type as convention.
         /// </summary>
         /// <param name="type">Type to check</param>

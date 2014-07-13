@@ -33,13 +33,13 @@ namespace Abp.Domain.Uow.EntityFramework
             _activeDbContexts = new Dictionary<Type, DbContext>();            
         }
 
-        public override void Begin(bool isTransactional)
+        public override void Begin()
         {
             try
             {
                 _activeDbContexts.Clear();
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
-                if (isTransactional)
+                if (IsTransactional)
                 {
                     _transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions); //Required or RequiresNew?
                 }

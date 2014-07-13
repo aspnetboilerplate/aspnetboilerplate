@@ -9,6 +9,8 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+        public bool IsTransactional { get; private set; }
+
         private readonly List<Action> _successHandlers;
 
         /// <summary>
@@ -21,7 +23,12 @@ namespace Abp.Domain.Uow
 
         public abstract void Dispose();
 
-        public abstract void Begin(bool isTransactional);
+        public void Initialize(bool isTransactional)
+        {
+            IsTransactional = isTransactional;
+        }
+
+        public abstract void Begin();
 
         public abstract void End();
 

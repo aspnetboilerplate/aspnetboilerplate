@@ -1,3 +1,4 @@
+using System.Reflection;
 using Abp.Dependency;
 using Castle.DynamicProxy;
 
@@ -14,37 +15,36 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            if (UnitOfWorkScope.Current != null)
-            {               
+            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrDefault(invocation.MethodInvocationTarget);
+            if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
+            {
+                //No need to a uow
                 invocation.Proceed();
                 return;
             }
 
-            var unitOfWorkAttr = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
-            if (unitOfWorkAttr == null)
+            if (UnitOfWorkScope.Current == null)
             {
-                if (!UnitOfWorkHelper.IsConventionalUowClass(invocation.MethodInvocationTarget.DeclaringType))
-                {
-                    //UnitOfWork is not defined and this is not a conventional unit-of-work class
-                    invocation.Proceed();
-                    return;
-                }
-
-                unitOfWorkAttr = new UnitOfWorkAttribute();
+                //No current uow, run a new one
+                PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
             }
-            else if (unitOfWorkAttr.IsDisabled)
+            else
             {
-                //Disabled unit of work
+                //Continue with current uow
                 invocation.Proceed();
-                return;
             }
+        }
 
+        private static void PerformUow(IInvocation invocation, bool isTransactional)
+        {
             using (var unitOfWork = IocHelper.ResolveAsDisposable<IUnitOfWork>())
             {
                 try
                 {
                     UnitOfWorkScope.Current = unitOfWork.Object;
-                    UnitOfWorkScope.Current.Begin(unitOfWorkAttr.IsTransactional);
+                    UnitOfWorkScope.Current.Initialize(isTransactional);
+                    UnitOfWorkScope.Current.Begin();
+
                     try
                     {
                         invocation.Proceed();
@@ -52,8 +52,7 @@ namespace Abp.Domain.Uow
                     }
                     catch
                     {
-                        try { UnitOfWorkScope.Current.Cancel(); }
-                        catch { }
+                        try { UnitOfWorkScope.Current.Cancel(); } catch { } //Hide exceptions on cancelling
                         throw;
                     }
                 }

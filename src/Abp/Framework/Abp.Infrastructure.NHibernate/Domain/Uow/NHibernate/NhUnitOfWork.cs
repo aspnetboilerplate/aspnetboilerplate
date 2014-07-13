@@ -40,11 +40,10 @@ namespace Abp.Domain.Uow.NHibernate
         /// <summary>
         /// Opens database connection and begins transaction.
         /// </summary>
-        /// <param name="isTransactional"></param>
-        public override void Begin(bool isTransactional)
+        public override void Begin()
         {
             Session = _sessionFactory.OpenSession();
-            if (isTransactional)
+            if (IsTransactional)
             {
                 _transaction = Session.BeginTransaction();                
             }

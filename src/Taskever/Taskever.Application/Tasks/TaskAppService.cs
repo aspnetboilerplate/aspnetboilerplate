@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Abp.Application.Services;
+using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Datas.Entities;
 using Abp.Mapping;
@@ -122,7 +123,7 @@ namespace Taskever.Tasks
 
             Logger.Debug("Creaded " + taskEntity);
 
-            _eventBus.Trigger(this, new EntityCreatedEventData<Task>(taskEntity));
+            _eventBus.TriggerUow(this, new EntityCreatedEventData<Task>(taskEntity));
 
             return new CreateTaskOutput
                        {
@@ -168,7 +169,7 @@ namespace Taskever.Tasks
 
             if (oldTaskState != TaskState.Completed && task.State == TaskState.Completed)
             {
-                _eventBus.Trigger(this, new TaskCompletedEventData(task));
+                _eventBus.TriggerUow(this, new TaskCompletedEventData(task));
             }
         }
 

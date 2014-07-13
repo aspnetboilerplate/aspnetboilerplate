@@ -9,13 +9,23 @@ namespace Abp.Domain.Uow
     public interface IUnitOfWork : ITransientDependency, IDisposable
     {
         /// <summary>
-        /// Begins to the unit of work.
+        /// Gets if this unit of work is transactional
         /// </summary>
-        /// <param name="isTransactional"></param>
-        void Begin(bool isTransactional);
+        bool IsTransactional { get; }
 
         /// <summary>
-        /// Ends tis unit of work.
+        /// Initializes this unit of work.
+        /// </summary>
+        /// <param name="isTransactional">Is this unit of work will be transactional?</param>
+        void Initialize(bool isTransactional);
+
+        /// <summary>
+        /// Starts this unit of woek.
+        /// </summary>
+        void Begin();
+
+        /// <summary>
+        /// Ends this unit of work.
         /// It saves all changes and commit transaction if exists.
         /// </summary>
         void End();
