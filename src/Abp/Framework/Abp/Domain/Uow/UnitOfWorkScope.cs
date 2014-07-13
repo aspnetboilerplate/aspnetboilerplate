@@ -28,8 +28,19 @@ namespace Abp.Domain.Uow
         [ThreadStatic]
         private static IUnitOfWork _currentUow;
 
+        /// <summary>
+        /// Unit of work object wrapper.
+        /// </summary>
         private readonly IDisposableDependencyObjectWrapper<IUnitOfWork> _unitOfWorkWrapper;
 
+        /// <summary>
+        /// Is current unit of work started by this scope?
+        /// </summary>
+        private readonly bool _isStartedByThisScope;
+
+        /// <summary>
+        /// Is unit of work commited?
+        /// </summary>
         private bool _isCommited;
 
         /// <summary>
@@ -46,36 +57,58 @@ namespace Abp.Domain.Uow
         /// </summary>
         public UnitOfWorkScope(bool isTransactional)
         {
+            //There is already a uow, do nothing
+            if (Current != null)
+            {
+                return;
+            }
+
+            //this scope started the uow
+            _isStartedByThisScope = true;
+
             _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
             Current = _unitOfWorkWrapper.Object;
-            Current.Initialize(isTransactional);
 
             try
             {
+                Current.Initialize(isTransactional);
                 Current.Begin();
             }
             catch
             {
                 Current = null;
+                _unitOfWorkWrapper.Dispose();
+                throw;
             }
         }
 
         /// <summary>
         /// Commits the unit of work.
-        /// If not commited, it's rolled back on <see cref="Dispose"/>.
+        /// If not commited, it's automatically rolled back on <see cref="Dispose"/>.
         /// </summary>
         public void Commit()
         {
-            _unitOfWorkWrapper.Object.End();
+            if (!_isStartedByThisScope)
+            {
+                //if this scope did not started the uow, do nothing
+                return;
+            }
+
+            Current.End();
             _isCommited = true;
         }
         
         public void Dispose()
         {
+            if (!_isStartedByThisScope)
+            {
+                //if this scope did not started the uow, do nothing
+                return;
+            }
+
             if (!_isCommited)
             {
-                try { _unitOfWorkWrapper.Object.Cancel(); }
-                catch { }
+                try { Current.Cancel(); } catch { } //Hide errors
             }
 
             Current = null;
