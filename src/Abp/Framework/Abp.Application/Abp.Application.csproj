@@ -68,6 +68,7 @@
     <Compile Include="Application\Authorization\Permissions\IPermissionDefinitionManager.cs" />
     <Compile Include="Application\Authorization\Permissions\PermissionDefinitionManager.cs" />
     <Compile Include="Application\Authorization\Permissions\PermissionDefinitionProviderContext.cs" />
+    <Compile Include="Application\Services\ApplicationService.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\CreationAuditedEntityDto.cs" />

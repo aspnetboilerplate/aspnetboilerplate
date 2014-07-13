@@ -1,5 +1,4 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="../weyland-config.js" />
 /// <reference path="almond-custom.js" />
 /// <reference path="bootstrap.js" />
 /// <reference path="jquery-2.1.1.js" />
