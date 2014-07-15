@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System;
+using Abp.Dependency;
 
 namespace Abp.Configuration
 {
@@ -7,11 +8,11 @@ namespace Abp.Configuration
     /// </summary>
     public static class SettingHelper
     {
-        private static readonly ISettingManager SettingManager;
+        private static readonly Lazy<ISettingManager> SettingManager;
 
         static SettingHelper()
         {
-            SettingManager = IocHelper.Resolve<ISettingManager>();
+            SettingManager = new Lazy<ISettingManager>(IocHelper.Resolve<ISettingManager>);
         }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Abp.Configuration
         /// <returns>Current value of the setting</returns>
         public static string GetSettingValue(string name)
         {
-            return SettingManager.GetSettingValue(name);
+            return SettingManager.Value.GetSettingValue(name);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Abp.Configuration
         /// <returns>Value of the setting</returns>
         public static T GetSettingValue<T>(string name)
         {
-            return SettingManager.GetSettingValue<T>(name);
+            return SettingManager.Value.GetSettingValue<T>(name);
         }
     }
 }
