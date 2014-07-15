@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Abp.Dependency;
 using Abp.Localization.Sources;
@@ -9,11 +10,11 @@ namespace Abp.Localization
     /// </summary>
     public static class LocalizationHelper
     {
-        private static readonly ILocalizationSourceManager LocalizationSourceManager;
+        private static readonly Lazy<ILocalizationSourceManager> LocalizationSourceManager;
 
         static LocalizationHelper()
         {
-            LocalizationSourceManager = IocHelper.Resolve<ILocalizationSourceManager>();
+            LocalizationSourceManager = new Lazy<ILocalizationSourceManager>(IocHelper.Resolve<ILocalizationSourceManager>);
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name)
         {
-            return LocalizationSourceManager.GetSource(sourceName).GetString(name);
+            return LocalizationSourceManager.Value.GetSource(sourceName).GetString(name);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name, CultureInfo culture)
         {
-            return LocalizationSourceManager.GetSource(sourceName).GetString(name, culture);
+            return LocalizationSourceManager.Value.GetSource(sourceName).GetString(name, culture);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(LocalizableString localizableString, CultureInfo culture)
         {
-            return LocalizationSourceManager.GetSource(localizableString.SourceName).GetString(localizableString.Name, culture);
+            return LocalizationSourceManager.Value.GetSource(localizableString.SourceName).GetString(localizableString.Name, culture);
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace Abp.Localization
         /// </summary>
         public static ILocalizationSource GetSource(string name)
         {
-            return LocalizationSourceManager.GetSource(name);
+            return LocalizationSourceManager.Value.GetSource(name);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Abp.Localization
         /// <typeparam name="T">Type of the localization source.</typeparam>
         public static void RegisterSource<T>() where T : ILocalizationSource
         {
-            LocalizationSourceManager.RegisterSource(IocHelper.Resolve<T>());
+            LocalizationSourceManager.Value.RegisterSource(IocHelper.Resolve<T>());
         }
     }
 }
