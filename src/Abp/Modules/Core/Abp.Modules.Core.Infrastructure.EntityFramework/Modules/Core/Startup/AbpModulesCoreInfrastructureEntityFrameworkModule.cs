@@ -1,11 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
-using Abp.Domain.Repositories.EntityFramework;
 using Abp.Modules.Core.Data.Repositories.Interceptors;
-using Abp.Security.Users;
 using Abp.Startup;
+using Abp.Startup.Infrastructure.EntityFramework;
 using Castle.Core;
 using Castle.MicroKernel;
 
@@ -13,6 +13,14 @@ namespace Abp.Modules.Core.Startup
 {
     public class AbpModulesCoreInfrastructureEntityFrameworkModule : AbpModule
     {
+        public override Type[] GetDependedModules()
+        {
+            return new[]
+                   {
+                       typeof (AbpEntityFrameworkModule)
+                   };
+        }
+
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
@@ -23,7 +31,6 @@ namespace Abp.Modules.Core.Startup
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            //AbpDbContext.AddEntityAssembly(Assembly.GetAssembly(typeof (AbpUser)));
         }
 
         private void ComponentRegistered(string key, IHandler handler)

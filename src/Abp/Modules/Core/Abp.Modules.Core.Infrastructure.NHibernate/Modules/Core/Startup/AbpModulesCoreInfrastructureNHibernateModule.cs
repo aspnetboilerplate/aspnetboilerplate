@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
@@ -12,6 +13,14 @@ namespace Abp.Modules.Core.Startup
 {
     public class AbpModulesCoreInfrastructureNHibernateModule : AbpModule
     {
+        public override Type[] GetDependedModules()
+        {
+            return new[]
+                   {
+                       typeof (AbpNHibernateModule)
+                   };
+        }
+
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
