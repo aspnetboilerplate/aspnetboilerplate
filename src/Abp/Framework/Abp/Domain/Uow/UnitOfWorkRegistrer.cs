@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using Abp.Startup;
 using Castle.Core;
 using Castle.MicroKernel;
@@ -26,7 +27,7 @@ namespace Abp.Domain.Uow
                 //Intercept all methods of all repositories.
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
             }
-            else if (handler.ComponentModel.Implementation.GetMethods().Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
+            else if (handler.ComponentModel.Implementation.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
             {
                 //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
                 //TODO: Intecept only UnitOfWork methods, not other methods!
