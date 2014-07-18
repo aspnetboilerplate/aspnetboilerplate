@@ -100,6 +100,7 @@
     <Compile Include="Domain\Uow\UowEventBusExtensions.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
+    <Compile Include="Modules\AbpStartupModule.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\Conventions\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />

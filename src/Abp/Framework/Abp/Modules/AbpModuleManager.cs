@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Abp.Dependency;
-using Abp.Dependency.Conventions;
-using Abp.Startup;
+﻿using Abp.Startup;
 
 namespace Abp.Modules
 {
@@ -22,15 +19,9 @@ namespace Abp.Modules
         public virtual void Initialize(IAbpInitializationContext initializationContext)
         {
             _moduleLoader.LoadAll();
-
             var sortedModules = _modules.GetSortedModuleListByDependency();
-
-            IocManager.Instance.AddConventionalRegisterer(new BasicConventionalRegisterer()); //TODO: Remove somewhere else!
             sortedModules.ForEach(module => module.Instance.PreInitialize(initializationContext));
-
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(), new ConventionalRegistrationConfig() { InstallInstallers = false });  //TODO: Remove somewhere else!
             sortedModules.ForEach(module => module.Instance.Initialize(initializationContext));
-
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
         }
 

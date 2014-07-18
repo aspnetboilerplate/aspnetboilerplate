@@ -25,6 +25,8 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
+            _modules.Add(AbpModuleInfo.CreateForType(typeof(AbpStartupModule)));
+
             var scannedAssemlies = new List<Assembly>();
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
