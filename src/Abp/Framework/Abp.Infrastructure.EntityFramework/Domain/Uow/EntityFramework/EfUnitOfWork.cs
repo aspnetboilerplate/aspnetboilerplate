@@ -51,11 +51,16 @@ namespace Abp.Domain.Uow.EntityFramework
             }
         }
 
+        public override void SaveChanges()
+        {
+            _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+        }
+
         public override void End()
         {
             try
             {
-                _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+                SaveChanges();
                 if (_transaction != null)
                 {
                     _transaction.Complete();

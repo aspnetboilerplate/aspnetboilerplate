@@ -30,11 +30,13 @@ namespace Abp.Domain.Uow
 
         public abstract void Begin();
 
+        public abstract void SaveChanges();
+
         public abstract void End();
 
         public abstract void Cancel();
 
-        public virtual void AddSuccessHandler(Action action)
+        public virtual void OnSuccess(Action action)
         {
             _successHandlers.Add(action);
         }

@@ -25,6 +25,16 @@ namespace Abp.Domain.Uow
         void Begin();
 
         /// <summary>
+        /// Saves all changes until now in this unit of work.
+        /// This method may be called to apply changes whenever needed.
+        /// Note that if this unit of work is transactional, saved changes are also rolled back
+        /// if transaction is rolled back.
+        /// No explicit call is needed to SaveChanges generally, 
+        /// since all changes saved at end of a unit of work automatically.
+        /// </summary>
+        void SaveChanges();
+
+        /// <summary>
         /// Ends this unit of work.
         /// It saves all changes and commit transaction if exists.
         /// </summary>
@@ -40,6 +50,6 @@ namespace Abp.Domain.Uow
         /// Add a handler that will be called if unit of work succeed.
         /// </summary>
         /// <param name="action">Action to be executed</param>
-        void AddSuccessHandler(Action action);
+        void OnSuccess(Action action);
     }
 }

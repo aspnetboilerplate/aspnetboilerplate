@@ -49,6 +49,11 @@ namespace Abp.Domain.Uow.NHibernate
             }
         }
 
+        public override void SaveChanges()
+        {
+            Session.Flush();
+        }
+
         /// <summary>
         /// Commits transaction and closes database connection.
         /// </summary>
@@ -56,7 +61,7 @@ namespace Abp.Domain.Uow.NHibernate
         {
             try
             {
-                Session.Flush();
+                SaveChanges();
                 if (_transaction != null)
                 {
                     _transaction.Commit();                    

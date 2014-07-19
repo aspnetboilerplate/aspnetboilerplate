@@ -19,7 +19,7 @@ namespace Abp.Domain.Uow
             where TEventData : IEventData
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.AddSuccessHandler(() => eventBus.Trigger(eventData));
+            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventData));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Abp.Domain.Uow
         public static void TriggerUow<TEventData>(this IEventBus eventBus, object eventSource, TEventData eventData) where TEventData : IEventData
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.AddSuccessHandler(() => eventBus.Trigger(eventSource, eventData));
+            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventSource, eventData));
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Abp.Domain.Uow
         public static void TriggerUow(this IEventBus eventBus, Type eventType, EventData eventData)
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.AddSuccessHandler(() => eventBus.Trigger(eventType, eventData));
+            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventType, eventData));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Abp.Domain.Uow
         public static void TriggerUow(this IEventBus eventBus, Type eventType, object eventSource, EventData eventData)
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.AddSuccessHandler(() => eventBus.Trigger(eventType, eventSource, eventData));
+            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventType, eventSource, eventData));
         }
 
         private static void CheckCurrentUow()
