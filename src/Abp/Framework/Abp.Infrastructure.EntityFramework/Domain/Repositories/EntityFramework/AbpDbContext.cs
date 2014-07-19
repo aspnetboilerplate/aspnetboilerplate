@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
@@ -14,6 +15,25 @@ namespace Abp.Domain.Repositories.EntityFramework
             : base(nameOrConnectionString)
         {
 
+        }
+
+        public override int SaveChanges()
+        {
+            DoSoftDelete();
+
+            return base.SaveChanges();
+        }
+
+        private void DoSoftDelete()
+        {
+            foreach (var entry in ChangeTracker.Entries<ISoftDeleteEntity>())
+            {
+                if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Unchanged;
+                    entry.Entity.IsDeleted = true;
+                }
+            }
         }
     }
 }

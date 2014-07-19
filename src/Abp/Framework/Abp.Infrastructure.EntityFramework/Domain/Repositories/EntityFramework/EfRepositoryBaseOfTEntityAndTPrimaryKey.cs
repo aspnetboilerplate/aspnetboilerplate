@@ -20,14 +20,7 @@ namespace Abp.Domain.Repositories.EntityFramework
 
         public virtual IQueryable<TEntity> GetAll()
         {
-            IQueryable<TEntity> query = Table;
-
-            //if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
-            //{
-            //    query = query.Where(entity => !(entity as ISoftDeleteEntity).IsDeleted);
-            //}
-
-            return query;
+            return Table;
         }
 
         public virtual List<TEntity> GetAllList()
@@ -63,7 +56,7 @@ namespace Abp.Domain.Repositories.EntityFramework
 
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
-            return GetAll().Where("Id = @0", key).FirstOrDefault();
+            return GetAll().Where("Id = @0", key).FirstOrDefault(); //TODO: Get actual primary key name
         }
 
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -90,16 +83,7 @@ namespace Abp.Domain.Repositories.EntityFramework
 
         public virtual void Delete(TEntity entity)
         {
-
-            //if (entity is ISoftDeleteEntity)
-            //{
-            //    (entity as ISoftDeleteEntity).IsDeleted = true;
-            //    Update(entity);
-            //}
-            //else
-            //{
             Table.Remove(entity);
-            //}
         }
 
         public virtual void Delete(TPrimaryKey id)
@@ -113,12 +97,12 @@ namespace Abp.Domain.Repositories.EntityFramework
                     return;
                 }
 
-                Table.Attach(entity);
+                Table.Attach(entity); //TODO: Is this needed? Test!
             }
 
             Table.Remove(entity);
 
-            /* TODO: Enable removing using SQL. Get TableName!             
+            /* TODO: Enable removing using SQL. Should use table and primary key name!
             return Context.Database.ExecuteSqlCommand(
                 "DELETE FROM " + TableName + " WHERE Id = @Id",
                 new SqlParameter("@Id", key)
