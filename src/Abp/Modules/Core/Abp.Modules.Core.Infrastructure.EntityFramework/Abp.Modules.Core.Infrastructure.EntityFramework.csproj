@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\CoreModuleDbContext.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\CoreModuleEfRepositoryBase.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpRoleRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpTenantRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\EntityFramework\AbpUserRepository.cs" />

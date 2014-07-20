@@ -8,7 +8,7 @@ namespace Abp.Application
     /// <summary>
     /// 
     /// </summary>
-    public class AbpSession : IAbpSession, ITransientDependency
+    public class AbpSession : IAbpSession, ISingletonDependency
     {
         public long? UserId
         {
