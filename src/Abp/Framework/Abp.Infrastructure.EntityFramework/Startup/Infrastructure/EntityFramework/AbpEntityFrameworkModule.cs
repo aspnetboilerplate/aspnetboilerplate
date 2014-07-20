@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Data.Entity.Infrastructure.Interception;
+using System.Reflection;
 using Abp.Dependency;
+using Abp.Domain.Repositories.EntityFramework.SoftDeleting;
 using Abp.Modules;
 
 namespace Abp.Startup.Infrastructure.EntityFramework
@@ -13,6 +15,7 @@ namespace Abp.Startup.Infrastructure.EntityFramework
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            DbInterception.Add(new SoftDeleteInterceptor());
         }
     }
 }
