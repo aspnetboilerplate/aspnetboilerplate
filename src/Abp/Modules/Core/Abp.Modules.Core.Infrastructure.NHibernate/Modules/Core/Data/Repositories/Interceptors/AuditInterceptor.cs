@@ -16,13 +16,14 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
             {
                 if (!invocation.Arguments.IsNullOrEmpty())
                 {
+                    if (invocation.Arguments[0] is IHasCreationTime)
+                    {
+                        invocation.Arguments[0].As<IHasCreationTime>().CreationTime = DateTime.Now;                        
+                    }
+
                     if (invocation.Arguments[0] is ICreationAudited)
                     {
-                        invocation.Arguments[0].As<ICreationAudited>().CreationTime = DateTime.Now;
-                        if (invocation.Arguments[0].As<ICreationAudited>().CreatorUserId == null)
-                        {
-                            invocation.Arguments[0].As<ICreationAudited>().CreatorUserId = AbpUser.CurrentUserId;
-                        }
+                        invocation.Arguments[0].As<ICreationAudited>().CreatorUserId = AbpUser.CurrentUserId;
                     }
                 }
 
@@ -35,10 +36,7 @@ namespace Abp.Modules.Core.Data.Repositories.Interceptors
                     if (invocation.Arguments[0] is IModificationAudited)
                     {
                         invocation.Arguments[0].As<IModificationAudited>().LastModificationTime = DateTime.Now;
-                        if (invocation.Arguments[0].As<IModificationAudited>().LastModifierUserId == null)
-                        {
-                            invocation.Arguments[0].As<IModificationAudited>().LastModifierUserId = AbpUser.CurrentUserId;
-                        }
+                        invocation.Arguments[0].As<IModificationAudited>().LastModifierUserId = AbpUser.CurrentUserId;
                     }
                 }
 
