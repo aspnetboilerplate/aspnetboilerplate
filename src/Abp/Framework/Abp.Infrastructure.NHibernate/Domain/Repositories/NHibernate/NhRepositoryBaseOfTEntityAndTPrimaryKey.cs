@@ -60,7 +60,7 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
-            return Session.Get<TEntity>(key); //TODO: Implement ISoftDeleteEntity?
+            return Session.Get<TEntity>(key);
         }
 
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -70,7 +70,7 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual TEntity Load(TPrimaryKey key)
         {
-            return Session.Load<TEntity>(key); //TODO: Implement ISoftDeleteEntity?
+            return Session.Load<TEntity>(key);
         }
 
         public virtual TEntity Insert(TEntity entity)
@@ -87,9 +87,9 @@ namespace Abp.Domain.Repositories.NHibernate
 
         public virtual void Delete(TEntity entity)
         {
-            if (entity is ISoftDeleteEntity)
+            if (entity is ISoftDelete)
             {
-                (entity as ISoftDeleteEntity).IsDeleted = true;
+                (entity as ISoftDelete).IsDeleted = true;
                 Update(entity);
             }
             else
@@ -101,9 +101,9 @@ namespace Abp.Domain.Repositories.NHibernate
         public virtual void Delete(TPrimaryKey id)
         {
             var entity = Session.Load<TEntity>(id);
-            if (entity is ISoftDeleteEntity)
+            if (entity is ISoftDelete)
             {
-                (entity as ISoftDeleteEntity).IsDeleted = true;
+                (entity as ISoftDelete).IsDeleted = true;
             }
             else
             {

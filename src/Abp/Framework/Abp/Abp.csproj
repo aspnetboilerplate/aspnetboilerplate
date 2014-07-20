@@ -93,7 +93,7 @@
     <Compile Include="Domain\Entities\Auditing\IHasCreationTime.cs" />
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
     <Compile Include="Domain\Entities\EntityExtensions.cs" />
-    <Compile Include="Domain\Entities\ISoftDeleteEntity.cs" />
+    <Compile Include="Domain\Entities\ISoftDelete.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkInterceptor.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkRegistrer.cs" />

@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static bool IsNullOrDeleted(this ISoftDeleteEntity entity)
+        public static bool IsNullOrDeleted(this ISoftDelete entity)
         {
             return entity == null || entity.IsDeleted;
         }

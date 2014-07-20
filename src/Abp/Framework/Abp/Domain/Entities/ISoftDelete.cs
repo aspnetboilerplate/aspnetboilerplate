@@ -6,7 +6,7 @@
     /// marked as IsDeleted = true in the database,
     /// but can not be retrived to the application.
     /// </summary>
-    public interface ISoftDeleteEntity
+    public interface ISoftDelete
     {
         /// <summary>
         /// Used to mark an Entity as 'Deleted'. 

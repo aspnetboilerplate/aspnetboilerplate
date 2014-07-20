@@ -26,12 +26,12 @@ namespace Abp.Domain.Repositories.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Types<ISoftDeleteEntity>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
+            modelBuilder.Types<ISoftDelete>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
         }
 
         private void DoSoftDelete()
         {
-            foreach (var entry in ChangeTracker.Entries<ISoftDeleteEntity>())
+            foreach (var entry in ChangeTracker.Entries<ISoftDelete>())
             {
                 if (entry.State == EntityState.Deleted)
                 {

@@ -25,7 +25,7 @@ namespace Abp.Data.Migrations.FluentMigrator
         }
 
         /// <summary>
-        /// Adds IsDeleted column to the table. See <see cref="ISoftDeleteEntity"/>.
+        /// Adds IsDeleted column to the table. See <see cref="ISoftDelete"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIsDeletedColumn(this ICreateTableWithColumnSyntax table)
         {

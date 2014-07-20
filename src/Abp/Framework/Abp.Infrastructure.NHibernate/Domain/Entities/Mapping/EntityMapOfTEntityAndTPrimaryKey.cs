@@ -24,7 +24,7 @@ namespace Abp.Domain.Entities.Mapping
             Table(tableName);
             Id(x => x.Id);
 
-            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
                 Where("IsDeleted = 0"); //TODO: Test with other DBMS then SQL Server
             }
