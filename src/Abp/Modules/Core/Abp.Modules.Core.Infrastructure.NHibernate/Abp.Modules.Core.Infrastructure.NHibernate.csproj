@@ -80,7 +80,6 @@
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_06_CreateAbpUserLoginsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\V20140323\_20140323_01_CreateAbpTenantsTable.cs" />
     <Compile Include="Modules\Core\Data\Migrations\VersionTable.cs" />
-    <Compile Include="Modules\Core\Data\Repositories\Interceptors\AuditInterceptor.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Modules\Core\Data\Repositories\NHibernate\PermissionRepository.cs" />

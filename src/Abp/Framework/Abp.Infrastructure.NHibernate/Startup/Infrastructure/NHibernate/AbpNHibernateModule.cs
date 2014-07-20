@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Repositories.NHibernate;
+using Abp.Domain.Repositories.NHibernate.Interceptors;
 using Abp.Modules;
 using FluentNHibernate.Cfg;
 using NHibernate;
@@ -33,7 +34,10 @@ namespace Abp.Startup.Infrastructure.NHibernate
         {
             base.Initialize(initializationContext);
 
-            _sessionFactory = Configuration.BuildSessionFactory();
+            _sessionFactory = Configuration
+                .ExposeConfiguration(config => config.SetInterceptor(new AbpNHibernateInterceptor()))
+                .BuildSessionFactory();
+
             initializationContext.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }

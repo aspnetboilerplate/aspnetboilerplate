@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
-using Abp.Security.Users;
 using Taskever.Security.Users;
 
 namespace Taskever.Tasks

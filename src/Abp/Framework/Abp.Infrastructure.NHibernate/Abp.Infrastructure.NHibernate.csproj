@@ -70,6 +70,7 @@
     <Compile Include="Data\Migrations\FluentMigrator\AbpFluentMigratorExtensions.cs" />
     <Compile Include="Domain\Entities\Mapping\CoreModuleMapExtensions.cs" />
     <Compile Include="Domain\Entities\Mapping\EntityMapOfTEntity.cs" />
+    <Compile Include="Domain\Repositories\NHibernate\Interceptors\AbpNHibernateInterceptor.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryInstaller.cs" />
     <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateModule.cs" />
