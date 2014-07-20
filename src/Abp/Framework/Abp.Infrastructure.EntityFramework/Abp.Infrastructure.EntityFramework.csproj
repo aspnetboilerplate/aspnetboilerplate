@@ -64,8 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Repositories\EntityFramework\AbpDbContext.cs" />
+    <Compile Include="Domain\Repositories\EntityFramework\AbpEfConsts.cs" />
     <Compile Include="Domain\Repositories\EntityFramework\EfRepositoryBase.cs" />
     <Compile Include="Domain\Repositories\EntityFramework\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
+    <Compile Include="Domain\Repositories\EntityFramework\SoftDeleting\SoftDeleteInterceptor.cs" />
+    <Compile Include="Domain\Repositories\EntityFramework\SoftDeleting\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Domain\Uow\EntityFramework\EfUnitOfWork.cs" />
     <Compile Include="Domain\Uow\EntityFramework\UnitOfWorkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +88,7 @@
   <ItemGroup>
     <Content Include="Dynamic Expressions.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

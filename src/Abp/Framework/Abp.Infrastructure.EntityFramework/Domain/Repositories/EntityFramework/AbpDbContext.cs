@@ -20,8 +20,13 @@ namespace Abp.Domain.Repositories.EntityFramework
         public override int SaveChanges()
         {
             DoSoftDelete();
-
             return base.SaveChanges();
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Types<ISoftDeleteEntity>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
         }
 
         private void DoSoftDelete()
