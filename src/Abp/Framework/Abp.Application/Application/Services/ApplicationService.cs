@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Abp.Application.Session;
 using Abp.Localization;
 using Castle.Core.Logging;
 
@@ -9,6 +10,11 @@ namespace Abp.Application.Services
     /// </summary>
     public abstract class ApplicationService : IApplicationService
     {
+        /// <summary>
+        /// Gets current session informations.
+        /// </summary>
+        public IAbpSession CurrentSession { get; set; }
+
         /// <summary>
         /// Reference to the logger to write logs.
         /// </summary>
@@ -25,6 +31,7 @@ namespace Abp.Application.Services
         /// </summary>
         protected ApplicationService()
         {
+            CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
         }
 
