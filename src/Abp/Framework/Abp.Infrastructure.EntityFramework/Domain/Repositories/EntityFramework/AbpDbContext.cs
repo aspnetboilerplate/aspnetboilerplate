@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -21,7 +20,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         protected AbpDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
