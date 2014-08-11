@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C43A88EE-1537-40BB-8154-4271E6AAD919}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Abp</RootNamespace>
+    <AssemblyName>Abp.Zero.NHibernate</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentMigrator">
+      <HintPath>..\..\..\..\packages\FluentMigrator.1.2.1.0\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\..\..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\..\..\packages\Iesi.Collections.3.2.0.1001\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\packages\NHibernate.3.3.4.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Migrations\FluentMigrator\AbpFluentMigratorExtensions.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_01_CreateAbpTenantsTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_02_CreateAbpRolesTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_03_CreateAbpUsersTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_04_CreateAbpUserRolesTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_05_CreatePermissionsTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_06_CreateAbpUserLoginsTable.cs" />
+    <Compile Include="Zero\DbMigrations\V20140323\_20140323_07_CreateAbpSettingsTable.cs" />
+    <Compile Include="Zero\DbMigrations\VersionTable.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\AbpRoleRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\AbpTenantRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\AbpUserRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\PermissionRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\SettingRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\UserRoleRepository.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\AbpRoleMap.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\AbpUserMap.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\PermissionMap.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\RoleMapBase.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\SettingValueMap.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\TenantMap.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\TenantMapBase.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\UserMapBase.cs" />
+    <Compile Include="Zero\Entities\NHibernate\Mappings\UserRoleMap.cs" />
+    <Compile Include="Zero\AbpModulesCoreInfrastructureNHibernateModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Abp.Zero.NHibernate.nuspec" />
+    <None Include="packages.config" />
+    <None Include="RunMigrations.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Abp.Infrastructure.NHibernate\Abp.Infrastructure.NHibernate.csproj">
+      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
+      <Name>Abp.Infrastructure.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
+      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
+      <Name>Abp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj">
+      <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>
+      <Name>Abp.Zero</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
