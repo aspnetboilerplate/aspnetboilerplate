@@ -85,6 +85,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.Tests", "Abp\Framework\Tests\Abp.Web.Api.Tests\Abp.Web.Api.Tests.csproj", "{662A3C76-DC6E-425C-B389-23B1040AD2F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zero", "Zero", "{ACCFAC06-4789-42E6-A486-6A1318FD9EA8}"
+	ProjectSection(SolutionItems) = preProject
+		Abp\Modules\Zero\README.md = Abp\Modules\Zero\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero", "Abp\Modules\Zero\Abp.Zero\Abp.Zero.csproj", "{70D916F2-9BFF-43DA-B3F7-3E0655114D48}"
 EndProject
