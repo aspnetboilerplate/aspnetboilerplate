@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.Runtime.Security;
 
 namespace Abp.Security.Tenants
 {

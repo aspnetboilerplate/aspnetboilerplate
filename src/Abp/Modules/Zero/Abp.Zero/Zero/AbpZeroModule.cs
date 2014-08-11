@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.Startup;
 
-namespace Abp.Startup.Modules.Core
+namespace Abp.Zero
 {
-    public class AbpModulesCoreModule : AbpModule
+    public class AbpZeroModule : AbpModule
     {
         public override void Initialize(IAbpInitializationContext initializationContext)
         {

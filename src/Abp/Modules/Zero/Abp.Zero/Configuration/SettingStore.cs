@@ -4,7 +4,7 @@ using Abp.Dependency;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// 
+    /// Implements <see cref="ISettingStore"/>.
     /// </summary>
     public class SettingStore : ISettingStore, ITransientDependency
     {

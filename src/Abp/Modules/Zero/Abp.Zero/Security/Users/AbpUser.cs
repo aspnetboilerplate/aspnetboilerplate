@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using Abp.Domain.Entities;
 using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
@@ -57,11 +56,6 @@ namespace Abp.Security.Users
         /// It's for one usage and must be set to null after reset.
         /// </summary>
         public virtual string PasswordResetCode { get; set; }
-
-        /// <summary>
-        /// Gets Name and Surname joined by space.
-        /// </summary>
-        public virtual string NameAndSurname { get { return Name + " " + Surname; } } //TODO@Halil: Remove this?
 
         public virtual void GenerateEmailConfirmationCode()
         {

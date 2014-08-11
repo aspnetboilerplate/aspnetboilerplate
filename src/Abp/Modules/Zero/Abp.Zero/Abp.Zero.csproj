@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Zero\AbpZeroModuleConsts.cs" />
-    <Compile Include="Application\AbpSession.cs" />
+    <Compile Include="Application\AbpIdentitySession.cs" />
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Security\Users\IAbpUserRepository.cs" />
     <Compile Include="Security\Users\IUserLoginRepository.cs" />
     <Compile Include="Security\Users\UserLogin.cs" />
-    <Compile Include="Startup\Modules\Core\AbpModulesCoreModule.cs" />
+    <Compile Include="Zero\AbpZeroModule.cs" />
     <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

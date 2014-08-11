@@ -5,16 +5,14 @@ using System.Threading;
 using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Runtime.Security;
-using Abp.Security.Tenants;
-using Abp.Security.Users;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Application
 {
     /// <summary>
-    /// 
+    /// Implements IAbpSession to get session informations from ASP.NET Identity framework.
     /// </summary>
-    public class AbpSession : IAbpSession, ISingletonDependency
+    public class AbpIdentitySession : IAbpSession, ISingletonDependency
     {
         public long? UserId
         {
