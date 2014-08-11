@@ -90,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero", "Abp\Modules\Zer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.NHibernate", "Abp\Modules\Zero\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj", "{C43A88EE-1537-40BB-8154-4271E6AAD919}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.EntityFramework", "Abp\Modules\Zero\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj", "{B728E703-345B-4553-A8B0-B28BB6738688}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -196,6 +198,10 @@ Global
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B728E703-345B-4553-A8B0-B28BB6738688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B728E703-345B-4553-A8B0-B28BB6738688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B728E703-345B-4553-A8B0-B28BB6738688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B728E703-345B-4553-A8B0-B28BB6738688}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,5 +239,6 @@ Global
 		{ACCFAC06-4789-42E6-A486-6A1318FD9EA8} = {AF82CE76-8F81-4816-B195-33B27E433655}
 		{70D916F2-9BFF-43DA-B3F7-3E0655114D48} = {ACCFAC06-4789-42E6-A486-6A1318FD9EA8}
 		{C43A88EE-1537-40BB-8154-4271E6AAD919} = {ACCFAC06-4789-42E6-A486-6A1318FD9EA8}
+		{B728E703-345B-4553-A8B0-B28BB6738688} = {ACCFAC06-4789-42E6-A486-6A1318FD9EA8}
 	EndGlobalSection
 EndGlobal
