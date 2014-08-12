@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Caching;
-using Abp.Application.Session;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Session;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Configuration

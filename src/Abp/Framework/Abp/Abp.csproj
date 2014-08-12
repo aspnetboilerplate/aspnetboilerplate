@@ -65,8 +65,8 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
-    <Compile Include="Application\Session\IAbpSession.cs" />
-    <Compile Include="Application\Session\NullAbpSession.cs" />
+    <Compile Include="Runtime\Session\IAbpSession.cs" />
+    <Compile Include="Runtime\Session\NullAbpSession.cs" />
     <Compile Include="Configuration\ISettingDefinitionManager.cs" />
     <Compile Include="Configuration\ISettingDefinitionProvider.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />

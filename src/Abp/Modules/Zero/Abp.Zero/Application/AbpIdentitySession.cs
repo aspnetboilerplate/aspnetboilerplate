@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
-using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Runtime.Security;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Application

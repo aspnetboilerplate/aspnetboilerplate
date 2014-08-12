@@ -1,4 +1,4 @@
-﻿namespace Abp.Application.Session
+﻿namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Defines some session informations that can be useful for applications.

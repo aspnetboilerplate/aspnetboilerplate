@@ -1,4 +1,4 @@
-﻿namespace Abp.Application.Session
+﻿namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Implements null object pattern for <see cref="IAbpSession"/>.

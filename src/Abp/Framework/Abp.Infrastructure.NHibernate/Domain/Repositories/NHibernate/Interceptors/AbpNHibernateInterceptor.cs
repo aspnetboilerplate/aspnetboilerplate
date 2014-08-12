@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Session;
 using NHibernate;
 using NHibernate.Type;
 

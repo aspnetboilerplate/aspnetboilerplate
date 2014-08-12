@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Session;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {

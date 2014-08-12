@@ -1,5 +1,5 @@
-using Abp.Application.Session;
 using Abp.Dependency;
+using Abp.Runtime.Session;
 using Abp.Security.Tenants;
 using Abp.Security.Users;
 

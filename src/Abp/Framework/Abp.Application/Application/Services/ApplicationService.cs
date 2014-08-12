@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
-using Abp.Application.Session;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
 namespace Abp.Application.Services
