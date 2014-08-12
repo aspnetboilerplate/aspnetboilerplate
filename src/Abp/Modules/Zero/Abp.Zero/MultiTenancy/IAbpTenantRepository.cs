@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 
-namespace Abp.Security.Tenants
+namespace Abp.MultiTenancy
 {
     /// <summary>
     /// Repository for Tenant entity.

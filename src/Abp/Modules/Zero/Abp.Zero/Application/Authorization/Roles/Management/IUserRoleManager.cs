@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Dependency;
 
-namespace Abp.Security.Roles.Management
+namespace Abp.Application.Authorization.Roles.Management
 {
     public interface IUserRoleManager : ISingletonDependency
     {

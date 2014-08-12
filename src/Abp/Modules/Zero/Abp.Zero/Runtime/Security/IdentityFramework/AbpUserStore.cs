@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.Security.Roles;
-using Abp.Security.Users;
+using Abp.Users;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.IdentityFramework
+namespace Abp.Runtime.Security.IdentityFramework
 {
     public class AbpUserStore :
         IUserPasswordStore<AbpUser, long>,

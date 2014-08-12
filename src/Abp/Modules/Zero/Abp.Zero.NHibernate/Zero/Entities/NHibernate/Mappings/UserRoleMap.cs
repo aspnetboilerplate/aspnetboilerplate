@@ -1,5 +1,5 @@
-﻿using Abp.Domain.Entities.Mapping;
-using Abp.Security.Roles;
+﻿using Abp.Application.Authorization.Roles;
+using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Zero.Entities.NHibernate.Mappings
 {

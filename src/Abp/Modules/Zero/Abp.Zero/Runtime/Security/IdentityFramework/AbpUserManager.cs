@@ -1,8 +1,8 @@
 using Abp.Dependency;
-using Abp.Security.Users;
+using Abp.Users;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.IdentityFramework
+namespace Abp.Runtime.Security.IdentityFramework
 {
     public class AbpUserManager : UserManager<AbpUser, long>, ITransientDependency
     {

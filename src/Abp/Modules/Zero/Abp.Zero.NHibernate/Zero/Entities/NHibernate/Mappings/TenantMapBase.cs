@@ -1,5 +1,5 @@
 using Abp.Domain.Entities.Mapping;
-using Abp.Security.Tenants;
+using Abp.MultiTenancy;
 
 namespace Abp.Zero.Entities.NHibernate.Mappings
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Domain.Repositories;
 
-namespace Abp.Security.Roles
+namespace Abp.Application.Authorization.Roles
 {
     public interface IAbpRoleRepository : IRepository<AbpRole>
     {

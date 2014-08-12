@@ -1,5 +1,5 @@
+using Abp.Application.Authorization.Permissions;
 using Abp.Domain.Repositories.NHibernate;
-using Abp.Security.Permissions;
 
 namespace Abp.Zero.Repositories.NHibernate
 {

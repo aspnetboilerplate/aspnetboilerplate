@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
-using Abp.Security.Permissions;
+using Abp.Application.Authorization.Permissions;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.Security.Roles.Management
+namespace Abp.Application.Authorization.Roles.Management
 {
     public class RoleManager : IRoleManager
     {

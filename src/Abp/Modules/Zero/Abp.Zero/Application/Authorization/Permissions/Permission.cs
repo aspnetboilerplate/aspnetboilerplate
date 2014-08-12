@@ -2,7 +2,7 @@
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Security.Permissions
+namespace Abp.Application.Authorization.Permissions
 {
     /// <summary>
     /// Represents a permission for a role.

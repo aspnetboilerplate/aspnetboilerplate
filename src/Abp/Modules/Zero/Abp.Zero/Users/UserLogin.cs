@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Entities;
 
-namespace Abp.Security.Users
+namespace Abp.Users
 {
     /// <summary>
     /// Used to store a User Login for external Login services.

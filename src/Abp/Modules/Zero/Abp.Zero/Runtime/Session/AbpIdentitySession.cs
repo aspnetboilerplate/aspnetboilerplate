@@ -4,10 +4,9 @@ using System.Security.Claims;
 using System.Threading;
 using Abp.Dependency;
 using Abp.Runtime.Security;
-using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Application
+namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Implements IAbpSession to get session informations from ASP.NET Identity framework.

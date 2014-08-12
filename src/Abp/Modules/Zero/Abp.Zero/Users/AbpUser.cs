@@ -3,7 +3,7 @@ using Abp.Domain.Entities;
 using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.Users
+namespace Abp.Users
 {
     /// <summary>
     /// Represents a user.
@@ -17,6 +17,7 @@ namespace Abp.Security.Users
 
         /// <summary>
         /// User name.
+        /// User name must be unique for it's tenant.
         /// </summary>
         public virtual string UserName { get; set; }
 
@@ -32,6 +33,7 @@ namespace Abp.Security.Users
 
         /// <summary>
         /// Email address of the user.
+        /// Email address must be unique for it's tenant.
         /// </summary>
         public virtual string EmailAddress { get; set; }
 

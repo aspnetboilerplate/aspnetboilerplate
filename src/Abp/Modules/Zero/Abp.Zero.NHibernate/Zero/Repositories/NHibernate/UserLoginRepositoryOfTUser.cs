@@ -1,5 +1,5 @@
 using Abp.Domain.Repositories.NHibernate;
-using Abp.Security.Users;
+using Abp.Users;
 
 namespace Abp.Zero.Repositories.NHibernate
 {

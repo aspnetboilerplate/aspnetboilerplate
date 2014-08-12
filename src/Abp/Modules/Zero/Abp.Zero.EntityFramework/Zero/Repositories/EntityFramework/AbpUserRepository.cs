@@ -1,4 +1,4 @@
-using Abp.Security.Users;
+using Abp.Users;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {

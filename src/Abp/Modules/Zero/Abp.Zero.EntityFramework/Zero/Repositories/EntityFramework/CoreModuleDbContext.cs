@@ -1,10 +1,10 @@
 using System.Data.Entity;
+using Abp.Application.Authorization.Permissions;
+using Abp.Application.Authorization.Roles;
 using Abp.Configuration;
 using Abp.Domain.Repositories.EntityFramework;
-using Abp.Security.Permissions;
-using Abp.Security.Roles;
-using Abp.Security.Tenants;
-using Abp.Security.Users;
+using Abp.MultiTenancy;
+using Abp.Users;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {

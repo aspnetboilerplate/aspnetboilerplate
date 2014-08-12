@@ -1,4 +1,4 @@
-﻿using Abp.Security.Tenants;
+﻿using Abp.MultiTenancy;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {

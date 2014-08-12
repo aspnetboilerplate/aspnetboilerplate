@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Abp.Security.Roles;
+using Abp.Application.Authorization.Roles;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Security.IdentityFramework
+namespace Abp.Runtime.Security.IdentityFramework
 {
     public class AbpRoleStore : IRoleStore<AbpRole, int> 
     {
