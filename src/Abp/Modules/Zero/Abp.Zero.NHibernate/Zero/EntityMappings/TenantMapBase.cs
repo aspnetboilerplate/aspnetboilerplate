@@ -1,7 +1,7 @@
 using Abp.Domain.Entities.Mapping;
 using Abp.MultiTenancy;
 
-namespace Abp.Zero.Entities.NHibernate.Mappings
+namespace Abp.Zero.EntityMappings
 {
     public abstract class TenantMapBase<TTenant> : EntityMap<TTenant> where TTenant : AbpTenant
     {

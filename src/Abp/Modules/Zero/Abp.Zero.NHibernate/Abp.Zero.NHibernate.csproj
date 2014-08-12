@@ -72,16 +72,16 @@
     <Compile Include="Zero\Repositories\NHibernate\SettingRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Zero\Repositories\NHibernate\UserRoleRepository.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\AbpRoleMap.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\AbpUserMap.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\PermissionMap.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\RoleMapBase.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\SettingValueMap.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\TenantMap.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\TenantMapBase.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\UserMapBase.cs" />
-    <Compile Include="Zero\Entities\NHibernate\Mappings\UserRoleMap.cs" />
-    <Compile Include="Zero\AbpModulesCoreInfrastructureNHibernateModule.cs" />
+    <Compile Include="Zero\EntityMappings\AbpRoleMap.cs" />
+    <Compile Include="Zero\EntityMappings\AbpUserMap.cs" />
+    <Compile Include="Zero\EntityMappings\PermissionMap.cs" />
+    <Compile Include="Zero\EntityMappings\RoleMapBase.cs" />
+    <Compile Include="Zero\EntityMappings\SettingValueMap.cs" />
+    <Compile Include="Zero\EntityMappings\TenantMap.cs" />
+    <Compile Include="Zero\EntityMappings\TenantMapBase.cs" />
+    <Compile Include="Zero\EntityMappings\UserMapBase.cs" />
+    <Compile Include="Zero\EntityMappings\UserRoleMap.cs" />
+    <Compile Include="Zero\AbpZeroNHibernateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

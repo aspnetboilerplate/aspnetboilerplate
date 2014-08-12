@@ -1,7 +1,7 @@
 using Abp.Application.Authorization.Roles;
 using Abp.Domain.Entities.Mapping;
 
-namespace Abp.Zero.Entities.NHibernate.Mappings
+namespace Abp.Zero.EntityMappings
 {
     public abstract class RoleMapBase<TRole> : EntityMap<TRole> where TRole : AbpRole
     {

@@ -1,7 +1,7 @@
 ﻿using Abp.Domain.Entities.Mapping;
 using Abp.Users;
 
-namespace Abp.Zero.Entities.NHibernate.Mappings
+namespace Abp.Zero.EntityMappings
 {
     public abstract class UserMapBase<TUser> : EntityMap<TUser, long> where TUser : AbpUser
     {

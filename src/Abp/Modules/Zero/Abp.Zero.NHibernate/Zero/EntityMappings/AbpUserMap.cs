@@ -1,6 +1,6 @@
 ﻿using Abp.Users;
 
-namespace Abp.Zero.Entities.NHibernate.Mappings
+namespace Abp.Zero.EntityMappings
 {
     public class AbpUserMap : UserMapBase<AbpUser>
     {

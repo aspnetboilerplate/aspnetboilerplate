@@ -1,7 +1,7 @@
 using Abp.Application.Authorization.Permissions;
 using Abp.Domain.Entities.Mapping;
 
-namespace Abp.Zero.Entities.NHibernate.Mappings
+namespace Abp.Zero.EntityMappings
 {
     public class PermissionMap : EntityMap<Permission, long>
     {

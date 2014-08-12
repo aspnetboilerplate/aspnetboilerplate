@@ -7,7 +7,7 @@ using Abp.Startup.Infrastructure.NHibernate;
 
 namespace Abp.Zero
 {
-    public class AbpModulesCoreInfrastructureNHibernateModule : AbpModule
+    public class AbpZeroNHibernateModule : AbpModule
     {
         public override Type[] GetDependedModules()
         {
