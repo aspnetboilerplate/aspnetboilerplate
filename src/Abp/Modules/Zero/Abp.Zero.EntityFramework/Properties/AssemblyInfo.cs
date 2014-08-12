@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp.Zero;
 
-[assembly: AssemblyTitle("Abp.Zero.EntityFramework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Iteration Zero - EntityFramework Integration")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Iteration Zero - EntityFramework Integration")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
 [assembly: AssemblyProduct("Abp.Zero.EntityFramework")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -5,12 +5,14 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.Zero.NHibernate")]
-[assembly: AssemblyDescription("")]
+using Abp.Zero;
+
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Iteration Zero - NHibernate Integration")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Iteration Zero - NHibernate Integration")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
 [assembly: AssemblyProduct("Abp.Zero.NHibernate")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +34,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion(AbpZeroModuleConsts.CurrentVersion)]
+[assembly: AssemblyFileVersion(AbpZeroModuleConsts.CurrentVersion)]
