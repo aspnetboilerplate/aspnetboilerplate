@@ -5,6 +5,7 @@ using Abp.Localization;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Web.Localization;
+using Abp.Web.Resources.Embedded;
 
 namespace Abp.Startup.Web
 {
@@ -25,6 +26,7 @@ namespace Abp.Startup.Web
 
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             LocalizationHelper.RegisterSource<AbpWebLocalizationSource>();
+            IocHelper.Resolve<IEmbeddedResourceManager>().Initialize();
         }
     }
 }
