@@ -10,12 +10,12 @@ namespace Abp.Web.Mvc.Helpers
     /// <summary>
     /// TODO: What if resource changes? How to update cache?
     /// </summary>
-    public static class ResourceHelper
+    public static class HtmlHelperResourceExtensions
     {
         private static readonly ConcurrentDictionary<string, string> Cache;
         private static readonly object SyncObj = new object();
 
-        static ResourceHelper()
+        static HtmlHelperResourceExtensions()
         {
             Cache = new ConcurrentDictionary<string, string>();
         }

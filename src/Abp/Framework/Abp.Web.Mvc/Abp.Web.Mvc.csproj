@@ -98,7 +98,7 @@
     <Compile Include="Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Controllers\Settings\AbpSettingsController.cs" />
     <Compile Include="Controllers\WindsorControllerFactory.cs" />
-    <Compile Include="Helpers\ResourceHelper.cs" />
+    <Compile Include="Helpers\HtmlHelperResourceExtensions.cs" />
     <Compile Include="Models\AbpMvcAjaxResponse.cs" />
     <Compile Include="Models\AbpMvcErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
