@@ -1,10 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Abp.Dependency;
-using Abp.Web.Resources.Embedded.Handlers;
+using Abp.Web.Mvc.Resources.Embedded.Handlers;
 
-namespace Abp.Web.Resources.Embedded
+namespace Abp.Web.Mvc.Resources.Embedded
 {
     /// <summary>
     /// 
@@ -33,14 +34,11 @@ namespace Abp.Web.Resources.Embedded
 
         public void Initialize()
         {
-            RouteTable.Routes.Insert(0,
-                new Route(
-                    "AbpRes/{resourceName}/{*pathInfo}", //TODO@Halil: We're here, working on route!
-                    new RouteValueDictionary(new {}),
-                    new RouteValueDictionary(new {}),
-                    new RouteValueDictionary(new {}),
-                    new UiResourceRouteHandler()
-                    ));
+            //ASP.NET MVC Route Config
+            //RouteTable.Routes.MapRoute(
+            //    name: "EmbeddedResourceRoute",
+            //    url: "Metronic/Resources/{*pathInfo}"
+            //    ).RouteHandler = new UiResourceRouteHandler();
         }
     }
 }

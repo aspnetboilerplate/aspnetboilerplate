@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Web.Resources.Embedded;
+using Abp.Web.Mvc.Resources.Embedded;
 
-namespace Abp.Web.Resources
+namespace Abp.Web.Mvc.Resources
 {
     /// <summary>
     /// A helper class to simplify expose web resources.

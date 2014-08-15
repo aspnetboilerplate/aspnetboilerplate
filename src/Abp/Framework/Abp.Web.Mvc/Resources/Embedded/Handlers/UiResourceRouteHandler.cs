@@ -1,7 +1,7 @@
 using System.Web;
 using System.Web.Routing;
 
-namespace Abp.Web.Resources.Embedded.Handlers
+namespace Abp.Web.Mvc.Resources.Embedded.Handlers
 {
     internal class UiResourceRouteHandler : IRouteHandler
     {

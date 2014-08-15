@@ -7,6 +7,7 @@ using Abp.Startup;
 using Abp.Startup.Application;
 using Abp.Startup.Web;
 using Abp.Web.Mvc.Controllers;
+using Abp.Web.Mvc.Resources.Embedded;
 
 namespace Abp.Web.Mvc.Startup
 {
@@ -38,6 +39,8 @@ namespace Abp.Web.Mvc.Startup
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(initializationContext.IocContainer.Kernel));
             GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());
+
+            IocHelper.Resolve<IEmbeddedResourceManager>().Initialize();
         }
     }
 }

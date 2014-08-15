@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Abp.Web.Resources.Embedded
+namespace Abp.Web.Mvc.Resources.Embedded
 {
     /// <summary>
     /// 

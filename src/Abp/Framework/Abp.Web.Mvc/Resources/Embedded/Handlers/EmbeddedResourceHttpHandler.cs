@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using System.Reflection;
 using System.Web;
 using System.Web.Routing;
 
-namespace Abp.Web.Resources.Embedded.Handlers
+namespace Abp.Web.Mvc.Resources.Embedded.Handlers
 {
     internal class EmbeddedResourceHttpHandler : IHttpHandler
     {
@@ -16,13 +15,22 @@ namespace Abp.Web.Resources.Embedded.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
-            string fileName = _routeData.Values["pathInfo"].ToString();
+            var fileName = _routeData.Values["pathInfo"] as string;
+            if (fileName == null)
+            {
+                return;
+            }
 
             string nameSpace = GetType().Assembly.GetName().Name;
             string manifestResourceName = string.Format("{0}.{1}", nameSpace, fileName.Replace("/", "."));
 
             using (Stream stream = GetType().Assembly.GetManifestResourceStream(manifestResourceName))
             {
+                if (stream == null)
+                {
+                    return;
+                }
+
                 context.Response.Clear();
                 if (fileName.EndsWith(".js"))
                     context.Response.ContentType = "text/javascript";
