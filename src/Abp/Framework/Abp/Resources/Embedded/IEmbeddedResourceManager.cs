@@ -9,6 +9,6 @@ namespace Abp.Resources.Embedded
     {
         void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace);
 
-        byte[] GetResource(string fullResourcePath);
+        EmbeddedResourceInfo GetResource(string fullResourcePath);
     }
 }

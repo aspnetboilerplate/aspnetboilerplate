@@ -51,7 +51,7 @@ namespace Abp.Web.Mvc.Resources
                 ).RouteHandler = new EmbeddedResourceRouteHandler(rootPath);
         }
 
-        public static byte[] GetEmbeddedResource(string fullResourcePath)
+        public static EmbeddedResourceInfo GetEmbeddedResource(string fullResourcePath)
         {
             return EmbeddedResourceManager.GetResource(fullResourcePath);
         }

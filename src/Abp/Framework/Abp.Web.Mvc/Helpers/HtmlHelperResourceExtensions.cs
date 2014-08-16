@@ -4,6 +4,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Logging;
+using Abp.Web.Mvc.Resources;
 
 namespace Abp.Web.Mvc.Helpers
 {
@@ -27,7 +28,7 @@ namespace Abp.Web.Mvc.Helpers
         /// <param name="url">URL of the script file</param>
         public static IHtmlString IncludeScript(this HtmlHelper html, string url)
         {
-            return html.Raw("<script src=\"" + GetResourcePathWithVersioning(url) + "\" type=\"text/javascript\"></script>");
+            return html.Raw("<script src=\"" + GetPathWithVersioning(url) + "\" type=\"text/javascript\"></script>");
         }
 
         /// <summary>
@@ -37,10 +38,10 @@ namespace Abp.Web.Mvc.Helpers
         /// <param name="url">URL of the style file</param>
         public static IHtmlString IncludeStyle(this HtmlHelper html, string url)
         {
-            return html.Raw("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + GetResourcePathWithVersioning(url) + "\" />");
+            return html.Raw("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + GetPathWithVersioning(url) + "\" />");
         }
 
-        private static string GetResourcePathWithVersioning(string path)
+        private static string GetPathWithVersioning(string path)
         {
             if (Cache.ContainsKey(path))
             {
@@ -57,10 +58,11 @@ namespace Abp.Web.Mvc.Helpers
                 string result;
                 try
                 {
+                    //TODO: Refactor...
                     var fullPath = HttpContext.Current.Server.MapPath(path.Replace("/", "\\"));
-                    var fileVersion = new FileInfo(fullPath).LastWriteTime.Ticks;
-
-                    result = VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
+                    result = File.Exists(fullPath)
+                        ? GetPathWithVersioningForPhysicalFile(path, fullPath)
+                        : GetPathWithVersioningForEmbeddedFile(path);
                 }
                 catch (Exception ex)
                 {
@@ -71,6 +73,33 @@ namespace Abp.Web.Mvc.Helpers
                 Cache[path] = result;
                 return result;
             }
+        }
+
+        private static string GetPathWithVersioningForPhysicalFile(string path, string filePath)
+        {
+            var fileVersion = new FileInfo(filePath).LastWriteTime.Ticks;
+            return VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
+        }
+
+        private static string GetPathWithVersioningForEmbeddedFile(string path)
+        {
+            //Remove "~/" from beggining
+            var embeddedResourcePath = path;
+
+
+            if (embeddedResourcePath.StartsWith("~"))
+            {
+                embeddedResourcePath = embeddedResourcePath.Substring(1);
+            }
+
+            if (embeddedResourcePath.StartsWith("/"))
+            {
+                embeddedResourcePath = embeddedResourcePath.Substring(1);                
+            }
+
+            var resource = WebResourceHelper.GetEmbeddedResource(embeddedResourcePath);
+            var fileVersion = new FileInfo(resource.Assembly.Location).LastWriteTime.Ticks;
+            return VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
         }
     }
 }

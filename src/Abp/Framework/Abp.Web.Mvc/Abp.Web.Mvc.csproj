@@ -102,7 +102,6 @@
     <Compile Include="Models\AbpMvcAjaxResponse.cs" />
     <Compile Include="Models\AbpMvcErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
     <Compile Include="Resources\Embedded\Handlers\EmbeddedResourceHttpHandler.cs" />
     <Compile Include="Resources\Embedded\Handlers\EmbeddedResourceRouteHandler.cs" />
     <Compile Include="Resources\WebResourceHelper.cs" />

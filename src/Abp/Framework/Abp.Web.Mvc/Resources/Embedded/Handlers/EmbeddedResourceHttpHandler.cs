@@ -27,8 +27,8 @@ namespace Abp.Web.Mvc.Resources.Embedded.Handlers
 
             context.Response.ContentType = MimeMapping.GetMimeMapping(fileName);
 
-            var resourceBytes = WebResourceHelper.GetEmbeddedResource(_rootPath + "/" + fileName);
-            context.Response.OutputStream.Write(resourceBytes, 0, resourceBytes.Length);
+            var resource = WebResourceHelper.GetEmbeddedResource(_rootPath + "/" + fileName);
+            context.Response.OutputStream.Write(resource.Content, 0, resource.Content.Length);
         }
 
         public bool IsReusable { get { return false; } }

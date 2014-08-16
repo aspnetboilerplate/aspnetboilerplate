@@ -1,4 +1,5 @@
 ﻿using Abp.Resources.Embedded;
+using Abp.Utils.Extensions;
 using NUnit.Framework;
 
 namespace Abp.Tests.Resources.Embedded
@@ -18,8 +19,9 @@ namespace Abp.Tests.Resources.Embedded
         public void Should_Define_And_Get_Embedded_Resources()
         {
             _embeddedResourceManager.ExposeResources("MyApp/MyResources", GetType().Assembly, "Abp.Tests.Resources.Embedded.MyResources");
-            var bytes = _embeddedResourceManager.GetResource("MyApp/MyResources/js/MyScriptFile1.js");
-            Assert.True(bytes.Length > 0);
+            var resource = _embeddedResourceManager.GetResource("MyApp/MyResources/js/MyScriptFile1.js");
+            Assert.True(resource.Assembly == GetType().Assembly);
+            Assert.True(resource.Content.Length > 0);
         }
     }
 }

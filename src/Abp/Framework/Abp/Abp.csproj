@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceManager.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourcePathInfo.cs" />
     <Compile Include="Resources\Embedded\IEmbeddedResourceManager.cs" />

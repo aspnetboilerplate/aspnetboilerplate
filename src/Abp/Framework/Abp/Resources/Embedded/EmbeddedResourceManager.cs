@@ -12,7 +12,7 @@ namespace Abp.Resources.Embedded
     public class EmbeddedResourceManager : IEmbeddedResourceManager, ISingletonDependency
     {
         private readonly ConcurrentDictionary<string, EmbeddedResourcePathInfo> _resourcePaths; //Key: Root path of the resource
-        private readonly ConcurrentDictionary<string, byte[]> _resourceCache; //Key: Root path of the resource
+        private readonly ConcurrentDictionary<string, EmbeddedResourceInfo> _resourceCache; //Key: Root path of the resource
 
         /// <summary>
         /// Constructor.
@@ -20,7 +20,7 @@ namespace Abp.Resources.Embedded
         public EmbeddedResourceManager()
         {
             _resourcePaths = new ConcurrentDictionary<string, EmbeddedResourcePathInfo>();
-            _resourceCache = new ConcurrentDictionary<string, byte[]>();
+            _resourceCache = new ConcurrentDictionary<string, EmbeddedResourceInfo>();
         }
 
         public void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace)
@@ -33,7 +33,7 @@ namespace Abp.Resources.Embedded
             _resourcePaths[rootPath] = new EmbeddedResourcePathInfo(rootPath, assembly, resourceNamespace);
         }
 
-        public byte[] GetResource(string fullPath)
+        public EmbeddedResourceInfo GetResource(string fullPath)
         {
             //Get from cache if exists!
             if (_resourceCache.ContainsKey(fullPath))
@@ -50,7 +50,7 @@ namespace Abp.Resources.Embedded
                     throw new AbpException("There is no exposed embedded resource for " + fullPath);
                 }
 
-                return (_resourceCache[fullPath] = stream.GetAllBytes());
+                return _resourceCache[fullPath] = new EmbeddedResourceInfo(stream.GetAllBytes(), pathInfo.Assembly);
             }
         }
 
