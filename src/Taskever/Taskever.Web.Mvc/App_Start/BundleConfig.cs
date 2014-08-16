@@ -42,7 +42,7 @@ namespace Taskever.Web.Mvc
                     .Include("~/Scripts/jquery.validate.min.js")
                     .Include("~/Scripts/jquery.form.min.js")
                     .Include("~/Scripts/jquery.blockUI.min.js")
-                    .Include("~/Scripts/moment-with-langs.min.js")
+                    .Include("~/Scripts/moment-with-locales.min.js")
                     .Include("~/Scripts/libs/livestamp/livestamp.min.js")
                     .Include("~/Scripts/toastr.min.js")
                 );
