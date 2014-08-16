@@ -86,7 +86,6 @@ namespace Abp.Web.Mvc.Helpers
             //Remove "~/" from beggining
             var embeddedResourcePath = path;
 
-
             if (embeddedResourcePath.StartsWith("~"))
             {
                 embeddedResourcePath = embeddedResourcePath.Substring(1);
