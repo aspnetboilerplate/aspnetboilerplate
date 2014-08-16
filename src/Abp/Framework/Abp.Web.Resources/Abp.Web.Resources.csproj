@@ -57,6 +57,8 @@
       <DependentUpon>abp.css</DependentUpon>
     </Content>
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
+    <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
+    <Content Include="Localization\AbpWeb\AbpWeb.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Abp\Framework\styles\abp.less" />
