@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<p>Message API is used to show a message to the user.
+User clicks OK and closes message window/dialog. Examples:</p>
+
+<pre lang="js">abp.message.info('some info message', 'some optional title');
+abp.message.warn('some warning message', 'some optional title');
+abp.message.error('some error message', 'some optional title');</pre>
+
+<p>It just shows a standard javascript <strong>alert</strong> in default 
+implementation. You can override it in a custom javascript file. ASP.NET 
+Boilerplate internally uses these functions. For example, it calls 
+abp.message.error if an <a href="/Pages/Documents/Javascript-API/AJAX">AJAX</a> call
+fails.</p>
+
+</body>
+
+</html>

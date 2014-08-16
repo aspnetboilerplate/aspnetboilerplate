@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocLocalizationSources">Localization sources</a><ul>
+		<li><a href="#DocLocalizeXml">XML files</a></li>
+		<li><a href="#DocLocalizeResources">Resource files</a></li>
+		<li><a href="#DocLocalizeCustom">Custom sources</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocRegisterSource">Registering localization sources</a></li>
+	<li><a href="#DocGetText">Getting a localized text</a><ul>
+		<li><a href="#DocInServer">In server-side code</a></li>
+		<li><a href="#DocInControllers">In MVC controllers</a></li>
+		<li><a href="#DocInViews">In MVC views</a></li>
+		<li><a href="#DocInJavascript">In Javascript</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocConclusion">Conclusion</a></li>
+</ul>
+
+<h3 id="DocLocalizationSources">Localization sources</h3>
+<p>ASP.NET Boilerplate provides a flexible localization system. Localization 
+texts can be stored in different sources. 
+Even you can use more than one source in same application.<strong> 
+ILocalizationSource</strong> interface should be implemented for a localization 
+source. Then it is <strong>register</strong>ed to ASP.NET Boilerplate's 
+localization system. There are pre-defined localization sources for <strong>XML 
+files</strong> and <strong>resource</strong> files.</p>
+
+<h4 id="DocLocalizeXml">XML files</h4>
+<p>Localization texts can be stored in XML files. Content of an XML file is 
+something like that:</p>
+<pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;localizationDictionary culture=&quot;en&quot;&gt;
+  &lt;texts&gt;
+    &lt;text name=&quot;TaskSystem&quot; value=&quot;Task System&quot; /&gt;
+    &lt;text name=&quot;TaskList&quot; value=&quot;Task List&quot; /&gt;
+    &lt;text name=&quot;NewTask&quot; value=&quot;New Task&quot; /&gt;
+    &lt;text name=&quot;Xtasks&quot; value=&quot;{0} tasks&quot; /&gt;
+    &lt;text name=&quot;AllTasks&quot; value=&quot;All tasks&quot; /&gt;
+    &lt;text name=&quot;ActiveTasks&quot; value=&quot;Active tasks&quot; /&gt;
+    &lt;text name=&quot;CompletedTasks&quot; value=&quot;Completed tasks&quot; /&gt;
+    &lt;text name=&quot;TaskDescription&quot; value=&quot;Task description&quot; /&gt;
+    &lt;text name=&quot;EnterDescriptionHere&quot; value=&quot;Task description&quot; /&gt;
+    &lt;text name=&quot;AssignTo&quot; value=&quot;Assign to&quot; /&gt;
+    &lt;text name=&quot;SelectPerson&quot; value=&quot;Select person&quot; /&gt;
+    &lt;text name=&quot;CreateTheTask&quot; value=&quot;Create the task&quot; /&gt;
+    &lt;text name=&quot;TaskUpdatedMessage&quot; value=&quot;Task has been successfully updated.&quot; /&gt;
+    &lt;text name=&quot;TaskCreatedMessage&quot; value=&quot;Task {0} has been created successfully.&quot; /&gt;
+  &lt;/texts&gt;
+&lt;/localizationDictionary&gt;</pre>
+<p>XML file must be unicode (UTF-8). A <strong>name</strong> is 
+used to identify each text. Then a localization source class should be created 
+as shown below:</p>
+<pre lang="cs">public class SimpleTaskSystemLocalizationSource : XmlLocalizationSource
+{
+    public SimpleTaskSystemLocalizationSource()
+        : base(&quot;SimpleTaskSystem&quot;, HttpContext.Current.Server.MapPath(&quot;/Localization/SimpleTaskSystem&quot;))
+    {
+    }
+}</pre>
+<p>It's derived from <strong>XmlLocalizationSource</strong>. A localization 
+source must be a <strong>unique name</strong> (SimpleTaskSystem here) and a
+<strong>directory path</strong> that contains XML files for each language. Here, 
+it's placed Localization/SimpleTaskSystem folder in the web application:</p>
+<p>
+<img alt="Localization files" height="142" src="/SiteFiles/Content/Documents/Resources/localization_files.png" width="307" /></p>
+<p>SimpleTaskSystem.xml is the <strong>default language</strong> (since it does 
+not contains language code). SimpleTaskSystem<strong>.tr</strong>.xml contains 
+localized texts for Turkish language. </p>
+<p>When a text is requested, ASP.NET 
+Boilerplate gets the text from current language's XML file (using 
+Thread.CurrentThread.<strong>CurrentUICulture</strong>). If it does not exists 
+in current language, it gets from default language's XML file.</p>
+
+<p>Using XML files provides flexibility since they can be easily modified using 
+code and by non experienced users, they can be easily distributed.</p>
+<h4 id="DocLocalizeResources">Reource files</h4>
+<p>Localization text can also be stored in .NET's resource files. We can create 
+a resource file for each language as shown below (Right click to the project, 
+choose add new item then find resources file).</p>
+<p>
+<img alt="Localization resource files" height="97" src="/SiteFiles/Content/Documents/Resources/resource_files.png" width="149" /></p>
+<p>MyTexts.resx contains the default language texts and MyTexts<strong>.tr</strong>.resx 
+contains texts for Turkish language. When we open MyTexts.resx, we can see all 
+texts:</p>
+<p>
+<img alt="Content of a resource file" height="174" src="/SiteFiles/Content/Documents/Resources/resource_files_content.png" width="466" /></p>
+<p>In this case, ASP.NET Boilerplate uses .NET's built-in resource manager for 
+localization. You should define a localization source for the resource:</p>
+<pre lang="cs">public class MyLocalizationSource : ResourceFileLocalizationSource
+{
+    public MyLocalizationSource()
+        : base("MySource", MyTexts.ResourceManager)
+    {
+    }
+}</pre>
+<p>Uniqe name of the source is MySource here. And MyTexts.ResourceManager is a 
+reference to the resource manager to be used to get localized texts.</p>
+<h4 id="DocLocalizeCustom">Custom source</h4>
+<p>A custom localization source can be implemented to store texts in different 
+sources such as in a database. You can directly implement the <strong>
+ILocalization</strong> interface or you can derive from <strong>
+DictionaryBasedLocalizationSource</strong> 
+class to make implementation easier.</p>
+<h3 id="DocRegisterSource">Registering localization sources</h3>
+<p>Registering the localization source is pretty easy:</p>
+<pre lang="cs">LocalizationHelper.RegisterSource&lt;SimpleTaskSystemLocalizationSource&gt;();</pre>
+
+<p>This is generally done in initialization step of the
+<a href="/Pages/Documents/Module-System">module</a>.</p>
+<h3 id="DocGetText">Getting a localized text</h3>
+<p>After creating a source and register it to the ASP.NET Boilerplate's 
+localization system, texts can be localized easily.</p>
+<h4 id="DocInServer">In server side</h4>
+<p>In server side code, you can simply call <strong>LocalizationHelper.GetString </strong>
+with source name and text name:</p>
+<pre lang="cs">var s1 = LocalizationHelper.GetString("SimpleTaskSystem", "NewTask");</pre>
+<p>To do not repeat source name always, you can first <strong>get the source</strong>, 
+then get a string from the source:</p>
+<pre lang="cs">var source = LocalizationHelper.GetSource("SimpleTaskSystem");
+var s<span lang="tr">1</span> = source.GetString("NewTask");</pre>
+<p>This returns text in the current language. There are also overrides of 
+GetString to get text in different languages.</p>
+<h4 id="DocInControllers">In MVC controllers</h4>
+<p>Localization texts are generally needed in MVC Controller and Views. There is 
+a shortcut for that. See the sample controller below:</p>
+<pre lang="cs">public class HomeController : SimpleTaskSystemControllerBase
+{
+    public ActionResult Index()
+    {
+        var helloWorldText = L("HelloWorld");
+        return View();
+    }
+}</pre>
+<p><strong>L</strong> method is used to localize a string. Surely, you must 
+supply a source name. It's done in SimpleTaskSystemControllerBase as shown 
+below:</p>
+<pre lang="cs">public abstract class SimpleTaskSystemControllerBase : AbpController
+{
+    protected SimpleTaskSystemControllerBase()
+    {
+        LocalizationSourceName = "SimpleTaskSystem";
+    }
+}</pre>
+<p>Notice that it is derived from <strong>AbpController</strong>. Thus, you can 
+easily localize texts with <strong>L</strong> method. </p>
+<h4 id="DocInViews">In MVC views</h4>
+<p>Same <strong>L</strong> method also exists in 
+views:</p>
+<pre lang="cs">&lt;div&gt;
+    &lt;form id=&quot;NewTaskForm&quot; role=&quot;form&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;TaskDescription&quot;&gt;<strong>@L(&quot;TaskDescription&quot;)</strong>&lt;/label&gt;
+            &lt;textarea id=&quot;TaskDescription&quot; data-bind=&quot;value: task.description&quot; class=&quot;form-control&quot; rows=&quot;3&quot; placeholder=&quot;<strong>@L(&quot;EnterDescriptionHere&quot;)</strong>&quot; required&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;TaskAssignedPerson&quot;&gt;<strong>@L(&quot;AssignTo&quot;)</strong>&lt;/label&gt;
+            &lt;select id=&quot;TaskAssignedPerson&quot; data-bind=&quot;options: people, optionsText: &#39;name&#39;, optionsValue: &#39;id&#39;, value: task.assignedPersonId, optionsCaption: &#39;<strong>@L(&quot;SelectPerson&quot;)</strong>&#39;&quot; class=&quot;form-control&quot;&gt;&lt;/select&gt;
+        &lt;/div&gt;
+        &lt;button data-bind=&quot;click: saveTask&quot; type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;<strong>@L(&quot;CreateTheTask&quot;)</strong>&lt;/button&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</pre>
+<p>To make this work, you should derive your views from a base class that sets 
+the source name:</p>
+<pre lang="cs">public abstract class SimpleTaskSystemWebViewPageBase : SimpleTaskSystemWebViewPageBase&lt;dynamic&gt;
+{
+
+}
+
+public abstract class SimpleTaskSystemWebViewPageBase&lt;TModel&gt; : AbpWebViewPage&lt;TModel&gt;
+{
+    protected SimpleTaskSystemWebViewPageBase()
+    {
+        LocalizationSourceName = &quot;SimpleTaskSystem&quot;;
+    }
+}</pre>
+<p>And set this view base class in web.config:</p>
+<pre lang="cs">&lt;pages pageBaseType=&quot;SimpleTaskSystem.Web.Views.SimpleTaskSystemWebViewPageBase&quot;&gt;</pre>
+<p>All these for controllers and views are ready when you create your solution 
+from one of the ASP.NET Boilerplate <a href="/Templates">templates</a>.</p>
+
+<h4 id="DocInJavascript">In javascript</h4>
+<p>ASP.NET Boilerplate makes possible to use same localization texts in also 
+javascript code. First, you should add dynamic localization scripts to the page:</p>
+<pre lang="xml">&lt;script src=&quot;/AbpLocalization/GetScripts&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+<p>ASP.NET Boilerplate automatically generates needed javascript code to get 
+localized texts in the client side. Then you can easily get a localized text in 
+javascript as shown below:</p>
+<pre lang="js">var s1 = abp.localization.localize('NewTask', 'SimpleTaskSystem');</pre>
+<p>NewTask is the text name and SimpleTaskSystem is the source name here. To do 
+not repeat source name, you can first get the source then get the text:</p>
+<pre lang="js">var source = abp.localization.getSource('SimpleTaskSystem');
+var s<span lang="tr">1</span> = source('NewTask');</pre>
+<h3 id="DocConclusion">Conclusion</h3>
+<p>ASP.NET Boilerplate provides ability to use different sources for 
+localization. It also provides an infrastructure to use same localization texts 
+both in server and client side code.</p>
+<p>XML files and Resource files have own strengths and weaknesses. 
+It's suggested to use XML files for re-usable modules since it will be easy to 
+add new languages for module out of the code. Also, if you use XML, it's 
+suggested to do not sort texts by name. Sort them by creation date. Thus, when 
+someone translates it to another language, he/she can easily see which texts are 
+added newly.</p>
+<p>You can also create your own localization source and integrate it with 
+ASP.NET Boilerplate.</p>
+
+</body>
+
+</html>

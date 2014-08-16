@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocDynamicApi">Building dynamic Web API Controllers</a></li>
+	<li><a href="#DocDynamicProxy">Using dynamic javascript proxi<span class="text-primary">es</span></a><ul>
+		<li><a href="#DocAjaxParams">AJAX parameters</a></li>
+		<li><a href="#DocSingleService">Single service script</a></li>
+		<li><a href="#DocAngularSupport">Angular support</a></li>
+		<li><a href="#DocDurandalSupport">Durandal support</a></li>
+	</ul>
+	</li>
+</ul>
+
+<h3 id="DocDynamicApi">
+    Building dynamic Web API Controllers</h3>
+<p>
+    ASP.NET Boilerplate can automatically generate <strong>web api layer</strong> 
+	for your <strong>application layer</strong>. Say that we have an 
+	<a href="/Pages/Documents/Application-Services">application 
+	service</a> as shown below:</p>
+<pre lang="cs">public interface ITaskAppService : IApplicationService
+{
+    GetTasksOutput GetTasks(GetTasksInput input);
+    void UpdateTask(UpdateTaskInput input);
+    void CreateTask(CreateTaskInput input);
+}</pre>
+<p>
+    And we want to expose this service as a Web API Controller for clients. 
+	ASP.NET Boilerplate can automatically and dynamically create a Web API 
+	Controller for this application service with a single line of configuration:</p>
+<pre lang="cs">DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;("tasksystem/task").Build();</pre>
+<p>
+    Thats 
+	all! An api controller is created in the address '<strong>/api/services/tasksystem/task</strong>' and all methods are now usable by clients.
+    This configuration is generally made in the
+	<a href="/Pages/Documents/Module-System">module initialization</a>. </p>
+<p><strong>ITaskAppService</strong> is the application service that we want to 
+wrap with an api controller. It is not restricted to application services but 
+this is the traditional and recommended way. "<strong>tasksystem/task</strong>" is name of the 
+api controller with an arbitrary namespace. You should define at least one-level 
+namespace but you can define more deep namespaces like 
+"myCompany/myApplication/myNamespace1/myNamespace2/myServiceName". '<strong>/api/services/</strong>' 
+is a prefix for all dynamic web api controllers. So, address of the api 
+controller will be like '/api/services/tasksystem/task' and GetTasks method's 
+address will be '/api/services/tasksystem/task/getTasks'. Method names are 
+converted to <strong>camelCase</strong> since it's traditional in javascript 
+world.</p>
+<p>You can <strong>exclude</strong> some methods or <strong>change name</strong> of 
+an api method. An example definition could be:</p>
+<pre lang="cs">DynamicApiControllerBuilder
+    .For&lt;ITaskAppService&gt;("tasksystem/task<span lang="tr">Service</span>")
+    .ForMethod("GetTasks").WithActionName("SelectTasks")
+    .ForMethod("CreateTask").DontCreateAction()
+    .Build();</pre>
+<h3 id="DocDynamicProxy">
+    Using dynamic javascript proxies</h3>
+<p>
+    You can use the dynamically created web api controller via ajax 
+	in javascript. ASP.NET 
+	Boilerplate also simplifies this by creating dynamic javascript proxies for 
+	dynamic web api controllers. So, 
+	you can call a dynamic web api controller's action from javascript as like a function 
+	call:</p>
+<pre lang="js">abp.services.tasksystem.task.getTasks({
+    state: 1
+}).done(function (data) {
+    //use data.tasks here...
+});</pre>
+<p>
+    Javascript proxies are created dynamically. You should include the dynamic script 
+to your page before use it:</p>
+<pre lang="xml">&lt;script src=&quot;/api/AbpServiceProxies/GetAll&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+<p>Service methods return promise (See
+<a href="http://api.jquery.com/category/deferred-object/" target="_blank">
+jQuery.Deferred</a>). You can register to done, fail, then... callbacks. 
+Service methods use
+<a href="/Pages/Documents/Javascript-API/AJAX">abp.ajax</a> inside. They 
+handle errors and show error messages if needed.</p>
+<h4 id="DocAjaxParams">AJAX parameters</h4>
+<p>You may want to pass custom ajax parameters to the proxy method. You can pass 
+them as second argument as sown below:</p>
+<pre lang="js">abp.services.tasksystem.task.createTask({
+    assignedPersonId: 3,
+    description: 'a new task description...'
+},{ //override jQuery's ajax parameters
+    async: false,
+    timeout: 30000
+}).done(function () {
+    abp.notify.success('successfully created a task!');
+});</pre>
+<p>All parameters of
+<a href="http://api.jquery.com/jQuery.ajax/" target="_blank">jQuery.ajax</a> are 
+valid here.</p>
+<h4 id="DocSingleService">Single service script</h4>
+<p>'/api/AbpServiceProxies/GetAll' generates all service proxies in one file. 
+You can also generate a sinle service proxy using 
+'/api/AbpServiceProxies/Get?name=<em>serviceName</em>' and include the script to the 
+page as shown below:</p>
+<pre lang="xml">&lt;script src=&quot;/api/AbpServiceProxies/Get?name=tasksystem/task&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+
+<h4 id="DocAngularSupport">Angular Support</h4>
+<p>ASP.NET Boilerplate can expose dynamic api controllers as angularjs services. 
+Consider the sample below:</p>
+<pre lang="js">(function() {
+    angular.module('app').controller('TaskListController', [
+        '$scope', 'abp.services.tasksystem.task',
+        function($scope, taskService) {
+            var vm = this;
+            vm.tasks = [];
+            taskService.getTasks({
+                state: 0
+            }).success(function(data) {
+                vm.tasks = data.tasks;
+            });
+        }
+    ]);
+})();</pre>
+<p>We can inject a <strong>service</strong> using it's name (with namespace). 
+Then we can call it's <strong>functions</strong> as regular javascript 
+functions. Notice that we registered to <strong>success</strong> handler 
+(instead of done) since it's like that in angular's <strong>$http</strong> 
+service. ASP.NET Boilerplate uses $http service of AngularJs. If you want to 
+pass $http <strong>configuration</strong>, you can pass a configuration object as the last 
+parameter of the service method.</p>
+<p>To be able to use auto-generated services, you should include needed scripts 
+to your page:</p>
+<pre lang="xml">&lt;script src=&quot;~/Abp/Framework/scripts/libs/angularjs/abp.ng.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;~/api/AbpServiceProxies/GetAll?type=angular&quot;&gt;&lt;/script&gt;</pre>
+
+<h4 id="DocDurandalSupport">Durandal support</h4>
+
+<p>ASP.NET Boilerplate makes it possible to inject service proxies in modules in 
+a <a href="http://durandaljs.com/" target="_blank">Durandal</a> application. See 
+the sample viewmodel:</p>
+<pre lang="cs">define(['service!tasksystem/task'],
+    function (taskService) {
+        //taskService can be used here
+    });</pre>
+
+<p>ASP.NET Boilerplate configures Durandal (Require.js actually) to understand 
+the 'service!' prefix and inject appropriate javascript service proxy.</p>
+
+</body>
+
+</html>

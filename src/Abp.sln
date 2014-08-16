@@ -12,15 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434F
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{76AA2897-D756-415C-A0CB-D00E90061FFF}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\Abp_TODO.txt = Docs\Abp_TODO.txt
-		Docs\Modules.txt = Docs\Modules.txt
-		Docs\Notes.txt = Docs\Notes.txt
-		Docs\Tools.txt = Docs\Tools.txt
-		Docs\WebProject Layout.txt = Docs\WebProject Layout.txt
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Taskever", "Taskever", "{55698328-B079-4FC4-9CE5-88C6013F9952}"
