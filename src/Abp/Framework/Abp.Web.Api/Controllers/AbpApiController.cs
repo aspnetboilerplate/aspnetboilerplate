@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Web.Http;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
 namespace Abp.WebApi.Controllers
@@ -10,6 +11,11 @@ namespace Abp.WebApi.Controllers
     /// </summary>
     public abstract class AbpApiController : ApiController
     {
+        /// <summary>
+        /// Gets current session informations.
+        /// </summary>
+        public IAbpSession CurrentSession { get; set; }
+
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
         /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
@@ -26,6 +32,7 @@ namespace Abp.WebApi.Controllers
         /// </summary>
         protected AbpApiController()
         {
+            CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
         }
 

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using System.Web.Mvc;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
@@ -14,6 +15,11 @@ namespace Abp.Web.Mvc.Controllers
     /// </summary>
     public abstract class AbpController : Controller
     {
+        /// <summary>
+        /// Gets current session informations.
+        /// </summary>
+        public IAbpSession CurrentSession { get; set; }
+
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
         /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
@@ -30,6 +36,7 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         protected AbpController()
         {
+            CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
         }
 
