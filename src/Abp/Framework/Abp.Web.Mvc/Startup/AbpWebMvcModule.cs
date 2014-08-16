@@ -39,8 +39,6 @@ namespace Abp.Web.Mvc.Startup
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(initializationContext.IocContainer.Kernel));
             GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());
-
-            IocHelper.Resolve<IEmbeddedResourceManager>().Initialize();
         }
     }
 }

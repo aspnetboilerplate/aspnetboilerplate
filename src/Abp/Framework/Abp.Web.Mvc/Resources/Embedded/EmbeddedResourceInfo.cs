@@ -1,31 +1,26 @@
-﻿using System.Reflection;
-
-namespace Abp.Web.Mvc.Resources.Embedded
+﻿namespace Abp.Resources.Embedded
 {
     /// <summary>
     /// 
     /// </summary>
     public class EmbeddedResourceInfo
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public Assembly Assembly { get; private set; }
+        public string Name { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ResourceNamespace { get; private set; }
+        public byte[] Content { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="resourceNamespace"></param>
-        public EmbeddedResourceInfo(Assembly assembly, string resourceNamespace)
+        public string MimeType { get; set; }
+
+        public EmbeddedResourceInfo(string name, byte[] content)
         {
-            Assembly = assembly;
-            ResourceNamespace = resourceNamespace;
+            Name = name;
+            Content = content;
+        }
+
+        public EmbeddedResourceInfo(string name, byte[] content, string mimeType)
+            : this(name, content)
+        {
+            MimeType = mimeType;
         }
     }
 }

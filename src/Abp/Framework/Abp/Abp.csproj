@@ -65,6 +65,9 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Resources\Embedded\EmbeddedResourceManager.cs" />
+    <Compile Include="Resources\Embedded\EmbeddedResourcePathInfo.cs" />
+    <Compile Include="Resources\Embedded\IEmbeddedResourceManager.cs" />
     <Compile Include="Runtime\Session\IAbpSession.cs" />
     <Compile Include="Runtime\Session\NullAbpSession.cs" />
     <Compile Include="Configuration\ISettingDefinitionManager.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="Utils\Extensions\Collections\CollectionExtensions.cs" />
     <Compile Include="Utils\Extensions\Collections\DictionaryExtensions.cs" />
     <Compile Include="Utils\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Utils\Extensions\IO\StreamExtensions.cs" />
     <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\Extensions\Reflection\MemberInfoExtensions.cs" />
     <Compile Include="Utils\Extensions\Xml\XmlExtensions.cs" />

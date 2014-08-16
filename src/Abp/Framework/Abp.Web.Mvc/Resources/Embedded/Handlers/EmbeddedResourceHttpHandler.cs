@@ -1,44 +1,34 @@
-﻿using System.IO;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
 
 namespace Abp.Web.Mvc.Resources.Embedded.Handlers
 {
     internal class EmbeddedResourceHttpHandler : IHttpHandler
     {
+        private readonly string _rootPath;
         private readonly RouteData _routeData;
 
-        public EmbeddedResourceHttpHandler(RouteData routeData)
+        public EmbeddedResourceHttpHandler(string rootPath, RouteData routeData)
         {
+            _rootPath = rootPath;
             _routeData = routeData;
         }
 
         public void ProcessRequest(HttpContext context)
         {
+            context.Response.Clear();
+
             var fileName = _routeData.Values["pathInfo"] as string;
             if (fileName == null)
             {
+                context.Response.StatusCode = 404; //TODO: Is this enough?
                 return;
             }
 
-            string nameSpace = GetType().Assembly.GetName().Name;
-            string manifestResourceName = string.Format("{0}.{1}", nameSpace, fileName.Replace("/", "."));
+            context.Response.ContentType = MimeMapping.GetMimeMapping(fileName);
 
-            using (Stream stream = GetType().Assembly.GetManifestResourceStream(manifestResourceName))
-            {
-                if (stream == null)
-                {
-                    return;
-                }
-
-                context.Response.Clear();
-                if (fileName.EndsWith(".js"))
-                    context.Response.ContentType = "text/javascript";
-                else if (fileName.EndsWith(".css"))
-                    context.Response.ContentType = "text/css";
-
-                stream.CopyTo(context.Response.OutputStream);
-            }
+            var resourceBytes = WebResourceHelper.GetEmbeddedResource(_rootPath + "/" + fileName);
+            context.Response.OutputStream.Write(resourceBytes, 0, resourceBytes.Length);
         }
 
         public bool IsReusable { get { return false; } }
