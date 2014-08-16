@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Modules\DefaultAssemblyFinder.cs" />
+    <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceManager.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourcePathInfo.cs" />

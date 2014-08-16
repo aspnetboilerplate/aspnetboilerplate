@@ -13,11 +13,14 @@ namespace Abp.Modules
     {
         public ILogger Logger { get; set; }
 
+        public IAssemblyFinder AssemblyFinder { get; set; }
+
         private readonly AbpModuleCollection _modules;
 
         public AbpModuleLoader(AbpModuleCollection modules)
         {
             _modules = modules;
+            AssemblyFinder = new DefaultAssemblyFinder();
             Logger = NullLogger.Instance;
         }
 
@@ -27,10 +30,10 @@ namespace Abp.Modules
 
             _modules.Add(AbpModuleInfo.CreateForType(typeof(AbpStartupModule)));
 
-            var scannedAssemlies = new List<Assembly>();
+            var allAssemblies = AssemblyFinder.GetAllAssemblies();
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
+            var scannedAssemlies = new List<Assembly>();
+            foreach (var assembly in allAssemblies)
             {
                 FillModules(assembly, scannedAssemlies);
             }
@@ -48,12 +51,6 @@ namespace Abp.Modules
             }
 
             scannedAssemblies.Add(assembly);
-            var referencedAssemblyNames = assembly.GetReferencedAssemblies();
-            foreach (var referencedAssemblyName in referencedAssemblyNames)
-            {
-                var referencedAssembly = Assembly.Load(referencedAssemblyName);
-                FillModules(referencedAssembly, scannedAssemblies);
-            }
 
             foreach (var type in assembly.GetTypes())
             {

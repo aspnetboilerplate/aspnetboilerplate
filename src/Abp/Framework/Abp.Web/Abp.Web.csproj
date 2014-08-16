@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Startup\Web\WebAssemblyFinder.cs" />
     <Compile Include="Web\Authentication\AuthenticationScriptManager.cs" />
     <Compile Include="Web\Authentication\IAuthenticationScriptManager.cs" />
     <Compile Include="Web\HttpVerb.cs" />
