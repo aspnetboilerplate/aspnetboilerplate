@@ -99,6 +99,10 @@
       <Project>{78FC0C9B-C5A9-4900-9A46-A8F544AC5343}</Project>
       <Name>Abp.Web.Mvc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Abp.Web.Resources\Abp.Web.Resources.csproj">
+      <Project>{9003dda9-1dd5-41a1-b907-6f378767c441}</Project>
+      <Name>Abp.Web.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Abp.Web\Abp.Web.csproj">
       <Project>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</Project>
       <Name>Abp.Web</Name>

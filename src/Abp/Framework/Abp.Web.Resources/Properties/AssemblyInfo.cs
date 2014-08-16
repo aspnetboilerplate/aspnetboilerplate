@@ -7,23 +7,14 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Web Resources")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Web Resources")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp")]
-[assembly: AssemblyCopyright("Copyright © 2014")]
+[assembly: AssemblyProduct("Abp.Web.Resources")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-[assembly: InternalsVisibleTo("Abp.Application")]
-[assembly: InternalsVisibleTo("Abp.Infrastructure.EntityFramework")]
-[assembly: InternalsVisibleTo("Abp.Infrastructure.NHibernate")]
-[assembly: InternalsVisibleTo("Abp.Web")]
-[assembly: InternalsVisibleTo("Abp.Web.Api")]
-[assembly: InternalsVisibleTo("Abp.Web.Mvc")]
-[assembly: InternalsVisibleTo("Abp.Web.Resources")]
-[assembly: InternalsVisibleTo("Abp.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -31,7 +22,7 @@ using Abp;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7b50eb47-4993-4a14-b65c-b61714a607b9")]
+[assembly: Guid("db504a85-8cb3-4c16-a7ff-ad00c4c93114")]
 
 // Version information for an assembly consists of the following four values:
 //
