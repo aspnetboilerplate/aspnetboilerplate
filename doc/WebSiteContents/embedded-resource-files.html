@@ -13,19 +13,19 @@
 
 <ul>
 	<li><a href="#DocIntro">Introduction</a></li>
-	<li><a href="#DocCreateFiles">Creating embedded files</a></li>
+	<li><a href="#DocCreateFiles">Create embedded files</a></li>
 	<li><a href="#DocExposeFiles">Expose embedded files</a></li>
 	<li><a href="#DocConsumeFiles">Consume embedded files</a></li>
 </ul>
 
 <h3 id="DocIntro">Introduction</h3>
 <p>In a web application, there are javascript, css, xml... files used by 
-clients. They are generally added web project and published as seperated files. 
-Sometimes, we need to package some of these files into an assembly (say, 
-into a class library project (dll)) and distribute as embedded resource files in the 
+clients. They are generally added to a web project and published as seperated files. 
+Sometimes, we need to package some of these files into an assembly (a class library project, 
+a dll file) and distribute as embedded resource files in the 
 assembly. ASP.NET Boilerplate provides an ifrastructure to make this easy.</p>
 
-<h3 id="DocCreateFiles">Creating embedded files</h3>
+<h3 id="DocCreateFiles">Create embedded files</h3>
 <p>We first should create a resource file and mark it as <strong>embedded 
 resource</strong>. Any assembly can contain embedded resource files. Assume that we have an assembly named 
 'Abp.Zero.Web.UI.Metronic.dll' and it contains javascripts, css and image files:</p>
