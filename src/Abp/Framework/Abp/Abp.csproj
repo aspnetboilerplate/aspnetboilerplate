@@ -65,6 +65,10 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
+    <Compile Include="Domain\Entities\Auditing\FullAuditedEntityOfTPrimaryKey.cs" />
+    <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />
+    <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
