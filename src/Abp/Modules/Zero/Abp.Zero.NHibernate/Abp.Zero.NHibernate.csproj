@@ -32,6 +32,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Abp, Version=0.3.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Abp.0.3.1.2\lib\net451\Abp.dll</HintPath>
+    </Reference>
+    <Reference Include="Abp.Infrastructure.NHibernate, Version=0.3.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Abp.Infrastructure.NHibernate.0.3.1.2\lib\net451\Abp.Infrastructure.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging">
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Castle.LoggingFacility.3.3.0\lib\net45\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="FluentMigrator">
       <HintPath>..\..\..\..\packages\FluentMigrator.1.2.1.0\lib\40\FluentMigrator.dll</HintPath>
     </Reference>
@@ -48,6 +67,10 @@
       <HintPath>..\..\..\..\packages\NHibernate.3.3.4.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\aspnetboilerplate-zero\src\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -90,14 +113,6 @@
     <None Include="RunMigrations.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\Abp.Infrastructure.NHibernate\Abp.Infrastructure.NHibernate.csproj">
-      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
-      <Name>Abp.Infrastructure.NHibernate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Abp\Abp.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj">
       <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>
       <Name>Abp.Zero</Name>
