@@ -87,9 +87,9 @@ namespace Abp.Web.Models
         }
         
         /// <summary>
-        /// 
+        /// Adds an exception converter that is used by <see cref="ForException"/> method.
         /// </summary>
-        /// <param name="converter"></param>
+        /// <param name="converter">Converter object</param>
         public static void AddExceptionConverter(IExceptionToErrorInfoConverter converter)
         {
             converter.Next = _converter;
