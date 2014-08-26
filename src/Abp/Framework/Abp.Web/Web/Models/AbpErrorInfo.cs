@@ -1,15 +1,19 @@
 ﻿using System;
-using Abp.Runtime.Validation;
-using Abp.UI;
-using Abp.Web.Localization;
 
 namespace Abp.Web.Models
 {
     /// <summary>
     /// Used to store informations about an error.
     /// </summary>
-    public class AbpErrorInfo
+    public class AbpErrorInfo //TODO: Rename to ErrorInfo?
     {
+        private static IExceptionToErrorInfoConverter _converter = new DefaultExceptionToErrorInfoConverter();
+
+        /// <summary>
+        /// Error code.
+        /// </summary>
+        public int Code { get; set; }
+
         /// <summary>
         /// Error message.
         /// </summary>
@@ -50,35 +54,46 @@ namespace Abp.Web.Models
         }
 
         /// <summary>
+        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="message">Error message</param>
+        public AbpErrorInfo(int code, string message)
+            : this(message)
+        {
+            Code = code;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="message">Error message</param>
+        /// <param name="details">Error details</param>
+        public AbpErrorInfo(int code, string message, string details)
+            : this(message, details)
+        {
+            Code = code;
+        }
+
+        /// <summary>
         /// Creates a new instance of <see cref="AbpErrorInfo"/> using given exception object.
         /// </summary>
         /// <param name="exception">Exception</param>
         /// <returns>Created <see cref="AbpErrorInfo"/> object</returns>
         public static AbpErrorInfo ForException(Exception exception)
         {
-            //TODO@Halil: I can find a better way...
-
-            if (exception is AggregateException && exception.InnerException != null)
-            {
-                var aggException = exception as AggregateException;
-                if (aggException.InnerException is UserFriendlyException || aggException.InnerException is AbpValidationException)
-                {
-                    exception = aggException.InnerException;
-                }
-            }
-
-            if (exception is UserFriendlyException)
-            {
-                var userFriendlyException = exception as UserFriendlyException;
-                return new AbpErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
-            }
-            
-            if (exception is AbpValidationException)
-            {
-                return new AbpErrorInfo(AbpWebLocalizedMessages.ValidationError);                
-            }
-
-            return new AbpErrorInfo(AbpWebLocalizedMessages.InternalServerError);
+            return _converter.Convert(exception);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converter"></param>
+        public static void AddExceptionConverter(IExceptionToErrorInfoConverter converter)
+        {
+            converter.Next = _converter;
+            _converter = converter;
         }
     }
 }
