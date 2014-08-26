@@ -25,8 +25,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             return base
                 .ExecuteAsync(controllerContext, arguments, cancellationToken)
-                .ContinueWith(
-                    task => (object) new AbpAjaxResponse(task.Result));
+                .ContinueWith(task => task.Result is AbpAjaxResponse ? task.Result : (object) new AbpAjaxResponse(task.Result));
         }
     }
 }
