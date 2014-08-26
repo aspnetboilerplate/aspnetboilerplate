@@ -20,7 +20,7 @@
         /// <summary>
         /// Error details (Must and only set if <see cref="Success"/> is false).
         /// </summary>
-        public AbpErrorInfo Error { get; set; }
+        public ErrorInfo Error { get; set; }
 
         /// <summary>
         /// This property can be used to indicate that the current user has no privilege to perform this request.
@@ -62,7 +62,7 @@
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>
-        public AbpAjaxResponse(AbpErrorInfo error, bool unAuthorizedRequest = false)
+        public AbpAjaxResponse(ErrorInfo error, bool unAuthorizedRequest = false)
         {
             Error = error;
             UnAuthorizedRequest = unAuthorizedRequest;

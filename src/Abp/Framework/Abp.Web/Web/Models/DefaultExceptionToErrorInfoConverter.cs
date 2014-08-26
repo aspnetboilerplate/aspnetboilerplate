@@ -9,7 +9,7 @@ namespace Abp.Web.Models
     {
         public IExceptionToErrorInfoConverter Next { set; private get; }
 
-        public AbpErrorInfo Convert(Exception exception)
+        public ErrorInfo Convert(Exception exception)
         {
             if (exception is AggregateException && exception.InnerException != null)
             {
@@ -23,15 +23,15 @@ namespace Abp.Web.Models
             if (exception is UserFriendlyException)
             {
                 var userFriendlyException = exception as UserFriendlyException;
-                return new AbpErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
+                return new ErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
             }
 
             if (exception is AbpValidationException)
             {
-                return new AbpErrorInfo(AbpWebLocalizedMessages.ValidationError);
+                return new ErrorInfo(AbpWebLocalizedMessages.ValidationError);
             }
 
-            return new AbpErrorInfo(AbpWebLocalizedMessages.InternalServerError);
+            return new ErrorInfo(AbpWebLocalizedMessages.InternalServerError);
         }
     }
 }

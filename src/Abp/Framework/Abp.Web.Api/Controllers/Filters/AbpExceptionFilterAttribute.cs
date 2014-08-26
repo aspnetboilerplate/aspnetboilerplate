@@ -16,7 +16,7 @@ namespace Abp.WebApi.Controllers.Filters
             LogHelper.LogException(context.Exception);
             context.Response = context.Request.CreateResponse(
                 HttpStatusCode.OK,
-                new AbpAjaxResponse(AbpErrorInfo.ForException(context.Exception))
+                new AbpAjaxResponse(ErrorInfo.ForException(context.Exception))
                 );
         }
     }

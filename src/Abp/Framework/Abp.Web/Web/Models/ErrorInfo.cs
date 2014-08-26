@@ -5,7 +5,7 @@ namespace Abp.Web.Models
     /// <summary>
     /// Used to store informations about an error.
     /// </summary>
-    public class AbpErrorInfo //TODO: Rename to ErrorInfo?
+    public class ErrorInfo
     {
         private static IExceptionToErrorInfoConverter _converter = new DefaultExceptionToErrorInfoConverter();
 
@@ -25,63 +25,63 @@ namespace Abp.Web.Models
         public string Details { get; set; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
-        public AbpErrorInfo()
+        public ErrorInfo()
         {
             
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
         /// <param name="message">Error message</param>
-        public AbpErrorInfo(string message)
+        public ErrorInfo(string message)
             : this(message, "")
         {
 
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
         /// <param name="message">Error message</param>
         /// <param name="details">Error details</param>
-        public AbpErrorInfo(string message, string details)
+        public ErrorInfo(string message, string details)
         {
             Message = message;
             Details = details;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
         /// <param name="code">Error code</param>
         /// <param name="message">Error message</param>
-        public AbpErrorInfo(int code, string message)
+        public ErrorInfo(int code, string message)
             : this(message)
         {
             Code = code;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/>.
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
         /// <param name="code">Error code</param>
         /// <param name="message">Error message</param>
         /// <param name="details">Error details</param>
-        public AbpErrorInfo(int code, string message, string details)
+        public ErrorInfo(int code, string message, string details)
             : this(message, details)
         {
             Code = code;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpErrorInfo"/> using given exception object.
+        /// Creates a new instance of <see cref="ErrorInfo"/> using given exception object.
         /// </summary>
         /// <param name="exception">Exception</param>
-        /// <returns>Created <see cref="AbpErrorInfo"/> object</returns>
-        public static AbpErrorInfo ForException(Exception exception)
+        /// <returns>Created <see cref="ErrorInfo"/> object</returns>
+        public static ErrorInfo ForException(Exception exception)
         {
             return _converter.Convert(exception);
         }
