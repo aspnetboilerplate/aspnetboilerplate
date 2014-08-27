@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</ProjectGuid>
+    <ProjectGuid>{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp</RootNamespace>
-    <AssemblyName>Abp.Web</AssemblyName>
+    <RootNamespace>Abp.Web.Tests</RootNamespace>
+    <AssemblyName>Abp.Web.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Abp.Web.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,21 +30,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Abp.Web.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,46 +44,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Startup\Web\WebAssemblyFinder.cs" />
-    <Compile Include="Web\Authentication\AuthenticationScriptManager.cs" />
-    <Compile Include="Web\Authentication\IAuthenticationScriptManager.cs" />
-    <Compile Include="Web\HttpVerb.cs" />
-    <Compile Include="Web\Localization\AbpWebLocalizedMessages.cs" />
-    <Compile Include="Web\Localization\ILocalizationScriptManager.cs" />
-    <Compile Include="Web\Localization\LocalizationScriptManager.cs" />
-    <Compile Include="Web\Models\AbpAjaxResponse.cs" />
-    <Compile Include="Web\Models\ErrorInfo.cs" />
+    <Compile Include="ErrorInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\Localization\AbpWebLocalizationSource.cs" />
-    <Compile Include="Startup\Web\AbpWebModule.cs" />
-    <Compile Include="Startup\Web\AbpWebApplication.cs" />
-    <Compile Include="Web\Models\DefaultExceptionToErrorInfoConverter.cs" />
-    <Compile Include="Web\Models\IExceptionToErrorInfoConverter.cs" />
-    <Compile Include="Web\Settings\ISettingScriptManager.cs" />
-    <Compile Include="Web\Settings\SettingScriptManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Application\Abp.Application.csproj">
-      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
-      <Name>Abp.Application</Name>
+    <ProjectReference Include="..\..\Abp.Web\Abp.Web.csproj">
+      <Project>{d37c09d8-2f18-4f0b-a4d3-7a12c124e070}</Project>
+      <Name>Abp.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp\Abp.csproj">
+    <ProjectReference Include="..\..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Abp.Web.nuspec" />
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
