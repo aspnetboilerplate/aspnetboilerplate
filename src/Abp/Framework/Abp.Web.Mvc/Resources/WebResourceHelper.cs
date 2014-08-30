@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Abp.Dependency;
 using Abp.Resources.Embedded;
-using Abp.Web.Mvc.Resources.Embedded;
 using Abp.Web.Mvc.Resources.Embedded.Handlers;
 
 namespace Abp.Web.Mvc.Resources
@@ -51,6 +49,11 @@ namespace Abp.Web.Mvc.Resources
                 ).RouteHandler = new EmbeddedResourceRouteHandler(rootPath);
         }
 
+        /// <summary>
+        /// Gets an embedded resource file.
+        /// </summary>
+        /// <param name="fullResourcePath">Full path of the resource</param>
+        /// <returns>Embedded resource file</returns>
         public static EmbeddedResourceInfo GetEmbeddedResource(string fullResourcePath)
         {
             return EmbeddedResourceManager.GetResource(fullResourcePath);

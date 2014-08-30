@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Abp.Resources.Embedded
 {
@@ -35,7 +36,35 @@ namespace Abp.Resources.Embedded
 
         public string FindManifestName(string fullPath)
         {
-            return string.Format("{0}.{1}", ResourceNamespace, fullPath.Substring(Path.Length + 1).Replace("/", "."));
+            var relativeResourcePath = fullPath.Substring(Path.Length + 1);
+            relativeResourcePath = NormalizeResourcePath(relativeResourcePath);
+            return string.Format("{0}.{1}", ResourceNamespace, relativeResourcePath.Replace("/", "."));
+        }
+
+        private static string NormalizeResourcePath(string path)
+        {
+            var pathFolders = path.Split('/');
+            if (pathFolders.Length < 2)
+            {
+                return path;
+            }
+            
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < pathFolders.Length - 1; i++)
+            {
+                sb.Append(NormalizeFolderName(pathFolders[i]) + "/");
+            }
+
+            sb.Append(pathFolders.Last()); //Append file name
+
+            return sb.ToString();
+        }
+
+        private static string NormalizeFolderName(string pathPart)
+        {
+            //TODO: Implement all rules of .NET
+            return pathPart.Replace('-', '_');
         }
     }
 }
