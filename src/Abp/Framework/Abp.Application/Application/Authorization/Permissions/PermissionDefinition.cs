@@ -10,6 +10,7 @@ namespace Abp.Application.Authorization.Permissions
     {
         /// <summary>
         /// Unique name of the permission.
+        /// This is the key name to grant permissions.
         /// </summary>
         public string Name { get; private set; }
 
@@ -26,6 +27,7 @@ namespace Abp.Application.Authorization.Permissions
 
         /// <summary>
         /// Is this permission granted by default.
+        /// Default value: false.
         /// </summary>
         public bool IsGrantedByDefault { get; private set; }
 
@@ -34,7 +36,7 @@ namespace Abp.Application.Authorization.Permissions
         /// </summary>
         /// <param name="name">Unique name of the permission</param>
         /// <param name="displayName">Display name of the permission</param>
-        /// <param name="isGrantedByDefault">Is this permission granted by default</param>
+        /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         public PermissionDefinition(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
