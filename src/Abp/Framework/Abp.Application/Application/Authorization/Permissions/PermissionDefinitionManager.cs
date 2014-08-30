@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Dependency;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization.Permissions
@@ -8,7 +9,7 @@ namespace Abp.Application.Authorization.Permissions
     /// <summary>
     /// 
     /// </summary>
-    public class PermissionDefinitionManager : IPermissionDefinitionManager
+    public class PermissionDefinitionManager : IPermissionDefinitionManager, ISingletonDependency
     {
         private readonly IDictionary<string, PermissionDefinition> _permissions;
 

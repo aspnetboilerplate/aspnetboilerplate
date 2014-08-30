@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Caching;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
@@ -13,7 +14,7 @@ namespace Abp.Configuration
     /// <summary>
     /// This class implements <see cref="ISettingManager"/> to manage setting values in the database.
     /// </summary>
-    public class SettingManager : ISettingManager
+    public class SettingManager : ISettingManager, ISingletonDependency
     {
         /// <summary>
         /// Reference to the current Session.

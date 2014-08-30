@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Abp.Dependency;
 
 namespace Abp.Application.Authorization.Permissions
 {
     /// <summary>
     /// Permission manager.
     /// </summary>
-    public interface IPermissionDefinitionManager : ISingletonDependency
+    public interface IPermissionDefinitionManager
     {
         /// <summary>
         /// Gets <see cref="PermissionDefinition"/> object with given <see cref="permissionName"/> or returns null
