@@ -1,6 +1,8 @@
 using System;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
@@ -59,6 +61,8 @@ namespace Abp.Web.Mvc.Controllers
             // they detect a server error. Setting this property indicates that we
             // want it to try to render ASP.NET MVC's error page instead.
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+            EventBus.Default.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
         private bool IsAjaxRequest(ExceptionContext context)

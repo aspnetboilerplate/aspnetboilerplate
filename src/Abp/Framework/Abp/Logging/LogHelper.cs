@@ -21,7 +21,9 @@ namespace Abp.Logging
 
         static LogHelper()
         {
-            Logger = IocHelper.Resolve<ILogger>();
+            Logger = IocManager.Instance.IocContainer.Kernel.HasComponent(typeof (ILogger))
+                ? IocHelper.Resolve<ILogger>()
+                : NullLogger.Instance;
         }
 
         public static void LogException(Exception ex)

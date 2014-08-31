@@ -71,6 +71,8 @@
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Domain\Entities\IMayHaveTenant.cs" />
     <Compile Include="Domain\Entities\IMustHaveTenant.cs" />
+    <Compile Include="Events\Bus\Exceptions\AbpHandledExceptionData.cs" />
+    <Compile Include="Events\Bus\Exceptions\ExceptionData.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
