@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.Events.Bus;
-using Abp.Events.Bus.Datas;
 
 namespace Abp.Domain.Uow
 {

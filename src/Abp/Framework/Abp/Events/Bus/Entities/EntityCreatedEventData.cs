@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Datas.Entities
+namespace Abp.Events.Bus.Entities
 {
     /// <summary>
     /// This type of event can be used to notify creation of an Entity.

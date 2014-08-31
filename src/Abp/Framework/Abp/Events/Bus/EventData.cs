@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Datas
+namespace Abp.Events.Bus
 {
     /// <summary>
     /// Implements <see cref="IEventData"/> and provides a base for event data classes.
