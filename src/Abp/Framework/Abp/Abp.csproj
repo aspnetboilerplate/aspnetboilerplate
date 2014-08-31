@@ -69,6 +69,8 @@
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
+    <Compile Include="Domain\Entities\IMayHaveTenant.cs" />
+    <Compile Include="Domain\Entities\IMustHaveTenant.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
