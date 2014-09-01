@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
 using Abp.Events.Bus;
-using Abp.WebApi.Controllers.Filters;
+using Abp.Events.Bus.Exceptions;
 using NUnit.Framework;
 
 namespace Abp.Web.Api.Tests.Controllers.Filters
@@ -20,11 +18,7 @@ namespace Abp.Web.Api.Tests.Controllers.Filters
         [Test]
         public void ShouldHandleExceptions()
         {
-            var exHandler = new MyExceptionHandler();
-            EventBus.Default.Register(exHandler);
-
-            var filter = new AbpExceptionFilterAttribute();
-            filter.OnException(new HttpActionExecutedContext(new HttpActionContext(), new Exception("my exception message")));
+            EventBus.Default.Trigger(this, new AbpHandledExceptionData(new Exception("my exception message")));
 
             Assert.NotNull(MyExceptionHandler.LastException);
             Assert.AreEqual("my exception message", MyExceptionHandler.LastException.Message);

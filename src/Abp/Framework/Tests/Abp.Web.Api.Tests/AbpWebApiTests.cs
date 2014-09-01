@@ -1,3 +1,4 @@
+using Abp.Localization;
 using Abp.Startup;
 
 namespace Abp.Web.Api.Tests
@@ -13,6 +14,7 @@ namespace Abp.Web.Api.Tests
                 return;
             }
 
+            LocalizationHelper.DisableLocalization();
             _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }

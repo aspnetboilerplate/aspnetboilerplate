@@ -51,6 +51,11 @@ namespace Abp.Localization.Sources
             }
         }
 
+        public virtual void Initialize()
+        {
+            
+        }
+
         public string GetString(string name)
         {
             return GetString(name, Thread.CurrentThread.CurrentUICulture);

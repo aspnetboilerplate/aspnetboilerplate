@@ -38,10 +38,9 @@ namespace Abp.Localization.Sources.Xml
             }
 
             DirectoryPath = directory;
-            Initialize();
         }
 
-        private void Initialize()
+        public override void Initialize()
         {
             var files = Directory.GetFiles(DirectoryPath, "*.xml", SearchOption.TopDirectoryOnly);
             var defaultLangFile = files.FirstOrDefault(f => f.EndsWith(Name + ".xml"));

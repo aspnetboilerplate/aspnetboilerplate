@@ -22,16 +22,27 @@ namespace Abp.Localization.Sources
 
         public void RegisterSource(ILocalizationSource source)
         {
+            if (LocalizationHelper.IsDisabled)
+            {
+                return;
+            }
+
             if (_sources.ContainsKey(source.Name))
             {
                 throw new AbpException("There is already a source with name: " + source.Name);
             }
 
             _sources[source.Name] = source;
+            source.Initialize();
         }
 
         public ILocalizationSource GetSource(string name)
         {
+            if (LocalizationHelper.IsDisabled)
+            {
+                return NullLocalizationSource.Instance;
+            }
+
             if (name == null)
             {
                 throw new ArgumentNullException("name");

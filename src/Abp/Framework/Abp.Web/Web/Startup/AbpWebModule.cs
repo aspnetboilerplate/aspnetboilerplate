@@ -17,7 +17,11 @@ namespace Abp.Web.Startup
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);
-            XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
+
+            if (HttpContext.Current != null)
+            {
+                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");                
+            }
         }
 
         public override void Initialize(IAbpInitializationContext initializationContext)

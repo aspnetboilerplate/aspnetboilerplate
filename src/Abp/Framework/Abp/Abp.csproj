@@ -73,6 +73,7 @@
     <Compile Include="Domain\Entities\IMustHaveTenant.cs" />
     <Compile Include="Events\Bus\Exceptions\AbpHandledExceptionData.cs" />
     <Compile Include="Events\Bus\Exceptions\ExceptionData.cs" />
+    <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
