@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Startup\Web\WebAssemblyFinder.cs" />
+    <Compile Include="Web\Startup\WebAssemblyFinder.cs" />
     <Compile Include="Web\Authentication\AuthenticationScriptManager.cs" />
     <Compile Include="Web\Authentication\IAuthenticationScriptManager.cs" />
     <Compile Include="Web\HttpVerb.cs" />
@@ -65,8 +65,8 @@
     <Compile Include="Web\Models\ErrorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Localization\AbpWebLocalizationSource.cs" />
-    <Compile Include="Startup\Web\AbpWebModule.cs" />
-    <Compile Include="Startup\Web\AbpWebApplication.cs" />
+    <Compile Include="Web\Startup\AbpWebModule.cs" />
+    <Compile Include="Web\Startup\AbpWebApplication.cs" />
     <Compile Include="Web\Models\DefaultExceptionToErrorInfoConverter.cs" />
     <Compile Include="Web\Models\IExceptionToErrorInfoConverter.cs" />
     <Compile Include="Web\Settings\ISettingScriptManager.cs" />

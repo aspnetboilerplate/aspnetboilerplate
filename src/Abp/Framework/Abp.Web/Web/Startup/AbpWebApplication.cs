@@ -5,9 +5,10 @@ using System.Web;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Modules;
+using Abp.Startup;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.Startup.Web
+namespace Abp.Web.Startup
 {
     /// <summary>
     /// This class is used to simplify starting of ABP system using <see cref="AbpBootstrapper"/> class..

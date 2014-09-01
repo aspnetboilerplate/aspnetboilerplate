@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Compilation;
 using Abp.Modules;
 
-namespace Abp.Startup.Web
+namespace Abp.Web.Startup
 {
     public class WebAssemblyFinder : IAssemblyFinder
     {

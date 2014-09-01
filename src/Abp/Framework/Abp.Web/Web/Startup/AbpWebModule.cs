@@ -4,9 +4,10 @@ using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
+using Abp.Startup;
 using Abp.Web.Localization;
 
-namespace Abp.Startup.Web
+namespace Abp.Web.Startup
 {
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.

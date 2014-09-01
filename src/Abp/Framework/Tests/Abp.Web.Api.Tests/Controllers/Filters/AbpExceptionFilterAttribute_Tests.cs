@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Events.Bus;
-using Abp.Events.Bus.Exceptions;
-using Abp.Events.Bus.Handlers;
 using Abp.WebApi.Controllers.Filters;
 using NUnit.Framework;
 
@@ -17,6 +11,12 @@ namespace Abp.Web.Api.Tests.Controllers.Filters
     [TestFixture]
     public class AbpExceptionFilterAttribute_Tests
     {
+        [TestFixtureSetUp]
+        public void Initialize()
+        {
+            AbpWebApiTests.Initialize();
+        }
+
         [Test]
         public void ShouldHandleExceptions()
         {
@@ -26,18 +26,8 @@ namespace Abp.Web.Api.Tests.Controllers.Filters
             var filter = new AbpExceptionFilterAttribute();
             filter.OnException(new HttpActionExecutedContext(new HttpActionContext(), new Exception("my exception message")));
 
-            Assert.NotNull(exHandler.Exception);
-            Assert.AreEqual("my exception message", exHandler.Exception.Message);
-        }
-    }
-
-    public class MyExceptionHandler : IEventHandler<AbpHandledExceptionData>
-    {
-        public Exception Exception { get; private set; }
-
-        public void HandleEvent(AbpHandledExceptionData eventData)
-        {
-            Exception = eventData.Exception;
+            Assert.NotNull(MyExceptionHandler.LastException);
+            Assert.AreEqual("my exception message", MyExceptionHandler.LastException.Message);
         }
     }
 }

@@ -57,7 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpWebApiTests.cs" />
     <Compile Include="Controllers\Filters\AbpExceptionFilterAttribute_Tests.cs" />
+    <Compile Include="AbpWebApiTestModule.cs" />
+    <Compile Include="Controllers\Filters\MyExceptionHandler.cs" />
     <Compile Include="DynamicApiController\ServiceNameValidation_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
