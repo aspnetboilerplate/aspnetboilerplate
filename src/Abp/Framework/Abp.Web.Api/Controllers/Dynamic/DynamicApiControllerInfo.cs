@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
@@ -29,6 +30,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         public IDictionary<string, DynamicApiActionInfo> Actions { get; private set; }
 
         /// <summary>
+        /// Dynamic ActionFilters for this controller.
+        /// </summary>
+        public IList<IFilter> ActionFilters { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
         /// <param name="serviceName">Name of the service</param>
@@ -41,6 +47,8 @@ namespace Abp.WebApi.Controllers.Dynamic
             ProxiedType = proxiedType;
 
             Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
+
+            ActionFilters = new List<IFilter>(); //Intializing ActionFilters
         }
     }
 }

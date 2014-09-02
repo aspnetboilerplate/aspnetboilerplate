@@ -4,6 +4,7 @@ using System.Reflection;
 using Abp.Dependency;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using Castle.MicroKernel.Registration;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -67,9 +68,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        public void Build()
+        public void Build(IList<IFilter> filters = null)
         {
             var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T));
+
+            if (filters != null)
+            {
+                controllerInfo.ActionFilters = filters;
+            }
             
             foreach (var actionBuilder in _actionBuilders.Values)
             {

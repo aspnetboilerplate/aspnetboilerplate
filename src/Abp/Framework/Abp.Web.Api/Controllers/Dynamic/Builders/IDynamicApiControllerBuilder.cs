@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Web.Http.Filters;
+
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
@@ -12,11 +15,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
         IApiControllerActionBuilder<T> ForMethod(string methodName);
-        
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        void Build();
+        void Build(IList<IFilter> filters = null);
     }
 }

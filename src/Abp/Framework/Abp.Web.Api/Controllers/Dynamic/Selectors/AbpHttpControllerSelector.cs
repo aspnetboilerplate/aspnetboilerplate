@@ -47,6 +47,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                         if (controllerInfo != null)
                         {
                             var controllerDescriptor = new HttpControllerDescriptor(_configuration, controllerInfo.ServiceName, controllerInfo.Type);
+                            controllerDescriptor.Configuration.Filters.AddRange(controllerInfo.ActionFilters);
                             controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
                             return controllerDescriptor;
                         }

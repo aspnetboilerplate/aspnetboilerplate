@@ -1,4 +1,6 @@
 using Abp.Web;
+using System.Collections.Generic;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -39,6 +41,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        void Build();
+        void Build(IList<IFilter> filters = null);
     }
 }
