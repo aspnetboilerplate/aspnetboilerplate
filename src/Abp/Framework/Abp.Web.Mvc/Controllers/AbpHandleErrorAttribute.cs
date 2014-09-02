@@ -23,10 +23,15 @@ namespace Abp.Web.Mvc.Controllers
                 throw new ArgumentNullException("context");
             }
 
+            //If exception handled before, do nothing.
+            //If this is child action, exception should be handled by main action.
             if (context.ExceptionHandled || context.IsChildAction)
             {
                 return;
             }
+
+            //Always log exception
+            LogHelper.LogException(context.Exception);
 
             // If custom errors are disabled, we need to let the normal ASP.NET exception handler
             // execute so that the user can see useful debugging information.
@@ -35,23 +40,23 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            var exception = context.Exception;
-            
-            LogHelper.LogException(exception);
-
             // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
             // ignore it.
-            if (new HttpException(null, exception).GetHttpCode() != 500)
+            if (new HttpException(null, context.Exception).GetHttpCode() != 500)
             {
                 return;
             }
 
-            if (!ExceptionType.IsInstanceOfType(exception))
+            //Do not handle exceptions for attributes configured for special exception types and this exceptiod does not fit condition.
+            if (!ExceptionType.IsInstanceOfType(context.Exception))
             {
                 return;
             }
 
+            //We handled the exception!
             context.ExceptionHandled = true;
+
+            //Return a special error response to the client.
             context.HttpContext.Response.Clear();
             context.Result = IsAjaxRequest(context)
                 ? GenerateAjaxResult(context)
@@ -62,6 +67,7 @@ namespace Abp.Web.Mvc.Controllers
             // want it to try to render ASP.NET MVC's error page instead.
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
 
+            //Trigger an event, so we can register it.
             EventBus.Default.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 

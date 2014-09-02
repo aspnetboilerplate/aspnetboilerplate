@@ -29,7 +29,7 @@ namespace Abp.Web.Models
         /// </summary>
         public ErrorInfo()
         {
-            
+
         }
 
         /// <summary>
@@ -37,22 +37,19 @@ namespace Abp.Web.Models
         /// </summary>
         /// <param name="message">Error message</param>
         public ErrorInfo(string message)
-            : this(message, "")
         {
-
+            Message = message;
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
-        /// <param name="message">Error message</param>
-        /// <param name="details">Error details</param>
-        public ErrorInfo(string message, string details)
+        /// <param name="code">Error code</param>
+        public ErrorInfo(int code)
         {
-            Message = message;
-            Details = details;
+            Code = code;
         }
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>
@@ -62,6 +59,17 @@ namespace Abp.Web.Models
             : this(message)
         {
             Code = code;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
+        /// </summary>
+        /// <param name="message">Error message</param>
+        /// <param name="details">Error details</param>
+        public ErrorInfo(string message, string details)
+            : this(message)
+        {
+            Details = details;
         }
 
         /// <summary>
@@ -85,7 +93,7 @@ namespace Abp.Web.Models
         {
             return _converter.Convert(exception);
         }
-        
+
         /// <summary>
         /// Adds an exception converter that is used by <see cref="ForException"/> method.
         /// </summary>
