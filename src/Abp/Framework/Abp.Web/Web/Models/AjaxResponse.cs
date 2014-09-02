@@ -3,7 +3,7 @@
     /// <summary>
     /// This class is used to create standard responses for ajax requests.
     /// </summary>
-    public class AbpAjaxResponse
+    public class AjaxResponse
     {
         /// <summary>
         /// The actual result object of ajax request.
@@ -28,41 +28,41 @@
         public bool UnAuthorizedRequest { get; set; }
 
         /// <summary>
-        /// Creates an <see cref="AbpAjaxResponse"/> object.
+        /// Creates an <see cref="AjaxResponse"/> object.
         /// <see cref="Success"/> is set as true.
         /// </summary>
-        public AbpAjaxResponse()
+        public AjaxResponse()
         {
             Success = true;
         }
 
         /// <summary>
-        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Success"/> specified.
+        /// Creates an <see cref="AjaxResponse"/> object with <see cref="Success"/> specified.
         /// </summary>
         /// <param name="success">Indicates success status of the result</param>
-        public AbpAjaxResponse(bool success)
+        public AjaxResponse(bool success)
         {
             Success = success;
         }
 
         /// <summary>
-        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Result"/> specified.
+        /// Creates an <see cref="AjaxResponse"/> object with <see cref="Result"/> specified.
         /// <see cref="Success"/> is set as true.
         /// </summary>
         /// <param name="result">The actual result object of ajax request</param>
-        public AbpAjaxResponse(object result)
+        public AjaxResponse(object result)
         {
             Result = result;
             Success = true;
         }
 
         /// <summary>
-        /// Creates an <see cref="AbpAjaxResponse"/> object with <see cref="Error"/> specified.
+        /// Creates an <see cref="AjaxResponse"/> object with <see cref="Error"/> specified.
         /// <see cref="Success"/> is set as false.
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>
-        public AbpAjaxResponse(ErrorInfo error, bool unAuthorizedRequest = false)
+        public AjaxResponse(ErrorInfo error, bool unAuthorizedRequest = false)
         {
             Error = error;
             UnAuthorizedRequest = unAuthorizedRequest;

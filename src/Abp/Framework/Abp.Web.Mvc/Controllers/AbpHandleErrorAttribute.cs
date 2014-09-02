@@ -73,7 +73,7 @@ namespace Abp.Web.Mvc.Controllers
         private ActionResult GenerateAjaxResult(ExceptionContext context)
         {
             context.HttpContext.Response.StatusCode = 200;
-            return new AbpJsonResult(new AbpMvcAjaxResponse(ErrorInfo.ForException(context.Exception)));
+            return new AbpJsonResult(new MvcAjaxResponse(ErrorInfo.ForException(context.Exception)));
         }
 
         private ActionResult GenerateNonAjaxResult(ExceptionContext context)
@@ -83,7 +83,7 @@ namespace Abp.Web.Mvc.Controllers
                    {
                        ViewName = View,
                        MasterName = Master,
-                       ViewData = new ViewDataDictionary<AbpMvcErrorModel>(new AbpMvcErrorModel(context.Exception)),
+                       ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(context.Exception)),
                        TempData = context.Controller.TempData
                    };
         }

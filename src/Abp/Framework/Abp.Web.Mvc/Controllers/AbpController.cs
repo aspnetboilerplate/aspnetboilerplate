@@ -63,9 +63,9 @@ namespace Abp.Web.Mvc.Controllers
 
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            if (!(data is AbpAjaxResponse))
+            if (!(data is AjaxResponse))
             {
-                data = new AbpMvcAjaxResponse(data);
+                data = new MvcAjaxResponse(data);
             }
 
             return new AbpJsonResult

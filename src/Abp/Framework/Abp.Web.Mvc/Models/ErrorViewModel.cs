@@ -3,18 +3,18 @@ using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Models
 {
-    public class AbpMvcErrorModel
+    public class ErrorViewModel
     {
         public ErrorInfo ErrorInfo { get; set; }
 
         public Exception Exception { get; set; }
 
-        public AbpMvcErrorModel()
+        public ErrorViewModel()
         {
             
         }
 
-        public AbpMvcErrorModel(Exception exception)
+        public ErrorViewModel(Exception exception)
         {
             Exception = exception;
             ErrorInfo = Web.Models.ErrorInfo.ForException(exception);
