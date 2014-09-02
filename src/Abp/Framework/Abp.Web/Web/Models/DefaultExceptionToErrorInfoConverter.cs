@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Web.Configuration;
 using Abp.Runtime.Validation;
@@ -60,14 +61,50 @@ namespace Abp.Web.Models
 
         private static void AddExceptionToDetails(Exception exception, StringBuilder detailBuilder)
         {
-            detailBuilder.AppendLine(exception.Message);
-            detailBuilder.AppendLine(exception.StackTrace ?? "No StackTrace");
+            //Exception Message
+            detailBuilder.AppendLine(exception.GetType().Name + ": " + exception.Message);
 
-            if (exception.InnerException != null)
+            //Additional info for UserFriendlyException
+            if (exception is UserFriendlyException)
             {
-                AddExceptionToDetails(exception.InnerException, detailBuilder);                
+                var userFriendlyException = exception as UserFriendlyException;
+                if (!string.IsNullOrEmpty(userFriendlyException.Details))
+                {
+                    detailBuilder.AppendLine(userFriendlyException.Details);
+                }
             }
 
+            //Additional info for AbpValidationException
+            else if (exception is AbpValidationException)
+            {
+                var validationException = exception as AbpValidationException;
+                foreach (var validationResult in validationException.ValidationErrors)
+                {
+                    detailBuilder.Append(validationResult.ErrorMessage);
+                    if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
+                    {
+                        detailBuilder.AppendLine(" (" + string.Join(", ", validationResult.MemberNames) + ")");
+                    }
+                    else
+                    {
+                        detailBuilder.AppendLine();
+                    }
+                }
+            }
+
+            //Exception StackTrace
+            if (!string.IsNullOrEmpty(exception.StackTrace))
+            {
+                detailBuilder.AppendLine("STACK TRACE: " + exception.StackTrace);
+            }
+
+            //Inner exception
+            if (exception.InnerException != null)
+            {
+                AddExceptionToDetails(exception.InnerException, detailBuilder);
+            }
+
+            //Inner exceptions for AggregateException
             if (exception is AggregateException)
             {
                 var aggException = exception as AggregateException;
