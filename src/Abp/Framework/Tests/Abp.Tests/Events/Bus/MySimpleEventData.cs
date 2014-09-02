@@ -1,4 +1,4 @@
-using Abp.Events.Bus.Datas;
+using Abp.Events.Bus;
 
 namespace Abp.Tests.Events.Bus
 {

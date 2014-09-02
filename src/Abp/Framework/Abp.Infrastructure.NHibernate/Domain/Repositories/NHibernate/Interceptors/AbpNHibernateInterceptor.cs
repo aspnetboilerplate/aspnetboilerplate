@@ -1,7 +1,8 @@
 ﻿using System;
-using Abp.Application.Session;
+using System.Linq;
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Session;
 using NHibernate;
 using NHibernate.Type;
 
@@ -15,7 +16,7 @@ namespace Abp.Domain.Repositories.NHibernate.Interceptors
         {
             _abpSession =
                 new Lazy<IAbpSession>(
-                    () => IocManager.Instance.IocContainer.Kernel.HasComponent(typeof (IAbpSession))
+                    () => IocManager.Instance.IocContainer.Kernel.HasComponent(typeof(IAbpSession))
                         ? IocHelper.Resolve<IAbpSession>()
                         : NullAbpSession.Instance
                     );
@@ -89,6 +90,36 @@ namespace Abp.Domain.Repositories.NHibernate.Interceptors
                     else if (propertyNames[i] == "LastModifierUserId")
                     {
                         currentState[i] = (entity as IModificationAudited).LastModifierUserId = _abpSession.Value.UserId;
+                    }
+                }
+            }
+
+            //Set deletion audits
+            if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
+            {
+                //@hikalkan: Is deleted bofore? Normally, a deleted entity should not e updated later but I preferred to check it.
+                var previousIsDeleted = false;
+                for (var i = 0; i < propertyNames.Length; i++)
+                {
+                    if (propertyNames[i] == "IsDeleted")
+                    {
+                        previousIsDeleted = (bool)previousState[i];
+                        break;
+                    }
+                }
+
+                if (!previousIsDeleted)
+                {
+                    for (var i = 0; i < propertyNames.Length; i++)
+                    {
+                        if (propertyNames[i] == "DeletionTime")
+                        {
+                            currentState[i] = (entity as IDeletionAudited).DeletionTime = DateTime.Now; //TODO: UtcNow?
+                        }
+                        else if (propertyNames[i] == "DeleterUserId")
+                        {
+                            currentState[i] = (entity as IDeletionAudited).DeleterUserId = _abpSession.Value.UserId;
+                        }
                     }
                 }
             }

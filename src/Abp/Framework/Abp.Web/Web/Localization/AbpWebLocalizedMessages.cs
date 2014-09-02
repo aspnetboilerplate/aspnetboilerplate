@@ -12,6 +12,7 @@ namespace Abp.Web.Localization
         private const string SourceName = "AbpWeb";
 
         public static string InternalServerError { get { return L("InternalServerError"); } }
+
         public static string ValidationError { get { return L("ValidationError"); } }
         
         private static readonly ILocalizationSource Source;

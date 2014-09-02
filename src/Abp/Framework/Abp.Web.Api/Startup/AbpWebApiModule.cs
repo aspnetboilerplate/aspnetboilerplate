@@ -8,7 +8,7 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Startup.Application;
-using Abp.Startup.Web;
+using Abp.Web.Startup;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;

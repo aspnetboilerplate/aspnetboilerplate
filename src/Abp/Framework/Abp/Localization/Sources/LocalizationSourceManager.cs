@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Dependency;
 
 namespace Abp.Localization.Sources
 {
     /// <summary>
     /// This class is used to manage localization sources by implementing <see cref="ILocalizationSourceManager"/>. See <see cref="ILocalizationSource"/>.
     /// </summary>
-    public class LocalizationSourceManager : ILocalizationSourceManager
+    public class LocalizationSourceManager : ILocalizationSourceManager, ISingletonDependency
     {
         private readonly IDictionary<string, ILocalizationSource> _sources;
         
@@ -21,16 +22,27 @@ namespace Abp.Localization.Sources
 
         public void RegisterSource(ILocalizationSource source)
         {
+            if (LocalizationHelper.IsDisabled)
+            {
+                return;
+            }
+
             if (_sources.ContainsKey(source.Name))
             {
                 throw new AbpException("There is already a source with name: " + source.Name);
             }
 
             _sources[source.Name] = source;
+            source.Initialize();
         }
 
         public ILocalizationSource GetSource(string name)
         {
+            if (LocalizationHelper.IsDisabled)
+            {
+                return NullLocalizationSource.Instance;
+            }
+
             if (name == null)
             {
                 throw new ArgumentNullException("name");

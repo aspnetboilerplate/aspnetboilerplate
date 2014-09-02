@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<h3>v0.3.1.2 (2014-08-17)</h3>
+<ul>
+	<li>Created an <a href="/Pages/Documents/Embedded-Resource-Files">embedded resource system</a> to expose embedded 
+	resources from assemblies to web clients easily.</li>
+	<li>Added <strong>CurrentSession</strong> to ApplicationService, 
+	AbpController and AbpApiController classes.</li>
+	<li>Created <strong>Asp.Web.Resources</strong> package and moved js,css and 
+	localization xml files from Abp.Web.Mvc to this new package. Should add this 
+	package for existing web projects.</li>
+	<li>Bugfixes and improvements.</li>
+</ul>
+<h3>v0.3.0.1 (2014-07-21)</h3>
+<ul>
+	<li>Updated nuget package dependencies.</li>
+</ul>
+
+<h3>v0.3 (2014-07-20)</h3>
+<ul>
+	<li>Setting <strong>auditing</strong> informations automatically for 
+	EntityFramework and NHibernate.</li>
+	<li><strong>Soft deleting</strong> implemented for also EntityFramework.</li>
+	<li>Added <strong>IShouldNormalize</strong> for DTOs.</li>
+	<li>Created a base <strong>ApplicationService</strong> class that can be 
+	(optionally) used to simplify logging and localization.</li>
+	<li>Added UnitOfWorkScope.Current.<strong>SaveChanges</strong>.</li>
+	<li><strong>UnitOfWorkScope</strong> uses existing UOW when available.</li>
+	<li>Added <strong>IAbpSession</strong> interface to obtain current UserId 
+	and TenantId.</li>
+	<li><strong>*</strong> Removed direct <strong>log4net</strong> package dependencies. If you're using log4net, add
+	<a href="http://www.nuget.org/packages/Castle.Windsor-log4net/" target="_blank">Castle.Windsor-log4net</a>
+	package to your project.</li>	
+	<li><strong>*</strong> Changed type of <strong>UserId</strong> from int to <strong>long</strong>.</li>
+	<li><strong>*</strong> Renamed ISoftDeleteEntity to <strong>ISoftDelete</strong>.</li>
+	<li><strong>*</strong> Renamed Uow.AddSuccessHandler to <strong>OnSuccess</strong>.</li>
+	<li>Code refactorings and improvements.</li>
+	<li>Some minor and potential bugs fixed</li>
+</ul>
+<p><strong>*</strong> these may be <strong>breaking changes</strong> for existing applications.</p>
+<h3>v0.2.4 (2014-07-05)</h3>
+<ul>
+	<li>Recursive <strong>DTO validation</strong> implemented.</li>
+	<li><strong>Soft delete</strong> implemented for NHibernate</li>
+	<li>Enhancements and fixes on MVC and Web API <strong>error handling</strong>.</li>
+	<li>Enhancements for <strong>errors logging</strong>.</li>
+	<li>Minor fixes and refactorings.</li>
+	<li>Updated depended nuget packages.</li>
+</ul>
+<h3>v0.2.3.1 (2014-06-22)</h3>
+<ul>
+	<li>Updated nuget package dependencies.</li>
+</ul>
+<h3>v0.2.3 (2014-06-15)</h3>
+<ul>
+	<li><strong>AngularJs</strong> integration completed.</li>
+	<li>Resolved virtual directory issue (<a href="https://github.com/aspnetboilerplate/aspnetboilerplate/issues/20" target="_blank">#20</a>).</li>
+	<li>Other minor fixes and improvements.</li>
+</ul>
+<h3>v0.2.2.1 (2014-06-08)</h3>
+<ul>
+	<li>Moved javascripts and styles back to Abp.Web.Mvc nuget package.</li>
+</ul>
+<h3>v0.2.2 (2014-06-07)</h3>
+<ul>
+	<li><strong><a href="/Pages/Documents/EntityFramework-Integration">
+	EntityFramework</a></strong> integration is completed.</li>
+	<li><strong><a href="/Pages/Documents/Application-Services">Application 
+	service</a></strong> methods are <strong>
+	<a href="/Pages/Documents/Unit-Of-Work">unit of work</a></strong> by default 
+	from now. Added UnitOfWorkAttribute.<strong>IsDisabled</strong> to disable 
+	it for a particular application service method.</li>
+	<li>Added <strong>IsTransactional</strong> property to unit of work.</li>
+	<li>Added <strong>AddSuccessHandler</strong> method to unit of work that is 
+	used to define actions that is performed when current unit of work 
+	successfully completed.</li>
+	<li>Added <strong>EventBus.TriggerUow</strong> extension method to trigger 
+	events when current unit of work successfully completed. It's actually a 
+	shortcut of AddSuccessHandler for triggering events.</li>
+	<li>Moved javascripts and styles from Abp.Web.Mvc to <strong>Abp.Web</strong> 
+	assembly (nuget package).</li>
+</ul>
+
+
+
+</body>
+
+</html>

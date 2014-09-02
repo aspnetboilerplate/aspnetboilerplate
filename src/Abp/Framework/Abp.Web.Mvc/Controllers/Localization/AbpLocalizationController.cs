@@ -34,7 +34,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
 
             if (Request.IsAjaxRequest())
             {
-                return Json(new AbpMvcAjaxResponse(), JsonRequestBehavior.AllowGet);
+                return Json(new MvcAjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
             if (!string.IsNullOrWhiteSpace(returnUrl))

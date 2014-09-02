@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 
@@ -14,10 +16,13 @@ namespace Abp.WebApi.Controllers.Filters
         public override void OnException(HttpActionExecutedContext context)
         {
             LogHelper.LogException(context.Exception);
+
             context.Response = context.Request.CreateResponse(
                 HttpStatusCode.OK,
-                new AbpAjaxResponse(AbpErrorInfo.ForException(context.Exception))
+                new AjaxResponse(ErrorInfo.ForException(context.Exception))
                 );
+
+            EventBus.Default.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
     }
 }

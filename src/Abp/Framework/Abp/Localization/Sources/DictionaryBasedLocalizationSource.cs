@@ -51,6 +51,11 @@ namespace Abp.Localization.Sources
             }
         }
 
+        public virtual void Initialize()
+        {
+            
+        }
+
         public string GetString(string name)
         {
             return GetString(name, Thread.CurrentThread.CurrentUICulture);
@@ -72,7 +77,7 @@ namespace Abp.Localization.Sources
             }
 
             //Try to get from same language dictionary
-            if (cultureCode.Length == 5)
+            if (cultureCode.Length == 5) //Example: "tr-TR" (length=5)
             {
                 var langCode = cultureCode.Substring(0, 2);
                 ILocalizationDictionary langDictionary;

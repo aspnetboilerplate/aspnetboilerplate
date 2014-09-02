@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Events.Bus.Datas;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
 

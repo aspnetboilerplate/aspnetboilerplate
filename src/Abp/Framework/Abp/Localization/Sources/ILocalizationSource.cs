@@ -14,6 +14,11 @@ namespace Abp.Localization.Sources
         string Name { get; }
 
         /// <summary>
+        /// This method is called by ABP before first usage.
+        /// </summary>
+        void Initialize();
+
+        /// <summary>
         /// Gets localized string for given name in current language.
         /// </summary>
         /// <param name="name">Name</param>

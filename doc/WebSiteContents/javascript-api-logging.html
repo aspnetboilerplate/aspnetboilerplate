@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<p>When you want to write some simple log in the client, you can use console.log('...') API as you know.
+But it's not supported by all browsers and your script may be broken.
+So, you should check it first if console is available.
+Also, you may want to write logs somewhere else. Even you may want to write logs 
+in some level. ASP.NET Boilerplate defines safe logging functions:</p>
+
+<pre lang="js">abp.log.debug('...');
+abp.log.info('...');
+abp.log.warn('...');
+abp.log.error('...');
+abp.log.fatal('...');</pre>
+
+<p>You can change log level by setting <strong>abp.log.level</strong> to one of abp.log.levels 
+(ex: abp.log.levels.INFO to do not write debug logs). These functions write logs to browser's console by default.
+But you can override/extend this behaviour if you need.</p>
+
+</body>
+
+</html>

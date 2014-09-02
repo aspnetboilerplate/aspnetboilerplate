@@ -10,6 +10,8 @@ namespace Abp.Localization
     /// </summary>
     public static class LocalizationHelper
     {
+        internal static bool IsDisabled { get; set; } //TODO: We may find a better way.
+
         private static readonly Lazy<ILocalizationSourceManager> LocalizationSourceManager;
 
         static LocalizationHelper()
@@ -76,6 +78,15 @@ namespace Abp.Localization
         public static void RegisterSource<T>() where T : ILocalizationSource
         {
             LocalizationSourceManager.Value.RegisterSource(IocHelper.Resolve<T>());
+        }
+
+        /// <summary>
+        /// Disables all localization system.
+        /// Other methods
+        /// </summary>
+        public static void DisableLocalization()
+        {
+            IsDisabled = true;
         }
     }
 }

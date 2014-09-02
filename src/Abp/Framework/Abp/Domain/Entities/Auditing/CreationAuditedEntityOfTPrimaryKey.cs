@@ -14,7 +14,7 @@ namespace Abp.Domain.Entities.Auditing
 
         protected CreationAuditedEntity()
         {
-            CreationTime = DateTime.Now;
+            CreationTime = DateTime.Now; //TODO: UtcNow?
         }
     }
 }

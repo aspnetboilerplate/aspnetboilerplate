@@ -57,7 +57,7 @@ namespace Abp.Runtime.Validation.Interception
 
             foreach (var argument in _arguments)
             {
-                Normalize(argument);
+                Normalize(argument); //TODO@Halil: Why not normalize recursively as we did in validation.
             }
         }
 

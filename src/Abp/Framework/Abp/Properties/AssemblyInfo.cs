@@ -22,6 +22,7 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.Web")]
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
+[assembly: InternalsVisibleTo("Abp.Web.Resources")]
 [assembly: InternalsVisibleTo("Abp.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

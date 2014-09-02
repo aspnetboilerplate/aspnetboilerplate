@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using Abp.Application.Session;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Session;
 
 namespace Abp.Domain.Repositories.EntityFramework
 {
@@ -21,7 +20,7 @@ namespace Abp.Domain.Repositories.EntityFramework
         protected AbpDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -90,12 +89,19 @@ namespace Abp.Domain.Repositories.EntityFramework
             }
         }
 
-        private static void HandleSoftDelete(DbEntityEntry entry)
+        private void HandleSoftDelete(DbEntityEntry entry)
         {
             if (entry.Entity is ISoftDelete)
             {
-                entry.State = EntityState.Unchanged;
-                entry.Cast<ISoftDelete>().Entity.IsDeleted = true;
+                var softDeleteEntry = entry.Cast<ISoftDelete>();
+                softDeleteEntry.State = EntityState.Unchanged;
+                softDeleteEntry.Entity.IsDeleted = true;
+                if (entry.Entity is IDeletionAudited)
+                {
+                    var deletionAuditedEntry = entry.Cast<IDeletionAudited>();
+                    deletionAuditedEntry.Entity.DeletionTime = DateTime.Now; //TODO: UtcNow?
+                    deletionAuditedEntry.Entity.DeleterUserId = AbpSession.UserId;
+                }
             }
         }
     }

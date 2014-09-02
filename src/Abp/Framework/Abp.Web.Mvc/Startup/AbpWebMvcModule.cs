@@ -5,8 +5,9 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Startup.Application;
-using Abp.Startup.Web;
 using Abp.Web.Mvc.Controllers;
+using Abp.Web.Mvc.Resources.Embedded;
+using Abp.Web.Startup;
 
 namespace Abp.Web.Mvc.Startup
 {

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Abp.Dependency;
 
 namespace Abp.Configuration
 {
     /// <summary>
     /// This is the main interface that must be implemented to be able to load/store values of settings for a data source.
     /// </summary>
-    public interface ISettingManager : ISingletonDependency
+    public interface ISettingManager
     {
         /// <summary>
         /// Gets current value of a setting.

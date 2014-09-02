@@ -11,7 +11,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             get
             {
-                return typeof(AbpAjaxResponse);
+                return typeof(AjaxResponse);
             }
         }
 
@@ -25,8 +25,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             return base
                 .ExecuteAsync(controllerContext, arguments, cancellationToken)
-                .ContinueWith(
-                    task => (object) new AbpAjaxResponse(task.Result));
+                .ContinueWith(task => task.Result is AjaxResponse ? task.Result : (object) new AjaxResponse(task.Result));
         }
     }
 }
