@@ -19,7 +19,7 @@ namespace Abp.Web.Models
         {
             get
             {
-                return string.Equals(WebConfigurationManager.AppSettings["Abp.Web.SendAllExceptionsToClients"], "true", StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(WebConfigurationManager.AppSettings["Abp.Web.SendAllExceptionsToClients"] ?? "false", "true", StringComparison.InvariantCultureIgnoreCase);
             }
         }
 
