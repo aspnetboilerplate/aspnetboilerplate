@@ -61,8 +61,8 @@ namespace Abp.Web.Mvc.Helpers
                     //TODO: Refactor...
                     var fullPath = HttpContext.Current.Server.MapPath(path.Replace("/", "\\"));
                     result = File.Exists(fullPath)
-                        ? GetPathWithVersioningForPhysicalFile(path, fullPath)
-                        : GetPathWithVersioningForEmbeddedFile(path);
+                                 ? GetPathWithVersioningForPhysicalFile(path, fullPath)
+                                 : GetPathWithVersioningForEmbeddedFile(path);
                 }
                 catch (Exception ex)
                 {

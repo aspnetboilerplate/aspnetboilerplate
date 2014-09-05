@@ -15,9 +15,7 @@ namespace Abp.Events.Bus
         private IEventBus _eventBus;
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
-                Component.For<IEventBus>().UsingFactoryMethod(() => EventBus.Default).LifestyleSingleton()
-                );
+            container.Register(Component.For<IEventBus>().UsingFactoryMethod(() => EventBus.Default).LifestyleSingleton());
 
             _eventBus = container.Resolve<IEventBus>();
 

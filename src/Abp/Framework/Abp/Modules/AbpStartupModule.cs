@@ -19,10 +19,10 @@ namespace Abp.Modules
         {
             base.Initialize(initializationContext);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
-                new ConventionalRegistrationConfig
-                {
-                    InstallInstallers = false
-                });
+                                                             new ConventionalRegistrationConfig
+                                                             {
+                                                                 InstallInstallers = false
+                                                             });
         }
     }
 }

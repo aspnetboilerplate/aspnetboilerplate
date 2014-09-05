@@ -19,14 +19,14 @@ namespace Abp.Runtime.Caching
         /// </summary>
         private readonly CacheItemPolicy _defaultCacheItemPolicy;
 
-        private const int DefaultSlidingCacheDurationAsMinutes = 120;
+        private const int DEFAULT_SLIDING_CACHE_DURATION_AS_MINUTES = 120;
 
         /// <summary>
         /// Creates a new <see cref="ThreadSafeObjectCache{TValue}"/> object.
         /// </summary>
         /// <param name="cache">The real cache object to store items</param>
         public ThreadSafeObjectCache(ObjectCache cache)
-            : this(cache, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(DefaultSlidingCacheDurationAsMinutes) })
+            : this(cache, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(DEFAULT_SLIDING_CACHE_DURATION_AS_MINUTES) })
         {
 
         }

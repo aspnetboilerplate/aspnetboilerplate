@@ -11,11 +11,9 @@ namespace Abp.Web.Mvc.Controllers
     {
         public void RegisterAssembly(ConventionalRegistrationContext context)
         {
-            context.IocContainer.Register(
-                Classes.FromAssembly(context.Assembly)
-                    .BasedOn<Controller>()
-                    .LifestyleTransient()
-                );
+            context.IocContainer.Register(Classes.FromAssembly(context.Assembly)
+                                                 .BasedOn<Controller>()
+                                                 .LifestyleTransient());
         }
     }
 }

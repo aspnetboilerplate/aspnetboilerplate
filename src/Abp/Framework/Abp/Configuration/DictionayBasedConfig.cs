@@ -44,8 +44,8 @@ namespace Abp.Configuration
         {
             var value = this[name];
             return value == null
-                ? default(T)
-                : (T) Convert.ChangeType(value, typeof (T));
+                       ? default(T)
+                       : (T) Convert.ChangeType(value, typeof (T));
         }
     }
 }

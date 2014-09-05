@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Abp.Resources.Embedded
 {
@@ -34,11 +36,16 @@ namespace Abp.Resources.Embedded
             ResourceNamespace = resourceNamespace;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <returns></returns>
         public string FindManifestName(string fullPath)
         {
             var relativeResourcePath = fullPath.Substring(Path.Length + 1);
             relativeResourcePath = NormalizeResourcePath(relativeResourcePath);
-            return string.Format("{0}.{1}", ResourceNamespace, relativeResourcePath.Replace("/", "."));
+            return String.Format("{0}.{1}", ResourceNamespace, relativeResourcePath.Replace("/", "."));
         }
 
         private static string NormalizeResourcePath(string path)
@@ -48,23 +55,25 @@ namespace Abp.Resources.Embedded
             {
                 return path;
             }
-            
-            var sb = new StringBuilder();
+
+            var stringBuilder = new StringBuilder();
 
             for (var i = 0; i < pathFolders.Length - 1; i++)
             {
-                sb.Append(NormalizeFolderName(pathFolders[i]) + "/");
+                stringBuilder.Append(NormalizeFolderName(pathFolders[i]) + "/");
             }
 
-            sb.Append(pathFolders.Last()); //Append file name
+            stringBuilder.Append(pathFolders.Last()); //Append file name
 
-            return sb.ToString();
+            return stringBuilder.ToString();
         }
 
         private static string NormalizeFolderName(string pathPart)
         {
-            //TODO: Implement all rules of .NET
-            return pathPart.Replace('-', '_');
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidFileNameChars());
+
+            Regex regexPattern = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            return regexPattern.Replace(pathPart, string.Empty);
         }
     }
 }

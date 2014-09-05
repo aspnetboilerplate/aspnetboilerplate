@@ -13,11 +13,10 @@ namespace Abp.Modules
         /// <param name="type">Type to check</param>
         public static bool IsAbpModule(Type type)
         {
-            return
-                type.IsPublic &&
-                type.IsClass &&
-                !type.IsAbstract &&
-                typeof (IAbpModule).IsAssignableFrom(type);
+            return type.IsPublic &&
+                   type.IsClass &&
+                   !type.IsAbstract &&
+                   typeof (IAbpModule).IsAssignableFrom(type);
         }
     }
 }
