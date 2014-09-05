@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
+<title>Change Logs</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 </head>
 
@@ -13,13 +13,15 @@
 <ul>
 	<li>Sends server side <strong>validation errors</strong> to clients 
 	automatically.</li>
-	<li>Added a config option to be able to send all <strong>exception details</strong> 
+	<li>Defined 'Abp.Web.SendAllExceptionsToClients' (default false, set as true to enable) 
+	application setting to be able to send all <strong>exception details</strong> 
 	to clients.</li>
-	<li>Defined an EventBus event to be informed for all <strong>exceptions 
+	<li>Defined AbpHandledExceptionData EventBus event to be informed for all <strong>exceptions 
 	handled</strong> by ASP.NET Boilerplate. Also, improved exception logging.</li>
-	<li>Created an interface to allow to convert custom exceptions to <strong>
+	<li>Created IExceptionToErrorInfoConverter interface to allow to convert custom exceptions to <strong>
 	ErrorInfo</strong> objects.</li>
-	<li>Added an option to disable <strong>localization</strong> when needed.</li>
+	<li>Defined 'Abp.Localization.IsEnabled' (default true, set as false to disable) 
+	application setting to disable <strong>localization</strong> when needed.</li>
 	<li>Added <strong>IDeletionAudited</strong> interface and <strong>
 	FullAuditedEntity</strong> class.</li>
 	<li>Added FluentMigrator extension method for <strong>CreationTime</strong> 

@@ -19,6 +19,7 @@
 	</ul>
 	</li>
 	<li><a href="#DocAjax">AJAX requests</a></li>
+	<li><a href="#DocExceptionEvent">Exception event</a></li>
 </ul>
 <h3 id="DocIntro">Introduction</h3>
 <p>In a web application, exceptions are usually handled in MVC Controller 
@@ -29,7 +30,9 @@ occured in an AJAX request, server sends error information to the client and
 then client handles and shows the error to the user.</p>
 <p>Handling exceptions in all web request is a tedious and repeating work. 
 ASP.NET Boilerplate <strong>automates</strong> this. You almost never need to 
-explicitly handle any exception.</p>
+explicitly handle any exception. ASP.NET Boilerplate handles all exceptions, 
+logs them and returns appropriate and formatted response to the client. Also, 
+handles these response in the client and show error messages to the user.</p>
 <h3 id="DocEnableErrorHandling">Enabling error handling</h3>
 <p>To enable error handling, <strong>customErrors</strong> mode must be enabled.</p>
 <pre>&lt;customErrors mode=&quot;On&quot; /&gt;</pre>
@@ -105,6 +108,11 @@ to the user using <a href="/Pages/Documents/Javascript-API/Message">message A<sp
 See <a href="/Pages/Documents/Javascript-API/AJAX">AJAX API</a> and
 <a href="/Pages/Documents/Dynamic-Web-API">dynamic web api layer</a> for more 
 information.</p>
+<h3 id="DocExceptionEvent">Exception event</h3>
+<p>When ASP.NET Boilerplare handle any exception on web requests, it triggers <strong>AbpHandledExceptionData</strong> 
+event that can be registered to be informed. See
+<a href="/Pages/Documents/EventBus-Domain-Events">eventbus documentation</a> for 
+more.</p>
 
 </body>
 
