@@ -9,6 +9,8 @@
 
 <body>
 
+<!-- START OF THE DOCUMENT -->
+
 <ul>
 	<li><a href="#DocEventBus">EventBus</a><ul>
 		<li><a href="#DocGetDefaultEventBus">Getting the default instance</a></li>
@@ -77,7 +79,7 @@ that we want to trigger an event when a task is completed:</p>
 the event. <strong>EventData</strong> class defines <strong>EventSource</strong> 
 (which object triggered the event) and <strong>EventTime</strong> (when it's triggered) 
 properties.</p>
-<h4>Predefined events</h4>
+<h4 id="DocPredefinedEvents">Predefined events</h4>
 <p>ASP.NET Boilerplate defines <strong>AbpHandledExceptionData</strong> and 
 triggers this event when it automatically handles any exception. This is 
 especially useful if you want to get more information about exceptions (even 
@@ -267,6 +269,8 @@ Unregistering handler object must be the same object which is registered before.
 <p>Lastly, EventBus provides a <strong>UnregisterAll&lt;T&gt;()</strong> method to 
 unregister all handlers of an event and <strong>UnregisterAll()</strong> method 
 to unregister all handlers of all events.</p>
+
+<!-- END OF THE DOCUMENT -->
 
 </body>
 
