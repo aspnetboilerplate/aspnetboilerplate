@@ -10,7 +10,11 @@ namespace Abp.Web.Startup
 {
     public class WebAssemblyFinder : IAssemblyFinder
     {
-        public List<Assembly> GetAllAssemblies()
+        /// <summary>
+        /// Get all assemblies in current domain.
+        /// </summary>
+        /// <returns>list of assemblies</returns>
+        public IEnumerable<Assembly> GetAllAssemblies()
         {
             var allAssemblies = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList();
 

@@ -11,33 +11,27 @@ namespace Abp.Dependency.Conventions
         public void RegisterAssembly(ConventionalRegistrationContext context)
         {
             //Transient
-            context.IocContainer.Register(
-                Classes.FromAssembly(context.Assembly)
-                    .IncludeNonPublicTypes()
-                    .BasedOn<ITransientDependency>()
-                    .WithService.Self()
-                    .WithService.DefaultInterfaces()
-                    .LifestyleTransient()
-                );
+            context.IocContainer.Register(Classes.FromAssembly(context.Assembly)
+                                                 .IncludeNonPublicTypes()
+                                                 .BasedOn<ITransientDependency>()
+                                                 .WithService.Self()
+                                                 .WithService.DefaultInterfaces()
+                                                 .LifestyleTransient());
 
             //Singleton
-            context.IocContainer.Register(
-                Classes.FromAssembly(context.Assembly)
-                    .IncludeNonPublicTypes()
-                    .BasedOn<ISingletonDependency>()
-                    .WithService.Self()
-                    .WithService.DefaultInterfaces()
-                    .LifestyleSingleton()
-                );
+            context.IocContainer.Register(Classes.FromAssembly(context.Assembly)
+                                                 .IncludeNonPublicTypes()
+                                                 .BasedOn<ISingletonDependency>()
+                                                 .WithService.Self()
+                                                 .WithService.DefaultInterfaces()
+                                                 .LifestyleSingleton());
 
             //Windsor Interceptors
-            context.IocContainer.Register(
-                Classes.FromAssembly(context.Assembly)
-                    .IncludeNonPublicTypes()
-                    .BasedOn<IInterceptor>()
-                    .WithService.Self()
-                    .LifestyleTransient()
-                );
+            context.IocContainer.Register(Classes.FromAssembly(context.Assembly)
+                                                 .IncludeNonPublicTypes()
+                                                 .BasedOn<IInterceptor>()
+                                                 .WithService.Self()
+                                                 .LifestyleTransient());
         }
     }
 }

@@ -45,11 +45,8 @@ namespace Abp.Modules
         public static AbpModuleInfo CreateForType(Type type)
         {
             if (!AbpModuleHelper.IsAbpModule(type))
-            {
-                throw new AbpException(
-                    string.Format(
-                        "type {0} is not an Abp module. An Abp module must be subclass of AbpModule, must declare AbpModuleAttribute attribute and must not be abstract!",
-                        type.FullName));
+            {                
+                throw new AbpException(String.Format("type {0} is not an Abp module. An Abp module must be subclass of AbpModule, must declare AbpModuleAttribute attribute and must not be abstract!", type.FullName));
             }
 
             return new AbpModuleInfo((IAbpModule)Activator.CreateInstance(type, new object[] { }));
@@ -57,7 +54,7 @@ namespace Abp.Modules
 
         public override string ToString()
         {
-            return string.Format("{0}", Type.AssemblyQualifiedName);
+            return String.Format("{0}", Type.AssemblyQualifiedName);
         }
     }
 }

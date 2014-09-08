@@ -18,7 +18,7 @@ namespace Abp.Utils.Extensions.Xml
         {
             if (node.Attributes == null || node.Attributes.Count <= 0)
             {
-                throw new ApplicationException(node.Name + " node has not " + attributeName + " attribute");
+                throw new ApplicationException(String.Format("{0} node has not {1} attribute", node.Name, attributeName));
             }
 
             return node.Attributes[attributeName].Value;

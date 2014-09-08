@@ -76,7 +76,7 @@ namespace Abp.Domain.Entities
 
         public override string ToString()
         {
-            return string.Format("[{0} {1}]", GetType().Name, Id);
+            return String.Format("[{0} {1}]", GetType().Name, Id);
         }
     }
 }

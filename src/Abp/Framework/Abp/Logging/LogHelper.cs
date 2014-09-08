@@ -21,9 +21,9 @@ namespace Abp.Logging
 
         static LogHelper()
         {
-            Logger = IocManager.Instance.IocContainer.Kernel.HasComponent(typeof (ILogger))
-                ? IocHelper.Resolve<ILogger>()
-                : NullLogger.Instance;
+            Logger = IocManager.Instance.IocContainer.Kernel.HasComponent(typeof(ILogger))
+                         ? IocHelper.Resolve<ILogger>()
+                         : NullLogger.Instance;
         }
 
         public static void LogException(Exception ex)
@@ -57,10 +57,10 @@ namespace Abp.Logging
             Logger.Warn("There are " + validationException.ValidationErrors.Count + " validation errors:");
             foreach (var validationResult in validationException.ValidationErrors)
             {
-                var memberNames = "";
+                var memberNames = string.Empty;
                 if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
                 {
-                    memberNames = " (" + string.Join(", ", validationResult.MemberNames) + ")";
+                    memberNames = String.Format(" ({0})", string.Join(", ", validationResult.MemberNames));
                 }
 
                 Logger.Warn(validationResult.ErrorMessage + memberNames);

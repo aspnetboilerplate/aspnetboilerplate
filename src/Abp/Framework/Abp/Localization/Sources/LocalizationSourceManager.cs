@@ -60,7 +60,7 @@ namespace Abp.Localization.Sources
             ILocalizationSource source;
             if (!_sources.TryGetValue(name, out source))
             {
-                throw new AbpException("Can not find a source with name: " + name);
+                throw new AbpException("Cannot find a source with name: " + name);
             }
 
             return source;

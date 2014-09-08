@@ -61,7 +61,7 @@ namespace Abp.Domain.Repositories.NHibernate.Interceptors
             //    {
             //        if (propertyNames[i] == "CreationTime" && previousState[i] != currentState[i])
             //        {
-            //            throw new AbpException(string.Format("Can not change CreationTime on a modified entity {0}", entity.GetType().FullName));
+            //            throw new AbpException(String.Format("Can not change CreationTime on a modified entity {0}", entity.GetType().FullName));
             //        }
             //    }
             //}
@@ -73,7 +73,7 @@ namespace Abp.Domain.Repositories.NHibernate.Interceptors
             //    {
             //        if (propertyNames[i] == "CreatorUserId" && previousState[i] != currentState[i])
             //        {
-            //            throw new AbpException(string.Format("Can not change CreatorUserId on a modified entity {0}", entity.GetType().FullName));
+            //            throw new AbpException(String.Format("Can not change CreatorUserId on a modified entity {0}", entity.GetType().FullName));
             //        }
             //    }
             //}

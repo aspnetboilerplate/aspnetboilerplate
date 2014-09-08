@@ -60,7 +60,7 @@ namespace Abp.Web.Localization
                 for (var i = 0; i < stringValues.Count; i++)
                 {
                     script.AppendLine(
-                        string.Format(
+                        String.Format(
                         "        '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
                             stringValues[i].Name,
                             stringValues[i].Value.Replace("'", "\\'").Replace(Environment.NewLine, string.Empty) //TODO: Allow new line?

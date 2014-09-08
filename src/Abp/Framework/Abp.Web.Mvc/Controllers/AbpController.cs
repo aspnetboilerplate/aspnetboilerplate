@@ -69,12 +69,12 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             return new AbpJsonResult
-            {
-                Data = data,
-                ContentType = contentType,
-                ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
-            };
+                   {
+                       Data = data,
+                       ContentType = contentType,
+                       ContentEncoding = contentEncoding,
+                       JsonRequestBehavior = behavior
+                   };
         }
     }
 }

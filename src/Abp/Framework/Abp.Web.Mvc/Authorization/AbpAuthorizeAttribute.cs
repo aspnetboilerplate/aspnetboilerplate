@@ -1,9 +1,7 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Abp.Application.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
-using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Authorization
 {
@@ -13,8 +11,14 @@ namespace Abp.Web.Mvc.Authorization
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] Permissions { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool RequireAllPermissions { get; set; }
 
         /// <summary>

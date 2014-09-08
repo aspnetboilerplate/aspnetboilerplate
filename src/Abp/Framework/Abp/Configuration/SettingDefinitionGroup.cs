@@ -62,7 +62,7 @@ namespace Abp.Configuration
         {
             if (child.Parent != null)
             {
-                throw new AbpException("Setting group " + child.Name + " has already a Parent (" + child.Parent.Name + ").");
+                throw new AbpException(String.Format("Setting group {0} has already a Parent ({1}).", child.Name, child.Parent.Name));
             }
 
             _children.Add(child);

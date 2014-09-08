@@ -155,23 +155,23 @@ namespace Abp.Configuration
             lock (_applicationSettings.Value)
             {
                 return _applicationSettings.Value.Values
-                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
-                    .ToImmutableList();
+                                           .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                                           .ToImmutableList();
             }
         }
 
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(int tenantId)
         {
             return GetReadOnlyTenantSettings(tenantId).Values
-                .Select(setting => new SettingValueObject(setting.Name, setting.Value))
-                .ToImmutableList();
+                                                      .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                                                      .ToImmutableList();
         }
 
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(long userId)
         {
             return GetReadOnlyUserSettings(userId).Values
-                .Select(setting => new SettingValueObject(setting.Name, setting.Value))
-                .ToImmutableList();
+                                                  .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                                                  .ToImmutableList();
         }
 
         [UnitOfWork]
@@ -241,13 +241,13 @@ namespace Abp.Configuration
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
             //var settingValue = _settingRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
             var settingValue = SettingStore.GetSettingOrNull(tenantId, userId, name);
-            
+
 
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
 
             //For Tenant and User, Application's value overrides Setting Definition's default value.
-            if (tenantId.HasValue || userId.HasValue) 
+            if (tenantId.HasValue || userId.HasValue)
             {
                 var applicationValue = GetSettingValueForApplicationOrNull(name);
                 if (applicationValue != null)
@@ -301,12 +301,12 @@ namespace Abp.Configuration
             //It's same value as it's, no need to update
             if (settingValue.Value == value)
             {
-                return settingValue;                
+                return settingValue;
             }
 
             //Update the setting on database.
             settingValue.Value = value;
-            
+
             return settingValue;
         }
 
@@ -341,7 +341,6 @@ namespace Abp.Configuration
             return dictionary;
         }
 
-
         private ImmutableDictionary<string, Setting> GetReadOnlyTenantSettings(int tenantId)
         {
             var cachedDictionary = GetTenantSettingsFromCache(tenantId);
@@ -350,6 +349,7 @@ namespace Abp.Configuration
                 return cachedDictionary.ToImmutableDictionary();
             }
         }
+
         private ImmutableDictionary<string, Setting> GetReadOnlyUserSettings(long userId)
         {
             var cachedDictionary = GetUserSettingsFromCache(userId);
