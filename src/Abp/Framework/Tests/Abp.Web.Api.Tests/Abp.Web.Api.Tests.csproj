@@ -61,6 +61,7 @@
     <Compile Include="Controllers\Filters\AbpExceptionFilterAttribute_Tests.cs" />
     <Compile Include="AbpWebApiTestModule.cs" />
     <Compile Include="Controllers\Filters\MyExceptionHandler.cs" />
+    <Compile Include="DynamicApiController\Clients\MyClientRequester.cs" />
     <Compile Include="DynamicApiController\ServiceNameValidation_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Abp.Application\Abp.Application.csproj">
+      <Project>{A948A08D-C64D-4E01-BDAD-3BF4BDDD68B5}</Project>
+      <Name>Abp.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Abp.Web.Api\Abp.Web.Api.csproj">
       <Project>{71962F97-5E4B-465C-9A21-2153D31992CF}</Project>
       <Name>Abp.Web.Api</Name>

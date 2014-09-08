@@ -91,6 +91,10 @@
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
+    <Compile Include="Controllers\Dynamic\Clients\ApiClientBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Clients\DynamicApiClientBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Clients\IApiClientBuilder.cs" />
+    <Compile Include="Controllers\Dynamic\Clients\IDynamicApiClient.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
