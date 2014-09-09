@@ -1,8 +1,11 @@
-﻿namespace Abp.Web.Models
+﻿using System;
+
+namespace Abp.Web.Models
 {
     /// <summary>
     /// This class is used to create standard responses for ajax requests.
     /// </summary>
+    [Serializable]
     public class AjaxResponse
     {
         /// <summary>

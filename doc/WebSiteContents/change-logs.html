@@ -3,12 +3,48 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
+<title>Change Logs</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 </head>
 
 <body>
 
+<!-- START OF THE DOCUMENT -->
+
+<h3>v0.3.2 (2014-09-06)</h3>
+<ul>
+	<li>Sends server side <strong>validation errors</strong> to clients 
+	automatically.</li>
+	<li>Defined 'Abp.Web.SendAllExceptionsToClients' (default false, set as true to enable) 
+	application setting to be able to send all <strong>exception details</strong> 
+	to clients.</li>
+	<li>Defined AbpHandledExceptionData EventBus event to be informed for all <strong>exceptions 
+	handled</strong> by ASP.NET Boilerplate. Also, improved exception logging.</li>
+	<li>Created IExceptionToErrorInfoConverter interface to allow to convert custom exceptions to <strong>
+	ErrorInfo</strong> objects.</li>
+	<li>Defined 'Abp.Localization.IsEnabled' (default true, set as false to disable) 
+	application setting to disable <strong>localization</strong> when needed.</li>
+	<li>Added <strong>IDeletionAudited</strong> interface and <strong>
+	FullAuditedEntity</strong> class.</li>
+	<li>Added FluentMigrator extension method for <strong>CreationTime</strong> 
+	field.</li>
+	<li>Minor bugfixes and improvements.</li>
+	<li>Updated nuget package dependencies.</li>
+	<li>Seperated sample project and modules to their own repositories on 
+	Github.</li>
+	<li>Refactored, renamed and relocated some classes</li>
+	<li><strong>*</strong> Renamed some classes:<ul>
+		<li>AbpAjaxResponse to AjaxResponse</li>
+		<li>AbpMvcAjaxResponse to MvcAjaxResponse</li>
+		<li>AbpMvcErrorModel to ErrorViewModel</li>
+		<li>AbpErrorInfo to ErrorInfo</li>
+	</ul>
+	</li>
+	<li><strong>*</strong> Changed namespaces of EntityEventData, 
+	EntityCreatedEventData, EntityDeletedEventData, EntityUpdatedEventData and 
+	IEventData classes.</li>
+</ul>
+<p><strong>*</strong> these may be <strong>breaking changes</strong> for existing applications.</p>
 <h3>v0.3.1.2 (2014-08-17)</h3>
 <ul>
 	<li>Created an <a href="/Pages/Documents/Embedded-Resource-Files">embedded resource system</a> to expose embedded 
@@ -90,7 +126,7 @@
 	assembly (nuget package).</li>
 </ul>
 
-
+<!-- END OF THE DOCUMENT -->
 
 </body>
 

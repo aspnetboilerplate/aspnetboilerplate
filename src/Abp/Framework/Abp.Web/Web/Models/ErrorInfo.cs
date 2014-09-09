@@ -5,6 +5,7 @@ namespace Abp.Web.Models
     /// <summary>
     /// Used to store informations about an error.
     /// </summary>
+    [Serializable]
     public class ErrorInfo
     {
         private static IExceptionToErrorInfoConverter _converter = new DefaultExceptionToErrorInfoConverter();
@@ -23,6 +24,11 @@ namespace Abp.Web.Models
         /// Error details.
         /// </summary>
         public string Details { get; set; }
+
+        /// <summary>
+        /// Validation errors if exists.
+        /// </summary>
+        public ValidationErrorInfo[] ValidationErrors { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="ErrorInfo"/>.

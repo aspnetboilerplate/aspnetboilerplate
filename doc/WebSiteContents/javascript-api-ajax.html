@@ -9,6 +9,8 @@
 
 <body>
 
+<!-- START OF THE DOCUMENT -->
+
 <h3>Problems of AJAX operations</h3>
 <p>Performing an AJAX call is frequently used by modern applcations. Especially 
 in SPAs (Single-Page Applications), it's almost the only way of communicating 
@@ -72,7 +74,7 @@ object.</p>
 scenes that is handled by ASP.NET Boilerplate. Let's dive into details...</p>
 <h4>AJAX return messages</h4>
 <p>Even we directly return an object with PersonId = 2, ASP.NET 
-Boilerplate wraps it by an <strong>AbpMvcAjaxResponse</strong> object. Actual 
+Boilerplate wraps it by an <strong>MvcAjaxResponse</strong> object. Actual 
 AJAX response is something like that:</p>
 <pre lang="cs">{
   "success": true,
@@ -128,9 +130,9 @@ returns an object with an error message like that:</p>
 abp.ajax handles this object and shows an error message to the user using
 <a href="/Pages/Documents/Javascript-API/Message">abp.message.error</a> 
 function. If your server side code throws an exception type of 
-UserFriendlyException, it directly shows exception's message to the user. 
+<strong>UserFriendlyException</strong>, it directly shows exception's message to the user. 
 Otherwise, it hides the actual error (writes error to logs) and shows a standard 
-''An internal error occured..." message to the user. All these re automatically 
+''An internal error occured..." message to the user. All these are automatically 
 done by ASP.NET Boilerplate.</p>
 
 <h4>Dynamic Web API Layer</h4>
@@ -161,6 +163,8 @@ these type of functions for <a href="/Pages/Documents/Application-Services">
 application service</a> methods. Read the
 <a href="/Pages/Documents/Dynamic-Web-API">dynamic web api</a> layer 
 documentation.</p>
+
+<!-- END OF THE DOCUMENT -->
 
 </body>
 

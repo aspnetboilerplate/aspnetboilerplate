@@ -9,9 +9,18 @@
 
 <body>
 
+<!-- START OF THE DOCUMENT -->
+
 <ul>
-	<li><a href="#DocEventBus">EventBus</a></li>
-	<li><a href="#DocDefineEvents">Defining events</a></li>
+	<li><a href="#DocEventBus">EventBus</a><ul>
+		<li><a href="#DocGetDefaultEventBus">Getting the default instance</a></li>
+		<li><a href="#DocInjectEventBus">Injecting IEventBus</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocDefineEvents">Defining events</a><ul>
+		<li><a href="#DocPredefinedEvents">Predefined events</a></li>
+	</ul>
+	</li>
 	<li><a href="#DocTriggerEvents">Triggering events</a></li>
 	<li><a href="#DocHandleEvents">Handling events</a><ul>
 		<li><a href="#DocHandleBaseEvent">Handling base events</a></li>
@@ -37,11 +46,11 @@ application.</p>
 <p>EventBus is a singleton object that is shared by all other classes to trigger and 
 handle events. To use the event bus, you should get a reference to it. You can 
 do it in two way.</p>
-<h4>Getting the default instance</h4>
+<h4 id="DocGetDefaultEventBus">Getting the default instance</h4>
 <p>You can directly use <strong>EventBus.Default</strong>. It's the global event 
 bus and can be used as shown below:</p>
 <pre lang="cs">EventBus.Default.Trigger(...); //trigger an event</pre>
-<h4>Injecting IEventBus</h4>
+<h4 id="DocInjectEventBus">Injecting IEventBus</h4>
 <p>Instead of directly using EventBus.Default, you can use 
 <a href="/Pages/Documents/Dependency-Injection">dependency injection</a> to get 
 a reference to <strong>IEventBus</strong>. 
@@ -70,6 +79,16 @@ that we want to trigger an event when a task is completed:</p>
 the event. <strong>EventData</strong> class defines <strong>EventSource</strong> 
 (which object triggered the event) and <strong>EventTime</strong> (when it's triggered) 
 properties.</p>
+<h4 id="DocPredefinedEvents">Predefined events</h4>
+<p>ASP.NET Boilerplate defines <strong>AbpHandledExceptionData</strong> and 
+triggers this event when it automatically handles any exception. This is 
+especially useful if you want to get more information about exceptions (even 
+ASP.NET Boilerplate automatically logs all exceptions). You can register to this 
+event to be informed when an exception occurs.</p>
+<p>There are also generic event data classes for entity changes (create, update 
+and delete). They are just helper classes, not triggered by ASP.NET Boilerplate. 
+You can use and trigger they for entities you want. They are defined in <strong>
+Abp.Events.Bus.Entities</strong> namespace.</p>
 <h3 id="DocTriggerEvents">Triggering events</h3>
 <p>Triggering an event is simple:</p>
 <pre lang="cs">public class TaskAppService : ApplicationService
@@ -250,6 +269,8 @@ Unregistering handler object must be the same object which is registered before.
 <p>Lastly, EventBus provides a <strong>UnregisterAll&lt;T&gt;()</strong> method to 
 unregister all handlers of an event and <strong>UnregisterAll()</strong> method 
 to unregister all handlers of all events.</p>
+
+<!-- END OF THE DOCUMENT -->
 
 </body>
 

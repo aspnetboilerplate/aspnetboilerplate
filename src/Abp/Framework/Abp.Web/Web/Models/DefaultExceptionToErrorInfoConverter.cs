@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Configuration;
@@ -18,7 +19,7 @@ namespace Abp.Web.Models
         {
             get
             {
-                return string.Equals(WebConfigurationManager.AppSettings["Abp.Web.SendAllExceptionsToClients"], "true", StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(WebConfigurationManager.AppSettings["Abp.Web.SendAllExceptionsToClients"] ?? "false", "true", StringComparison.InvariantCultureIgnoreCase);
             }
         }
 
@@ -46,7 +47,10 @@ namespace Abp.Web.Models
 
             if (exception is AbpValidationException)
             {
-                return new ErrorInfo(AbpWebLocalizedMessages.ValidationError);
+                return new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
+                       {
+                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException)
+                       };
             }
 
             return new ErrorInfo(AbpWebLocalizedMessages.InternalServerError);
@@ -55,8 +59,17 @@ namespace Abp.Web.Models
         private static ErrorInfo CreateDetailedErrorInfoFromException(Exception exception)
         {
             var detailBuilder = new StringBuilder();
+
             AddExceptionToDetails(exception, detailBuilder);
-            return new ErrorInfo(exception.Message, detailBuilder.ToString());
+
+            var errorInfo = new ErrorInfo(exception.Message, detailBuilder.ToString());
+
+            if (exception is AbpValidationException)
+            {
+                errorInfo.ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException);
+            }
+
+            return errorInfo;
         }
 
         private static void AddExceptionToDetails(Exception exception, StringBuilder detailBuilder)
@@ -71,24 +84,6 @@ namespace Abp.Web.Models
                 if (!string.IsNullOrEmpty(userFriendlyException.Details))
                 {
                     detailBuilder.AppendLine(userFriendlyException.Details);
-                }
-            }
-
-            //Additional info for AbpValidationException
-            else if (exception is AbpValidationException)
-            {
-                var validationException = exception as AbpValidationException;
-                foreach (var validationResult in validationException.ValidationErrors)
-                {
-                    detailBuilder.Append(validationResult.ErrorMessage);
-                    if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
-                    {
-                        detailBuilder.AppendLine(" (" + string.Join(", ", validationResult.MemberNames) + ")");
-                    }
-                    else
-                    {
-                        detailBuilder.AppendLine();
-                    }
                 }
             }
 
@@ -118,6 +113,25 @@ namespace Abp.Web.Models
                     AddExceptionToDetails(innerException, detailBuilder);
                 }
             }
+        }
+
+        private static ValidationErrorInfo[] GetValidationErrorInfos(AbpValidationException validationException)
+        {
+            var validationErrorInfos = new List<ValidationErrorInfo>();
+
+            foreach (var validationResult in validationException.ValidationErrors)
+            {
+                var validationError = new ValidationErrorInfo(validationResult.ErrorMessage);
+
+                if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
+                {
+                    validationError.Members = validationResult.MemberNames.ToArray();
+                }
+
+                validationErrorInfos.Add(validationError);
+            }
+
+            return validationErrorInfos.ToArray();
         }
     }
 }

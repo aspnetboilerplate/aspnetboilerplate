@@ -9,9 +9,11 @@
 
 <body>
 
+<!-- START OF THE DOCUMENT -->
+
 <ul>
 	<li><a href="#DocIntro">Introduction</a></li>
-	<li>Enabling custom errors</li>
+	<li><a href="#DocEnableErrorHandling">Enabling error handling</a></li>
 	<li><a href="#DocNonAjax">Non-AJAX requests</a><ul>
 		<li><a href="#DocShowExceptions">Showing exceptions</a></li>
 		<li><a href="#DocShowUserFriendlyExceptions">User friendly exceptions</a></li>
@@ -19,6 +21,7 @@
 	</ul>
 	</li>
 	<li><a href="#DocAjax">AJAX requests</a></li>
+	<li><a href="#DocExceptionEvent">Exception event</a></li>
 </ul>
 <h3 id="DocIntro">Introduction</h3>
 <p>In a web application, exceptions are usually handled in MVC Controller 
@@ -29,8 +32,10 @@ occured in an AJAX request, server sends error information to the client and
 then client handles and shows the error to the user.</p>
 <p>Handling exceptions in all web request is a tedious and repeating work. 
 ASP.NET Boilerplate <strong>automates</strong> this. You almost never need to 
-explicitly handle any exception.</p>
-<p>Enabling custom errors</p>
+explicitly handle any exception. ASP.NET Boilerplate handles all exceptions, 
+logs them and returns appropriate and formatted response to the client. Also, 
+handles these response in the client and show error messages to the user.</p>
+<h3 id="DocEnableErrorHandling">Enabling error handling</h3>
 <p>To enable error handling, <strong>customErrors</strong> mode must be enabled.</p>
 <pre>&lt;customErrors mode=&quot;On&quot; /&gt;</pre>
 <p>It also can be 'RemoteOnly' if you do not want to handler errors in local 
@@ -68,16 +73,15 @@ to the user. See the sample below:</p>
 UserFriendlyException (or an exception derived from it).</p>
 <h4 id="DocErrorModel">Error model</h4>
 
-<p>ASP.NET Boilerplate passes an <strong>AbpMvcErrorModel</strong> object as 
+<p>ASP.NET Boilerplate passes an <strong>ErrorViewModel</strong> object as 
 model to the Error view:</p>
-<pre lang="cs">public class AbpMvcErrorModel
+<pre lang="cs">public class ErrorViewModel
 {
     public AbpErrorInfo ErrorInfo { get; set; }
 
     public Exception Exception { get; set; }
 }</pre>
-<p><strong>AbpErrorInfo</strong> class has just <strong>Message</strong> and <strong>
-Details</strong> properties that can be shown to the user. <strong>Exception</strong> 
+<p><strong>ErrorInfo</strong> contains detailed informations about the error that can be shown to the user. <strong>Exception</strong> 
 object is the thrown exception. You can check it and show additional 
 informations if you want. For example, we can show validation errors if it's an
 <strong>AbpValidationException</strong>:</p>
@@ -106,6 +110,13 @@ to the user using <a href="/Pages/Documents/Javascript-API/Message">message A<sp
 See <a href="/Pages/Documents/Javascript-API/AJAX">AJAX API</a> and
 <a href="/Pages/Documents/Dynamic-Web-API">dynamic web api layer</a> for more 
 information.</p>
+<h3 id="DocExceptionEvent">Exception event</h3>
+<p>When ASP.NET Boilerplare handle any exception on web requests, it triggers <strong>AbpHandledExceptionData</strong> 
+event that can be registered to be informed. See
+<a href="/Pages/Documents/EventBus-Domain-Events">eventbus documentation</a> for 
+more.</p>
+
+<!-- END OF THE DOCUMENT -->
 
 </body>
 

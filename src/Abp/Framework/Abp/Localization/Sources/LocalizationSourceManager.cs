@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Configuration;
 using Abp.Dependency;
 
 namespace Abp.Localization.Sources
@@ -10,6 +11,14 @@ namespace Abp.Localization.Sources
     /// </summary>
     public class LocalizationSourceManager : ILocalizationSourceManager, ISingletonDependency
     {
+        private static bool IsEnabled
+        {
+            get
+            {
+                return string.Equals(ConfigurationManager.AppSettings["Abp.Localization.IsEnabled"] ?? "true", "true", StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
         private readonly IDictionary<string, ILocalizationSource> _sources;
         
         /// <summary>
@@ -22,7 +31,7 @@ namespace Abp.Localization.Sources
 
         public void RegisterSource(ILocalizationSource source)
         {
-            if (LocalizationHelper.IsDisabled)
+            if (!IsEnabled)
             {
                 return;
             }
@@ -38,7 +47,7 @@ namespace Abp.Localization.Sources
 
         public ILocalizationSource GetSource(string name)
         {
-            if (LocalizationHelper.IsDisabled)
+            if (!IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }

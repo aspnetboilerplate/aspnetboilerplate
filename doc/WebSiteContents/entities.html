@@ -4,9 +4,12 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>Entities</title>
+<link href="bootstrap.min.css" type="text/css" rel="stylesheet" />
 </head>
 
 <body>
+
+<!-- START OF THE DOCUMENT -->
 
 <ul>
 	<li><a href="#DocEntityClasses">Entity classes</a></li>
@@ -113,8 +116,8 @@ entity. You just define them for your entity.</p>
 {
         
 }</pre>
-<p>Finally, as a shortcut, you can derive from <strong>AuditedEntity </strong>class 
-instead of direcly implement <strong>IAudited</strong>. AuditedEntity class has 
+<p>As a shortcut, you can derive from <strong>AuditedEntity </strong>class 
+instead of direcly implementing <strong>IAudited</strong>. AuditedEntity class has 
 also a generic version for different type of Id properties.</p>
 <h4 id="DocSoftDelete">Soft delete</h4>
 <p>Soft delete is a commonly used pattern to mark an Entity as deleted instead 
@@ -130,11 +133,33 @@ soft-delete entity is being deleted, ASP.NET Boilerplate detects this, prevents
 deleting, sets IsDeleted as true and updates entity in the database. Also, it 
 does not retrive (select) soft deleted entities from database, automatically 
 filters them.</p>
+<p>If you use soft delete, you may also want to store information when an entity 
+is deleted and who deleted it. You can implement <strong>IDeletionAudited</strong> interface that is shown below:</p>
+<pre lang="cs">public interface IDeletionAudited : ISoftDelete
+{
+    long? DeleterUserId { get; set; }
+
+    DateTime? DeletionTime { get; set; }
+}
+</pre>
+<p>IDeletionAudited extends ISoftDelete as you noticed. ASP.NET Boilerplate 
+automatically sets these properties when an entity is deleted.</p>
+<p>If you want to implement all audit interfaces (creation, modification and 
+deletion) for an entity, you can directly implement <strong>IFullAudited</strong> 
+since it inherits all:</p>
+<pre lang="cs">public interface IFullAudited : IAudited, IDeletionAudited
+{
+        
+}</pre>
+<p>&nbsp;As a shortcut, you can derive your entity from <strong>
+FullAuditedEntity</strong> class that implements all.</p>
 <h3 id="DocIEntityInterfaces">IEntity interfaces</h3>
 <p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (<strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
 If you do not want to derive from Entity class, you can implement these 
 interfaces directly. But this is not the suggested way, unless you have a good 
 reason to do not derive from Entity classes.</p>
+
+<!-- END OF THE DOCUMENT -->
 
 </body>
 
