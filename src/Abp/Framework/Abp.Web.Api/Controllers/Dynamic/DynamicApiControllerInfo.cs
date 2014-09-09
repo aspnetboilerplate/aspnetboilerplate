@@ -30,9 +30,9 @@ namespace Abp.WebApi.Controllers.Dynamic
         public IDictionary<string, DynamicApiActionInfo> Actions { get; private set; }
 
         /// <summary>
-        /// Dynamic ActionFilters for this controller.
+        /// Dynamic Action Filters for this controller.
         /// </summary>
-        public IList<IFilter> ActionFilters { get; set; }
+        public IFilter[] Filters { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
@@ -40,15 +40,14 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="serviceName">Name of the service</param>
         /// <param name="type">Controller type</param>
         /// <param name="proxiedType">Proxied type</param>
-        public DynamicApiControllerInfo(string serviceName, Type type, Type proxiedType)
+        public DynamicApiControllerInfo(string serviceName, Type type, Type proxiedType, IFilter[] filters = null)
         {
             ServiceName = serviceName;
             Type = type;
             ProxiedType = proxiedType;
 
             Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
-
-            ActionFilters = new List<IFilter>(); //Intializing ActionFilters
+            Filters = filters ?? new IFilter[] { }; //Assigning or initialzing the action filters.
         }
     }
 }

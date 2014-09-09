@@ -27,6 +27,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private readonly MethodInfo _methodInfo;
 
         /// <summary>
+        /// Action Filters for dynamic controller method.
+        /// </summary>
+        private IFilter[] _filters;
+
+        /// <summary>
         /// Selected Http verd.
         /// </summary>
         private HttpVerb? _verb;
@@ -84,6 +89,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             return _controllerBuilder.ForMethod(methodName);
         }
+
+        /// <summary>
+        /// Used to add action filters to apply to this method.
+        /// </summary>
+        /// <param name="filters"> Action Filters to apply.</param>
+        /// <returns>The <see cref="IApiControllerActionBuilder"/>. </returns>
+        public IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters)
+        {
+            _filters = filters;
+            return this;
+        }
         
         /// <summary>
         /// Tells builder to not create action for this method.
@@ -99,9 +115,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        public void Build(IList<IFilter> filters = null)
+        public void Build()
         {
-            _controllerBuilder.Build(filters);
+            _controllerBuilder.Build();
         }
 
         /// <summary>
@@ -115,7 +131,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 _verb = DefaultVerb;
             }
 
-            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo);
+            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo, _filters);
         }
     }
 }

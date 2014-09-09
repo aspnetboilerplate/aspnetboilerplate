@@ -25,6 +25,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
 
         /// <summary>
+        /// Action Filters to apply to the whole Dynamic Controller.
+        /// </summary>
+        public IFilter[] _filters;
+
+        /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
         /// <param name="serviceName">Name of the controller</param>
@@ -50,6 +55,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
+        /// The adds Action filters for the whole Dynamic Controller
+        /// </summary>
+        /// <param name="filters"> The filters. </param>
+        /// <returns>The current Controller Builder </returns>
+        public IApiControllerBuilder<T> WithFilters(params IFilter[] filters)
+        {
+            _filters = filters;
+            return this;
+        }
+
+        /// <summary>
         /// Used to specify a method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
@@ -68,14 +84,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        public void Build(IList<IFilter> filters = null)
+        public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T));
-
-            if (filters != null)
-            {
-                controllerInfo.ActionFilters = filters;
-            }
+            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T), _filters);
             
             foreach (var actionBuilder in _actionBuilders.Values)
             {

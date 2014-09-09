@@ -100,6 +100,7 @@
     <Compile Include="Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ProxyScriptType.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
+    <Compile Include="Controllers\Dynamic\Selectors\AbpHttpControllerDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
     <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\ActionScriptProxyGenerator.cs" />

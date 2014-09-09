@@ -41,6 +41,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
-        void Build(IList<IFilter> filters = null);
+        void Build();
+
+        /// <summary>
+        /// Used to add action filters to apply to this method.
+        /// </summary>
+        /// <param name="filters"> Action Filters to apply.</param>
+        /// <returns>The <see cref="IApiControllerActionBuilder"/>. </returns>
+        IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters);
     }
 }
