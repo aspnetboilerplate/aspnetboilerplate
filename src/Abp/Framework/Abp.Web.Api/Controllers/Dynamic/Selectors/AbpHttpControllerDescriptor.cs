@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             var actionFilters = new Collection<IFilter>();
 
-            if (_filters.IsNullOrEmpty())
+            if (!_filters.IsNullOrEmpty())
             {
                 foreach (var filter in _filters)
                 {
