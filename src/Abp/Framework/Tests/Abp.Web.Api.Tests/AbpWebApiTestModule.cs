@@ -4,7 +4,6 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Web.Api.Tests.DynamicApiController.Clients;
-using Abp.WebApi.Controllers.Dynamic.Builders;
 using Abp.WebApi.Controllers.Dynamic.Clients;
 using Abp.WebApi.Startup;
 

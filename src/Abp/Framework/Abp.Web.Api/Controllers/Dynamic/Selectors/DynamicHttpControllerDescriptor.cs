@@ -3,29 +3,28 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
+using Abp.Utils.Extensions.Collections;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
-    using Abp.Utils.Extensions.Collections;
-
     /// <summary>
     /// This class is used to extend the default controller descriptor to add the action filters dynamically.
     /// </summary>
-    public class AbpHttpControllerDescriptor : HttpControllerDescriptor
+    public class DynamicHttpControllerDescriptor : HttpControllerDescriptor
     {
         /// <summary>
         /// The Dynamic Controller Action filters.
         /// </summary>
-        public readonly IFilter[] _filters;
+        private readonly IFilter[] _filters;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpHttpControllerDescriptor"/> class. Add the argument for action filters to the controller.
+        /// Initializes a new instance of the <see cref="DynamicHttpControllerDescriptor"/> class. Add the argument for action filters to the controller.
         /// </summary>
         /// <param name="configuration">The Http Configuration.</param>
         /// <param name="controllerName"> The controller name.</param>
         /// <param name="controllerType">The controller type.</param>
         /// <param name="filters">The Dynamic Controller action filters.</param>
-        public AbpHttpControllerDescriptor(HttpConfiguration configuration, string controllerName, Type controllerType, IFilter[] filters = null)
+        public DynamicHttpControllerDescriptor(HttpConfiguration configuration, string controllerName, Type controllerType, IFilter[] filters = null)
             : base(configuration, controllerName, controllerType)
         {
             _filters = filters;
@@ -51,6 +50,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             {
                 actionFilters.Add(baseFilter);
             }
+
             return actionFilters;
         }
     }
