@@ -1,4 +1,6 @@
 using Abp.Web;
+using System.Collections.Generic;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -40,5 +42,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// This method must be called at last of the build operation.
         /// </summary>
         void Build();
+
+        /// <summary>
+        /// Used to add action filters to apply to this method.
+        /// </summary>
+        /// <param name="filters"> Action Filters to apply.</param>
+        /// <returns>The <see cref="IApiControllerActionBuilder"/>. </returns>
+        IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters);
     }
 }

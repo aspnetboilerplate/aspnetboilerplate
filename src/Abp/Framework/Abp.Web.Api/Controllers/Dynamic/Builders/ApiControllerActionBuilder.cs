@@ -1,5 +1,7 @@
 using System.Reflection;
 using Abp.Web;
+using System.Collections.Generic;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -23,6 +25,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Underlying proxying method.
         /// </summary>
         private readonly MethodInfo _methodInfo;
+
+        /// <summary>
+        /// Action Filters for dynamic controller method.
+        /// </summary>
+        private IFilter[] _filters;
 
         /// <summary>
         /// Selected Http verd.
@@ -82,6 +89,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             return _controllerBuilder.ForMethod(methodName);
         }
+
+        /// <summary>
+        /// Used to add action filters to apply to this method.
+        /// </summary>
+        /// <param name="filters"> Action Filters to apply.</param>
+        /// <returns>The <see cref="IApiControllerActionBuilder"/>. </returns>
+        public IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters)
+        {
+            _filters = filters;
+            return this;
+        }
         
         /// <summary>
         /// Tells builder to not create action for this method.
@@ -113,7 +131,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 _verb = DefaultVerb;
             }
 
-            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo);
+            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo, _filters);
         }
     }
 }

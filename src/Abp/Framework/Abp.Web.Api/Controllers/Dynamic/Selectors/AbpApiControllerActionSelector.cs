@@ -37,7 +37,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                         throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
                     }
 
-                    return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method);
+                    return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method, controllerInfo.Actions[actionName].Filters);
                 }
             }
             
