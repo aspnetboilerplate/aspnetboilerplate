@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Resources", "Abp\Fr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Tests", "Abp\Framework\Tests\Abp.Web.Tests\Abp.Web.Tests.csproj", "{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Application.Tests", "Abp\Framework\Tests\Abp.Application.Tests\Abp.Application.Tests.csproj", "{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +111,6 @@ Global
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{9003DDA9-1DD5-41A1-B907-6F378767C441} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal

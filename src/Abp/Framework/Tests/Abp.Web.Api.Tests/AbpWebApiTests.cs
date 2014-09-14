@@ -13,7 +13,7 @@ namespace Abp.Web.Api.Tests
             {
                 return;
             }
-
+            
             _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }

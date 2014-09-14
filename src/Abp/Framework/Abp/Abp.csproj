@@ -162,6 +162,7 @@
     <Compile Include="Runtime\Validation\IValidate.cs" />
     <Compile Include="Runtime\Validation\Interception\MethodInvocationValidator.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptor.cs" />
+    <Compile Include="Startup\AbpInitializationException.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

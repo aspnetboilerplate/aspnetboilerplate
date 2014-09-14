@@ -5,7 +5,7 @@ namespace Abp.Application.Authorization.Permissions
     /// <summary>
     /// Permission manager.
     /// </summary>
-    public interface IPermissionDefinitionManager
+    public interface IPermissionManager
     {
         /// <summary>
         /// Gets <see cref="PermissionDefinition"/> object with given <see cref="permissionName"/> or returns null
@@ -18,5 +18,12 @@ namespace Abp.Application.Authorization.Permissions
         /// Gets all permission definitions.
         /// </summary>
         IReadOnlyList<PermissionDefinition> GetAllPermissions();
+
+        /// <summary>
+        /// Gets root permission groups.
+        /// All permission groups and permissions can be reached using this method.
+        /// </summary>
+        /// <returns>Root permission groups</returns>
+        IReadOnlyList<PermissionGroup> GetRootPermissionGroups();
     }
 }

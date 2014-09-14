@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Abp.Web.Api.Tests.Controllers.Filters
 {
-    //TODO: This tests fail because LocalizationSourceManager is not registered. It will be fixed when #58 fixed.
+    //TODO: Unit tests affect this one. If this is run alone, it works. We should fix it.
     [TestFixture]
     public class AbpExceptionFilterAttribute_Tests
     {

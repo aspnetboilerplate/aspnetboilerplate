@@ -1,16 +1,15 @@
-using System.Collections.Generic;
-
 namespace Abp.Application.Authorization.Permissions
 {
     /// <summary>
-    /// This interface defines a class that provide a list of permissions those are used for authorization in the application.
+    /// This is the main interface to define permissions for an application.
+    /// Implement it to define permissions for your module.
     /// </summary>
     public interface IPermissionDefinitionProvider
     {
         /// <summary>
-        /// Gets a list of <see cref="PermissionDefinition"/> objects.
+        /// This method is called once on application startup to allow to define permissions.
         /// </summary>
-        /// <returns>Permissions</returns>
-        IEnumerable<PermissionDefinition> GetPermissions(PermissionDefinitionProviderContext context);
+        /// <param name="context">Permission definition context</param>
+        void DefinePermissions(IPermissionDefinitionContext context);
     }
 }
