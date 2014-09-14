@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Dependency;
+using Abp.Modules;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Application.Authorization.Permissions
@@ -11,10 +12,13 @@ namespace Abp.Application.Authorization.Permissions
     /// </summary>
     public class PermissionDefinitionManager : IPermissionDefinitionManager, ISingletonDependency
     {
+        public IAssemblyFinder AssemblyFinder { get; set; }
+
         private readonly IDictionary<string, PermissionDefinition> _permissions;
 
         public PermissionDefinitionManager()
         {
+            AssemblyFinder = DefaultAssemblyFinder.Instance;
             _permissions = new Dictionary<string, PermissionDefinition>();
             Initialize();
         }
@@ -33,7 +37,7 @@ namespace Abp.Application.Authorization.Permissions
         {
             var context = new PermissionDefinitionProviderContext();
 
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AssemblyFinder.GetAllAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {

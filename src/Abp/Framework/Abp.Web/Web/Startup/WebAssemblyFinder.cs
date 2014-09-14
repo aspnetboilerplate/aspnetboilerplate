@@ -8,6 +8,9 @@ using Abp.Modules;
 
 namespace Abp.Web.Startup
 {
+    /// <summary>
+    /// This class is used to get all assemblies in bin folder of a web application.
+    /// </summary>
     public class WebAssemblyFinder : IAssemblyFinder
     {
         public List<Assembly> GetAllAssemblies()

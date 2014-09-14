@@ -20,7 +20,7 @@ namespace Abp.Modules
         public AbpModuleLoader(AbpModuleCollection modules)
         {
             _modules = modules;
-            AssemblyFinder = new DefaultAssemblyFinder();
+            AssemblyFinder = DefaultAssemblyFinder.Instance;
             Logger = NullLogger.Instance;
         }
 

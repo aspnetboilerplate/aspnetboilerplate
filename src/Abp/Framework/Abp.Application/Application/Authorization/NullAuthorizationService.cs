@@ -12,6 +12,14 @@
         public static NullAuthorizationService Instance { get { return SingletonInstance; } }
         private static readonly NullAuthorizationService SingletonInstance = new NullAuthorizationService();
 
+        /// <summary>
+        /// Private constructor to disable instancing.
+        /// </summary>
+        private NullAuthorizationService()
+        {
+
+        }
+
         public bool HasAnyOfPermissions(string[] permissions)
         {
             return true;
@@ -30,14 +38,6 @@
         public string[] GetGrantedPermissionNames()
         {
             return new string[0];
-        }
-
-        /// <summary>
-        /// Private constructor to disable instancing.
-        /// </summary>
-        private NullAuthorizationService()
-        {
-            
         }
     }
 }
