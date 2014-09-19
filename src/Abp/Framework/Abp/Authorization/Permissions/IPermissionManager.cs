@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Application.Authorization.Permissions
+namespace Abp.Authorization.Permissions
 {
     /// <summary>
     /// Permission manager.
@@ -8,22 +8,22 @@ namespace Abp.Application.Authorization.Permissions
     public interface IPermissionManager
     {
         /// <summary>
-        /// Gets <see cref="PermissionDefinition"/> object with given <see cref="permissionName"/> or returns null
+        /// Gets <see cref="Permission"/> object with given <see cref="permissionName"/> or returns null
         /// if there is no permission with given <see cref="permissionName"/>.
         /// </summary>
         /// <param name="permissionName">Unique name of the permission</param>
-        PermissionDefinition GetPermissionOrNull(string permissionName);
+        Permission GetPermissionOrNull(string permissionName);
 
         /// <summary>
         /// Gets all permission definitions.
         /// </summary>
-        IReadOnlyList<PermissionDefinition> GetAllPermissions();
+        IReadOnlyList<Permission> GetAllPermissions();
 
         /// <summary>
         /// Gets root permission groups.
         /// All permission groups and permissions can be reached using this method.
         /// </summary>
         /// <returns>Root permission groups</returns>
-        IReadOnlyList<PermissionGroup> GetRootPermissionGroups();
+        IReadOnlyList<PermissionGroup> GetPermissionGroups();
     }
 }

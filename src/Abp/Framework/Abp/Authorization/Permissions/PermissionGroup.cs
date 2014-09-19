@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Localization;
 
-namespace Abp.Application.Authorization.Permissions
+namespace Abp.Authorization.Permissions
 {
     /// <summary>
     /// Represents a permission group.
@@ -39,11 +39,11 @@ namespace Abp.Application.Authorization.Permissions
         /// <summary>
         /// List of child permission groups.
         /// </summary>
-        public IReadOnlyList<PermissionDefinition> Permissions
+        public IReadOnlyList<Permission> Permissions
         {
             get { return _permissions.ToImmutableList(); }
         }
-        private readonly List<PermissionDefinition> _permissions;
+        private readonly List<Permission> _permissions;
 
         /// <summary>
         /// Creates a new <see cref="PermissionGroup"/> object.
@@ -63,7 +63,7 @@ namespace Abp.Application.Authorization.Permissions
             Name = name;
             DisplayName = displayName;
             _children = new List<PermissionGroup>();
-            _permissions = new List<PermissionDefinition>();
+            _permissions = new List<Permission>();
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace Abp.Application.Authorization.Permissions
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <returns>New created permission</returns>
-        public PermissionDefinition CreatePermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        public Permission CreatePermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
-            var permission = new PermissionDefinition(name, displayName, isGrantedByDefault, description);
+            var permission = new Permission(name, displayName, isGrantedByDefault, description);
             _permissions.Add(permission);
             return permission;
         }

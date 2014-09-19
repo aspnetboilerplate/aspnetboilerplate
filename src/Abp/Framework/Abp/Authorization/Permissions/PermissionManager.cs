@@ -5,40 +5,40 @@ using Abp.Localization;
 using Abp.Startup;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.Application.Authorization.Permissions
+namespace Abp.Authorization.Permissions
 {
     /// <summary>
     /// Permission manager.
     /// </summary>
     public class PermissionManager : IPermissionManager, ISingletonDependency
     {
-        private readonly IPermissionDefinitionProviderFinder _definitionProviderFinder;
+        private readonly IPermissionProviderFinder _providerFinder;
 
-        private readonly Dictionary<string, PermissionDefinition> _permissions;
+        private readonly Dictionary<string, Permission> _permissions;
         private readonly Dictionary<string, PermissionGroup> _rootGroups;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PermissionManager(IPermissionDefinitionProviderFinder definitionProviderFinder)
+        public PermissionManager(IPermissionProviderFinder providerFinder)
         {
-            _definitionProviderFinder = definitionProviderFinder;
-            _permissions = new Dictionary<string, PermissionDefinition>();
+            _providerFinder = providerFinder;
+            _permissions = new Dictionary<string, Permission>();
             _rootGroups = new Dictionary<string, PermissionGroup>();
             Initialize();
         }
 
-        public PermissionDefinition GetPermissionOrNull(string permissionName)
+        public Permission GetPermissionOrNull(string permissionName)
         {
             return _permissions.GetOrDefault(permissionName);
         }
 
-        public IReadOnlyList<PermissionDefinition> GetAllPermissions()
+        public IReadOnlyList<Permission> GetAllPermissions()
         {
             return _permissions.Values.ToImmutableList();
         }
 
-        public IReadOnlyList<PermissionGroup> GetRootPermissionGroups()
+        public IReadOnlyList<PermissionGroup> GetPermissionGroups()
         {
             return _rootGroups.Values.ToImmutableList();
         }
@@ -47,7 +47,7 @@ namespace Abp.Application.Authorization.Permissions
         {
             var context = new PermissionDefinitionContext(_rootGroups);
 
-            foreach (var provider in _definitionProviderFinder.GetPermissionProviders())
+            foreach (var provider in _providerFinder.GetPermissionProviders())
             {
                 provider.DefinePermissions(context);
             }
@@ -73,10 +73,10 @@ namespace Abp.Application.Authorization.Permissions
             }
         }
 
-        private void AddPermissionRecursively(PermissionDefinition permission)
+        private void AddPermissionRecursively(Permission permission)
         {
             //Did defined before?
-            PermissionDefinition existingPermission;
+            Permission existingPermission;
             if (_permissions.TryGetValue(permission.Name, out existingPermission))
             {
                 throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);

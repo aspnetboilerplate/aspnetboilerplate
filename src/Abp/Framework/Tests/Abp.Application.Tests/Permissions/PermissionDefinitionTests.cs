@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Abp.Application.Authorization.Permissions;
+using Abp.Authorization.Permissions;
 using Abp.Localization;
 using NUnit.Framework;
 
@@ -11,9 +11,9 @@ namespace Abp.Application.Tests.Permissions
         [Test]
         public void Test_PermissionManager()
         {
-            var permissionManager = new PermissionManager(new MyPermissionDefinitionProviderFinder());
+            var permissionManager = new PermissionManager(new MyPermissionProviderFinder());
 
-            Assert.AreEqual(1, permissionManager.GetRootPermissionGroups().Count);
+            Assert.AreEqual(1, permissionManager.GetPermissionGroups().Count);
             Assert.AreEqual(4, permissionManager.GetAllPermissions().Count);
 
             var userManagement = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement");
@@ -29,11 +29,11 @@ namespace Abp.Application.Tests.Permissions
         }
     }
 
-    public class MyPermissionDefinitionProviderFinder : IPermissionDefinitionProviderFinder
+    public class MyPermissionProviderFinder : IPermissionProviderFinder
     {
-        public IEnumerable<IPermissionDefinitionProvider> GetPermissionProviders()
+        public IEnumerable<IPermissionProvider> GetPermissionProviders()
         {
-            return new IPermissionDefinitionProvider[]
+            return new IPermissionProvider[]
                    {
                        new MyPermissionProvider1(),
                        new MyPermissionProvider2() 
@@ -41,7 +41,7 @@ namespace Abp.Application.Tests.Permissions
         }
     }
 
-    public class MyPermissionProvider1 : IPermissionDefinitionProvider
+    public class MyPermissionProvider1 : IPermissionProvider
     {
         public void DefinePermissions(IPermissionDefinitionContext context)
         {
@@ -56,7 +56,7 @@ namespace Abp.Application.Tests.Permissions
         }
     }
 
-    public class MyPermissionProvider2 : IPermissionDefinitionProvider
+    public class MyPermissionProvider2 : IPermissionProvider
     {
         public void DefinePermissions(IPermissionDefinitionContext context)
         {

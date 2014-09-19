@@ -66,6 +66,14 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Authorization\Permissions\DefaultPermissionProviderFinder.cs" />
+    <Compile Include="Authorization\Permissions\IPermissionDefinitionContext.cs" />
+    <Compile Include="Authorization\Permissions\IPermissionProvider.cs" />
+    <Compile Include="Authorization\Permissions\IPermissionProviderFinder.cs" />
+    <Compile Include="Authorization\Permissions\IPermissionManager.cs" />
+    <Compile Include="Authorization\Permissions\Permission.cs" />
+    <Compile Include="Authorization\Permissions\PermissionGroup.cs" />
+    <Compile Include="Authorization\Permissions\PermissionManager.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />

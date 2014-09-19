@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Localization;
 
-namespace Abp.Application.Authorization.Permissions
+namespace Abp.Authorization.Permissions
 {
     /// <summary>
     /// Represents a permission.
     /// A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
-    public class PermissionDefinition
+    public class Permission
     {
         /// <summary>
         /// Parent of this permission if one exists.
         /// If set, this permission can be granted only if parent is granted.
         /// </summary>
-        public PermissionDefinition Parent { get; private set; }
+        public Permission Parent { get; private set; }
 
         /// <summary>
         /// Unique name of the permission.
@@ -43,11 +43,11 @@ namespace Abp.Application.Authorization.Permissions
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
-        public IReadOnlyList<PermissionDefinition> Children
+        public IReadOnlyList<Permission> Children
         {
             get { return _children.ToImmutableList(); }
         }
-        private readonly List<PermissionDefinition> _children;
+        private readonly List<Permission> _children;
 
         /// <summary>
         /// Creates a new Permission.
@@ -56,7 +56,7 @@ namespace Abp.Application.Authorization.Permissions
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
-        internal PermissionDefinition(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        internal Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
             if (name == null)
             {
@@ -73,7 +73,7 @@ namespace Abp.Application.Authorization.Permissions
             IsGrantedByDefault = isGrantedByDefault;
             Description = description;
 
-            _children = new List<PermissionDefinition>();
+            _children = new List<Permission>();
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace Abp.Application.Authorization.Permissions
         /// A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns new child permission</returns>
-        public PermissionDefinition CreateChildPermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        public Permission CreateChildPermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
         {
-            var permission = new PermissionDefinition(name, displayName, isGrantedByDefault, description) { Parent = this };
+            var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };
             _children.Add(permission);
             return permission;
         }

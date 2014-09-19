@@ -63,14 +63,6 @@
     <Compile Include="Application\Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Authorization\IAuthorizationService.cs" />
     <Compile Include="Application\Authorization\NullAuthorizationService.cs" />
-    <Compile Include="Application\Authorization\Permissions\IPermissionDefinitionProvider.cs" />
-    <Compile Include="Application\Authorization\Permissions\IPermissionDefinitionProviderFinder.cs" />
-    <Compile Include="Application\Authorization\Permissions\PermissionDefinition.cs" />
-    <Compile Include="Application\Authorization\Permissions\IPermissionManager.cs" />
-    <Compile Include="Application\Authorization\Permissions\DefaultPermissionDefinitionProviderFinder.cs" />
-    <Compile Include="Application\Authorization\Permissions\PermissionManager.cs" />
-    <Compile Include="Application\Authorization\Permissions\IPermissionDefinitionContext.cs" />
-    <Compile Include="Application\Authorization\Permissions\PermissionGroup.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDtoOfTPrimaryKey.cs" />
