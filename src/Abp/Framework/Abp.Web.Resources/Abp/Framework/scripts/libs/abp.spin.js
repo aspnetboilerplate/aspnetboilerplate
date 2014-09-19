@@ -60,8 +60,8 @@
                 options.promise.always(function () {
                     abp.ui.clearBusy(elm);
                 });
-            } else if (options.promise.finally) {
-                options.promise.finally(function () {
+            } else if (options.promise['finally']) {
+                options.promise['finally'](function () {
                     abp.ui.clearBusy(elm);
                 });
             }
