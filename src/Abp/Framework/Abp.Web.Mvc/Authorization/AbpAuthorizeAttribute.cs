@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Abp.Application.Authorization;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
 using Castle.Core.Logging;

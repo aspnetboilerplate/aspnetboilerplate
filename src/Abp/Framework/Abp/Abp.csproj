@@ -66,6 +66,9 @@
   <ItemGroup>
     <Compile Include="AbpConst.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
+    <Compile Include="Authorization\AbpAuthorizationException.cs" />
+    <Compile Include="Authorization\IAuthorizationService.cs" />
+    <Compile Include="Authorization\NullAuthorizationService.cs" />
     <Compile Include="Authorization\Permissions\DefaultPermissionProviderFinder.cs" />
     <Compile Include="Authorization\Permissions\IPermissionDefinitionContext.cs" />
     <Compile Include="Authorization\Permissions\IPermissionProvider.cs" />

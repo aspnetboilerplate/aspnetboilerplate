@@ -20,6 +20,12 @@ namespace Abp.Authorization.Permissions
         IReadOnlyList<Permission> GetAllPermissions();
 
         /// <summary>
+        /// Gets all permission names.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<string> GetAllPermissionNames();
+
+        /// <summary>
         /// Gets root permission groups.
         /// All permission groups and permissions can be reached using this method.
         /// </summary>

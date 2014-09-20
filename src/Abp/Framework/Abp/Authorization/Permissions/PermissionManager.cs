@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Startup;
@@ -36,6 +37,11 @@ namespace Abp.Authorization.Permissions
         public IReadOnlyList<Permission> GetAllPermissions()
         {
             return _permissions.Values.ToImmutableList();
+        }
+
+        public IReadOnlyList<string> GetAllPermissionNames()
+        {
+            return _permissions.Values.Select(p => p.Name).ToImmutableList();
         }
 
         public IReadOnlyList<PermissionGroup> GetPermissionGroups()

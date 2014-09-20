@@ -1,4 +1,4 @@
-﻿namespace Abp.Application.Authorization
+﻿namespace Abp.Authorization
 {
     /// <summary>
     /// This class is used as "null object" for <see cref="IAuthorizationService"/>.
@@ -28,11 +28,6 @@
         public bool HasAllOfPermissions(string[] permissions)
         {
             return true;
-        }
-
-        public string[] GetAllPermissionNames()
-        {
-            return new string[0];
         }
 
         public string[] GetGrantedPermissionNames()

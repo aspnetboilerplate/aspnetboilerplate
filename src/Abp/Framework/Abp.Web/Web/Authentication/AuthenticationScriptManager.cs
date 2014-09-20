@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using Abp.Application.Authorization;
+using Abp.Authorization;
+using Abp.Authorization.Permissions;
 using Abp.Dependency;
 
 namespace Abp.Web.Authentication
@@ -12,15 +12,17 @@ namespace Abp.Web.Authentication
     public class AuthenticationScriptManager : IAuthenticationScriptManager, ISingletonDependency
     {
         private readonly IAuthorizationService _authorizationService;
+        private readonly IPermissionManager _permissionManager;
 
-        public AuthenticationScriptManager(IAuthorizationService authorizationService)
+        public AuthenticationScriptManager(IAuthorizationService authorizationService, IPermissionManager permissionManager)
         {
             _authorizationService = authorizationService;
+            _permissionManager = permissionManager;
         }
 
         public string GetAuthenticationScript()
         {
-            var allPermission = _authorizationService.GetAllPermissionNames();
+            var allPermission = _permissionManager.GetAllPermissionNames();
             var grantedPermissions = _authorizationService.GetGrantedPermissionNames();
             
             var script = new StringBuilder();
@@ -45,14 +47,14 @@ namespace Abp.Web.Authentication
             return script.ToString();
         }
 
-        private void AppendPermissionList(StringBuilder script, string name, string[] permissions)
+        private void AppendPermissionList(StringBuilder script, string name, IReadOnlyList<string> permissions)
         {
             script.AppendLine("    abp.auth." + name + " = {");
 
-            for (var i = 0; i < permissions.Length; i++)
+            for (var i = 0; i < permissions.Count; i++)
             {
                 var permission = permissions[i];
-                if (i < permissions.Length - 1)
+                if (i < permissions.Count - 1)
                 {
                     script.AppendLine("        '" + permission + "': true,");
                 }

@@ -57,12 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Authorization\AbpAuthorizationException.cs" />
     <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
     <Compile Include="Application\Authorization\AuthorizeAttributeHelper.cs" />
     <Compile Include="Application\Authorization\IAbpAuthorizeAttribute.cs" />
-    <Compile Include="Application\Authorization\IAuthorizationService.cs" />
-    <Compile Include="Application\Authorization\NullAuthorizationService.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDtoOfTPrimaryKey.cs" />

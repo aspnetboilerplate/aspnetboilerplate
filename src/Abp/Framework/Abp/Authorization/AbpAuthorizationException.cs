@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Abp.Application.Authorization
+namespace Abp.Authorization
 {
     /// <summary>
     /// This exception is thrown on an unauthorized request.
