@@ -24,12 +24,17 @@ It adds it's own techniques such as:
 - Auto-creating Javascript proxy layer to use Web API layer
 
 Also adds standard stuff:
-- Authentication & Authorization
-- User & Role management
 - Exception handling
 - Validation
 
-and so on... See http://www.aspnetboilerplate.com for more.
+and so on...
+
+The first module (https://github.com/aspnetboilerplate/module-zero) is being developed to implement:
+- Authentication & Authorization (Implementing ASP.NET Identity Framework)
+- User & Role management
+- Setting management
+
+See http://www.aspnetboilerplate.com for more.
 
 An overall view of layers:
 
