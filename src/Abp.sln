@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Tests", "Abp\Framew
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Application.Tests", "Abp\Framework\Tests\Abp.Application.Tests\Abp.Application.Tests.csproj", "{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Owin", "Abp\Framework\Abp.Owin\Abp.Owin.csproj", "{CE05D1E0-557E-40F9-BD59-32837DB8BE2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE05D1E0-557E-40F9-BD59-32837DB8BE2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE05D1E0-557E-40F9-BD59-32837DB8BE2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE05D1E0-557E-40F9-BD59-32837DB8BE2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE05D1E0-557E-40F9-BD59-32837DB8BE2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,5 +118,6 @@ Global
 		{9003DDA9-1DD5-41A1-B907-6F378767C441} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{CF24FFAE-60AC-4A6B-8604-75AFE73B0F09} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{CE05D1E0-557E-40F9-BD59-32837DB8BE2F} = {8B19DD6F-9BFB-45C4-BFEE-F5FF5617546A}
 	EndGlobalSection
 EndGlobal
