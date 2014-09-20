@@ -1,7 +1,7 @@
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// This interface is defined to standardize to request a paged result
+    /// This interface is defined to standardize to request a paged result.
     /// </summary>
     public interface IPagedResultRequest : ILimitedResultRequest
     {
