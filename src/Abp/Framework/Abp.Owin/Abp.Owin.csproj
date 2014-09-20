@@ -44,10 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Owin\AbpOwinStartupExtensions.cs" />
+    <Compile Include="Owin\AbpAppBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Abp.Owin.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -7,14 +7,15 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("ASP.NEt Boilerplate - Application Layer")]
-[assembly: AssemblyDescription("ASP.NEt Boilerplate - Application Layer")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Application Layer")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Application Layer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NEt Boilerplate")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
 [assembly: AssemblyProduct("Abp.Application")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 

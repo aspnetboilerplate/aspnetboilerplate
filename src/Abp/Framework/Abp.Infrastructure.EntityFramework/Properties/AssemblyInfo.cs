@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("Abp.Infrastructure.EntityFramework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Infrastructure Layer - EntityFramework")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Infrastructure Layer - EntityFramework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ASP.NET Boilerplate")]
 [assembly: AssemblyProduct("Abp.Infrastructure.EntityFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

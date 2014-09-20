@@ -4,7 +4,7 @@ using Owin;
 
 namespace Abp.Owin
 {
-    public static class AbpOwinStartupExtensions
+    public static class AbpAppBuilderExtensions
     {
         public static void UseAbp(this IAppBuilder app)
         {
