@@ -13,25 +13,27 @@ namespace Abp.Web.Startup
     /// </summary>
     public class WebAssemblyFinder : IAssemblyFinder
     {
+        /// <summary>
+        /// This return all assemblies in bin folder of the web application.
+        /// </summary>
+        /// <returns>List of assemblies</returns>
         public List<Assembly> GetAllAssemblies()
         {
-            var allAssemblies = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList();
+            var assembliesInBinFolder = new List<Assembly>();
 
-            var binFolder = HttpRuntime.AppDomainAppPath + "bin\\";
-            var dllFiles = Directory.GetFiles(binFolder, "*.dll", SearchOption.TopDirectoryOnly).ToList();
+            var allReferencedAssemblies = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList();
+            var dllFiles = Directory.GetFiles(HttpRuntime.AppDomainAppPath + "bin\\", "*.dll", SearchOption.TopDirectoryOnly).ToList();
 
-            var binAssemblies = new List<Assembly>();
             foreach (string dllFile in dllFiles)
             {
-                var assemblyName = AssemblyName.GetAssemblyName(dllFile);
-                var locatedAssembly = allAssemblies.FirstOrDefault(a => AssemblyName.ReferenceMatchesDefinition(a.GetName(), assemblyName));
+                var locatedAssembly = allReferencedAssemblies.FirstOrDefault(asm => AssemblyName.ReferenceMatchesDefinition(asm.GetName(), AssemblyName.GetAssemblyName(dllFile)));
                 if (locatedAssembly != null)
                 {
-                    binAssemblies.Add(locatedAssembly);
+                    assembliesInBinFolder.Add(locatedAssembly);
                 }
             }
 
-            return binAssemblies;
+            return assembliesInBinFolder;
         }
     }
 }
