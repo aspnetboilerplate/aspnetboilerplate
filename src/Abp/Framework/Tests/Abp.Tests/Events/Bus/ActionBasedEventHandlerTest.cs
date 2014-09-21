@@ -1,12 +1,11 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Tests.Events.Bus
 {
-    [TestFixture]
     public class ActionBasedEventHandlerTest : EventBusTestBase
     {
-        [Test]
+        [Fact]
         public void Should_Call_Action_On_Event_With_Correct_Source()
         {
             var totalData = 0;
@@ -15,7 +14,7 @@ namespace Abp.Tests.Events.Bus
                 eventData =>
                 {
                     totalData += eventData.Value;
-                    Assert.AreEqual(this, eventData.EventSource);
+                    Assert.Equal(this, eventData.EventSource);
                 });
 
             EventBus.Trigger(this, new MySimpleEventData(1));
@@ -23,10 +22,10 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(this, new MySimpleEventData(3));
             EventBus.Trigger(this, new MySimpleEventData(4));
 
-            Assert.AreEqual(10, totalData);
+            Assert.Equal(10, totalData);
         }
 
-        [Test]
+        [Fact]
         public void Should_Call_Handler_With_Non_Generic_Trigger()
         {
             var totalData = 0;
@@ -35,7 +34,7 @@ namespace Abp.Tests.Events.Bus
                 eventData =>
                 {
                     totalData += eventData.Value;
-                    Assert.AreEqual(this, eventData.EventSource);
+                    Assert.Equal(this, eventData.EventSource);
                 });
 
             EventBus.Trigger(typeof(MySimpleEventData), this, new MySimpleEventData(1));
@@ -43,10 +42,10 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(typeof(MySimpleEventData), this, new MySimpleEventData(3));
             EventBus.Trigger(typeof(MySimpleEventData), this, new MySimpleEventData(4));
 
-            Assert.AreEqual(10, totalData);
+            Assert.Equal(10, totalData);
         }
 
-        [Test]
+        [Fact]
         public void Should_Not_Call_Action_After_Unregister_1()
         {
             var totalData = 0;
@@ -65,10 +64,10 @@ namespace Abp.Tests.Events.Bus
 
             EventBus.Trigger(this, new MySimpleEventData(4));
 
-            Assert.AreEqual(6, totalData);
+            Assert.Equal(6, totalData);
         }
 
-        [Test]
+        [Fact]
         public void Should_Not_Call_Action_After_Unregister_2()
         {
             var totalData = 0;
@@ -89,7 +88,7 @@ namespace Abp.Tests.Events.Bus
 
             EventBus.Trigger(this, new MySimpleEventData(4));
 
-            Assert.AreEqual(6, totalData);
+            Assert.Equal(6, totalData);
         }
     }
 }

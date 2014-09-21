@@ -1,12 +1,12 @@
 using Abp.Localization.Dictionaries.Xml;
 using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Tests.Localization
 {
-    [TestFixture]
     public class Test_XmlLocalizationDictionaryBuilder
     {
-        [Test]
+        [Fact]
         public void Can_Build_LocalizationDictionary_From_Xml_String()
         {
             var dictionary = XmlLocalizationDictionary.BuildFomXmlString(
@@ -19,9 +19,9 @@ namespace Abp.Tests.Localization
 </localizationDictionary>"
                 );
 
-            Assert.AreEqual("tr", dictionary.CultureInfo.Name);
-            Assert.AreEqual("Merhaba", dictionary["hello"]);
-            Assert.AreEqual("Dünya", dictionary["world"]);
+            Assert.Equal("tr", dictionary.CultureInfo.Name);
+            Assert.Equal("Merhaba", dictionary["hello"]);
+            Assert.Equal("Dünya", dictionary["world"]);
         }
     }
 }

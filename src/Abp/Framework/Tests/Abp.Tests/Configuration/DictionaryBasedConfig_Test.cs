@@ -1,20 +1,20 @@
 ﻿using Abp.Configuration;
 using NUnit.Framework;
+using Shouldly;
+using Xunit;
 
 namespace Abp.Tests.Configuration
 {
-    [TestFixture]
     public class DictionaryBasedConfig_Test
     {
-        private MyConfig _config;
+        private readonly MyConfig _config;
 
-        [TestFixtureSetUp]
-        public void Initialize()
+        public DictionaryBasedConfig_Test()
         {
             _config = new MyConfig();
         }
 
-        [Test]
+        [Fact]
         public void Should_Get_Value()
         {
             var testObject = new TestClass {Value = 42};
@@ -23,24 +23,24 @@ namespace Abp.Tests.Configuration
             _config["StringValue"] = "Test string";
             _config["ObjectValue"] = testObject;
 
-            Assert.AreEqual(42, _config["IntValue"]);
-            Assert.AreEqual(42, _config.GetOrDefault<int>("IntValue"));
+            _config["IntValue"].ShouldBe(42);
+            _config.GetOrDefault<int>("IntValue").ShouldBe(42);
 
-            Assert.AreEqual("Test string", _config["StringValue"]);
-            Assert.AreEqual("Test string", _config.GetOrDefault<string>("StringValue"));
+            _config["StringValue"].ShouldBe("Test string");
+            _config.GetOrDefault<string>("StringValue").ShouldBe("Test string");
 
-            Assert.AreEqual(testObject, _config["ObjectValue"]);
-            Assert.AreEqual(testObject, _config.GetOrDefault<TestClass>("ObjectValue"));
-            Assert.AreEqual(42, _config.GetOrDefault<TestClass>("ObjectValue").Value);
+            _config["ObjectValue"].ShouldBeSameAs(testObject);
+            _config.GetOrDefault<TestClass>("ObjectValue").ShouldBeSameAs(testObject);
+            _config.GetOrDefault<TestClass>("ObjectValue").Value.ShouldBe(42);
         }
 
-        [Test]
+        [Fact]
         public void Should_Get_Default_If_No_Value()
         {
-            Assert.AreEqual(null, _config["MyUndefinedName"]);
-            Assert.AreEqual(null, _config.GetOrDefault<string>("MyUndefinedName"));
-            Assert.AreEqual(null, _config.GetOrDefault<MyConfig>("MyUndefinedName"));
-            Assert.AreEqual(0, _config.GetOrDefault<int>("MyUndefinedName"));
+            _config["MyUndefinedName"].ShouldBe(null);
+            _config.GetOrDefault<string>("MyUndefinedName").ShouldBe(null);
+            _config.GetOrDefault<MyConfig>("MyUndefinedName").ShouldBe(null);
+            _config.GetOrDefault<int>("MyUndefinedName").ShouldBe(0);
         }
 
         private class MyConfig : DictionayBasedConfig

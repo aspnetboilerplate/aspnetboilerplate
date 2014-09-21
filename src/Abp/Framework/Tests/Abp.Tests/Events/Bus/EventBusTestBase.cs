@@ -1,5 +1,4 @@
 using Abp.Events.Bus;
-using NUnit.Framework;
 
 namespace Abp.Tests.Events.Bus
 {
@@ -7,8 +6,7 @@ namespace Abp.Tests.Events.Bus
     {
         protected IEventBus EventBus;
 
-        [TestFixtureSetUp]
-        public void Initialize()
+        protected EventBusTestBase()
         {
             EventBus = new EventBus();
         }

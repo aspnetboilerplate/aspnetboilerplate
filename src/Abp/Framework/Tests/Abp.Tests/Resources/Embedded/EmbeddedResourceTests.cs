@@ -1,21 +1,18 @@
 ﻿using Abp.Resources.Embedded;
-using Abp.Utils.Extensions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Tests.Resources.Embedded
 {
-    [TestFixture]
     public class EmbeddedResourceTests
     {
-        private IEmbeddedResourceManager _embeddedResourceManager;
+        private readonly IEmbeddedResourceManager _embeddedResourceManager;
 
-        [TestFixtureSetUp]
-        public void Initialize()
+        public EmbeddedResourceTests()
         {
             _embeddedResourceManager = new EmbeddedResourceManager();
         }
 
-        [Test]
+        [Fact]
         public void Should_Define_And_Get_Embedded_Resources()
         {
             _embeddedResourceManager.ExposeResources("MyApp/MyResources", GetType().Assembly, "Abp.Tests.Resources.Embedded.MyResources");

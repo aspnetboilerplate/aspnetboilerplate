@@ -1,11 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Tests.Events.Bus
 {
-    [TestFixture]
     public class TransientDisposableEventHandlerTest : EventBusTestBase
     {
-        [Test]
+        [Fact]
         public void Should_Call_Handler_AndDispose()
         {
             EventBus.Register<MySimpleEventData, MySimpleTransientEventHandler>();
@@ -14,8 +13,8 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(new MySimpleEventData(2));
             EventBus.Trigger(new MySimpleEventData(3));
 
-            Assert.AreEqual(MySimpleTransientEventHandler.HandleCount, 3);
-            Assert.AreEqual(MySimpleTransientEventHandler.DisposeCount, 3);
+            Assert.Equal(MySimpleTransientEventHandler.HandleCount, 3);
+            Assert.Equal(MySimpleTransientEventHandler.DisposeCount, 3);
         }
     }
 }

@@ -1,10 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Tests.Events.Bus
 {
     public class InheritanceTest : EventBusTestBase
     {
-        [Test]
+        [Fact]
         public void Should_Handle_Events_For_Derived_Classes()
         {
             var totalData = 0;
@@ -13,7 +13,7 @@ namespace Abp.Tests.Events.Bus
                 eventData =>
                 {
                     totalData += eventData.Value;
-                    Assert.AreEqual(this, eventData.EventSource);
+                    Assert.Equal(this, eventData.EventSource);
                 });
 
             EventBus.Trigger(this, new MySimpleEventData(1)); //Should handle directly registered class
@@ -21,10 +21,10 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(this, new MyDerivedEventData(3)); //Should handle derived class too
             EventBus.Trigger(this, new MyDerivedEventData(4)); //Should handle derived class too
 
-            Assert.AreEqual(10, totalData);
+            Assert.Equal(10, totalData);
         }
 
-        [Test]
+        [Fact]
         public void Should_Not_Handle_Events_For_Base_Classes()
         {
             var totalData = 0;
@@ -33,7 +33,7 @@ namespace Abp.Tests.Events.Bus
                 eventData =>
                 {
                     totalData += eventData.Value;
-                    Assert.AreEqual(this, eventData.EventSource);
+                    Assert.Equal(this, eventData.EventSource);
                 });
 
             EventBus.Trigger(this, new MySimpleEventData(1)); //Should not handle
@@ -41,7 +41,7 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(this, new MyDerivedEventData(3)); //Should handle
             EventBus.Trigger(this, new MyDerivedEventData(4)); //Should handle
 
-            Assert.AreEqual(7, totalData);
+            Assert.Equal(7, totalData);
         }   
     }
 }
