@@ -1,38 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Abp.UI;
 using Abp.Web.Models;
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Web.Tests
 {
-    [TestFixture]
     public class ErrorInfoTests
     {
-        [TestFixtureSetUp]
-        public void Initialize()
+        static ErrorInfoTests()
         {
             ErrorInfo.AddExceptionConverter(new MyErrorInfoConverter());
         }
 
-        [Test]
+        [Fact]
         public void Should_Convert_Specific_Exception()
         {
             var errorInfo = ErrorInfo.ForException(new MySpecificException());
-            Assert.AreEqual(42, errorInfo.Code);
-            Assert.AreEqual("MySpecificMessage", errorInfo.Message);
-            Assert.AreEqual("MySpecificMessageDetails", errorInfo.Details);
+            Assert.Equal(42, errorInfo.Code);
+            Assert.Equal("MySpecificMessage", errorInfo.Message);
+            Assert.Equal("MySpecificMessageDetails", errorInfo.Details);
         }
 
-        [Test]
+        [Fact]
         public void Should_Convert_UserFriendlyException()
         {
             var errorInfo = ErrorInfo.ForException(new UserFriendlyException("Test message"));
-            Assert.AreEqual(0, errorInfo.Code);
-            Assert.AreEqual("Test message", errorInfo.Message);
+            Assert.Equal(0, errorInfo.Code);
+            Assert.Equal("Test message", errorInfo.Message);
         }
 
         public class MySpecificException : Exception

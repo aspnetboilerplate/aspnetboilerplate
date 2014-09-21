@@ -1,29 +1,28 @@
 ﻿using System.Collections.Generic;
 using Abp.Authorization.Permissions;
 using Abp.Localization;
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Application.Tests.Permissions
 {
-    [TestFixture]
     public class PermissionManagerTester
     {
-        [Test]
+        [Fact]
         public void Test_PermissionManager()
         {
             var permissionManager = new PermissionManager(new MyPermissionProviderFinder());
 
-            Assert.AreEqual(1, permissionManager.GetPermissionGroups().Count);
-            Assert.AreEqual(4, permissionManager.GetAllPermissions().Count);
+            Assert.Equal(1, permissionManager.GetPermissionGroups().Count);
+            Assert.Equal(4, permissionManager.GetAllPermissions().Count);
 
             var userManagement = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement");
             Assert.NotNull(userManagement);
-            Assert.AreEqual(1, userManagement.Children.Count);
+            Assert.Equal(1, userManagement.Children.Count);
 
             var changePermissions = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
             Assert.NotNull(changePermissions);
 
-            Assert.AreSame(userManagement, changePermissions.Parent);
+            Assert.Same(userManagement, changePermissions.Parent);
 
             Assert.Null(permissionManager.GetPermissionOrNull("NonExistingPermissionName"));
         }

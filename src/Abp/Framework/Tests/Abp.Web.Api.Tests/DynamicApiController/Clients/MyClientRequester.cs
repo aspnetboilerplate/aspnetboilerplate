@@ -1,24 +1,20 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic.Clients;
-using NUnit.Framework;
+using Xunit;
 
 namespace Abp.Web.Api.Tests.DynamicApiController.Clients
 {
-    [TestFixture]
     public class DynamicApiClient_Tests
     {
-        [TestFixtureSetUp]
-        public void Initialize()
+        static DynamicApiClient_Tests()
         {
             AbpWebApiTests.Initialize();
         }
 
-        [Test]
+        [Fact]
         public void Should_Call_Service()
         {
-            //NOTE: This feature is being developed. So, unit test can be failed
+            //NOTE: This feature is being developed. So, unit test will be failed
 
             //var myClient = IocHelper.Resolve<IDynamicApiClient<IMyAppService>>();
             //var result = myClient.Service.MyMethod(new MyMethodInput {TestProperty1 = "test value"});
