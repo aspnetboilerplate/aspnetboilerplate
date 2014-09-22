@@ -1,12 +1,10 @@
 ﻿using System.Reflection;
 using System.Web;
 using Abp.Dependency;
-using Abp.Localization;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Startup;
 using Abp.Startup.Configuration;
-using Abp.Web.Localization;
 
 namespace Abp.Web.Startup
 {
@@ -17,7 +15,7 @@ namespace Abp.Web.Startup
     {
         public override void Configure(AbpConfiguration configuration)
         {
-
+            configuration.Localization.AddXmlSource("AbpWeb", "Localization\\AbpWeb");
         }
 
         public override void PreInitialize(IAbpInitializationContext initializationContext)
@@ -35,7 +33,6 @@ namespace Abp.Web.Startup
             base.Initialize(initializationContext);
 
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            LocalizationHelper.RegisterSource<AbpWebLocalizationSource>();
         }
     }
 }

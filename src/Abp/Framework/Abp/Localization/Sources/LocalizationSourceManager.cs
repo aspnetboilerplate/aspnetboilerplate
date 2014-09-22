@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Configuration;
-using Abp.Dependency;
 using Abp.Startup.Configuration;
 
 namespace Abp.Localization.Sources
@@ -10,7 +8,7 @@ namespace Abp.Localization.Sources
     /// <summary>
     /// This class is used to manage localization sources by implementing <see cref="ILocalizationSourceManager"/>. See <see cref="ILocalizationSource"/>.
     /// </summary>
-    public class LocalizationSourceManager : ILocalizationSourceManager, ISingletonDependency
+    public class LocalizationSourceManager : ILocalizationSourceManager
     {
         private static bool IsEnabled
         {

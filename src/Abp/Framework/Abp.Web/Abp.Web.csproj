@@ -68,7 +68,6 @@
     <Compile Include="Web\Models\AjaxResponse.cs" />
     <Compile Include="Web\Models\ErrorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\Localization\AbpWebLocalizationSource.cs" />
     <Compile Include="Web\Startup\AbpWebModule.cs" />
     <Compile Include="Web\Startup\AbpWebApplication.cs" />
     <Compile Include="Web\Models\DefaultExceptionToErrorInfoConverter.cs" />

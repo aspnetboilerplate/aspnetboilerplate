@@ -1,4 +1,6 @@
-﻿namespace Abp.Startup.Configuration
+﻿using Abp.Localization.Sources;
+
+namespace Abp.Startup.Configuration
 {
     /// <summary>
     /// Used for localization configurations.
@@ -14,6 +16,11 @@
         internal AbpLocalizationConfiguration()
         {
             IsEnabled = true;
+        }
+
+        public void AddSource(ILocalizationSource source)
+        {
+            
         }
     }
 }

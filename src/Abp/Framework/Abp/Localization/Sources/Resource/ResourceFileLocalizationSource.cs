@@ -13,7 +13,7 @@ namespace Abp.Localization.Sources.Resource
     /// This class is used to simplify to create a localization source that
     /// uses resource a file.
     /// </summary>
-    public abstract class ResourceFileLocalizationSource : ILocalizationSource, ISingletonDependency
+    public class ResourceFileLocalizationSource : ILocalizationSource, ISingletonDependency
     {
         /// <summary>
         /// Unique Name of the source.
@@ -27,7 +27,7 @@ namespace Abp.Localization.Sources.Resource
 
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
-        protected ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
+        public ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
         {
             Name = name;
             ResourceManager = resourceManager;
