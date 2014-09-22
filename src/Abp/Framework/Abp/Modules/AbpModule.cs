@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Startup;
+using Abp.Startup.Configuration;
 
 namespace Abp.Modules
 {
@@ -15,6 +16,15 @@ namespace Abp.Modules
         public virtual Type[] GetDependedModules()
         {
             return new Type[] {};
+        }
+
+        /// <summary>
+        /// This method can be used to configure ABP system and depended modules.
+        /// </summary>
+        /// <param name="configuration">Configuration object</param>
+        public virtual void Configure(AbpConfiguration configuration)
+        {
+            
         }
 
         /// <summary>

@@ -176,6 +176,7 @@
     <Compile Include="Startup\AbpInitializationException.cs" />
     <Compile Include="Startup\Configuration\AbpConfiguration.cs" />
     <Compile Include="Startup\Configuration\AbpLocalizationConfiguration.cs" />
+    <Compile Include="Startup\Configuration\AbpModuleConfigurations.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

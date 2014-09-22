@@ -5,6 +5,7 @@ using Abp.Localization;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Startup;
+using Abp.Startup.Configuration;
 using Abp.Web.Localization;
 
 namespace Abp.Web.Startup
@@ -14,6 +15,11 @@ namespace Abp.Web.Startup
     /// </summary>
     public class AbpWebModule : AbpModule
     {
+        public override void Configure(AbpConfiguration configuration)
+        {
+
+        }
+
         public override void PreInitialize(IAbpInitializationContext initializationContext)
         {
             base.PreInitialize(initializationContext);

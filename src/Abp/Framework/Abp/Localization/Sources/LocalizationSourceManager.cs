@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Configuration;
 using Abp.Dependency;
+using Abp.Startup.Configuration;
 
 namespace Abp.Localization.Sources
 {
@@ -15,7 +16,7 @@ namespace Abp.Localization.Sources
         {
             get
             {
-                return string.Equals(ConfigurationManager.AppSettings["Abp.Localization.IsEnabled"] ?? "true", "true", StringComparison.InvariantCultureIgnoreCase);
+                return AbpConfiguration.Instance.Localization.IsEnabled;
             }
         }
 

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Configuration;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Utils.Extensions.Collections;
 using Abp.Web.Localization;
+using Abp.Web.Startup;
 
 namespace Abp.Web.Models
 {
@@ -19,7 +19,7 @@ namespace Abp.Web.Models
         {
             get
             {
-                return string.Equals(WebConfigurationManager.AppSettings["Abp.Web.SendAllExceptionsToClients"] ?? "false", "true", StringComparison.InvariantCultureIgnoreCase);
+                return AbpWebModuleConfiguration.Instance.SendAllExceptionsToClients;
             }
         }
 

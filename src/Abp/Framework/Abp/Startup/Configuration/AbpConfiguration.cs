@@ -14,10 +14,15 @@ namespace Abp.Startup.Configuration
         public AbpLocalizationConfiguration Localization { get; private set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public AbpModuleConfigurations Modules { get; private set; }
+
+        /// <summary>
         /// Gets/sets key-based configuration objects.
         /// </summary>
         /// <param name="name">Name of the setting</param>
-        public object this[string name]
+        private object this[string name]
         {
             get { return _settings.GetOrDefault(name); }
             set { _settings[name] = value; }
@@ -26,7 +31,7 @@ namespace Abp.Startup.Configuration
         /// <summary>
         /// Singletion instance.
         /// </summary>
-        internal static AbpConfiguration Instance { get { return _instance; } }
+        public static AbpConfiguration Instance { get { return _instance; } }
         private static readonly AbpConfiguration _instance = new AbpConfiguration();
 
         /// <summary>
@@ -41,6 +46,28 @@ namespace Abp.Startup.Configuration
         {
             _settings = new Dictionary<string, object>();
             Localization = new AbpLocalizationConfiguration();
+            Modules = new AbpModuleConfigurations();
+        }
+
+        public void Set<T>(string name, T value)
+        {
+            this[name] = value;
+        }
+
+        public T Get<T>(string name)
+        {
+            return Get(name, default(T));
+        }
+
+        public T Get<T>(string name, T defaultValue)
+        {
+            var value = this[name];
+            if (value == null)
+            {
+                return defaultValue;
+            }
+
+            return (T)this[name];
         }
     }
 }

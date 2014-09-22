@@ -1,4 +1,5 @@
 ﻿using Abp.Startup;
+using Abp.Startup.Configuration;
 
 namespace Abp.Modules
 {
@@ -20,6 +21,7 @@ namespace Abp.Modules
         {
             _moduleLoader.LoadAll();
             var sortedModules = _modules.GetSortedModuleListByDependency();
+            sortedModules.ForEach(module => module.Instance.Configure(AbpConfiguration.Instance));
             sortedModules.ForEach(module => module.Instance.PreInitialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.Initialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
