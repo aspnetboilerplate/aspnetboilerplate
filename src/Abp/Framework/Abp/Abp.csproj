@@ -199,7 +199,6 @@
     <Compile Include="Startup\AbpApplicationManager.cs" />
     <Compile Include="Modules\AbpModuleHelper.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
-    <Compile Include="Modules\IAbpModule.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\AbpStartupInstaller.cs" />

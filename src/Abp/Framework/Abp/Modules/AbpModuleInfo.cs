@@ -22,7 +22,7 @@ namespace Abp.Modules
         /// <summary>
         /// Instance of the module.
         /// </summary>
-        public IAbpModule Instance { get; private set; }
+        public AbpModule Instance { get; private set; }
 
         /// <summary>
         /// All dependent modules of this module.
@@ -32,9 +32,8 @@ namespace Abp.Modules
         /// <summary>
         /// Creates a new AbpModuleInfo object.
         /// </summary>
-        /// <param name="type"></param>
         /// <param name="instance"></param>
-        public AbpModuleInfo(IAbpModule instance)
+        public AbpModuleInfo(AbpModule instance)
         {
             Dependencies = new List<AbpModuleInfo>();
             Type = instance.GetType();
@@ -52,7 +51,7 @@ namespace Abp.Modules
                         type.FullName));
             }
 
-            return new AbpModuleInfo((IAbpModule)Activator.CreateInstance(type, new object[] { }));
+            return new AbpModuleInfo((AbpModule)Activator.CreateInstance(type, new object[] { }));
         }
 
         public override string ToString()

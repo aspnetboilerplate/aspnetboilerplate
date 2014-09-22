@@ -4,9 +4,9 @@ using Abp.Startup;
 namespace Abp.Modules
 {
     /// <summary>
-    /// Base class that can be inherited to easily implement <see cref="IAbpModule"/>.
+    /// This class must be implemented by all module definition classes.
     /// </summary>
-    public abstract class AbpModule : IAbpModule
+    public abstract class AbpModule
     {
         /// <summary>
         /// Gets all depended modules for this module.
@@ -15,7 +15,7 @@ namespace Abp.Modules
         public virtual Type[] GetDependedModules()
         {
             return new Type[] {};
-        } 
+        }
 
         /// <summary>
         /// What can be done in this method:

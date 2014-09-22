@@ -17,7 +17,7 @@ namespace Abp.Modules
                 type.IsPublic &&
                 type.IsClass &&
                 !type.IsAbstract &&
-                typeof (IAbpModule).IsAssignableFrom(type);
+                typeof (AbpModule).IsAssignableFrom(type);
         }
     }
 }
