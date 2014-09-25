@@ -196,7 +196,6 @@
     <Compile Include="Localization\Dictionaries\ILocalizationDictionary.cs" />
     <Compile Include="Localization\Sources\DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\Sources\Xml\XmlLocalizationSource.cs" />
-    <Compile Include="Modules\AbpModuleLoader.cs" />
     <Compile Include="Startup\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />

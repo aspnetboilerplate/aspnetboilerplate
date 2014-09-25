@@ -27,6 +27,8 @@ namespace Abp.Tests.Startup
         {
             LocalIocManager.IocContainer.Register(Component.For<IModuleFinder>().ImplementedBy<MyTestModuleFinder>());
             
+            MyTestModule.ClearCounters();
+
             _bootstrapper.Initialize();
             _bootstrapper.Dispose();
 
@@ -63,6 +65,14 @@ namespace Abp.Tests.Startup
         public static int PostInitializeCount { get; private set; }
 
         public static int ShutdownCount { get; private set; }
+
+        public static void ClearCounters()
+        {
+            PreInitializeCount = 0;
+            InitializeCount = 0;
+            PostInitializeCount = 0;
+            ShutdownCount = 0;
+        }
 
         public override void PreInitialize(IAbpInitializationContext context)
         {
