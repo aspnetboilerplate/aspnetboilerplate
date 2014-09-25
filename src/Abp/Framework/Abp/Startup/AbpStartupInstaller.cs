@@ -10,16 +10,16 @@ namespace Abp.Startup
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            RegisterModuleSystem(container, store);
+            RegisterStartupSystem(container, store);
             RegisterLocalizationSystem(container, store);
-            RegisterStartupManager(container, store);
         }
 
-        protected virtual void RegisterModuleSystem(IWindsorContainer container, IConfigurationStore store)
+        protected virtual void RegisterStartupSystem(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
                 Component.For<AbpModuleCollection>().LifestyleSingleton(),
-                Component.For<AbpModuleManager>().LifestyleSingleton()
+                Component.For<AbpModuleManager>().LifestyleSingleton(),
+                Component.For<AbpStartupManager>().LifestyleSingleton()
                 );
         }
 
@@ -27,13 +27,6 @@ namespace Abp.Startup
         {
             container.Register(
                 Component.For<ILocalizationSourceManager>().ImplementedBy<LocalizationSourceManager>().LifestyleSingleton()
-                );
-        }
-
-        protected virtual void RegisterStartupManager(IWindsorContainer container, IConfigurationStore store)
-        {
-            container.Register(
-                Component.For<AbpStartupManager>().LifestyleSingleton()
                 );
         }
     }

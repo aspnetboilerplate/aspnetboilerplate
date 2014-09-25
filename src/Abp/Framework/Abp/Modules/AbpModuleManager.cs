@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Abp.Startup;
-using Abp.Startup.Configuration;
 using Castle.Core.Logging;
 
 namespace Abp.Modules
@@ -43,7 +42,7 @@ namespace Abp.Modules
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
         }
 
-        public void LoadAll()
+        private void LoadAll()
         {
             Logger.Debug("Loading Abp modules...");
 
