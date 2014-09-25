@@ -5,12 +5,12 @@ namespace Abp.Startup
     /// <summary>
     /// This class is the main class that manages an application and modules.
     /// </summary>
-    public class AbpApplicationManager
+    public class AbpStartupManager
     {
         private readonly AbpModuleManager _moduleManager;
         private readonly AbpModuleCollection _modules;
 
-        public AbpApplicationManager(AbpModuleManager moduleManager, AbpModuleCollection modules)
+        public AbpStartupManager(AbpModuleManager moduleManager, AbpModuleCollection modules)
         {
             _moduleManager = moduleManager;
             _modules = modules;

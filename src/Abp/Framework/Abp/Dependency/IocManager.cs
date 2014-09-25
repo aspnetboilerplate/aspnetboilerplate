@@ -30,7 +30,7 @@ namespace Abp.Dependency
             Instance = new IocManager();
         }
 
-        private IocManager()
+        internal IocManager()
         {
             IocContainer = new WindsorContainer();
             _conventionalRegisterers = new List<IConventionalRegisterer>();

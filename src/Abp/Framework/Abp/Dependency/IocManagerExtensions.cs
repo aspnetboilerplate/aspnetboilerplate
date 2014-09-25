@@ -1,12 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Abp.Dependency
 {
-    /// <summary>
-    /// This class is a helper to direcly use basic functionallity of dependency injection.
-    /// Use <see cref="IocManager.IocContainer"/> to register dependencies.
-    /// </summary>
-    public static class IocHelper
+    public static class IocManagerExtensions
     {
         #region Resolve
 
@@ -15,10 +15,11 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="iocManager">IocManager object</param>
         /// <returns>The instance object</returns>
-        public static T Resolve<T>()
+        public static T Resolve<T>(this IocManager iocManager)
         {
-            return IocManager.Instance.IocContainer.Resolve<T>();
+            return iocManager.IocContainer.Resolve<T>();
         }
 
         /// <summary>
@@ -26,11 +27,12 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object</returns>
-        public static T Resolve<T>(object argumentsAsAnonymousType) //TODO: Test!
+        public static T Resolve<T>(this IocManager iocManager, object argumentsAsAnonymousType) //TODO: Test!
         {
-            return IocManager.Instance.IocContainer.Resolve<T>(argumentsAsAnonymousType);
+            return iocManager.IocContainer.Resolve<T>(argumentsAsAnonymousType);
         }
 
         /// <summary>
@@ -38,10 +40,11 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
+        /// <param name="iocManager">IocManager object</param>
         /// <returns>The instance object</returns>
-        public static object Resolve(Type type)
+        public static object Resolve(this IocManager iocManager, Type type)
         {
-            return IocManager.Instance.IocContainer.Resolve(type);
+            return iocManager.IocContainer.Resolve(type);
         }
 
         /// <summary>
@@ -49,11 +52,12 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object</returns>
-        public static object Resolve(Type type, object argumentsAsAnonymousType)
+        public static object Resolve(this IocManager iocManager, Type type, object argumentsAsAnonymousType)
         {
-            return IocManager.Instance.IocContainer.Resolve(type, argumentsAsAnonymousType);
+            return iocManager.IocContainer.Resolve(type, argumentsAsAnonymousType);
         }
 
         #endregion
@@ -64,65 +68,71 @@ namespace Abp.Dependency
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="iocManager">IocManager object</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>()
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocManager)
         {
-            return new DisposableDependencyObjectWrapper<T>(IocManager.Instance);
+            return new DisposableDependencyObjectWrapper<T>(iocManager);
         }
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocManager, Type type)
         {
-            return new DisposableDependencyObjectWrapper<T>(IocManager.Instance, type);
+            return new DisposableDependencyObjectWrapper<T>(iocManager, type);
         }
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(Type type)
+        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IocManager iocManager, Type type)
         {
-            return new DisposableDependencyObjectWrapper(IocManager.Instance, type);
-        }
-
-        /// <summary>
-        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
-        /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
-        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(object argumentsAsAnonymousType)
-        {
-            return new DisposableDependencyObjectWrapper<T>(IocManager.Instance, argumentsAsAnonymousType);
+            return new DisposableDependencyObjectWrapper(iocManager, type);
         }
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(Type type, object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocManager, object argumentsAsAnonymousType)
         {
-            return new DisposableDependencyObjectWrapper<T>(IocManager.Instance, type, argumentsAsAnonymousType);
+            return new DisposableDependencyObjectWrapper<T>(iocManager, argumentsAsAnonymousType);
         }
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(Type type, object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocManager, Type type, object argumentsAsAnonymousType)
         {
-            return new DisposableDependencyObjectWrapper(IocManager.Instance, type, argumentsAsAnonymousType);
+            return new DisposableDependencyObjectWrapper<T>(iocManager, type, argumentsAsAnonymousType);
+        }
+
+        /// <summary>
+        /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
+        /// </summary> 
+        /// <param name="iocManager">IocManager object</param>
+        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
+        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IocManager iocManager, Type type, object argumentsAsAnonymousType)
+        {
+            return new DisposableDependencyObjectWrapper(iocManager, type, argumentsAsAnonymousType);
         }
 
         #endregion
@@ -130,12 +140,13 @@ namespace Abp.Dependency
         #region Release
 
         /// <summary>
-        /// Releases a pre-resolved (see <see cref="Resolve{T}()"/>) object.
+        /// Releases a pre-resolved object. See <see cref="Resolve{T}(IocManager)"/> method.
         /// </summary>
+        /// <param name="iocManager">IocManager object</param>
         /// <param name="obj">Object to be released</param>
-        public static void Release(object obj)
+        public static void Release(this IocManager iocManager, object obj)
         {
-            IocManager.Instance.IocContainer.Release(obj);
+            iocManager.IocContainer.Release(obj);
         }
 
         #endregion

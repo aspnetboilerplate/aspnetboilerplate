@@ -10,9 +10,10 @@ namespace Abp.Events.Bus
     /// <summary>
     /// Installs event bus system and registers all handlers automatically.
     /// </summary>
-    public class EventBusInstaller : IWindsorInstaller
+    internal class EventBusInstaller : IWindsorInstaller
     {
         private IEventBus _eventBus;
+
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(

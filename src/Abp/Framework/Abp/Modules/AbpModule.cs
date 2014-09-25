@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.Startup;
-using Abp.Startup.Configuration;
 
 namespace Abp.Modules
 {

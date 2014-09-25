@@ -1,26 +1,49 @@
 ﻿using System;
 using Abp.Dependency;
-using Castle.Windsor.Installer;
+using Abp.Events.Bus;
 
 namespace Abp.Startup
 {
     /// <summary>
     /// This is the main class that is responsible to start entire system.
-    /// It must be instantiated and initialized first.
-    /// It starts Dependency Injection system.
+    /// It must be instantiated and initialized (see <see cref="Initialize"/>) first in an application.
     /// </summary>
     public class AbpBootstrapper : IDisposable
     {
-        private AbpApplicationManager _applicationManager;
+        /// <summary>
+        /// Gets/sets IocManager object used by this class.
+        /// </summary>
+        public IocManager IocManager { get; set; }
+
+        private AbpStartupManager _startupManager;
+
+        private bool _isDisposed;
+
+        /// <summary>
+        /// Creates a new <see cref="AbpBootstrapper"/> instance.
+        /// </summary>
+        public AbpBootstrapper()
+        {
+            IocManager = IocManager.Instance;
+        }
         
         /// <summary>
-        /// Initializes the system.
+        /// Initializes the complete system.
         /// </summary>
         public virtual void Initialize()
         {
-            IocManager.Instance.IocContainer.Install(FromAssembly.This());
-            _applicationManager = IocHelper.Resolve<AbpApplicationManager>();
-            _applicationManager.Initialize();
+            RegisterCoreDependencies();
+            _startupManager = IocManager.IocContainer.Resolve<AbpStartupManager>();
+            _startupManager.Initialize();
+        }
+
+        /// <summary>
+        /// Registers core dependencies for starting of ABP system.
+        /// </summary>
+        protected virtual void RegisterCoreDependencies()
+        {
+            IocManager.IocContainer.Install(new AbpStartupInstaller());
+            IocManager.IocContainer.Install(new EventBusInstaller());
         }
 
         /// <summary>
@@ -28,8 +51,17 @@ namespace Abp.Startup
         /// </summary>
         public virtual void Dispose()
         {
-            _applicationManager.Dispose();
-            IocManager.Instance.Dispose();
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            _isDisposed = true;
+
+            if (_startupManager != null)
+            {
+                _startupManager.Dispose();
+            }
         }
     }
 }

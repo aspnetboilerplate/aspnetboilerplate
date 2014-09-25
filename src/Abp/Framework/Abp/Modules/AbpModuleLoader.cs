@@ -13,72 +13,36 @@ namespace Abp.Modules
     {
         public ILogger Logger { get; set; }
 
-        public IAssemblyFinder AssemblyFinder { get; set; }
+        public IModuleFinder ModuleFinder { get; set; }
 
         private readonly AbpModuleCollection _modules;
 
         public AbpModuleLoader(AbpModuleCollection modules)
         {
             _modules = modules;
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
             Logger = NullLogger.Instance;
+            ModuleFinder = new DefaultModuleFinder();
         }
 
         public void LoadAll()
         {
             Logger.Debug("Loading Abp modules...");
 
-            _modules.Add(AbpModuleInfo.CreateForType(typeof(AbpStartupModule)));
+            _modules.AddRange(ModuleFinder.FindAll());
 
-            var allAssemblies = AssemblyFinder.GetAllAssemblies();
-
-            var scannedAssemlies = new List<Assembly>();
-            foreach (var assembly in allAssemblies)
+            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof (AbpStartupModule));
+            if (startupModuleIndex > 0)
             {
-                FillModules(assembly, scannedAssemlies);
+                var startupModule = _modules[startupModuleIndex];
+                _modules.RemoveAt(startupModuleIndex);
+                _modules.Insert(0, startupModule);
             }
 
             SetDependencies();
 
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
         }
-
-        private void FillModules(Assembly assembly, List<Assembly> scannedAssemblies)
-        {
-            if (scannedAssemblies.Contains(assembly))
-            {
-                return;
-            }
-
-            scannedAssemblies.Add(assembly);
-
-            foreach (var type in assembly.GetTypes())
-            {
-                //Skip types those are not Abp Module
-                if (!AbpModuleHelper.IsAbpModule(type))
-                {
-                    continue;
-                }
-
-                //Prevent multiple adding same module
-                var moduleInfo = _modules.FirstOrDefault(m => m.Type == type);
-                if (moduleInfo == null)
-                {
-                    moduleInfo = AbpModuleInfo.CreateForType(type);
-                    _modules.Add(moduleInfo);
-                }
-
-                //Check for depended modules
-                var dependedModuleTypes = moduleInfo.Instance.GetDependedModules();
-                foreach (var dependedModuleType in dependedModuleTypes)
-                {
-                    FillModules(dependedModuleType.Assembly, scannedAssemblies);
-                }
-
-                Logger.Debug("Loaded module: " + moduleInfo);
-            }
-        }
-
+        
         private void SetDependencies()
         {
             foreach (var moduleInfo in _modules)
