@@ -19,20 +19,11 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// This method can be used to configure ABP system and depended modules.
-        /// </summary>
-        /// <param name="configuration">Configuration object</param>
-        public virtual void Configure(AbpConfiguration configuration)
-        {
-            
-        }
-
-        /// <summary>
         /// What can be done in this method:
         /// - Make things those must be done before dependency registers.
         /// </summary>
-        /// <param name="initializationContext">Initialization context</param>
-        public virtual void PreInitialize(IAbpInitializationContext initializationContext)
+        /// <param name="context">Initialization context</param>
+        public virtual void PreInitialize(IAbpInitializationContext context)
         {
 
         }
@@ -41,8 +32,8 @@ namespace Abp.Modules
         /// What can be done in this method:
         /// - Register dependency installers and components.
         /// </summary>
-        /// <param name="initializationContext">Initialization context</param>
-        public virtual void Initialize(IAbpInitializationContext initializationContext)
+        /// <param name="context">Initialization context</param>
+        public virtual void Initialize(IAbpInitializationContext context)
         {
 
         }
@@ -51,8 +42,8 @@ namespace Abp.Modules
         /// What can be done in this method:
         /// - Make things those must be done after dependency registers.
         /// </summary>
-        /// <param name="initializationContext">Initialization context</param>
-        public virtual void PostInitialize(IAbpInitializationContext initializationContext)
+        /// <param name="context">Initialization context</param>
+        public virtual void PostInitialize(IAbpInitializationContext context)
         {
             
         }

@@ -11,9 +11,9 @@ namespace Abp.Startup.Infrastructure.EntityFramework
     /// </summary>
     public class AbpEntityFrameworkModule : AbpModule
     {
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(context);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             DbInterception.Add(new SoftDeleteInterceptor());
         }

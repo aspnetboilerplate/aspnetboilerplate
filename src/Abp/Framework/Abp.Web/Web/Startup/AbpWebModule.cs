@@ -13,14 +13,9 @@ namespace Abp.Web.Startup
     /// </summary>
     public class AbpWebModule : AbpModule
     {
-        public override void Configure(AbpConfiguration configuration)
+        public override void PreInitialize(IAbpInitializationContext context)
         {
-            configuration.Localization.AddXmlSource("AbpWeb", "Localization\\AbpWeb");
-        }
-
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
-        {
-            base.PreInitialize(initializationContext);
+            base.PreInitialize(context);
 
             if (HttpContext.Current != null)
             {
@@ -28,11 +23,12 @@ namespace Abp.Web.Startup
             }
         }
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         { 
-            base.Initialize(initializationContext);
+            base.Initialize(context);
 
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            context.Configuration.Localization.RegisterXmlSource("AbpWeb", "Localization\\AbpWeb");
         }
     }
 }

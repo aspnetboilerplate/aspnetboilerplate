@@ -8,16 +8,16 @@ namespace Abp.Modules
 {
     public class AbpStartupModule : AbpModule
     {
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext context)
         {
-            base.PreInitialize(initializationContext);
+            base.PreInitialize(context);
             IocManager.Instance.AddConventionalRegisterer(new BasicConventionalRegisterer());
-            UnitOfWorkRegistrer.Initialize(initializationContext);
+            UnitOfWorkRegistrer.Initialize(context);
         }
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(context);
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
                 new ConventionalRegistrationConfig
                 {

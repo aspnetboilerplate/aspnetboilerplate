@@ -32,16 +32,16 @@ namespace Abp.WebApi.Startup
                    };
         }
 
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext context)
         {
-            base.PreInitialize(initializationContext);
+            base.PreInitialize(context);
 
             IocManager.Instance.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
         }
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(context);
 
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 

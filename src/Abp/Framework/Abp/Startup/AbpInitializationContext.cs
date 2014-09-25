@@ -1,5 +1,6 @@
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.Startup.Configuration;
 using Castle.Windsor;
 
 namespace Abp.Startup
@@ -30,5 +31,7 @@ namespace Abp.Startup
         {
             return _modules.GetModule<TModule>();
         }
+
+        public AbpConfiguration Configuration { get { return AbpConfiguration.Instance; } }
     }
 }

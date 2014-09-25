@@ -25,19 +25,19 @@ namespace Abp.Web.Mvc.Startup
                    };
         }
 
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext context)
         {
-            base.PreInitialize(initializationContext);
+            base.PreInitialize(context);
             IocManager.Instance.AddConventionalRegisterer(new ControllerConventionalRegisterer());
         }
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(context);
 
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(initializationContext.IocContainer.Kernel));
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(context.IocContainer.Kernel));
             GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());
         }
     }

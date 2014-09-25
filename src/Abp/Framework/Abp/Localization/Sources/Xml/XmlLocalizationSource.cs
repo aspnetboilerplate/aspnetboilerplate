@@ -28,16 +28,16 @@ namespace Abp.Localization.Sources.Xml
         /// Creates an Xml based localization source.
         /// </summary>
         /// <param name="name">Unique Name of the source</param>
-        /// <param name="directory">Directory path</param>
-        public XmlLocalizationSource(string name, string directory)
+        /// <param name="directoryPath">Directory path of the localization XML files</param>
+        public XmlLocalizationSource(string name, string directoryPath)
             : base(name)
         {
-            if (!Path.IsPathRooted(directory))
+            if (!Path.IsPathRooted(directoryPath))
             {
-                directory = Path.Combine(RootDirectoryOfApplication, directory);
+                directoryPath = Path.Combine(RootDirectoryOfApplication, directoryPath);
             }
 
-            DirectoryPath = directory;
+            DirectoryPath = directoryPath;
         }
 
         public override void Initialize()

@@ -1,4 +1,6 @@
+using System.Security.Cryptography.X509Certificates;
 using Abp.Modules;
+using Abp.Startup.Configuration;
 using Castle.Windsor;
 
 namespace Abp.Startup
@@ -19,5 +21,10 @@ namespace Abp.Startup
         /// <typeparam name="TModule">Type of the module</typeparam>
         /// <returns>The module instance</returns>
         TModule GetModule<TModule>() where TModule : AbpModule;
+
+        /// <summary>
+        /// Used to configure ABP and modules..
+        /// </summary>
+        AbpConfiguration Configuration { get; }
     }
 }

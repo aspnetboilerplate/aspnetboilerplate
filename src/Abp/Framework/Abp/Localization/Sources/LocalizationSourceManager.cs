@@ -10,16 +10,8 @@ namespace Abp.Localization.Sources
     /// </summary>
     public class LocalizationSourceManager : ILocalizationSourceManager
     {
-        private static bool IsEnabled
-        {
-            get
-            {
-                return AbpConfiguration.Instance.Localization.IsEnabled;
-            }
-        }
-
         private readonly IDictionary<string, ILocalizationSource> _sources;
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -28,9 +20,13 @@ namespace Abp.Localization.Sources
             _sources = new Dictionary<string, ILocalizationSource>();
         }
 
+        /// <summary>
+        /// Registers new localization source.
+        /// </summary>
+        /// <param name="source">Localization source</param>
         public void RegisterSource(ILocalizationSource source)
         {
-            if (!IsEnabled)
+            if (!AbpConfiguration.Instance.Localization.IsEnabled)
             {
                 return;
             }
@@ -44,9 +40,14 @@ namespace Abp.Localization.Sources
             source.Initialize();
         }
 
+        /// <summary>
+        /// Gets a localization source with name.
+        /// </summary>
+        /// <param name="name">Unique name of the localization source</param>
+        /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!IsEnabled)
+            if (!AbpConfiguration.Instance.Localization.IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }
@@ -65,6 +66,10 @@ namespace Abp.Localization.Sources
             return source;
         }
 
+        /// <summary>
+        /// Gets all registered localization sources.
+        /// </summary>
+        /// <returns>List of sources</returns>
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
             return _sources.Values.ToImmutableList();

@@ -6,5 +6,9 @@
     /// </summary>
     public sealed class AbpModuleConfigurations
     {
+        internal AbpModuleConfigurations()
+        {
+            
+        }
     }
 }

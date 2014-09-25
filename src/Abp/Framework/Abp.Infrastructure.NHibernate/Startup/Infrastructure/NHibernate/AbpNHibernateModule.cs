@@ -24,21 +24,21 @@ namespace Abp.Startup.Infrastructure.NHibernate
         /// </summary>
         private ISessionFactory _sessionFactory;
 
-        public override void PreInitialize(IAbpInitializationContext initializationContext)
+        public override void PreInitialize(IAbpInitializationContext context)
         {
-            base.PreInitialize(initializationContext);
+            base.PreInitialize(context);
             Configuration = Fluently.Configure();
         }
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize(IAbpInitializationContext context)
         {
-            base.Initialize(initializationContext);
+            base.Initialize(context);
 
             _sessionFactory = Configuration
                 .ExposeConfiguration(config => config.SetInterceptor(new AbpNHibernateInterceptor()))
                 .BuildSessionFactory();
 
-            initializationContext.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
+            context.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
             IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
