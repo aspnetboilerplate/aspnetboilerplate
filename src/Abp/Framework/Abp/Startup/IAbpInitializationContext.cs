@@ -1,4 +1,5 @@
-using System.Security.Cryptography.X509Certificates;
+using System;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Startup.Configuration;
 using Castle.Windsor;
@@ -13,7 +14,13 @@ namespace Abp.Startup
         /// <summary>
         /// Gets a reference to the Ioc container. A shortcut for Abp.Dependency.IocManager.Instance.IocContainer.
         /// </summary>
+        [Obsolete("Use IocManager property. This property will be removed in future releases.")]
         IWindsorContainer IocContainer { get; }
+
+        /// <summary>
+        /// Gets IOC Manager to perform dependency injection works.
+        /// </summary>
+        IocManager IocManager { get; }
 
         /// <summary>
         /// Gets a reference to a module instance.

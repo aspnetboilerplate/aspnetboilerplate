@@ -1,4 +1,5 @@
-﻿using Abp.Events.Bus.Factories;
+﻿using Abp.Dependency;
+using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
@@ -12,7 +13,13 @@ namespace Abp.Events.Bus
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
+        private readonly IocManager _iocManager;
         private IEventBus _eventBus;
+
+        public EventBusInstaller(IocManager iocManager)
+        {
+            _iocManager = iocManager;
+        }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
@@ -46,7 +53,7 @@ namespace Abp.Events.Bus
                 var genericArgs = @interface.GetGenericArguments();
                 if (genericArgs.Length == 1)
                 {
-                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(handler.ComponentModel.Implementation));
+                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(_iocManager, handler.ComponentModel.Implementation));
                 }
             }
         }

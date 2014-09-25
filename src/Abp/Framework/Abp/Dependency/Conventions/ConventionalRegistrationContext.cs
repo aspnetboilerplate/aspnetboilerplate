@@ -16,17 +16,17 @@ namespace Abp.Dependency.Conventions
         /// <summary>
         /// Reference to the IOC Container to register types.
         /// </summary>
-        public IWindsorContainer IocContainer { get; private set; }
+        public IocManager IocManager { get; private set; }
 
         /// <summary>
         /// Registration configuration.
         /// </summary>
         public ConventionalRegistrationConfig Config { get; private set; }
 
-        internal ConventionalRegistrationContext(Assembly assembly, IWindsorContainer iocContainer, ConventionalRegistrationConfig config)
+        internal ConventionalRegistrationContext(Assembly assembly, IocManager iocManager, ConventionalRegistrationConfig config)
         {
             Assembly = assembly;
-            IocContainer = iocContainer;
+            IocManager = iocManager;
             Config = config;
         }
     }

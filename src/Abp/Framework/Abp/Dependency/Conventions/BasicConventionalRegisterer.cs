@@ -11,7 +11,7 @@ namespace Abp.Dependency.Conventions
         public void RegisterAssembly(ConventionalRegistrationContext context)
         {
             //Transient
-            context.IocContainer.Register(
+            context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ITransientDependency>()
@@ -21,7 +21,7 @@ namespace Abp.Dependency.Conventions
                 );
 
             //Singleton
-            context.IocContainer.Register(
+            context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ISingletonDependency>()
@@ -31,7 +31,7 @@ namespace Abp.Dependency.Conventions
                 );
 
             //Windsor Interceptors
-            context.IocContainer.Register(
+            context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<IInterceptor>()

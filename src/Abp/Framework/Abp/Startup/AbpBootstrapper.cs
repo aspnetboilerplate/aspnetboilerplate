@@ -1,11 +1,11 @@
 ﻿using System;
 using Abp.Dependency;
-using Abp.Events.Bus;
 
 namespace Abp.Startup
 {
     /// <summary>
-    /// This is the main class that is responsible to start entire system.
+    /// This is the main class that is responsible to start entire ABP system.
+    /// Prepares dependency injection and registers core components needed for startup.
     /// It must be instantiated and initialized (see <see cref="Initialize"/>) first in an application.
     /// </summary>
     public class AbpBootstrapper : IDisposable
@@ -15,9 +15,12 @@ namespace Abp.Startup
         /// </summary>
         public IocManager IocManager { get; set; }
 
-        private AbpStartupManager _startupManager;
+        /// <summary>
+        /// Is this object disposed before?
+        /// </summary>
+        protected bool IsDisposed;
 
-        private bool _isDisposed;
+        private AbpStartupManager _startupManager;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
@@ -33,6 +36,7 @@ namespace Abp.Startup
         public virtual void Initialize()
         {
             RegisterCoreDependencies();
+
             _startupManager = IocManager.IocContainer.Resolve<AbpStartupManager>();
             _startupManager.Initialize();
         }
@@ -43,7 +47,6 @@ namespace Abp.Startup
         protected virtual void RegisterCoreDependencies()
         {
             IocManager.IocContainer.Install(new AbpStartupInstaller());
-            IocManager.IocContainer.Install(new EventBusInstaller());
         }
 
         /// <summary>
@@ -51,12 +54,12 @@ namespace Abp.Startup
         /// </summary>
         public virtual void Dispose()
         {
-            if (_isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
 
-            _isDisposed = true;
+            IsDisposed = true;
 
             if (_startupManager != null)
             {

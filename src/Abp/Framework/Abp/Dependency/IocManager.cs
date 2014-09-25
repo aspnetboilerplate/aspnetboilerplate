@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Abp.Dependency.Conventions;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 
@@ -34,6 +35,9 @@ namespace Abp.Dependency
         {
             IocContainer = new WindsorContainer();
             _conventionalRegisterers = new List<IConventionalRegisterer>();
+
+            //Register self!
+            IocContainer.Register(Component.For<IocManager>().UsingFactoryMethod(() => this));
         }
 
         /// <summary>
@@ -61,7 +65,7 @@ namespace Abp.Dependency
         /// <param name="config">Additional configuration</param>
         public void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config)
         {
-            var context = new ConventionalRegistrationContext(assembly, IocContainer, config);
+            var context = new ConventionalRegistrationContext(assembly, this, config);
 
             foreach (var registerer in _conventionalRegisterers)
             {

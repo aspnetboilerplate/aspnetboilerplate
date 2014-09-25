@@ -17,7 +17,7 @@ namespace Abp.Domain.Uow
         /// <param name="initializationContext">Initialization context</param>
         public static void Initialize(IAbpInitializationContext initializationContext)
         {
-            initializationContext.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+            initializationContext.IocManager.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
         }
 
         private static void ComponentRegistered(string key, IHandler handler)

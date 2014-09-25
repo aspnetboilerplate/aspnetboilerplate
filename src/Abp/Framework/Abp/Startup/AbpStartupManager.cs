@@ -1,17 +1,24 @@
-﻿using Abp.Modules;
+﻿using Abp.Dependency;
+using Abp.Modules;
 
 namespace Abp.Startup
 {
     /// <summary>
-    /// This class is the main class that manages an application and modules.
+    /// This class is the main class that starts the application.
+    /// This is used by <see cref="AbpBootstrapper"/> to start the application.
     /// </summary>
     public class AbpStartupManager
     {
+        private readonly IocManager _iocManager;
         private readonly AbpModuleManager _moduleManager;
         private readonly AbpModuleCollection _modules;
 
-        public AbpStartupManager(AbpModuleManager moduleManager, AbpModuleCollection modules)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public AbpStartupManager(IocManager iocManager, AbpModuleManager moduleManager, AbpModuleCollection modules)
         {
+            _iocManager = iocManager;
             _moduleManager = moduleManager;
             _modules = modules;
         }
@@ -21,7 +28,7 @@ namespace Abp.Startup
         /// </summary>
         public virtual void Initialize()
         {
-            var initializationContext = new AbpInitializationContext(_modules);
+            var initializationContext = new AbpInitializationContext(_iocManager, _modules);
             _moduleManager.Initialize(initializationContext);
         }
 

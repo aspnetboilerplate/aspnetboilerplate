@@ -11,7 +11,7 @@ namespace Abp.WebApi.Controllers
     {
         public void RegisterAssembly(ConventionalRegistrationContext context)
         {
-            context.IocContainer.Register(
+            context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .BasedOn<ApiController>()
                     .LifestyleTransient()
