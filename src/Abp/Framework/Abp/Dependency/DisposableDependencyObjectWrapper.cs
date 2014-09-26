@@ -4,36 +4,36 @@ namespace Abp.Dependency
 {
     internal class DisposableDependencyObjectWrapper<T> : IDisposableDependencyObjectWrapper<T>
     {
-        private readonly IocManager _iocManager;
+        private readonly IIocResolver _iocResolver;
 
         public T Object { get; private set; }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver)
         {
-            _iocManager = iocManager;
-            Object = iocManager.Resolve<T>();
+            _iocResolver = iocResolver;
+            Object = iocResolver.Resolve<T>();
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, object argumentsAsAnonymousType)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object argumentsAsAnonymousType)
         {
-            Object = iocManager.Resolve<T>(argumentsAsAnonymousType);
+            Object = iocResolver.Resolve<T>(argumentsAsAnonymousType);
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, Type type)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type)
         {
             CheckType(type);
-            Object = (T)iocManager.Resolve(type);
+            Object = (T)iocResolver.Resolve(type);
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, Type type, object argumentsAsAnonymousType)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type, object argumentsAsAnonymousType)
         {
             CheckType(type);
-            Object = (T)iocManager.Resolve(type, argumentsAsAnonymousType);
+            Object = (T)iocResolver.Resolve(type, argumentsAsAnonymousType);
         }
 
         public void Dispose()
         {
-            _iocManager.Release(Object);
+            _iocResolver.Release(Object);
         }
 
         private static void CheckType(Type type)
@@ -47,23 +47,23 @@ namespace Abp.Dependency
 
     internal class DisposableDependencyObjectWrapper : DisposableDependencyObjectWrapper<object>, IDisposableDependencyObjectWrapper
     {
-        public DisposableDependencyObjectWrapper(IocManager iocManager)
-            : base(iocManager)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver)
+            : base(iocResolver)
         {
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, object argumentsAsAnonymousType)
-            : base(iocManager, argumentsAsAnonymousType)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object argumentsAsAnonymousType)
+            : base(iocResolver, argumentsAsAnonymousType)
         {
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, Type type)
-            : base(iocManager, type)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type)
+            : base(iocResolver, type)
         {
         }
 
-        public DisposableDependencyObjectWrapper(IocManager iocManager, Type type, object argumentsAsAnonymousType)
-            : base(iocManager, type, argumentsAsAnonymousType)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type, object argumentsAsAnonymousType)
+            : base(iocResolver, type, argumentsAsAnonymousType)
         {
         }
     }

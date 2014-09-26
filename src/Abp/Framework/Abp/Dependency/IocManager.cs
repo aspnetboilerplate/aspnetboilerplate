@@ -9,13 +9,12 @@ using Castle.Windsor.Installer;
 namespace Abp.Dependency
 {
     /// <summary>
-    /// This class is used to create/dispose and get a reference to the dependency injection container.
-    /// It implements Singleton pattern.
+    /// This class is used to directly perform dependency injection tasks.
     /// </summary>
-    public class IocManager : IDisposable
+    public class IocManager : IIocManager
     {
         /// <summary>
-        /// The Singleton instance
+        /// The Singleton instance.
         /// </summary>
         public static IocManager Instance { get; private set; }
 
@@ -24,20 +23,26 @@ namespace Abp.Dependency
         /// </summary>
         public IWindsorContainer IocContainer { get; private set; }
 
-        private readonly List<IConventionalRegisterer> _conventionalRegisterers;
+        /// <summary>
+        /// List of all registered conventional registrars.
+        /// </summary>
+        private readonly List<IConventionalRegisterer> _conventionalRegistrars;
 
         static IocManager()
         {
             Instance = new IocManager();
         }
 
+        //Halil: Make it public?
         internal IocManager()
         {
             IocContainer = new WindsorContainer();
-            _conventionalRegisterers = new List<IConventionalRegisterer>();
+            _conventionalRegistrars = new List<IConventionalRegisterer>();
 
             //Register self!
-            IocContainer.Register(Component.For<IocManager>().UsingFactoryMethod(() => this));
+            IocContainer.Register(
+                Component.For<IocManager, IIocManager, IIocRegistrar, IIocResolver>().UsingFactoryMethod(() => this)
+                );
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace Abp.Dependency
         /// <param name="registerer">dependency registerer</param>
         public void AddConventionalRegisterer(IConventionalRegisterer registerer)
         {
-            _conventionalRegisterers.Add(registerer);
+            _conventionalRegistrars.Add(registerer);
         }
 
         /// <summary>
@@ -67,20 +72,133 @@ namespace Abp.Dependency
         {
             var context = new ConventionalRegistrationContext(assembly, this, config);
 
-            foreach (var registerer in _conventionalRegisterers)
+            foreach (var registerer in _conventionalRegistrars)
             {
                 registerer.RegisterAssembly(context);
             }
 
             if (config.InstallInstallers)
             {
-                IocContainer.Install(FromAssembly.Instance(assembly));                
+                IocContainer.Install(FromAssembly.Instance(assembly));
             }
+        }
+
+        /// <summary>
+        /// Registers a type as self registration.
+        /// </summary>
+        /// <typeparam name="TService">Type of the class</typeparam>
+        /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
+        public void Register<TType>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TType : class
+        {
+            IocContainer.Register(ApplyLifestyle(Component.For<TType>(), lifeStyle));
+        }
+
+        /// <summary>
+        /// Registers a type as self registration.
+        /// </summary>
+        /// <param name="type">Type of the class</param>
+        /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
+        public void Register(Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        {
+            IocContainer.Register(ApplyLifestyle(Component.For(type), lifeStyle));
+        }
+
+        /// <summary>
+        /// Registers a type with it's implementation.
+        /// </summary>
+        /// <typeparam name="TType">Registering type</typeparam>
+        /// <typeparam name="TImpl">The type that implements <see cref="TType"/></typeparam>
+        /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
+        public void Register<TType, TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+            where TType : class
+            where TImpl : class, TType
+        {
+            IocContainer.Register(ApplyLifestyle(Component.For<TType>().ImplementedBy<TImpl>(), lifeStyle));
+        }
+
+        /// <summary>
+        /// Registers a class as self registration.
+        /// </summary>
+        /// <param name="type">Type of the class</param>
+        /// <param name="impl">The type that implements <see cref="type"/></param>
+        /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
+        public void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        {
+            IocContainer.Register(ApplyLifestyle(Component.For(type).ImplementedBy(impl), lifeStyle));
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <returns>The instance object</returns>
+        public T Resolve<T>()
+        {
+            return IocContainer.Resolve<T>();
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object</returns>
+        public T Resolve<T>(object argumentsAsAnonymousType)
+        {
+            return IocContainer.Resolve<T>(argumentsAsAnonymousType);
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the object to get</param>
+        /// <returns>The instance object</returns>
+        public object Resolve(Type type)
+        {
+            return IocContainer.Resolve(type);
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the object to get</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object</returns>
+        public object Resolve(Type type, object argumentsAsAnonymousType)
+        {
+            return IocContainer.Resolve(type, argumentsAsAnonymousType);
+        }
+
+        /// <summary>
+        /// Releases a pre-resolved object. See Resolve methods.
+        /// </summary>
+        /// <param name="obj">Object to be released</param>
+        public void Release(object obj)
+        {
+            IocContainer.Release(obj);
         }
 
         public void Dispose()
         {
             IocContainer.Dispose();
+        }
+
+        private static ComponentRegistration<T> ApplyLifestyle<T>(ComponentRegistration<T> registration, DependencyLifeStyle lifeStyle)
+            where T : class
+        {
+            switch (lifeStyle)
+            {
+                case DependencyLifeStyle.Transient:
+                    return registration.LifestyleTransient();
+                case DependencyLifeStyle.Singleton:
+                    return registration.LifestyleSingleton();
+                default:
+                    return registration;
+            }
         }
     }
 }
