@@ -60,7 +60,6 @@
     <Compile Include="Dependency\IocManager_LifeStyle_Tests.cs" />
     <Compile Include="Dependency\IocManager_Self_Register_Tests.cs" />
     <Compile Include="Dependency\IRegistrar_And_Resolver_Tests.cs" />
-    <Compile Include="Dependency\SimpleDisposableObject.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\Manager.cs" />
     <Compile Include="Entities\Test_Entities.cs" />
