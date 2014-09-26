@@ -29,7 +29,7 @@ namespace Abp.Web.Api.Tests
         {
             base.Initialize(context);
             
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             
             DynamicApiClientBuilder
                 .For<IMyAppService>("http://www.aspnetboilerplate.com/api/services/myapp/myservice")

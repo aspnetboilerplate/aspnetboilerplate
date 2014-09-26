@@ -38,8 +38,8 @@ namespace Abp.Startup.Infrastructure.NHibernate
                 .ExposeConfiguration(config => config.SetInterceptor(new AbpNHibernateInterceptor()))
                 .BuildSessionFactory();
 
-            context.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
         public override void Shutdown()

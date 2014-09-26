@@ -9,10 +9,10 @@ namespace Abp.Modules
     /// </summary>
     public abstract class AbpModule
     {
-        ///// <summary>
-        ///// Gets a reference to the IOC manager.
-        ///// </summary>
-        //public IIocManager IocManager { get; set; }
+        /// <summary>
+        /// Gets a reference to the IOC manager.
+        /// </summary>
+        public IIocManager IocManager { get; set; }
 
         /// <summary>
         /// Gets all depended modules for this module.

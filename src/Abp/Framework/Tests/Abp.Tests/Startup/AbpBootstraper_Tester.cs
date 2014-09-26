@@ -77,6 +77,8 @@ namespace Abp.Tests.Startup
 
         public override void PreInitialize(IAbpInitializationContext context)
         {
+            IocManager.ShouldNotBe(null);
+
             base.PreInitialize(context);
             PreInitializeCount++;
         }

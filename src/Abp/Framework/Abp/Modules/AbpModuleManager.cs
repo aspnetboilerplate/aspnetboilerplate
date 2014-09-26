@@ -57,15 +57,22 @@ namespace Abp.Modules
             {
                 if (!_iocManager.IsRegistered(moduleType))
                 {
-                    _iocManager.Register(moduleType);
+                    _iocManager.Register(moduleType, DependencyLifeStyle.Singleton);
                 }
             }
 
+            //Add to module collection
             foreach (var moduleType in moduleTypes)
             {
-                _modules.Add(new AbpModuleInfo((AbpModule) _iocManager.Resolve(moduleType)));
+                var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
+                var moduleInfo = new AbpModuleInfo(moduleObject);
+
+                _modules.Add(moduleInfo);
+                
+                Logger.DebugFormat("Loaded module: " + moduleInfo);
             }
 
+            //AbpStartupModule must be the first module
             var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpStartupModule));
             if (startupModuleIndex > 0)
             {

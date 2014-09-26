@@ -28,16 +28,16 @@ namespace Abp.Web.Mvc.Startup
         public override void PreInitialize(IAbpInitializationContext context)
         {
             base.PreInitialize(context);
-            IocManager.Instance.AddConventionalRegisterer(new ControllerConventionalRegisterer());
+            IocManager.AddConventionalRegisterer(new ControllerConventionalRegisterer());
         }
 
         public override void Initialize(IAbpInitializationContext context)
         {
             base.Initialize(context);
 
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(context.IocContainer.Kernel));
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager.IocContainer.Kernel));
             GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());
         }
     }

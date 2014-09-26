@@ -27,7 +27,7 @@ namespace Abp.Web.Startup
         { 
             base.Initialize(context);
 
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             context.Configuration.Localization.RegisterXmlSource("AbpWeb", "Localization\\AbpWeb");
         }
     }

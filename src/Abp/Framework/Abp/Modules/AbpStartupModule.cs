@@ -13,7 +13,7 @@ namespace Abp.Modules
         {
             base.PreInitialize(context);
 
-            IocManager.Instance.AddConventionalRegisterer(new BasicConventionalRegisterer());
+            IocManager.AddConventionalRegisterer(new BasicConventionalRegisterer());
             context.IocManager.IocContainer.Install(new EventBusInstaller(context.IocManager));
             UnitOfWorkRegistrer.Initialize(context);
         }
@@ -22,7 +22,7 @@ namespace Abp.Modules
         {
             base.Initialize(context);
             
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false

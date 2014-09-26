@@ -36,14 +36,14 @@ namespace Abp.WebApi.Startup
         {
             base.PreInitialize(context);
 
-            IocManager.Instance.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
+            IocManager.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
         }
 
         public override void Initialize(IAbpInitializationContext context)
         {
             base.Initialize(context);
 
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             InitializeAspNetServices();
             InitializeFilters();
