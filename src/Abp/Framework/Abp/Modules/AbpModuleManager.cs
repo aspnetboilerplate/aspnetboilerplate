@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Abp.Dependency;
 using Abp.Startup;
 using Castle.Core.Logging;
 
@@ -16,15 +17,20 @@ namespace Abp.Modules
 
         private readonly AbpModuleCollection _modules;
 
-        public AbpModuleManager(AbpModuleCollection modules)
+        private readonly IIocManager _iocManager;
+
+        public AbpModuleManager(AbpModuleCollection modules, IIocManager iocManager)
         {
             _modules = modules;
+            _iocManager = iocManager;
             Logger = NullLogger.Instance;
             ModuleFinder = new DefaultModuleFinder();
         }
 
-        public virtual void Initialize(IAbpInitializationContext initializationContext)
+        public virtual void InitializeModules()
         {
+            var initializationContext = new AbpInitializationContext(_iocManager, _modules);
+
             LoadAll();
 
             var sortedModules = _modules.GetSortedModuleListByDependency();
@@ -34,7 +40,7 @@ namespace Abp.Modules
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
         }
 
-        public virtual void Shutdown()
+        public virtual void ShutdownModules()
         {
             var sortedModules = _modules.GetSortedModuleListByDependency();
 

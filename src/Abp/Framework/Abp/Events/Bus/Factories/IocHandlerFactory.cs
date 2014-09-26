@@ -15,7 +15,7 @@ namespace Abp.Events.Bus.Factories
         /// </summary>
         public Type HandlerType { get; private set; }
 
-        private readonly IocManager _iocManager;
+        private readonly IIocManager _iocManager;
 
         /// <summary>
         /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
@@ -32,7 +32,7 @@ namespace Abp.Events.Bus.Factories
         /// </summary>
         /// <param name="iocManager"></param>
         /// <param name="handlerType">Type of the handler</param>
-        public IocHandlerFactory(IocManager iocManager, Type handlerType)
+        public IocHandlerFactory(IIocManager iocManager, Type handlerType)
         {
             _iocManager = iocManager;
             HandlerType = handlerType;

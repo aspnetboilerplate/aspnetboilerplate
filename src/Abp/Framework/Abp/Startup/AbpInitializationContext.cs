@@ -15,11 +15,11 @@ namespace Abp.Startup
         /// </summary>
         public IWindsorContainer IocContainer { get { return IocManager.IocContainer; } }
 
-        public IocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; private set; }
 
         private readonly AbpModuleCollection _modules;
 
-        public AbpInitializationContext(IocManager iocManager, AbpModuleCollection modules)
+        public AbpInitializationContext(IIocManager iocManager, AbpModuleCollection modules)
         {
             IocManager = iocManager;
             _modules = modules;

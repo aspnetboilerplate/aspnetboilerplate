@@ -35,6 +35,20 @@ namespace Abp.Tests.Dependency
             obj.DisposeCount.ShouldBe(1);
         }
 
+        [Fact]
+        public void Should_Call_Dispose_Of_Singleton_Dependency_When_IocManager_Is_Disposed()
+        {
+            LocalIocManager.IocContainer.Register(
+                Component.For<SimpleDisposableObject>().LifestyleSingleton()
+                );
+
+            var obj = LocalIocManager.IocContainer.Resolve<SimpleDisposableObject>();
+
+            LocalIocManager.Dispose();
+
+            obj.DisposeCount.ShouldBe(1);
+        }
+
         public class SimpleDisposableObject : IDisposable
         {
             public int DisposeCount { get; set; }

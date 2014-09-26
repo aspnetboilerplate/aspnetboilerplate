@@ -14,13 +14,13 @@ namespace Abp.Startup
         /// <summary>
         /// Gets a reference to the Ioc container. A shortcut for Abp.Dependency.IocManager.Instance.IocContainer.
         /// </summary>
-        [Obsolete("Use IocManager property. This property will be removed in future releases.")]
+        [Obsolete("Use IocManager. This property will be removed in future releases.")]
         IWindsorContainer IocContainer { get; }
 
         /// <summary>
         /// Gets IOC Manager to perform dependency injection works.
         /// </summary>
-        IocManager IocManager { get; }
+        IIocManager IocManager { get; }
 
         /// <summary>
         /// Gets a reference to a module instance.

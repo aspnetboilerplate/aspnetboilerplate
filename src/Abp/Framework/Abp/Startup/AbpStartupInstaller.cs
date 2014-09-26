@@ -18,8 +18,7 @@ namespace Abp.Startup
         {
             container.Register(
                 Component.For<AbpModuleCollection>().LifestyleSingleton(),
-                Component.For<AbpModuleManager>().LifestyleSingleton(),
-                Component.For<AbpStartupManager>().LifestyleSingleton()
+                Component.For<AbpModuleManager>().LifestyleSingleton()
                 );
         }
 

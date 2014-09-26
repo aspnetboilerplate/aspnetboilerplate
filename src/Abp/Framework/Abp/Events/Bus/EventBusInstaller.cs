@@ -13,10 +13,10 @@ namespace Abp.Events.Bus
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
-        private readonly IocManager _iocManager;
+        private readonly IIocManager _iocManager;
         private IEventBus _eventBus;
 
-        public EventBusInstaller(IocManager iocManager)
+        public EventBusInstaller(IIocManager iocManager)
         {
             _iocManager = iocManager;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Modules;
 
 namespace Abp.Startup
 {
@@ -13,23 +14,33 @@ namespace Abp.Startup
         /// <summary>
         /// Gets/sets IocManager object used by this class.
         /// </summary>
-        public IocManager IocManager { get; set; }
+        public IIocManager IocManager { get; set; }
 
         /// <summary>
         /// Is this object disposed before?
         /// </summary>
         protected bool IsDisposed;
 
-        private AbpStartupManager _startupManager;
+        private AbpModuleManager _moduleManager;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
         /// </summary>
         public AbpBootstrapper()
+            : this(Dependency.IocManager.Instance)
         {
-            IocManager = IocManager.Instance;
+
         }
-        
+
+        /// <summary>
+        /// Creates a new <see cref="AbpBootstrapper"/> instance.
+        /// </summary>
+        /// <param name="iocManager">IOC manager that is used to bootstrap the ABP system</param>
+        public AbpBootstrapper(IIocManager iocManager)
+        {
+            IocManager = iocManager;
+        }
+
         /// <summary>
         /// Initializes the complete system.
         /// </summary>
@@ -37,8 +48,8 @@ namespace Abp.Startup
         {
             RegisterCoreDependencies();
 
-            _startupManager = IocManager.IocContainer.Resolve<AbpStartupManager>();
-            _startupManager.Initialize();
+            _moduleManager = IocManager.IocContainer.Resolve<AbpModuleManager>();
+            _moduleManager.InitializeModules();
         }
 
         /// <summary>
@@ -61,9 +72,9 @@ namespace Abp.Startup
 
             IsDisposed = true;
 
-            if (_startupManager != null)
+            if (_moduleManager != null)
             {
-                _startupManager.Dispose();
+                _moduleManager.ShutdownModules();
             }
         }
     }

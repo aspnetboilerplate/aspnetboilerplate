@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Castle.Windsor;
 
 namespace Abp.Dependency.Conventions
 {

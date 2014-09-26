@@ -203,7 +203,6 @@
     <Compile Include="Startup\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
-    <Compile Include="Startup\AbpStartupManager.cs" />
     <Compile Include="Modules\AbpModuleHelper.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
