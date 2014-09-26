@@ -93,6 +93,7 @@
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\DefaultModuleFinder.cs" />
+    <Compile Include="Modules\IAbpModuleManager.cs" />
     <Compile Include="Modules\IAssemblyFinder.cs" />
     <Compile Include="Modules\IModuleFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Abp.Dependency.Conventions;
 
 namespace Abp.Dependency
@@ -59,5 +60,17 @@ namespace Abp.Dependency
         /// <param name="impl">The type that implements <see cref="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton);
+
+        /// <summary>
+        /// Checks whether given type is registered before.
+        /// </summary>
+        /// <param name="type">Type to check</param>
+        bool IsRegistered(Type type);
+
+        /// <summary>
+        /// Checks whether given type is registered before.
+        /// </summary>
+        /// <typeparam name="TType">Type to check</typeparam>
+        bool IsRegistered<TType>();
     }
 }

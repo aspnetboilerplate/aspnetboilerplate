@@ -17,8 +17,7 @@ namespace Abp.Startup
         protected virtual void RegisterStartupSystem(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<AbpModuleCollection>().LifestyleSingleton(),
-                Component.For<AbpModuleManager>().LifestyleSingleton()
+                Component.For<IAbpModuleManager>().ImplementedBy<AbpModuleManager>().LifestyleSingleton()
                 );
         }
 

@@ -128,6 +128,24 @@ namespace Abp.Dependency
         }
 
         /// <summary>
+        /// Checks whether given type is registered before.
+        /// </summary>
+        /// <param name="type">Type to check</param>
+        public bool IsRegistered(Type type)
+        {
+            return IocContainer.Kernel.HasComponent(type);
+        }
+
+        /// <summary>
+        /// Checks whether given type is registered before.
+        /// </summary>
+        /// <typeparam name="TType">Type to check</typeparam>
+        public bool IsRegistered<TType>()
+        {
+            return IocContainer.Kernel.HasComponent(typeof(TType));
+        }
+
+        /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
         /// </summary> 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Dependency;
 using Abp.Startup;
 
 namespace Abp.Modules
@@ -8,6 +9,11 @@ namespace Abp.Modules
     /// </summary>
     public abstract class AbpModule
     {
+        ///// <summary>
+        ///// Gets a reference to the IOC manager.
+        ///// </summary>
+        //public IIocManager IocManager { get; set; }
+
         /// <summary>
         /// Gets all depended modules for this module.
         /// </summary>

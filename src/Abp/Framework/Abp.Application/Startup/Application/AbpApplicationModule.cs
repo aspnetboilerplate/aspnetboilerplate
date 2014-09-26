@@ -18,7 +18,7 @@ namespace Abp.Startup.Application
         public override void Initialize(IAbpInitializationContext context)
         {
             base.Initialize(context);
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            context.IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

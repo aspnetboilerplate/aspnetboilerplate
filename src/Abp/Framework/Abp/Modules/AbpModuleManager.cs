@@ -9,7 +9,7 @@ namespace Abp.Modules
     /// <summary>
     /// This class is used to manage modules.
     /// </summary>
-    public class AbpModuleManager
+    public class AbpModuleManager : IAbpModuleManager
     {
         public ILogger Logger { get; set; }
         
@@ -19,9 +19,9 @@ namespace Abp.Modules
 
         private readonly IIocManager _iocManager;
 
-        public AbpModuleManager(AbpModuleCollection modules, IIocManager iocManager)
+        public AbpModuleManager(IIocManager iocManager)
         {
-            _modules = modules;
+            _modules = new AbpModuleCollection();
             _iocManager = iocManager;
             Logger = NullLogger.Instance;
             ModuleFinder = new DefaultModuleFinder();
@@ -29,12 +29,11 @@ namespace Abp.Modules
 
         public virtual void InitializeModules()
         {
-            var initializationContext = new AbpInitializationContext(_iocManager, _modules);
-
             LoadAll();
 
             var sortedModules = _modules.GetSortedModuleListByDependency();
-            
+
+            var initializationContext = new AbpInitializationContext(_iocManager, _modules);
             sortedModules.ForEach(module => module.Instance.PreInitialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.Initialize(initializationContext));
             sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
@@ -43,7 +42,6 @@ namespace Abp.Modules
         public virtual void ShutdownModules()
         {
             var sortedModules = _modules.GetSortedModuleListByDependency();
-
             sortedModules.Reverse();
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
         }
@@ -51,8 +49,22 @@ namespace Abp.Modules
         private void LoadAll()
         {
             Logger.Debug("Loading Abp modules...");
+            
+            var moduleTypes = ModuleFinder.FindAll();
 
-            _modules.AddRange(ModuleFinder.FindAll());
+            //Register to IOC container.
+            foreach (var moduleType in moduleTypes)
+            {
+                if (!_iocManager.IsRegistered(moduleType))
+                {
+                    _iocManager.Register(moduleType);
+                }
+            }
+
+            foreach (var moduleType in moduleTypes)
+            {
+                _modules.Add(new AbpModuleInfo((AbpModule) _iocManager.Resolve(moduleType)));
+            }
 
             var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpStartupModule));
             if (startupModuleIndex > 0)

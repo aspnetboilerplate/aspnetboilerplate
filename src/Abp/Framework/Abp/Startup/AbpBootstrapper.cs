@@ -21,7 +21,7 @@ namespace Abp.Startup
         /// </summary>
         protected bool IsDisposed;
 
-        private AbpModuleManager _moduleManager;
+        private IAbpModuleManager _moduleManager;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
@@ -48,7 +48,7 @@ namespace Abp.Startup
         {
             RegisterCoreDependencies();
 
-            _moduleManager = IocManager.IocContainer.Resolve<AbpModuleManager>();
+            _moduleManager = IocManager.IocContainer.Resolve<IAbpModuleManager>();
             _moduleManager.InitializeModules();
         }
 

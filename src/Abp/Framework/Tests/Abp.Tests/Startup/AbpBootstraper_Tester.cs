@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Abp.Modules;
 using Abp.Startup;
 using Castle.MicroKernel.Registration;
@@ -47,11 +48,11 @@ namespace Abp.Tests.Startup
 
     public class MyTestModuleFinder : IModuleFinder
     {
-        public List<AbpModuleInfo> FindAll()
+        public List<Type> FindAll()
         {
-            return new List<AbpModuleInfo>
+            return new List<Type>
                    {
-                       AbpModuleInfo.CreateForType(typeof (MyTestModule))
+                       typeof (MyTestModule)
                    };
         }
     }

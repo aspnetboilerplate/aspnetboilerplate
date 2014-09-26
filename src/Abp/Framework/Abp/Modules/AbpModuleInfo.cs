@@ -41,27 +41,6 @@ namespace Abp.Modules
             Assembly = Type.Assembly;
         }
 
-        /// <summary>
-        /// Creates a <see cref="AbpModuleInfo"/> object for given ABP module type.
-        /// </summary>
-        /// <param name="type">Type of the ABP Module</param>
-        /// <returns></returns>
-        /// <exception cref="AbpException">
-        /// Thrown if given type is not an ABP module type.
-        /// </exception>
-        public static AbpModuleInfo CreateForType(Type type)
-        {
-            if (!AbpModuleHelper.IsAbpModule(type))
-            {
-                throw new AbpException(
-                    string.Format(
-                        "type {0} is not an Abp module. An Abp module must be a non-abstract public subclass of AbpModule class!",
-                        type.FullName));
-            }
-
-            return new AbpModuleInfo((AbpModule)Activator.CreateInstance(type, new object[] { }));
-        }
-
         public override string ToString()
         {
             return string.Format("{0}", Type.AssemblyQualifiedName);

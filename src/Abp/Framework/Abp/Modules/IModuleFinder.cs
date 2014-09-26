@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Abp.Modules
 {
@@ -7,6 +8,6 @@ namespace Abp.Modules
     /// </summary>
     public interface IModuleFinder
     {
-        List<AbpModuleInfo> FindAll();
+        List<Type> FindAll();
     }
 }
