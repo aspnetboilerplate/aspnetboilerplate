@@ -3,24 +3,23 @@ using Abp.Dependency;
 using Abp.Dependency.Conventions;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
-using Abp.Startup;
 
 namespace Abp.Modules
 {
     public class AbpStartupModule : AbpModule
     {
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
+            base.PreInitialize();
 
             IocManager.AddConventionalRegisterer(new BasicConventionalRegisterer());
-            context.IocManager.IocContainer.Install(new EventBusInstaller(context.IocManager));
-            UnitOfWorkRegistrer.Initialize(context);
+            IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
+            UnitOfWorkRegistrer.Initialize(IocManager);
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
+            base.Initialize();
             
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
                 new ConventionalRegistrationConfig

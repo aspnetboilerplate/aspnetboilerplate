@@ -10,14 +10,16 @@ namespace Abp.Domain.Repositories.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {
+        private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
 
-        public AbpNHibernateInterceptor()
+        public AbpNHibernateInterceptor(IIocManager iocManager)
         {
+            _iocManager = iocManager;
             _abpSession =
                 new Lazy<IAbpSession>(
-                    () => IocManager.Instance.IocContainer.Kernel.HasComponent(typeof(IAbpSession))
-                        ? IocHelper.Resolve<IAbpSession>()
+                    () => _iocManager.IsRegistered(typeof(IAbpSession))
+                        ? _iocManager.Resolve<IAbpSession>()
                         : NullAbpSession.Instance
                     );
         }

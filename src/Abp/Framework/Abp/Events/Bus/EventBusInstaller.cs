@@ -13,12 +13,12 @@ namespace Abp.Events.Bus
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
-        private readonly IIocManager _iocManager;
+        private readonly IIocResolver _iocResolver;
         private IEventBus _eventBus;
 
-        public EventBusInstaller(IIocManager iocManager)
+        public EventBusInstaller(IIocResolver iocResolver)
         {
-            _iocManager = iocManager;
+            _iocResolver = iocResolver;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -53,7 +53,7 @@ namespace Abp.Events.Bus
                 var genericArgs = @interface.GetGenericArguments();
                 if (genericArgs.Length == 1)
                 {
-                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(_iocManager, handler.ComponentModel.Implementation));
+                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(_iocResolver, handler.ComponentModel.Implementation));
                 }
             }
         }

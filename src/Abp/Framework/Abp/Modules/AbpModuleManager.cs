@@ -2,6 +2,7 @@
 using System.Reflection;
 using Abp.Dependency;
 using Abp.Startup;
+using Abp.Startup.Configuration;
 using Castle.Core.Logging;
 
 namespace Abp.Modules
@@ -33,10 +34,9 @@ namespace Abp.Modules
 
             var sortedModules = _modules.GetSortedModuleListByDependency();
 
-            var initializationContext = new AbpInitializationContext(_iocManager, _modules);
-            sortedModules.ForEach(module => module.Instance.PreInitialize(initializationContext));
-            sortedModules.ForEach(module => module.Instance.Initialize(initializationContext));
-            sortedModules.ForEach(module => module.Instance.PostInitialize(initializationContext));
+            sortedModules.ForEach(module => module.Instance.PreInitialize());
+            sortedModules.ForEach(module => module.Instance.Initialize());
+            sortedModules.ForEach(module => module.Instance.PostInitialize());
         }
 
         public virtual void ShutdownModules()
@@ -65,6 +65,9 @@ namespace Abp.Modules
             foreach (var moduleType in moduleTypes)
             {
                 var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
+                moduleObject.IocManager = _iocManager;
+                moduleObject.Configuration = AbpConfiguration.Instance;
+
                 var moduleInfo = new AbpModuleInfo(moduleObject);
 
                 _modules.Add(moduleInfo);

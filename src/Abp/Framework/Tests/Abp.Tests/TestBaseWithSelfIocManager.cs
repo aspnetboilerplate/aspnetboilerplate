@@ -5,7 +5,7 @@ namespace Abp.Tests
 {
     public abstract class TestBaseWithSelfIocManager : IDisposable
     {
-        protected IocManager LocalIocManager;
+        protected IIocManager LocalIocManager;
 
         protected TestBaseWithSelfIocManager()
         {

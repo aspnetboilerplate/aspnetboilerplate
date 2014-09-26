@@ -15,7 +15,7 @@ namespace Abp.Events.Bus.Factories
         /// </summary>
         public Type HandlerType { get; private set; }
 
-        private readonly IIocManager _iocManager;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
@@ -23,18 +23,18 @@ namespace Abp.Events.Bus.Factories
         /// <param name="handlerType">Type of the handler</param>
         public IocHandlerFactory(Type handlerType)
         {
-            _iocManager = IocManager.Instance;
+            _iocResolver = IocManager.Instance;
             HandlerType = handlerType;
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
         /// </summary>
-        /// <param name="iocManager"></param>
+        /// <param name="iocResolver"></param>
         /// <param name="handlerType">Type of the handler</param>
-        public IocHandlerFactory(IIocManager iocManager, Type handlerType)
+        public IocHandlerFactory(IIocResolver iocResolver, Type handlerType)
         {
-            _iocManager = iocManager;
+            _iocResolver = iocResolver;
             HandlerType = handlerType;
         }
 
@@ -44,7 +44,7 @@ namespace Abp.Events.Bus.Factories
         /// <returns>Resolved handler object</returns>
         public IEventHandler GetHandler()
         {
-            return (IEventHandler)_iocManager.Resolve(HandlerType);
+            return (IEventHandler)_iocResolver.Resolve(HandlerType);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Abp.Events.Bus.Factories
         /// <param name="handler">Handler to be released</param>
         public void ReleaseHandler(IEventHandler handler)
         {
-            _iocManager.Release(handler);
+            _iocResolver.Release(handler);
         }
     }
 }

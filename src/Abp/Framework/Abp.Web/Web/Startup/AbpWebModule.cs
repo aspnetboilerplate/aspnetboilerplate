@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
 using System.Web;
-using Abp.Dependency;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
-using Abp.Startup;
 using Abp.Startup.Configuration;
 
 namespace Abp.Web.Startup
@@ -13,9 +11,9 @@ namespace Abp.Web.Startup
     /// </summary>
     public class AbpWebModule : AbpModule
     {
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
+            base.PreInitialize();
 
             if (HttpContext.Current != null)
             {
@@ -23,12 +21,12 @@ namespace Abp.Web.Startup
             }
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         { 
-            base.Initialize(context);
+            base.Initialize();
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            context.Configuration.Localization.RegisterXmlSource("AbpWeb", "Localization\\AbpWeb");
+            Configuration.Localization.RegisterXmlSource("AbpWeb", "Localization\\AbpWeb");
         }
     }
 }

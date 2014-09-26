@@ -201,7 +201,6 @@
     <Compile Include="Localization\Dictionaries\ILocalizationDictionary.cs" />
     <Compile Include="Localization\Sources\DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\Sources\Xml\XmlLocalizationSource.cs" />
-    <Compile Include="Startup\IAbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
     <Compile Include="Modules\AbpModuleHelper.cs" />
@@ -209,7 +208,6 @@
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />
     <Compile Include="Startup\AbpStartupInstaller.cs" />
-    <Compile Include="Startup\AbpInitializationContext.cs" />
     <Compile Include="Modules\AbpModuleCollection.cs" />
     <Compile Include="Utils\Extensions\Collections\CollectionExtensions.cs" />
     <Compile Include="Utils\Extensions\Collections\DictionaryExtensions.cs" />

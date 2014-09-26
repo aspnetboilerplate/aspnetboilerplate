@@ -15,14 +15,14 @@ namespace Abp.Dependency.Conventions
         /// <summary>
         /// Reference to the IOC Container to register types.
         /// </summary>
-        public IocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; private set; }
 
         /// <summary>
         /// Registration configuration.
         /// </summary>
         public ConventionalRegistrationConfig Config { get; private set; }
 
-        internal ConventionalRegistrationContext(Assembly assembly, IocManager iocManager, ConventionalRegistrationConfig config)
+        internal ConventionalRegistrationContext(Assembly assembly, IIocManager iocManager, ConventionalRegistrationConfig config)
         {
             Assembly = assembly;
             IocManager = iocManager;

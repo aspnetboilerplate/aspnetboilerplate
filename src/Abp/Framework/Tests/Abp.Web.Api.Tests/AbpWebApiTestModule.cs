@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Abp.Dependency;
 using Abp.Modules;
-using Abp.Startup;
 using Abp.Web.Api.Tests.DynamicApiController.Clients;
 using Abp.WebApi.Controllers.Dynamic.Clients;
 using Abp.WebApi.Startup;
@@ -19,15 +17,15 @@ namespace Abp.Web.Api.Tests
                    };
         }
 
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
-            context.Configuration.Localization.IsEnabled = false;
+            base.PreInitialize();
+            Configuration.Localization.IsEnabled = false;
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
+            base.Initialize();
             
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             

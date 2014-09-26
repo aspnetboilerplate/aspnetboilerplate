@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Web.Mvc;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Startup;
 using Abp.Startup.Application;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.Resources.Embedded;
@@ -25,15 +24,15 @@ namespace Abp.Web.Mvc.Startup
                    };
         }
 
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
+            base.PreInitialize();
             IocManager.AddConventionalRegisterer(new ControllerConventionalRegisterer());
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
+            base.Initialize();
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 

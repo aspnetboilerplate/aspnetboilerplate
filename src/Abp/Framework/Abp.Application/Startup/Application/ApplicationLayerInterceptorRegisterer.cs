@@ -1,5 +1,6 @@
 using Abp.Application.Authorization;
 using Abp.Application.Services;
+using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Castle.Core;
 
@@ -10,9 +11,9 @@ namespace Abp.Startup.Application
     /// </summary>
     internal static class ApplicationLayerInterceptorRegisterer
     {
-        public static void Initialize(IAbpInitializationContext initializationContext)
+        public static void Initialize(IIocManager iocManager)
         {
-            initializationContext.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;            
+            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;            
         }
 
         private static void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)

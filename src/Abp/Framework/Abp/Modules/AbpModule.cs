@@ -1,6 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
-using Abp.Startup;
+using Abp.Startup.Configuration;
 
 namespace Abp.Modules
 {
@@ -12,7 +12,12 @@ namespace Abp.Modules
         /// <summary>
         /// Gets a reference to the IOC manager.
         /// </summary>
-        public IIocManager IocManager { get; set; }
+        public IIocManager IocManager { get; internal set; }
+
+        /// <summary>
+        /// Gets a reference to the ABP configuration.
+        /// </summary>
+        public AbpConfiguration Configuration { get; internal set; }
 
         /// <summary>
         /// Gets all depended modules for this module.
@@ -27,8 +32,7 @@ namespace Abp.Modules
         /// What can be done in this method:
         /// - Make things those must be done before dependency registers.
         /// </summary>
-        /// <param name="context">Initialization context</param>
-        public virtual void PreInitialize(IAbpInitializationContext context)
+        public virtual void PreInitialize()
         {
 
         }
@@ -37,8 +41,7 @@ namespace Abp.Modules
         /// What can be done in this method:
         /// - Register dependency installers and components.
         /// </summary>
-        /// <param name="context">Initialization context</param>
-        public virtual void Initialize(IAbpInitializationContext context)
+        public virtual void Initialize()
         {
 
         }
@@ -47,8 +50,7 @@ namespace Abp.Modules
         /// What can be done in this method:
         /// - Make things those must be done after dependency registers.
         /// </summary>
-        /// <param name="context">Initialization context</param>
-        public virtual void PostInitialize(IAbpInitializationContext context)
+        public virtual void PostInitialize()
         {
             
         }

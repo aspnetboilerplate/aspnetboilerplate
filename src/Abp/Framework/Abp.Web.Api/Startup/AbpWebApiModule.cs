@@ -6,7 +6,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Startup;
 using Abp.Startup.Application;
 using Abp.Web.Startup;
 using Abp.WebApi.Controllers;
@@ -32,16 +31,16 @@ namespace Abp.WebApi.Startup
                    };
         }
 
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
+            base.PreInitialize();
 
             IocManager.AddConventionalRegisterer(new ApiControllerConventionalRegisterer());
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
+            base.Initialize();
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 

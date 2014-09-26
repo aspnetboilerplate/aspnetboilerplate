@@ -75,23 +75,24 @@ namespace Abp.Tests.Startup
             ShutdownCount = 0;
         }
 
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
             IocManager.ShouldNotBe(null);
+            Configuration.ShouldNotBe(null);
 
-            base.PreInitialize(context);
+            base.PreInitialize();
             PreInitializeCount++;
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
+            base.Initialize();
             InitializeCount++;
         }
 
-        public override void PostInitialize(IAbpInitializationContext context)
+        public override void PostInitialize()
         {
-            base.PostInitialize(context);
+            base.PostInitialize();
             PostInitializeCount++;
         }
 

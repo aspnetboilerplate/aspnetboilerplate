@@ -9,16 +9,16 @@ namespace Abp.Startup.Application
     /// </summary>
     public class AbpApplicationModule : AbpModule
     {
-        public override void PreInitialize(IAbpInitializationContext context)
+        public override void PreInitialize()
         {
-            base.PreInitialize(context);
-            ApplicationLayerInterceptorRegisterer.Initialize(context);
+            base.PreInitialize();
+            ApplicationLayerInterceptorRegisterer.Initialize(IocManager);
         }
 
-        public override void Initialize(IAbpInitializationContext context)
+        public override void Initialize()
         {
-            base.Initialize(context);
-            context.IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            base.Initialize();
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

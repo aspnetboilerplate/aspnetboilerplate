@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Reflection;
-using Abp.Startup;
+using Abp.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
@@ -14,10 +14,10 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Initializes the registerer.
         /// </summary>
-        /// <param name="initializationContext">Initialization context</param>
-        public static void Initialize(IAbpInitializationContext initializationContext)
+        /// <param name="iocManager">IOC manager</param>
+        public static void Initialize(IIocManager iocManager)
         {
-            initializationContext.IocManager.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
+            iocManager.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
         }
 
         private static void ComponentRegistered(string key, IHandler handler)
