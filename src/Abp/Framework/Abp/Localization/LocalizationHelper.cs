@@ -14,7 +14,7 @@ namespace Abp.Localization
 
         static LocalizationHelper()
         {
-            LocalizationSourceManager = new Lazy<ILocalizationSourceManager>(IocHelper.Resolve<ILocalizationSourceManager>);
+            LocalizationSourceManager = new Lazy<ILocalizationSourceManager>(IocManager.Instance.Resolve<ILocalizationSourceManager>);
         }
 
         /// <summary>

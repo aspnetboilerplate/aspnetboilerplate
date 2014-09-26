@@ -20,7 +20,7 @@ namespace Abp.Startup.Configuration
         internal AbpLocalizationConfiguration()
         {
             IsEnabled = true;
-            _localizationSourceManager = new Lazy<ILocalizationSourceManager>(IocHelper.Resolve<ILocalizationSourceManager>);
+            _localizationSourceManager = new Lazy<ILocalizationSourceManager>(IocManager.Instance.Resolve<ILocalizationSourceManager>);
         }
 
         /// <summary>

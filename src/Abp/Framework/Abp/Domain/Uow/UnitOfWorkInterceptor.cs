@@ -9,6 +9,13 @@ namespace Abp.Domain.Uow
     /// </summary>
     public class UnitOfWorkInterceptor : IInterceptor
     {
+        private readonly IIocResolver _iocResolver;
+
+        public UnitOfWorkInterceptor(IIocResolver iocResolver)
+        {
+            _iocResolver = iocResolver;
+        }
+
         /// <summary>
         /// Intercepts a method.
         /// </summary>
@@ -35,9 +42,9 @@ namespace Abp.Domain.Uow
             }
         }
 
-        private static void PerformUow(IInvocation invocation, bool isTransactional)
+        private void PerformUow(IInvocation invocation, bool isTransactional)
         {
-            using (var unitOfWork = IocHelper.ResolveAsDisposable<IUnitOfWork>())
+            using (var unitOfWork = _iocResolver.ResolveAsDisposable<IUnitOfWork>())
             {
                 try
                 {

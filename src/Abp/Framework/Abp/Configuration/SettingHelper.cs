@@ -12,7 +12,7 @@ namespace Abp.Configuration
 
         static SettingHelper()
         {
-            SettingManager = new Lazy<ISettingManager>(IocHelper.Resolve<ISettingManager>);
+            SettingManager = new Lazy<ISettingManager>(IocManager.Instance.Resolve<ISettingManager>);
         }
 
         /// <summary>

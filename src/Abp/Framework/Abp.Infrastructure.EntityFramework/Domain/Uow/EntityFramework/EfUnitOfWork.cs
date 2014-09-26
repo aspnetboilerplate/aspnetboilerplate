@@ -22,15 +22,18 @@ namespace Abp.Domain.Uow.EntityFramework
         /// </summary>
         private TransactionScope _transaction;
 
+        private readonly IIocManager _iocManager;
+
         /// <summary>
         /// Is this object disposed?
         /// Used to prevent multiple dispose.
         /// </summary>
         private bool _disposed;
 
-        public EfUnitOfWork()
+        public EfUnitOfWork(IIocManager iocManager)
         {
-            _activeDbContexts = new Dictionary<Type, DbContext>();            
+            _iocManager = iocManager;
+            _activeDbContexts = new Dictionary<Type, DbContext>();
         }
 
         public override void Begin()
@@ -97,7 +100,7 @@ namespace Abp.Domain.Uow.EntityFramework
             _activeDbContexts.Values.ForEach(dbContext =>
                                        {
                                            dbContext.Dispose();
-                                           IocHelper.Release(dbContext);
+                                           _iocManager.Release(dbContext);
                                        });
 
             _activeDbContexts.Clear();
@@ -108,7 +111,7 @@ namespace Abp.Domain.Uow.EntityFramework
             DbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                _activeDbContexts[typeof(TDbContext)] = dbContext = IocHelper.Resolve<TDbContext>();
+                _activeDbContexts[typeof(TDbContext)] = dbContext = _iocManager.Resolve<TDbContext>();
             }
 
             return (TDbContext)dbContext;

@@ -9,6 +9,13 @@ namespace Abp.Application.Authorization
     /// </summary>
     internal class AuthorizationInterceptor : IInterceptor
     {
+        private readonly IIocManager _iocManager;
+
+        public AuthorizationInterceptor(IIocManager iocManager)
+        {
+            _iocManager = iocManager;
+        }
+
         public void Intercept(IInvocation invocation)
         {
             Authorize(invocation);
@@ -23,7 +30,7 @@ namespace Abp.Application.Authorization
             }
 
             var authorizeAttributes = invocation.MethodInvocationTarget.GetCustomAttributes(typeof(AbpAuthorizeAttribute), true);
-            using (var authorizationAttributeHelper = IocHelper.ResolveAsDisposable<AuthorizeAttributeHelper>())
+            using (var authorizationAttributeHelper = _iocManager.ResolveAsDisposable<AuthorizeAttributeHelper>())
             {
                 authorizationAttributeHelper.Object.Authorize(authorizeAttributes.Cast<IAbpAuthorizeAttribute>());
             }

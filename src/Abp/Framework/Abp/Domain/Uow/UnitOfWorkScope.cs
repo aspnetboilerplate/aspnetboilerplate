@@ -66,7 +66,7 @@ namespace Abp.Domain.Uow
             //this scope started the uow
             _isStartedByThisScope = true;
 
-            _unitOfWorkWrapper = IocHelper.ResolveAsDisposable<IUnitOfWork>();
+            _unitOfWorkWrapper = IocManager.Instance.ResolveAsDisposable<IUnitOfWork>();
             Current = _unitOfWorkWrapper.Object;
 
             try

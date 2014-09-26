@@ -1,10 +1,8 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Abp.Application.Authorization;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
-using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Authorization
 {
@@ -36,7 +34,7 @@ namespace Abp.Web.Mvc.Authorization
 
             try
             {
-                using (var authorizationAttributeHelper = IocHelper.ResolveAsDisposable<AuthorizeAttributeHelper>())
+                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<AuthorizeAttributeHelper>())
                 {
                     authorizationAttributeHelper.Object.Authorize(this);
                 }

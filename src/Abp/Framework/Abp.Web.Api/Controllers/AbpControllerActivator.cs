@@ -14,7 +14,7 @@ namespace Abp.WebApi.Controllers
     {
         public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
         {
-            var controllerWrapper = IocHelper.ResolveAsDisposable<IHttpController>(controllerType);
+            var controllerWrapper = IocManager.Instance.ResolveAsDisposable<IHttpController>(controllerType);
             request.RegisterForDispose(controllerWrapper);
             return controllerWrapper.Object;
         }

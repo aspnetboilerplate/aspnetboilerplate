@@ -22,7 +22,7 @@ namespace Abp.Logging
         static LogHelper()
         {
             Logger = IocManager.Instance.IocContainer.Kernel.HasComponent(typeof (ILogger))
-                ? IocHelper.Resolve<ILogger>()
+                ? IocManager.Instance.Resolve<ILogger>()
                 : NullLogger.Instance;
         }
 

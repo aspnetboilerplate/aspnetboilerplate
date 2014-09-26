@@ -18,7 +18,7 @@ namespace Abp.Web.Mvc.Resources
 
         static WebResourceHelper()
         {
-            LazyEmbeddedResourceManager = new Lazy<IEmbeddedResourceManager>(IocHelper.Resolve<IEmbeddedResourceManager>, true);
+            LazyEmbeddedResourceManager = new Lazy<IEmbeddedResourceManager>(IocManager.Instance.Resolve<IEmbeddedResourceManager>, true);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ namespace Abp.Dependency
     /// This class is a helper to direcly use basic functionallity of dependency injection.
     /// Use <see cref="IocManager.IocContainer"/> to register dependencies.
     /// </summary>
+    [Obsolete("This class is deprecated. Inject and use IIocManager or directly use IocManager.Instance singleton object.")]
     public static class IocHelper
     {
         #region Resolve
