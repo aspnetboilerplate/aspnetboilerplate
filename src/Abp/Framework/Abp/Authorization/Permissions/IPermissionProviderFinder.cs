@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Abp.Authorization.Permissions
@@ -10,6 +11,6 @@ namespace Abp.Authorization.Permissions
         /// <summary>
         /// Finds and returns all classes implements <see cref="IPermissionProvider"/> in the application.
         /// </summary>
-        IEnumerable<IPermissionProvider> GetPermissionProviders();
+        List<Type> FindAll();
     }
 }

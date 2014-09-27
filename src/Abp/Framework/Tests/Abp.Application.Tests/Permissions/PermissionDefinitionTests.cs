@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Abp.Authorization.Permissions;
+using Abp.Dependency;
 using Abp.Localization;
 using Xunit;
 
@@ -10,7 +12,7 @@ namespace Abp.Application.Tests.Permissions
         [Fact]
         public void Test_PermissionManager()
         {
-            var permissionManager = new PermissionManager(new MyPermissionProviderFinder());
+            var permissionManager = new PermissionManager(IocManager.Instance, new MyPermissionProviderFinder());
 
             Assert.Equal(1, permissionManager.GetPermissionGroups().Count);
             Assert.Equal(4, permissionManager.GetAllPermissions().Count);
@@ -30,12 +32,12 @@ namespace Abp.Application.Tests.Permissions
 
     public class MyPermissionProviderFinder : IPermissionProviderFinder
     {
-        public IEnumerable<IPermissionProvider> GetPermissionProviders()
+        public List<Type> FindAll()
         {
-            return new IPermissionProvider[]
+            return new List<Type>
                    {
-                       new MyPermissionProvider1(),
-                       new MyPermissionProvider2() 
+                       typeof(MyPermissionProvider1),
+                       typeof(MyPermissionProvider2)
                    };
         }
     }

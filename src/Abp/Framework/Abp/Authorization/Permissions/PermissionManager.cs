@@ -13,6 +13,7 @@ namespace Abp.Authorization.Permissions
     /// </summary>
     public class PermissionManager : IPermissionManager, ISingletonDependency
     {
+        private readonly IIocManager _iocManager;
         private readonly IPermissionProviderFinder _providerFinder;
 
         private readonly Dictionary<string, Permission> _permissions;
@@ -21,8 +22,9 @@ namespace Abp.Authorization.Permissions
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PermissionManager(IPermissionProviderFinder providerFinder)
+        public PermissionManager(IIocManager iocManager, IPermissionProviderFinder providerFinder)
         {
+            _iocManager = iocManager;
             _providerFinder = providerFinder;
             _permissions = new Dictionary<string, Permission>();
             _rootGroups = new Dictionary<string, PermissionGroup>();
@@ -53,9 +55,17 @@ namespace Abp.Authorization.Permissions
         {
             var context = new PermissionDefinitionContext(_rootGroups);
 
-            foreach (var provider in _providerFinder.GetPermissionProviders())
+            var providerTypes = _providerFinder.FindAll();
+
+            foreach (var providerType in providerTypes)
             {
-                provider.DefinePermissions(context);
+                if (!_iocManager.IsRegistered(providerType))
+                {
+                    _iocManager.Register(providerType);
+                }
+
+                var providerObj = (IPermissionProvider)_iocManager.Resolve(providerType);
+                providerObj.DefinePermissions(context);
             }
 
             foreach (var rootGroup in _rootGroups.Values)
