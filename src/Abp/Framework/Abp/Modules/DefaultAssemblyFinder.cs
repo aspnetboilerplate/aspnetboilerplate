@@ -9,7 +9,7 @@ namespace Abp.Modules
     /// Default implementation of <see cref="IAssemblyFinder"/>.
     /// If gets assemblies from current domain.
     /// </summary>
-    public class DefaultAssemblyFinder : IAssemblyFinder
+    internal class DefaultAssemblyFinder : IAssemblyFinder
     {
         /// <summary>
         /// Gets Singleton instance of <see cref="DefaultAssemblyFinder"/>.

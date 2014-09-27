@@ -14,7 +14,7 @@ namespace Abp.Application.Tests.Permissions
         {
             var permissionManager = new PermissionManager(IocManager.Instance, new MyPermissionProviderFinder());
 
-            Assert.Equal(1, permissionManager.GetRootPermissionGroups().Count);
+            Assert.Equal(1, permissionManager.GetAllRootGroups().Count);
             Assert.Equal(4, permissionManager.GetAllPermissions().Count);
 
             var userManagement = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement");

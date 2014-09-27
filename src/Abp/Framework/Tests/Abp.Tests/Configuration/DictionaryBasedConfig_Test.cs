@@ -24,23 +24,23 @@ namespace Abp.Tests.Configuration
             _config["ObjectValue"] = testObject;
 
             _config["IntValue"].ShouldBe(42);
-            _config.GetOrDefault<int>("IntValue").ShouldBe(42);
+            _config.Get<int>("IntValue").ShouldBe(42);
 
             _config["StringValue"].ShouldBe("Test string");
-            _config.GetOrDefault<string>("StringValue").ShouldBe("Test string");
+            _config.Get<string>("StringValue").ShouldBe("Test string");
 
             _config["ObjectValue"].ShouldBeSameAs(testObject);
-            _config.GetOrDefault<TestClass>("ObjectValue").ShouldBeSameAs(testObject);
-            _config.GetOrDefault<TestClass>("ObjectValue").Value.ShouldBe(42);
+            _config.Get<TestClass>("ObjectValue").ShouldBeSameAs(testObject);
+            _config.Get<TestClass>("ObjectValue").Value.ShouldBe(42);
         }
 
         [Fact]
         public void Should_Get_Default_If_No_Value()
         {
             _config["MyUndefinedName"].ShouldBe(null);
-            _config.GetOrDefault<string>("MyUndefinedName").ShouldBe(null);
-            _config.GetOrDefault<MyConfig>("MyUndefinedName").ShouldBe(null);
-            _config.GetOrDefault<int>("MyUndefinedName").ShouldBe(0);
+            _config.Get<string>("MyUndefinedName").ShouldBe(null);
+            _config.Get<MyConfig>("MyUndefinedName").ShouldBe(null);
+            _config.Get<int>("MyUndefinedName").ShouldBe(0);
         }
 
         private class MyConfig : DictionayBasedConfig

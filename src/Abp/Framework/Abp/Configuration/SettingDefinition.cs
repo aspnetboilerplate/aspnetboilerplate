@@ -4,7 +4,7 @@ namespace Abp.Configuration
 {
     /// <summary>
     /// Defines a setting.
-    /// A setting is used to configure and change behaviour of the application.
+    /// A setting is used to configure and change behavior of the application.
     /// </summary>
     public class SettingDefinition
     {

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Startup;
@@ -11,13 +11,13 @@ namespace Abp.Authorization.Permissions
     /// <summary>
     /// Permission manager.
     /// </summary>
-    public class PermissionManager : IPermissionManager, ISingletonDependency
+    internal class PermissionManager : IPermissionManager, ISingletonDependency
     {
         private readonly IIocManager _iocManager;
         private readonly IPermissionProviderFinder _providerFinder;
 
-        private readonly Dictionary<string, Permission> _permissions;
         private readonly Dictionary<string, PermissionGroup> _rootGroups;
+        private readonly PermissionDictionary _permissions;
 
         /// <summary>
         /// Constructor.
@@ -26,14 +26,15 @@ namespace Abp.Authorization.Permissions
         {
             _iocManager = iocManager;
             _providerFinder = providerFinder;
-            _permissions = new Dictionary<string, Permission>();
             _rootGroups = new Dictionary<string, PermissionGroup>();
+            _permissions = new PermissionDictionary();
+
             Initialize();
         }
 
-        public Permission GetPermissionOrNull(string permissionName)
+        public Permission GetPermissionOrNull(string name)
         {
-            return _permissions.GetOrDefault(permissionName);
+            return _permissions.GetOrDefault(name);
         }
 
         public IReadOnlyList<Permission> GetAllPermissions()
@@ -41,9 +42,14 @@ namespace Abp.Authorization.Permissions
             return _permissions.Values.ToImmutableList();
         }
 
-        public IReadOnlyList<PermissionGroup> GetRootPermissionGroups()
+        public IReadOnlyList<PermissionGroup> GetAllRootGroups()
         {
             return _rootGroups.Values.ToImmutableList();
+        }
+
+        public PermissionGroup GetRootGroupOrNull(string name)
+        {
+            return _rootGroups.GetOrDefault(name);
         }
 
         private void Initialize()
@@ -54,56 +60,24 @@ namespace Abp.Authorization.Permissions
 
             foreach (var providerType in providerTypes)
             {
-                if (!_iocManager.IsRegistered(providerType))
-                {
-                    _iocManager.Register(providerType);
-                }
-
-                var providerObj = (IPermissionProvider)_iocManager.Resolve(providerType);
-                providerObj.DefinePermissions(context);
+                CreatePermissionProvider(providerType).DefinePermissions(context);
             }
 
             foreach (var rootGroup in _rootGroups.Values)
             {
-                AddGroupRecursively(rootGroup);
+                _permissions.AddGroupPermissionsRecursively(rootGroup);
             }
         }
 
-        private void AddGroupRecursively(PermissionGroup permissionGroup)
+        private IPermissionProvider CreatePermissionProvider(Type providerType)
         {
-            //Add permissions of the group
-            foreach (var permission in permissionGroup.Permissions)
+            if (!_iocManager.IsRegistered(providerType))
             {
-                AddPermissionRecursively(permission);
+                _iocManager.Register(providerType);
             }
 
-            //Add child groups
-            foreach (var childPermissionGroup in permissionGroup.Children)
-            {
-                AddGroupRecursively(childPermissionGroup);
-            }
+            return (IPermissionProvider) _iocManager.Resolve(providerType);
         }
-
-        private void AddPermissionRecursively(Permission permission)
-        {
-            //Did defined before?
-            Permission existingPermission;
-            if (_permissions.TryGetValue(permission.Name, out existingPermission))
-            {
-                throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);
-            }
-
-            //Add permission
-            _permissions[permission.Name] = permission;
-
-            //Add child permissions
-            foreach (var childPermission in permission.Children)
-            {
-                AddPermissionRecursively(childPermission);
-            }
-        }
-
-        #region PermissionDefinitionContext
 
         private class PermissionDefinitionContext : IPermissionDefinitionContext
         {
@@ -124,9 +98,7 @@ namespace Abp.Authorization.Permissions
                             name));
                 }
 
-                var permissionGroup = new PermissionGroup(name, displayName);
-                _rootGroups[name] = permissionGroup;
-                return permissionGroup;
+                return _rootGroups[name] = new PermissionGroup(name, displayName);
             }
 
             public PermissionGroup GetRootGroupOrNull(string name)
@@ -134,7 +106,5 @@ namespace Abp.Authorization.Permissions
                 return _rootGroups.GetOrDefault(name);
             }
         }
-
-        #endregion
     }
 }

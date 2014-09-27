@@ -9,7 +9,7 @@ namespace Abp.Authorization.Permissions
     /// Represents a permission group.
     /// A permission group can have subgroups and permissions.
     /// </summary>
-    public class PermissionGroup
+    public sealed class PermissionGroup
     {
         /// <summary>
         /// Parent of this permission group if one exists.
@@ -86,7 +86,7 @@ namespace Abp.Authorization.Permissions
         /// </summary>
         /// <param name="name">Unique name of the group</param>
         /// <param name="displayName">Display name of the group</param>
-        /// <returns>Created child permission group object</returns>
+        /// <returns>Newly created child permission group object</returns>
         public PermissionGroup CreateChildGroup(string name, ILocalizableString displayName)
         {
             var childGroup = new PermissionGroup(name, displayName) { Parent = this };

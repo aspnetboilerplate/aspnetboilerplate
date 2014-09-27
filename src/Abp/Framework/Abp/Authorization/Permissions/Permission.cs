@@ -9,7 +9,7 @@ namespace Abp.Authorization.Permissions
     /// Represents a permission.
     /// A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
-    public class Permission
+    public sealed class Permission
     {
         /// <summary>
         /// Parent of this permission if one exists.
@@ -80,7 +80,7 @@ namespace Abp.Authorization.Permissions
         /// Adds a child permission.
         /// A child permission can be granted only if parent is granted.
         /// </summary>
-        /// <returns>Returns new child permission</returns>
+        /// <returns>Returns newly created child permission</returns>
         public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
         {
             var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };

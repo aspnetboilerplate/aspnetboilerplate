@@ -6,10 +6,7 @@ using Abp.Modules;
 
 namespace Abp.Authorization.Permissions
 {
-    /// <summary>
-    /// Default implementation of <see cref="IPermissionProviderFinder"/>.
-    /// </summary>
-    public class PermissionProviderFinder : IPermissionProviderFinder, ITransientDependency
+    internal class PermissionProviderFinder : IPermissionProviderFinder, ITransientDependency
     {
         public IAssemblyFinder AssemblyFinder { get; set; }
 

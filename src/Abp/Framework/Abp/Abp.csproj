@@ -69,6 +69,7 @@
     <Compile Include="Authorization\AbpAuthorizationException.cs" />
     <Compile Include="Authorization\IAuthorizationService.cs" />
     <Compile Include="Authorization\NullAuthorizationService.cs" />
+    <Compile Include="Authorization\Permissions\PermissionDictionary.cs" />
     <Compile Include="Authorization\Permissions\PermissionProviderFinder.cs" />
     <Compile Include="Authorization\Permissions\IPermissionDefinitionContext.cs" />
     <Compile Include="Authorization\Permissions\IPermissionProvider.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Authorization\Permissions\Permission.cs" />
     <Compile Include="Authorization\Permissions\PermissionGroup.cs" />
     <Compile Include="Authorization\Permissions\PermissionManager.cs" />
+    <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
     <Compile Include="Dependency\IIocRegistrar.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
