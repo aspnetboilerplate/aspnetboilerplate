@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Dependency;
+using Abp.Modules;
 
 namespace Abp.Configuration
 {
@@ -12,11 +13,14 @@ namespace Abp.Configuration
     {
         private readonly IDictionary<string, SettingDefinition> _settings;
 
+        public IAssemblyFinder AssemblyFinder { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
         public SettingDefinitionManager()
         {
+            AssemblyFinder = DefaultAssemblyFinder.Instance;
             _settings = new Dictionary<string, SettingDefinition>();
             LoadAllSettingsFromAllProviders();
         }
@@ -39,11 +43,8 @@ namespace Abp.Configuration
 
         private void LoadAllSettingsFromAllProviders()
         {
-            //TODO: Test, if it gets all settings from all assemblies?
-
             var context = new SettingDefinitionProviderContext();
-
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AssemblyFinder.GetAllAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {

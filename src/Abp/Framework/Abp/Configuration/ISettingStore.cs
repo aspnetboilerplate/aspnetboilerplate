@@ -14,19 +14,25 @@ namespace Abp.Configuration
         /// <param name="userId">UserId or null</param>
         /// <param name="name">Name of the setting</param>
         /// <returns>Setting object</returns>
-        Setting GetSettingOrNull(int? tenantId, long? userId, string name);
+        SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name);
 
         /// <summary>
         /// Deletes a setting.
         /// </summary>
         /// <param name="setting">Setting to be deleted</param>
-        void Delete(Setting setting);
+        void Delete(SettingInfo setting);
 
         /// <summary>
         /// Adds a setting.
         /// </summary>
         /// <param name="setting">Setting to add</param>
-        void Add(Setting setting);
+        void Create(SettingInfo setting);
+
+        /// <summary>
+        /// Update a setting.
+        /// </summary>
+        /// <param name="setting">Setting to add</param>
+        void Update(SettingInfo setting);
 
         /// <summary>
         /// Gets a list of setting.
@@ -34,6 +40,6 @@ namespace Abp.Configuration
         /// <param name="tenantId">TenantId or null</param>
         /// <param name="userId">UserId or null</param>
         /// <returns>List of settings</returns>
-        List<Setting> GetAll(int? tenantId, long? userId);
+        List<SettingInfo> GetAll(int? tenantId, long? userId);
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines interface to use authorization system.
     /// </summary>
-    public interface IAuthorizationService
+    public interface IAuthorizationService //TODO: Move these methods to Permission manager and create a IPermissionStore!
     {
         /// <summary>
         /// Checks if current user is authorized for any of the given permissions.

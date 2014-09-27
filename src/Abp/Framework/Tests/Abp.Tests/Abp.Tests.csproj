@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\..\..\..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="Shouldly">
       <HintPath>..\..\..\..\packages\Shouldly.2.2.0\lib\net40\Shouldly.dll</HintPath>
     </Reference>
@@ -57,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\DictionaryBasedConfig_Test.cs" />
+    <Compile Include="Configuration\MyChangableSession.cs" />
+    <Compile Include="Configuration\SettingManager_Tests.cs" />
     <Compile Include="Dependency\Interceptors\Interceptors_Can_Have_Injected_Objects.cs" />
     <Compile Include="Dependency\IocManager_LifeStyle_Tests.cs" />
     <Compile Include="Dependency\IocManager_Self_Register_Tests.cs" />

@@ -9,7 +9,7 @@ namespace Abp.Configuration
     {
         /// <summary>
         /// Gets current value of a setting.
-        /// It gets the setting value, overwrited by application and the current user if exists.
+        /// It gets the setting value, overwritten by application and the current user if exists.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
         /// <returns>Current value of the setting</returns>

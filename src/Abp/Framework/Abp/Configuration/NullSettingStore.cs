@@ -18,24 +18,29 @@ namespace Abp.Configuration
             
         }
 
-        public Setting GetSettingOrNull(int? tenantId, long? userId, string name)
+        public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
             return null;
         }
 
-        public void Delete(Setting setting)
+        public void Delete(SettingInfo setting)
         {
             
         }
 
-        public void Add(Setting setting)
+        public void Create(SettingInfo setting)
         {
 
         }
 
-        public List<Setting> GetAll(int? tenantId, long? userId)
+        public void Update(SettingInfo setting)
         {
-            return new List<Setting>();
+            
+        }
+
+        public List<SettingInfo> GetAll(int? tenantId, long? userId)
+        {
+            return new List<SettingInfo>();
         }
     }
 }

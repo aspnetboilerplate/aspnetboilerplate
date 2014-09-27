@@ -79,6 +79,7 @@
     <Compile Include="Authorization\Permissions\PermissionGroup.cs" />
     <Compile Include="Authorization\Permissions\PermissionManager.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
+    <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
     <Compile Include="Dependency\IIocRegistrar.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
