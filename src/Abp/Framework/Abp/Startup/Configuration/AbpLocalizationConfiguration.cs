@@ -7,7 +7,7 @@ namespace Abp.Startup.Configuration
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    public class AbpLocalizationConfiguration
+    public class AbpLocalizationConfiguration : IAbpLocalizationConfiguration
     {
         private readonly Lazy<ILocalizationSourceManager> _localizationSourceManager;
 

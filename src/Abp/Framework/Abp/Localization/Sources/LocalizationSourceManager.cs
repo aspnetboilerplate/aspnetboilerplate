@@ -10,13 +10,15 @@ namespace Abp.Localization.Sources
     /// </summary>
     public class LocalizationSourceManager : ILocalizationSourceManager
     {
+        private readonly IAbpConfiguration _configuration;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationSourceManager()
+        public LocalizationSourceManager(IAbpConfiguration configuration)
         {
+            _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();
         }
 
@@ -26,7 +28,7 @@ namespace Abp.Localization.Sources
         /// <param name="source">Localization source</param>
         public void RegisterSource(ILocalizationSource source)
         {
-            if (!AbpConfiguration.Instance.Localization.IsEnabled)
+            if (!_configuration.Localization.IsEnabled)
             {
                 return;
             }
@@ -47,7 +49,7 @@ namespace Abp.Localization.Sources
         /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!AbpConfiguration.Instance.Localization.IsEnabled)
+            if (!_configuration.Localization.IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }

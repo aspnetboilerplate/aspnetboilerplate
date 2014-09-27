@@ -7,18 +7,18 @@ namespace Abp.Startup.Configuration
     /// <summary>
     /// This class is used for configure ABP and modules on startup.
     /// </summary>
-    public sealed class AbpConfiguration
+    internal class AbpConfiguration : IAbpConfiguration
     {
         /// <summary>
         /// Used to set localization configuration.
         /// </summary>
-        public AbpLocalizationConfiguration Localization { get; private set; }
+        public IAbpLocalizationConfiguration Localization { get; private set; }
 
         /// <summary>
         /// Used to configure modules.
         /// Modules can write extension methods to <see cref="AbpModuleConfigurations"/> to add module specific configurations.
         /// </summary>
-        public AbpModuleConfigurations Modules { get; private set; }
+        public IAbpModuleConfigurations Modules { get; private set; }
 
         /// <summary>
         /// Gets/sets key-based configuration objects.
@@ -33,8 +33,8 @@ namespace Abp.Startup.Configuration
         /// <summary>
         /// Singletion instance.
         /// </summary>
-        public static AbpConfiguration Instance { get { return _instance; } }
-        private static readonly AbpConfiguration _instance = new AbpConfiguration();
+        //public static AbpConfiguration Instance { get { return _instance; } }
+        //private static readonly AbpConfiguration _instance = new AbpConfiguration();
 
         /// <summary>
         /// Additional string-based configurations.
@@ -44,11 +44,11 @@ namespace Abp.Startup.Configuration
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
-        private AbpConfiguration()
+        public AbpConfiguration()
         {
             _settings = new Dictionary<string, object>();
             Localization = new AbpLocalizationConfiguration(IocManager.Instance);
-            Modules = new AbpModuleConfigurations();
+            Modules = new AbpModuleConfigurations(this);
         }
 
         /// <summary>
@@ -71,7 +71,6 @@ namespace Abp.Startup.Configuration
         {
             return Get(name, null);
         }
-
 
         /// <summary>
         /// Gets a configuration object with given name.
@@ -111,6 +110,16 @@ namespace Abp.Startup.Configuration
         public T Get<T>(string name, T defaultValue)
         {
             return (T)Get(name, (object)defaultValue);
+        }
+        
+        private sealed class AbpModuleConfigurations : IAbpModuleConfigurations
+        {
+            public IAbpConfiguration AbpConfiguration { get; private set; }
+
+            public AbpModuleConfigurations(IAbpConfiguration abpConfiguration)
+            {
+                AbpConfiguration = abpConfiguration;
+            }
         }
     }
 }

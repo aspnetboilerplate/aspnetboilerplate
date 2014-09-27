@@ -1,5 +1,6 @@
 ﻿using Abp.Localization.Sources;
 using Abp.Modules;
+using Abp.Startup.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -17,6 +18,7 @@ namespace Abp.Startup
         protected virtual void RegisterStartupSystem(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
+                Component.For<IAbpConfiguration>().ImplementedBy<AbpConfiguration>().LifestyleSingleton(),
                 Component.For<IAbpModuleManager>().ImplementedBy<AbpModuleManager>().LifestyleSingleton()
                 );
         }
