@@ -20,16 +20,6 @@ namespace Abp.Events.Bus.Factories
         /// <summary>
         /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
         /// </summary>
-        /// <param name="handlerType">Type of the handler</param>
-        public IocHandlerFactory(Type handlerType)
-        {
-            _iocResolver = IocManager.Instance;
-            HandlerType = handlerType;
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
-        /// </summary>
         /// <param name="iocResolver"></param>
         /// <param name="handlerType">Type of the handler</param>
         public IocHandlerFactory(IIocResolver iocResolver, Type handlerType)

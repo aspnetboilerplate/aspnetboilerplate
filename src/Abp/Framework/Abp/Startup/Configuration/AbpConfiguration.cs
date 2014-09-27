@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Abp.Dependency;
 using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Startup.Configuration
@@ -46,7 +47,7 @@ namespace Abp.Startup.Configuration
         private AbpConfiguration()
         {
             _settings = new Dictionary<string, object>();
-            Localization = new AbpLocalizationConfiguration();
+            Localization = new AbpLocalizationConfiguration(IocManager.Instance);
             Modules = new AbpModuleConfigurations();
         }
 

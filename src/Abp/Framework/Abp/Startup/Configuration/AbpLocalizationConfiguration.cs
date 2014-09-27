@@ -17,10 +17,10 @@ namespace Abp.Startup.Configuration
         /// </summary>
         public bool IsEnabled { get; set; }
 
-        internal AbpLocalizationConfiguration()
+        internal AbpLocalizationConfiguration(IIocResolver iocManager)
         {
             IsEnabled = true;
-            _localizationSourceManager = new Lazy<ILocalizationSourceManager>(IocManager.Instance.Resolve<ILocalizationSourceManager>);
+            _localizationSourceManager = new Lazy<ILocalizationSourceManager>(iocManager.Resolve<ILocalizationSourceManager>);
         }
 
         /// <summary>
