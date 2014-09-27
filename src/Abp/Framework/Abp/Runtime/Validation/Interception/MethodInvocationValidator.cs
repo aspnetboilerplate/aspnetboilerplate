@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Abp.Utils.Extensions.Collections;
+using Abp.Collections;
 
 namespace Abp.Runtime.Validation.Interception
 {

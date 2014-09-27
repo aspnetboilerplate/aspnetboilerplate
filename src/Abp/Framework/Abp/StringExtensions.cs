@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Abp.Utils.Extensions
+namespace Abp
 {
     /// <summary>
     /// Extension methods for String class.
@@ -13,7 +13,7 @@ namespace Abp.Utils.Extensions
         private static readonly CultureInfo DefaultCultureInfo = new CultureInfo("en-US");
 
         /// <summary>
-        /// Converts string to camelCase.
+        /// Converts PascalCase string to camelCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>camelCase of the string</returns>
@@ -23,7 +23,7 @@ namespace Abp.Utils.Extensions
         }
 
         /// <summary>
-        /// Converts string to camelCase.
+        /// Converts PascalCase string to camelCase string in specified culture.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>
@@ -44,7 +44,7 @@ namespace Abp.Utils.Extensions
         }
 
         /// <summary>
-        /// Converts string to PascalCase.
+        /// Converts camelCase string to PascalCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>PascalCase of the string</returns>
@@ -54,7 +54,7 @@ namespace Abp.Utils.Extensions
         }
 
         /// <summary>
-        /// Converts string to PascalCase.
+        /// Converts camelCase string to PascalCase string in specified culture.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>

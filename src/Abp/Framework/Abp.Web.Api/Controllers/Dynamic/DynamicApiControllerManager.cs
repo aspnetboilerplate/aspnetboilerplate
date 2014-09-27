@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Utils.Extensions.Collections;
+using Abp.Collections;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {

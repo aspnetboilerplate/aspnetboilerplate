@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Abp.Utils.Extensions.Reflection
+namespace Abp.Reflection
 {
     /// <summary>
     /// Extensions to <see cref="MemberInfo"/>.

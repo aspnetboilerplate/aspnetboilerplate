@@ -10,7 +10,7 @@ namespace Abp
     public class AbpException : Exception
     {
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
         public AbpException()
         {
@@ -18,7 +18,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor for serializing.
+        /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
         public AbpException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -27,7 +27,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpException(string message)
@@ -37,7 +37,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>

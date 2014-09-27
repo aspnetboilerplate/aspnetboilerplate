@@ -16,7 +16,7 @@ namespace Abp.UI
         public string Details { get; private set; }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         public UserFriendlyException()
         {
@@ -24,7 +24,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Contstructor for serializing.
+        /// Constructor for serializing.
         /// </summary>
         public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -33,7 +33,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public UserFriendlyException(string message)
@@ -43,7 +43,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>
@@ -54,7 +54,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
@@ -65,7 +65,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>

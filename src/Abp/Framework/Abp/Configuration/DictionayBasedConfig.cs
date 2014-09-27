@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Abp.Utils.Extensions.Collections;
+using Abp.Collections;
 
 namespace Abp.Configuration
 {

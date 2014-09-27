@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Abp.Collections;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
-using Abp.Utils.Extensions.Collections;
 using Castle.Core.Logging;
 
 namespace Abp.Logging

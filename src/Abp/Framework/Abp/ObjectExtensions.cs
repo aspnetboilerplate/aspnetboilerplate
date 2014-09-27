@@ -1,4 +1,4 @@
-﻿namespace Abp.Utils.Extensions
+﻿namespace Abp
 {
     /// <summary>
     /// Extension methods for all objects.

@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
-using Abp.Utils.Extensions.Collections;
+using Abp.Collections;
 using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Collections;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Startup;
-using Abp.Utils.Extensions.Collections;
 
 namespace Abp.Authorization.Permissions
 {

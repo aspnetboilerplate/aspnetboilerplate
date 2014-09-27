@@ -7,7 +7,7 @@ namespace Abp.Resources.Embedded
     /// <summary>
     /// 
     /// </summary>
-    public class EmbeddedResourcePathInfo
+    internal class EmbeddedResourcePathInfo
     {
         public string Path { get; private set; }
 

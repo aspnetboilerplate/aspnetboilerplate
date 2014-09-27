@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Abp.Collections;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
 using Abp.Startup.Configuration;
 using Abp.UI;
-using Abp.Utils.Extensions.Collections;
 using Abp.Web.Localization;
 using Abp.Web.Startup;
 

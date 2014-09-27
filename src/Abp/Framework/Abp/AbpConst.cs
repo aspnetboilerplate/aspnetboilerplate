@@ -1,7 +1,13 @@
 namespace Abp
 {
-    internal static class AbpConst
+    /// <summary>
+    /// Used to define some constants for ABP.
+    /// </summary>
+    public static class AbpConst
     {
+        /// <summary>
+        /// Current version of the ABP.
+        /// </summary>
         public const string CurrentVersion = "0.3.2.3";
     }
 }

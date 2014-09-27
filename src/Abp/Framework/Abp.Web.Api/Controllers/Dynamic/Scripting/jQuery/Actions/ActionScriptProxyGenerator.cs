@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Reflection;
-using Abp.Utils.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery.Actions
 {
