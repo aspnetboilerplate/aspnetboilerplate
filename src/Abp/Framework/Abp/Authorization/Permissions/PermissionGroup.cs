@@ -25,7 +25,7 @@ namespace Abp.Authorization.Permissions
         /// <summary>
         /// Display name of the permission group.
         /// </summary>
-        public LocalizableString DisplayName { get; private set; }
+        public ILocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// List of child permission groups.
@@ -48,7 +48,7 @@ namespace Abp.Authorization.Permissions
         /// <summary>
         /// Creates a new <see cref="PermissionGroup"/> object.
         /// </summary>
-        internal PermissionGroup(string name, LocalizableString displayName)
+        internal PermissionGroup(string name, ILocalizableString displayName)
         {
             if (name == null)
             {
@@ -74,7 +74,7 @@ namespace Abp.Authorization.Permissions
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <returns>New created permission</returns>
-        public Permission CreatePermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
         {
             var permission = new Permission(name, displayName, isGrantedByDefault, description);
             _permissions.Add(permission);
@@ -87,7 +87,7 @@ namespace Abp.Authorization.Permissions
         /// <param name="name">Unique name of the group</param>
         /// <param name="displayName">Display name of the group</param>
         /// <returns>Created child permission group object</returns>
-        public PermissionGroup CreateChildGroup(string name, LocalizableString displayName)
+        public PermissionGroup CreateChildGroup(string name, ILocalizableString displayName)
         {
             var childGroup = new PermissionGroup(name, displayName) { Parent = this };
             _children.Add(childGroup);

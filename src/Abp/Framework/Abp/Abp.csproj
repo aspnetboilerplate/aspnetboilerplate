@@ -90,6 +90,8 @@
     <Compile Include="Domain\Entities\IMustHaveTenant.cs" />
     <Compile Include="Events\Bus\Exceptions\AbpHandledExceptionData.cs" />
     <Compile Include="Events\Bus\Exceptions\ExceptionData.cs" />
+    <Compile Include="Localization\FixedLocalizableString.cs" />
+    <Compile Include="Localization\ILocalizableString.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DefaultAssemblyFinder.cs" />
     <Compile Include="Modules\DefaultModuleFinder.cs" />

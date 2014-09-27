@@ -20,7 +20,7 @@ namespace Abp.Configuration
         /// Display name of the setting.
         /// This can be used to show setting to the user.
         /// </summary>
-        public LocalizableString DisplayName { get; private set; }
+        public ILocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// Gets parent of this group.
@@ -41,7 +41,7 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="name">Unique name of the setting group</param>
         /// <param name="displayName">Display name of the setting</param>
-        public SettingDefinitionGroup(string name, LocalizableString displayName)
+        public SettingDefinitionGroup(string name, ILocalizableString displayName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

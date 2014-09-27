@@ -6,17 +6,17 @@ namespace Abp.Localization
     /// <summary>
     /// Represents a string that can be localized.
     /// </summary>
-    public class LocalizableString
+    public class LocalizableString : ILocalizableString
     {
         /// <summary>
         /// Unique name of the localization source.
         /// </summary>
-        public string SourceName { get; private set; }
+        public virtual string SourceName { get; private set; }
 
         /// <summary>
         /// Unique Name of the string to be localized.
         /// </summary>
-        public string Name { get; private set; }
+        public virtual string Name { get; private set; }
 
         /// <param name="name">Unique name of the localization source</param>
         /// <param name="sourceName">Unique Name of the string to be localized</param>
@@ -40,7 +40,7 @@ namespace Abp.Localization
         /// Localizes the string in current language.
         /// </summary>
         /// <returns>Localized string</returns>
-        public string Localize()
+        public virtual string Localize()
         {
             return LocalizationHelper.GetString(SourceName, Name);
         }
@@ -50,7 +50,7 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="culture">culture</param>
         /// <returns>Localized string</returns>
-        public string Localize(CultureInfo culture)
+        public virtual string Localize(CultureInfo culture)
         {
             return LocalizationHelper.GetString(SourceName, Name, culture);
         }

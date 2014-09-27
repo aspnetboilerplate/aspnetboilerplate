@@ -17,12 +17,12 @@ namespace Abp.Configuration
         /// Display name of the setting.
         /// This can be used to show setting to the user.
         /// </summary>
-        public LocalizableString DisplayName { get; private set; }
+        public ILocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// A brief description for this setting.
         /// </summary>
-        public LocalizableString Description { get; private set; }
+        public ILocalizableString Description { get; private set; }
 
         /// <summary>
         /// Scopes of this setting.
@@ -57,7 +57,7 @@ namespace Abp.Configuration
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>
         /// <param name="isVisibleToClients">Can clients see this setting and it's value</param>
-        public SettingDefinition(string name, string defaultValue, LocalizableString displayName = null, SettingDefinitionGroup group = null, LocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false)
+        public SettingDefinition(string name, string defaultValue, ILocalizableString displayName = null, SettingDefinitionGroup group = null, ILocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false)
         {
             Name = name;
             DefaultValue = defaultValue;

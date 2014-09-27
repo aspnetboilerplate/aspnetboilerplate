@@ -119,7 +119,7 @@ namespace Abp.Authorization.Permissions
                 _rootGroups = rootGroups;
             }
 
-            public PermissionGroup CreateRootGroup(string name, LocalizableString displayName)
+            public PermissionGroup CreateRootGroup(string name, ILocalizableString displayName)
             {
                 if (_rootGroups.ContainsKey(name))
                 {

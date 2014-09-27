@@ -47,13 +47,13 @@ namespace Abp.Application.Tests.Permissions
         public void DefinePermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
-            var administration = context.CreateRootGroup("Abp.Zero.Administration", new LocalizableString("Administration", "AbpZero"));
+            var administration = context.CreateRootGroup("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
 
             //Create 'User management' permission under 'Administration' group
-            var userManagement = administration.CreatePermission("Abp.Zero.Administration.UserManagement", new LocalizableString("UserManagement", "AbpZero"));
+            var userManagement = administration.CreatePermission("Abp.Zero.Administration.UserManagement", new FixedLocalizableString("User management"));
 
             //Create 'Change permissions' (to be able to change permissions of a user) permission as child of 'User management' permission.
-            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions", new LocalizableString("ChangePermissions", "AbpZero"));
+            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions", new FixedLocalizableString("Change permissions"));
         }
     }
 
@@ -65,10 +65,10 @@ namespace Abp.Application.Tests.Permissions
             var administration = context.GetRootGroupOrNull("Abp.Zero.Administration");
 
             //Create 'Role management' permission under 'Administration' group
-            var roleManegement = administration.CreatePermission("Abp.Zero.Administration.RoleManagement", new LocalizableString("RoleManagement", "AbpZero"));
+            var roleManegement = administration.CreatePermission("Abp.Zero.Administration.RoleManagement", new FixedLocalizableString("Role management"));
 
             //Create 'Create role' (to be able to create a new role) permission  as child of 'Role management' permission.
-            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new LocalizableString("CreateRole", "AbpZero"));
+            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new FixedLocalizableString("Create role"));
         }
     }
 }

@@ -27,12 +27,12 @@ namespace Abp.Authorization.Permissions
         /// Display name of the permission.
         /// This can be used to show permission to the user.
         /// </summary>
-        public LocalizableString DisplayName { get; private set; }
+        public ILocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// A brief description for this permission.
         /// </summary>
-        public LocalizableString Description { get; private set; }
+        public ILocalizableString Description { get; private set; }
 
         /// <summary>
         /// Is this permission granted by default.
@@ -56,7 +56,7 @@ namespace Abp.Authorization.Permissions
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
-        internal Permission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        internal Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
         {
             if (name == null)
             {
@@ -81,7 +81,7 @@ namespace Abp.Authorization.Permissions
         /// A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns new child permission</returns>
-        public Permission CreateChildPermission(string name, LocalizableString displayName, bool isGrantedByDefault = false, LocalizableString description = null)
+        public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
         {
             var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };
             _children.Add(permission);

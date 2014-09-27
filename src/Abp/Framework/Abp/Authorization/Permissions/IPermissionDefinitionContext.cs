@@ -13,7 +13,7 @@ namespace Abp.Authorization.Permissions
         /// <param name="name">Unique name of the group</param>
         /// <param name="displayName">Display name of the group</param>
         /// <returns>Created permission group object</returns>
-        PermissionGroup CreateRootGroup(string name, LocalizableString displayName);
+        PermissionGroup CreateRootGroup(string name, ILocalizableString displayName);
         
         /// <summary>
         /// Gets an existing root permission group or null if it does not exists.
