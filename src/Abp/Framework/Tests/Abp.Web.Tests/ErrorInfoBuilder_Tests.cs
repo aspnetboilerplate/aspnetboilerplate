@@ -1,21 +1,29 @@
 ﻿using System;
+using Abp.Startup.Configuration;
+using Abp.Tests;
 using Abp.UI;
 using Abp.Web.Models;
 using Xunit;
 
 namespace Abp.Web.Tests
 {
-    public class ErrorInfoTests
+    public class ErrorInfoBuilder_Tests : TestBaseWithSelfIocManager
     {
-        static ErrorInfoTests()
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+
+        public ErrorInfoBuilder_Tests()
         {
-            ErrorInfo.AddExceptionConverter(new MyErrorInfoConverter());
+            var configuration = new AbpConfiguration();
+            configuration.Localization.IsEnabled = false;
+
+            _errorInfoBuilder = new ErrorInfoBuilder(configuration);
+            _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 
         [Fact]
         public void Should_Convert_Specific_Exception()
         {
-            var errorInfo = ErrorInfo.ForException(new MySpecificException());
+            var errorInfo = _errorInfoBuilder.BuildForException(new MySpecificException());
             Assert.Equal(42, errorInfo.Code);
             Assert.Equal("MySpecificMessage", errorInfo.Message);
             Assert.Equal("MySpecificMessageDetails", errorInfo.Details);
@@ -24,10 +32,18 @@ namespace Abp.Web.Tests
         [Fact]
         public void Should_Convert_UserFriendlyException()
         {
-            var errorInfo = ErrorInfo.ForException(new UserFriendlyException("Test message"));
+            var errorInfo = _errorInfoBuilder.BuildForException(new UserFriendlyException("Test message"));
             Assert.Equal(0, errorInfo.Code);
             Assert.Equal("Test message", errorInfo.Message);
         }
+
+        //[Fact]
+        //public void Should_Not_Convert_Other_Exceptions()
+        //{
+        //    var errorInfo = _errorInfoBuilder.BuildForException(new Exception("Test message"));
+        //    Assert.Equal(0, errorInfo.Code);
+        //    Assert.NotEqual("Test message", errorInfo.Message);
+        //}
 
         public class MySpecificException : Exception
         {

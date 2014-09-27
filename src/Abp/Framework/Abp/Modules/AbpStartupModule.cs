@@ -6,6 +6,9 @@ using Abp.Events.Bus;
 
 namespace Abp.Modules
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AbpStartupModule : AbpModule
     {
         public override void PreInitialize()
@@ -13,14 +16,15 @@ namespace Abp.Modules
             base.PreInitialize();
 
             IocManager.AddConventionalRegisterer(new BasicConventionalRegisterer());
-            IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
             UnitOfWorkRegistrer.Initialize(IocManager);
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            
+
+            IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
+
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
                 new ConventionalRegistrationConfig
                 {

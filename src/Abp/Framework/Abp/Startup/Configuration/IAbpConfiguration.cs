@@ -1,4 +1,6 @@
-﻿namespace Abp.Startup.Configuration
+﻿using System;
+
+namespace Abp.Startup.Configuration
 {
     public interface IAbpConfiguration
     {
@@ -19,7 +21,8 @@
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
-        void Set(string name, object value);
+        /// <returns>Returns the passed <see cref="value"/></returns>
+        T Set<T>(string name, T value);
 
         /// <summary>
         /// Gets a configuration object with given name.
@@ -52,5 +55,14 @@
         /// <param name="defaultValue">Default value of the object if can not found given configuration</param>
         /// <returns>Value of the configuration or null if not found</returns>
         T Get<T>(string name, T defaultValue);
+
+        /// <summary>
+        /// Gets a configuration object with given name.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="name">Unique name of the configuration</param>
+        /// <param name="creator">The function that will be called to create if given configuration is not found</param>
+        /// <returns>Value of the configuration or null if not found</returns>
+        T GetOrCreate<T>(string name, Func<T> creator);
     }
 }

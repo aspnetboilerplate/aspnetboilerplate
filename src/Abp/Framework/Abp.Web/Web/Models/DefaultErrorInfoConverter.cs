@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Abp.Dependency;
 using Abp.Runtime.Validation;
+using Abp.Startup.Configuration;
 using Abp.UI;
 using Abp.Utils.Extensions.Collections;
 using Abp.Web.Localization;
@@ -11,16 +13,23 @@ using Abp.Web.Startup;
 namespace Abp.Web.Models
 {
     //TODO@Halil: I did not like constructing ErrorInfo this way. It works wlll but I think we should change it later...
-    internal class DefaultExceptionToErrorInfoConverter : IExceptionToErrorInfoConverter
+    internal class DefaultErrorInfoConverter : IExceptionToErrorInfoConverter
     {
+        private readonly IAbpConfiguration _configuration;
+
         public IExceptionToErrorInfoConverter Next { set; private get; }
 
-        private static bool SendAllExceptionsToClients
+        private bool SendAllExceptionsToClients
         {
             get
             {
-                return AbpWebModuleConfiguration.Instance.SendAllExceptionsToClients;
+                return _configuration.Modules.AbpWeb().SendAllExceptionsToClients;
             }
+        }
+
+        public DefaultErrorInfoConverter(IAbpConfiguration configuration)
+        {
+            _configuration = configuration;
         }
 
         public ErrorInfo Convert(Exception exception)

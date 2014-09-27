@@ -8,8 +8,6 @@ namespace Abp.Web.Models
     [Serializable]
     public class ErrorInfo
     {
-        private static IExceptionToErrorInfoConverter _converter = new DefaultExceptionToErrorInfoConverter();
-
         /// <summary>
         /// Error code.
         /// </summary>
@@ -88,26 +86,6 @@ namespace Abp.Web.Models
             : this(message, details)
         {
             Code = code;
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ErrorInfo"/> using given exception object.
-        /// </summary>
-        /// <param name="exception">Exception</param>
-        /// <returns>Created <see cref="ErrorInfo"/> object</returns>
-        public static ErrorInfo ForException(Exception exception)
-        {
-            return _converter.Convert(exception);
-        }
-
-        /// <summary>
-        /// Adds an exception converter that is used by <see cref="ForException"/> method.
-        /// </summary>
-        /// <param name="converter">Converter object</param>
-        public static void AddExceptionConverter(IExceptionToErrorInfoConverter converter)
-        {
-            converter.Next = _converter;
-            _converter = converter;
         }
     }
 }

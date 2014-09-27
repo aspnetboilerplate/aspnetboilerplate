@@ -7,9 +7,9 @@ namespace Abp.Web.Startup
     /// </summary>
     public static class ModuleConfigurationExtensions
     {
-        public static AbpWebModuleConfiguration AbpWebModule(this IAbpModuleConfigurations configurations)
+        public static IAbpWebModuleConfiguration AbpWeb(this IAbpModuleConfigurations configurations)
         {
-            return AbpWebModuleConfiguration.Instance;
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web", () => new AbpWebModuleConfiguration());
         }
     }
 }

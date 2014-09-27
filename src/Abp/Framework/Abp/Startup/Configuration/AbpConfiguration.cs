@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Abp.Dependency;
 using Abp.Utils.Extensions.Collections;
 
@@ -31,12 +32,6 @@ namespace Abp.Startup.Configuration
         }
 
         /// <summary>
-        /// Singletion instance.
-        /// </summary>
-        //public static AbpConfiguration Instance { get { return _instance; } }
-        //private static readonly AbpConfiguration _instance = new AbpConfiguration();
-
-        /// <summary>
         /// Additional string-based configurations.
         /// </summary>
         private readonly Dictionary<string, object> _settings;
@@ -57,9 +52,10 @@ namespace Abp.Startup.Configuration
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
-        public void Set(string name, object value)
+        public T Set<T>(string name, T value)
         {
             this[name] = value;
+            return value;
         }
 
         /// <summary>
@@ -111,7 +107,19 @@ namespace Abp.Startup.Configuration
         {
             return (T)Get(name, (object)defaultValue);
         }
-        
+
+        /// <summary>
+        /// Gets a configuration object with given name.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="name">Unique name of the configuration</param>
+        /// <param name="creator">The function that will be called to create if given configuration is not found</param>
+        /// <returns>Value of the configuration or null if not found</returns>
+        public T GetOrCreate<T>(string name, Func<T> creator)
+        {
+            return (T) (Get(name) ?? Set(name, creator()));
+        }
+
         private sealed class AbpModuleConfigurations : IAbpModuleConfigurations
         {
             public IAbpConfiguration AbpConfiguration { get; private set; }

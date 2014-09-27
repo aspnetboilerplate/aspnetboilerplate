@@ -206,7 +206,6 @@
     <Compile Include="Localization\Sources\Xml\XmlLocalizationSource.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
-    <Compile Include="Modules\AbpModuleHelper.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
     <Compile Include="Startup\AbpBootstrapper.cs" />

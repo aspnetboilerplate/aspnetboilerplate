@@ -18,12 +18,10 @@ namespace Abp.Modules
 
         public List<Type> FindAll()
         {
-            var allAssemblies = AssemblyFinder.GetAllAssemblies();
-
             return (
-                from assembly in allAssemblies
+                from assembly in AssemblyFinder.GetAllAssemblies()
                 from type in assembly.GetTypes()
-                where AbpModuleHelper.IsAbpModule(type)
+                where AbpModule.IsAbpModule(type)
                 select type
                 ).ToList();
         }

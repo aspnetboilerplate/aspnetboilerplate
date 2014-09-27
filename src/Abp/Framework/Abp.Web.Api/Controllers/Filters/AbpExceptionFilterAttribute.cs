@@ -19,7 +19,7 @@ namespace Abp.WebApi.Controllers.Filters
 
             context.Response = context.Request.CreateResponse(
                 HttpStatusCode.OK,
-                new AjaxResponse(ErrorInfo.ForException(context.Exception))
+                new AjaxResponse(ErrorInfoBuilder.Instance.BuildForException(context.Exception))
                 );
 
             EventBus.Default.Trigger(this, new AbpHandledExceptionData(context.Exception));

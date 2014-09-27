@@ -55,6 +55,11 @@ namespace Abp.Modules
             //Register to IOC container.
             foreach (var moduleType in moduleTypes)
             {
+                if (!AbpModule.IsAbpModule(moduleType))
+                {
+                    throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+                }
+
                 if (!_iocManager.IsRegistered(moduleType))
                 {
                     _iocManager.Register(moduleType, DependencyLifeStyle.Singleton);
@@ -65,14 +70,13 @@ namespace Abp.Modules
             foreach (var moduleType in moduleTypes)
             {
                 var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
+
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpConfiguration>();
 
-                var moduleInfo = new AbpModuleInfo(moduleObject);
-
-                _modules.Add(moduleInfo);
+                _modules.Add(new AbpModuleInfo(moduleObject));
                 
-                Logger.DebugFormat("Loaded module: " + moduleInfo);
+                Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
 
             //AbpStartupModule must be the first module

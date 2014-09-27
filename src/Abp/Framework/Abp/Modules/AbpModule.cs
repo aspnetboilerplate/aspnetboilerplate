@@ -12,12 +12,12 @@ namespace Abp.Modules
         /// <summary>
         /// Gets a reference to the IOC manager.
         /// </summary>
-        public IIocManager IocManager { get; internal set; }
+        protected internal IIocManager IocManager { get; internal set; }
 
         /// <summary>
         /// Gets a reference to the ABP configuration.
         /// </summary>
-        public IAbpConfiguration Configuration { get; internal set; }
+        protected internal IAbpConfiguration Configuration { get; internal set; }
 
         /// <summary>
         /// Gets all depended modules for this module.
@@ -61,6 +61,19 @@ namespace Abp.Modules
         public virtual void Shutdown()
         {
             
+        }
+
+        /// <summary>
+        /// Checks if given type is an Abp module class.
+        /// </summary>
+        /// <param name="type">Type to check</param>
+        public static bool IsAbpModule(Type type)
+        {
+            return
+                type.IsPublic &&
+                type.IsClass &&
+                !type.IsAbstract &&
+                typeof(AbpModule).IsAssignableFrom(type);
         }
     }
 }
