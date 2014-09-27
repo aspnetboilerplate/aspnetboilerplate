@@ -41,12 +41,7 @@ namespace Abp.Authorization.Permissions
             return _permissions.Values.ToImmutableList();
         }
 
-        public IReadOnlyList<string> GetAllPermissionNames()
-        {
-            return _permissions.Values.Select(p => p.Name).ToImmutableList();
-        }
-
-        public IReadOnlyList<PermissionGroup> GetPermissionGroups()
+        public IReadOnlyList<PermissionGroup> GetRootPermissionGroups()
         {
             return _rootGroups.Values.ToImmutableList();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Abp.Authorization;
 using Abp.Authorization.Permissions;
@@ -22,7 +23,7 @@ namespace Abp.Web.Authentication
 
         public string GetAuthenticationScript()
         {
-            var allPermission = _permissionManager.GetAllPermissionNames();
+            var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
             var grantedPermissions = _authorizationService.GetGrantedPermissionNames();
             
             var script = new StringBuilder();
