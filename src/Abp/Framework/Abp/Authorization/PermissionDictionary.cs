@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Startup;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// Used to store and manipulate dictionary of permissions.

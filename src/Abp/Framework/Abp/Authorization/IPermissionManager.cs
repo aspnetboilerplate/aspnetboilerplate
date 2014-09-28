@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// Permission manager.
@@ -32,5 +32,18 @@ namespace Abp.Authorization.Permissions
         /// </summary>
         /// <returns>Root permission groups</returns>
         IReadOnlyList<PermissionGroup> GetAllRootGroups();
+
+        /// <summary>
+        /// Checks if a user is granted for a permission.
+        /// </summary>
+        /// <param name="userId">Id of the user to check</param>
+        /// <param name="permissionName">Name of the permission</param>
+        bool IsGranted(long userId, string permissionName);
+
+        /// <summary>
+        /// Gets all granted permissions for current user.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<Permission> GetGrantedPermissions(long userId);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// This interface is used to find all classes implement <see cref="IPermissionProvider"/> in the application.

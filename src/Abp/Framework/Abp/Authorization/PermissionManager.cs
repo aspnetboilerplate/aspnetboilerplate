@@ -1,31 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Abp.Collections;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Startup;
+using Castle.Core.Logging;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// Permission manager.
     /// </summary>
     internal class PermissionManager : IPermissionManager, ISingletonDependency
     {
+        public IPermissionGrantStore PermissionGrantStore { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly IIocManager _iocManager;
         private readonly IPermissionProviderFinder _providerFinder;
 
         private readonly Dictionary<string, PermissionGroup> _rootGroups;
         private readonly PermissionDictionary _permissions;
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
         public PermissionManager(IIocManager iocManager, IPermissionProviderFinder providerFinder)
         {
+            PermissionGrantStore = NullPermissionGrantStore.Instance;
+            Logger = NullLogger.Instance;
+
             _iocManager = iocManager;
             _providerFinder = providerFinder;
+
             _rootGroups = new Dictionary<string, PermissionGroup>();
             _permissions = new PermissionDictionary();
 
@@ -45,6 +54,23 @@ namespace Abp.Authorization.Permissions
         public IReadOnlyList<PermissionGroup> GetAllRootGroups()
         {
             return _rootGroups.Values.ToImmutableList();
+        }
+
+        public bool IsGranted(long userId, string permissionName)
+        {
+            var permission = GetPermissionOrNull(permissionName);
+            if (permission == null)
+            {
+                Logger.Warn("Permission is not defined: " + permissionName);
+                return false;
+            }
+
+            return PermissionGrantStore.IsGranted(userId, permissionName);
+        }
+
+        public IReadOnlyList<Permission> GetGrantedPermissions(long userId)
+        {
+            return GetAllPermissions().Where(p => IsGranted(userId, p.Name)).ToImmutableList();
         }
 
         public PermissionGroup GetRootGroupOrNull(string name)

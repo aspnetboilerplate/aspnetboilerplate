@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Authorization.Permissions;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Localization;
 using Xunit;

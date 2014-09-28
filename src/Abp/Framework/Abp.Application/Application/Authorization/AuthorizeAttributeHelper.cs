@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abp.Authorization;
 using Abp.Collections;
 using Abp.Dependency;
+using Abp.Runtime.Session;
 
 namespace Abp.Application.Authorization
 {
     public class AuthorizeAttributeHelper : ITransientDependency //TODO: Make internal
     {
-        public IAuthorizationService AuthorizationService { get; set; }
+        public IAbpSession AbpSession { get; set; }
 
-        public AuthorizeAttributeHelper()
+        private readonly IPermissionManager _permissionManager;
+
+        public AuthorizeAttributeHelper(IPermissionManager permissionManager)
         {
-            AuthorizationService = NullAuthorizationService.Instance;            
+            AbpSession = NullAbpSession.Instance;
+            _permissionManager = permissionManager;
         }
 
         public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
@@ -22,6 +27,11 @@ namespace Abp.Application.Authorization
 
         public void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
+            if (!AbpSession.UserId.HasValue)
+            {
+                throw new AbpAuthorizationException("No user logged in!");
+            }
+
             foreach (var authorizeAttribute in authorizeAttributes)
             {
                 if (authorizeAttribute.Permissions.IsNullOrEmpty())
@@ -31,18 +41,22 @@ namespace Abp.Application.Authorization
 
                 if (authorizeAttribute.RequireAllPermissions)
                 {
-                    if (!AuthorizationService.HasAllOfPermissions(authorizeAttribute.Permissions))
+                    if (!authorizeAttribute.Permissions.All(permissionName => _permissionManager.IsGranted(AbpSession.UserId.Value, permissionName)))
                     {
-                        var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
-                        throw new AbpAuthorizationException("Required permissions are not granted. All of these permissions must be granted: " + requiredPermissions);
+                        throw new AbpAuthorizationException(
+                            "Required permissions are not granted. All of these permissions must be granted: " +
+                            String.Join(", ", authorizeAttribute.Permissions)
+                            );
                     }
                 }
                 else
                 {
-                    if (!AuthorizationService.HasAnyOfPermissions(authorizeAttribute.Permissions))
+                    if (!authorizeAttribute.Permissions.Any(permissionName => _permissionManager.IsGranted(AbpSession.UserId.Value, permissionName)))
                     {
-                        var requiredPermissions = String.Join(", ", authorizeAttribute.Permissions);
-                        throw new AbpAuthorizationException("Required permissions are not granted. At least one of these permissions must be granted: " + requiredPermissions);
+                        throw new AbpAuthorizationException(
+                            "Required permissions are not granted. At least one of these permissions must be granted: " +
+                            String.Join(", ", authorizeAttribute.Permissions)
+                            );
                     }
                 }
             }

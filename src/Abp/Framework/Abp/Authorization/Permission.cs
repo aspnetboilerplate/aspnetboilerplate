@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Localization;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// Represents a permission.

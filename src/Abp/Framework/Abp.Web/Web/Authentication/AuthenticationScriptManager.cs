@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using Abp.Authorization;
-using Abp.Authorization.Permissions;
 using Abp.Dependency;
+using Abp.Runtime.Session;
 
 namespace Abp.Web.Authentication
 {
@@ -12,34 +12,40 @@ namespace Abp.Web.Authentication
     /// </summary>
     public class AuthenticationScriptManager : IAuthenticationScriptManager, ISingletonDependency
     {
-        private readonly IAuthorizationService _authorizationService;
+        public IAbpSession AbpSession { get; set; }
+
         private readonly IPermissionManager _permissionManager;
 
-        public AuthenticationScriptManager(IAuthorizationService authorizationService, IPermissionManager permissionManager)
+        public AuthenticationScriptManager(IPermissionManager permissionManager)
         {
-            _authorizationService = authorizationService;
+            AbpSession = NullAbpSession.Instance;
+
             _permissionManager = permissionManager;
         }
 
         public string GetAuthenticationScript()
         {
             var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
-            var grantedPermissions = _authorizationService.GetGrantedPermissionNames();
-            
+            var grantedPermissions =
+                AbpSession.UserId.HasValue
+                    ? _permissionManager.GetGrantedPermissions(AbpSession.UserId.Value).Select(p => p.Name).ToArray()
+                    : new string[0];
+
+
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
-            
+
             script.AppendLine();
-            
+
             script.AppendLine("    abp.auth = abp.auth || {};");
-            
+
             script.AppendLine();
 
             AppendPermissionList(script, "allPermissions", allPermission);
-            
+
             script.AppendLine();
-            
+
             AppendPermissionList(script, "grantedPermissions", grantedPermissions);
 
             script.AppendLine();
@@ -48,7 +54,7 @@ namespace Abp.Web.Authentication
             return script.ToString();
         }
 
-        private void AppendPermissionList(StringBuilder script, string name, IReadOnlyList<string> permissions)
+        private static void AppendPermissionList(StringBuilder script, string name, IReadOnlyList<string> permissions)
         {
             script.AppendLine("    abp.auth." + name + " = {");
 

@@ -1,6 +1,6 @@
 using Abp.Dependency;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// This is the main interface to define permissions for an application.

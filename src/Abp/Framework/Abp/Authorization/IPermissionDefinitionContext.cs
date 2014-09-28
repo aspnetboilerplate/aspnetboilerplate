@@ -1,6 +1,6 @@
 using Abp.Localization;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     /// <summary>
     /// This context is used on <see cref="IPermissionProvider.DefinePermissions"/> method.

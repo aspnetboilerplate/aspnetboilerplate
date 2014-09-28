@@ -4,7 +4,7 @@ using System.Linq;
 using Abp.Dependency;
 using Abp.Modules;
 
-namespace Abp.Authorization.Permissions
+namespace Abp.Authorization
 {
     internal class PermissionProviderFinder : IPermissionProviderFinder, ITransientDependency
     {
