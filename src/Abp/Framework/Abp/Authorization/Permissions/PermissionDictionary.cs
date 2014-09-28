@@ -8,24 +8,31 @@ namespace Abp.Authorization.Permissions
     /// </summary>
     internal class PermissionDictionary : Dictionary<string, Permission>
     {
+        /// <summary>
+        /// Adds permissions to dictionary in given group and it's all child groups recursively.
+        /// </summary>
         public void AddGroupPermissionsRecursively(PermissionGroup permissionGroup)
         {
-            //Add permissions of the group
+            //Add permissions in given group
             foreach (var permission in permissionGroup.Permissions)
             {
                 AddPermissionRecursively(permission);
             }
 
-            //Add child groups
+            //Add permissions in all child groups recursively
             foreach (var childGroup in permissionGroup.Children)
             {
                 AddGroupPermissionsRecursively(childGroup);
             }
         }
 
+        /// <summary>
+        /// Adds a permission and it's all child permissions to dictionary.
+        /// </summary>
+        /// <param name="permission"></param>
         private void AddPermissionRecursively(Permission permission)
         {
-            //Did defined before?
+            //Prevent multiple adding of same named permission.
             Permission existingPermission;
             if (TryGetValue(permission.Name, out existingPermission))
             {

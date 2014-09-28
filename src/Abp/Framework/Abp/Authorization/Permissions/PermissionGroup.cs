@@ -37,7 +37,7 @@ namespace Abp.Authorization.Permissions
         private readonly List<PermissionGroup> _children;
 
         /// <summary>
-        /// List of child permission groups.
+        /// List of permissions in this group.
         /// </summary>
         public IReadOnlyList<Permission> Permissions
         {

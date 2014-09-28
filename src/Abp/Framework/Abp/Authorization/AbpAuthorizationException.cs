@@ -10,7 +10,7 @@ namespace Abp.Authorization
     public class AbpAuthorizationException : AbpException
     {
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpAuthorizationException"/> object.
         /// </summary>
         public AbpAuthorizationException()
         {
@@ -18,7 +18,7 @@ namespace Abp.Authorization
         }
 
         /// <summary>
-        /// Contstructor for serializing.
+        /// Creates a new <see cref="AbpAuthorizationException"/> object.
         /// </summary>
         public AbpAuthorizationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -27,7 +27,7 @@ namespace Abp.Authorization
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpAuthorizationException"/> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpAuthorizationException(string message)
@@ -37,7 +37,7 @@ namespace Abp.Authorization
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Creates a new <see cref="AbpAuthorizationException"/> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
