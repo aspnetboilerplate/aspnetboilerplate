@@ -24,7 +24,7 @@ namespace Abp.EntityFramework
 
                 if (parts.Length > 1)
                 {
-                    isDescending = parts[1].ToLower().Contains("esc");
+                    isDescending = parts[1].ToLower().Contains("asc");
                 }
 
                 PropertyInfo prop = tType.GetProperty(propertyName);
@@ -72,7 +72,7 @@ namespace Abp.EntityFramework
 
                 if (parts.Length > 1)
                 {
-                    isDescending = parts[1].ToLower().Contains("esc");
+                    isDescending = parts[1].ToLower().Contains("asc");
                 }
 
                 PropertyInfo prop = tType.GetProperty(propertyName);
@@ -106,7 +106,7 @@ namespace Abp.EntityFramework
             return query;
         }
 
-        public static IQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> query, string sorting)
+        public static IQueryable<TEntity> SortedBy<TEntity>(this IQueryable<TEntity> query, string sorting)
         {
             //
             if (query == null)
