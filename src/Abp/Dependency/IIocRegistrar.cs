@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using Abp.Dependency.Conventions;
 
 namespace Abp.Dependency

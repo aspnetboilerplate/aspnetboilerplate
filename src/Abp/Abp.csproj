@@ -222,7 +222,6 @@
     <Compile Include="Localization\Sources\ILocalizationSourceManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Sources\Resource\ResourceFileLocalizationSource.cs" />
-    <Compile Include="Dependency\IocHelper.cs" />
     <Compile Include="Localization\Sources\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
