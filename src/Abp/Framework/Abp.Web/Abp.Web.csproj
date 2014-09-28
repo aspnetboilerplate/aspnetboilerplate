@@ -60,7 +60,7 @@
     <Compile Include="Web\Models\ValidationErrorInfo.cs" />
     <Compile Include="Web\Startup\AbpWebModuleConfiguration.cs" />
     <Compile Include="Web\Startup\IAbpWebModuleConfiguration.cs" />
-    <Compile Include="Web\Startup\ModuleConfigurationExtensions.cs" />
+    <Compile Include="Web\Startup\AbpWebConfigurationExtensions.cs" />
     <Compile Include="Web\Startup\WebAssemblyFinder.cs" />
     <Compile Include="Web\Authentication\AuthenticationScriptManager.cs" />
     <Compile Include="Web\Authentication\IAuthenticationScriptManager.cs" />

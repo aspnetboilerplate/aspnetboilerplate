@@ -14,27 +14,15 @@ namespace Abp.Startup.Infrastructure.NHibernate
     public class AbpNHibernateModule : AbpModule
     {
         /// <summary>
-        /// Gets NHibernate Fluent configuration object to configure.
-        /// Do not call BuildSessionFactory on it.
-        /// </summary>
-        public FluentConfiguration Configuration { get; private set; }
-
-        /// <summary>
         /// NHibernate session factory object.
         /// </summary>
         private ISessionFactory _sessionFactory;
-
-        public override void PreInitialize()
-        {
-            base.PreInitialize();
-            Configuration = Fluently.Configure();
-        }
-
+        
         public override void Initialize()
         {
             base.Initialize();
 
-            _sessionFactory = Configuration
+            _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .ExposeConfiguration(config => config.SetInterceptor(new AbpNHibernateInterceptor(IocManager)))
                 .BuildSessionFactory();
 

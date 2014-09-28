@@ -74,11 +74,14 @@
     <Compile Include="Domain\Repositories\NHibernate\Interceptors\AbpNHibernateInterceptor.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryInstaller.cs" />
+    <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateConfigurationExtensions.cs" />
     <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateModule.cs" />
     <Compile Include="Domain\Repositories\NHibernate\NhRepositoryBaseOfTEntity.cs" />
     <Compile Include="Domain\Uow\NHibernate\NhUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\Entities\Mapping\EntityMapOfTEntityAndTPrimaryKey.cs" />
+    <Compile Include="Startup\Infrastructure\NHibernate\AbpNHibernateModuleConfiguration.cs" />
+    <Compile Include="Startup\Infrastructure\NHibernate\IAbpNHibernateModuleConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Infrastructure.NHibernate.nuspec" />
