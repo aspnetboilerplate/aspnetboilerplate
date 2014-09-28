@@ -24,7 +24,7 @@ namespace Abp.EntityFramework
 
                 if (parts.Length > 1)
                 {
-                    isDescending = parts[1].ToLower().Contains("asc");
+                    isDescending = parts[1].ToLower().Contains("desc");
                 }
 
                 PropertyInfo prop = tType.GetProperty(propertyName);
@@ -72,7 +72,7 @@ namespace Abp.EntityFramework
 
                 if (parts.Length > 1)
                 {
-                    isDescending = parts[1].ToLower().Contains("asc");
+                    isDescending = parts[1].ToLower().Contains("desc");
                 }
 
                 PropertyInfo prop = tType.GetProperty(propertyName);
