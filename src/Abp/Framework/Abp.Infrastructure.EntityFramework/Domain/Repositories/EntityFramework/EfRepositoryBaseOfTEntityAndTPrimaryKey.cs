@@ -109,7 +109,18 @@ namespace Abp.Domain.Repositories.EntityFramework
                 );
              */
         }
+        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entities = Table.Where(predicate).ToList();
+            foreach (var entity in entities)
+            {
+                Delete(entity);
+            }
 
+            
+           
+        }
+        
         public virtual int Count()
         {
             return GetAll().Count();
@@ -129,5 +140,8 @@ namespace Abp.Domain.Repositories.EntityFramework
         {
             return GetAll().Where(predicate).LongCount();
         }
+
+
+       
     }
 }

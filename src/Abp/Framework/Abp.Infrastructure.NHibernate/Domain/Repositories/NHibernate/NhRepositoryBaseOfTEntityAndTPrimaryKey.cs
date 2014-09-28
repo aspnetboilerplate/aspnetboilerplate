@@ -130,5 +130,16 @@ namespace Abp.Domain.Repositories.NHibernate
         {
             return GetAll().Where(predicate).LongCount();
         }
+
+
+        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entities = GetAll().Where(predicate).ToList();
+            foreach (var entity in entities)
+            {
+                Delete(entity);
+            }
+
+        }
     }
 }
