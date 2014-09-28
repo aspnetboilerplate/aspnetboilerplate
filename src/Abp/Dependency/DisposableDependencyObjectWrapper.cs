@@ -16,18 +16,21 @@ namespace Abp.Dependency
 
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object argumentsAsAnonymousType)
         {
+            _iocResolver = iocResolver;
             Object = iocResolver.Resolve<T>(argumentsAsAnonymousType);
         }
 
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type)
         {
             CheckType(type);
+            _iocResolver = iocResolver;
             Object = (T)iocResolver.Resolve(type);
         }
 
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type, object argumentsAsAnonymousType)
         {
             CheckType(type);
+            _iocResolver = iocResolver;
             Object = (T)iocResolver.Resolve(type, argumentsAsAnonymousType);
         }
 

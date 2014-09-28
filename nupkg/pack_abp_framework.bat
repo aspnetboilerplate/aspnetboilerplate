@@ -6,4 +6,3 @@
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Api\Abp.Web.Api.csproj" -Properties Configuration=Release -IncludeReferencedProjects
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" -Properties Configuration=Release -IncludeReferencedProjects
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" -Properties Configuration=Release -IncludeReferencedProjects
-pause

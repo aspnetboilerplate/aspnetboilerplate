@@ -1,5 +1,4 @@
-﻿using System;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
@@ -47,16 +46,6 @@ namespace Abp.Tests.Dependency
             LocalIocManager.Dispose();
 
             obj.DisposeCount.ShouldBe(1);
-        }
-
-        public class SimpleDisposableObject : IDisposable
-        {
-            public int DisposeCount { get; set; }
-
-            public void Dispose()
-            {
-                DisposeCount++;
-            }
         }
     }
 }
