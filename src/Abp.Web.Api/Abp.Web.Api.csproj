@@ -7,7 +7,7 @@
     <ProjectGuid>{71962F97-5E4B-465C-9A21-2153D31992CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.WebApi</RootNamespace>
+    <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.Web.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -86,52 +86,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\DynamicApiServiceNameHelper.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
-    <Compile Include="Controllers\Dynamic\Clients\ApiClientBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Clients\DynamicApiClientBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Clients\IApiClientBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Clients\IDynamicApiClient.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\GetActionScriptWriter.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Angular\Actions\PostActionScriptWriter.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\IScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\ProxyScriptType.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
-    <Compile Include="Controllers\Dynamic\Selectors\DynamicHttpControllerDescriptor.cs" />
-    <Compile Include="Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\ActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\JQueryProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\HttpDeleteActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\HttpGetActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\HttpPostActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\HttpPutActionScriptProxyGenerator.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\jQuery\Actions\HttpVerbExtensions.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
-    <Compile Include="Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
-    <Compile Include="Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />
-    <Compile Include="Controllers\Filters\AbpExceptionFilterAttribute.cs" />
-    <Compile Include="Startup\AbpWebApiModule.cs" />
-    <Compile Include="Controllers\AbpApiController.cs" />
-    <Compile Include="Controllers\Dynamic\Selectors\AbpApiControllerActionSelector.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiController.cs" />
-    <Compile Include="Controllers\Dynamic\Interceptors\AbpDynamicApiControllerInterceptor.cs" />
-    <Compile Include="Controllers\Dynamic\Selectors\AbpHttpControllerSelector.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiControllerInfo.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiControllerManager.cs" />
-    <Compile Include="Controllers\Dynamic\Builders\DynamicApiControllerBuilder.cs" />
-    <Compile Include="Controllers\ApiControllerConventionalRegisterer.cs" />
-    <Compile Include="Controllers\AbpControllerActivator.cs" />
+    <Compile Include="WebApi\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiServiceNameHelper.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Clients\ApiClientBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Clients\DynamicApiClientBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Clients\IApiClientBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Clients\IDynamicApiClient.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\GetActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\PostActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\IScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\ProxyScriptType.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpControllerDescriptor.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiMethodInfo.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\ActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\JQueryProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpDeleteActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpGetActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPostActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPutActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpVerbExtensions.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />
+    <Compile Include="WebApi\Controllers\Filters\AbpExceptionFilterAttribute.cs" />
+    <Compile Include="WebApi\AbpWebApiModule.cs" />
+    <Compile Include="WebApi\Controllers\AbpApiController.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\AbpApiControllerActionSelector.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiController.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Interceptors\AbpDynamicApiControllerInterceptor.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\AbpHttpControllerSelector.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiControllerInfo.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiControllerManager.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerBuilder.cs" />
+    <Compile Include="WebApi\Controllers\ApiControllerConventionalRegisterer.cs" />
+    <Compile Include="WebApi\Controllers\AbpControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\Dynamic\DynamicApiRouteConfig.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiRouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Api.nuspec" />

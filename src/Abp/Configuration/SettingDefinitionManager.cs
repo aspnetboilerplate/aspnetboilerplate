@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.Reflection;
 
 namespace Abp.Configuration
 {

@@ -7,8 +7,8 @@ using Abp.Dependency;
 using Abp.Runtime.Validation;
 using Abp.Startup.Configuration;
 using Abp.UI;
+using Abp.Web.Configuration;
 using Abp.Web.Localization;
-using Abp.Web.Startup;
 
 namespace Abp.Web.Models
 {

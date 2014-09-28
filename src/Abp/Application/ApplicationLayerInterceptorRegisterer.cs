@@ -4,7 +4,7 @@ using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Castle.Core;
 
-namespace Abp.Startup.Application
+namespace Abp.Application
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.

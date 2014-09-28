@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
-using Abp.Dependency;
-using Abp.Domain.Repositories.NHibernate;
-using Abp.Domain.Repositories.NHibernate.Interceptors;
 using Abp.Modules;
-using FluentNHibernate.Cfg;
+using Abp.NHibernate.Interceptors;
+using Abp.NHibernate.Repositories;
 using NHibernate;
 
 namespace Abp.Startup.Infrastructure.NHibernate
@@ -20,8 +18,6 @@ namespace Abp.Startup.Infrastructure.NHibernate
         
         public override void Initialize()
         {
-            base.Initialize();
-
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .ExposeConfiguration(config => config.SetInterceptor(new AbpNHibernateInterceptor(IocManager)))
                 .BuildSessionFactory();
@@ -32,7 +28,6 @@ namespace Abp.Startup.Infrastructure.NHibernate
 
         public override void Shutdown()
         {
-            base.Shutdown();
             _sessionFactory.Dispose();
         }
     }

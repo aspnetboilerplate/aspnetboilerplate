@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
+using Abp.Application;
 using Abp.Dependency.Conventions;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
-using Abp.Startup.Application;
 
 namespace Abp.Modules
 {

@@ -7,7 +7,7 @@
     <ProjectGuid>{78FC0C9B-C5A9-4900-9A46-A8F544AC5343}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Web.Mvc</RootNamespace>
+    <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.Web.Mvc</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -89,26 +89,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Controllers\AbpController.cs" />
-    <Compile Include="Controllers\AbpHandleErrorAttribute.cs" />
-    <Compile Include="Controllers\AbpAppViewController.cs" />
-    <Compile Include="Controllers\Authentication\AbpAuthorizationController.cs" />
-    <Compile Include="Controllers\Localization\AbpLocalizationController.cs" />
-    <Compile Include="Controllers\Results\AbpJsonResult.cs" />
-    <Compile Include="Controllers\Settings\AbpSettingsController.cs" />
-    <Compile Include="Controllers\WindsorControllerFactory.cs" />
-    <Compile Include="Helpers\HtmlHelperResourceExtensions.cs" />
-    <Compile Include="Models\MvcAjaxResponse.cs" />
-    <Compile Include="Models\ErrorViewModel.cs" />
+    <Compile Include="Web\Mvc\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="Web\Mvc\Controllers\AbpController.cs" />
+    <Compile Include="Web\Mvc\Controllers\AbpHandleErrorAttribute.cs" />
+    <Compile Include="Web\Mvc\Controllers\AbpAppViewController.cs" />
+    <Compile Include="Web\Mvc\Controllers\Authentication\AbpAuthorizationController.cs" />
+    <Compile Include="Web\Mvc\Controllers\Localization\AbpLocalizationController.cs" />
+    <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
+    <Compile Include="Web\Mvc\Controllers\Settings\AbpSettingsController.cs" />
+    <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />
+    <Compile Include="Web\Mvc\Helpers\HtmlHelperResourceExtensions.cs" />
+    <Compile Include="Web\Mvc\Models\MvcAjaxResponse.cs" />
+    <Compile Include="Web\Mvc\Models\ErrorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Embedded\Handlers\EmbeddedResourceHttpHandler.cs" />
-    <Compile Include="Resources\Embedded\Handlers\EmbeddedResourceRouteHandler.cs" />
-    <Compile Include="Resources\WebResourceHelper.cs" />
-    <Compile Include="Startup\AbpWebMvcModule.cs" />
-    <Compile Include="Controllers\ControllerConventionalRegisterer.cs" />
-    <Compile Include="Views\AbpWebViewPage.cs" />
-    <Compile Include="Views\AbpWebViewPageOfTModel.cs" />
+    <Compile Include="Web\Mvc\Resources\Embedded\Handlers\EmbeddedResourceHttpHandler.cs" />
+    <Compile Include="Web\Mvc\Resources\Embedded\Handlers\EmbeddedResourceRouteHandler.cs" />
+    <Compile Include="Web\Mvc\Resources\WebResourceHelper.cs" />
+    <Compile Include="Web\Mvc\AbpWebMvcModule.cs" />
+    <Compile Include="Web\Mvc\Controllers\ControllerConventionalRegisterer.cs" />
+    <Compile Include="Web\Mvc\Views\AbpWebViewPage.cs" />
+    <Compile Include="Web\Mvc\Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Mvc.nuspec" />
@@ -128,6 +128,9 @@
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\Mvc\Startup\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

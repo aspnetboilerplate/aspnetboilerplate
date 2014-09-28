@@ -4,7 +4,7 @@ using FluentMigrator;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create.Table;
 
-namespace Abp.Data.Migrations.FluentMigrator
+namespace Abp.FluentMigrator
 {
     /// <summary>
     /// This class is an extension for migration system to make easier to some common tasks.
