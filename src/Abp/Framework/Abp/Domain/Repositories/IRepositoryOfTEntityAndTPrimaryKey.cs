@@ -118,7 +118,11 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
-
+        /// <summary>
+        /// Deletes many entities by function.
+        /// </summary>
+        /// <param name="id">A condition to filter entities</param>
+        void Delete(Expression<Func<TEntity, bool>> predicate);
         #endregion
 
         #region Aggregates
