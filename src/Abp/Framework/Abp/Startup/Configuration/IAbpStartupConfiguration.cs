@@ -6,7 +6,7 @@ namespace Abp.Startup.Configuration
     /// <summary>
     /// Used to configure ABP and modules on startup.
     /// </summary>
-    public interface IAbpConfiguration : IDictionaryBasedConfig
+    public interface IAbpStartupConfiguration : IDictionaryBasedConfig
     {
         /// <summary>
         /// Used to set localization configuration.

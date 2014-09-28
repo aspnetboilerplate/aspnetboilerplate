@@ -17,7 +17,7 @@ namespace Abp.Modules
         /// <summary>
         /// Gets a reference to the ABP configuration.
         /// </summary>
-        protected internal IAbpConfiguration Configuration { get; internal set; }
+        protected internal IAbpStartupConfiguration Configuration { get; internal set; }
 
         /// <summary>
         /// Gets all depended modules for this module.

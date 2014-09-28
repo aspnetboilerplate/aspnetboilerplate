@@ -6,7 +6,7 @@ namespace Abp.Startup.Configuration
     /// <summary>
     /// This class is used to configure ABP and modules on startup.
     /// </summary>
-    internal class AbpConfiguration : DictionayBasedConfig, IAbpConfiguration
+    internal class AbpStartupConfiguration : DictionayBasedConfig, IAbpStartupConfiguration
     {
         /// <summary>
         /// Used to set localization configuration.
@@ -22,7 +22,7 @@ namespace Abp.Startup.Configuration
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
-        public AbpConfiguration()
+        public AbpStartupConfiguration()
         {
             Localization = new AbpLocalizationConfiguration(IocManager.Instance);
             Modules = new AbpModuleConfigurations(this);
@@ -30,9 +30,9 @@ namespace Abp.Startup.Configuration
 
         private sealed class AbpModuleConfigurations : IAbpModuleConfigurations
         {
-            public IAbpConfiguration AbpConfiguration { get; private set; }
+            public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
-            public AbpModuleConfigurations(IAbpConfiguration abpConfiguration)
+            public AbpModuleConfigurations(IAbpStartupConfiguration abpConfiguration)
             {
                 AbpConfiguration = abpConfiguration;
             }

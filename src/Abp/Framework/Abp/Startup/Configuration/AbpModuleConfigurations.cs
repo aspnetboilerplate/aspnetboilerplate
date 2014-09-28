@@ -1,4 +1,0 @@
-﻿namespace Abp.Startup.Configuration
-{
-
-}

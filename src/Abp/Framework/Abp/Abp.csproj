@@ -187,11 +187,10 @@
     <Compile Include="Runtime\Validation\Interception\MethodInvocationValidator.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptor.cs" />
     <Compile Include="Startup\AbpInitializationException.cs" />
-    <Compile Include="Startup\Configuration\AbpConfiguration.cs" />
+    <Compile Include="Startup\Configuration\AbpStartupConfiguration.cs" />
     <Compile Include="Startup\Configuration\AbpLocalizationConfiguration.cs" />
     <Compile Include="Startup\Configuration\AbpLocalizationConfigurationExtensions.cs" />
-    <Compile Include="Startup\Configuration\AbpModuleConfigurations.cs" />
-    <Compile Include="Startup\Configuration\IAbpConfiguration.cs" />
+    <Compile Include="Startup\Configuration\IAbpStartupConfiguration.cs" />
     <Compile Include="Startup\Configuration\IAbpLocalizationConfiguration.cs" />
     <Compile Include="Startup\Configuration\IAbpModuleConfigurations.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />

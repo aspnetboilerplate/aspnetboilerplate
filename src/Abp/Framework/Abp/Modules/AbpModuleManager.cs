@@ -72,7 +72,7 @@ namespace Abp.Modules
                 var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
 
                 moduleObject.IocManager = _iocManager;
-                moduleObject.Configuration = _iocManager.Resolve<IAbpConfiguration>();
+                moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
 
                 _modules.Add(new AbpModuleInfo(moduleObject));
                 

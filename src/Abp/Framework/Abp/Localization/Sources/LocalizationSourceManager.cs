@@ -10,13 +10,13 @@ namespace Abp.Localization.Sources
     /// </summary>
     public class LocalizationSourceManager : ILocalizationSourceManager
     {
-        private readonly IAbpConfiguration _configuration;
+        private readonly IAbpStartupConfiguration _configuration;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationSourceManager(IAbpConfiguration configuration)
+        public LocalizationSourceManager(IAbpStartupConfiguration configuration)
         {
             _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();

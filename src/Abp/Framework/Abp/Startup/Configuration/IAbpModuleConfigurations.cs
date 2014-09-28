@@ -9,6 +9,6 @@
         /// <summary>
         /// Gets the ABP configuration object.
         /// </summary>
-        IAbpConfiguration AbpConfiguration { get; }
+        IAbpStartupConfiguration AbpConfiguration { get; }
     }
 }

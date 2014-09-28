@@ -15,7 +15,7 @@ namespace Abp.Web.Models
     //TODO@Halil: I did not like constructing ErrorInfo this way. It works wlll but I think we should change it later...
     internal class DefaultErrorInfoConverter : IExceptionToErrorInfoConverter
     {
-        private readonly IAbpConfiguration _configuration;
+        private readonly IAbpStartupConfiguration _configuration;
 
         public IExceptionToErrorInfoConverter Next { set; private get; }
 
@@ -27,7 +27,7 @@ namespace Abp.Web.Models
             }
         }
 
-        public DefaultErrorInfoConverter(IAbpConfiguration configuration)
+        public DefaultErrorInfoConverter(IAbpStartupConfiguration configuration)
         {
             _configuration = configuration;
         }
