@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Tests", "Tests\Abp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.Tests", "Tests\Abp.Web.Api.Tests\Abp.Web.Api.Tests.csproj", "{662A3C76-DC6E-425C-B389-23B1040AD2F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.FluentMigrator", "Abp.FluentMigrator\Abp.FluentMigrator.csproj", "{908717CC-C284-4C88-A13C-32B62674845D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{908717CC-C284-4C88-A13C-32B62674845D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{908717CC-C284-4C88-A13C-32B62674845D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{908717CC-C284-4C88-A13C-32B62674845D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{908717CC-C284-4C88-A13C-32B62674845D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

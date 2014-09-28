@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Infrastructure Layer - NHibernate")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Infrastructure Layer - NHibernate")]
+[assembly: AssemblyTitle("Abp.FluentMigrator")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Infrastructure.NHibernate")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Abp.FluentMigrator")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +21,7 @@ using Abp;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6921b79d-4c05-40bf-b12c-1636f125102a")]
+[assembly: Guid("0c4b2aea-5b73-4b81-a03d-dc424c097050")]
 
 // Version information for an assembly consists of the following four values:
 //
