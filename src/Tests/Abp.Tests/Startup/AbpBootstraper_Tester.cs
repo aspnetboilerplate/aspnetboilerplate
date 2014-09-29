@@ -25,7 +25,7 @@ namespace Abp.Tests.Startup
         [Fact]
         public void Should_Call_Module_Events_Once()
         {
-            LocalIocManager.IocContainer.Register(Component.For<IModuleFinder>().ImplementedBy<MyTestModuleFinder>());
+            LocalIocManager.Register<IModuleFinder, MyTestModuleFinder>();
             
             MyTestModule.ClearCounters();
 
