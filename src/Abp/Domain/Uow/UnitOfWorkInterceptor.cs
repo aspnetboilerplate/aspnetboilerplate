@@ -1,4 +1,3 @@
-using System.Reflection;
 using Abp.Dependency;
 using Castle.DynamicProxy;
 
@@ -7,7 +6,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// This interceptor is used to manage database connection and transactions.
     /// </summary>
-    public class UnitOfWorkInterceptor : IInterceptor
+    internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
 

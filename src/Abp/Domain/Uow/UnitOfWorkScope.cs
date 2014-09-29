@@ -3,14 +3,14 @@ using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
-    /// TODO@Halil: Use upper-level scope instead of starting new when available.
+    /// TODO@Halil: Use upper-level scope instead of starting new when available..?
 
     /// <summary>
     /// This class is used to create a manual unit of work scope.  
     /// </summary>
     /// <remarks>
     /// <see cref="UnitOfWorkAttribute"/> can be used to mark a method as unit of work. Then the marked method
-    /// will be a unit of work scope. But, somethimes you may want to restrict unit of work scope to a part of a method, 
+    /// will be a unit of work scope. But, sometimes you may want to restrict unit of work scope to a part of a method, 
     /// then use this class.
     /// </remarks>
     public class UnitOfWorkScope : IDisposable

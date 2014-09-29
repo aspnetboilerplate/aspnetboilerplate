@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
-    <Compile Include="Application\Interceptors\ApplicationLayerInterceptorRegisterer.cs" />
+    <Compile Include="Application\Interceptors\ApplicationLayerInterceptorRegistrar.cs" />
     <Compile Include="Application\Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
     <Compile Include="Application\Authorization\AuthorizeAttributeHelper.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Domain\Entities\ISoftDelete.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkInterceptor.cs" />
-    <Compile Include="Domain\Uow\UnitOfWorkRegistrer.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkRegistrar.cs" />
     <Compile Include="Domain\Uow\UowEventBusExtensions.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
@@ -192,7 +192,7 @@
     <Compile Include="Events\Bus\EventData.cs" />
     <Compile Include="Events\Bus\IEventData.cs" />
     <Compile Include="Events\Bus\EventBusInstaller.cs" />
-    <Compile Include="Events\Bus\Factories\Internals\FactoryUnregisterer.cs" />
+    <Compile Include="Events\Bus\Factories\Internals\FactoryUnregistrar.cs" />
     <Compile Include="Events\Bus\Handlers\Internals\ActionEventHandler.cs" />
     <Compile Include="Events\Bus\Entities\EntityEventData.cs" />
     <Compile Include="Events\Bus\Factories\IEventHandlerFactory.cs" />

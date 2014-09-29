@@ -9,7 +9,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// This class is used to register interceptor for needed classes for Unit Of Work mechanism.
     /// </summary>
-    public static class UnitOfWorkRegistrer
+    internal static class UnitOfWorkRegistrar
     {
         /// <summary>
         /// Initializes the registerer.

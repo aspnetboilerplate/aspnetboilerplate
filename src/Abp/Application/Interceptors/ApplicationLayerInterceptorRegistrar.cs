@@ -9,7 +9,7 @@ namespace Abp.Application.Interceptors
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.
     /// </summary>
-    internal static class ApplicationLayerInterceptorRegisterer
+    internal static class ApplicationLayerInterceptorRegistrar
     {
         public static void Initialize(IIocManager iocManager)
         {

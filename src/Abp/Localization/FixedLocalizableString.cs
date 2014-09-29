@@ -25,11 +25,17 @@ namespace Abp.Localization
             FixedString = fixedString;
         }
 
+        /// <summary>
+        /// Gets the <see cref="FixedString"/> always.
+        /// </summary>
         public virtual string Localize()
         {
             return FixedString;
         }
 
+        /// <summary>
+        /// Gets the <see cref="FixedString"/> always.
+        /// </summary>
         public virtual string Localize(CultureInfo culture)
         {
             return FixedString;

@@ -89,7 +89,7 @@ namespace Abp.Events.Bus
             lock (_handlerFactories)
             {
                 GetOrCreateHandlerFactories(eventType).Add(handlerFactory);
-                return new FactoryUnregisterer(this, eventType, handlerFactory);
+                return new FactoryUnregistrar(this, eventType, handlerFactory);
             }
         }
 

@@ -9,8 +9,8 @@ namespace Abp
     [Serializable]
     public class AbpInitializationException : AbpException
     {
-                /// <summary>
-        /// Contstructor.
+        /// <summary>
+        /// Constructor.
         /// </summary>
         public AbpInitializationException()
         {
@@ -18,7 +18,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor for serializing.
+        /// Constructor for serializing.
         /// </summary>
         public AbpInitializationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -27,7 +27,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpInitializationException(string message)
@@ -37,7 +37,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>

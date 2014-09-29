@@ -13,8 +13,8 @@ namespace Abp.Modules
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
-            UnitOfWorkRegistrer.Initialize(IocManager);
-            ApplicationLayerInterceptorRegisterer.Initialize(IocManager);
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            ApplicationLayerInterceptorRegistrar.Initialize(IocManager);
         }
 
         public override void Initialize()

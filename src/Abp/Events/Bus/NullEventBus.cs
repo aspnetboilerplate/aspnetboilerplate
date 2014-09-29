@@ -9,7 +9,7 @@ namespace Abp.Events.Bus
     /// <summary>
     /// An event bus that implements Null object pattern.
     /// </summary>
-    public class NullEventBus : IEventBus
+    public sealed class NullEventBus : IEventBus
     {
         /// <summary>
         /// Gets single instance of <see cref="NullEventBus"/> class.
