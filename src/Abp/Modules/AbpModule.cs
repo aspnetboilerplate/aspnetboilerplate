@@ -7,6 +7,11 @@ namespace Abp.Modules
     /// <summary>
     /// This class must be implemented by all module definition classes.
     /// </summary>
+    /// <remarks>
+    /// A module definition class is generally located in it's own assembly
+    /// and implements some action in module events on application startup and shotdown.
+    /// It also defines depended modules.
+    /// </remarks>
     public abstract class AbpModule
     {
         /// <summary>
@@ -20,7 +25,8 @@ namespace Abp.Modules
         protected internal IAbpStartupConfiguration Configuration { get; internal set; }
 
         /// <summary>
-        /// Gets all depended modules for this module.
+        /// Used to declare all depended modules for this module.
+        /// Events of depended modules are called before this module's corresponding events.
         /// </summary>
         /// <returns>List of depended modules.</returns>
         public virtual Type[] GetDependedModules()
@@ -29,8 +35,8 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// What can be done in this method:
-        /// - Make things those must be done before dependency registers.
+        /// This is the first event called on application startup. 
+        /// Codes can be placed here to run before dependency injection registrations.
         /// </summary>
         public virtual void PreInitialize()
         {
@@ -38,8 +44,7 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// What can be done in this method:
-        /// - Register dependency installers and components.
+        /// This method is used to register dependencies for this module.
         /// </summary>
         public virtual void Initialize()
         {
@@ -47,8 +52,7 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// What can be done in this method:
-        /// - Make things those must be done after dependency registers.
+        /// This method is called lastly on application startup.
         /// </summary>
         public virtual void PostInitialize()
         {
@@ -70,7 +74,6 @@ namespace Abp.Modules
         public static bool IsAbpModule(Type type)
         {
             return
-                type.IsPublic &&
                 type.IsClass &&
                 !type.IsAbstract &&
                 typeof(AbpModule).IsAssignableFrom(type);

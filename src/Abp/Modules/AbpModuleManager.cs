@@ -9,22 +9,21 @@ namespace Abp.Modules
     /// <summary>
     /// This class is used to manage modules.
     /// </summary>
-    public class AbpModuleManager : IAbpModuleManager
+    internal class AbpModuleManager : IAbpModuleManager
     {
         public ILogger Logger { get; set; }
         
-        public IModuleFinder ModuleFinder { get; set; }
-
         private readonly AbpModuleCollection _modules;
 
         private readonly IIocManager _iocManager;
+        private readonly IModuleFinder _moduleFinder;
 
-        public AbpModuleManager(IIocManager iocManager)
+        public AbpModuleManager(IIocManager iocManager, IModuleFinder moduleFinder)
         {
             _modules = new AbpModuleCollection();
             _iocManager = iocManager;
+            _moduleFinder = moduleFinder;
             Logger = NullLogger.Instance;
-            ModuleFinder = new DefaultModuleFinder();
         }
 
         public virtual void InitializeModules()
@@ -48,8 +47,8 @@ namespace Abp.Modules
         private void LoadAll()
         {
             Logger.Debug("Loading Abp modules...");
-            
-            var moduleTypes = ModuleFinder.FindAll();
+
+            var moduleTypes = _moduleFinder.FindAll();
 
             //Register to IOC container.
             foreach (var moduleType in moduleTypes)
@@ -61,7 +60,7 @@ namespace Abp.Modules
 
                 if (!_iocManager.IsRegistered(moduleType))
                 {
-                    _iocManager.Register(moduleType, DependencyLifeStyle.Singleton);
+                    _iocManager.Register(moduleType);
                 }
             }
 
@@ -78,8 +77,8 @@ namespace Abp.Modules
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
 
-            //AbpStartupModule must be the first module
-            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpStartupModule));
+            //AbpCoreModule must be the first module
+            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpCoreModule));
             if (startupModuleIndex > 0)
             {
                 var startupModule = _modules[startupModuleIndex];

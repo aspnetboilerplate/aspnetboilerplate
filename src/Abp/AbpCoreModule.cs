@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
-using Abp.Application;
 using Abp.Application.Interceptors;
 using Abp.Dependency;
-using Abp.Dependency.Installers;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Modules;
 
-namespace Abp.Modules
+namespace Abp
 {
-    public class AbpStartupModule : AbpModule
+    internal sealed class AbpCoreModule : AbpModule
     {
         public override void PreInitialize()
         {

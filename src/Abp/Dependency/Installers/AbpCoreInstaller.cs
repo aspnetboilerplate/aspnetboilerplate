@@ -19,6 +19,7 @@ namespace Abp.Dependency.Installers
         {
             container.Register(
                 Component.For<IAbpStartupConfiguration>().ImplementedBy<AbpStartupConfiguration>().LifestyleSingleton(),
+                Component.For<IModuleFinder>().ImplementedBy<DefaultModuleFinder>().LifestyleTransient(),
                 Component.For<IAbpModuleManager>().ImplementedBy<AbpModuleManager>().LifestyleSingleton()
                 );
         }

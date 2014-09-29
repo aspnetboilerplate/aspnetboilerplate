@@ -5,10 +5,7 @@ using Abp.Reflection;
 
 namespace Abp.Modules
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DefaultModuleFinder : IModuleFinder
+    internal class DefaultModuleFinder : IModuleFinder
     {
         public IAssemblyFinder AssemblyFinder { get; set; }
 

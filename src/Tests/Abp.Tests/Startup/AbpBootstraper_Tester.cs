@@ -13,7 +13,7 @@ namespace Abp.Tests.Startup
 
         public AbpBootstraper_Tester()
         {
-            _bootstrapper = new AbpBootstrapper {IocManager = LocalIocManager};
+            _bootstrapper = new AbpBootstrapper(LocalIocManager);
         }
 
         [Fact]

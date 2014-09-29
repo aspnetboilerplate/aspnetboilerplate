@@ -13,9 +13,9 @@ namespace Abp
     public class AbpBootstrapper : IDisposable
     {
         /// <summary>
-        /// Gets/sets IocManager object used by this class.
+        /// Gets/sets _iocManager object used by this class.
         /// </summary>
-        public IIocManager IocManager { get; set; }
+        private readonly IIocManager _iocManager;
 
         /// <summary>
         /// Is this object disposed before?
@@ -28,7 +28,7 @@ namespace Abp
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
         /// </summary>
         public AbpBootstrapper()
-            : this(Dependency.IocManager.Instance)
+            : this(IocManager.Instance)
         {
 
         }
@@ -39,7 +39,7 @@ namespace Abp
         /// <param name="iocManager">IOC manager that is used to bootstrap the ABP system</param>
         public AbpBootstrapper(IIocManager iocManager)
         {
-            IocManager = iocManager;
+            _iocManager = iocManager;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Abp
         {
             RegisterCoreDependencies();
 
-            _moduleManager = IocManager.IocContainer.Resolve<IAbpModuleManager>();
+            _moduleManager = _iocManager.Resolve<IAbpModuleManager>();
             _moduleManager.InitializeModules();
         }
 
@@ -58,7 +58,7 @@ namespace Abp
         /// </summary>
         protected virtual void RegisterCoreDependencies()
         {
-            IocManager.IocContainer.Install(new AbpCoreInstaller());
+            _iocManager.IocContainer.Install(new AbpCoreInstaller());
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace Abp.Modules
     /// <summary>
     /// Used to store AbpModuleInfo objects as a dictionary.
     /// </summary>
-    public class AbpModuleCollection : List<AbpModuleInfo>
+    internal class AbpModuleCollection : List<AbpModuleInfo>
     {
         /// <summary>
         /// Gets a reference to a module instance.

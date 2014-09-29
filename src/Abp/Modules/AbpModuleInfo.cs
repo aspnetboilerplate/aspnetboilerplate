@@ -7,7 +7,7 @@ namespace Abp.Modules
     /// <summary>
     /// Used to store all needed informations for a module.
     /// </summary>
-    public class AbpModuleInfo
+    internal class AbpModuleInfo
     {
         /// <summary>
         /// The assembly which contains the module definition.
