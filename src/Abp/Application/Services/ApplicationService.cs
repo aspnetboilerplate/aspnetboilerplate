@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -15,6 +17,16 @@ namespace Abp.Application.Services
         /// </summary>
         public IAbpSession CurrentSession { get; set; }
 
+        /// <summary>
+        /// Reference to the permission manager.
+        /// </summary>
+        public IPermissionManager PermissionManager { get; set; }
+
+        /// <summary>
+        /// Reference to the setting manager.
+        /// </summary>
+        public ISettingManager SettingManager { get; set; }
+        
         /// <summary>
         /// Reference to the logger to write logs.
         /// </summary>

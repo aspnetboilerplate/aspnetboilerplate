@@ -8,7 +8,7 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Sorting information.
         /// Should include sorting field and optionally a direction (ASC or DESC)
-        /// Can contain more than one field seperated by comma (,).
+        /// Can contain more than one field separated by comma (,).
         /// </summary>
         /// <example>
         /// Examples:

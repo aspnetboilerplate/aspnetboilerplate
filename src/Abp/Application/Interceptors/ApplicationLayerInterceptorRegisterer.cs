@@ -4,7 +4,7 @@ using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Castle.Core;
 
-namespace Abp.Application
+namespace Abp.Application.Interceptors
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.
@@ -22,7 +22,7 @@ namespace Abp.Application
             {
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
 
-                //TODO: If possible, intecept methods only those have AbpAuthorizeAttribute
+                //TODO: If possible, intercept methods only those have AbpAuthorizeAttribute
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
             }
         }

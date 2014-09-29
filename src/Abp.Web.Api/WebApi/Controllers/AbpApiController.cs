@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Web.Http;
+using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -15,17 +17,27 @@ namespace Abp.WebApi.Controllers
         /// Gets current session informations.
         /// </summary>
         public IAbpSession CurrentSession { get; set; }
+        
+        /// <summary>
+        /// Reference to the permission manager.
+        /// </summary>
+        public IPermissionManager PermissionManager { get; set; }
+
+        /// <summary>
+        /// Reference to the setting manager.
+        /// </summary>
+        public ISettingManager SettingManager { get; set; }
+
+        /// <summary>
+        /// Reference to the logger to write logs.
+        /// </summary>
+        public ILogger Logger { get; set; }
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
         /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
         protected string LocalizationSourceName { get; set; }
-
-        /// <summary>
-        /// Reference to the logger to write logs.
-        /// </summary>
-        public ILogger Logger { get; set; }
 
         /// <summary>
         /// Constructor.

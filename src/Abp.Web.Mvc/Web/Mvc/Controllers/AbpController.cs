@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Text;
 using System.Web.Mvc;
+using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Web.Models;
@@ -21,15 +23,25 @@ namespace Abp.Web.Mvc.Controllers
         public IAbpSession CurrentSession { get; set; }
 
         /// <summary>
-        /// Gets/sets name of the localization source that is used in this controller.
-        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// Reference to the permission manager.
         /// </summary>
-        public string LocalizationSourceName { get; set; }
+        public IPermissionManager PermissionManager { get; set; }
+
+        /// <summary>
+        /// Reference to the setting manager.
+        /// </summary>
+        public ISettingManager SettingManager { get; set; }
 
         /// <summary>
         /// Reference to the logger to write logs.
         /// </summary>
         public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Gets/sets name of the localization source that is used in this controller.
+        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// </summary>
+        public string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Constructor.
