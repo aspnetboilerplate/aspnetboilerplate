@@ -10,9 +10,7 @@ namespace Abp.Tests.Dependency
         [Fact]
         public void ResolveAsDisposable_Should_Work()
         {
-            LocalIocManager.IocContainer.Register(
-                Component.For<SimpleDisposableObject>().LifestyleTransient()
-                );
+            LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
 
             SimpleDisposableObject simpleObj;
 
@@ -23,6 +21,17 @@ namespace Abp.Tests.Dependency
             }
 
             simpleObj.DisposeCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void ResolveAsDisposable_With_Constructor_Args_Should_Work()
+        {
+            LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
+
+            using (var wrapper = LocalIocManager.ResolveAsDisposable<SimpleDisposableObject>(new { myData = 42 }))
+            {
+                wrapper.Object.MyData.ShouldBe(42);
+            }
         }
     }
 }

@@ -128,7 +128,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiControllerInfo.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiControllerManager.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerBuilder.cs" />
-    <Compile Include="WebApi\Controllers\ApiControllerConventionalRegisterer.cs" />
+    <Compile Include="WebApi\Controllers\ApiControllerConventionalRegistrar.cs" />
     <Compile Include="WebApi\Controllers\AbpControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiRouteConfig.cs" />

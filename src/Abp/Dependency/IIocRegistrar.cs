@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Abp.Dependency.Conventions;
 
 namespace Abp.Dependency
 {
@@ -10,19 +9,19 @@ namespace Abp.Dependency
     public interface IIocRegistrar
     {
         /// <summary>
-        /// Adds a dependency registerer for conventional registration.
+        /// Adds a dependency registrar for conventional registration.
         /// </summary>
-        /// <param name="registerer">dependency registerer</param>
-        void AddConventionalRegisterer(IConventionalRegisterer registerer);
+        /// <param name="registrar">dependency registrar</param>
+        void AddConventionalRegisterer(IConventionalDependencyRegistrar registrar);
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registerers. See <see cref="IocManager.AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegisterer"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         void RegisterAssemblyByConvention(Assembly assembly);
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registerers. See <see cref="IocManager.AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegisterer"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         /// <param name="config">Additional configuration</param>

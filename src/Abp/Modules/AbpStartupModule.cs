@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Application;
-using Abp.Dependency.Conventions;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 
@@ -10,7 +10,7 @@ namespace Abp.Modules
     {
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegisterer(new BasicConventionalRegisterer());
+            IocManager.AddConventionalRegisterer(new BasicConventionalRegistrar());
             UnitOfWorkRegistrer.Initialize(IocManager);
             ApplicationLayerInterceptorRegisterer.Initialize(IocManager);
         }

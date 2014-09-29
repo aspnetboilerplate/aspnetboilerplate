@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using Abp.Dependency.Conventions;
+using Abp.Dependency;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Web.Mvc.Controllers
@@ -7,9 +7,9 @@ namespace Abp.Web.Mvc.Controllers
     /// <summary>
     /// Registers all MVC Controllers derived from <see cref="Controller"/>.
     /// </summary>
-    public class ControllerConventionalRegisterer : IConventionalRegisterer
+    public class ControllerConventionalRegistrar : IConventionalDependencyRegistrar
     {
-        public void RegisterAssembly(ConventionalRegistrationContext context)
+        public void RegisterAssembly(IConventionalRegistrationContext context)
         {
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)

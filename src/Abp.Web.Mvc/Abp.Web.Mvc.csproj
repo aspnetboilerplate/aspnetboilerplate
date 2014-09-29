@@ -106,7 +106,7 @@
     <Compile Include="Web\Mvc\Resources\Embedded\Handlers\EmbeddedResourceRouteHandler.cs" />
     <Compile Include="Web\Mvc\Resources\WebResourceHelper.cs" />
     <Compile Include="Web\Mvc\AbpWebMvcModule.cs" />
-    <Compile Include="Web\Mvc\Controllers\ControllerConventionalRegisterer.cs" />
+    <Compile Include="Web\Mvc\Controllers\ControllerConventionalRegistrar.cs" />
     <Compile Include="Web\Mvc\Views\AbpWebViewPage.cs" />
     <Compile Include="Web\Mvc\Views\AbpWebViewPageOfTModel.cs" />
   </ItemGroup>

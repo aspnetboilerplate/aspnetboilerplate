@@ -1,7 +1,7 @@
 using Abp.Configuration;
 using Castle.DynamicProxy;
 
-namespace Abp.Dependency.Conventions
+namespace Abp.Dependency
 {
     /// <summary>
     /// This class is used to pass configuration/options while registering classes in conventional way.

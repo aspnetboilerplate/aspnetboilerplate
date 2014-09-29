@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.Dependency.Conventions;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
@@ -26,7 +25,7 @@ namespace Abp.Dependency
         /// <summary>
         /// List of all registered conventional registrars.
         /// </summary>
-        private readonly List<IConventionalRegisterer> _conventionalRegistrars;
+        private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
 
         static IocManager()
         {
@@ -37,7 +36,7 @@ namespace Abp.Dependency
         internal IocManager()
         {
             IocContainer = new WindsorContainer();
-            _conventionalRegistrars = new List<IConventionalRegisterer>();
+            _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             //Register self!
             IocContainer.Register(
@@ -46,12 +45,12 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Adds a dependency registerer for conventional registration.
+        /// Adds a dependency registrar for conventional registration.
         /// </summary>
-        /// <param name="registerer">dependency registerer</param>
-        public void AddConventionalRegisterer(IConventionalRegisterer registerer)
+        /// <param name="registrar">dependency registrar</param>
+        public void AddConventionalRegisterer(IConventionalDependencyRegistrar registrar)
         {
-            _conventionalRegistrars.Add(registerer);
+            _conventionalRegistrars.Add(registrar);
         }
 
         /// <summary>

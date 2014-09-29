@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
 
-namespace Abp.Dependency.Conventions
+namespace Abp.Dependency
 {
     /// <summary>
     /// This class is used to pass needed objects on conventional registration process.
     /// </summary>
-    public class ConventionalRegistrationContext
+    internal class ConventionalRegistrationContext : IConventionalRegistrationContext
     {
         /// <summary>
-        /// Gets the registring Assembly.
+        /// Gets the registering Assembly.
         /// </summary>
         public Assembly Assembly { get; private set; }
 

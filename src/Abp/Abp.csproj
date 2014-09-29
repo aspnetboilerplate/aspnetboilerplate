@@ -101,6 +101,7 @@
     <Compile Include="Authorization\PermissionManager.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
+    <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
     <Compile Include="Dependency\IIocRegistrar.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
@@ -142,7 +143,7 @@
     <Compile Include="Configuration\SettingManager.cs" />
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
-    <Compile Include="Dependency\Conventions\ConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
     <Compile Include="Configuration\DictionayBasedConfig.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
@@ -163,11 +164,11 @@
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Modules\AbpStartupModule.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
-    <Compile Include="Dependency\Conventions\ConventionalRegistrationConfig.cs" />
+    <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />
-    <Compile Include="Dependency\Conventions\BasicConventionalRegisterer.cs" />
-    <Compile Include="Dependency\Conventions\IConventionalRegisterer.cs" />
+    <Compile Include="Dependency\BasicConventionalRegistrar.cs" />
+    <Compile Include="Dependency\IConventionalDependencyRegistrar.cs" />
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\ISingletonDependency.cs" />
     <Compile Include="Domain\Entities\EntityOfTPrimaryKey.cs" />
