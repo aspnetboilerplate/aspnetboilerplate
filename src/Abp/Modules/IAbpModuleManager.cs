@@ -1,6 +1,6 @@
 namespace Abp.Modules
 {
-    public interface IAbpModuleManager
+    internal interface IAbpModuleManager
     {
         void InitializeModules();
 
