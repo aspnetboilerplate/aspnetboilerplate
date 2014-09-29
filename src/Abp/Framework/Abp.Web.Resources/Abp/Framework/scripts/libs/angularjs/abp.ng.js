@@ -38,7 +38,11 @@
                             defer.resolve(response);
                         } else { //data.success === false
                             if (originalData.error) {
-                                abp.message.error(originalData.error.details, originalData.error.message);
+                                if (originalData.error.details) {
+                                    abp.message.error(originalData.error.details, originalData.error.message);
+                                } else {
+                                    abp.message.error(originalData.error.message);
+                                }
                             } else {
                                 originalData.error = defaultError;
                             }
