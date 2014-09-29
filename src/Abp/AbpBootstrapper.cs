@@ -1,8 +1,9 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Dependency.Installers;
 using Abp.Modules;
 
-namespace Abp.Startup
+namespace Abp
 {
     /// <summary>
     /// This is the main class that is responsible to start entire ABP system.
@@ -57,7 +58,7 @@ namespace Abp.Startup
         /// </summary>
         protected virtual void RegisterCoreDependencies()
         {
-            IocManager.IocContainer.Install(new AbpStartupInstaller());
+            IocManager.IocContainer.Install(new AbpCoreInstaller());
         }
 
         /// <summary>

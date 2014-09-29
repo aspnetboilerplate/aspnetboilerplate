@@ -2,7 +2,7 @@
 using Abp.Localization.Sources.Resource;
 using Abp.Localization.Sources.Xml;
 
-namespace Abp.Startup.Configuration
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Extension methods to configure localization system.

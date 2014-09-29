@@ -2,6 +2,7 @@
 using Abp.Application;
 using Abp.Application.Interceptors;
 using Abp.Dependency;
+using Abp.Dependency.Installers;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 
@@ -11,7 +12,7 @@ namespace Abp.Modules
     {
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegisterer(new BasicConventionalRegistrar());
+            IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
             UnitOfWorkRegistrer.Initialize(IocManager);
             ApplicationLayerInterceptorRegisterer.Initialize(IocManager);
         }

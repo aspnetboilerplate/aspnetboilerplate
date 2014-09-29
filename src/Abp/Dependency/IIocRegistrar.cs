@@ -12,16 +12,16 @@ namespace Abp.Dependency
         /// Adds a dependency registrar for conventional registration.
         /// </summary>
         /// <param name="registrar">dependency registrar</param>
-        void AddConventionalRegisterer(IConventionalDependencyRegistrar registrar);
+        void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar);
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegistrar"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         void RegisterAssemblyByConvention(Assembly assembly);
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="IocManager.AddConventionalRegistrar"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         /// <param name="config">Additional configuration</param>

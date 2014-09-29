@@ -101,7 +101,9 @@
     <Compile Include="Authorization\PermissionManager.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
+    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
     <Compile Include="Dependency\IIocRegistrar.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Domain\Entities\IMayHaveTenant.cs" />
     <Compile Include="Domain\Entities\IMustHaveTenant.cs" />
+    <Compile Include="Domain\Services\DomainService.cs" />
     <Compile Include="Events\Bus\Exceptions\AbpHandledExceptionData.cs" />
     <Compile Include="Events\Bus\Exceptions\ExceptionData.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
@@ -145,7 +148,7 @@
     <Compile Include="Configuration\ISettingValue.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
     <Compile Include="Configuration\DictionayBasedConfig.cs" />
-    <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Dependency\IDisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
@@ -165,7 +168,7 @@
     <Compile Include="Modules\AbpStartupModule.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
-    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />
     <Compile Include="Dependency\BasicConventionalRegistrar.cs" />
     <Compile Include="Dependency\IConventionalDependencyRegistrar.cs" />
@@ -208,13 +211,13 @@
     <Compile Include="Runtime\Validation\IValidate.cs" />
     <Compile Include="Runtime\Validation\Interception\MethodInvocationValidator.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptor.cs" />
-    <Compile Include="Startup\AbpInitializationException.cs" />
-    <Compile Include="Startup\Configuration\AbpStartupConfiguration.cs" />
-    <Compile Include="Startup\Configuration\AbpLocalizationConfiguration.cs" />
-    <Compile Include="Startup\Configuration\AbpLocalizationConfigurationExtensions.cs" />
-    <Compile Include="Startup\Configuration\IAbpStartupConfiguration.cs" />
-    <Compile Include="Startup\Configuration\IAbpLocalizationConfiguration.cs" />
-    <Compile Include="Startup\Configuration\IAbpModuleConfigurations.cs" />
+    <Compile Include="AbpInitializationException.cs" />
+    <Compile Include="Configuration\Startup\AbpStartupConfiguration.cs" />
+    <Compile Include="Configuration\Startup\AbpLocalizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\AbpLocalizationConfigurationExtensions.cs" />
+    <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
+    <Compile Include="Configuration\Startup\IAbpLocalizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\IAbpModuleConfigurations.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
@@ -233,8 +236,8 @@
     <Compile Include="Modules\AbpModuleManager.cs" />
     <Compile Include="Modules\AbpModuleInfo.cs" />
     <Compile Include="Domain\Services\IDomainService.cs" />
-    <Compile Include="Startup\AbpBootstrapper.cs" />
-    <Compile Include="Startup\AbpStartupInstaller.cs" />
+    <Compile Include="AbpBootstrapper.cs" />
+    <Compile Include="Dependency\Installers\AbpCoreInstaller.cs" />
     <Compile Include="Modules\AbpModuleCollection.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />

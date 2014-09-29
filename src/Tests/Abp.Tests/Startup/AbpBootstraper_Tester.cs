@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Modules;
-using Abp.Startup;
 using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;

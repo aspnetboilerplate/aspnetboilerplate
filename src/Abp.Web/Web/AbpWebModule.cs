@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Web;
+using Abp.Configuration.Startup;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
-using Abp.Startup.Configuration;
 
 namespace Abp.Web
 {

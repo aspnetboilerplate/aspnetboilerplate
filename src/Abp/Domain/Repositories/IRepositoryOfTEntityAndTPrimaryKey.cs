@@ -154,6 +154,5 @@ namespace Abp.Domain.Repositories
         long LongCount(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
-
     }
 }

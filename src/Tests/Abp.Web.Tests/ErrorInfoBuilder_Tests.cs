@@ -1,5 +1,5 @@
 ﻿using System;
-using Abp.Startup.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Tests;
 using Abp.UI;
 using Abp.Web.Models;

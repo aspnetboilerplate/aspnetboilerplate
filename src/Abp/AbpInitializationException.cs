@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Abp.Startup
+namespace Abp
 {
     /// <summary>
     /// This exception is thrown if a problem on ABP initialization progress.

@@ -1,4 +1,4 @@
-﻿using Abp.Startup.Configuration;
+﻿using Abp.Configuration.Startup;
 
 namespace Abp.Web.Configuration
 {

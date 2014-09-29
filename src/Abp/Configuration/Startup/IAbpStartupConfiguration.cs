@@ -1,6 +1,4 @@
-﻿using Abp.Configuration;
-
-namespace Abp.Startup.Configuration
+﻿namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used to configure ABP and modules on startup.

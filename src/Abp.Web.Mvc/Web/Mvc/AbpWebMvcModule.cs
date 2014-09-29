@@ -21,7 +21,7 @@ namespace Abp.Web.Mvc
 
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegisterer(new ControllerConventionalRegistrar());
+            IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
         }
 
         public override void Initialize()

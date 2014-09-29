@@ -5,7 +5,6 @@ using System.Linq;
 using Abp.Collections;
 using Abp.Dependency;
 using Abp.Localization;
-using Abp.Startup;
 using Castle.Core.Logging;
 
 namespace Abp.Authorization

@@ -3,7 +3,7 @@ using System;
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
-    /// This interface is implemented by entities which's deletion informations (who and when deleted) must be stored.
+    /// This interface is implemented by entities which wanted to store deletion informations (who and when deleted).
     /// </summary>
     public interface IDeletionAudited : ISoftDelete
     {

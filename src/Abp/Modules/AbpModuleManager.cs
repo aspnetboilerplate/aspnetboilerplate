@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Startup;
-using Abp.Startup.Configuration;
 using Castle.Core.Logging;
 
 namespace Abp.Modules

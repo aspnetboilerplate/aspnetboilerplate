@@ -30,7 +30,7 @@ namespace Abp.WebApi
 
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegisterer(new ApiControllerConventionalRegistrar());
+            IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
         }
 
         public override void Initialize()

@@ -5,7 +5,6 @@ using System.Web;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Reflection;
-using Abp.Startup;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Web

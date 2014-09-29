@@ -1,6 +1,6 @@
 ﻿using Abp.Localization.Sources;
 
-namespace Abp.Startup.Configuration
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used for localization configurations.

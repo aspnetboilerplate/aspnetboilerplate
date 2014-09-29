@@ -9,7 +9,7 @@ namespace Abp.Dependency
     {
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The instance object</returns>
@@ -17,7 +17,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -26,7 +26,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <returns>The instance object</returns>
@@ -34,7 +34,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>

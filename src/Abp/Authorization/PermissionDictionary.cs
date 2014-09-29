@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Abp.Startup;
 
 namespace Abp.Authorization
 {

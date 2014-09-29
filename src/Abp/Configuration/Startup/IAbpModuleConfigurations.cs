@@ -1,4 +1,4 @@
-﻿namespace Abp.Startup.Configuration
+﻿namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used to provide a way to configure modules.

@@ -3,7 +3,7 @@ namespace Abp.Authorization
     /// <summary>
     /// Null (and default) implementation of <see cref="IPermissionGrantStore"/>.
     /// </summary>
-    public class NullPermissionGrantStore : IPermissionGrantStore
+    public sealed class NullPermissionGrantStore : IPermissionGrantStore
     {
         /// <summary>
         /// Singleton instance.

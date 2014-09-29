@@ -32,7 +32,6 @@ namespace Abp.Dependency
             Instance = new IocManager();
         }
 
-        //Halil: Make it public?
         internal IocManager()
         {
             IocContainer = new WindsorContainer();
@@ -48,13 +47,13 @@ namespace Abp.Dependency
         /// Adds a dependency registrar for conventional registration.
         /// </summary>
         /// <param name="registrar">dependency registrar</param>
-        public void AddConventionalRegisterer(IConventionalDependencyRegistrar registrar)
+        public void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar)
         {
             _conventionalRegistrars.Add(registrar);
         }
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registerers. See <see cref="AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         public void RegisterAssemblyByConvention(Assembly assembly)
@@ -63,7 +62,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registerers. See <see cref="AddConventionalRegisterer"/> method.
+        /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         /// <param name="config">Additional configuration</param>

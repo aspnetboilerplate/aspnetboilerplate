@@ -1,5 +1,4 @@
 using Abp.Localization;
-using Abp.Startup;
 
 namespace Abp.Web.Api.Tests
 {

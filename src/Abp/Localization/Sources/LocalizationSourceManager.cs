@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Startup.Configuration;
+using Abp.Configuration.Startup;
 
 namespace Abp.Localization.Sources
 {

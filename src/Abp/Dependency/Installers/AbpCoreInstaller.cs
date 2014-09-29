@@ -1,13 +1,13 @@
-﻿using Abp.Localization.Sources;
+﻿using Abp.Configuration.Startup;
+using Abp.Localization.Sources;
 using Abp.Modules;
-using Abp.Startup.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Startup
+namespace Abp.Dependency.Installers
 {
-    internal class AbpStartupInstaller : IWindsorInstaller
+    internal class AbpCoreInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

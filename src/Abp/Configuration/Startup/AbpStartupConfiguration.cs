@@ -1,7 +1,6 @@
-﻿using Abp.Configuration;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 
-namespace Abp.Startup.Configuration
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// This class is used to configure ABP and modules on startup.

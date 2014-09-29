@@ -7,6 +7,6 @@ namespace Abp.Domain.Services
     /// </summary>
     public interface IDomainService : ITransientDependency
     {
-        
+
     }
 }
