@@ -62,6 +62,12 @@
                         }
 
                         return defer.promise;
+                    },
+
+                    'responseError': function (error) {
+                        abp.message.error(error.data, error.statusText);
+                        abp.log.error(error);
+                        return $q.reject(error);
                     }
 
                 };
