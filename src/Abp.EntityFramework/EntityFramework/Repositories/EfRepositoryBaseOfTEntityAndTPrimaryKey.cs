@@ -117,9 +117,6 @@ namespace Abp.EntityFramework.Repositories
             {
                 Delete(entity);
             }
-
-            
-           
         }
         
         public virtual int Count()
