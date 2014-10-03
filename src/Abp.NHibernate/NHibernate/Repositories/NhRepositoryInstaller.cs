@@ -1,4 +1,5 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using Abp.Domain.Repositories;
+using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using NHibernate;
@@ -17,7 +18,9 @@ namespace Abp.NHibernate.Repositories
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<ISessionFactory>().UsingFactoryMethod(() => _sessionFactory).LifeStyle.Singleton
+                Component.For<ISessionFactory>().UsingFactoryMethod(() => _sessionFactory).LifeStyle.Singleton,
+                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)),
+                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>))
                 );
         }
     }
