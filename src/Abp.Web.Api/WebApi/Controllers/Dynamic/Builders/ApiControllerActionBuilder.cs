@@ -69,17 +69,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Used to specify name of the action.
-        /// </summary>
-        /// <param name="name">Action name</param>
-        /// <returns></returns>
-        public IApiControllerActionBuilder<T> WithActionName(string name)
-        {
-            ActionName = name;
-            return this;
-        }
-
-        /// <summary>
         /// Used to specify another method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>

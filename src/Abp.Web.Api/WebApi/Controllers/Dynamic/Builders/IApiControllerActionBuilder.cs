@@ -17,13 +17,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IApiControllerActionBuilder<T> WithVerb(HttpVerb verb);
 
         /// <summary>
-        /// Used to specify name of the action.
-        /// </summary>
-        /// <param name="name">Action name</param>
-        /// <returns></returns>
-        IApiControllerActionBuilder<T> WithActionName(string name);
-
-        /// <summary>
         /// Used to specify another method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
