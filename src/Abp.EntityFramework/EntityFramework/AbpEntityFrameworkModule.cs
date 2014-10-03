@@ -12,7 +12,6 @@ namespace Abp.EntityFramework
     {
         public override void Initialize()
         {
-            base.Initialize();
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             DbInterception.Add(new SoftDeleteInterceptor());
         }

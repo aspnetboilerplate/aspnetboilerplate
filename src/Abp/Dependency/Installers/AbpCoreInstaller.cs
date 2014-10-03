@@ -11,11 +11,11 @@ namespace Abp.Dependency.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            RegisterStartupSystem(container, store);
-            RegisterLocalizationSystem(container, store);
+            RegisterStartupSystem(container);
+            RegisterLocalizationSystem(container);
         }
 
-        protected virtual void RegisterStartupSystem(IWindsorContainer container, IConfigurationStore store)
+        private static void RegisterStartupSystem(IWindsorContainer container)
         {
             container.Register(
                 Component.For<IAbpStartupConfiguration>().ImplementedBy<AbpStartupConfiguration>().LifestyleSingleton(),
@@ -24,7 +24,7 @@ namespace Abp.Dependency.Installers
                 );
         }
 
-        protected virtual void RegisterLocalizationSystem(IWindsorContainer container, IConfigurationStore store)
+        private static void RegisterLocalizationSystem(IWindsorContainer container)
         {
             container.Register(
                 Component.For<ILocalizationSourceManager>().ImplementedBy<LocalizationSourceManager>().LifestyleSingleton()

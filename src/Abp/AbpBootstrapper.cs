@@ -47,18 +47,10 @@ namespace Abp
         /// </summary>
         public virtual void Initialize()
         {
-            RegisterCoreDependencies();
+            _iocManager.IocContainer.Install(new AbpCoreInstaller());
 
             _moduleManager = _iocManager.Resolve<IAbpModuleManager>();
             _moduleManager.InitializeModules();
-        }
-
-        /// <summary>
-        /// Registers core dependencies for starting of ABP system.
-        /// </summary>
-        protected virtual void RegisterCoreDependencies()
-        {
-            _iocManager.IocContainer.Install(new AbpCoreInstaller());
         }
 
         /// <summary>

@@ -2,9 +2,8 @@
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.EntityFramework.Repositories;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFramework.Repositories
 {
     internal static class EntityFrameworkGenericRepositoryRegistrar
     {

@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityFramework.Repositories;
 using Abp.Tests;
 using Shouldly;
 using Xunit;
