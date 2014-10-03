@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 
-namespace Abp.Startup.Infrastructure.NHibernate
+namespace Abp.NHibernate.Config
 {
     /// <summary>
     /// Used to configure ABP NHibernate module.

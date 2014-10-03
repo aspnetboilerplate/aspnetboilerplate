@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.NHibernate.Config;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
 using NHibernate;
 
-namespace Abp.Startup.Infrastructure.NHibernate
+namespace Abp.NHibernate
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.
