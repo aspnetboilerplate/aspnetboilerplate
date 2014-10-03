@@ -7,14 +7,16 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Infrastructure Layer - EntityFramework")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Infrastructure Layer - EntityFramework")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - EntityFramework adapter")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Infrastructure.EntityFramework")]
+[assembly: AssemblyProduct("Abp.EntityFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

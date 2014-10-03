@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Infrastructure Layer - NHibernate")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Infrastructure Layer - NHibernate")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - NHibernate adapter")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - NHibernate adapter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Infrastructure.NHibernate")]
+[assembly: AssemblyProduct("Abp.NHibernate")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

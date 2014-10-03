@@ -19,8 +19,8 @@ namespace Abp.NHibernate.Repositories
         {
             container.Register(
                 Component.For<ISessionFactory>().UsingFactoryMethod(() => _sessionFactory).LifeStyle.Singleton,
-                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)),
-                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>))
+                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
                 );
         }
     }

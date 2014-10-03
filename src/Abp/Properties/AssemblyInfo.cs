@@ -16,17 +16,16 @@ using Abp;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: InternalsVisibleTo("Abp.Owin")]
 [assembly: InternalsVisibleTo("Abp.Application")]
-[assembly: InternalsVisibleTo("Abp.Infrastructure.EntityFramework")]
-[assembly: InternalsVisibleTo("Abp.Infrastructure.NHibernate")]
+[assembly: InternalsVisibleTo("Abp.EntityFramework")]
+[assembly: InternalsVisibleTo("Abp.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Web")]
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 [assembly: InternalsVisibleTo("Abp.Web.Resources")]
 
 [assembly: InternalsVisibleTo("Abp.Tests")]
-[assembly: InternalsVisibleTo("Abp.Application.Tests")]
+[assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
 

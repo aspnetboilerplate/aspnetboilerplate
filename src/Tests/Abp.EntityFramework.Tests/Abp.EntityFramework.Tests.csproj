@@ -63,7 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\Should_Resolve_Generic_Repositories.cs" />
+    <Compile Include="Repositories\EntityFrameworkGenericRepositoryRegistrar_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

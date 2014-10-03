@@ -126,6 +126,7 @@
     <Compile Include="Modules\IAbpModuleManager.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />
     <Compile Include="Modules\IModuleFinder.cs" />
+    <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceManager.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourcePathInfo.cs" />
