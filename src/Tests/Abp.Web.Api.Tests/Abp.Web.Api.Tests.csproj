@@ -77,6 +77,7 @@
     <Compile Include="Controllers\Filters\MyExceptionHandler.cs" />
     <Compile Include="DynamicApiController\Clients\MyClientRequester.cs" />
     <Compile Include="DynamicApiController\DynamicApiControllerActionFinder_Tests.cs" />
+    <Compile Include="DynamicApiController\BatchBuilding\BatchDynamicApiControllerBuilder_Test.cs" />
     <Compile Include="DynamicApiController\ServiceNameValidation_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

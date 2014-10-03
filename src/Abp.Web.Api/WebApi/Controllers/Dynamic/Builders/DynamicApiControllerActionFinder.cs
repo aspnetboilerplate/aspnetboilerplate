@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,9 +8,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     internal static class DynamicApiControllerActionFinder
     {
-        public static List<MethodInfo> GetMethodsToBeAction<T>()
+        public static List<MethodInfo> GetMethodsToBeAction(Type type)
         {
-            return typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Where(method =>
                        {
                            if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(ApplicationService))

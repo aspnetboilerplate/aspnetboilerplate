@@ -1,4 +1,6 @@
-﻿namespace Abp.WebApi.Controllers.Dynamic.Builders
+﻿using System.Reflection;
+
+namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// Used to generate dynamic api controllers for arbitrary types.
@@ -13,6 +15,17 @@
         public static IApiControllerBuilder<T> For<T>(string serviceName)
         {
             return new ApiControllerBuilder<T>(serviceName);
+        }
+
+        /// <summary>
+        /// Generates multiple dynamic api controllers.
+        /// </summary>
+        /// <typeparam name="T">Base type (class or interface) for services</typeparam>
+        /// <param name="assembly">Assembly contains types</param>
+        /// <param name="servicePrefix">Service prefix</param>
+        public static IBatchApiControllerBuilder<T> ForAll<T>(Assembly assembly, string servicePrefix)
+        {
+            return new BatchApiControllerBuilder<T>(assembly, servicePrefix);
         }
     }
 }

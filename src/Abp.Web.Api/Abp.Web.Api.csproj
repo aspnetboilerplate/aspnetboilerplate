@@ -87,11 +87,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WebApi\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\BatchApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerActionFinder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiServiceNameHelper.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiVerbHelper.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\IBatchApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Clients\ApiClientBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Clients\DynamicApiClientBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Clients\IApiClientBuilder.cs" />
@@ -115,7 +117,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPostActionScriptProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPutActionScriptProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpVerbExtensions.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Builders\IDynamicApiControllerBuilder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />

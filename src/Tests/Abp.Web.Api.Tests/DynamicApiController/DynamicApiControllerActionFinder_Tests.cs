@@ -10,7 +10,7 @@ namespace Abp.Web.Api.Tests.DynamicApiController
         [Fact]
         public void Should_Find_Right_Methods()
         {
-            var methods = DynamicApiControllerActionFinder.GetMethodsToBeAction<MyApplicationService>();
+            var methods = DynamicApiControllerActionFinder.GetMethodsToBeAction(typeof(MyApplicationService));
             methods.Count.ShouldBe(3);
         }
 
