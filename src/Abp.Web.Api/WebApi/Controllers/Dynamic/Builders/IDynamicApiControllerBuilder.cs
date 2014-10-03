@@ -9,18 +9,18 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     public interface IApiControllerBuilder<T>
     {
         /// <summary>
+        /// The adds Action filters for the Dynamic Controller.
+        /// </summary>
+        /// <param name="filters"> The filters. </param>
+        /// <returns>The current Controller Builder </returns>
+        IApiControllerBuilder<T> WithFilters(params IFilter[] filters);
+
+        /// <summary>
         /// Used to specify a method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
         IApiControllerActionBuilder<T> ForMethod(string methodName);
-
-        /// <summary>
-        /// The adds Action filters for the whole Dynamic Controller
-        /// </summary>
-        /// <param name="filters"> The filters. </param>
-        /// <returns>The current Controller Builder </returns>
-        IApiControllerBuilder<T> WithFilters(params IFilter[] filters);
 
         /// <summary>
         /// Builds the controller.
