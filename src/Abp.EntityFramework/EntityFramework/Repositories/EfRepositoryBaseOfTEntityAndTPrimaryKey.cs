@@ -11,7 +11,7 @@ using Abp.EntityFramework.Uow;
 
 namespace Abp.EntityFramework.Repositories
 {
-    public abstract class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {

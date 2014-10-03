@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434F
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9E8F8E84-8335-48E4-988C-D0C9F37927D6}"
@@ -33,6 +32,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.Tests", "Tests\Abp.Web.Api.Tests\Abp.Web.Api.Tests.csproj", "{662A3C76-DC6E-425C-B389-23B1040AD2F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.FluentMigrator", "Abp.FluentMigrator\Abp.FluentMigrator.csproj", "{908717CC-C284-4C88-A13C-32B62674845D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.EntityFramework.Tests", "Tests\Abp.EntityFramework.Tests\Abp.EntityFramework.Tests.csproj", "{30F91B61-4BA1-491A-ABE1-B615C1B97E71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +85,10 @@ Global
 		{908717CC-C284-4C88-A13C-32B62674845D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{908717CC-C284-4C88-A13C-32B62674845D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{908717CC-C284-4C88-A13C-32B62674845D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F91B61-4BA1-491A-ABE1-B615C1B97E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F91B61-4BA1-491A-ABE1-B615C1B97E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F91B61-4BA1-491A-ABE1-B615C1B97E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F91B61-4BA1-491A-ABE1-B615C1B97E71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +97,6 @@ Global
 		{D1E31E85-0F7E-43BC-91E2-F9E544ECEBD5} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{C3ACA5F7-6A78-497B-AE25-B0B4F20E5AA2} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{30F91B61-4BA1-491A-ABE1-B615C1B97E71} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal
