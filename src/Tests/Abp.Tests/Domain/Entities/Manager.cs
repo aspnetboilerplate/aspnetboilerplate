@@ -1,4 +1,4 @@
-namespace Abp.Tests.Entities
+namespace Abp.Tests.Domain.Entities
 {
     public class Manager : Worker
     {

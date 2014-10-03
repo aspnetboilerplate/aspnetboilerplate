@@ -64,6 +64,7 @@
     <Compile Include="Configuration\MyChangableSession.cs" />
     <Compile Include="Configuration\SettingManager_Tests.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper_Tests.cs" />
+    <Compile Include="Dependency\GenericInjection_Tests.cs" />
     <Compile Include="Dependency\Interceptors\Interceptors_Can_Have_Injected_Objects.cs" />
     <Compile Include="Dependency\IocManager_LifeStyle_Tests.cs" />
     <Compile Include="Dependency\IocManager_Self_Register_Tests.cs" />
@@ -71,10 +72,10 @@
     <Compile Include="Dependency\IRegistrar_And_Resolver_Tests.cs" />
     <Compile Include="Dependency\PropertyInjection_Tests.cs" />
     <Compile Include="Dependency\SimpleDisposableObject.cs" />
-    <Compile Include="Entities\Department.cs" />
-    <Compile Include="Entities\Manager.cs" />
-    <Compile Include="Entities\Test_Entities.cs" />
-    <Compile Include="Entities\Worker.cs" />
+    <Compile Include="Domain\Entities\Department.cs" />
+    <Compile Include="Domain\Entities\Manager.cs" />
+    <Compile Include="Domain\Entities\Test_Entities.cs" />
+    <Compile Include="Domain\Entities\Worker.cs" />
     <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
     <Compile Include="Events\Bus\EventBusTestBase.cs" />
     <Compile Include="Events\Bus\InheritanceTest.cs" />
@@ -106,6 +107,7 @@
       <Name>Abp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

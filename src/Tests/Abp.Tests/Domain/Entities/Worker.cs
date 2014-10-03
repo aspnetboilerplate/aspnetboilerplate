@@ -1,6 +1,6 @@
 using Abp.Domain.Entities;
 
-namespace Abp.Tests.Entities
+namespace Abp.Tests.Domain.Entities
 {
     public class Worker : Entity
     {
