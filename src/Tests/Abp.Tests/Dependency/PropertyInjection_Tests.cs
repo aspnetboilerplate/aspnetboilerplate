@@ -27,12 +27,12 @@ namespace Abp.Tests.Dependency
                 );
 
             var myAppService = LocalIocManager.Resolve<MyApplicationService>();
-            myAppService.Test();
+            myAppService.TestSession();
         }
 
-        public class MyApplicationService : ApplicationService
+        private class MyApplicationService : ApplicationService
         {
-            public void Test()
+            public void TestSession()
             {
                 CurrentSession.ShouldNotBe(null);
                 CurrentSession.TenantId.ShouldBe(1);

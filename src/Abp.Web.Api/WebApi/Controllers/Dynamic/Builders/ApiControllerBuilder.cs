@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using Abp.Dependency;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using Castle.MicroKernel.Registration;
@@ -48,7 +48,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
-            foreach (var methodInfo in GetMethodsToBeActions())
+            foreach (var methodInfo in DynamicApiControllerActionFinder.GetMethodsToBeAction<T>())
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
             }
@@ -104,11 +104,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 );
 
             DynamicApiControllerManager.Register(controllerInfo);
-        }
-
-        private static IEnumerable<MethodInfo> GetMethodsToBeActions()
-        {
-            return typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
         }
     }
 }

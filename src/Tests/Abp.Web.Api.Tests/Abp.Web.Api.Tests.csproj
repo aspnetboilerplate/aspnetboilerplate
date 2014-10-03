@@ -44,6 +44,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="Shouldly">
+      <HintPath>..\..\packages\Shouldly.2.2.0\lib\net40\Shouldly.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -70,6 +76,7 @@
     <Compile Include="AbpWebApiTestModule.cs" />
     <Compile Include="Controllers\Filters\MyExceptionHandler.cs" />
     <Compile Include="DynamicApiController\Clients\MyClientRequester.cs" />
+    <Compile Include="DynamicApiController\DynamicApiControllerActionFinder_Tests.cs" />
     <Compile Include="DynamicApiController\ServiceNameValidation_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
