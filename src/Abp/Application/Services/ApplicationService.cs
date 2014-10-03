@@ -15,22 +15,22 @@ namespace Abp.Application.Services
         /// <summary>
         /// Gets current session informations.
         /// </summary>
-        public IAbpSession CurrentSession { get; set; }
+        public IAbpSession CurrentSession { protected get; set; }
 
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>
-        public IPermissionManager PermissionManager { get; set; }
+        public IPermissionManager PermissionManager { protected get; set; }
 
         /// <summary>
         /// Reference to the setting manager.
         /// </summary>
-        public ISettingManager SettingManager { get; set; }
+        public ISettingManager SettingManager { protected get; set; }
         
         /// <summary>
         /// Reference to the logger to write logs.
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILogger Logger { protected get; set; }
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.

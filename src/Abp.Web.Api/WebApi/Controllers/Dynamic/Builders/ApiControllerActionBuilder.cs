@@ -1,6 +1,5 @@
 using System.Reflection;
 using Abp.Web;
-using System.Collections.Generic;
 using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -32,7 +31,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private IFilter[] _filters;
 
         /// <summary>
-        /// Selected Http verd.
+        /// Selected Http verb.
         /// </summary>
         private HttpVerb? _verb;
 
@@ -94,7 +93,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Used to add action filters to apply to this method.
         /// </summary>
         /// <param name="filters"> Action Filters to apply.</param>
-        /// <returns>The <see cref="IApiControllerActionBuilder"/>. </returns>
         public IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters)
         {
             _filters = filters;

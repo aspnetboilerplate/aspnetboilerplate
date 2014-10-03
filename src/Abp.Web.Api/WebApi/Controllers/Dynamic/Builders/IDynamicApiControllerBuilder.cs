@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders

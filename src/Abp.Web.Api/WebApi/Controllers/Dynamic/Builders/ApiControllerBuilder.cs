@@ -27,7 +27,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Action Filters to apply to the whole Dynamic Controller.
         /// </summary>
-        public IFilter[] _filters;
+        private IFilter[] _filters;
 
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
@@ -48,7 +48,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
-            foreach (var methodInfo in GetPublicInstanceMethods())
+            foreach (var methodInfo in GetMethodsToBeActions())
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
             }
@@ -106,13 +106,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             DynamicApiControllerManager.Register(controllerInfo);
         }
 
-        #region Private methods
-
-        private static IEnumerable<MethodInfo> GetPublicInstanceMethods()
+        private static IEnumerable<MethodInfo> GetMethodsToBeActions()
         {
             return typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance);
         }
-
-        #endregion
     }
 }
