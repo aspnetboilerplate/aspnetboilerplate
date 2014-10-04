@@ -65,7 +65,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     ? _serviceNameSelector(type)
                     : GetConventionalServiceName(type);
 
-                serviceName = _servicePrefix + "/" + serviceName;
+                if (!string.IsNullOrWhiteSpace(_servicePrefix))
+                {
+                    serviceName = _servicePrefix + "/" + serviceName;                    
+                }
 
                 var builder = typeof (DynamicApiControllerBuilder)
                     .GetMethod("For", BindingFlags.Public | BindingFlags.Static)
