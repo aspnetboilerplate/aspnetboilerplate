@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Abp.IO
+namespace Abp.IO.Extensions
 {
     internal static class StreamExtensions
     {

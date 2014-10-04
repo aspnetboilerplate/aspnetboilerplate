@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Abp
+namespace Abp.Extensions
 {
     /// <summary>
     /// Extension methods for String class.

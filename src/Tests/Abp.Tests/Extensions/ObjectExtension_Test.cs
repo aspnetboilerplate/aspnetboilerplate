@@ -1,10 +1,21 @@
-﻿using Shouldly;
+﻿using Abp.Extensions;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Extensions
 {
     public class ObjectExtension_Test
     {
+        [Fact]
+        public void As_Test()
+        {
+            var obj = (object)new ObjectExtension_Test();
+            obj.As<ObjectExtension_Test>().ShouldNotBe(null);
+
+            obj = null;
+            obj.As<ObjectExtension_Test>().ShouldBe(null);
+        }
+
         [Fact]
         public void IsIn_Test()
         {

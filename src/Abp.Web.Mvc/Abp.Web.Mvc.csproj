@@ -98,7 +98,7 @@
     <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Web\Mvc\Controllers\Settings\AbpSettingsController.cs" />
     <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />
-    <Compile Include="Web\Mvc\Helpers\HtmlHelperResourceExtensions.cs" />
+    <Compile Include="Web\Mvc\Extensions\HtmlHelperResourceExtensions.cs" />
     <Compile Include="Web\Mvc\Models\MvcAjaxResponse.cs" />
     <Compile Include="Web\Mvc\Models\ErrorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -126,6 +126,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Web\Mvc\Helpers\" />
     <Folder Include="Web\Mvc\Startup\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

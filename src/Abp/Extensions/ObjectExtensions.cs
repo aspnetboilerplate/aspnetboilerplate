@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Abp
+namespace Abp.Extensions
 {
     /// <summary>
     /// Extension methods for all objects.

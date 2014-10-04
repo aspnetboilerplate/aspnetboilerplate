@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FluentMigrator\AbpFluentMigratorExtensions.cs" />
+    <Compile Include="FluentMigrator\Extensions\AbpFluentMigratorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

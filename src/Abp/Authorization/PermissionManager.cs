@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Collections;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.Core.Logging;

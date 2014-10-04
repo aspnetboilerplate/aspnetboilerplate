@@ -2,6 +2,7 @@
 using System.Reflection;
 using Abp.Dependency;
 using Abp.IO;
+using Abp.IO.Extensions;
 
 namespace Abp.Resources.Embedded
 {

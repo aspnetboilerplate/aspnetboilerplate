@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Collections;
+using Abp.Collections.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors

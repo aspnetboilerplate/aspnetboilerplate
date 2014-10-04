@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Collections
+namespace Abp.Collections.Extensions
 {
     /// <summary>
     /// Extension methods for Collections.

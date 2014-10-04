@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
 using Abp.Collections;
+using Abp.Collections.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {

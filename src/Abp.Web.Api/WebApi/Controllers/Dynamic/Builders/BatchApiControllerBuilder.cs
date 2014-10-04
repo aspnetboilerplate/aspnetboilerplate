@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {

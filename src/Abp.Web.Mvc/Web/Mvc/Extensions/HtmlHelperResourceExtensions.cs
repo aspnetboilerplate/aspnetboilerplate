@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Abp.Logging;
 using Abp.Web.Mvc.Resources;
 
-namespace Abp.Web.Mvc.Helpers
+namespace Abp.Web.Mvc.Extensions
 {
     /// <summary>
     /// TODO: What if resource changes? How to update cache?
@@ -83,7 +83,7 @@ namespace Abp.Web.Mvc.Helpers
 
         private static string GetPathWithVersioningForEmbeddedFile(string path)
         {
-            //Remove "~/" from beggining
+            //Remove "~/" from beginning
             var embeddedResourcePath = path;
 
             if (embeddedResourcePath.StartsWith("~"))

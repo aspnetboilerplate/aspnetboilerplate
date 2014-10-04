@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Authorization;
 using Abp.Collections;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 
