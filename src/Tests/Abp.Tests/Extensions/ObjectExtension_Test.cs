@@ -4,16 +4,16 @@ using Xunit;
 
 namespace Abp.Tests.Extensions
 {
-    public class ObjectExtension_Test
+    public class ObjectExtensions_Tests
     {
         [Fact]
         public void As_Test()
         {
-            var obj = (object)new ObjectExtension_Test();
-            obj.As<ObjectExtension_Test>().ShouldNotBe(null);
+            var obj = (object)new ObjectExtensions_Tests();
+            obj.As<ObjectExtensions_Tests>().ShouldNotBe(null);
 
             obj = null;
-            obj.As<ObjectExtension_Test>().ShouldBe(null);
+            obj.As<ObjectExtensions_Tests>().ShouldBe(null);
         }
 
         [Fact]
