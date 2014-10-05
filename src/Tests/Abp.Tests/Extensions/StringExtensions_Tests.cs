@@ -48,10 +48,26 @@ namespace Abp.Tests.Extensions
         public void Truncate_Test()
         {
             const string str = "This is a test string";
-            
+
             str.Truncate(7).ShouldBe("This is");
             str.Truncate(0).ShouldBe("");
             str.Truncate(100).ShouldBe(str);
+        }
+
+        [Fact]
+        public void TruncateWithPostFix_Test()
+        {
+            const string str = "This is a test string";
+
+            str.TruncateWithPostfix(3).ShouldBe("Thi...");
+            str.TruncateWithPostfix(12).ShouldBe("This is a te...");
+            str.TruncateWithPostfix(0).ShouldBe("...");
+            str.TruncateWithPostfix(100).ShouldBe(str);
+
+            str.TruncateWithPostfix(3, "~").ShouldBe("Thi~");
+            str.TruncateWithPostfix(12, "~").ShouldBe("This is a te~");
+            str.TruncateWithPostfix(0, "~").ShouldBe("~");
+            str.TruncateWithPostfix(100, "~").ShouldBe(str);
         }
 
         [Fact]

@@ -85,7 +85,7 @@
     <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
     <Compile Include="Extensions\ComparableExtensions_Tests.cs" />
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
-    <Compile Include="Extensions\DateTimeExtensions_Tests.cs" />
+    <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
     <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />

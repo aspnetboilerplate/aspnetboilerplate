@@ -148,13 +148,9 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets a substring of a string from beginning of the string.
+        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="maxLength"></param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
         public static string Truncate(this string str, int maxLength)
         {
             if (str == null)
@@ -168,6 +164,36 @@ namespace Abp.Extensions
             }
 
             return str.Left(maxLength);
+        }
+
+        /// <summary>
+        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
+        /// It adds a "..." postfix to end of the string if it's truncated.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        public static string TruncateWithPostfix(this string str, int maxLength)
+        {
+            return TruncateWithPostfix(str, maxLength, "...");
+        }
+
+        /// <summary>
+        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
+        /// It adds given <see cref="postfix"/> to end of the string if it's truncated.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
+        {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
+            if (str.Length <= maxLength)
+            {
+                return str;
+            }
+
+            return str.Left(maxLength) + postfix;
         }
     }
 }
