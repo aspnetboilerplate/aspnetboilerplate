@@ -119,6 +119,7 @@
     <Compile Include="Events\Bus\Exceptions\AbpHandledExceptionData.cs" />
     <Compile Include="Events\Bus\Exceptions\ExceptionData.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
+    <Compile Include="Extensions\DayOfWeekExtensions.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
     <Compile Include="Localization\ILocalizableString.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
