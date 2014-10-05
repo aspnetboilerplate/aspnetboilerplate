@@ -3,7 +3,7 @@
 namespace Abp.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="DateTime"/>.
+    /// Extension methods for <see cref="DayOfWeekExtensions"/>.
     /// </summary>
     public static class DayOfWeekExtensions
     {
