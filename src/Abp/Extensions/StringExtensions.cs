@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace Abp.Extensions
@@ -11,6 +12,53 @@ namespace Abp.Extensions
         /// Default used CultureInfo.
         /// </summary>
         private static readonly CultureInfo DefaultCultureInfo = new CultureInfo("en-US");
+
+        /// <summary>
+        /// Gets a substring of a string from beginning of the string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
+        public static string Left(this string str, int len)
+        {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
+            if (str.Length < len)
+            {
+                throw new ArgumentException("len argument can not be bigger than given string's length!");
+            }
+
+            return str.Substring(0, len);
+        }
+
+        /// <summary>
+        /// Gets a substring of a string from end of the string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
+        public static string Right(this string str, int len)
+        {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
+            if (str.Length < len)
+            {
+                throw new ArgumentException("len argument can not be bigger than given string's length!");
+            }
+
+            return str.Substring(str.Length - len, len);
+        }
+
 
         /// <summary>
         /// Converts PascalCase string to camelCase string.
@@ -44,6 +92,31 @@ namespace Abp.Extensions
         }
 
         /// <summary>
+        /// Converts string to enum value.
+        /// </summary>
+        /// <typeparam name="T">Type of enum</typeparam>
+        /// <param name="value">String value to convert</param>
+        /// <returns>Returns enum object</returns>
+        public static T ToEnum<T>(this string value)
+            where T : struct
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
+
+        /// <summary>
+        /// Converts string to enum value.
+        /// </summary>
+        /// <typeparam name="T">Type of enum</typeparam>
+        /// <param name="value">String value to convert</param>
+        /// <param name="ignoreCase">Ignore case</param>
+        /// <returns>Returns enum object</returns>
+        public static T ToEnum<T>(this string value, bool ignoreCase)
+            where T : struct
+        {
+            return (T)Enum.Parse(typeof(T), value, ignoreCase);
+        }
+
+        /// <summary>
         /// Converts camelCase string to PascalCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
@@ -72,6 +145,29 @@ namespace Abp.Extensions
             }
 
             return char.ToUpper(str[0], culture) + str.Substring(1);
+        }
+
+        /// <summary>
+        /// Gets a substring of a string from beginning of the string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
+        public static string Truncate(this string str, int maxLength)
+        {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
+            if (str.Length <= maxLength)
+            {
+                return str;
+            }
+
+            return str.Left(maxLength);
         }
     }
 }
