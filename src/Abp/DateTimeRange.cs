@@ -164,6 +164,55 @@ namespace Abp
             }
         }
 
+
+        /// <summary>
+        /// Gets a date range represents the last 30 days (30x24 hours) including today.
+        /// </summary>
+        public static DateTimeRange Last30Days
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.AddDays(-30), now);
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the last 30 days excluding today.
+        /// </summary>
+        public static DateTimeRange Last30DaysExceptToday
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.Date.AddDays(-30), now.Date.AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the last 7 days (7x24 hours) including today.
+        /// </summary>
+        public static DateTimeRange Last7Days
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.AddDays(-7), now);
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the last 7 days excluding today.
+        /// </summary>
+        public static DateTimeRange Last7DaysExceptToday
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.Date.AddDays(-7), now.Date.AddMilliseconds(-1));
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("[{0} - {1}]", StartTime, EndTime);
