@@ -106,15 +106,25 @@ namespace Abp.Modules
                     }
                 }
 
-                //Set dependencies according to explicit dependencies
-                var dependedModuleTypes = moduleInfo.Instance.GetDependedModules();
-                foreach (var dependedModuleType in dependedModuleTypes)
+                //Set dependencies for defined DependsOnAttribute attribute(s).
+                if (moduleInfo.Type.IsDefined(typeof (DependsOnAttribute), true))
                 {
-                    AbpModuleInfo dependedModule;
-                    if (((dependedModule = _modules.FirstOrDefault(m => m.Type == dependedModuleType)) != null)
-                        && (moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                    var dependsOnAttributes = moduleInfo.Type.GetCustomAttributes(typeof (DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                    foreach (var dependsOnAttribute in dependsOnAttributes)
                     {
-                        moduleInfo.Dependencies.Add(dependedModule);
+                        foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
+                        {
+                            var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
+                            if (dependedModuleInfo == null)
+                            {
+                                throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                            }
+
+                            if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                            {
+                                moduleInfo.Dependencies.Add(dependedModuleInfo);
+                            }   
+                        }
                     }
                 }
             }

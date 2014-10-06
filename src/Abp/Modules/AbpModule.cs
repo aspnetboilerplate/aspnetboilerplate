@@ -25,16 +25,6 @@ namespace Abp.Modules
         protected internal IAbpStartupConfiguration Configuration { get; internal set; }
 
         /// <summary>
-        /// Used to declare all depended modules for this module.
-        /// Events of depended modules are called before this module's corresponding events.
-        /// </summary>
-        /// <returns>List of depended modules.</returns>
-        public virtual Type[] GetDependedModules()
-        {
-            return new Type[] {};
-        }
-
-        /// <summary>
         /// This is the first event called on application startup. 
         /// Codes can be placed here to run before dependency injection registrations.
         /// </summary>

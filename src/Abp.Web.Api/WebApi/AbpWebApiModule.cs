@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http.Formatting;
+﻿using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -18,16 +17,9 @@ namespace Abp.WebApi
     /// <summary>
     /// This module provides Abp features for ASP.NET Web API.
     /// </summary>
+    [DependsOn(typeof(AbpWebModule))]
     public class AbpWebApiModule : AbpModule
     {
-        public override Type[] GetDependedModules()
-        {
-            return new[]
-                   {
-                       typeof(AbpWebModule)
-                   };
-        }
-
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());

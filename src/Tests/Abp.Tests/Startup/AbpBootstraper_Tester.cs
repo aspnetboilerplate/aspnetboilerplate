@@ -25,18 +25,24 @@ namespace Abp.Tests.Startup
         public void Should_Call_Module_Events_Once()
         {
             LocalIocManager.Register<IModuleFinder, MyTestModuleFinder>();
-            
-            MyTestModule.ClearCounters();
 
             _bootstrapper.Initialize();
             _bootstrapper.Dispose();
 
-            MyTestModule.PreInitializeCount.ShouldBe(1);
-            MyTestModule.InitializeCount.ShouldBe(1);
-            MyTestModule.PostInitializeCount.ShouldBe(1);
-            MyTestModule.ShutdownCount.ShouldBe(1);
+            var testModule = LocalIocManager.Resolve<MyTestModule>();
+            var otherModule = LocalIocManager.Resolve<MyOtherModule>();
 
-            LocalIocManager.Resolve<MyOtherModule>().CallMeOnStartupCount.ShouldBe(1);
+            testModule.PreInitializeCount.ShouldBe(1);
+            testModule.InitializeCount.ShouldBe(1);
+            testModule.PostInitializeCount.ShouldBe(1);
+            testModule.ShutdownCount.ShouldBe(1);
+
+            otherModule.PreInitializeCount.ShouldBe(1);
+            otherModule.InitializeCount.ShouldBe(1);
+            otherModule.PostInitializeCount.ShouldBe(1);
+            otherModule.ShutdownCount.ShouldBe(1);
+
+            otherModule.CallMeOnStartupCount.ShouldBe(1);
         }
 
         public override void Dispose()
@@ -52,22 +58,15 @@ namespace Abp.Tests.Startup
         {
             return new List<Type>
                    {
+                       typeof (MyOtherModule),
                        typeof (MyTestModule),
-                       typeof (MyOtherModule)
                    };
         }
     }
-    
-    public class MyTestModule : AbpModule
+
+    [DependsOn(typeof(MyOtherModule))]
+    public class MyTestModule : MyEventCounterModuleBase
     {
-        public static int PreInitializeCount { get; private set; }
-
-        public static int InitializeCount { get; private set; }
-
-        public static int PostInitializeCount { get; private set; }
-
-        public static int ShutdownCount { get; private set; }
-
         private readonly MyOtherModule _otherModule;
 
         public MyTestModule(MyOtherModule otherModule)
@@ -75,21 +74,57 @@ namespace Abp.Tests.Startup
             _otherModule = otherModule;
         }
 
-        public static void ClearCounters()
+        public override void PreInitialize()
         {
-            PreInitializeCount = 0;
-            InitializeCount = 0;
-            PostInitializeCount = 0;
-            ShutdownCount = 0;
+            base.PreInitialize();
+            _otherModule.PreInitializeCount.ShouldBe(1);
+            _otherModule.CallMeOnStartup();
         }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            _otherModule.InitializeCount.ShouldBe(1);
+        }
+
+        public override void PostInitialize()
+        {
+            base.PostInitialize();
+            _otherModule.PostInitializeCount.ShouldBe(1);
+        }
+
+        public override void Shutdown()
+        {
+            base.Shutdown();
+            _otherModule.ShutdownCount.ShouldBe(0); //Depended module should be shutdown after this module
+        }
+    }
+
+    public class MyOtherModule : MyEventCounterModuleBase
+    {
+        public int CallMeOnStartupCount { get; private set; }
+
+        public void CallMeOnStartup()
+        {
+            CallMeOnStartupCount++;
+        }
+    }
+
+    public abstract class MyEventCounterModuleBase : AbpModule
+    {
+        public int PreInitializeCount { get; private set; }
+
+        public int InitializeCount { get; private set; }
+
+        public int PostInitializeCount { get; private set; }
+
+        public int ShutdownCount { get; private set; }
 
         public override void PreInitialize()
         {
             IocManager.ShouldNotBe(null);
             Configuration.ShouldNotBe(null);
             PreInitializeCount++;
-
-            _otherModule.CallMeOnStartup();
         }
 
         public override void Initialize()
@@ -105,16 +140,6 @@ namespace Abp.Tests.Startup
         public override void Shutdown()
         {
             ShutdownCount++;
-        }
-    }
-
-    public class MyOtherModule : AbpModule
-    {
-        public int CallMeOnStartupCount { get; private set; }
-
-        public void CallMeOnStartup()
-        {
-            CallMeOnStartupCount++;
         }
     }
 }
