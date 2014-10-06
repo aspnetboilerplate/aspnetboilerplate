@@ -29,7 +29,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Creates a new <see cref="DateTimeRange"/> object.
+        /// Creates a new <see cref="DateTimeRange"/> object from given <see cref="startTime"/> and <see cref="endTime"/>.
         /// </summary>
         /// <param name="startTime">Start time of the datetime range</param>
         /// <param name="endTime">End time of the datetime range</param>
@@ -37,6 +37,16 @@ namespace Abp
         {
             StartTime = startTime;
             EndTime = endTime;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DateTimeRange"/> object from given <see cref="dateTimeRange"/> object.
+        /// </summary>
+        /// <param name="dateTimeRange">IDateTimeRange object</param>
+        public DateTimeRange(IDateTimeRange dateTimeRange)
+        {
+            StartTime = dateTimeRange.StartTime;
+            EndTime = dateTimeRange.EndTime;
         }
 
         /// <summary>
@@ -72,6 +82,48 @@ namespace Abp
             {
                 var now = Now;
                 return new DateTimeRange(now.Date.AddDays(1), now.Date.AddDays(2).AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the last month.
+        /// </summary>
+        public static DateTimeRange LastMonth
+        {
+            get
+            {
+                var now = Now;
+                var startTime = now.Date.AddDays(-now.Day + 1).AddMonths(-1);
+                var endTime = startTime.AddMonths(1).AddMilliseconds(-1);
+                return new DateTimeRange(startTime, endTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents this month.
+        /// </summary>
+        public static DateTimeRange ThisMonth
+        {
+            get
+            {
+                var now = Now;
+                var startTime = now.Date.AddDays(-now.Day + 1);
+                var endTime = startTime.AddMonths(1).AddMilliseconds(-1);
+                return new DateTimeRange(startTime, endTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the next month.
+        /// </summary>
+        public static DateTimeRange NextMonth
+        {
+            get
+            {
+                var now = Now;
+                var startTime = now.Date.AddDays(-now.Day + 1).AddMonths(1);
+                var endTime = startTime.AddMonths(1).AddMilliseconds(-1);
+                return new DateTimeRange(startTime, endTime);
             }
         }
     }
