@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Abp.Extensions;
 using Shouldly;
@@ -7,6 +8,40 @@ namespace Abp.Tests.Extensions
 {
     public class StringExtensions_Tests
     {
+        [Fact]
+        public void EnsureEndsWith_Test()
+        {
+            //Expected use-cases
+            "Test".EnsureEndsWith('!').ShouldBe("Test!");
+            "Test!".EnsureEndsWith('!').ShouldBe("Test!");
+            @"C:\test\folderName".EnsureEndsWith('\\').ShouldBe(@"C:\test\folderName\");
+            @"C:\test\folderName\".EnsureEndsWith('\\').ShouldBe(@"C:\test\folderName\");
+
+            //Case differences
+            "TurkeY".EnsureEndsWith('y').ShouldBe("TurkeYy");
+            "TurkeY".EnsureEndsWith('y', StringComparison.InvariantCultureIgnoreCase).ShouldBe("TurkeY");
+            
+            //Edge cases for Turkish 'i'.
+            "TAKS›".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKS›");
+            "TAKS›".EnsureEndsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("TAKS›i");
+        }
+
+        [Fact]
+        public void EnsureStartsWith_Test()
+        {
+            //Expected use-cases
+            "Test".EnsureStartsWith('~').ShouldBe("~Test");
+            "~Test".EnsureStartsWith('~').ShouldBe("~Test");
+
+            //Case differences
+            "Turkey".EnsureStartsWith('t').ShouldBe("tTurkey");
+            "Turkey".EnsureStartsWith('t', StringComparison.InvariantCultureIgnoreCase).ShouldBe("Turkey");
+
+            //Edge cases for Turkish 'i'.
+            "›stanbul".EnsureStartsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("›stanbul");
+            "›stanbul".EnsureStartsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("i›stanbul");
+        }
+
         [Fact]
         public void ToPascalCase_Test()
         {
