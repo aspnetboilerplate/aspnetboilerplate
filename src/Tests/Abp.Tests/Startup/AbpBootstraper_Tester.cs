@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Modules;
-using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
@@ -36,6 +35,8 @@ namespace Abp.Tests.Startup
             MyTestModule.InitializeCount.ShouldBe(1);
             MyTestModule.PostInitializeCount.ShouldBe(1);
             MyTestModule.ShutdownCount.ShouldBe(1);
+
+            LocalIocManager.Resolve<MyOtherModule>().CallMeOnStartupCount.ShouldBe(1);
         }
 
         public override void Dispose()
@@ -51,11 +52,12 @@ namespace Abp.Tests.Startup
         {
             return new List<Type>
                    {
-                       typeof (MyTestModule)
+                       typeof (MyTestModule),
+                       typeof (MyOtherModule)
                    };
         }
     }
-
+    
     public class MyTestModule : AbpModule
     {
         public static int PreInitializeCount { get; private set; }
@@ -65,6 +67,13 @@ namespace Abp.Tests.Startup
         public static int PostInitializeCount { get; private set; }
 
         public static int ShutdownCount { get; private set; }
+
+        private readonly MyOtherModule _otherModule;
+
+        public MyTestModule(MyOtherModule otherModule)
+        {
+            _otherModule = otherModule;
+        }
 
         public static void ClearCounters()
         {
@@ -78,27 +87,34 @@ namespace Abp.Tests.Startup
         {
             IocManager.ShouldNotBe(null);
             Configuration.ShouldNotBe(null);
-
-            base.PreInitialize();
             PreInitializeCount++;
+
+            _otherModule.CallMeOnStartup();
         }
 
         public override void Initialize()
         {
-            base.Initialize();
             InitializeCount++;
         }
 
         public override void PostInitialize()
         {
-            base.PostInitialize();
             PostInitializeCount++;
         }
 
         public override void Shutdown()
         {
-            base.Shutdown();
             ShutdownCount++;
+        }
+    }
+
+    public class MyOtherModule : AbpModule
+    {
+        public int CallMeOnStartupCount { get; private set; }
+
+        public void CallMeOnStartup()
+        {
+            CallMeOnStartupCount++;
         }
     }
 }
