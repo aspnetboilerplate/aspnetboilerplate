@@ -31,6 +31,7 @@ namespace Abp.Tests.Startup
 
             var testModule = LocalIocManager.Resolve<MyTestModule>();
             var otherModule = LocalIocManager.Resolve<MyOtherModule>();
+            var anotherModule = LocalIocManager.Resolve<MyAnotherModule>();
 
             testModule.PreInitializeCount.ShouldBe(1);
             testModule.InitializeCount.ShouldBe(1);
@@ -41,8 +42,12 @@ namespace Abp.Tests.Startup
             otherModule.InitializeCount.ShouldBe(1);
             otherModule.PostInitializeCount.ShouldBe(1);
             otherModule.ShutdownCount.ShouldBe(1);
-
             otherModule.CallMeOnStartupCount.ShouldBe(1);
+
+            anotherModule.PreInitializeCount.ShouldBe(1);
+            anotherModule.InitializeCount.ShouldBe(1);
+            anotherModule.PostInitializeCount.ShouldBe(1);
+            anotherModule.ShutdownCount.ShouldBe(1);
         }
 
         public override void Dispose()
@@ -60,11 +65,13 @@ namespace Abp.Tests.Startup
                    {
                        typeof (MyOtherModule),
                        typeof (MyTestModule),
+                       typeof (MyAnotherModule)
                    };
         }
     }
 
     [DependsOn(typeof(MyOtherModule))]
+    [DependsOn(typeof(MyAnotherModule))]
     public class MyTestModule : MyEventCounterModuleBase
     {
         private readonly MyOtherModule _otherModule;
@@ -108,6 +115,11 @@ namespace Abp.Tests.Startup
         {
             CallMeOnStartupCount++;
         }
+    }
+
+    public class MyAnotherModule : MyEventCounterModuleBase
+    {
+
     }
 
     public abstract class MyEventCounterModuleBase : AbpModule

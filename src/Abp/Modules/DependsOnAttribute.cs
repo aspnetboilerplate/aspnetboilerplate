@@ -6,7 +6,7 @@ namespace Abp.Modules
     /// Used to define dependencies of an ABP module to other modules.
     /// It should be used for a class derived from <see cref="AbpModule"/>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class DependsOnAttribute : Attribute
     {
         /// <summary>
