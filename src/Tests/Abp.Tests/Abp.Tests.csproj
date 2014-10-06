@@ -84,6 +84,7 @@
     <Compile Include="Events\Bus\MySimpleTransientEventHandler.cs" />
     <Compile Include="Events\Bus\TransientDisposableEventHandlerTest.cs" />
     <Compile Include="Extensions\ComparableExtensions_Tests.cs" />
+    <Compile Include="Extensions\DateTimeRange_Tests.cs" />
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />

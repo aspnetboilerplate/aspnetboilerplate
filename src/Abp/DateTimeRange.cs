@@ -18,12 +18,14 @@ namespace Abp
         /// </summary>
         public DateTime EndTime { get; set; }
 
+        private static DateTime Now { get { return DateTime.Now; } }
+
         /// <summary>
         /// Creates a new <see cref="DateTimeRange"/> object.
         /// </summary>
         public DateTimeRange()
         {
-            
+
         }
 
         /// <summary>
@@ -35,6 +37,42 @@ namespace Abp
         {
             StartTime = startTime;
             EndTime = endTime;
+        }
+
+        /// <summary>
+        /// Gets a date range represents yesterday.
+        /// </summary>
+        public static DateTimeRange Yesterday
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.Date.AddDays(-1), now.Date.AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents today.
+        /// </summary>
+        public static DateTimeRange Today
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.Date, now.Date.AddDays(1).AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents tomorrow.
+        /// </summary>
+        public static DateTimeRange Tomorrow
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(now.Date.AddDays(1), now.Date.AddDays(2).AddMilliseconds(-1));
+            }
         }
     }
 }
