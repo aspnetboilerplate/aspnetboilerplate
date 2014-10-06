@@ -12,11 +12,17 @@ namespace Abp.Tests.Extensions
             DateTimeRange.Today.EndTime.ShouldBeLessThan(DateTimeRange.Tomorrow.StartTime);
 
             DateTimeRange.ThisMonth.StartTime.Day.ShouldBe(1);
+            DateTimeRange.LastMonth.StartTime.Day.ShouldBe(1);
+            DateTimeRange.NextMonth.StartTime.Day.ShouldBe(1);
+
             DateTimeRange.ThisMonth.StartTime.ShouldBeGreaterThan(DateTimeRange.LastMonth.EndTime);
             DateTimeRange.ThisMonth.EndTime.ShouldBeLessThan(DateTimeRange.NextMonth.EndTime);
 
-            DateTimeRange.LastMonth.StartTime.Day.ShouldBe(1);
-            DateTimeRange.NextMonth.StartTime.Day.ShouldBe(1);
+            DateTimeRange.ThisYear.StartTime.Month.ShouldBe(1);
+            DateTimeRange.ThisYear.StartTime.Day.ShouldBe(1);
+            
+            DateTimeRange.ThisYear.StartTime.ShouldBeGreaterThan(DateTimeRange.LastYear.EndTime);
+            DateTimeRange.ThisYear.EndTime.ShouldBeLessThan(DateTimeRange.NextYear.StartTime);
         }
     }
 }

@@ -126,5 +126,47 @@ namespace Abp
                 return new DateTimeRange(startTime, endTime);
             }
         }
+
+
+        /// <summary>
+        /// Gets a date range represents the last year.
+        /// </summary>
+        public static DateTimeRange LastYear
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(new DateTime(now.Year - 1, 1, 1), new DateTime(now.Year, 1, 1).AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents this year.
+        /// </summary>
+        public static DateTimeRange ThisYear
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(new DateTime(now.Year, 1, 1), new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1));
+            }
+        }
+
+        /// <summary>
+        /// Gets a date range represents the next year.
+        /// </summary>
+        public static DateTimeRange NextYear
+        {
+            get
+            {
+                var now = Now;
+                return new DateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1));
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0} - {1}]", StartTime, EndTime);
+        }
     }
 }
