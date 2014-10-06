@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class IocManager_LifeStyle_Tests : TestBaseWithSelfIocManager
+    public class IocManager_LifeStyle_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Call_Dispose_Of_Transient_Dependency_When_Object_Is_Released()

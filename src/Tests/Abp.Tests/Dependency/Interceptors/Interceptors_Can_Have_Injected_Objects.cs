@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency.Interceptors
 {
-    public class Interceptors_Tests : TestBaseWithSelfIocManager
+    public class Interceptors_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Interceptors_Should_Work()

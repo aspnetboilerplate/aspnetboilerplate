@@ -3,11 +3,11 @@ using Abp.Dependency;
 
 namespace Abp.Tests
 {
-    public abstract class TestBaseWithSelfIocManager : IDisposable
+    public abstract class TestBaseWithLocalIocManager : IDisposable
     {
         protected IIocManager LocalIocManager;
 
-        protected TestBaseWithSelfIocManager()
+        protected TestBaseWithLocalIocManager()
         {
             LocalIocManager = new IocManager();
         }

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class IocManager_Tests : TestBaseWithSelfIocManager
+    public class IocManager_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Get_First_Registered_Class_If_Registered_Multiple_Class_For_Same_Interface()

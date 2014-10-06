@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class IocManager_Self_Register_Tests : TestBaseWithSelfIocManager
+    public class IocManager_Self_Register_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Self_Register_With_All_Interfaces()

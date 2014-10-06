@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.Tests.Configuration
 {
-    public class SettingManager_Tests : TestBaseWithSelfIocManager
+    public class SettingManager_Tests : TestBaseWithLocalIocManager
     {
         private const string MyAppLevelSetting = "MyAppLevelSetting";
         private const string MyAllLevelsSetting = "MyAllLevelsSetting";

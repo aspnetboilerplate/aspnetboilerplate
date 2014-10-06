@@ -93,7 +93,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceTests.cs" />
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
-    <Compile Include="TestBaseWithSelfIocManager.cs" />
+    <Compile Include="TestBaseWithLocalIocManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

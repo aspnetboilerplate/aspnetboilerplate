@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class Registrar_And_Resolver_Tests : TestBaseWithSelfIocManager
+    public class Registrar_And_Resolver_Tests : TestBaseWithLocalIocManager
     {
         private readonly IIocRegistrar _registrar;
         private readonly IIocResolver _resolver;

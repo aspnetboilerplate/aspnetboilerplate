@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.Tests.Startup
 {
-    public class AbpBootstraper_Tester : TestBaseWithSelfIocManager
+    public class AbpBootstraper_Tester : TestBaseWithLocalIocManager
     {
         private readonly AbpBootstrapper _bootstrapper;
 

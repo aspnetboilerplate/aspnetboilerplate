@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.Web.Tests
 {
-    public class ErrorInfoBuilder_Tests : TestBaseWithSelfIocManager
+    public class ErrorInfoBuilder_Tests : TestBaseWithLocalIocManager
     {
         private readonly IErrorInfoBuilder _errorInfoBuilder;
 

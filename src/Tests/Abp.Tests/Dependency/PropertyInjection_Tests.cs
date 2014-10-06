@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class PropertyInjection_Tests : TestBaseWithSelfIocManager
+    public class PropertyInjection_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Inject_Session_For_ApplicationService()

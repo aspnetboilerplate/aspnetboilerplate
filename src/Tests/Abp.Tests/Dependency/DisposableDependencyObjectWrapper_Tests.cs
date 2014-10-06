@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class DisposableDependencyObjectWrapper_Tests : TestBaseWithSelfIocManager
+    public class DisposableDependencyObjectWrapper_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void ResolveAsDisposable_Should_Work()

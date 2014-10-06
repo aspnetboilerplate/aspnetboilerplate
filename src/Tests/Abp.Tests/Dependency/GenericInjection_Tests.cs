@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class GenericInjection_Tests : TestBaseWithSelfIocManager
+    public class GenericInjection_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Resolve_Generic_Types()

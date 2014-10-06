@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Abp.EntityFramework.Tests.Repositories
 {
-    public class EntityFrameworkGenericRepositoryRegistrar_Tests : TestBaseWithSelfIocManager
+    public class EntityFrameworkGenericRepositoryRegistrar_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Resolve_Generic_Repositories()
