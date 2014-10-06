@@ -101,6 +101,8 @@
     <Compile Include="Authorization\PermissionManager.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
+    <Compile Include="DateTimeRange.cs" />
+    <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
+    <Compile Include="IDateTimeRange.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
     <Compile Include="Localization\ILocalizableString.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
@@ -251,7 +254,7 @@
     <Compile Include="IO\Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Reflection\Extensions\MemberInfoExtensions.cs" />
-    <Compile Include="Xml\XmlExtensions.cs" />
+    <Compile Include="Xml\Extensions\XmlExtensions.cs" />
     <Compile Include="Localization\GlobalizationHelper.cs" />
     <Compile Include="IO\DirectoryHelper.cs" />
     <Compile Include="IO\FileHelper.cs" />

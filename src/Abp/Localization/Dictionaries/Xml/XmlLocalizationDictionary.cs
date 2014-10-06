@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using Abp.Xml;
+using Abp.Xml.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
 {

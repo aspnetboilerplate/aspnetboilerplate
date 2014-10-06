@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace Abp.Xml
+namespace Abp.Xml.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="XmlNode"/> class.

@@ -7,6 +7,6 @@ namespace Abp.Extensions
     /// </summary>
     public static class DateTimeExtensions
     {
-        //TODO...
+        //...
     }
 }
