@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 
@@ -67,6 +69,35 @@ namespace Abp.Modules
                 type.IsClass &&
                 !type.IsAbstract &&
                 typeof(AbpModule).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Finds depended modules of a module.
+        /// </summary>
+        /// <param name="moduleType"></param>
+        /// <returns></returns>
+        public static List<Type> FindDependedModuleTypes(Type moduleType)
+        {
+            if (!IsAbpModule(moduleType))
+            {
+                throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+            }
+
+            var list = new List<Type>();
+
+            if (moduleType.IsDefined(typeof(DependsOnAttribute), true))
+            {
+                var dependsOnAttributes = moduleType.GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                foreach (var dependsOnAttribute in dependsOnAttributes)
+                {
+                    foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
+                    {
+                        list.Add(dependedModuleType);
+                    }
+                }
+            }
+
+            return list;
         }
     }
 }

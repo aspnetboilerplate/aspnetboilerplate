@@ -12,7 +12,7 @@ namespace Abp.Modules
     internal class AbpModuleManager : IAbpModuleManager
     {
         public ILogger Logger { get; set; }
-        
+
         private readonly AbpModuleCollection _modules;
 
         private readonly IIocManager _iocManager;
@@ -67,13 +67,13 @@ namespace Abp.Modules
             //Add to module collection
             foreach (var moduleType in moduleTypes)
             {
-                var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
+                var moduleObject = (AbpModule)_iocManager.Resolve(moduleType);
 
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
 
                 _modules.Add(new AbpModuleInfo(moduleObject));
-                
+
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
 
@@ -107,24 +107,17 @@ namespace Abp.Modules
                 }
 
                 //Set dependencies for defined DependsOnAttribute attribute(s).
-                if (moduleInfo.Type.IsDefined(typeof (DependsOnAttribute), true))
+                foreach (var dependedModuleType in AbpModule.FindDependedModuleTypes(moduleInfo.Type))
                 {
-                    var dependsOnAttributes = moduleInfo.Type.GetCustomAttributes(typeof (DependsOnAttribute), true).Cast<DependsOnAttribute>();
-                    foreach (var dependsOnAttribute in dependsOnAttributes)
+                    var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
+                    if (dependedModuleInfo == null)
                     {
-                        foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
-                        {
-                            var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
-                            if (dependedModuleInfo == null)
-                            {
-                                throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
-                            }
+                        throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                    }
 
-                            if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
-                            {
-                                moduleInfo.Dependencies.Add(dependedModuleInfo);
-                            }   
-                        }
+                    if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                    {
+                        moduleInfo.Dependencies.Add(dependedModuleInfo);
                     }
                 }
             }
