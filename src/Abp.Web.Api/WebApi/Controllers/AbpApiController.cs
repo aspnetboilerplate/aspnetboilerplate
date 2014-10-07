@@ -3,6 +3,7 @@ using System.Web.Http;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Localization;
+using Abp.Localization.Sources;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
@@ -35,9 +36,15 @@ namespace Abp.WebApi.Controllers
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
-        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
-        protected string LocalizationSourceName { get; set; }
+        protected string LocalizationSourceName
+        {
+            get { return _localizationSource.Name; }
+            set { _localizationSource = LocalizationHelper.GetSource(value); }
+        }
+
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Constructor.
@@ -46,6 +53,7 @@ namespace Abp.WebApi.Controllers
         {
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
+            _localizationSource = NullLocalizationSource.Instance;
         }
 
         /// <summary>
@@ -53,10 +61,9 @@ namespace Abp.WebApi.Controllers
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
-        protected string L(string name)
+        protected virtual string L(string name)
         {
-            CheckForLocalizationSourceName();
-            return LocalizationHelper.GetString(LocalizationSourceName, name);
+            return _localizationSource.GetString(name);
         }
 
         /// <summary>
@@ -65,18 +72,9 @@ namespace Abp.WebApi.Controllers
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, CultureInfo culture)
+        protected virtual string L(string name, CultureInfo culture)
         {
-            CheckForLocalizationSourceName();
-            return LocalizationHelper.GetString(LocalizationSourceName, name, culture);
-        }
-
-        private void CheckForLocalizationSourceName()
-        {
-            if (LocalizationSourceName == null)
-            {
-                throw new AbpException("You must set LocalizationSourceName property before use L methods.");
-            }
+            return _localizationSource.GetString(name, culture);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Localization;
+using Abp.Localization.Sources;
 using Abp.Runtime.Session;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
@@ -39,9 +40,15 @@ namespace Abp.Web.Mvc.Controllers
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
-        /// It's used in <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
-        public string LocalizationSourceName { get; set; }
+        protected string LocalizationSourceName
+        {
+            get { return _localizationSource.Name; }
+            set { _localizationSource = LocalizationHelper.GetSource(value); }
+        }
+
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Constructor.
@@ -50,6 +57,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
+            _localizationSource = NullLocalizationSource.Instance;
         }
 
         /// <summary>
@@ -59,7 +67,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <returns>Localized string</returns>
         protected virtual string L(string name)
         {
-            return LocalizationHelper.GetString(LocalizationSourceName, name);
+            return _localizationSource.GetString(name);
         }
 
         /// <summary>
@@ -70,7 +78,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <returns>Localized string</returns>
         protected virtual string L(string name, CultureInfo culture)
         {
-            return LocalizationHelper.GetString(LocalizationSourceName, name, culture);
+            return _localizationSource.GetString(name, culture);
         }
 
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)

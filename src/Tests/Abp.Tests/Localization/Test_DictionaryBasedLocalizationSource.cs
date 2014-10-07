@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
 using Abp.Localization.Sources;
-using NUnit.Framework;
 using Xunit;
 
 namespace Abp.Tests.Localization

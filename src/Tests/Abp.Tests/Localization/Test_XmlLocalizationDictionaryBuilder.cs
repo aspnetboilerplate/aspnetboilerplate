@@ -1,5 +1,4 @@
 using Abp.Localization.Dictionaries.Xml;
-using NUnit.Framework;
 using Xunit;
 
 namespace Abp.Tests.Localization
