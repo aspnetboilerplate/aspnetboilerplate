@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -8,8 +10,14 @@ using Abp.Runtime.Session;
 
 namespace Abp.EntityFramework
 {
+    /// <summary>
+    /// Base class for all DbContext classes in the application.
+    /// </summary>
     public abstract class AbpDbContext : DbContext, ITransientDependency
     {
+        /// <summary>
+        /// Used to get current session values.
+        /// </summary>
         public IAbpSession AbpSession { get; set; }
 
         protected AbpDbContext()
@@ -22,7 +30,37 @@ namespace Abp.EntityFramework
         {
             AbpSession = NullAbpSession.Instance;
         }
+
+        protected AbpDbContext(DbCompiledModel model)
+            : base(model)
+        {
+
+        }
         
+        protected AbpDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
+        {
+            AbpSession = NullAbpSession.Instance;
+        }
+
+        protected AbpDbContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+
+        }
+
+        protected AbpDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
+
+        }
+
+        protected AbpDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        {
+
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
