@@ -6,9 +6,9 @@
     <title>Abp.Web.Resources</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET Boilerplate - Web Resorces</description>
+    <description>This package contains resources (xml, js and css files) needed for ASP.NET Boilerplate web projects.</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>
-    <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection</tags>
+    <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection resources</tags>
   </metadata>
 </package>

@@ -6,7 +6,7 @@
     <title>Abp.NHibernate</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET Boilerplate - NHibernate adapter</description>
+    <description>NHibernate integration package for ASP.NET Boilerplate.</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>
     <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection nhibernate</tags>

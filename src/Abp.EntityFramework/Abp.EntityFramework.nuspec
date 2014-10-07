@@ -6,7 +6,7 @@
     <title>Abp.EntityFramework</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET Boilerplate - EntityFramework adapter</description>
+    <description>EntityFramework integration package for ASP.NET Boilerplate.</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>
     <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection entityframework</tags>
