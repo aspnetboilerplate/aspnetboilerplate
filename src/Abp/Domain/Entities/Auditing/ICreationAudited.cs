@@ -7,7 +7,7 @@ namespace Abp.Domain.Entities.Auditing
     public interface ICreationAudited : IHasCreationTime
     {
         /// <summary>
-        /// Creator of this entity.
+        /// Id of the creator user of this entity.
         /// </summary>
         long? CreatorUserId { get; set; }
     }

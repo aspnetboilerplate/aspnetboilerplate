@@ -6,6 +6,6 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     public interface IAudited : ICreationAudited, IModificationAudited
     {
-        
+
     }
 }
