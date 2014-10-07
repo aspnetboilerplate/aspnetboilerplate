@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -20,41 +21,74 @@ namespace Abp.EntityFramework
         /// </summary>
         public IAbpSession AbpSession { get; set; }
 
+        /// <summary>
+        /// Constructor.
+        /// Uses <see cref="IAbpStartupConfiguration.DefaultConnectionString"/> as connection string.
+        /// </summary>
         protected AbpDbContext()
+            : base(GetConnectionString(IocManager.Instance))
         {
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// Uses <see cref="IAbpStartupConfiguration.DefaultConnectionString"/> as connection string.
+        /// </summary>
+        protected AbpDbContext(IIocResolver iocResolver)
+            : base(GetConnectionString(iocResolver))
+        {
+            AbpSession = NullAbpSession.Instance;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(DbCompiledModel model)
             : base(model)
         {
             AbpSession = NullAbpSession.Instance;
         }
-        
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(string nameOrConnectionString, DbCompiledModel model)
             : base(nameOrConnectionString, model)
         {
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
             : base(objectContext, dbContextOwnsObjectContext)
         {
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected AbpDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
@@ -122,6 +156,7 @@ namespace Abp.EntityFramework
             if (entry.Entity is IModificationAudited)
             {
                 var auditedEntry = entry.Cast<IModificationAudited>();
+
                 auditedEntry.Entity.LastModificationTime = DateTime.Now; //TODO: UtcNow?
                 auditedEntry.Entity.LastModifierUserId = AbpSession.UserId;
             }
@@ -132,8 +167,10 @@ namespace Abp.EntityFramework
             if (entry.Entity is ISoftDelete)
             {
                 var softDeleteEntry = entry.Cast<ISoftDelete>();
+
                 softDeleteEntry.State = EntityState.Unchanged;
                 softDeleteEntry.Entity.IsDeleted = true;
+                
                 if (entry.Entity is IDeletionAudited)
                 {
                     var deletionAuditedEntry = entry.Cast<IDeletionAudited>();
@@ -141,6 +178,13 @@ namespace Abp.EntityFramework
                     deletionAuditedEntry.Entity.DeleterUserId = AbpSession.UserId;
                 }
             }
+        }
+
+        private static string GetConnectionString(IIocResolver iocResolver)
+        {
+            return iocResolver.IsRegistered<IAbpStartupConfiguration>()
+                ? iocResolver.Resolve<IAbpStartupConfiguration>().DefaultConnectionString
+                : null;
         }
     }
 }
