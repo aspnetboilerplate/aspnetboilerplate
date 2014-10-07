@@ -34,7 +34,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbCompiledModel model)
             : base(model)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
         
         protected AbpDbContext(DbConnection existingConnection, bool contextOwnsConnection)
@@ -46,19 +46,19 @@ namespace Abp.EntityFramework
         protected AbpDbContext(string nameOrConnectionString, DbCompiledModel model)
             : base(nameOrConnectionString, model)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
 
         protected AbpDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
             : base(objectContext, dbContextOwnsObjectContext)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
 
         protected AbpDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
-
+            AbpSession = NullAbpSession.Instance;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
