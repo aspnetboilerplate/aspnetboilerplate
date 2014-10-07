@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Abp.Application.Interceptors;
+using Abp.Application;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -13,7 +13,7 @@ namespace Abp
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
             UnitOfWorkRegistrar.Initialize(IocManager);
-            ApplicationLayerInterceptorRegistrar.Initialize(IocManager);
+            ApplicationServiceInterceptorRegistrar.Initialize(IocManager);
         }
 
         public override void Initialize()

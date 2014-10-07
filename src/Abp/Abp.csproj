@@ -65,11 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
-    <Compile Include="Application\Interceptors\ApplicationLayerInterceptorRegistrar.cs" />
-    <Compile Include="Application\Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Application\Authorization\AuthorizationInterceptor.cs" />
-    <Compile Include="Application\Authorization\AuthorizeAttributeHelper.cs" />
-    <Compile Include="Application\Authorization\IAbpAuthorizeAttribute.cs" />
+    <Compile Include="Application\ApplicationServiceInterceptorRegistrar.cs" />
+    <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
+    <Compile Include="Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDto.cs" />
     <Compile Include="Application\Services\Dto\AuditedEntityDtoOfTPrimaryKey.cs" />

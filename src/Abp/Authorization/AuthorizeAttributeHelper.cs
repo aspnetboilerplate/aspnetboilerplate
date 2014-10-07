@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Authorization;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 
-namespace Abp.Application.Authorization
+namespace Abp.Authorization
 {
-    public class AuthorizeAttributeHelper : ITransientDependency //TODO: Make internal
+    internal class AuthorizeAttributeHelper : ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
 

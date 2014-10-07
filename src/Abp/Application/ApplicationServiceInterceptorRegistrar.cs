@@ -1,15 +1,15 @@
-using Abp.Application.Authorization;
 using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Castle.Core;
 
-namespace Abp.Application.Interceptors
+namespace Abp.Application
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.
     /// </summary>
-    internal static class ApplicationLayerInterceptorRegistrar
+    internal static class ApplicationServiceInterceptorRegistrar
     {
         public static void Initialize(IIocManager iocManager)
         {

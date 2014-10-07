@@ -1,7 +1,7 @@
 ﻿using System;
 using Abp.Application.Services;
 
-namespace Abp.Application.Authorization
+namespace Abp.Authorization
 {
     /// <summary>
     /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)

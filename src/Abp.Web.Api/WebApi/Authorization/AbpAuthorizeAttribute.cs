@@ -1,6 +1,5 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Controllers;
-using Abp.Application.Authorization;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
