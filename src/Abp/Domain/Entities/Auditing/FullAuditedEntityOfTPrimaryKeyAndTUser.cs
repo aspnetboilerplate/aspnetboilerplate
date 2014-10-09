@@ -14,22 +14,22 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Is this entity Deleted?
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public virtual bool IsDeleted { get; set; }
 
         /// <summary>
         /// Reference to the deleter user of this entity.
         /// </summary>
         [ForeignKey("DeleterUserId")]
-        public TUser DeleterUser { get; set; }
+        public virtual TUser DeleterUser { get; set; }
 
         /// <summary>
         /// Which user deleted this entity?
         /// </summary>
-        public long? DeleterUserId { get; set; }
+        public virtual long? DeleterUserId { get; set; }
 
         /// <summary>
         /// Deletion time of this entity.
         /// </summary>
-        public DateTime? DeletionTime { get; set; }
+        public virtual DateTime? DeletionTime { get; set; }
     }
 }
