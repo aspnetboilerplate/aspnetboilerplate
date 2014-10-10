@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Abp.Application;
+using Abp.Application.Services.Interceptors;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;

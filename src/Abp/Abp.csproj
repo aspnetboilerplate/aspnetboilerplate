@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
-    <Compile Include="Application\ApplicationServiceInterceptorRegistrar.cs" />
+    <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />

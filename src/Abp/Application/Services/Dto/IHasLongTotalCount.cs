@@ -8,6 +8,6 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Total count of Items.
         /// </summary>
-        int TotalCount { get; set; }
+        long TotalCount { get; set; }
     }
 }
