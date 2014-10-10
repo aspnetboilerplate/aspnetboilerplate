@@ -13,7 +13,7 @@ namespace Abp.Web.Tests
 
         public ErrorInfoBuilder_Tests()
         {
-            var configuration = new AbpStartupConfiguration();
+            var configuration = new AbpStartupConfiguration(LocalIocManager);
             configuration.Localization.IsEnabled = false;
 
             _errorInfoBuilder = new ErrorInfoBuilder(configuration);

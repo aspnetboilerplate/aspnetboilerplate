@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 
 namespace Abp.Configuration

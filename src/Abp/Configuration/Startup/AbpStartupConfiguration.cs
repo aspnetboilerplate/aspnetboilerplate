@@ -27,9 +27,9 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
-        public AbpStartupConfiguration()
+        public AbpStartupConfiguration(IIocManager iocManager)
         {
-            Localization = new AbpLocalizationConfiguration(IocManager.Instance);
+            Localization = new AbpLocalizationConfiguration(iocManager);
             Modules = new AbpModuleConfigurations(this);
         }
 
