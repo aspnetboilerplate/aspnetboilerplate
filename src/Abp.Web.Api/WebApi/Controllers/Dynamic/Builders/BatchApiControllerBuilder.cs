@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Dependency;
 using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -50,7 +51,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    type.IsPublic && !type.IsAbstract && type.IsClass && typeof(T).IsAssignableFrom(type)
+                    type.IsPublic && type.IsInterface && typeof(T).IsAssignableFrom(type) && IocManager.Instance.IsRegistered(type)
                 select
                     type;
 
@@ -67,13 +68,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
                 if (!string.IsNullOrWhiteSpace(_servicePrefix))
                 {
-                    serviceName = _servicePrefix + "/" + serviceName;                    
+                    serviceName = _servicePrefix + "/" + serviceName;
                 }
 
-                var builder = typeof (DynamicApiControllerBuilder)
+                var builder = typeof(DynamicApiControllerBuilder)
                     .GetMethod("For", BindingFlags.Public | BindingFlags.Static)
                     .MakeGenericMethod(type)
-                    .Invoke(null, new object[] {serviceName});
+                    .Invoke(null, new object[] { serviceName });
 
                 if (_filters != null)
                 {
@@ -92,13 +93,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             var typeName = type.Name;
 
-            if (typeName.EndsWith("AppService"))
+            if (typeName.EndsWith("ApplicationService"))
+            {
+                typeName = typeName.Substring(0, typeName.Length - "ApplicationService".Length);
+            }
+            else if (typeName.EndsWith("AppService"))
             {
                 typeName = typeName.Substring(0, typeName.Length - "AppService".Length);
             }
             else if (typeName.EndsWith("Service"))
             {
                 typeName = typeName.Substring(0, typeName.Length - "Service".Length);
+            }
+
+            if (typeName.Length > 1 && typeName.StartsWith("I") && char.IsUpper(typeName, 1))
+            {
+                typeName = typeName.Substring(1);
             }
 
             return typeName.ToCamelCase();

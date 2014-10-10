@@ -1,4 +1,6 @@
 using System.Reflection;
+using Abp.Application.Services;
+using Abp.Dependency;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Shouldly;
@@ -11,33 +13,24 @@ namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
         [Fact]
         public void Test1()
         {
+            IocManager.Instance.Register<IMyFirstAppService, MyFirstAppService>();
+
             DynamicApiControllerBuilder
-                .ForAll<IMyServiceInterface>(Assembly.GetExecutingAssembly(), "myapp/ns1")
+                .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp/ns1")
                 .Build();
 
-            DynamicApiControllerManager.FindOrNull("myapp/ns1/mySample1").ShouldNotBe(null);
-            DynamicApiControllerManager.FindOrNull("myapp/ns1/mySample2").ShouldNotBe(null);
-            DynamicApiControllerManager.FindOrNull("myapp/ns1/mySampleNotDefined").ShouldBe(null);
+            DynamicApiControllerManager.GetAll().Count.ShouldBe(1);
+            DynamicApiControllerManager.FindOrNull("myapp/ns1/myFirst").ShouldNotBe(null);
         }
     }
 
-    public interface IMyServiceInterface
+    public interface IMyFirstAppService : IApplicationService
     {
         
     }
 
-    public abstract class MyServiceBase : IMyServiceInterface
+    public abstract class MyFirstAppService : IMyFirstAppService
     {
         
-    }
-
-    public class MySample1AppService : MyServiceBase
-    {
-        
-    }
-
-    public class MySample2Service : MyServiceBase
-    {
-
     }
 }
