@@ -14,7 +14,7 @@ namespace Abp.Configuration
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
         /// <returns>Returns the passed <see cref="value"/></returns>
-        T Set<T>(string name, T value);
+        void Set<T>(string name, T value);
 
         /// <summary>
         /// Gets a configuration object with given name.

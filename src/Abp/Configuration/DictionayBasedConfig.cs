@@ -55,10 +55,9 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
-        public T Set<T>(string name, T value)
+        public void Set<T>(string name, T value)
         {
             this[name] = value;
-            return value;
         }
 
         /// <summary>
@@ -109,7 +108,13 @@ namespace Abp.Configuration
         /// <returns>Value of the configuration or null if not found</returns>
         public T GetOrCreate<T>(string name, Func<T> creator)
         {
-            return (T)(Get(name) ?? Set(name, creator()));
+            var value = Get(name);
+            if (value == null)
+            {
+                value = creator();
+                Set(name, value);
+            }
+            return (T) value;
         }
     }
 }
