@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Web.Mvc;
 using Abp.Web.Authorization;
 
@@ -22,6 +18,5 @@ namespace Abp.Web.Mvc.Controllers.Authentication
             var script = _authorizationScriptManager.GetAuthenticationScript();
             return Content(script, "application/x-javascript", Encoding.UTF8);
         }
-
     }
 }
