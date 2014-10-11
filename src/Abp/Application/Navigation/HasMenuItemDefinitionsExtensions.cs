@@ -4,17 +4,17 @@ using Abp.Collections.Extensions;
 namespace Abp.Application.Navigation
 {
     /// <summary>
-    /// Defines extension methods for <see cref="IHasMenuItems"/>.
+    /// Defines extension methods for <see cref="IHasMenuItemDefinitions"/>.
     /// </summary>
-    public static class HasMenuItemsExtensions
+    public static class HasMenuItemDefinitionsExtensions
     {
         /// <summary>
-        /// Searches and gets a <see cref="MenuItem"/> by it's unique name.
+        /// Searches and gets a <see cref="MenuItemDefinition"/> by it's unique name.
         /// Throws exception if can not find.
         /// </summary>
         /// <param name="source">Source object</param>
         /// <param name="name">Unique name of the source</param>
-        public static MenuItem GetItemByName(this IHasMenuItems source, string name)
+        public static MenuItemDefinition GetItemByName(this IHasMenuItemDefinitions source, string name)
         {
             var item = GetItemByNameOrNull(source, name);
             if (item == null)
@@ -26,12 +26,12 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
-        /// Searches all menu items (recursively) in the source and gets a <see cref="MenuItem"/> by it's unique name.
+        /// Searches all menu items (recursively) in the source and gets a <see cref="MenuItemDefinition"/> by it's unique name.
         /// Returns null if can not find.
         /// </summary>
         /// <param name="source">Source object</param>
         /// <param name="name">Unique name of the source</param>
-        public static MenuItem GetItemByNameOrNull(this IHasMenuItems source, string name)
+        public static MenuItemDefinition GetItemByNameOrNull(this IHasMenuItemDefinitions source, string name)
         {
             if (source == null)
             {

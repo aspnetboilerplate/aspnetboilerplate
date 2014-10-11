@@ -15,6 +15,7 @@ namespace Abp.Authorization
     internal class PermissionManager : IPermissionManager, ISingletonDependency
     {
         public IPermissionGrantStore PermissionGrantStore { get; set; }
+
         public ILogger Logger { get; set; }
 
         private readonly IIocManager _iocManager;

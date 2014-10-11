@@ -10,12 +10,12 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// All menus defined in the application.
         /// </summary>
-        IDictionary<string, Menu> Menus { get; }
+        IDictionary<string, MenuDefinition> Menus { get; }
 
         /// <summary>
         /// Gets the main menu of the application.
         /// A shortcut of <see cref="Menus"/>["MainMenu"].
         /// </summary>
-        Menu MainMenu { get; }
+        MenuDefinition MainMenu { get; }
     }
 }

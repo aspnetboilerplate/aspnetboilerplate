@@ -95,6 +95,7 @@
     <Compile Include="Web\Mvc\Controllers\AbpAppViewController.cs" />
     <Compile Include="Web\Mvc\Controllers\Authentication\AbpAuthorizationController.cs" />
     <Compile Include="Web\Mvc\Controllers\Localization\AbpLocalizationController.cs" />
+    <Compile Include="Web\Mvc\Controllers\Navigation\AbpNavigationController.cs" />
     <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Web\Mvc\Controllers\Settings\AbpSettingsController.cs" />
     <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />
