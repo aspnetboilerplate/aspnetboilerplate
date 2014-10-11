@@ -5,7 +5,7 @@ namespace Abp.Configuration.Startup
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    public interface IAbpLocalizationConfiguration
+    public interface ILocalizationConfiguration
     {
         /// <summary>
         /// Used to enable/disable localization system.

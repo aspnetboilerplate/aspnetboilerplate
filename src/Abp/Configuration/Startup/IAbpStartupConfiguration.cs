@@ -8,7 +8,12 @@
         /// <summary>
         /// Used to set localization configuration.
         /// </summary>
-        IAbpLocalizationConfiguration Localization { get; }
+        ILocalizationConfiguration Localization { get; }
+
+        /// <summary>
+        /// Used to configure navigation.
+        /// </summary>
+        INavigationConfiguration Navigation { get; }
 
         /// <summary>
         /// Gets/sets default connection string used by ORM module.
@@ -18,8 +23,8 @@
 
         /// <summary>
         /// Used to configure modules.
-        /// Modules can write extension methods to <see cref="IAbpModuleConfigurations"/> to add module specific configurations.
+        /// Modules can write extension methods to <see cref="IModuleConfigurations"/> to add module specific configurations.
         /// </summary>
-        IAbpModuleConfigurations Modules { get; }
+        IModuleConfigurations Modules { get; }
     }
 }

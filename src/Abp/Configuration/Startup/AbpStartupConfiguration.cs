@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Generic;
+using Abp.Dependency;
 
 namespace Abp.Configuration.Startup
 {
@@ -7,10 +8,12 @@ namespace Abp.Configuration.Startup
     /// </summary>
     internal class AbpStartupConfiguration : DictionayBasedConfig, IAbpStartupConfiguration
     {
+        public IIocManager IocManager { get; private set; }
+
         /// <summary>
         /// Used to set localization configuration.
         /// </summary>
-        public IAbpLocalizationConfiguration Localization { get; private set; }
+        public ILocalizationConfiguration Localization { get; private set; }
 
         /// <summary>
         /// Gets/sets default connection string used by ORM module.
@@ -20,24 +23,31 @@ namespace Abp.Configuration.Startup
 
         /// <summary>
         /// Used to configure modules.
-        /// Modules can write extension methods to <see cref="AbpModuleConfigurations"/> to add module specific configurations.
+        /// Modules can write extension methods to <see cref="ModuleConfigurations"/> to add module specific configurations.
         /// </summary>
-        public IAbpModuleConfigurations Modules { get; private set; }
+        public IModuleConfigurations Modules { get; private set; }
+
+        /// <summary>
+        /// Used to configure navigation.
+        /// </summary>
+        public INavigationConfiguration Navigation { get; private set; }
 
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
         public AbpStartupConfiguration(IIocManager iocManager)
         {
-            Localization = new AbpLocalizationConfiguration(iocManager);
-            Modules = new AbpModuleConfigurations(this);
+            IocManager = iocManager;
+            Localization = new LocalizationConfiguration(iocManager);
+            Modules = new ModuleConfigurations(this);
+            Navigation = IocManager.Resolve<INavigationConfiguration>();
         }
 
-        private sealed class AbpModuleConfigurations : IAbpModuleConfigurations
+        private sealed class ModuleConfigurations : IModuleConfigurations
         {
             public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
-            public AbpModuleConfigurations(IAbpStartupConfiguration abpConfiguration)
+            public ModuleConfigurations(IAbpStartupConfiguration abpConfiguration)
             {
                 AbpConfiguration = abpConfiguration;
             }

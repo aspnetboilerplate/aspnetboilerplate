@@ -22,7 +22,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Display name of the menu item. Required.
         /// </summary>
-        public ILocalizableString DisplayName { get; set; }
+        public ILocalizableString DisplayName { get; private set; }
 
         /// <summary>
         /// The URL to navigate when this menu item is selected. Optional.

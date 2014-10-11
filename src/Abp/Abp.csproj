@@ -65,9 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
+    <Compile Include="Application\Navigation\HasMenuItemsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItems.cs" />
     <Compile Include="Application\Navigation\IMenuManager.cs" />
-    <Compile Include="Application\Navigation\INavigationConfiguration.cs" />
     <Compile Include="Application\Navigation\Menu.cs" />
     <Compile Include="Application\Navigation\MenuItem.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
@@ -104,8 +104,14 @@
     <Compile Include="Authorization\Permission.cs" />
     <Compile Include="Authorization\PermissionGroup.cs" />
     <Compile Include="Authorization\PermissionManager.cs" />
+    <Compile Include="Collections\ITypeList.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
+    <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
+    <Compile Include="Application\Navigation\INavigationProvider.cs" />
+    <Compile Include="Application\Navigation\INavigationProviderContext.cs" />
+    <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
@@ -235,11 +241,11 @@
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptor.cs" />
     <Compile Include="AbpInitializationException.cs" />
     <Compile Include="Configuration\Startup\AbpStartupConfiguration.cs" />
-    <Compile Include="Configuration\Startup\AbpLocalizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\LocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\AbpLocalizationConfigurationExtensions.cs" />
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
-    <Compile Include="Configuration\Startup\IAbpLocalizationConfiguration.cs" />
-    <Compile Include="Configuration\Startup\IAbpModuleConfigurations.cs" />
+    <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

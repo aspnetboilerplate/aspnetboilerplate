@@ -15,7 +15,7 @@ namespace Abp.Configuration.Startup
         /// <param name="localizationConfiguration">Localization configuration object</param>
         /// <param name="sourceName">Unique Name of the source</param>
         /// <param name="directoryPath">Directory path of the localization XML files</param>
-        public static void RegisterXmlSource(this IAbpLocalizationConfiguration localizationConfiguration, string sourceName, string directoryPath)
+        public static void RegisterXmlSource(this ILocalizationConfiguration localizationConfiguration, string sourceName, string directoryPath)
         {
             localizationConfiguration.RegisterSource(new XmlLocalizationSource(sourceName, directoryPath));
         }
@@ -26,7 +26,7 @@ namespace Abp.Configuration.Startup
         /// <param name="localizationConfiguration">Localization configuration object</param>
         /// <param name="sourceName">Unique Name of the source</param>
         /// <param name="resourceManager">Directory path of the localization XML files</param>
-        public static void RegisterResourceFileSource(this IAbpLocalizationConfiguration localizationConfiguration, string sourceName, ResourceManager resourceManager)
+        public static void RegisterResourceFileSource(this ILocalizationConfiguration localizationConfiguration, string sourceName, ResourceManager resourceManager)
         {
             localizationConfiguration.RegisterSource(new ResourceFileLocalizationSource(sourceName, resourceManager));
         }

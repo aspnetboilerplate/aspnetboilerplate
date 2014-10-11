@@ -7,7 +7,7 @@ namespace Abp.Configuration.Startup
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    public class AbpLocalizationConfiguration : IAbpLocalizationConfiguration
+    public class LocalizationConfiguration : ILocalizationConfiguration
     {
         private readonly Lazy<ILocalizationSourceManager> _localizationSourceManager;
 
@@ -17,7 +17,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public bool IsEnabled { get; set; }
 
-        internal AbpLocalizationConfiguration(IIocResolver iocManager)
+        internal LocalizationConfiguration(IIocResolver iocManager)
         {
             IsEnabled = true;
             _localizationSourceManager = new Lazy<ILocalizationSourceManager>(iocManager.Resolve<ILocalizationSourceManager>);
