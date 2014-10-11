@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -16,7 +18,7 @@ namespace Abp.Application.Navigation
             _navigationManager = navigationManager;
         }
 
-        public UserMenu GetUserMenu(string menuName, long userId)
+        public UserMenu GetMenu(string menuName, long userId)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
@@ -27,6 +29,11 @@ namespace Abp.Application.Navigation
             var userMenu = new UserMenu(menuDefinition);
             FillUserMenuItems(userId, menuDefinition.Items, userMenu.Items);
             return userMenu;
+        }
+
+        public IReadOnlyList<UserMenu> GetMenus(long userId)
+        {
+            return _navigationManager.Menus.Values.Select(m => GetMenu(m.Name, userId)).ToImmutableList();
         }
 
         private int FillUserMenuItems(long userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)

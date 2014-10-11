@@ -15,7 +15,7 @@ namespace Abp.Web.Mvc.Controllers.Authentication
 
         public ContentResult GetScripts()
         {
-            var script = _authorizationScriptManager.GetAuthenticationScript();
+            var script = _authorizationScriptManager.GetAuthorizationScript();
             return Content(script, "application/x-javascript", Encoding.UTF8);
         }
     }

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
+    <Compile Include="Application\Navigation\NavigationTestCase.cs" />
     <Compile Include="Authorization\PermissionDefinitionTests.cs" />
     <Compile Include="Collections\TypeList_Test.cs" />
     <Compile Include="Configuration\DictionaryBasedConfig_Test.cs" />

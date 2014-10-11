@@ -1,21 +1,21 @@
 ﻿using System.Text;
 using System.Web.Mvc;
-using Abp.Application.Navigation;
+using Abp.Web.Navigation;
 
 namespace Abp.Web.Mvc.Controllers.Navigation
 {
     public class AbpNavigationController : AbpController
     {
-        private readonly INavigationManager _navigationManager;
+        private readonly INavigationScriptManager navigationScriptManager;
 
-        public AbpNavigationController(INavigationManager navigationManager)
+        public AbpNavigationController(INavigationScriptManager navigationScriptManager)
         {
-            _navigationManager = navigationManager;
+            this.navigationScriptManager = navigationScriptManager;
         }
 
         public ContentResult GetScripts()
         {
-            var script = "";
+            var script = navigationScriptManager.GetScript();
             return Content(script, "application/x-javascript", Encoding.UTF8);
         }
     }
