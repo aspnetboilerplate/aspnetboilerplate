@@ -67,9 +67,11 @@
     <Compile Include="AbpConsts.cs" />
     <Compile Include="Application\Navigation\HasMenuItemsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItems.cs" />
-    <Compile Include="Application\Navigation\IMenuManager.cs" />
+    <Compile Include="Application\Navigation\INavigationManager.cs" />
     <Compile Include="Application\Navigation\Menu.cs" />
     <Compile Include="Application\Navigation\MenuItem.cs" />
+    <Compile Include="Application\Navigation\NavigationManager.cs" />
+    <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor.cs" />

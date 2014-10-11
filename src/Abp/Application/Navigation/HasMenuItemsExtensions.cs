@@ -26,7 +26,7 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
-        /// Searches and gets a <see cref="MenuItem"/> by it's unique name.
+        /// Searches all menu items (recursively) in the source and gets a <see cref="MenuItem"/> by it's unique name.
         /// Returns null if can not find.
         /// </summary>
         /// <param name="source">Source object</param>

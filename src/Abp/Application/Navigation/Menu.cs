@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Abp.Localization;
 
 namespace Abp.Application.Navigation
@@ -23,15 +24,27 @@ namespace Abp.Application.Navigation
         /// </summary>
         public IList<MenuItem> Items { get; set; }
 
-        //public Dictionary<string, string> Settings { get; set; } //Maybe implemented later?
-
         /// <summary>
         /// Creates a new <see cref="Menu"/> object.
         /// </summary>
-        public Menu()
+        /// <param name="name">Unique name of the menu</param>
+        /// <param name="displayName">Display name of the menu</param>
+        public Menu(string name, ILocalizableString displayName)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name", "Menu name can not be empty or null.");
+            }
+
+            if (displayName == null)
+            {
+                throw new ArgumentNullException("displayName", "Display name of the menu can not be null.");
+            }
+
+            Name = name;
+            DisplayName = displayName;
+
             Items = new List<MenuItem>();
-            //Settings = new Dictionary<string, string>();
         }
 
         /// <summary>

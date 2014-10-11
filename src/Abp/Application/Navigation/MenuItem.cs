@@ -39,14 +39,11 @@ namespace Abp.Application.Navigation
         /// </summary>
         public string RequiredPermissionName { get; set; }
 
-        //public Dictionary<string, string> Settings { get; set; } //Maybe implemented later?
-
         /// <summary>
         /// Creates a new <see cref="MenuItem"/> object.
         /// </summary>
         public MenuItem(ILocalizableString displayName)
         {
-            //Settings = new Dictionary<string, string>();
             Items = new List<MenuItem>();
             DisplayName = displayName;
         }

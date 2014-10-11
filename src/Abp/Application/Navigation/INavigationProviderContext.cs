@@ -6,8 +6,8 @@
     public interface INavigationProviderContext
     {
         /// <summary>
-        /// Gets main menu of the application to modify.
+        /// Gets a reference to the menu manager.
         /// </summary>
-        Menu MainMenu { get; }
+        INavigationManager Manager { get; }
     }
 }

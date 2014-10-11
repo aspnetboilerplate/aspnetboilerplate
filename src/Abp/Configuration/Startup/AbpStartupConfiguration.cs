@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 
 namespace Abp.Configuration.Startup
 {
@@ -8,6 +7,8 @@ namespace Abp.Configuration.Startup
     /// </summary>
     internal class AbpStartupConfiguration : DictionayBasedConfig, IAbpStartupConfiguration
     {
+        //TODO@Halil: Register all properties to IOC and use over it!
+
         public IIocManager IocManager { get; private set; }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure navigation.
         /// </summary>
-        public INavigationConfiguration Navigation { get; private set; }
+        public INavigationConfiguration Navigation { get; set; }
 
         /// <summary>
         /// Private constructor for singleton pattern.
@@ -40,7 +41,6 @@ namespace Abp.Configuration.Startup
             IocManager = iocManager;
             Localization = new LocalizationConfiguration(iocManager);
             Modules = new ModuleConfigurations(this);
-            Navigation = IocManager.Resolve<INavigationConfiguration>();
         }
 
         private sealed class ModuleConfigurations : IModuleConfigurations
