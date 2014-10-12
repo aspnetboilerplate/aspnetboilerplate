@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Sources;
@@ -10,7 +11,10 @@ namespace Abp.Configuration.Startup
     /// </summary>
     public class LocalizationConfiguration : ILocalizationConfiguration
     {
-        private readonly Lazy<ILocalizationManager> _localizationManager;
+        /// <summary>
+        /// Used to set languages available for this application.
+        /// </summary>
+        public List<LanguageInfo> Languages { get; private set; }
 
         /// <summary>
         /// Used to enable/disable localization system.
@@ -18,12 +22,15 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public bool IsEnabled { get; set; }
 
+        private readonly Lazy<ILocalizationManager> _localizationManager;
+
         internal LocalizationConfiguration(IIocResolver iocManager)
         {
             IsEnabled = true;
             _localizationManager = new Lazy<ILocalizationManager>(iocManager.Resolve<ILocalizationManager>);
+            Languages = new List<LanguageInfo>();
         }
-
+        
         /// <summary>
         /// Adds a localization source.
         /// </summary>

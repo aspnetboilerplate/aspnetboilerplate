@@ -152,6 +152,7 @@
     <Compile Include="IDateTimeRange.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
     <Compile Include="Localization\ILocalizableString.cs" />
+    <Compile Include="Localization\LanguageInfo.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DependsOnAttribute.cs" />
     <Compile Include="Reflection\DefaultAssemblyFinder.cs" />

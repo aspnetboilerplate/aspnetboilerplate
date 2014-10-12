@@ -1,4 +1,6 @@
-﻿using Abp.Localization.Sources;
+﻿using System.Collections.Generic;
+using Abp.Localization;
+using Abp.Localization.Sources;
 
 namespace Abp.Configuration.Startup
 {
@@ -12,6 +14,11 @@ namespace Abp.Configuration.Startup
         /// Default: true.
         /// </summary>
         bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Used to set languages available for this application.
+        /// </summary>
+        List<LanguageInfo> Languages { get; }
 
         /// <summary>
         /// Adds a localization source.

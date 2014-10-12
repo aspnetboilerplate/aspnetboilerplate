@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Threading;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Localization.Sources;
 
@@ -8,6 +11,11 @@ namespace Abp.Localization
 {
     internal class LocalizationManager : ILocalizationManager
     {
+        /// <summary>
+        /// Gets current language for the application.
+        /// </summary>
+        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
+
         private readonly IAbpStartupConfiguration _configuration;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
@@ -18,6 +26,11 @@ namespace Abp.Localization
         {
             _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();
+        }
+
+        public IReadOnlyList<LanguageInfo> GetAllLanguages()
+        {
+            return _configuration.Localization.Languages.ToImmutableList();
         }
 
         /// <summary>
@@ -73,6 +86,40 @@ namespace Abp.Localization
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
             return _sources.Values.ToImmutableList();
+        }
+
+        private LanguageInfo GetCurrentLanguage()
+        {
+            if (_configuration.Localization.Languages.IsNullOrEmpty())
+            {
+                throw new AbpException("No language defined in this application. Define languages on startup configuration.");
+            }
+
+            var currentCultureName = Thread.CurrentThread.CurrentUICulture.Name;
+
+            //Try to find exact match
+            var currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => l.Code == currentCultureName);
+            if (currentLanguage != null)
+            {
+                return currentLanguage;
+            }
+
+            //Try to find best match
+            currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Code));
+            if (currentLanguage != null)
+            {
+                return currentLanguage;
+            }
+
+            //Try to find default language
+            currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => l.IsDefault);
+            if (currentLanguage != null)
+            {
+                return currentLanguage;
+            }
+
+            //Get first one
+            return _configuration.Localization.Languages[0];
         }
     }
 }
