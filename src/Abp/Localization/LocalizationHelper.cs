@@ -10,11 +10,11 @@ namespace Abp.Localization
     /// </summary>
     public static class LocalizationHelper
     {
-        private static readonly Lazy<ILocalizationManager> LocalizationSourceManager;
+        private static readonly Lazy<ILocalizationManager> LocalizationManager;
 
         static LocalizationHelper()
         {
-            LocalizationSourceManager = new Lazy<ILocalizationManager>(IocManager.Instance.Resolve<ILocalizationManager>);
+            LocalizationManager = new Lazy<ILocalizationManager>(IocManager.Instance.Resolve<ILocalizationManager>);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Abp.Localization
         /// </summary>
         public static ILocalizationSource GetSource(string name)
         {
-            return LocalizationSourceManager.Value.GetSource(name);
+            return LocalizationManager.Value.GetSource(name);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name)
         {
-            return LocalizationSourceManager.Value.GetSource(sourceName).GetString(name);
+            return LocalizationManager.Value.GetSource(sourceName).GetString(name);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name, CultureInfo culture)
         {
-            return LocalizationSourceManager.Value.GetSource(sourceName).GetString(name, culture);
+            return LocalizationManager.Value.GetSource(sourceName).GetString(name, culture);
         }
     }
 }
