@@ -1,4 +1,5 @@
 ﻿using Abp.Configuration.Startup;
+using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Castle.MicroKernel.Registration;
@@ -30,7 +31,7 @@ namespace Abp.Dependency.Installers
         private static void RegisterLocalizationSystem(IWindsorContainer container)
         {
             container.Register(
-                Component.For<ILocalizationSourceManager>().ImplementedBy<LocalizationSourceManager>().LifestyleSingleton()
+                Component.For<ILocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton()
                 );
         }
     }

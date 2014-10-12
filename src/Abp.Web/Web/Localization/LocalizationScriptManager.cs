@@ -5,6 +5,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Caching;
 
@@ -15,13 +16,13 @@ namespace Abp.Web.Localization
     /// </summary>
     public class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency //TODO: Make it internal?
     {
-        private readonly ILocalizationSourceManager _localizationSourceManager;
+        private readonly ILocalizationManager _localizationManager;
 
         private readonly ThreadSafeObjectCache<string> _cache;
 
-        public LocalizationScriptManager(ILocalizationSourceManager localizationSourceManager)
+        public LocalizationScriptManager(ILocalizationManager localizationManager)
         {
-            _localizationSourceManager = localizationSourceManager;
+            _localizationManager = localizationManager;
             _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
         }
 
@@ -52,7 +53,7 @@ namespace Abp.Web.Localization
             script.AppendLine("    abp.localization.values = abp.localization.values || {};");
             script.AppendLine();
 
-            foreach (var source in _localizationSourceManager.GetAllSources().OrderBy(s => s.Name))
+            foreach (var source in _localizationManager.GetAllSources().OrderBy(s => s.Name))
             {
                 script.AppendLine("    abp.localization.values['" + source.Name + "'] = {");
 

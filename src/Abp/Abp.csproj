@@ -257,12 +257,12 @@
     <Compile Include="Events\Bus\IEventBus.cs" />
     <Compile Include="AbpException.cs" />
     <Compile Include="UI\UserFriendlyException.cs" />
-    <Compile Include="Localization\Sources\ILocalizationSourceManager.cs" />
+    <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Sources\Resource\ResourceFileLocalizationSource.cs" />
     <Compile Include="Localization\Sources\ILocalizationSource.cs" />
     <Compile Include="Localization\LocalizationHelper.cs" />
-    <Compile Include="Localization\Sources\LocalizationSourceManager.cs" />
+    <Compile Include="Localization\LocalizationManager.cs" />
     <Compile Include="Localization\Dictionaries\ILocalizationDictionary.cs" />
     <Compile Include="Localization\Sources\DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\Sources\Xml\XmlLocalizationSource.cs" />

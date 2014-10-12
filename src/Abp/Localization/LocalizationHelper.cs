@@ -10,11 +10,11 @@ namespace Abp.Localization
     /// </summary>
     public static class LocalizationHelper
     {
-        private static readonly Lazy<ILocalizationSourceManager> LocalizationSourceManager;
+        private static readonly Lazy<ILocalizationManager> LocalizationSourceManager;
 
         static LocalizationHelper()
         {
-            LocalizationSourceManager = new Lazy<ILocalizationSourceManager>(IocManager.Instance.Resolve<ILocalizationSourceManager>);
+            LocalizationSourceManager = new Lazy<ILocalizationManager>(IocManager.Instance.Resolve<ILocalizationManager>);
         }
 
         /// <summary>

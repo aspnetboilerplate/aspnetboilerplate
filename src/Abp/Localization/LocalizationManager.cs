@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Configuration.Startup;
+using Abp.Localization.Sources;
 
-namespace Abp.Localization.Sources
+namespace Abp.Localization
 {
-    /// <summary>
-    /// This class is used to manage localization sources by implementing <see cref="ILocalizationSourceManager"/>. See <see cref="ILocalizationSource"/>.
-    /// </summary>
-    public class LocalizationSourceManager : ILocalizationSourceManager
+    internal class LocalizationManager : ILocalizationManager
     {
         private readonly IAbpStartupConfiguration _configuration;
         private readonly IDictionary<string, ILocalizationSource> _sources;
@@ -16,7 +14,7 @@ namespace Abp.Localization.Sources
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationSourceManager(IAbpStartupConfiguration configuration)
+        public LocalizationManager(IAbpStartupConfiguration configuration)
         {
             _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();

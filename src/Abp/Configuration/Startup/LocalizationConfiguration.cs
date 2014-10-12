@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.Localization.Sources;
 
 namespace Abp.Configuration.Startup
@@ -9,7 +10,7 @@ namespace Abp.Configuration.Startup
     /// </summary>
     public class LocalizationConfiguration : ILocalizationConfiguration
     {
-        private readonly Lazy<ILocalizationSourceManager> _localizationSourceManager;
+        private readonly Lazy<ILocalizationManager> _localizationSourceManager;
 
         /// <summary>
         /// Used to enable/disable localization system.
@@ -20,7 +21,7 @@ namespace Abp.Configuration.Startup
         internal LocalizationConfiguration(IIocResolver iocManager)
         {
             IsEnabled = true;
-            _localizationSourceManager = new Lazy<ILocalizationSourceManager>(iocManager.Resolve<ILocalizationSourceManager>);
+            _localizationSourceManager = new Lazy<ILocalizationManager>(iocManager.Resolve<ILocalizationManager>);
         }
 
         /// <summary>
