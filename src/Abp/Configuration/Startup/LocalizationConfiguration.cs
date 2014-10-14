@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Dependency;
+﻿using System.Collections.Generic;
 using Abp.Localization;
-using Abp.Localization.Sources;
 
 namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    public class LocalizationConfiguration : ILocalizationConfiguration
+    internal class LocalizationConfiguration : ILocalizationConfiguration
     {
         /// <summary>
         /// Used to set languages available for this application.
         /// </summary>
-        public List<LanguageInfo> Languages { get; private set; }
+        public IList<LanguageInfo> Languages { get; private set; }
+
+        /// <summary>
+        /// List of localization sources.
+        /// </summary>
+        public ILocalizationSourceList Sources { get; private set; }
 
         /// <summary>
         /// Used to enable/disable localization system.
@@ -22,22 +24,11 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public bool IsEnabled { get; set; }
 
-        private readonly Lazy<ILocalizationManager> _localizationManager;
-
-        internal LocalizationConfiguration(IIocResolver iocManager)
+        public LocalizationConfiguration()
         {
-            IsEnabled = true;
-            _localizationManager = new Lazy<ILocalizationManager>(iocManager.Resolve<ILocalizationManager>);
             Languages = new List<LanguageInfo>();
-        }
-        
-        /// <summary>
-        /// Adds a localization source.
-        /// </summary>
-        /// <param name="source">Localization source</param>
-        public void RegisterSource(ILocalizationSource source)
-        {
-            _localizationManager.Value.RegisterSource(source);
+            Sources = new LocalizationSourceList();
+            IsEnabled = true;
         }
     }
 }

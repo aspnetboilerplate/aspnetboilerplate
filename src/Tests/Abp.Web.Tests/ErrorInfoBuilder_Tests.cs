@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Configuration.Startup;
+using Abp.Dependency.Installers;
 using Abp.Tests;
 using Abp.UI;
 using Abp.Web.Models;
@@ -13,10 +14,13 @@ namespace Abp.Web.Tests
 
         public ErrorInfoBuilder_Tests()
         {
-            var configuration = new AbpStartupConfiguration(LocalIocManager);
+            LocalIocManager.IocContainer.Install(new AbpCoreInstaller());
+
+            var configuration = LocalIocManager.Resolve<AbpStartupConfiguration>();
+            configuration.Initialize();
             configuration.Localization.IsEnabled = false;
 
-            _errorInfoBuilder = new ErrorInfoBuilder(configuration);
+            _errorInfoBuilder = new ErrorInfoBuilder(new ModuleConfigurations(configuration));
             _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 

@@ -16,41 +16,41 @@ namespace Abp.Localization
         /// </summary>
         public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
 
-        private readonly IAbpStartupConfiguration _configuration;
+        private readonly ILocalizationConfiguration _configuration;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationManager(IAbpStartupConfiguration configuration)
+        public LocalizationManager(ILocalizationConfiguration configuration)
         {
             _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();
+            InitializeSources();
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
         {
-            return _configuration.Localization.Languages.ToImmutableList();
+            return _configuration.Languages.ToImmutableList();
         }
 
-        /// <summary>
-        /// Registers new localization source.
-        /// </summary>
-        /// <param name="source">Localization source</param>
-        public void RegisterSource(ILocalizationSource source)
+        private void InitializeSources()
         {
-            if (!_configuration.Localization.IsEnabled)
+            if (!_configuration.IsEnabled)
             {
                 return;
             }
 
-            if (_sources.ContainsKey(source.Name))
+            foreach (var source in _configuration.Sources)
             {
-                throw new AbpException("There is already a source with name: " + source.Name);
-            }
+                if (_sources.ContainsKey(source.Name))
+                {
+                    throw new AbpException("There are more than one source with name: " + source.Name + "! Source name must be unique!");
+                }
 
-            _sources[source.Name] = source;
-            source.Initialize();
+                _sources[source.Name] = source;
+                source.Initialize();
+            }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Abp.Localization
         /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!_configuration.Localization.IsEnabled)
+            if (!_configuration.IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }
@@ -90,7 +90,7 @@ namespace Abp.Localization
 
         private LanguageInfo GetCurrentLanguage()
         {
-            if (_configuration.Localization.Languages.IsNullOrEmpty())
+            if (_configuration.Languages.IsNullOrEmpty())
             {
                 throw new AbpException("No language defined in this application. Define languages on startup configuration.");
             }
@@ -98,28 +98,28 @@ namespace Abp.Localization
             var currentCultureName = Thread.CurrentThread.CurrentUICulture.Name;
 
             //Try to find exact match
-            var currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => l.Code == currentCultureName);
+            var currentLanguage = _configuration.Languages.FirstOrDefault(l => l.Code == currentCultureName);
             if (currentLanguage != null)
             {
                 return currentLanguage;
             }
 
             //Try to find best match
-            currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Code));
+            currentLanguage = _configuration.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Code));
             if (currentLanguage != null)
             {
                 return currentLanguage;
             }
 
             //Try to find default language
-            currentLanguage = _configuration.Localization.Languages.FirstOrDefault(l => l.IsDefault);
+            currentLanguage = _configuration.Languages.FirstOrDefault(l => l.IsDefault);
             if (currentLanguage != null)
             {
                 return currentLanguage;
             }
 
             //Get first one
-            return _configuration.Localization.Languages[0];
+            return _configuration.Languages[0];
         }
     }
 }

@@ -114,9 +114,12 @@
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
     <Compile Include="Application\Navigation\INavigationProvider.cs" />
     <Compile Include="Application\Navigation\INavigationProviderContext.cs" />
+    <Compile Include="Configuration\Startup\LocalizationSourceList.cs" />
+    <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
@@ -249,7 +252,6 @@
     <Compile Include="AbpInitializationException.cs" />
     <Compile Include="Configuration\Startup\AbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\LocalizationConfiguration.cs" />
-    <Compile Include="Configuration\Startup\AbpLocalizationConfigurationExtensions.cs" />
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />

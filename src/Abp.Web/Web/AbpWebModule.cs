@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Web;
-using Abp.Configuration.Startup;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 
@@ -22,7 +21,7 @@ namespace Abp.Web
         public override void Initialize()
         { 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            Configuration.Localization.RegisterXmlSource("AbpWeb", "Localization\\AbpWeb");
+            Configuration.Localization.Sources.Add(new XmlLocalizationSource("AbpWeb", "Localization\\AbpWeb"));
         }
     }
 }

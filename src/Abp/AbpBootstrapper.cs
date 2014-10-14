@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Modules;
@@ -48,6 +49,8 @@ namespace Abp
         public virtual void Initialize()
         {
             _iocManager.IocContainer.Install(new AbpCoreInstaller());
+
+            _iocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
             _moduleManager = _iocManager.Resolve<IAbpModuleManager>();
             _moduleManager.InitializeModules();

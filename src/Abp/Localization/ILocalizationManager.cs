@@ -20,12 +20,6 @@ namespace Abp.Localization
         IReadOnlyList<LanguageInfo> GetAllLanguages();
 
         /// <summary>
-        /// Registers new localization source.
-        /// </summary>
-        /// <param name="source">Localization source</param>
-        void RegisterSource(ILocalizationSource source);
-
-        /// <summary>
         /// Gets a localization source with name.
         /// </summary>
         /// <param name="name">Unique name of the localization source</param>

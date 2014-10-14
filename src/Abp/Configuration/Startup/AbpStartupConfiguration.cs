@@ -7,8 +7,6 @@ namespace Abp.Configuration.Startup
     /// </summary>
     internal class AbpStartupConfiguration : DictionayBasedConfig, IAbpStartupConfiguration
     {
-        //TODO@Halil: Register all properties to IOC and use over it!
-
         public IIocManager IocManager { get; private set; }
 
         /// <summary>
@@ -31,7 +29,7 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure navigation.
         /// </summary>
-        public INavigationConfiguration Navigation { get; set; }
+        public INavigationConfiguration Navigation { get; private set; }
 
         /// <summary>
         /// Private constructor for singleton pattern.
@@ -39,18 +37,13 @@ namespace Abp.Configuration.Startup
         public AbpStartupConfiguration(IIocManager iocManager)
         {
             IocManager = iocManager;
-            Localization = new LocalizationConfiguration(iocManager);
-            Modules = new ModuleConfigurations(this);
         }
 
-        private sealed class ModuleConfigurations : IModuleConfigurations
+        public void Initialize()
         {
-            public IAbpStartupConfiguration AbpConfiguration { get; private set; }
-
-            public ModuleConfigurations(IAbpStartupConfiguration abpConfiguration)
-            {
-                AbpConfiguration = abpConfiguration;
-            }
+            Localization = IocManager.Resolve<ILocalizationConfiguration>();
+            Modules = IocManager.Resolve<IModuleConfigurations>();
+            Navigation = IocManager.Resolve<INavigationConfiguration>();
         }
     }
 }
