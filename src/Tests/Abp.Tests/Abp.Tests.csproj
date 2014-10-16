@@ -66,6 +66,7 @@
     <Compile Include="Configuration\DictionaryBasedConfig_Test.cs" />
     <Compile Include="Configuration\MyChangableSession.cs" />
     <Compile Include="Configuration\SettingManager_Tests.cs" />
+    <Compile Include="Dependency\CircularDependency_Tests.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper_Tests.cs" />
     <Compile Include="Dependency\GenericInjection_Tests.cs" />
     <Compile Include="Dependency\Interceptors\Interceptors_Can_Have_Injected_Objects.cs" />
