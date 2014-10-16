@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.Application.Navigation;
 using Abp.Application.Services.Interceptors;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -27,6 +28,11 @@ namespace Abp
                 {
                     InstallInstallers = false
                 });
+        }
+
+        public override void PostInitialize()
+        {
+            IocManager.Resolve<NavigationManager>().Initialize();
         }
     }
 }
