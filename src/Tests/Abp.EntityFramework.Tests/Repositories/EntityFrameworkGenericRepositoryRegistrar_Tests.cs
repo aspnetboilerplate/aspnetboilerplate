@@ -3,6 +3,9 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
 using Abp.Tests;
+using Castle.MicroKernel;
+using Castle.MicroKernel.Context;
+using Castle.MicroKernel.Handlers;
 using Shouldly;
 using Xunit;
 
@@ -20,7 +23,7 @@ namespace Abp.EntityFramework.Tests.Repositories
 
             var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1, int>>();
             entity1RepositoryWithPk.ShouldNotBe(null);
-            
+
             var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2, long>>();
             entity2Repository.ShouldNotBe(null);
         }

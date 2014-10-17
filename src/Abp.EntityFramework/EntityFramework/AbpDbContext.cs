@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Runtime.Session;
@@ -14,7 +13,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext, ITransientDependency
+    public abstract class AbpDbContext : DbContext
     {
         /// <summary>
         /// Used to get current session values.
@@ -23,20 +22,9 @@ namespace Abp.EntityFramework
 
         /// <summary>
         /// Constructor.
-        /// Uses <see cref="IAbpStartupConfiguration.DefaultConnectionString"/> as connection string.
+        /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
         protected AbpDbContext()
-            : base(GetConnectionString(IocManager.Instance))
-        {
-            AbpSession = NullAbpSession.Instance;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// Uses <see cref="IAbpStartupConfiguration.DefaultConnectionString"/> as connection string.
-        /// </summary>
-        protected AbpDbContext(IIocResolver iocResolver)
-            : base(GetConnectionString(iocResolver))
         {
             AbpSession = NullAbpSession.Instance;
         }
@@ -178,13 +166,6 @@ namespace Abp.EntityFramework
                     deletionAuditedEntry.Entity.DeleterUserId = AbpSession.UserId;
                 }
             }
-        }
-
-        private static string GetConnectionString(IIocResolver iocResolver)
-        {
-            return iocResolver.IsRegistered<IAbpStartupConfiguration>()
-                ? iocResolver.Resolve<IAbpStartupConfiguration>().DefaultConnectionString
-                : null;
         }
     }
 }

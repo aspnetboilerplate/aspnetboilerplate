@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity.Infrastructure.Interception;
 using System.Linq;
 using System.Reflection;
+using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.SoftDeleting;
 using Abp.Modules;
@@ -20,6 +21,11 @@ namespace Abp.EntityFramework
             AssemblyFinder = DefaultAssemblyFinder.Instance;
         }
 
+        public override void PreInitialize()
+        {
+            IocManager.AddConventionalRegistrar(new EntityFrameworkConventionalRegisterer());
+        }
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
@@ -32,7 +38,7 @@ namespace Abp.EntityFramework
             var dbContextTypes = (
                 from assembly in AssemblyFinder.GetAllAssemblies()
                 from type in assembly.GetTypes()
-                where type.IsPublic && !type.IsAbstract && type.IsClass && typeof (AbpDbContext).IsAssignableFrom(type)
+                where type.IsPublic && !type.IsAbstract && type.IsClass && typeof(AbpDbContext).IsAssignableFrom(type)
                 select type
                 ).ToList();
 

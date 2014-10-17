@@ -19,7 +19,7 @@
         /// Gets/sets default connection string used by ORM module.
         /// It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>
-        string DefaultConnectionString { get; set; }
+        string DefaultNameOrConnectionString { get; set; }
 
         /// <summary>
         /// Used to configure modules.
