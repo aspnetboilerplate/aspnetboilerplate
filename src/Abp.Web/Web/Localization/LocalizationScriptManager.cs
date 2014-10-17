@@ -6,15 +6,11 @@ using System.Text;
 using System.Threading;
 using Abp.Dependency;
 using Abp.Localization;
-using Abp.Localization.Sources;
 using Abp.Runtime.Caching;
 
 namespace Abp.Web.Localization
 {
-    /// <summary>
-    /// This class is used to build and cache localization script.
-    /// </summary>
-    public class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency //TODO: Make it internal?
+    internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
         private readonly ILocalizationManager _localizationManager;
 
@@ -40,7 +36,7 @@ namespace Abp.Web.Localization
         {
             var script = new StringBuilder();
             var currentCulture = Thread.CurrentThread.CurrentUICulture;
-            
+
             script.AppendLine("(function(){");
             script.AppendLine();
             script.AppendLine("    abp.localization = abp.localization || {};");
@@ -49,6 +45,38 @@ namespace Abp.Web.Localization
             script.AppendLine("        name: '" + currentCulture.Name + "',");
             script.AppendLine("        displayName: '" + currentCulture.DisplayName + "'");
             script.AppendLine("    };");
+            script.AppendLine();
+            script.Append("    abp.localization.languages = [");
+            
+            var languages = _localizationManager.GetAllLanguages();
+            for (var i = 0; i < languages.Count; i++)
+            {
+                var language = languages[i];
+                
+                script.AppendLine("{");
+                script.AppendLine("        name: '" + language.Name + "',");
+                script.AppendLine("        displayName: '" + language.DisplayName + "',");
+                script.AppendLine("        icon: '" + language.Icon + "',");
+                script.AppendLine("        isDefault: " + language.IsDefault.ToString().ToLower());
+                script.Append("    }");
+                
+                if (i < languages.Count - 1)
+                {
+                    script.Append(" , ");
+                }
+            }
+
+            script.AppendLine("];");
+            script.AppendLine();
+
+            var currentLanguage = _localizationManager.CurrentLanguage;
+            script.AppendLine("    abp.localization.currentLanguage = {");
+            script.AppendLine("        name: '" + currentLanguage.Name + "',");
+            script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
+            script.AppendLine("        icon: '" + currentLanguage.Icon + "',");
+            script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLower());
+            script.AppendLine("    };");
+            
             script.AppendLine();
             script.AppendLine("    abp.localization.values = abp.localization.values || {};");
             script.AppendLine();

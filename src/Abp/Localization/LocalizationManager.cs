@@ -98,14 +98,14 @@ namespace Abp.Localization
             var currentCultureName = Thread.CurrentThread.CurrentUICulture.Name;
 
             //Try to find exact match
-            var currentLanguage = _configuration.Languages.FirstOrDefault(l => l.Code == currentCultureName);
+            var currentLanguage = _configuration.Languages.FirstOrDefault(l => l.Name == currentCultureName);
             if (currentLanguage != null)
             {
                 return currentLanguage;
             }
 
             //Try to find best match
-            currentLanguage = _configuration.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Code));
+            currentLanguage = _configuration.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Name));
             if (currentLanguage != null)
             {
                 return currentLanguage;

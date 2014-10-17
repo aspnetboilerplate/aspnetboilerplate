@@ -10,7 +10,7 @@ namespace Abp.Localization
         /// It should be valid culture code.
         /// Ex: "en-US" for American English, "tr-TR" for Turkey Turkish.
         /// </summary>
-        public string Code { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Display name of the language in it's original language.
@@ -31,7 +31,7 @@ namespace Abp.Localization
         /// <summary>
         /// Creates a new <see cref="LanguageInfo"/> object.
         /// </summary>
-        /// <param name="code">
+        /// <param name="name">
         /// Code name of the language.
         /// It should be valid culture code.
         /// Ex: "en-US" for American English, "tr-TR" for Turkey Turkish.
@@ -42,9 +42,9 @@ namespace Abp.Localization
         /// </param>
         /// <param name="icon">An icon can be set to display on the UI</param>
         /// <param name="isDefault">Is this the default language?</param>
-        public LanguageInfo(string code, string displayName, string icon = null, bool isDefault = false)
+        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false)
         {
-            Code = code;
+            Name = name;
             DisplayName = displayName;
             Icon = icon;
             IsDefault = isDefault;
