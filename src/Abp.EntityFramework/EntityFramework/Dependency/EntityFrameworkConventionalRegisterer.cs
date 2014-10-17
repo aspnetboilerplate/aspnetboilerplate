@@ -1,9 +1,13 @@
+using System.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework.Dependency
 {
+    /// <summary>
+    /// Registers classes derived from AbpDbContext with configurations.
+    /// </summary>
     public class EntityFrameworkConventionalRegisterer : IConventionalDependencyRegistrar
     {
         public void RegisterAssembly(IConventionalRegistrationContext context)
@@ -17,19 +21,36 @@ namespace Abp.EntityFramework.Dependency
                     .Configure(c => c.DynamicParameters(
                         (kernel, dynamicParams) =>
                         {
-                            if (!kernel.HasComponent(typeof (IAbpStartupConfiguration)))
+                            var connectionString = GetNameOrConnectionStringOrNull(context.IocManager);
+                            if (!string.IsNullOrWhiteSpace(connectionString))
                             {
-                                return;
+                                dynamicParams["nameOrConnectionString"] = connectionString;
                             }
-
-                            var defaultConnectionString = kernel.Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString;
-                            if (string.IsNullOrWhiteSpace(defaultConnectionString))
-                            {
-                                return;
-                            }
-
-                            dynamicParams["nameOrConnectionString"] = defaultConnectionString;
                         })));
+        }
+
+        private static string GetNameOrConnectionStringOrNull(IIocResolver iocResolver)
+        {
+            if (iocResolver.IsRegistered<IAbpStartupConfiguration>())
+            {
+                var defaultConnectionString = iocResolver.Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString;
+                if (!string.IsNullOrWhiteSpace(defaultConnectionString))
+                {
+                    return defaultConnectionString;
+                }
+            }
+
+            if (ConfigurationManager.ConnectionStrings.Count == 1)
+            {
+                return ConfigurationManager.ConnectionStrings[0].Name;
+            }
+
+            if (ConfigurationManager.ConnectionStrings["Default"] != null)
+            {
+                return "Default";
+            }
+
+            return null;
         }
     }
 }

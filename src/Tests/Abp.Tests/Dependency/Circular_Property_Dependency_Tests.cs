@@ -73,6 +73,7 @@ namespace Abp.Tests.Dependency
         public class MyClass2
         {
             public static int CreateCount { get; set; }
+
             public MyClass1 Obj1 { get; set; }
 
             public MyClass3 Obj3 { get; set; }
