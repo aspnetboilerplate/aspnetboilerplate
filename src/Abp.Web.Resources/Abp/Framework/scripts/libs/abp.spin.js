@@ -32,8 +32,14 @@
 
     };
 
-    abp.ui.setBusy = function (elm, options) {
-        options = $.extend({}, options);
+    abp.ui.setBusy = function (elm, optionsOrPromise) {
+        if (optionsOrPromise.always || optionsOrPromise['finally']) { //Check if it's promise
+            optionsOrPromise = {
+                promise: optionsOrPromise
+            };
+        }
+
+        var options = $.extend({}, optionsOrPromise);
 
         if (!elm) {
             if (options.blockUI != false) {

@@ -219,7 +219,7 @@
     /* UI BUSY */
     //Defines UI Busy API, not implements it
 
-    abp.ui.setBusy = function (elm, options) {
+    abp.ui.setBusy = function (elm, optionsOrPromise) {
         abp.log.warn('abp.ui.setBusy is not implemented!');
     };
 
