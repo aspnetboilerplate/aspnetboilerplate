@@ -101,14 +101,14 @@ namespace Abp.NHibernate.Repositories
 
         public virtual void Delete(TPrimaryKey id)
         {
-            var entity = Session.Load<TEntity>(id);
-            if (entity is ISoftDelete)
+            Delete(Session.Load<TEntity>(id));
+        }
+
+        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            foreach (var entity in GetAll().Where(predicate).ToList())
             {
-                (entity as ISoftDelete).IsDeleted = true;
-            }
-            else
-            {
-                Session.Delete(entity);
+                Delete(entity);
             }
         }
 
@@ -130,17 +130,6 @@ namespace Abp.NHibernate.Repositories
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).LongCount();
-        }
-
-
-        public void Delete(Expression<Func<TEntity, bool>> predicate)
-        {
-            var entities = GetAll().Where(predicate).ToList();
-            foreach (var entity in entities)
-            {
-                Delete(entity);
-            }
-
         }
     }
 }

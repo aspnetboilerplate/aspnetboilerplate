@@ -84,7 +84,14 @@ namespace Abp.EntityFramework.Repositories
 
         public virtual void Delete(TEntity entity)
         {
-            Table.Remove(entity);
+            if (entity is ISoftDelete)
+            {
+                (entity as ISoftDelete).IsDeleted = true;
+            }
+            else
+            {
+                Table.Remove(entity);                
+            }
         }
 
         public virtual void Delete(TPrimaryKey id)
@@ -97,23 +104,14 @@ namespace Abp.EntityFramework.Repositories
                 {
                     return;
                 }
-
-                Table.Attach(entity); //TODO: Is this needed? Test!
             }
 
-            Table.Remove(entity);
-
-            /* TODO: Enable removing using SQL. Should use table and primary key name!
-            return Context.Database.ExecuteSqlCommand(
-                "DELETE FROM " + TableName + " WHERE Id = @Id",
-                new SqlParameter("@Id", key)
-                );
-             */
+            Delete(entity);
         }
+
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            var entities = Table.Where(predicate).ToList();
-            foreach (var entity in entities)
+            foreach (var entity in Table.Where(predicate).ToList())
             {
                 Delete(entity);
             }
@@ -138,8 +136,5 @@ namespace Abp.EntityFramework.Repositories
         {
             return GetAll().Where(predicate).LongCount();
         }
-
-
-       
     }
 }

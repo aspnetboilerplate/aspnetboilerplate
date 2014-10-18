@@ -118,11 +118,16 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
+
         /// <summary>
         /// Deletes many entities by function.
+        /// Notice that: All entities fits to given predicate are retrieved and deleted.
+        /// This may cause major performance problems if there are too many entities with
+        /// given predicate.
         /// </summary>
-        /// <param name="id">A condition to filter entities</param>
+        /// <param name="predicate">A condition to filter entities</param>
         void Delete(Expression<Func<TEntity, bool>> predicate);
+
         #endregion
 
         #region Aggregates
