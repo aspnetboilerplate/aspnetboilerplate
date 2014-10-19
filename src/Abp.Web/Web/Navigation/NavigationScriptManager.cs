@@ -20,13 +20,7 @@ namespace Abp.Web.Navigation
 
         public string GetScript()
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                throw new NotImplementedException();
-            }
-
-            var userMenus = _userNavigationManager.GetMenus(AbpSession.UserId.Value);
-
+            var userMenus = _userNavigationManager.GetMenus(AbpSession.UserId);
 
             var sb = new StringBuilder();
             sb.AppendLine("(function() {");

@@ -18,7 +18,7 @@ namespace Abp.Application.Navigation
             _navigationManager = navigationManager;
         }
 
-        public UserMenu GetMenu(string menuName, long userId)
+        public UserMenu GetMenu(string menuName, long? userId)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
@@ -31,19 +31,19 @@ namespace Abp.Application.Navigation
             return userMenu;
         }
 
-        public IReadOnlyList<UserMenu> GetMenus(long userId)
+        public IReadOnlyList<UserMenu> GetMenus(long? userId)
         {
             return _navigationManager.Menus.Values.Select(m => GetMenu(m.Name, userId)).ToImmutableList();
         }
 
-        private int FillUserMenuItems(long userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
+        private int FillUserMenuItems(long? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
             var addedMenuItemCount = 0;
 
             foreach (var menuItemDefinition in menuItemDefinitions)
             {
                 if (string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) ||
-                    _permissionManager.IsGranted(userId, menuItemDefinition.RequiredPermissionName))
+                    (userId.HasValue && _permissionManager.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
                 {
                     var userMenuItem = new UserMenuItem(menuItemDefinition);
                     if (menuItemDefinition.Items.Count <= 0 || FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items) > 0)

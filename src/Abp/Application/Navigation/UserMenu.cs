@@ -22,8 +22,6 @@ namespace Abp.Application.Navigation
         /// </summary>
         public IList<UserMenuItem> Items { get; set; }
 
-        //TODO: RequiredPermissionName?
-
         /// <summary>
         /// Creates a new <see cref="UserMenu"/> object.
         /// </summary>
