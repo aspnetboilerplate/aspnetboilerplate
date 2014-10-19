@@ -16,15 +16,15 @@ namespace Abp.Application.Navigation
         public string Name { get; set; }
 
         /// <summary>
-        /// Icon of the menu item if exists. Optional.
-        /// </summary>
-        public string Icon { get; set; }
-
-        /// <summary>
         /// Display name of the menu item. Required.
         /// </summary>
         public ILocalizableString DisplayName { get; private set; }
 
+        /// <summary>
+        /// Icon of the menu item if exists. Optional.
+        /// </summary>
+        public string Icon { get; set; }
+        
         /// <summary>
         /// The URL to navigate when this menu item is selected. Optional.
         /// </summary>
@@ -43,15 +43,24 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName)
+        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, string requiredPermissionName = null)
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name", "Menu item's name can not be null or empty");
+                throw new ArgumentNullException("name");
+            }
+
+            if (displayName == null)
+            {
+                throw new ArgumentNullException("displayName");
             }
 
             Name = name;
             DisplayName = displayName;
+            Icon = icon;
+            Url = url;
+            RequiredPermissionName = requiredPermissionName;
+            
             Items = new List<MenuItemDefinition>();
         }
 
