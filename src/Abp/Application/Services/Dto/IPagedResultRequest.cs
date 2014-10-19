@@ -6,7 +6,7 @@ namespace Abp.Application.Services.Dto
     public interface IPagedResultRequest : ILimitedResultRequest
     {
         /// <summary>
-        /// Skip count (beggining of the page).
+        /// Skip count (beginning of the page).
         /// </summary>
         int SkipCount { get; set; }
     }
