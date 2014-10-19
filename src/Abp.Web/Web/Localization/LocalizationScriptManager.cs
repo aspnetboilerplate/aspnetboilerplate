@@ -69,13 +69,16 @@ namespace Abp.Web.Localization
             script.AppendLine("];");
             script.AppendLine();
 
-            var currentLanguage = _localizationManager.CurrentLanguage;
-            script.AppendLine("    abp.localization.currentLanguage = {");
-            script.AppendLine("        name: '" + currentLanguage.Name + "',");
-            script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
-            script.AppendLine("        icon: '" + currentLanguage.Icon + "',");
-            script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLower());
-            script.AppendLine("    };");
+            if (languages.Count > 0)
+            {
+                var currentLanguage = _localizationManager.CurrentLanguage;
+                script.AppendLine("    abp.localization.currentLanguage = {");
+                script.AppendLine("        name: '" + currentLanguage.Name + "',");
+                script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
+                script.AppendLine("        icon: '" + currentLanguage.Icon + "',");
+                script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLower());
+                script.AppendLine("    };");
+            }
             
             script.AppendLine();
             script.AppendLine("    abp.localization.values = abp.localization.values || {};");
