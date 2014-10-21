@@ -75,6 +75,18 @@ namespace Abp.EntityFramework.Repositories
             return Table.Add(entity);
         }
 
+        public TPrimaryKey InsertAndGetId(TEntity entity)
+        {
+            entity = Insert(entity);
+            
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                UnitOfWorkScope.Current.SaveChanges();
+            }
+
+            return entity.Id;
+        }
+
         public virtual TEntity Update(TEntity entity)
         {
             Table.Attach(entity);

@@ -12,7 +12,7 @@ namespace Abp.Domain.Repositories
     /// </summary>
     /// <typeparam name="TEntity">Main Entity type this repository works on</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public interface IRepository<TEntity, in TPrimaryKey> : IRepository where TEntity : class, IEntity<TPrimaryKey>
+    public interface IRepository<TEntity, TPrimaryKey> : IRepository where TEntity : class, IEntity<TPrimaryKey>
     {
         #region Select/Get/Query
 
@@ -84,7 +84,7 @@ namespace Abp.Domain.Repositories
         TEntity Load(TPrimaryKey key);
 
         #endregion
-
+        
         #region Insert
 
         /// <summary>
@@ -92,6 +92,15 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="entity">Entity</param>
         TEntity Insert(TEntity entity);
+
+        /// <summary>
+        /// Inserts a new entity and gets it's Id.
+        /// It may require to save current unit of work
+        /// to be able to retrieve id.
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>Id of the entity</returns>
+        TPrimaryKey InsertAndGetId(TEntity entity);
 
         #endregion
 
