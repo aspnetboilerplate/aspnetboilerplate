@@ -74,6 +74,16 @@ namespace Abp.NHibernate.Repositories
             return Session.Load<TEntity>(key);
         }
 
+        public TEntity Create()
+        {
+            return (TEntity)Activator.CreateInstance(typeof(TEntity), true);
+        }
+
+        public TEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity
+        {
+            return (TEntity)Activator.CreateInstance(typeof(TDerivedEntity), true);
+        }
+
         public virtual TEntity Insert(TEntity entity)
         {
             Session.Save(entity);

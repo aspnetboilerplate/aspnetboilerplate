@@ -70,6 +70,16 @@ namespace Abp.EntityFramework.Repositories
             return Get(key); //EntityFramework has no Load as like NHibernate.
         }
 
+        public TEntity Create()
+        {
+            return Table.Create<TEntity>();
+        }
+
+        public TEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity
+        {
+            return Table.Create<TDerivedEntity>();
+        }
+
         public virtual TEntity Insert(TEntity entity)
         {
             return Table.Add(entity);
