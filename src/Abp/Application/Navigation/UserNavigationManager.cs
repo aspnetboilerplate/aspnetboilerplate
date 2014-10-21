@@ -42,15 +42,21 @@ namespace Abp.Application.Navigation
 
             foreach (var menuItemDefinition in menuItemDefinitions)
             {
-                if (string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) ||
-                    (userId.HasValue && _permissionManager.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
+                if (menuItemDefinition.RequiresAuthentication && !userId.HasValue)
                 {
-                    var userMenuItem = new UserMenuItem(menuItemDefinition);
-                    if (menuItemDefinition.Items.Count <= 0 || FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items) > 0)
-                    {
-                        userMenuItems.Add(userMenuItem);
-                        ++addedMenuItemCount;
-                    }
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !_permissionManager.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
+                {
+                    continue;
+                }
+
+                var userMenuItem = new UserMenuItem(menuItemDefinition);
+                if (menuItemDefinition.IsLeaf || FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items) > 0)
+                {
+                    userMenuItems.Add(userMenuItem);
+                    ++addedMenuItemCount;
                 }
             }
 

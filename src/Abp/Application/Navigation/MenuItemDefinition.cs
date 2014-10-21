@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Collections.Extensions;
 using Abp.Localization;
 
 namespace Abp.Application.Navigation
@@ -13,7 +14,7 @@ namespace Abp.Application.Navigation
         /// Unique name of the menu item in the application. 
         /// Can be used to find this menu item later.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Display name of the menu item. Required.
@@ -23,12 +24,12 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Icon of the menu item if exists. Optional.
         /// </summary>
-        public string Icon { get; set; }
+        public string Icon { get; private set; }
         
         /// <summary>
         /// The URL to navigate when this menu item is selected. Optional.
         /// </summary>
-        public string Url { get; set; }
+        public string Url { get; private set; }
 
         /// <summary>
         /// Sub items of this menu item. Optional.
@@ -36,14 +37,28 @@ namespace Abp.Application.Navigation
         public IList<MenuItemDefinition> Items { get; private set; }
 
         /// <summary>
-        /// A permission name. Optional.
+        /// A permission name. Only users that has this permission can see this menu item.
+        /// Optional.
         /// </summary>
-        public string RequiredPermissionName { get; set; }
+        public string RequiredPermissionName { get; private set; }
+
+        /// <summary>
+        /// This can be set to true if only authenticated users should see this menu item.
+        /// </summary>
+        public bool RequiresAuthentication { get; private set; }
+
+        /// <summary>
+        /// Returns true if this menu item has no child <see cref="Items"/>.
+        /// </summary>
+        public bool IsLeaf
+        {
+            get { return Items.IsNullOrEmpty(); }
+        }
 
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, string requiredPermissionName = null)
+        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -59,6 +74,7 @@ namespace Abp.Application.Navigation
             DisplayName = displayName;
             Icon = icon;
             Url = url;
+            RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
             
             Items = new List<MenuItemDefinition>();
