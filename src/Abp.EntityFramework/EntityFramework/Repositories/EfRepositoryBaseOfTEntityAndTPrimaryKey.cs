@@ -87,6 +87,25 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
+        public TEntity InsertOrUpdate(TEntity entity)
+        {
+            return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
+                ? Insert(entity)
+                : Update(entity);
+        }
+
+        public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+        {
+            entity = InsertOrUpdate(entity);
+
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                UnitOfWorkScope.Current.SaveChanges();
+            }
+
+            return entity.Id;
+        }
+
         public virtual TEntity Update(TEntity entity)
         {
             Table.Attach(entity);

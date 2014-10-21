@@ -85,6 +85,17 @@ namespace Abp.NHibernate.Repositories
             return Insert(entity).Id;
         }
 
+        public TEntity InsertOrUpdate(TEntity entity)
+        {
+            Session.SaveOrUpdate(entity);
+            return entity;
+        }
+
+        public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+        {
+            return InsertOrUpdate(entity).Id;
+        }
+
         public virtual TEntity Update(TEntity entity)
         {
             Session.Update(entity);

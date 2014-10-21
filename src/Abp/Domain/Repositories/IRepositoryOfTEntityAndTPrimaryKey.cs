@@ -102,6 +102,22 @@ namespace Abp.Domain.Repositories
         /// <returns>Id of the entity</returns>
         TPrimaryKey InsertAndGetId(TEntity entity);
 
+        /// <summary>
+        /// Inserts or updates given entity depending on Id's value.
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        TEntity InsertOrUpdate(TEntity entity);
+
+        /// <summary>
+        /// Inserts or updates given entity depending on Id's value.
+        /// Also returns Id of the entity.
+        /// It may require to save current unit of work
+        /// to be able to retrieve id.
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <returns>Id of the entity</returns>
+        TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
+
         #endregion
 
         #region Update
