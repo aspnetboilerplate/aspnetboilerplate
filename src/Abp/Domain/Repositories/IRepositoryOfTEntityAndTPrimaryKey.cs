@@ -85,23 +85,6 @@ namespace Abp.Domain.Repositories
 
         #endregion
 
-        #region Create
-
-        /// <summary>
-        /// Creates a new instance of this entity type.
-        /// </summary>
-        /// <returns>Created instance</returns>
-        TEntity Create();
-
-        /// <summary>
-        /// Creates a new instance of a derived type of this entity.
-        /// </summary>
-        /// <typeparam name="TDerivedEntity">Derived entity type</typeparam>
-        /// <returns>Created instance</returns>
-        TEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity;
-
-        #endregion
-
         #region Insert
 
         /// <summary>
