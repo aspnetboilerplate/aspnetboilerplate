@@ -31,12 +31,19 @@ namespace Abp.Web
             AbpBootstrapper.Initialize();
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system on web application's end.
-        /// </summary>
         protected virtual void Application_End(object sender, EventArgs e)
         {
             AbpBootstrapper.Dispose();
+        }
+
+        protected virtual void Session_Start(object sender, EventArgs e)
+        {
+
+        }
+
+        protected virtual void Session_End(object sender, EventArgs e)
+        {
+
         }
 
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
@@ -54,14 +61,14 @@ namespace Abp.Web
             
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system on an authentication request.
-        /// </summary>
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
 
         }
 
-        //TODO: Implement all events!
+        protected virtual void Application_Error(object sender, EventArgs e)
+        {
+
+        }
     }
 }
