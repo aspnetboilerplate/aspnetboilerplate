@@ -4,17 +4,21 @@ using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Uow
 {
-    public static class UnitOfWorkExtensions
+    internal static class UnitOfWorkExtensions
     {
         public static TDbContext GetDbContext<TDbContext>(this IUnitOfWork unitOfWork) where TDbContext : DbContext
         {
-            var uow = unitOfWork as EfUnitOfWork;
-            if (uow == null)
+            if (unitOfWork == null)
+            {
+                throw new ArgumentNullException("unitOfWork");
+            }
+
+            if (!(unitOfWork is EfUnitOfWork))
             {
                 throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, "unitOfWork");
             }
 
-            return uow.GetOrCreateDbContext<TDbContext>();
+            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>();
         }
     }
 }
