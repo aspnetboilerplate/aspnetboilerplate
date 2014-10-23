@@ -13,22 +13,31 @@ namespace Abp.EntityFramework.Repositories
             {
                 foreach (var interfaceType in entityType.GetInterfaces())
                 {
-                    if (interfaceType == typeof(IEntity))
-                    {
-                        iocManager.Register(
-                            typeof(IRepository<>).MakeGenericType(entityType),
-                            typeof(EfRepositoryBase<,>).MakeGenericType(dbContextType, entityType),
-                            DependencyLifeStyle.Transient
-                            );
-                    }
-                    else if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IEntity<>))
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IEntity<>))
                     {
                         var primaryKeyType = interfaceType.GenericTypeArguments[0];
-                        iocManager.Register(
-                            typeof(IRepository<,>).MakeGenericType(entityType, primaryKeyType),
-                            typeof(EfRepositoryBase<,,>).MakeGenericType(dbContextType, entityType, primaryKeyType),
-                            DependencyLifeStyle.Transient
-                            );
+                        if (primaryKeyType == typeof(int))
+                        {
+                            var genericRepositoryType = typeof(IRepository<>).MakeGenericType(entityType);
+                            if (!iocManager.IsRegistered(genericRepositoryType))
+                            {
+                                iocManager.Register(
+                                    genericRepositoryType,
+                                    typeof(EfRepositoryBase<,>).MakeGenericType(dbContextType, entityType),
+                                    DependencyLifeStyle.Transient
+                                    );
+                            }
+                        }
+
+                        var genericRepositoryTypeWithPrimaryKey = typeof(IRepository<,>).MakeGenericType(entityType, primaryKeyType);
+                        if (!iocManager.IsRegistered(genericRepositoryTypeWithPrimaryKey))
+                        {
+                            iocManager.Register(
+                                genericRepositoryTypeWithPrimaryKey,
+                                typeof(EfRepositoryBase<,,>).MakeGenericType(dbContextType, entityType, primaryKeyType),
+                                DependencyLifeStyle.Transient
+                                );
+                        }
                     }
                 }
             }

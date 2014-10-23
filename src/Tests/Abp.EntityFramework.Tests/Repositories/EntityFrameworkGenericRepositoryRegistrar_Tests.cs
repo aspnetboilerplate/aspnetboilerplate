@@ -3,9 +3,6 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
 using Abp.Tests;
-using Castle.MicroKernel;
-using Castle.MicroKernel.Context;
-using Castle.MicroKernel.Handlers;
 using Shouldly;
 using Xunit;
 
@@ -28,11 +25,14 @@ namespace Abp.EntityFramework.Tests.Repositories
             entity2Repository.ShouldNotBe(null);
         }
 
-        public class MyDbContext : AbpDbContext
+        public class MyDbContext : MyBaseDbContext
         {
-            public IDbSet<MyEntity1> MyEntities1 { get; set; }
-
             public DbSet<MyEntity2> MyEntities2 { get; set; }
+        }
+
+        public abstract class MyBaseDbContext : AbpDbContext
+        {
+            public IDbSet<MyEntity1> MyEntities1 { get; set; }            
         }
 
         public class MyEntity1 : Entity
