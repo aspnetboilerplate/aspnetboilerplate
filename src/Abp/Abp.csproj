@@ -76,6 +76,10 @@
     <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
     <Compile Include="Application\Navigation\UserMenu.cs" />
     <Compile Include="Application\Navigation\UserMenuItem.cs" />
+    <Compile Include="Application\Services\Dto\EntityRequestInput.cs" />
+    <Compile Include="Application\Services\Dto\EntityRequestInputOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\EntityResultOutput.cs" />
+    <Compile Include="Application\Services\Dto\EntityResultOutputOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IEntityDto.cs" />
     <Compile Include="Application\Services\Dto\IEntityDtoOfPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IListResult.cs" />
