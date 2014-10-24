@@ -78,6 +78,7 @@
     <Compile Include="Application\Navigation\UserMenuItem.cs" />
     <Compile Include="Application\Services\Dto\IPagedResult.cs" />
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
+    <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor.cs" />
