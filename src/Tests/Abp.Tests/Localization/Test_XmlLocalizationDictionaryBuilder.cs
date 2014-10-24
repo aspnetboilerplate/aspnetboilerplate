@@ -1,4 +1,5 @@
 using Abp.Localization.Dictionaries.Xml;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Localization
@@ -13,14 +14,14 @@ namespace Abp.Tests.Localization
 <localizationDictionary culture=""tr"">
   <texts>
     <text name=""hello"" value=""Merhaba"" />
-    <text name=""world"" value=""Dünya"" />
+    <text name=""world"">Dünya</text>
   </texts>
 </localizationDictionary>"
                 );
 
-            Assert.Equal("tr", dictionary.CultureInfo.Name);
-            Assert.Equal("Merhaba", dictionary["hello"]);
-            Assert.Equal("Dünya", dictionary["world"]);
+            dictionary.CultureInfo.Name.ShouldBe("tr");
+            dictionary["hello"].ShouldBe("Merhaba");
+            dictionary["world"].ShouldBe("Dünya");
         }
     }
 }
