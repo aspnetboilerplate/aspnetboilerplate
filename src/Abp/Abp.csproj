@@ -76,7 +76,12 @@
     <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
     <Compile Include="Application\Navigation\UserMenu.cs" />
     <Compile Include="Application\Navigation\UserMenuItem.cs" />
+    <Compile Include="Application\Services\Dto\IEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\IEntityDtoOfPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\IListResult.cs" />
     <Compile Include="Application\Services\Dto\IPagedResult.cs" />
+    <Compile Include="Application\Services\Dto\ListResultDto.cs" />
+    <Compile Include="Application\Services\Dto\ListResultOutput.cs" />
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
