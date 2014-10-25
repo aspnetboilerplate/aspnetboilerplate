@@ -76,6 +76,7 @@
     <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
     <Compile Include="Application\Navigation\UserMenu.cs" />
     <Compile Include="Application\Navigation\UserMenuItem.cs" />
+    <Compile Include="Application\Services\Dto\ComboboxItemDto.cs" />
     <Compile Include="Application\Services\Dto\EntityRequestInput.cs" />
     <Compile Include="Application\Services\Dto\EntityRequestInputOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutput.cs" />

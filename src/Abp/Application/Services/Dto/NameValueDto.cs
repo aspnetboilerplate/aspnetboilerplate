@@ -1,7 +1,7 @@
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// Can be used to send/receive Name/Value pairs.
+    /// Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
     public class NameValueDto : IDto
     {
