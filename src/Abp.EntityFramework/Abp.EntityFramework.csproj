@@ -76,7 +76,6 @@
     <Compile Include="EntityFramework\SoftDeleting\SoftDeleteQueryVisitor.cs" />
     <Compile Include="EntityFramework\Uow\EfUnitOfWork.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkExtensions.cs" />
-    <Compile Include="EntityFramework\EntityFrameworkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityFramework\AbpEntityFrameworkModule.cs" />
   </ItemGroup>
