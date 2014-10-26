@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Authorization;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Authorization
@@ -12,39 +14,31 @@ namespace Abp.Tests.Authorization
         [Fact]
         public void Test_PermissionManager()
         {
-            var permissionManager = new PermissionManager(IocManager.Instance, new MyPermissionProviderFinder());
+            var authorizationConfiguration = new AuthorizationConfiguration();
+            authorizationConfiguration.Providers.Add<MyAuthorizationProvider1>();
+            authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
-            Assert.Equal(1, permissionManager.GetAllRootGroups().Count);
-            Assert.Equal(4, permissionManager.GetAllPermissions().Count);
+            var permissionManager = new PermissionManager(IocManager.Instance, authorizationConfiguration);
+            permissionManager.Initialize();
+
+            permissionManager.GetAllRootGroups().Count.ShouldBe(1);
+            permissionManager.GetAllPermissions().Count.ShouldBe(4);
 
             var userManagement = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement");
-            Assert.NotNull(userManagement);
-            Assert.Equal(1, userManagement.Children.Count);
+            userManagement.ShouldNotBe(null);
+            userManagement.Children.Count.ShouldBe(1);
 
             var changePermissions = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
-            Assert.NotNull(changePermissions);
+            changePermissions.ShouldNotBe(null);
+            changePermissions.Parent.ShouldBeSameAs(userManagement);
 
-            Assert.Same(userManagement, changePermissions.Parent);
-
-            Assert.Null(permissionManager.GetPermissionOrNull("NonExistingPermissionName"));
+            permissionManager.GetPermissionOrNull("NonExistingPermissionName").ShouldBe(null);
         }
     }
 
-    public class MyPermissionProviderFinder : IPermissionProviderFinder
+    public class MyAuthorizationProvider1 : AuthorizationProvider
     {
-        public List<Type> FindAll()
-        {
-            return new List<Type>
-                   {
-                       typeof(MyPermissionProvider1),
-                       typeof(MyPermissionProvider2)
-                   };
-        }
-    }
-
-    public class MyPermissionProvider1 : PermissionProvider
-    {
-        public override void DefinePermissions(IPermissionDefinitionContext context)
+        public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
             var administration = context.CreateRootGroup("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
@@ -57,9 +51,9 @@ namespace Abp.Tests.Authorization
         }
     }
 
-    public class MyPermissionProvider2 : PermissionProvider
+    public class MyAuthorizationProvider2 : AuthorizationProvider
     {
-        public override void DefinePermissions(IPermissionDefinitionContext context)
+        public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Get existing root permission group 'Administration'
             var administration = context.GetRootGroupOrNull("Abp.Zero.Administration");

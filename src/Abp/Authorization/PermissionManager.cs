@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.Core.Logging;
@@ -19,7 +20,7 @@ namespace Abp.Authorization
         public ILogger Logger { get; set; }
 
         private readonly IIocManager _iocManager;
-        private readonly IPermissionProviderFinder _providerFinder;
+        private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
         private readonly Dictionary<string, PermissionGroup> _rootGroups;
         private readonly PermissionDictionary _permissions;
@@ -27,18 +28,31 @@ namespace Abp.Authorization
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PermissionManager(IIocManager iocManager, IPermissionProviderFinder providerFinder)
+        public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
         {
             PermissionGrantStore = NullPermissionGrantStore.Instance;
             Logger = NullLogger.Instance;
 
             _iocManager = iocManager;
-            _providerFinder = providerFinder;
+            _authorizationConfiguration = authorizationConfiguration;
 
             _rootGroups = new Dictionary<string, PermissionGroup>();
             _permissions = new PermissionDictionary();
+        }
 
-            Initialize();
+        public void Initialize()
+        {
+            var context = new PermissionDefinitionContext(_rootGroups);
+
+            foreach (var providerType in _authorizationConfiguration.Providers)
+            {
+                CreatePermissionProvider(providerType).SetPermissions(context);
+            }
+
+            foreach (var rootGroup in _rootGroups.Values)
+            {
+                _permissions.AddGroupPermissionsRecursively(rootGroup);
+            }
         }
 
         public Permission GetPermissionOrNull(string name)
@@ -78,31 +92,14 @@ namespace Abp.Authorization
             return _rootGroups.GetOrDefault(name);
         }
 
-        private void Initialize()
-        {
-            var context = new PermissionDefinitionContext(_rootGroups);
-
-            var providerTypes = _providerFinder.FindAll();
-
-            foreach (var providerType in providerTypes)
-            {
-                CreatePermissionProvider(providerType).DefinePermissions(context);
-            }
-
-            foreach (var rootGroup in _rootGroups.Values)
-            {
-                _permissions.AddGroupPermissionsRecursively(rootGroup);
-            }
-        }
-
-        private PermissionProvider CreatePermissionProvider(Type providerType)
+        private AuthorizationProvider CreatePermissionProvider(Type providerType)
         {
             if (!_iocManager.IsRegistered(providerType))
             {
                 _iocManager.Register(providerType);
             }
 
-            return (PermissionProvider) _iocManager.Resolve(providerType);
+            return (AuthorizationProvider) _iocManager.Resolve(providerType);
         }
 
         private class PermissionDefinitionContext : IPermissionDefinitionContext

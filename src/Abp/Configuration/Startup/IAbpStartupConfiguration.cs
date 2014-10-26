@@ -16,6 +16,11 @@
         INavigationConfiguration Navigation { get; }
 
         /// <summary>
+        /// Used to configure authorization.
+        /// </summary>
+        IAuthorizationConfiguration Authorization { get; }
+
+        /// <summary>
         /// Gets/sets default connection string used by ORM module.
         /// It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>

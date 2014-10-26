@@ -3,7 +3,7 @@ using Abp.Localization;
 namespace Abp.Authorization
 {
     /// <summary>
-    /// This context is used on <see cref="PermissionProvider.DefinePermissions"/> method.
+    /// This context is used on <see cref="AuthorizationProvider.SetPermissions"/> method.
     /// </summary>
     public interface IPermissionDefinitionContext
     {

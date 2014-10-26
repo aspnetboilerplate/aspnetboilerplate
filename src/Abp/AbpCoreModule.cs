@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Application.Navigation;
 using Abp.Application.Services.Interceptors;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -33,6 +34,7 @@ namespace Abp
         public override void PostInitialize()
         {
             IocManager.Resolve<NavigationManager>().Initialize();
+            IocManager.Resolve<PermissionManager>().Initialize();
         }
     }
 }

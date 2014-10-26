@@ -116,10 +116,8 @@
     <Compile Include="Authorization\IPermissionGrantStore.cs" />
     <Compile Include="Authorization\NullPermissionGrantStore.cs" />
     <Compile Include="Authorization\PermissionDictionary.cs" />
-    <Compile Include="Authorization\PermissionProviderFinder.cs" />
     <Compile Include="Authorization\IPermissionDefinitionContext.cs" />
-    <Compile Include="Authorization\PermissionProvider.cs" />
-    <Compile Include="Authorization\IPermissionProviderFinder.cs" />
+    <Compile Include="Authorization\AuthorizationProvider.cs" />
     <Compile Include="Authorization\IPermissionManager.cs" />
     <Compile Include="Authorization\Permission.cs" />
     <Compile Include="Authorization\PermissionGroup.cs" />
@@ -128,6 +126,8 @@
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\Startup\AuthorizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\IAuthorizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
     <Compile Include="Application\Navigation\NavigationProvider.cs" />

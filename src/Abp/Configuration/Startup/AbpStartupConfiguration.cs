@@ -15,6 +15,11 @@ namespace Abp.Configuration.Startup
         public ILocalizationConfiguration Localization { get; private set; }
 
         /// <summary>
+        /// Used to configure authorization.
+        /// </summary>
+        public IAuthorizationConfiguration Authorization { get; private set; }
+
+        /// <summary>
         /// Gets/sets default connection string used by ORM module.
         /// It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>
@@ -44,6 +49,7 @@ namespace Abp.Configuration.Startup
             Localization = IocManager.Resolve<ILocalizationConfiguration>();
             Modules = IocManager.Resolve<IModuleConfigurations>();
             Navigation = IocManager.Resolve<INavigationConfiguration>();
+            Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
         }
     }
 }
