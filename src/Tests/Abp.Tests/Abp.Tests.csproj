@@ -93,7 +93,6 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
-    <Compile Include="Linq\LinqExtension_Tests.cs" />
     <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
