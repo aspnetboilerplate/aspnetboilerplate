@@ -5,11 +5,11 @@ namespace Abp.Configuration.Startup
 {
     internal class NavigationConfiguration : INavigationConfiguration
     {
-        public ITypeList<INavigationProvider> Providers { get; private set; }
+        public ITypeList<NavigationProvider> Providers { get; private set; }
 
         public NavigationConfiguration()
         {
-            Providers = new TypeList<INavigationProvider>();
+            Providers = new TypeList<NavigationProvider>();
         }
     }
 }

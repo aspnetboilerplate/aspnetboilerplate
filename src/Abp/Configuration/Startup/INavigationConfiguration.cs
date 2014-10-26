@@ -11,6 +11,6 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// List of navigation providers.
         /// </summary>
-        ITypeList<INavigationProvider> Providers { get; }
+        ITypeList<NavigationProvider> Providers { get; }
     }
 }

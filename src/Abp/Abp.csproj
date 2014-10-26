@@ -130,7 +130,7 @@
     <Compile Include="Collections\TypeList.cs" />
     <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
-    <Compile Include="Application\Navigation\INavigationProvider.cs" />
+    <Compile Include="Application\Navigation\NavigationProvider.cs" />
     <Compile Include="Application\Navigation\INavigationProviderContext.cs" />
     <Compile Include="Configuration\Startup\LocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />

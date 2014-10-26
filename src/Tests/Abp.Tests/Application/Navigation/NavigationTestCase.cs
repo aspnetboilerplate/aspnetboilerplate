@@ -53,9 +53,9 @@ namespace Abp.Tests.Application.Navigation
             return permissionManager;
         }
 
-        public class MyNavigationProvider1 : INavigationProvider
+        public class MyNavigationProvider1 : NavigationProvider
         {
-            public void SetNavigation(INavigationProviderContext context)
+            public override void SetNavigation(INavigationProviderContext context)
             {
                 context.Manager.MainMenu.AddItem(
                     new MenuItemDefinition(
@@ -84,9 +84,9 @@ namespace Abp.Tests.Application.Navigation
             }
         }
 
-        public class MyNavigationProvider2 : INavigationProvider
+        public class MyNavigationProvider2 : NavigationProvider
         {
-            public void SetNavigation(INavigationProviderContext context)
+            public override void SetNavigation(INavigationProviderContext context)
             {
                 var adminMenu = context.Manager.MainMenu.GetItemByName("Abp.Zero.Administration");
                 adminMenu.AddItem(
