@@ -9,8 +9,58 @@
 
 <body>
 
-<!-- START OF THE DOCUMENT -->
-
+<h3>v0.4 (2014-11-01)</h3>
+<ul>
+	<li>#124 #125: <strong>*</strong>Removed Abp.Infrastructure.EntityFramework and 
+	Abp.Infrastructure.NHibernate nuget packages. Created <strong>Abp.EntityFramework</strong>, 
+	<strong>Abp.NHibernate</strong> and <strong>Abp.FluentMigrator</strong> nuget packages. Need to change package 
+	dependencies for existing applications.</li>
+	<li>#127: <strong>*</strong>Removed Abp.Application nuget package. It is merged to Abp nuget 
+	package. Need to remove package dependency for existing applications.</li>
+	<li>#90: Registering <strong>IRepository&lt;TEntity&gt;</strong> to dependency injection 
+	automatically. Thus, we can directly inject and use IRepository&lt;Task&gt; 
+	without creating a TaskRepository.</li>
+	<li>#170: Added <strong>IRepository.InsertAndGetId</strong> method.</li>
+	<li>#172: Added <strong>IRepository.InsertOrUpdate</strong> method.</li>
+	<li>#120: Added <strong>IRepository.Delete(predicate)</strong> to delete more than one entity 
+	fits given condition.</li>
+	<li>#104: <strong>*</strong>Created a <strong>startup configuration system</strong> to configure ABP and 
+	modules.</li>
+	<li>#154: Created a modular and common <strong>menu system</strong> to define menus in C#, 
+	use in C# and Javascript.</li>
+	<li>#156: Provided a way of setting list of <strong>localized languages</strong> for the application.</li>
+	<li>#91: Created a <strong>permission system</strong>.</li>
+	<li>#113: Created <strong>IIocManager</strong>, <strong>IIocRegistrar</strong> and 
+	<strong>IIocResolved</strong> to work better 
+	with IOC system.</li>
+	<li>#117: <strong>*</strong>Removed IocHelper. Inject IIocManager or use IocManager.Instance 
+	if needed.</li>
+	<li>#108: Added a <strong>DynamicApiControllerBuilder.ForAll</strong> method to easily create many api controller at once.</li>
+	<li>#78: Added ability to add <strong>filter</strong> attributes to the dyanamic web api controllers.</li>
+	<li>#137: <strong>*</strong>Removed IApiControllerActionBuilder.WithActionName.</li>
+	<li>#132: Added permission and setting managers to application and controller classes.</li>
+	<li>#115 #116 #145 #146: <strong>*</strong>Re-designed<strong> module system</strong>.</li>
+	<li>#133: Add some frequently used <strong>extension methods</strong>.</li>
+	<li>#166: Created some useful <strong>DTO</strong> classes.</li>
+	<li>#96: Added <strong>ISortedResultRequest</strong> to standardize sorting request.</li>
+	<li>#147: Added <strong>IDateTimeRange</strong> and static date ranges for general-purpose datatime range operations.</li>
+	<li>#144: Created user-generic <strong>audited entity base classes</strong> with navigation 
+	properties.</li>
+	<li>#147: Add <strong>DefaultNameOrConnectionString</strong> to IAbpStartupConfiguration to 
+	share connection string across modules.</li>
+	<li>#176: Enhanced XML based localization.</li>
+	<li>#86: Enhanced Javascript busy api</li>
+	<li>#104: <strong>*</strong>Changed localization source registration.</li>
+	<li>#131: <strong>*</strong>Renamed IConventionalRegisterer to IConventionalDependencyRegistrar.</li>
+	<li>Fixed minor bugs.</li>
+	<li>Refactored and improved project structure and codebase. Changed namespaces and class names.</li>
+	<li>Moved unit texts to <strong>xunit</strong> and created more <strong>unit tests</strong>.</li>
+	<li>#134: Created nuget <strong>symbol packages</strong> to debug ABP framework.</li>
+	<li>Updated all nuget package dependencies.</li>
+	<li><strong>Enhanced startup templates</strong> and sample projects.</li>
+</ul>
+<p><strong>*</strong> these may be <strong>breaking changes</strong> for existing applications. 
+For breaking changes, see related <strong>issues</strong> on github.</p>
 <h3>v0.3.2 (2014-09-06)</h3>
 <ul>
 	<li>Sends server side <strong>validation errors</strong> to clients 
@@ -125,8 +175,6 @@
 	<li>Moved javascripts and styles from Abp.Web.Mvc to <strong>Abp.Web</strong> 
 	assembly (nuget package).</li>
 </ul>
-
-<!-- END OF THE DOCUMENT -->
 
 </body>
 
