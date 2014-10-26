@@ -2,6 +2,7 @@
 using Abp.Application.Navigation;
 using Abp.Application.Services.Interceptors;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -35,6 +36,7 @@ namespace Abp
         {
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
+            IocManager.Resolve<SettingDefinitionManager>().Initialize();
         }
     }
 }

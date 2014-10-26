@@ -20,6 +20,11 @@ namespace Abp.Configuration.Startup
         public IAuthorizationConfiguration Authorization { get; private set; }
 
         /// <summary>
+        /// Used to configure settings.
+        /// </summary>
+        public ISettingsConfiguration Settings { get; private set; }
+
+        /// <summary>
         /// Gets/sets default connection string used by ORM module.
         /// It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>
@@ -50,6 +55,7 @@ namespace Abp.Configuration.Startup
             Modules = IocManager.Resolve<IModuleConfigurations>();
             Navigation = IocManager.Resolve<INavigationConfiguration>();
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
+            Settings = IocManager.Resolve<ISettingsConfiguration>();
         }
     }
 }

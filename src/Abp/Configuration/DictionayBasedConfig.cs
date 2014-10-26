@@ -12,7 +12,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Dictionary of custom configuration.
         /// </summary>
-        protected Dictionary<string, object> Settings { get; private set; }
+        protected Dictionary<string, object> CustomSettings { get; private set; }
 
         /// <summary>
         /// Gets/sets a config value.
@@ -22,8 +22,8 @@ namespace Abp.Configuration
         /// <returns>Value of the config</returns>
         public object this[string name]
         {
-            get { return Settings.GetOrDefault(name); }
-            set { Settings[name] = value; }
+            get { return CustomSettings.GetOrDefault(name); }
+            set { CustomSettings[name] = value; }
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Abp.Configuration
         /// </summary>
         protected DictionayBasedConfig()
         {
-            Settings = new Dictionary<string, object>();
+            CustomSettings = new Dictionary<string, object>();
         }
 
         /// <summary>

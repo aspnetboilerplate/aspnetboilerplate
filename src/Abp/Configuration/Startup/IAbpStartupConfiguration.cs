@@ -21,6 +21,11 @@
         IAuthorizationConfiguration Authorization { get; }
 
         /// <summary>
+        /// Used to configure settings.
+        /// </summary>
+        ISettingsConfiguration Settings { get; }
+
+        /// <summary>
         /// Gets/sets default connection string used by ORM module.
         /// It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>

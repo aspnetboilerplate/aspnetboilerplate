@@ -132,9 +132,11 @@
     <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
     <Compile Include="Application\Navigation\NavigationProvider.cs" />
     <Compile Include="Application\Navigation\INavigationProviderContext.cs" />
+    <Compile Include="Configuration\Startup\ISettingsConfiguration.cs" />
     <Compile Include="Configuration\Startup\LocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
     <Compile Include="DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
@@ -185,7 +187,7 @@
     <Compile Include="Runtime\Session\IAbpSession.cs" />
     <Compile Include="Runtime\Session\NullAbpSession.cs" />
     <Compile Include="Configuration\ISettingDefinitionManager.cs" />
-    <Compile Include="Configuration\ISettingDefinitionProvider.cs" />
+    <Compile Include="Configuration\SettingProvider.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\ISettingStore.cs" />
     <Compile Include="Configuration\NullSettingStore.cs" />

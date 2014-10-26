@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Modules;
-using Abp.Reflection;
 
 namespace Abp.Configuration
 {
@@ -12,18 +11,32 @@ namespace Abp.Configuration
     /// </summary>
     internal class SettingDefinitionManager : ISettingDefinitionManager, ISingletonDependency
     {
+        private readonly IIocManager _iocManager;
+        private readonly ISettingsConfiguration _settingsConfiguration;
         private readonly IDictionary<string, SettingDefinition> _settings;
-
-        public IAssemblyFinder AssemblyFinder { get; set; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SettingDefinitionManager()
+        public SettingDefinitionManager(IIocManager iocManager, ISettingsConfiguration settingsConfiguration)
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            _iocManager = iocManager;
+            _settingsConfiguration = settingsConfiguration;
             _settings = new Dictionary<string, SettingDefinition>();
-            LoadAllSettingsFromAllProviders();
+        }
+
+        public void Initialize()
+        {
+            var context = new SettingDefinitionProviderContext();
+
+            foreach (var providerType in _settingsConfiguration.Providers)
+            {
+                var provider = CreateProvider(providerType);
+                foreach (var settings in provider.GetSettingDefinitions(context))
+                {
+                    _settings[settings.Name] = settings;
+                }
+            }
         }
 
         public SettingDefinition GetSettingDefinition(string name)
@@ -42,23 +55,14 @@ namespace Abp.Configuration
             return _settings.Values.ToImmutableList();
         }
 
-        private void LoadAllSettingsFromAllProviders()
+        private SettingProvider CreateProvider(Type providerType)
         {
-            var context = new SettingDefinitionProviderContext();
-            foreach (var assembly in AssemblyFinder.GetAllAssemblies())
+            if (!_iocManager.IsRegistered(providerType))
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (typeof(ISettingDefinitionProvider).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
-                    {
-                        var provider = (ISettingDefinitionProvider)Activator.CreateInstance(type);
-                        foreach (var settings in provider.GetSettingDefinitions(context))
-                        {
-                            _settings[settings.Name] = settings;
-                        }
-                    }
-                }
+                _iocManager.Register(providerType);
             }
+
+            return (SettingProvider)_iocManager.Resolve(providerType);
         }
     }
 }
