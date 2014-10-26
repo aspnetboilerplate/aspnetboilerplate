@@ -95,14 +95,14 @@ namespace Abp.Authorization
             }
         }
 
-        private IPermissionProvider CreatePermissionProvider(Type providerType)
+        private PermissionProvider CreatePermissionProvider(Type providerType)
         {
             if (!_iocManager.IsRegistered(providerType))
             {
                 _iocManager.Register(providerType);
             }
 
-            return (IPermissionProvider) _iocManager.Resolve(providerType);
+            return (PermissionProvider) _iocManager.Resolve(providerType);
         }
 
         private class PermissionDefinitionContext : IPermissionDefinitionContext

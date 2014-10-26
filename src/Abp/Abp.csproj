@@ -118,7 +118,7 @@
     <Compile Include="Authorization\PermissionDictionary.cs" />
     <Compile Include="Authorization\PermissionProviderFinder.cs" />
     <Compile Include="Authorization\IPermissionDefinitionContext.cs" />
-    <Compile Include="Authorization\IPermissionProvider.cs" />
+    <Compile Include="Authorization\PermissionProvider.cs" />
     <Compile Include="Authorization\IPermissionProviderFinder.cs" />
     <Compile Include="Authorization\IPermissionManager.cs" />
     <Compile Include="Authorization\Permission.cs" />

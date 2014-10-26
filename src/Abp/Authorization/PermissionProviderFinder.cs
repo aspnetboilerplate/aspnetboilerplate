@@ -26,7 +26,7 @@ namespace Abp.Authorization
 
         private static bool IsPermissionProviderClass(Type type)
         {
-            return typeof (IPermissionProvider).IsAssignableFrom(type)
+            return typeof (PermissionProvider).IsAssignableFrom(type)
                    && type.IsClass
                    && !type.IsAbstract;
         }

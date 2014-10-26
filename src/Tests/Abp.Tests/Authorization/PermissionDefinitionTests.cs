@@ -42,9 +42,9 @@ namespace Abp.Tests.Authorization
         }
     }
 
-    public class MyPermissionProvider1 : IPermissionProvider
+    public class MyPermissionProvider1 : PermissionProvider
     {
-        public void DefinePermissions(IPermissionDefinitionContext context)
+        public override void DefinePermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
             var administration = context.CreateRootGroup("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
@@ -57,9 +57,9 @@ namespace Abp.Tests.Authorization
         }
     }
 
-    public class MyPermissionProvider2 : IPermissionProvider
+    public class MyPermissionProvider2 : PermissionProvider
     {
-        public void DefinePermissions(IPermissionDefinitionContext context)
+        public override void DefinePermissions(IPermissionDefinitionContext context)
         {
             //Get existing root permission group 'Administration'
             var administration = context.GetRootGroupOrNull("Abp.Zero.Administration");
