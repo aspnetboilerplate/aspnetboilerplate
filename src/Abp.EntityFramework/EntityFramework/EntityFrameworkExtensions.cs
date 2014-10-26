@@ -125,12 +125,5 @@ namespace Abp.EntityFramework
 
             return query;
         }
-
-        public static IQueryable<TEntity> PagedBy<TEntity>(this IQueryable<TEntity> query, int skipCount, int maxResultCount)
-        {
-            if (query == null)
-                throw new ArgumentNullException("source", "source is null.");
-            return query.Skip(skipCount).Take(maxResultCount);
-        }
     }
 }
