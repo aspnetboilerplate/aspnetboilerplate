@@ -31,10 +31,9 @@ Say that we're developing a Blog module that can be used in different
 applications. Simplest module definition can be as shown below:</p>
 <pre lang="cs">public class MyBlogApplicationModule : AbpModule
 {
-    public override void Initialize(IAbpInitializationContext initializationContext)
+    public override void Initialize()
     {
-        base.Initialize(initializationContext);
-        IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
 <p>ASP.NET Boilerplate scans all assemblies and finds all classes those are 
@@ -46,17 +45,17 @@ startup and shutdown. You can override these methods to perform some specific
 tasks.</p>
 <p>ASP.NET Boilerplate calls these methods <strong>ordered by dependecies</strong>. If module A depends on module B, module B is initialized before module A. Exact order of 
 startup methods: PreInitialize-B, PreInitialize-A, Initialize-B, Initialize-A, PostInitialize-B and PostInitialize-A. This is true for all dependency graph. 
-Shutdown method is also similar.</p>
+Shutdown method is also similar but in reverse order.</p>
 <h4 id="DocModulePreInit">PreInitialize</h4>
 <p>This method is called first when application starts. You can write some 
 specific code here to run before dependency injection registrations. For 
 example, if you create a conventional registration class, you should register it 
-here (using IocManager.Instance.AddConventionalRegisterer method). You can 
+here (using IocManager.AddConventionalRegisterer method). You can 
 register to events of IOC container.. so on.</p>
 <h4 id="DocModuleInit">Initialize</h4>
 <p>It's the usual place where
 <a href="/Pages/Documents/Dependency-Injection">dependency injection</a> 
-registration should be done. It's generally done using IocManager.Instance.RegisterAssemblyByConvention method. 
+registration should be done. It's generally done using IocManager.RegisterAssemblyByConvention method. 
 If you want to define custom dependency registration, see dependency injection 
 documentation.</p>
 <h4 id="DocModulePostInit">PostInitialize</h4>
@@ -70,20 +69,12 @@ dependency here.</p>
 <p>A module can be dependent to another. ASP.NET Boilerplate tries to resolve 
 these dependencies automatically. But it's suggested to explicitly declare dependencies by 
 overriding GetDependencies method as like below:</p>
-<pre lang="cs">public class MyBlogApplicationModule : AbpModule
+<pre lang="cs">[DependsOn(typeof(MyBlogCoreModule))]
+public class MyBlogApplicationModule : AbpModule
 {
-    public override Type[] GetDependedModules()
+    public override void Initialize()
     {
-        return new[]
-        {
-            typeof(MyBlogCoreModule)
-        };
-    } 
-	
-    public override void Initialize(IAbpInitializationContext initializationContext)
-    {
-        base.Initialize(initializationContext);
-        IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
 <p>Thus, we declare to ASP.NET Boilerplate that MyBlogApplicationModule is 
@@ -95,42 +86,41 @@ depend on this module. Assume that MyModule2 depends on MyModule1 and wants to
 call a method of MyModule1 in PreInitialize event.</p>
 
 <pre lang="cs">public class MyModule1 : AbpModule
-{	
-    public override void Initialize(IAbpInitializationContext initializationContext)
+{
+    public override void Initialize()
     {
-        base.Initialize(initializationContext);
-        IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
-	
-    public void MyModuleMethod1(...)
+
+    public void MyModuleMethod1()
     {
         //this is a custom method of this module
-    } 
+    }
 }
 
+[DependsOn(typeof(MyModule1))]
 public class MyModule2 : AbpModule
-{	
-    public override Type[] GetDependedModules()
-    {
-        return new[]
-        {
-            typeof(MyModule1) //depends on MyModule1
-        };
-    } 
+{
+    private readonly MyModule1 _myModule1;
 
-    public override void PreInitialize(IAbpInitializationContext initializationContext)
+    public MyModule2(MyModule1 myModule1)
     {
-        initializationContext.GetModule&lt;MyModule1&gt;().MyModuleMethod1(...); //Call MyModule1&#39;s method
+        _myModule1 = myModule1;
     }
 
-    public override void Initialize(IAbpInitializationContext initializationContext)
+    public override void PreInitialize()
     {
-        base.Initialize(initializationContext);
-        IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        _myModule1.MyModuleMethod1(); //Call MyModule1's method
+    }
+
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
 
-<p>This is usually used to configure the depended module on startup.</p>
+<p>Here, we constructor-injected MyModule1 to MyModule2, so MyModule2 can call 
+MyModule1's custom method.</p>
 
 </body>
 
