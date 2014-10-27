@@ -66,6 +66,7 @@ differences in implementations.</p>
             <td class="layer-building-blocks col-sm-10">
                 <span>View Models (Javascript)</span>
                 <span>Views (HTML/CSS)</span>
+                <span><a href="/Pages/Documents/Localization">Localization</a></span>
             </td>
         </tr>
         <tr>
@@ -123,7 +124,7 @@ differences in implementations.</p>
             </td>
             <td class="layer-building-blocks">
                 <span><a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a></span>
-                <span>Logging</span>
+                <span><a href="/Pages/Documents/Logging">Logging</a></span>
             </td>
         </tr>
     </tbody>
@@ -164,7 +165,8 @@ application service method generally considered as a
 <a href="/Pages/Documents/Validating-Data-Transfer-Objects">validating user 
 inputs</a> is implemented in this layer. ASP.NET Boilerplate provides 
 infrastructure to implement validation easily. It's suggested to use a tool for 
-mapping entities to DTOs such as <a href="http://automapper.org" target="_blank">AutoMapper</a> library.</p>
+mapping entities to DTOs such as <a href="http://automapper.org" target="_blank">AutoMapper</a> library. 
+Exception handling</p>
 <h4 id="DocInfraLayer">Infrastructure layer</h4>
 <p>Domain layer just defines interface for
 <a href="/Pages/Documents/Repositories">repositories</a>, infrastructure layer 
@@ -207,16 +209,22 @@ For example, <a href="http://getbootstrap.com/" target="_blank">twitter bootstra
 framework.</p>
 <p>ASP.NET Boilerplate provides an infrastructure to automatically create a Web 
 API layer from your application services and use them in javascript easily (see
-<a href="/Pages/Documents/Dynamic-Web-API">documentation</a>). It also provides 
+<a href="/Pages/Documents/Dynamic-Web-API">documentation</a>). Provides 
+infrastructure to manage application menu,
+<a href="/Pages/Documents/Localization">localization</a> and language switch. Provides 
 a unified <a href="/Pages/Documents/Javascript-API">Javascript API</a> 
-to simplify localization, showing messages and notifications and so on.</p>
+to simplify showing messages and notifications.</p>
+<p>ASP.NET Boilerplate automatically
+<a href="/Pages/Documents/Handling-Exceptions">handles exceptions</a> in server 
+side and returns appropriate responses to clients.</p>
 <h3 id="DocOthers">Others</h3>
 <p>ASP.NET Boilerplate strongly uses and supports <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a>. It 
 uses
 <a href="http://docs.castleproject.org/Windsor.MainPage.ashx" target="_blank">
 Castle Windsor</a> framework for that. It also uses
 <a href="http://logging.apache.org/log4net/" target="_blank">Log4Net</a> for 
-logging on server side.</p>
+<a href="/Pages/Documents/Logging">logging</a> on server side (easily supports 
+other logging libraries without code change using Castle's logging facility).</p>
 
 <h3 id="DocLayeringSummary">Summary</h3>
 <p>ASP.NET Boilerplate uses best frameworks/libraries, also adds it's classes 

@@ -59,7 +59,9 @@
 <p>
     IRepostory defines most common methods for a repository class such as 
 	select, insert, update and delete methods (CRUD operations). Most of time these methods will be 
-	enough for simple entities.</p>
+	enough for simple entities. If these methods are enough for an entity, you 
+	don't have to create repository interface/class for this entitiy. See
+	<a href="#DocRepositoryImpl">implementation</a> section for details.</p>
 <h4 id="DocQuerying">
     Querying</h4>
 <p>
@@ -148,9 +150,17 @@ given lamda (or method) is executed in the repository method, it's executed when
 database connection is open. You can return a list of entities, a single entity, 
 a projection or something else that executes the query.</p>
 <h4 id="DocInsertEntity">Insert</h4>
-<p>IRepository interface defines a simple method to insert an entity to 
-database. It gets the entity to be inserted and returns the same entity object.</p>
-<pre lang="cs">TEntity Insert(TEntity entity);</pre>
+<p>IRepository interface defines simple methods to insert an entity to database:</p>
+<pre lang="cs">TEntity Insert(TEntity entity);
+TPrimaryKey InsertAndGetId(TEntity entity);
+TEntity InsertOrUpdate(TEntity entity);
+TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);</pre>
+<p><strong>Insert</strong> method simply inserts new entity to database and 
+returns the same inserted entity. <strong>InsertAndGetId</strong> method returns 
+Id of new inserted entity. This is useful if Id is auto increment and you need 
+Id of the new inserted entity. <strong>InsertOrUpdate</strong> inserts or updated given 
+entity by checking it's Id's value. Lastly, <strong>InsertOrUpdateAndGetId</strong> 
+returns Id of the entity after inserting or updating.</p>
 <h4 id="DocUpdateEntity">Update</h4>
 <p>IRepository defines a method to update an existing entity in the database. It 
 gets the entity to be updated and returns the same entity object.</p>
@@ -160,9 +170,13 @@ gets the entity to be updated and returns the same entity object.</p>
 
 <pre>void Delete(TEntity entity);
 void Delete(TPrimaryKey key);
-</pre>
+void Delete(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
 <p>First method accepts an existing entity, second one accepts Id of the entity 
-to delete.</p>
+to delete. </p>
+<p>The last one accepts a condition to delete all entities fit to given 
+condition. Notice that all entities matches given predicate will be retrived 
+from database and then deleted. So, use it carefully, it may cause performance 
+problems if there are too many entities with given condition.</p>
 
 <h4 id="DocOtherRepositoryMethods">Others</h4>
 <p>IRepository also provides methods to get count of entities in the table.</p>
@@ -183,6 +197,32 @@ repositories in ASP.NET Boilerplate in these frameworks:</p>
 	<li><a href="/Pages/Documents/EntityFramework-Integration">EntityFramework integration</a></li>
 </ul>
 
+<p>When you use NHibernate or EntityFramework, you don't have to 
+create repository classes for your entities if standard methods are enough for 
+you. You can directly <a href="/Pages/Documents/Dependency-Injection">inject</a> 
+<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;). An example
+<a href="/Pages/Documents/Application-Services">application service</a> uses a 
+repository to insert an entity to database:</p>
+<pre lang="cs">public class PersonAppService : IPersonAppService
+{
+    private readonly IRepository&lt;Person&gt; _personRepository;
+
+    public PersonAppService(IRepository&lt;Person&gt; personRepository)
+    {
+        _personRepository = personRepository;
+    }
+
+    public void CreatePerson(CreatePersonInput input)
+    {        
+        person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
+        
+        _personRepository.Insert(person);
+    }
+}</pre>
+<p>PersonAppService contructor-inject <strong>IRepository&lt;Person&gt;</strong> and 
+use the <strong>Insert</strong> method. In this way, you should only create a 
+repository class for an entity when you need to create a custom repository 
+method for that entity.</p>
 <h3 id="DocManageConnection">Managing database connection</h3>
 <p>A database 
 connection is not opened or closed in a repository method. Connection management is made automatically 
