@@ -48,7 +48,7 @@ namespace Abp.NHibernate.Repositories
             var entity = FirstOrDefault(key);
             if (entity == null)
             {
-                throw new AbpException("Threre is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + key);
+                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + key);
             }
 
             return entity;
