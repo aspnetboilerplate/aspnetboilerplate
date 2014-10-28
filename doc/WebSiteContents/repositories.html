@@ -69,11 +69,11 @@
 <h5 id="DocGettingSingleEntity">
     Getting single entity</h5>
 
-<pre lang="cs">TEntity Get(TPrimaryKey key);
+<pre lang="cs">TEntity Get(TPrimaryKey id);
 TEntity Single(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
-TEntity FirstOrDefault(TPrimaryKey key);
+TEntity FirstOrDefault(TPrimaryKey id);
 TEntity FirstOrDefault(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
-TEntity Load(TPrimaryKey key);</pre>
+TEntity Load(TPrimaryKey id);</pre>
 
 <p><strong>Get </strong>method is used to get an Entity with given primary key 
 (Id). It throws exception if there is no entity in database with given Id.
@@ -169,7 +169,7 @@ gets the entity to be updated and returns the same entity object.</p>
 <p>IRepository defines methods to delete an existing entity from the database</p>
 
 <pre>void Delete(TEntity entity);
-void Delete(TPrimaryKey key);
+void Delete(TPrimaryKey id);
 void Delete(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
 <p>First method accepts an existing entity, second one accepts Id of the entity 
 to delete. </p>
