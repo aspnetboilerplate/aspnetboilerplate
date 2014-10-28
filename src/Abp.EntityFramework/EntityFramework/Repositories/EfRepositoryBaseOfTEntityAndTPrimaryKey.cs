@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -57,7 +56,8 @@ namespace Abp.EntityFramework.Repositories
 
         public virtual TEntity FirstOrDefault(TPrimaryKey key)
         {
-            return GetAll().Where("Id = @0", key).FirstOrDefault(); //TODO: Get actual primary key name
+            return GetAll()
+                .FirstOrDefault(CreateEqualityExpression(key));
         }
 
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -166,6 +166,18 @@ namespace Abp.EntityFramework.Repositories
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).LongCount();
+        }
+
+        private static Expression<Func<TEntity, bool>> CreateEqualityExpression(TPrimaryKey id)
+        {
+            var lambdaParam = Expression.Parameter(typeof(TEntity));
+
+            var lambdaBody = Expression.Equal(
+                Expression.PropertyOrField(lambdaParam, "Id"),
+                Expression.Constant(id, typeof(TPrimaryKey))
+                );
+
+            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
     }
 }
