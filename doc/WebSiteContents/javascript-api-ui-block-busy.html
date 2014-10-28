@@ -36,15 +36,19 @@ Examples:</p>
 abp.ui.clearBusy('#MyLoginForm');</pre>
 <p>Example screenshot:</p>
 <p><img alt="A busy div with spin.js" height="240" src="/SiteFiles/Content/Documents/Resources/ui_busy_sample.png" width="375" /></p>
-<p>setBusy function can take a promise and automatically clear busy when this 
+<p>The parameter should be a jQuery selector (like '#MyLoginForm') or jQuery 
+selection (like $('#MyLoginForm')). To make busy the whole page, you can pass 
+null (or 'body') as selector.</p>
+<p>setBusy function can take a promise (as second parameter) and automatically clear busy when this 
 promise completed. Example:</p>
-<pre lang="js">abp.ui.setBusy($('#MyLoginForm'), {
-    promise: abp.ajax({ ... })	
-});</pre>
+<pre lang="js">abp.ui.setBusy(
+    $('#MyLoginForm'), 
+    abp.ajax({ ... })	
+);</pre>
 <p>Since <a href="/Pages/Documents/Javascript-API/AJAX">abp.ajax</a> returns promise, we can directly pass it as promise. To learn 
 more about promises, see jQuery's
 <a href="http://api.jquery.com/category/deferred-object/" target="_blank">
-Deferred</a>.</p>
+Deferred</a>. setBusy also supports Q (and Angular's $http service).</p>
 <p>UI Busy API is implemented using
 <a href="http://fgnass.github.io/spin.js/" target="_blank">spin.js</a>. To make 
 it work, you should include it's javascript file, then 

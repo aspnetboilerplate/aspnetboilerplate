@@ -219,8 +219,8 @@ repository to insert an entity to database:</p>
         _personRepository.Insert(person);
     }
 }</pre>
-<p>PersonAppService contructor-inject <strong>IRepository&lt;Person&gt;</strong> and 
-use the <strong>Insert</strong> method. In this way, you should only create a 
+<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
+uses the <strong>Insert</strong> method. In this way, you should only create a 
 repository class for an entity when you need to create a custom repository 
 method for that entity.</p>
 <h3 id="DocManageConnection">Managing database connection</h3>
