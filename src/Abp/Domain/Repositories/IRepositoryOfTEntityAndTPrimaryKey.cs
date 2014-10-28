@@ -50,9 +50,9 @@ namespace Abp.Domain.Repositories
         /// <summary>
         /// Gets an entity with given primary key.
         /// </summary>
-        /// <param name="key">Primary key of the entity to get</param>
+        /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity</returns>
-        TEntity Get(TPrimaryKey key);
+        TEntity Get(TPrimaryKey id);
 
         /// <summary>
         /// Gets exactly one entity with given predicate.
@@ -65,9 +65,9 @@ namespace Abp.Domain.Repositories
         /// <summary>
         /// Gets an entity with given primary key.
         /// </summary>
-        /// <param name="key">Primary key of the entity to get</param>
+        /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity or null</returns>
-        TEntity FirstOrDefault(TPrimaryKey key);
+        TEntity FirstOrDefault(TPrimaryKey id);
 
         /// <summary>
         /// Gets an entity with given given predicate.
@@ -79,9 +79,9 @@ namespace Abp.Domain.Repositories
         /// <summary>
         /// Creates an entity with given primary key without database access.
         /// </summary>
-        /// <param name="key">Primary key of the entity to load</param>
+        /// <param name="id">Primary key of the entity to load</param>
         /// <returns>Entity</returns>
-        TEntity Load(TPrimaryKey key);
+        TEntity Load(TPrimaryKey id);
 
         #endregion
 

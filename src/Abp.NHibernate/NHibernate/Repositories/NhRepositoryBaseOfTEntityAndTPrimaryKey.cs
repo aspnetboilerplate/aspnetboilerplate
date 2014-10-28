@@ -43,12 +43,12 @@ namespace Abp.NHibernate.Repositories
             return queryMethod(GetAll());
         }
 
-        public virtual TEntity Get(TPrimaryKey key)
+        public virtual TEntity Get(TPrimaryKey id)
         {
-            var entity = FirstOrDefault(key);
+            var entity = FirstOrDefault(id);
             if (entity == null)
             {
-                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + key);
+                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
             }
 
             return entity;
@@ -59,9 +59,9 @@ namespace Abp.NHibernate.Repositories
             return GetAll().Single(predicate);
         }
 
-        public virtual TEntity FirstOrDefault(TPrimaryKey key)
+        public virtual TEntity FirstOrDefault(TPrimaryKey id)
         {
-            return Session.Get<TEntity>(key);
+            return Session.Get<TEntity>(id);
         }
 
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -69,9 +69,9 @@ namespace Abp.NHibernate.Repositories
             return GetAll().FirstOrDefault(predicate);
         }
 
-        public virtual TEntity Load(TPrimaryKey key)
+        public virtual TEntity Load(TPrimaryKey id)
         {
-            return Session.Load<TEntity>(key);
+            return Session.Load<TEntity>(id);
         }
 
         public virtual TEntity Insert(TEntity entity)
