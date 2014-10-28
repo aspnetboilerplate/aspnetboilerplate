@@ -65,7 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NHibernate\EntityMappings\CoreModuleMapExtensions.cs" />
+    <Compile Include="NHibernate\EntityMappings\NhMappingExtensions.cs" />
     <Compile Include="NHibernate\EntityMappings\EntityMapOfTEntity.cs" />
     <Compile Include="NHibernate\Interceptors\AbpNHibernateInterceptor.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />

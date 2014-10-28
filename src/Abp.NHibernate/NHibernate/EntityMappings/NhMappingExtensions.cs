@@ -6,7 +6,7 @@ namespace Abp.NHibernate.EntityMappings
     /// <summary>
     /// This class is used to make mapping easier for standart columns.
     /// </summary>
-    public static class CoreModuleMapExtensions
+    public static class NhMappingExtensions
     {
         /// <summary>
         /// Maps audit columns. See <see cref="IAudited"/>.
