@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Abp.Xml;
 using Abp.Xml.Extensions;
@@ -43,7 +44,7 @@ namespace Abp.Localization.Dictionaries.Xml
             }
             catch (Exception ex)
             {
-                throw new AbpException("Invalid localization file format!", ex);
+                throw new AbpException("Invalid localization file format! " + filePath, ex);
             }
         }
 
@@ -79,6 +80,11 @@ namespace Abp.Localization.Dictionaries.Xml
                     if (string.IsNullOrEmpty(name))
                     {
                         throw new AbpException("name attribute of a text is empty in given xml string.");
+                    }
+
+                    if (dictionary.Contains(name))
+                    {
+                        throw new AbpException("A dictionary can not contain same key twice. '" + name + "' is defined more than once.");
                     }
 
                     var value = node.GetAttributeValueOrNull("value") ?? node.InnerText;

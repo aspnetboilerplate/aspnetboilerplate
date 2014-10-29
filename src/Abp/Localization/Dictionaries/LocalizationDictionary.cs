@@ -57,5 +57,10 @@ namespace Abp.Localization.Dictionaries
         {
             return GetAllStrings().GetEnumerator();
         }
+
+        protected bool Contains(string name)
+        {
+            return _dictionary.ContainsKey(name);
+        }
     }
 }
