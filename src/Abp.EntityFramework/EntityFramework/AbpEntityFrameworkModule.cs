@@ -10,7 +10,7 @@ using Abp.Reflection;
 namespace Abp.EntityFramework
 {
     /// <summary>
-    /// This module is used to implement "Data Access Layer" in NHibernate.
+    /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     public class AbpEntityFrameworkModule : AbpModule
     {
