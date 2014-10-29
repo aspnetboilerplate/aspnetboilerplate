@@ -2,6 +2,7 @@
 using System.Web;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
+using Abp.Web.Configuration;
 
 namespace Abp.Web
 {
@@ -16,6 +17,8 @@ namespace Abp.Web
             {
                 XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");                
             }
+
+            IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
         }
 
         public override void Initialize()

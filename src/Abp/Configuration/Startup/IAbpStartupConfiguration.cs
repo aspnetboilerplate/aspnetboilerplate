@@ -1,10 +1,17 @@
-﻿namespace Abp.Configuration.Startup
+﻿using Abp.Dependency;
+
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used to configure ABP and modules on startup.
     /// </summary>
     public interface IAbpStartupConfiguration : IDictionaryBasedConfig
     {
+        /// <summary>
+        /// Gets the IOC manager associated with this configuration.
+        /// </summary>
+        IIocManager IocManager { get; }
+
         /// <summary>
         /// Used to set localization configuration.
         /// </summary>

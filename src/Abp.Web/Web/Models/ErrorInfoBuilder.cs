@@ -1,6 +1,6 @@
 ﻿using System;
-using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Web.Configuration;
 
 namespace Abp.Web.Models
 {
@@ -10,7 +10,7 @@ namespace Abp.Web.Models
 
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
-        public ErrorInfoBuilder(IModuleConfigurations configuration)
+        public ErrorInfoBuilder(IAbpWebModuleConfiguration configuration)
         {
             Converter = new DefaultErrorInfoConverter(configuration);
         }
