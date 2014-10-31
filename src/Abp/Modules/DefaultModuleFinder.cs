@@ -2,28 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Reflection;
+using Castle.Core.Logging;
 
 namespace Abp.Modules
 {
     internal class DefaultModuleFinder : IModuleFinder
     {
+        public ILogger Logger { get; set; }
+
         public IAssemblyFinder AssemblyFinder { get; set; }
 
         public DefaultModuleFinder()
         {
             AssemblyFinder = DefaultAssemblyFinder.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public List<Type> FindAll()
         {
-            var allModules = new List<Type>();            
-            
-            allModules.AddRange(
-                from assembly in AssemblyFinder.GetAllAssemblies()
-                from type in assembly.GetTypes()
-                where AbpModule.IsAbpModule(type)
-                select type
-                );
+            var allModules = new List<Type>();
+
+            var allAssemblies = AssemblyFinder.GetAllAssemblies().Distinct();
+
+            foreach (var assembly in allAssemblies)
+            {
+                Logger.Debug("Searching ABP modules in assembly: " + assembly.FullName);
+
+                var modules = (from type in assembly.GetTypes()
+                    where AbpModule.IsAbpModule(type)
+                    select type).ToList();
+
+                if (modules.Count > 0)
+                {
+                    Logger.Debug("Found modules:");
+                    foreach (var module in modules)
+                    {
+                        Logger.Debug("- " + module.FullName);
+                    }
+
+                    allModules.AddRange(modules);
+                }
+            }
+
+            Logger.Debug("Found " + allModules.Count + " ABP modules in total.");
 
             var currentModules = allModules.ToList();
 
