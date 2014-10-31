@@ -33,6 +33,7 @@
     };
 
     abp.ui.setBusy = function (elm, optionsOrPromise) {
+        optionsOrPromise = optionsOrPromise || {};
         if (optionsOrPromise.always || optionsOrPromise['finally']) { //Check if it's promise
             optionsOrPromise = {
                 promise: optionsOrPromise
