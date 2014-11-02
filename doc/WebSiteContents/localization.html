@@ -10,6 +10,7 @@
 <body>
 
 <ul>
+	<li><a href="#DocAppLangs">Application languages</a></li>
 	<li><a href="#DocLocalizationSources">Localization sources</a><ul>
 		<li><a href="#DocLocalizeXml">XML files</a></li>
 		<li><a href="#DocLocalizeResources">Resource files</a></li>
@@ -26,8 +27,25 @@
 	<li><a href="#DocConclusion">Conclusion</a></li>
 </ul>
 
+<h3 id="DocAppLangs">Application languages</h3>
+<p>An application has at least one language for user interface. Many 
+applications have more than one language. ASP.NET Boilerplate provides a 
+flexible localization system for an application.</p>
+<p>The first thing is to declare which languages are supported. This is done
+<strong>PreInitialize</strong> event of your
+<a href="/Pages/Documents/Module-System">module</a> as shown below:</p>
+<pre lang="cs">Configuration.Localization.Languages.Add(new LanguageInfo(&quot;en&quot;, &quot;English&quot;, &quot;famfamfam-flag-england&quot;, true));
+Configuration.Localization.Languages.Add(new LanguageInfo(&quot;tr&quot;, &quot;T&#252;rk&#231;e&quot;, &quot;famfamfam-flag-tr&quot;));</pre>
+<p>In server side, you can <a href="/Pages/Documents/Dependency-Injection">
+inject</a> and use <strong>ILocalizationManager</strong>. In client side, you 
+can use <strong>abp.localization</strong> javascript API to get list of 
+languages and the current language.</p>
+<p>ASP.NET Boilerplate also uses this configuration internally to manage 
+localization system. So, we should declare all languages of the application on 
+startup.</p>
+
 <h3 id="DocLocalizationSources">Localization sources</h3>
-<p>ASP.NET Boilerplate provides a flexible localization system. Localization 
+<p>Localization 
 texts can be stored in different sources. 
 Even you can use more than one source in same application.<strong> 
 ILocalizationSource</strong> interface should be implemented for a localization 
