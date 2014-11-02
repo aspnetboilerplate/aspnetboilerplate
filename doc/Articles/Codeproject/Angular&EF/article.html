@@ -62,12 +62,14 @@ A screenshot of the sample application.</p>
 
 <p><img alt="Create template by ASP.NET Boilerplate" src="create-abp-template.png" style="width:100%;" /></p>
 
-<p>Here, I selected <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. It created and downloaded my solution. I opened it in Visual Studio 2013:</p>
-
-<p><img alt="Solution structure" height="110" src="abp-template-projects.png" width="315" /></p>
+<p>Here, I selected <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. It created and downloaded my solution. </p>
 
 <p>There are 5 projects included in the solution. <strong>Core</strong> project for domain (business) layer, <strong>Application</strong> project for application layer, <strong>WebApi</strong> project to implement Web Api controllers, <strong> Web</strong> project for presentation layer and finally 
 <strong> EntityFramework</strong> project for EntityFramework implementation.</p>
+<p><strong>Note</strong>: If you download sample solution for this acticle, you 
+will see 7 projects in the solution. I improved template to support NHibernate 
+and Durandal also for same application. If you don't interest in NHibernate or 
+Durandal, just ignore these 2 projects.</p>
 
 <h2 id="ArticleCreateEntities">Create entities</h2>
 
@@ -140,19 +142,11 @@ for Task and Person. This is my DbContext class:</p>
 
 <h2 id="ArticleDbMigrations">Create Database Migrations</h2>
 
-<p>We&#39;ll use EntityFramework&#39;s Code First Migrations to create and maintain the database schema. Open the Package Manager Console and type the following command (<strong>Default project</strong> must be set to SimpleTaskSystem.Infrastructure.EntityFramework in console window):</p>
-
-<pre>
-PM&gt; Enable-Migrations</pre>
-
-<p>A screenshot from package manager console (Selecting default project):</p>
-
-<p><img alt="Package manager console enable migrations" height="104" src="pkm-console.png" width="590" /></p>
-
-<p>This will enable migrations for our DbContext (SimpleTaskSystemDbContext) and create a <strong>Configuration</strong> class as shown below:</p>
+<p>We&#39;ll use EntityFramework&#39;s Code First Migrations to create and maintain the database schema. 
+ASP.NET Boilerplate template has enabled migrations by default and added a <strong>Configuration</strong>class as shown below::</p>
 
 <pre lang="cs">
-internal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSystem.EntityFramework.SimpleTaskSystemDbContext&gt;
+internalinternal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSystem.EntityFramework.SimpleTaskSystemDbContext&gt;
 {
     public Configuration()
     {
@@ -171,12 +165,12 @@ internal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSys
     }
 }</pre>
 
-<p>In the Seed method, I added four people for initial data. Now, I&#39;ll create the <strong>initial migration</strong>:</p>
+<p>In the Seed method, I added four people for initial data. Now, I&#39;ll create the <strong>initial migration</strong>. 
+I opened Package Manager Console and typed the following command:</p>
+<p>
+<img alt="Visual studio Package manager console" height="110" src="pkm-console2.png" width="590" /></p>
 
-<pre>
-PM&gt; Add-Migration &quot;InitialCreate&quot;</pre>
-
-<p>This command creates a class named InitialCreate as shown below:</p>
+<p><strong>Add-Migration "InitialCreate"</strong> command creates a class named InitialCreate as shown below:</p>
 
 <pre lang="cs">
 public partial class InitialCreate : DbMigration
@@ -221,7 +215,7 @@ public partial class InitialCreate : DbMigration
 <pre>
 PM&gt; Update-Database</pre>
 
-<p>This command runs the migrations, creates the database and populates the initial data for us:</p>
+<p>This command runs migrations, creates the database and populates the initial data for us:</p>
 
 <p><img alt="Database created by EntityFramework Migrations" height="147" src="sql-db.png" width="207" /></p>
 
@@ -239,14 +233,14 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
 
 <p>It extends generic <strong>IRepository</strong> interface of ASP.NET Boilerplate. IRepository defines common methods for select, insert, update, delete and a few more:</p>
 
-<p><img alt="Generic IRepository interface" height="308" src="irepository-interface.png" width="464" /></p>
+<p><img alt="Generic IRepository interface" height="385" src="irepository-interface2.png" width="460" /></p>
 
 <p>So, <strong>ITaskRepository</strong> inherently defines all these methods as default. It can also add it&#39;s own methods as I defined <strong>GetAllWithPeople(...)</strong>. </p>
 <p>No need to create a repository for Person since default methods are enough 
 for me. ASP.NET Boilerplate provides a way of injecting generic repositories 
 without creating a repository class. We will see it in TaskAppService class in 
 'Build application services' section..</p>
-<p>Lastly, I defined repository interfaces in the <strong>Core</strong> project since they are parts of domain/business layer.</p>
+<p>I defined repository interfaces in the <strong>Core</strong> project since they are parts of domain/business layer.</p>
 
 <h2 id="ArticleImplementRepositories">Implement repositories</h2>
 
