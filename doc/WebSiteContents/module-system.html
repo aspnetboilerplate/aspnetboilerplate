@@ -67,8 +67,8 @@ dependency here.</p>
 <h3 id="DocModuleDepend">Module dependencies</h3>
 
 <p>A module can be dependent to another. ASP.NET Boilerplate tries to resolve 
-these dependencies automatically. But it's suggested to explicitly declare dependencies by 
-overriding GetDependencies method as like below:</p>
+these dependencies automatically. But it's suggested to explicitly declare dependencies 
+using DependsOn attribute like below:</p>
 <pre lang="cs">[DependsOn(typeof(MyBlogCoreModule))]
 public class MyBlogApplicationModule : AbpModule
 {
