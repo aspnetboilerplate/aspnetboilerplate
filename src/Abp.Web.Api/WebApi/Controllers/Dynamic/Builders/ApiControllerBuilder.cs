@@ -85,7 +85,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T), _filters);
+            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), _filters);
             
             foreach (var actionBuilder in _actionBuilders.Values)
             {
