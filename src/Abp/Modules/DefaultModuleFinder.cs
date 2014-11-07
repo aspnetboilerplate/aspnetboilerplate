@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Dependency;
 using Abp.Reflection;
 using Castle.Core.Logging;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.Modules
 {
@@ -14,6 +16,7 @@ namespace Abp.Modules
 
         public DefaultModuleFinder()
         {
+            IocManager.Instance.IocContainer.Register(Component.For<IAssemblyFilter>().ImplementedBy<DefaultAssemblyFilter>());
             AssemblyFinder = DefaultAssemblyFinder.Instance;
             Logger = NullLogger.Instance;
         }

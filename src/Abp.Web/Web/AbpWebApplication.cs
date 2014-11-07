@@ -25,6 +25,7 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
+            IocManager.Instance.IocContainer.Register(Component.For<IAssemblyFilter>().ImplementedBy<DefaultAssemblyFilter>());
             IocManager.Instance.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
 
             AbpBootstrapper = new AbpBootstrapper();
