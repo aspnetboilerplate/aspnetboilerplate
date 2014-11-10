@@ -13,6 +13,16 @@ namespace Abp.Web
     /// </summary>
     public class WebAssemblyFinder : IAssemblyFinder
     {
+        private readonly IAssemblyFilter _AssemblyFilter;
+
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public WebAssemblyFinder(IAssemblyFilter aAssemblyFilter)
+        {
+            _AssemblyFilter = aAssemblyFilter;
+        }
+        
         /// <summary>
         /// This return all assemblies in bin folder of the web application.
         /// </summary>
@@ -29,6 +39,11 @@ namespace Abp.Web
                 var locatedAssembly = allReferencedAssemblies.FirstOrDefault(asm => AssemblyName.ReferenceMatchesDefinition(asm.GetName(), AssemblyName.GetAssemblyName(dllFile)));
                 if (locatedAssembly != null)
                 {
+                    //Exclude any assemblies based on implementation of IAssemblyFilter
+                    if (_AssemblyFilter.ExcludeAssembly(locatedAssembly.FullName))
+                        continue;
+
+
                     assembliesInBinFolder.Add(locatedAssembly);
                 }
             }
