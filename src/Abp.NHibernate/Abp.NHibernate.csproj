@@ -68,6 +68,9 @@
     <Compile Include="NHibernate\EntityMappings\NhMappingExtensions.cs" />
     <Compile Include="NHibernate\EntityMappings\EntityMapOfTEntity.cs" />
     <Compile Include="NHibernate\Interceptors\AbpNHibernateInterceptor.cs" />
+    <Compile Include="NHibernate\DefaultSessionProvider.cs" />
+    <Compile Include="NHibernate\FactorySessionProvider.cs" />
+    <Compile Include="NHibernate\ISessionProvider.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryInstaller.cs" />
     <Compile Include="NHibernate\Config\AbpNHibernateConfigurationExtensions.cs" />
