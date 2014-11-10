@@ -42,7 +42,7 @@ namespace Abp.Web.Mvc.Authorization
             }
             catch (AbpAuthorizationException ex)
             {
-                LogHelper.Logger.Warn(ex.Message, ex);
+                LogHelper.Logger.Warn(ex.ToString(), ex);
                 return false;
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
@@ -29,7 +28,7 @@ namespace Abp.Logging
 
         public static void LogException(Exception ex)
         {
-            Logger.Error(ex.Message, ex);
+            Logger.Error(ex.ToString(), ex);
             LogValidationErrors(ex);
         }
 

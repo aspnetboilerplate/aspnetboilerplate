@@ -265,7 +265,7 @@ namespace Abp.Events.Bus
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex.Message, ex);
+                        Logger.Warn(ex.ToString(), ex);
                     }
                 });
         }
@@ -286,7 +286,7 @@ namespace Abp.Events.Bus
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex.Message, ex);
+                        Logger.Warn(ex.ToString(), ex);
                     }
                 });
         }

@@ -66,7 +66,7 @@ namespace Abp.Web.Mvc.Extensions
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.Logger.Error("Can not find file for: " + path + "! " + ex.Message);
+                    LogHelper.Logger.Error("Can not find file for: " + path + "! " + ex.ToString());
                     result = path;
                 }
 

@@ -44,7 +44,7 @@ namespace Abp.WebApi.Authorization
             }
             catch (AbpAuthorizationException ex)
             {
-                LogHelper.Logger.Warn(ex.Message, ex);
+                LogHelper.Logger.Warn(ex.ToString(), ex);
                 return false;
             }
         }
