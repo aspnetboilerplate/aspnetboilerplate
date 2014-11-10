@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Abp.Tests.Authorization
 {
-    public class PermissionManagerTester
+    public class PermissionManagerTester : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Test_PermissionManager()
@@ -18,7 +18,7 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider1>();
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
-            var permissionManager = new PermissionManager(IocManager.Instance, authorizationConfiguration);
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
             permissionManager.Initialize();
 
             permissionManager.GetAllRootGroups().Count.ShouldBe(1);
