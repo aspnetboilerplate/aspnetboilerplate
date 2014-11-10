@@ -46,16 +46,34 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Create a new unit of work scope.
         /// </summary>
-        public UnitOfWorkScope() 
-            : this(true)
+        public UnitOfWorkScope()
+            : this(true, IocManager.Instance)
         {
-            
+
+        }
+
+        /// <summary>
+        /// Create a new unit of work scope.
+        /// </summary>
+        internal UnitOfWorkScope(IIocResolver iocResolver)
+            : this(true, iocResolver)
+        {
+
         }
 
         /// <summary>
         /// Create a new unit of work scope.
         /// </summary>
         public UnitOfWorkScope(bool isTransactional)
+            : this(isTransactional, IocManager.Instance)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a new unit of work scope.
+        /// </summary>
+        internal UnitOfWorkScope(bool isTransactional, IIocResolver iocResolver)
         {
             //There is already a uow, do nothing
             if (Current != null)
@@ -66,18 +84,17 @@ namespace Abp.Domain.Uow
             //this scope started the uow
             _isStartedByThisScope = true;
 
-            _unitOfWorkWrapper = IocManager.Instance.ResolveAsDisposable<IUnitOfWork>();
-            Current = _unitOfWorkWrapper.Object;
+            _unitOfWorkWrapper = iocResolver.ResolveAsDisposable<IUnitOfWork>();
 
             try
             {
+                Current = _unitOfWorkWrapper.Object;
                 Current.Initialize(isTransactional);
                 Current.Begin();
             }
             catch
             {
                 Current = null;
-                _unitOfWorkWrapper.Dispose();
                 throw;
             }
         }
@@ -97,7 +114,7 @@ namespace Abp.Domain.Uow
             Current.End();
             _isCommited = true;
         }
-        
+
         public void Dispose()
         {
             if (!_isStartedByThisScope)
@@ -106,9 +123,16 @@ namespace Abp.Domain.Uow
                 return;
             }
 
+            if (Current == null)
+            {
+                //No active UOW
+                return;
+            }
+
             if (!_isCommited)
             {
-                try { Current.Cancel(); } catch { } //Hide errors
+                try { Current.Cancel(); }
+                catch { } //Hide errors
             }
 
             Current = null;

@@ -82,6 +82,7 @@
     <Compile Include="Domain\Entities\Manager.cs" />
     <Compile Include="Domain\Entities\Test_Entities.cs" />
     <Compile Include="Domain\Entities\Worker.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkScope_Tests.cs" />
     <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
     <Compile Include="Events\Bus\EventBusTestBase.cs" />
     <Compile Include="Events\Bus\InheritanceTest.cs" />
