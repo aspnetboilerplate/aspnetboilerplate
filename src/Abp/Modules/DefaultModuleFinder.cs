@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Abp.Collections.Extensions;
 using Abp.Reflection;
 using Castle.Core.Logging;
 
@@ -28,20 +30,36 @@ namespace Abp.Modules
             {
                 Logger.Debug("Searching ABP modules in assembly: " + assembly.FullName);
 
-                var modules = (from type in assembly.GetTypes()
-                    where AbpModule.IsAbpModule(type)
-                    select type).ToList();
+                Type[] types;
 
-                if (modules.Count > 0)
+                try
                 {
-                    Logger.Debug("Found modules:");
-                    foreach (var module in modules)
-                    {
-                        Logger.Debug("- " + module.FullName);
-                    }
-
-                    allModules.AddRange(modules);
+                    types = assembly.GetTypes();
                 }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    types = ex.Types;
+                }
+
+                if (types.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                var modules = (from type in types where AbpModule.IsAbpModule(type) select type).ToArray();
+
+                if (modules.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                Logger.Debug("Found modules:");
+                foreach (var module in modules)
+                {
+                    Logger.Debug("- " + module.FullName);
+                }
+
+                allModules.AddRange(modules);
             }
 
             Logger.Debug("Found " + allModules.Count + " ABP modules in total.");
@@ -52,7 +70,7 @@ namespace Abp.Modules
             {
                 FillDependedModules(module, allModules);
             }
-            
+
             return allModules;
         }
 

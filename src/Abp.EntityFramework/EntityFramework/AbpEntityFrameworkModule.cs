@@ -1,6 +1,8 @@
-﻿using System.Data.Entity.Infrastructure.Interception;
+﻿using System;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Linq;
 using System.Reflection;
+using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.SoftDeleting;
@@ -35,16 +37,45 @@ namespace Abp.EntityFramework
 
         private void RegisterGenericRepositories()
         {
-            var dbContextTypes = (
-                from assembly in AssemblyFinder.GetAllAssemblies()
-                from type in assembly.GetTypes()
-                where type.IsPublic && !type.IsAbstract && type.IsClass && typeof(AbpDbContext).IsAssignableFrom(type)
-                select type
-                ).ToList();
+            //TODO: Refactor this code. Also, it's similar to DefaultModuleFinder.FindAll
 
-            foreach (var dbContextType in dbContextTypes)
+            var allAssemblies = AssemblyFinder.GetAllAssemblies().Distinct();
+
+            foreach (var assembly in allAssemblies)
             {
-                EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
+                Type[] types;
+
+                try
+                {
+                    types = assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    types = ex.Types;
+                }
+
+                if (types.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                var dbContextTypes = (
+                    from type in types
+                    where
+                        type.IsPublic && !type.IsAbstract && type.IsClass &&
+                        typeof (AbpDbContext).IsAssignableFrom(type)
+                    select type
+                    ).ToArray();
+
+                if (dbContextTypes.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
+                }
             }
         }
     }
