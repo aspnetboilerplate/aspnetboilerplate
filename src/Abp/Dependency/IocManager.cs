@@ -32,7 +32,12 @@ namespace Abp.Dependency
             Instance = new IocManager();
         }
 
-        internal IocManager()
+        /// <summary>
+        /// Creates a new <see cref="IocManager"/> object.
+        /// Normally, you don't directly instantiate an <see cref="IocManager"/>.
+        /// This may be useful for test purposes.
+        /// </summary>
+        public IocManager()
         {
             IocContainer = new WindsorContainer();
             _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
