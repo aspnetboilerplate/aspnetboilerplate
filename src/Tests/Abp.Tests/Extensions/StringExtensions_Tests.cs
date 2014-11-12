@@ -80,6 +80,18 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
+        public void NthIndexOf_Test()
+        {
+            const string str = "This is a test string";
+
+            str.NthIndexOf('i', 0).ShouldBe(-1);
+            str.NthIndexOf('i', 1).ShouldBe(2);
+            str.NthIndexOf('i', 2).ShouldBe(5);
+            str.NthIndexOf('i', 3).ShouldBe(18);
+            str.NthIndexOf('i', 4).ShouldBe(-1);
+        }
+
+        [Fact]
         public void Truncate_Test()
         {
             const string str = "This is a test string";
