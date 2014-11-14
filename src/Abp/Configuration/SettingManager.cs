@@ -169,7 +169,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public void ChangeSettingForApplication(string name, string value)
+        public virtual void ChangeSettingForApplication(string name, string value)
         {
             var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, null, null);
             lock (_applicationSettings.Value)
@@ -186,7 +186,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public void ChangeSettingForTenant(int tenantId, string name, string value)
+        public virtual void ChangeSettingForTenant(int tenantId, string name, string value)
         {
             var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, tenantId, null);
             var cachedDictionary = GetTenantSettingsFromCache(tenantId);
@@ -204,7 +204,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public void ChangeSettingForUser(long userId, string name, string value)
+        public virtual void ChangeSettingForUser(long userId, string name, string value)
         {
             var settingValue = InsertOrUpdateOrDeleteSettingValue(name, value, null, userId);
             var cachedDictionary = GetUserSettingsFromCache(userId);
@@ -233,10 +233,8 @@ namespace Abp.Configuration
             }
 
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
-            //var settingValue = _settingRepository.FirstOrDefault(sv => sv.TenantId == tenantId && sv.UserId == userId && sv.Name == name);
             var settingValue = SettingStore.GetSettingOrNull(tenantId, userId, name);
             
-
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
 
@@ -300,7 +298,8 @@ namespace Abp.Configuration
 
             //Update the setting on database.
             settingValue.Value = value;
-            
+            SettingStore.Update(settingValue);
+
             return settingValue;
         }
 
