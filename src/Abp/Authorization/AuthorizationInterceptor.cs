@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Dependency;
+using Abp.Reflection;
 using Castle.DynamicProxy;
 
 namespace Abp.Authorization
@@ -9,11 +11,11 @@ namespace Abp.Authorization
     /// </summary>
     internal class AuthorizationInterceptor : IInterceptor
     {
-        private readonly IIocManager _iocManager;
+        private readonly IIocResolver _iocResolver;
 
-        public AuthorizationInterceptor(IIocManager iocManager)
+        public AuthorizationInterceptor(IIocResolver iocResolver)
         {
-            _iocManager = iocManager;
+            _iocResolver = iocResolver;
         }
 
         public void Intercept(IInvocation invocation)
@@ -24,15 +26,20 @@ namespace Abp.Authorization
 
         public void Authorize(IInvocation invocation)
         {
-            if (!invocation.MethodInvocationTarget.IsDefined(typeof(AbpAuthorizeAttribute), true))
+            var authorizeAttrList =
+                ReflectionHelper
+                    .GetAttributesOfMemberAndDeclaringType<AbpAuthorizeAttribute>(
+                        invocation.MethodInvocationTarget
+                    );
+
+            if (authorizeAttrList.Count <= 0)
             {
                 return;
             }
 
-            var authorizeAttributes = invocation.MethodInvocationTarget.GetCustomAttributes(typeof(AbpAuthorizeAttribute), true);
-            using (var authorizationAttributeHelper = _iocManager.ResolveAsDisposable<AuthorizeAttributeHelper>())
+            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<AuthorizeAttributeHelper>())
             {
-                authorizationAttributeHelper.Object.Authorize(authorizeAttributes.Cast<IAbpAuthorizeAttribute>());
+                authorizationAttributeHelper.Object.Authorize(authorizeAttrList);
             }
         }
     }

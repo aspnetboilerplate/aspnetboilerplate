@@ -20,8 +20,6 @@ namespace Abp.Application.Services.Interceptors
             if (typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
             {
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
-
-                //TODO: If possible, intercept methods only those have AbpAuthorizeAttribute
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
             }
         }
