@@ -7,11 +7,11 @@ namespace Abp.Web.Sessions
 {
     public class SessionScriptManager : ISessionScriptManager, ISingletonDependency
     {
-        private readonly IAbpSession _abpSession;
+        public IAbpSession AbpSession { get; set; }
 
-        public SessionScriptManager(IAbpSession abpSession)
+        public SessionScriptManager()
         {
-            _abpSession = abpSession;
+            AbpSession = NullAbpSession.Instance;
         }
 
         public string GetScript()
@@ -23,14 +23,14 @@ namespace Abp.Web.Sessions
 
             script.AppendLine("    abp.session = abp.session || {};");
             
-            if (_abpSession.UserId.HasValue)
+            if (AbpSession.UserId.HasValue)
             {
-                script.AppendLine("    abp.session.userId = " + _abpSession.UserId.Value + ";");
+                script.AppendLine("    abp.session.userId = " + AbpSession.UserId.Value + ";");
             }
 
-            if (_abpSession.TenantId.HasValue)
+            if (AbpSession.TenantId.HasValue)
             {
-                script.AppendLine("    abp.session.tenantId = " + _abpSession.TenantId.Value + ";");
+                script.AppendLine("    abp.session.tenantId = " + AbpSession.TenantId.Value + ";");
             }
 
             script.AppendLine();
