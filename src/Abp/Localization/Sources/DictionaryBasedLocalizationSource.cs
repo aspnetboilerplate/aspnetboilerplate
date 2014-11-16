@@ -16,7 +16,7 @@ namespace Abp.Localization.Sources
         /// Unique Name of the source.
         /// </summary>
         public string Name { get; private set; }
-        
+
         /// <summary>
         /// List of all dictionaries in this source.
         /// </summary>
@@ -53,7 +53,7 @@ namespace Abp.Localization.Sources
 
         public virtual void Initialize()
         {
-            
+
         }
 
         public string GetString(string name)
@@ -103,7 +103,7 @@ namespace Abp.Localization.Sources
                 return strDefault.Value;
             }
 
-            throw new AbpException("Can not find '" + name + "'!");
+            throw new AbpException("Can not find a localized string for '" + name + "' in source '" + Name + "'!");
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
@@ -117,7 +117,7 @@ namespace Abp.Localization.Sources
             {
                 throw new AbpException("No default dictionary is defined!");
             }
-            
+
             //Create a temp dictionary to build
             var dict = new Dictionary<string, LocalizedString>();
 
