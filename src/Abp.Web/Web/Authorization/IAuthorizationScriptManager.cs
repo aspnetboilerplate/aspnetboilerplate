@@ -2,6 +2,6 @@
 {
     public interface IAuthorizationScriptManager
     {
-        string GetAuthorizationScript();
+        string GetScript();
     }
 }

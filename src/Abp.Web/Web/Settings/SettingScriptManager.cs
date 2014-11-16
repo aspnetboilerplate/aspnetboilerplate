@@ -19,7 +19,7 @@ namespace Abp.Web.Settings
             _settingManager = settingManager;
         }
 
-        public string GetSettingScript()
+        public string GetScript()
         {
             var script = new StringBuilder();
 

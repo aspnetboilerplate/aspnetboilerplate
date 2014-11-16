@@ -23,7 +23,7 @@ namespace Abp.Web.Authorization
             _permissionManager = permissionManager;
         }
 
-        public string GetAuthorizationScript()
+        public string GetScript()
         {
             var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
             var grantedPermissions =

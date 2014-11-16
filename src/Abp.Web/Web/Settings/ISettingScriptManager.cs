@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets Javascript that contains setting values.
         /// </summary>
-        string GetSettingScript();
+        string GetScript();
     }
 }

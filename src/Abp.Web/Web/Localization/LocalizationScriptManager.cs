@@ -22,12 +22,12 @@ namespace Abp.Web.Localization
             _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
         }
 
-        public string GetLocalizationScript()
+        public string GetScript()
         {
-            return GetLocalizationScript(Thread.CurrentThread.CurrentUICulture);
+            return GetScript(Thread.CurrentThread.CurrentUICulture);
         }
 
-        public string GetLocalizationScript(CultureInfo cultureInfo)
+        public string GetScript(CultureInfo cultureInfo)
         {
             return _cache.Get(cultureInfo.Name, BuildAll);
         }
