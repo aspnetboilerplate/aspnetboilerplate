@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using AutoMapper;
 using Shouldly;
 using Xunit;
@@ -10,8 +11,7 @@ namespace Abp.AutoMapper.Tests
         static AutoMapping_Tests()
         {
             //ABP will automatically find and create these mappings!
-            Mapper.CreateMap<MyClass1, MyClass2>().ReverseMap();
-            Mapper.CreateMap<MyClass1, MyClass3>().ReverseMap();
+            AutoMapperHelper.AutoMapInAssembly(Assembly.GetExecutingAssembly());
         }
 
         [Fact]
@@ -50,9 +50,8 @@ namespace Abp.AutoMapper.Tests
             list2[1].TestProp.ShouldBe("Test value 2");
         }
 
-        private class MyClass1 :
-            IAutoMap<MyClass2>,
-            IAutoMap<MyClass3>
+        [AutoMap(typeof(MyClass2), typeof(MyClass3))]
+        private class MyClass1
         {
             public string TestProp { get; set; }
         }

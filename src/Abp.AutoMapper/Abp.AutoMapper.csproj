@@ -47,9 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoMapper\IAutoMap.cs" />
-    <Compile Include="AutoMapper\IAutoMapFrom.cs" />
-    <Compile Include="AutoMapper\IAutoMapTo.cs" />
+    <Compile Include="AutoMapper\AutoMapAttribute.cs" />
+    <Compile Include="AutoMapper\AutoMapFromAttribute.cs" />
+    <Compile Include="AutoMapper\AutoMapperHelper.cs" />
+    <Compile Include="AutoMapper\AutoMapToAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
