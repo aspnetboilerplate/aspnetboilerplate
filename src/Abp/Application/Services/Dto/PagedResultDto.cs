@@ -1,9 +1,12 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
     /// Implements <see cref="IPagedResult{T}"/>.
     /// </summary>
     /// <typeparam name="T">Type of the items in the <see cref="ListResultDto{T}.Items"/> list</typeparam>
+    [Serializable]
     public class PagedResultDto<T> : ListResultDto<T>, IPagedResult<T>, IDto
     {
         /// <summary>

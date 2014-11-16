@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Abp.Application.Services.Dto
@@ -6,6 +7,7 @@ namespace Abp.Application.Services.Dto
     /// Implements <see cref="IListResult{T}"/>.
     /// </summary>
     /// <typeparam name="T">Type of the items in the <see cref="Items"/> list</typeparam>
+    [Serializable]
     public class ListResultDto<T> : IListResult<T>
     {
         /// <summary>

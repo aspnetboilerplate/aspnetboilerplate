@@ -1,8 +1,11 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
     /// Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
+    [Serializable]
     public class NameValueDto : IDto
     {
         /// <summary>

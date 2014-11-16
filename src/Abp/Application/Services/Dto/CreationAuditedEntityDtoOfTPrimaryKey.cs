@@ -7,6 +7,7 @@ namespace Abp.Application.Services.Dto
     /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="ICreationAudited"/> interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of primary key</typeparam>
+    [Serializable]
     public abstract class CreationAuditedEntityDto<TPrimaryKey> : EntityDto<TPrimaryKey>, ICreationAudited
     {
         /// <summary>
