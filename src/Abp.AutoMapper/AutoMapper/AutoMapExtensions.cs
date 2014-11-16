@@ -4,13 +4,7 @@ namespace Abp.AutoMapper
 {
     public static class AutoMapExtensions
     {
-        public static TDestination Map<TDestination>(this IAutoMapTo<TDestination> source)
-        {
-            return Mapper.Map<TDestination>(source);
-        }
-
-        public static TDestination Map<TSource, TDestination>(this TSource source)
-            where TDestination : IAutoMapFrom<TSource>
+        public static TDestination MapTo<TDestination>(this object source)
         {
             return Mapper.Map<TDestination>(source);
         }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Shouldly;
 using Xunit;
 
@@ -18,12 +19,10 @@ namespace Abp.AutoMapper.Tests
         {
             var obj1 = new MyClass1 { TestProp = "Test value" };
 
-            var obj2 = obj1.Map<MyClass2>();
-            obj2.ShouldNotBe(null);
+            var obj2 = obj1.MapTo<MyClass2>();
             obj2.TestProp.ShouldBe("Test value");
 
-            var obj3 = obj1.Map<MyClass3>();
-            obj3.ShouldNotBe(null);
+            var obj3 = obj1.MapTo<MyClass3>();
             obj3.TestProp.ShouldBe("Test value");
         }
 
@@ -32,10 +31,23 @@ namespace Abp.AutoMapper.Tests
         {
             var obj2 = new MyClass2 { TestProp = "Test value" };
 
-            var obj1 = obj2.Map<MyClass2, MyClass1>();
-
-            obj1.ShouldNotBe(null);
+            var obj1 = obj2.MapTo< MyClass1>();
             obj1.TestProp.ShouldBe("Test value");
+        }
+
+        [Fact]
+        public void MapTo_Collection_Tests()
+        {
+            var list1 = new List<MyClass1>
+                        {
+                            new MyClass1 {TestProp = "Test value 1"},
+                            new MyClass1 {TestProp = "Test value 2"}
+                        };
+
+            var list2 = list1.MapTo<List<MyClass2>>();
+            list2.Count.ShouldBe(2);
+            list2[0].TestProp.ShouldBe("Test value 1");
+            list2[1].TestProp.ShouldBe("Test value 2");
         }
 
         private class MyClass1 :
