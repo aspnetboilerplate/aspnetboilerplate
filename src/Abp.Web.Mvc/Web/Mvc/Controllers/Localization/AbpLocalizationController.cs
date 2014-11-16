@@ -1,28 +1,13 @@
 ﻿using System;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Localization;
-using Abp.Web.Localization;
 using Abp.Web.Mvc.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
-        private readonly ILocalizationScriptManager _localizationScriptManager;
-
-        public AbpLocalizationController(ILocalizationScriptManager localizationScriptManager)
-        {
-            _localizationScriptManager = localizationScriptManager;
-        }
-
-        public ContentResult GetScripts()
-        {
-            var script = _localizationScriptManager.GetLocalizationScript();
-            return Content(script, "application/x-javascript", Encoding.UTF8);
-        }
-
         public ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
             if (!GlobalizationHelper.IsValidCultureCode(cultureName))

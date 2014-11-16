@@ -90,7 +90,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 case ProxyScriptType.JQuery:
                     return new JQueryProxyGenerator(controllerInfo, amdModule);
                 case ProxyScriptType.Angular:
-                    return new AngularProxyGenerator(controllerInfo); //TODO: Angular!
+                    return new AngularProxyGenerator(controllerInfo);
                 default:
                     throw new AbpException("Unknown ProxyScriptType: " + type);
             }

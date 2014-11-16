@@ -31,7 +31,6 @@ namespace Abp.Web.Authorization
                     ? _permissionManager.GetGrantedPermissions(AbpSession.UserId.Value).Select(p => p.Name).ToArray()
                     : new string[0];
 
-
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
