@@ -53,7 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MapTo_Tests.cs" />
+    <Compile Include="AutoMapping_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
