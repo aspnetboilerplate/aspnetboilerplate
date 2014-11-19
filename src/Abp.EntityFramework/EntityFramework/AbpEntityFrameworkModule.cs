@@ -8,6 +8,7 @@ using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.SoftDeleting;
 using Abp.Modules;
 using Abp.Reflection;
+using Castle.Core.Logging;
 
 namespace Abp.EntityFramework
 {
@@ -18,9 +19,12 @@ namespace Abp.EntityFramework
     {
         public IAssemblyFinder AssemblyFinder { private get; set; }
 
+        public ILogger Logger { get; set; }
+
         public AbpEntityFrameworkModule()
         {
             AssemblyFinder = DefaultAssemblyFinder.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public override void PreInitialize()
@@ -43,38 +47,43 @@ namespace Abp.EntityFramework
 
             foreach (var assembly in allAssemblies)
             {
-                Type[] types;
-
                 try
                 {
-                    types = assembly.GetTypes();
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    types = ex.Types;
-                }
+                    Type[] types;
 
-                if (types.IsNullOrEmpty())
-                {
-                    continue;
+                    try
+                    {
+                        types = assembly.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException ex)
+                    {
+                        types = ex.Types;
+                    }
+
+                    if (types.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    var dbContextTypes = (
+                        from type in types
+                        where type != null && type.IsPublic && !type.IsAbstract && type.IsClass && typeof(AbpDbContext).IsAssignableFrom(type)
+                        select type
+                        ).ToArray();
+
+                    if (dbContextTypes.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    foreach (var dbContextType in dbContextTypes)
+                    {
+                        EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
+                    }
                 }
-
-                var dbContextTypes = (
-                    from type in types
-                    where
-                        type.IsPublic && !type.IsAbstract && type.IsClass &&
-                        typeof (AbpDbContext).IsAssignableFrom(type)
-                    select type
-                    ).ToArray();
-
-                if (dbContextTypes.IsNullOrEmpty())
+                catch (Exception ex)
                 {
-                    continue;
-                }
-
-                foreach (var dbContextType in dbContextTypes)
-                {
-                    EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
+                    Logger.Warn(ex.ToString(), ex);
                 }
             }
         }

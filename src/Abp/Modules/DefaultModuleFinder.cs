@@ -28,38 +28,45 @@ namespace Abp.Modules
 
             foreach (var assembly in allAssemblies)
             {
-                Logger.Debug("Searching ABP modules in assembly: " + assembly.FullName);
-
-                Type[] types;
-
                 try
                 {
-                    types = assembly.GetTypes();
+                    Logger.Debug("Searching ABP modules in assembly: " + assembly.FullName);
+
+                    Type[] types;
+
+                    try
+                    {
+                        types = assembly.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException ex)
+                    {
+                        types = ex.Types;
+                    }
+
+                    if (types.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    var modules = (from type in types where type != null && AbpModule.IsAbpModule(type) select type).ToArray();
+
+                    if (modules.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    Logger.Debug("Found modules:");
+                    foreach (var module in modules)
+                    {
+                        Logger.Debug("- " + module.FullName);
+                    }
+
+                    allModules.AddRange(modules);
                 }
-                catch (ReflectionTypeLoadException ex)
+                catch (Exception ex)
                 {
-                    types = ex.Types;
+                    Logger.Warn(ex.ToString(), ex);
                 }
-
-                if (types.IsNullOrEmpty())
-                {
-                    continue;
-                }
-
-                var modules = (from type in types where AbpModule.IsAbpModule(type) select type).ToArray();
-
-                if (modules.IsNullOrEmpty())
-                {
-                    continue;
-                }
-
-                Logger.Debug("Found modules:");
-                foreach (var module in modules)
-                {
-                    Logger.Debug("- " + module.FullName);
-                }
-
-                allModules.AddRange(modules);
             }
 
             Logger.Debug("Found " + allModules.Count + " ABP modules in total.");
