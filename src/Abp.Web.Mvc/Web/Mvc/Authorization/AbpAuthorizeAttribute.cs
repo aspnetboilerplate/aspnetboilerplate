@@ -11,10 +11,10 @@ namespace Abp.Web.Mvc.Authorization
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public string[] Permissions { get; set; }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public bool RequireAllPermissions { get; set; }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Abp.Web.Mvc.Authorization
             Permissions = permissions;
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
         {
             if (!base.AuthorizeCore(httpContext))

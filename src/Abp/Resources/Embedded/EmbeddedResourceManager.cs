@@ -23,7 +23,7 @@ namespace Abp.Resources.Embedded
             _resourceCache = new ConcurrentDictionary<string, EmbeddedResourceInfo>();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace)
         {
             if (_resourcePaths.ContainsKey(rootPath))
@@ -34,7 +34,7 @@ namespace Abp.Resources.Embedded
             _resourcePaths[rootPath] = new EmbeddedResourcePathInfo(rootPath, assembly, resourceNamespace);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public EmbeddedResourceInfo GetResource(string fullPath)
         {
             //Get from cache if exists!

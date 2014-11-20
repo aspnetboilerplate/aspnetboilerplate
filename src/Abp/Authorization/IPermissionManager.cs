@@ -8,8 +8,8 @@ namespace Abp.Authorization
     public interface IPermissionManager
     {
         /// <summary>
-		/// Gets <see cref="Permission"/> object with given <paramref name="name"/> or returns null
-		/// if there is no permission with given <paramref name="name"/>.
+        /// Gets <see cref="Permission"/> object with given <paramref name="name"/> or returns null
+        /// if there is no permission with given <paramref name="name"/>.
         /// </summary>
         /// <param name="name">Unique name of the permission</param>
         Permission GetPermissionOrNull(string name);
@@ -20,8 +20,8 @@ namespace Abp.Authorization
         IReadOnlyList<Permission> GetAllPermissions();
 
         /// <summary>
-		/// Gets <see cref="PermissionGroup"/> object with given <paramref name="name"/> or returns null
-		/// if there is no permission group with given <paramref name="name"/>.
+        /// Gets <see cref="PermissionGroup"/> object with given <paramref name="name"/> or returns null
+        /// if there is no permission group with given <paramref name="name"/>.
         /// </summary>
         /// <param name="name">Unique name of the permission</param>
         PermissionGroup GetRootGroupOrNull(string name);

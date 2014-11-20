@@ -34,7 +34,7 @@ namespace Abp.Configuration
 
         private readonly ThreadSafeObjectCache<Dictionary<string, SettingInfo>> _userSettingCache;
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public SettingManager(ISettingDefinitionManager settingDefinitionManager)
         {
             _settingDefinitionManager = settingDefinitionManager;
@@ -49,7 +49,7 @@ namespace Abp.Configuration
 
         #region Public methods
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public string GetSettingValue(string name)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
@@ -88,13 +88,13 @@ namespace Abp.Configuration
             return settingDefinition.DefaultValue;
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public T GetSettingValue<T>(string name)
         {
             return (T)Convert.ChangeType(GetSettingValue(name), typeof(T));
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValues()
         {
             var settingDefinitions = new Dictionary<string, SettingDefinition>();
@@ -148,7 +148,7 @@ namespace Abp.Configuration
             return settingValues.Values.ToImmutableList();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForApplication()
         {
             lock (_applicationSettings.Value)
@@ -159,7 +159,7 @@ namespace Abp.Configuration
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(int tenantId)
         {
             return GetReadOnlyTenantSettings(tenantId).Values
@@ -167,7 +167,7 @@ namespace Abp.Configuration
                 .ToImmutableList();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(long userId)
         {
             return GetReadOnlyUserSettings(userId).Values
@@ -175,7 +175,7 @@ namespace Abp.Configuration
                 .ToImmutableList();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         [UnitOfWork]
         public virtual void ChangeSettingForApplication(string name, string value)
         {
@@ -193,7 +193,7 @@ namespace Abp.Configuration
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         [UnitOfWork]
         public virtual void ChangeSettingForTenant(int tenantId, string name, string value)
         {
@@ -212,7 +212,7 @@ namespace Abp.Configuration
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         [UnitOfWork]
         public virtual void ChangeSettingForUser(long userId, string name, string value)
         {
@@ -244,12 +244,12 @@ namespace Abp.Configuration
 
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
             var settingValue = SettingStore.GetSettingOrNull(tenantId, userId, name);
-            
+
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
 
             //For Tenant and User, Application's value overrides Setting Definition's default value.
-            if (tenantId.HasValue || userId.HasValue) 
+            if (tenantId.HasValue || userId.HasValue)
             {
                 var applicationValue = GetSettingValueForApplicationOrNull(name);
                 if (applicationValue != null)
@@ -303,7 +303,7 @@ namespace Abp.Configuration
             //It's same value as it's, no need to update
             if (settingValue.Value == value)
             {
-                return settingValue;                
+                return settingValue;
             }
 
             //Update the setting on database.

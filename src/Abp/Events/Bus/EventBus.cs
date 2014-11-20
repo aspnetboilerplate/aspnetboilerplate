@@ -57,19 +57,19 @@ namespace Abp.Events.Bus
 
         #region Register
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             return Register(typeof(TEventData), new ActionEventHandler<TEventData>(action));
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handler);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
             where THandler : IEventHandler<TEventData>, new()
@@ -77,19 +77,19 @@ namespace Abp.Events.Bus
             return Register(typeof(TEventData), new TransientEventHandlerFactory<THandler>());
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandler handler)
         {
             return Register(eventType, new SingleInstanceHandlerFactory(handler));
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handlerFactory);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
             lock (_handlerFactories)
@@ -103,7 +103,7 @@ namespace Abp.Events.Bus
 
         #region Unregister
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             lock (_handlerFactories)
@@ -130,13 +130,13 @@ namespace Abp.Events.Bus
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), handler);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandler handler)
         {
             lock (_handlerFactories)
@@ -149,13 +149,13 @@ namespace Abp.Events.Bus
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Unregister<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), factory);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
             lock (_handlerFactories)
@@ -164,13 +164,13 @@ namespace Abp.Events.Bus
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void UnregisterAll<TEventData>() where TEventData : IEventData
         {
             UnregisterAll(typeof(TEventData));
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void UnregisterAll(Type eventType)
         {
             lock (_handlerFactories)
@@ -183,13 +183,13 @@ namespace Abp.Events.Bus
 
         #region Trigger
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
             Trigger(null, eventData);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             var eventType = typeof(TEventData);
@@ -215,13 +215,13 @@ namespace Abp.Events.Bus
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Trigger(Type eventType, EventData eventData)
         {
             Trigger(eventType, null, eventData);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Trigger(Type eventType, object eventSource, EventData eventData)
         {
             eventData.EventSource = eventSource;
@@ -234,7 +234,7 @@ namespace Abp.Events.Bus
                     throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
                 }
 
-                var handlerType = typeof (IEventHandler<>).MakeGenericType(eventType);
+                var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
                 try
                 {
@@ -266,13 +266,13 @@ namespace Abp.Events.Bus
             return handlerFactoryList.ToArray();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
             return TriggerAsync(null, eventData);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             return Task.Factory.StartNew(
@@ -289,13 +289,13 @@ namespace Abp.Events.Bus
                 });
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, EventData eventData)
         {
             return TriggerAsync(eventType, null, eventData);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
         {
             return Task.Factory.StartNew(

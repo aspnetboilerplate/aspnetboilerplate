@@ -11,14 +11,14 @@ namespace Abp.WebApi.Authorization
     /// to make that method usable only by authorized users.
     /// TODO: This class is not implemented yet.
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute , IAbpAuthorizeAttribute
+    public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public string[] Permissions { get; set; }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public bool RequireAllPermissions { get; set; }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
         /// </summary>
@@ -28,7 +28,7 @@ namespace Abp.WebApi.Authorization
             Permissions = permissions;
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             if (!base.IsAuthorized(actionContext))
@@ -40,7 +40,7 @@ namespace Abp.WebApi.Authorization
             {
                 using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<AuthorizeAttributeHelper>())
                 {
-                    authorizationAttributeHelper.Object.Authorize(this);                    
+                    authorizationAttributeHelper.Object.Authorize(this);
                 }
 
                 return true;

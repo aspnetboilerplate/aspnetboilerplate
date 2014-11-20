@@ -11,20 +11,20 @@ namespace Abp.Web
     /// </summary>
     public class AbpWebModule : AbpModule
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public override void PreInitialize()
         {
             if (HttpContext.Current != null)
             {
-                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");                
+                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
             }
 
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public override void Initialize()
-        { 
+        {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             Configuration.Localization.Sources.Add(new XmlLocalizationSource("AbpWeb", "Localization\\AbpWeb"));
         }

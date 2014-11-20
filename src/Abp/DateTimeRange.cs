@@ -29,7 +29,7 @@ namespace Abp
         }
 
         /// <summary>
-		/// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="startTime"/> and <paramref name="endTime"/>.
+        /// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="startTime"/> and <paramref name="endTime"/>.
         /// </summary>
         /// <param name="startTime">Start time of the datetime range</param>
         /// <param name="endTime">End time of the datetime range</param>
@@ -40,7 +40,7 @@ namespace Abp
         }
 
         /// <summary>
-		/// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="dateTimeRange"/> object.
+        /// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="dateTimeRange"/> object.
         /// </summary>
         /// <param name="dateTimeRange">IDateTimeRange object</param>
         public DateTimeRange(IDateTimeRange dateTimeRange)
@@ -213,10 +213,10 @@ namespace Abp
             }
         }
 
-		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.
-		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.</returns>
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.</returns>
         public override string ToString()
         {
             return string.Format("[{0} - {1}]", StartTime, EndTime);

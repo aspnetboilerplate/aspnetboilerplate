@@ -36,7 +36,7 @@ namespace Abp.Dependency
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
         /// <param name="iocResolver">IIocResolver object</param>
-		/// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
+        /// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
         public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IIocResolver iocResolver, Type type)
         {

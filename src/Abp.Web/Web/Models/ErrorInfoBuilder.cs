@@ -4,21 +4,21 @@ using Abp.Web.Configuration;
 
 namespace Abp.Web.Models
 {
-	/// <inheritdoc/>
+    /// <inheritdoc/>
     public class ErrorInfoBuilder : IErrorInfoBuilder, ISingletonDependency
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public static IErrorInfoBuilder Instance { get { return IocManager.Instance.Resolve<IErrorInfoBuilder>(); } }
 
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public ErrorInfoBuilder(IAbpStartupConfiguration configuration)
         {
             Converter = new DefaultErrorInfoConverter(configuration);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public ErrorInfo BuildForException(Exception exception)
         {
             return Converter.Convert(exception);

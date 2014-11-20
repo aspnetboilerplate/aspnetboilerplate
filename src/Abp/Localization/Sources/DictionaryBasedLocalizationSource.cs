@@ -51,18 +51,18 @@ namespace Abp.Localization.Sources
             }
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public virtual void Initialize()
         {
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public string GetString(string name)
         {
             return GetString(name, Thread.CurrentThread.CurrentUICulture);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public string GetString(string name, CultureInfo culture)
         {
             var cultureCode = culture.Name;
@@ -108,13 +108,13 @@ namespace Abp.Localization.Sources
             throw new AbpException("Can not find a localized string for '" + name + "' in source '" + Name + "'!");
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
             if (_defaultDictionary == null)

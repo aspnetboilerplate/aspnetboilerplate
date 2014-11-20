@@ -81,13 +81,13 @@ namespace Abp.Web.Mvc.Controllers
             return _localizationSource.GetString(name, culture);
         }
 
-		/// <summary>
-		/// Json the specified data, contentType, contentEncoding and behavior.
-		/// </summary>
-		/// <param name="data">Data.</param>
-		/// <param name="contentType">Content type.</param>
-		/// <param name="contentEncoding">Content encoding.</param>
-		/// <param name="behavior">Behavior.</param>
+        /// <summary>
+        /// Json the specified data, contentType, contentEncoding and behavior.
+        /// </summary>
+        /// <param name="data">Data.</param>
+        /// <param name="contentType">Content type.</param>
+        /// <param name="contentEncoding">Content encoding.</param>
+        /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
             if (!(data is AjaxResponse))

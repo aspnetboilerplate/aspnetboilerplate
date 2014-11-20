@@ -20,13 +20,13 @@ namespace Abp.WebApi
     [DependsOn(typeof(AbpWebModule))]
     public class AbpWebApiModule : AbpModule
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

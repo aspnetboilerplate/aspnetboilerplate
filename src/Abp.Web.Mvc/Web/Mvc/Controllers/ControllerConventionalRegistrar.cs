@@ -9,7 +9,7 @@ namespace Abp.Web.Mvc.Controllers
     /// </summary>
     public class ControllerConventionalRegistrar : IConventionalDependencyRegistrar
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void RegisterAssembly(IConventionalRegistrationContext context)
         {
             context.IocManager.IocContainer.Register(

@@ -153,7 +153,7 @@ namespace Abp.Domain.Repositories
         /// <param name="predicate">A condition to filter entities</param>
         void Delete(Expression<Func<TEntity, bool>> predicate);
 
-		#endregion
+        #endregion
 
         #region Aggregates
 
@@ -178,7 +178,7 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
-		/// (use this overload if expected return value is greather than <see cref="int.MaxValue"/>).
+        /// (use this overload if expected return value is greather than <see cref="int.MaxValue"/>).
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>

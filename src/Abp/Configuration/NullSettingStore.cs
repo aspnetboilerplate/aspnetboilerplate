@@ -17,28 +17,28 @@ namespace Abp.Configuration
         {
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
             return null;
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Delete(SettingInfo setting)
         {
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Create(SettingInfo setting)
         {
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Update(SettingInfo setting)
-        {            
+        {
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public List<SettingInfo> GetAll(int? tenantId, long? userId)
         {
             return new List<SettingInfo>();

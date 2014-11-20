@@ -53,7 +53,7 @@ namespace Abp.Web.Models
         {
             Code = code;
         }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>

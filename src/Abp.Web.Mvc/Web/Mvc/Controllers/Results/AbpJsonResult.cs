@@ -24,12 +24,13 @@ namespace Abp.Web.Mvc.Controllers.Results
         /// Constructor with JSON data.
         /// </summary>
         /// <param name="data">JSON data</param>
-        public AbpJsonResult(object data) : this()
+        public AbpJsonResult(object data)
+            : this()
         {
             Data = data;
         }
-        
-		/// <inheritdoc/>
+
+        /// <inheritdoc/>
         public override void ExecuteResult(ControllerContext context)
         {
             if (context == null)

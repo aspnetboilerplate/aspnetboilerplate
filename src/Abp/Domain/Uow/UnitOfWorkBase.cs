@@ -9,7 +9,7 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public bool IsTransactional { get; private set; }
 
         private readonly List<Action> _successHandlers;
@@ -22,31 +22,31 @@ namespace Abp.Domain.Uow
             _successHandlers = new List<Action>();
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public abstract void Dispose();
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public void Initialize(bool isTransactional)
         {
             IsTransactional = isTransactional;
         }
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public abstract void Begin();
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public abstract void SaveChanges();
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public abstract void End();
 
-		/// <inheritdoc/>
+        /// <inheritdoc/>
         public abstract void Cancel();
 
-		/// <summary>
-		/// Add a handler that will be called if unit of work succeed.
-		/// </summary>
-		/// <param name="action">Action to be executed</param>
+        /// <summary>
+        /// Add a handler that will be called if unit of work succeed.
+        /// </summary>
+        /// <param name="action">Action to be executed</param>
         public virtual void OnSuccess(Action action)
         {
             _successHandlers.Add(action);
