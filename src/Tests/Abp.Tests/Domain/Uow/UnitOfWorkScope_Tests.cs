@@ -13,7 +13,7 @@ namespace Abp.Tests.Domain.Uow
             var fakeUow = Substitute.For<IUnitOfWork>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleTransient()
+                Component.For<IUnitOfWork>().Instance(fakeUow)
                 );
 
             using (var unitOfWorkScope = new UnitOfWorkScope(LocalIocManager))

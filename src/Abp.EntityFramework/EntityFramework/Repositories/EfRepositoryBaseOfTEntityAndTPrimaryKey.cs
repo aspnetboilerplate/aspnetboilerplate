@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Dependency;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -92,7 +93,8 @@ namespace Abp.EntityFramework.Repositories
             
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                // TODO: ammachado: Remove this dependency
+                IocManager.Instance.Resolve<UnitOfWorkScope>().Current.SaveChanges();
             }
 
             return entity.Id;
@@ -111,7 +113,8 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                // TODO: ammachado: Remove this dependency
+                IocManager.Instance.Resolve<UnitOfWorkScope>().Current.SaveChanges();
             }
 
             return entity.Id;

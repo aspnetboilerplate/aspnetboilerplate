@@ -3,8 +3,6 @@ using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
-    /// TODO@Halil: Use upper-level scope instead of starting new when available..?
-
     /// <summary>
     /// This class is used to create a manual unit of work scope.  
     /// </summary>
@@ -15,28 +13,12 @@ namespace Abp.Domain.Uow
     /// </remarks>
     public class UnitOfWorkScope : IDisposable
     {
-        /// <summary>
-        /// Gets current <see cref="IUnitOfWork"/> instance.
-        /// It gets the right instance that is related to current thread.
-        /// </summary>
-        public static IUnitOfWork Current
-        {
-            get { return _currentUow; }
-            set { _currentUow = value; }
-        }
-
-        [ThreadStatic]
-        private static IUnitOfWork _currentUow;
+        private IUnitOfWork _currentUow;
 
         /// <summary>
         /// Unit of work object wrapper.
         /// </summary>
         private readonly IDisposableDependencyObjectWrapper<IUnitOfWork> _unitOfWorkWrapper;
-
-        /// <summary>
-        /// Is current unit of work started by this scope?
-        /// </summary>
-        private readonly bool _isStartedByThisScope;
 
         /// <summary>
         /// Is unit of work commited?
@@ -49,7 +31,6 @@ namespace Abp.Domain.Uow
         public UnitOfWorkScope()
             : this(true, IocManager.Instance)
         {
-
         }
 
         /// <summary>
@@ -58,7 +39,6 @@ namespace Abp.Domain.Uow
         internal UnitOfWorkScope(IIocResolver iocResolver)
             : this(true, iocResolver)
         {
-
         }
 
         /// <summary>
@@ -67,7 +47,6 @@ namespace Abp.Domain.Uow
         public UnitOfWorkScope(bool isTransactional)
             : this(isTransactional, IocManager.Instance)
         {
-
         }
 
         /// <summary>
@@ -75,26 +54,19 @@ namespace Abp.Domain.Uow
         /// </summary>
         internal UnitOfWorkScope(bool isTransactional, IIocResolver iocResolver)
         {
-            //There is already a uow, do nothing
-            if (Current != null)
-            {
-                return;
-            }
-
-            //this scope started the uow
-            _isStartedByThisScope = true;
-
             _unitOfWorkWrapper = iocResolver.ResolveAsDisposable<IUnitOfWork>();
+            _currentUow = _unitOfWorkWrapper.Object;
 
             try
             {
-                Current = _unitOfWorkWrapper.Object;
-                Current.Initialize(isTransactional);
-                Current.Begin();
+                _currentUow.Initialize(isTransactional);
+                _currentUow.Begin();
             }
             catch
             {
-                Current = null;
+                _currentUow.Dispose();
+                _currentUow = null;
+                _unitOfWorkWrapper.Dispose();
                 throw;
             }
         }
@@ -105,38 +77,37 @@ namespace Abp.Domain.Uow
         /// </summary>
         public void Commit()
         {
-            if (!_isStartedByThisScope)
-            {
-                //if this scope did not started the uow, do nothing
-                return;
-            }
-
-            Current.End();
+            _currentUow.End();
             _isCommited = true;
         }
 
         public void Dispose()
         {
-            if (!_isStartedByThisScope)
-            {
-                //if this scope did not started the uow, do nothing
-                return;
-            }
-
-            if (Current == null)
-            {
-                //No active UOW
-                return;
-            }
-
             if (!_isCommited)
             {
-                try { Current.Cancel(); }
-                catch { } //Hide errors
+                try
+                {
+                    _currentUow.Cancel();
+                }
+                catch
+                {
+                    // Hide errors
+                }
             }
 
-            Current = null;
+            // TODO: Should call dispose here?
+            _currentUow.Dispose();
+            _currentUow = null;
             _unitOfWorkWrapper.Dispose();
+        }
+
+        /// <summary>
+        /// Gets current <see cref="IUnitOfWork"/> instance.
+        /// It gets the right instance that is related to current scope (thread or web request).
+        /// </summary>
+        public IUnitOfWork Current
+        {
+            get { return _currentUow; }
         }
     }
 }
