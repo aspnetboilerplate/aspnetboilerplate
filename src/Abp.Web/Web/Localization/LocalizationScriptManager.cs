@@ -27,13 +27,13 @@ namespace Abp.Web.Localization
         }
 
         /// <inheritdoc/>
-        public string GetLocalizationScript()
+        public string GetScript()
         {
             return GetScript(Thread.CurrentThread.CurrentUICulture);
         }
 
         /// <inheritdoc/>
-        public string GetLocalizationScript(CultureInfo cultureInfo)
+        public string GetScript(CultureInfo cultureInfo)
         {
             return _cache.Get(cultureInfo.Name, BuildAll);
         }

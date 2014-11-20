@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets Javascript that contains all authorization information.
         /// </summary>
-        string GetAuthorizationScript();
+        string GetScript();
     }
 }

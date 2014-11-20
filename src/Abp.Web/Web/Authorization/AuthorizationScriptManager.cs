@@ -26,7 +26,7 @@ namespace Abp.Web.Authorization
         }
 
         /// <inheritdoc/>
-        public string GetAuthorizationScript()
+        public string GetScript()
         {
             var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
             var grantedPermissions =
