@@ -29,6 +29,7 @@ namespace Abp.Web.Mvc.Controllers.Results
             Data = data;
         }
         
+		/// <inheritdoc/>
         public override void ExecuteResult(ControllerContext context)
         {
             if (context == null)

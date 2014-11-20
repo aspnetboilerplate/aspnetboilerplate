@@ -11,7 +11,7 @@ namespace Abp.Reflection
     internal static class ReflectionHelper
     {
         /// <summary>
-        /// Checks whether <see cref="givenType"/> implements/inherits <see cref="genericType"/>.
+        /// Checks whether <paramref name="givenType"/> implements/inherits <paramref name="genericType"/>.
         /// </summary>
         /// <param name="givenType">Type to check</param>
         /// <param name="genericType">Generic type</param>

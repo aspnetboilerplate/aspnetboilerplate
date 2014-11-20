@@ -12,10 +12,12 @@ namespace Abp.Web.Authorization
     /// </summary>
     public class AuthorizationScriptManager : IAuthorizationScriptManager, ISingletonDependency
     {
+		/// <inheritdoc/>
         public IAbpSession AbpSession { get; set; }
 
         private readonly IPermissionManager _permissionManager;
 
+		/// <inheritdoc/>
         public AuthorizationScriptManager(IPermissionManager permissionManager)
         {
             AbpSession = NullAbpSession.Instance;
@@ -23,7 +25,8 @@ namespace Abp.Web.Authorization
             _permissionManager = permissionManager;
         }
 
-        public string GetScript()
+		/// <inheritdoc/>
+        public string GetAuthorizationScript()
         {
             var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
             var grantedPermissions =

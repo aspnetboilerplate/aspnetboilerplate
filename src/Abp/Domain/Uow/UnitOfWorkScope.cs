@@ -114,7 +114,8 @@ namespace Abp.Domain.Uow
             Current.End();
             _isCommited = true;
         }
-
+        
+		/// <inheritdoc/>
         public void Dispose()
         {
             if (!_isStartedByThisScope)

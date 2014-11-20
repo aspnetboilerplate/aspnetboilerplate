@@ -21,7 +21,7 @@ namespace Abp.Runtime.Validation.Interception
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
         /// <param name="method">Method to be validated</param>
-        /// <param name="arguments">List of arguments those are used to call the <see cref="method"/>.</param>
+        /// <param name="arguments">List of arguments those are used to call the <paramref name="method"/>.</param>
         public MethodInvocationValidator(MethodInfo method, object[] arguments)
         {
             _arguments = arguments;

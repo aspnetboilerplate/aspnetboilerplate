@@ -20,7 +20,7 @@ namespace Abp.Localization.Dictionaries
         string this[string name] { get; }
 
         /// <summary>
-        /// Gets a <see cref="LocalizedString"/> for given <see cref="name"/>.
+        /// Gets a <see cref="LocalizedString"/> for given <paramref name="name"/>.
         /// </summary>
         /// <param name="name">Name (key) to get localized string</param>
         /// <returns>The localized string or null if not found in this dictionary</returns>

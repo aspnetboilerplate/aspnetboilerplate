@@ -1,7 +1,7 @@
 ﻿namespace Abp.Runtime.Session
 {
     /// <summary>
-    /// Defines some session informations that can be useful for applications.
+    /// Defines some session information that can be useful for applications.
     /// </summary>
     public interface IAbpSession
     {

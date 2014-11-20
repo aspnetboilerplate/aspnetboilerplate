@@ -28,7 +28,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
         /// <summary>
         /// Intercepts method calls of dynamic api controller
         /// </summary>
-        /// <param name="invocation">Method invocation informations</param>
+        /// <param name="invocation">Method invocation information</param>
         public void Intercept(IInvocation invocation)
         {
             //If method call is for generic type (T)...
