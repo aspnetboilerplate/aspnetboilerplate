@@ -38,12 +38,6 @@ namespace Abp.Web
 
         protected virtual void Session_Start(object sender, EventArgs e)
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
-            if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
-            }
         }
 
         protected virtual void Session_End(object sender, EventArgs e)
@@ -55,6 +49,12 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
+            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
+            if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
+            }
         }
 
         /// <summary>

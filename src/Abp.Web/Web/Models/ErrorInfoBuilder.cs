@@ -13,7 +13,7 @@ namespace Abp.Web.Models
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
         /// <inheritdoc/>
-        public ErrorInfoBuilder(IAbpStartupConfiguration configuration)
+        public ErrorInfoBuilder(IAbpWebModuleConfiguration configuration)
         {
             Converter = new DefaultErrorInfoConverter(configuration);
         }
