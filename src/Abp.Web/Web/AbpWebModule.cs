@@ -11,6 +11,7 @@ namespace Abp.Web
     /// </summary>
     public class AbpWebModule : AbpModule
     {
+		/// <inheritdoc/>
         public override void PreInitialize()
         {
             if (HttpContext.Current != null)
@@ -19,6 +20,7 @@ namespace Abp.Web
             }
         }
 
+		/// <inheritdoc/>
         public override void Initialize()
         { 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

@@ -11,8 +11,10 @@
         public static NullAbpSession Instance { get { return SingletonInstance; } }
         private static readonly NullAbpSession SingletonInstance = new NullAbpSession();
         
+		/// <inheritdoc/>
         public long? UserId { get { return null; } }
         
+		/// <inheritdoc/>
         public int? TenantId { get { return null; } }
 
         private NullAbpSession()

@@ -15,29 +15,30 @@ namespace Abp.Configuration
 
         private NullSettingStore()
         {
-            
         }
 
+		/// <inheritdoc/>
         public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
             return null;
         }
 
+		/// <inheritdoc/>
         public void Delete(SettingInfo setting)
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Create(SettingInfo setting)
         {
-
         }
 
+		/// <inheritdoc/>
         public void Update(SettingInfo setting)
-        {
-            
+        {            
         }
 
+		/// <inheritdoc/>
         public List<SettingInfo> GetAll(int? tenantId, long? userId)
         {
             return new List<SettingInfo>();

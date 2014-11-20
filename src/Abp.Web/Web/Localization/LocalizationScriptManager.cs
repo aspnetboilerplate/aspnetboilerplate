@@ -20,23 +20,29 @@ namespace Abp.Web.Localization
 
         private readonly ThreadSafeObjectCache<string> _cache;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Abp.Web.Localization.LocalizationScriptManager"/> class.
+		/// </summary>
+		/// <param name="localizationManager">Localization manager.</param>
         public LocalizationScriptManager(ILocalizationManager localizationManager)
         {
             _localizationManager = localizationManager;
             _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
         }
 
+		/// <inheritdoc/>
         public string GetLocalizationScript()
         {
             return GetLocalizationScript(Thread.CurrentThread.CurrentUICulture);
         }
 
+		/// <inheritdoc/>
         public string GetLocalizationScript(CultureInfo cultureInfo)
         {
             return _cache.Get(cultureInfo.Name, BuildAll);
         }
 
-        public string BuildAll()
+        private string BuildAll()
         {
             var script = new StringBuilder();
             var currentCulture = Thread.CurrentThread.CurrentUICulture;

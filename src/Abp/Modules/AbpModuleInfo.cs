@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Abp.Modules
 {
     /// <summary>
-    /// Used to store all needed informations for a module.
+    /// Used to store all needed information for a module.
     /// </summary>
     internal class AbpModuleInfo
     {

@@ -55,7 +55,7 @@ namespace Abp.Dependency
         /// Registers a class as self registration.
         /// </summary>
         /// <param name="type">Type of the class</param>
-        /// <param name="impl">The type that implements <see cref="type"/></param>
+        /// <param name="impl">The type that implements <paramref name="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton);
 

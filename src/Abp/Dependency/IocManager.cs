@@ -84,7 +84,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Registers a type as self registration.
         /// </summary>
-        /// <typeparam name="TService">Type of the class</typeparam>
+        /// <typeparam name="TType">Type of the class</typeparam>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register<TType>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TType : class
         {
@@ -118,7 +118,7 @@ namespace Abp.Dependency
         /// Registers a class as self registration.
         /// </summary>
         /// <param name="type">Type of the class</param>
-        /// <param name="impl">The type that implements <see cref="type"/></param>
+        /// <param name="impl">The type that implements <paramref name="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
@@ -145,7 +145,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+		/// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The instance object</returns>
@@ -156,7 +156,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+		/// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -168,7 +168,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+		/// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <returns>The instance object</returns>
@@ -179,7 +179,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IocHelper.Release"/>) after usage.
+		/// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -198,6 +198,7 @@ namespace Abp.Dependency
             IocContainer.Release(obj);
         }
 
+		/// <inheritdoc/>
         public void Dispose()
         {
             IocContainer.Dispose();

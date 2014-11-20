@@ -19,19 +19,21 @@ namespace Abp.Events.Bus
         
         private NullEventBus()
         {
-            
         }
 
+		/// <inheritdoc/>
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             return NullDisposable.Instance;
         }
 
+		/// <inheritdoc/>
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return NullDisposable.Instance;            
         }
 
+		/// <inheritdoc/>
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
             where THandler : IEventHandler<TEventData>, new()
@@ -39,91 +41,98 @@ namespace Abp.Events.Bus
             return NullDisposable.Instance;
         }
 
+		/// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandler handler)
         {
             return NullDisposable.Instance;
         }
 
+		/// <inheritdoc/>
         public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
         {
             return NullDisposable.Instance;
         }
 
+		/// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
             return NullDisposable.Instance;
         }
 
+		/// <inheritdoc/>
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
-        {
-            
+        {   
         }
 
+		/// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandler handler)
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Unregister<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
-            
         }
 
+		/// <inheritdoc/>
         public void UnregisterAll<TEventData>() where TEventData : IEventData
         {
-            
         }
 
+		/// <inheritdoc/>
         public void UnregisterAll(Type eventType)
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Trigger(Type eventType, EventData eventData)
         {
-            
         }
 
+		/// <inheritdoc/>
         public void Trigger(Type eventType, object eventSource, EventData eventData)
         {
-            
         }
 
+		/// <inheritdoc/>
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
             return new Task(() => {});
         }
 
+		/// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             return new Task(() => { });            
         }
 
+		/// <inheritdoc/>
         public Task TriggerAsync(Type eventType, EventData eventData)
         {
             return new Task(() => { });
         }
 
+		/// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
         {
             return new Task(() => { });

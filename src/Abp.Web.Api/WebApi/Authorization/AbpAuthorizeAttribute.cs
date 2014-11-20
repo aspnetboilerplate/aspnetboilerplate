@@ -13,8 +13,10 @@ namespace Abp.WebApi.Authorization
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute , IAbpAuthorizeAttribute
     {
+		/// <inheritdoc/>
         public string[] Permissions { get; set; }
 
+		/// <inheritdoc/>
         public bool RequireAllPermissions { get; set; }
         
         /// <summary>
@@ -26,6 +28,7 @@ namespace Abp.WebApi.Authorization
             Permissions = permissions;
         }
 
+		/// <inheritdoc/>
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             if (!base.IsAuthorized(actionContext))

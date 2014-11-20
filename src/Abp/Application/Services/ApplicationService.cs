@@ -14,7 +14,7 @@ namespace Abp.Application.Services
     public abstract class ApplicationService : IApplicationService
     {
         /// <summary>
-        /// Gets current session informations.
+        /// Gets current session information.
         /// </summary>
         public IAbpSession CurrentSession { protected get; set; }
 

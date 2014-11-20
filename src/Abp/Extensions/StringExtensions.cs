@@ -82,8 +82,8 @@ namespace Abp.Extensions
         /// <param name="str"></param>
         /// <param name="len"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Left(this string str, int len)
         {
             if (str == null)
@@ -105,8 +105,8 @@ namespace Abp.Extensions
         /// <param name="str"></param>
         /// <param name="len"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <see cref="len"/> is bigger that string's length</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Right(this string str, int len)
         {
             if (str == null)
@@ -213,7 +213,7 @@ namespace Abp.Extensions
         /// <summary>
         /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string Truncate(this string str, int maxLength)
         {
             if (str == null)
@@ -233,7 +233,7 @@ namespace Abp.Extensions
         /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// It adds a "..." postfix to end of the string if it's truncated.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength)
         {
             return TruncateWithPostfix(str, maxLength, "...");
@@ -241,9 +241,9 @@ namespace Abp.Extensions
 
         /// <summary>
         /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
-        /// It adds given <see cref="postfix"/> to end of the string if it's truncated.
+        /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
         {
             if (str == null)

@@ -40,6 +40,7 @@ namespace Abp.Localization.Sources.Xml
             DirectoryPath = directoryPath;
         }
 
+		/// <inheritdoc/>
         public override void Initialize()
         {
             var files = Directory.GetFiles(DirectoryPath, "*.xml", SearchOption.TopDirectoryOnly);

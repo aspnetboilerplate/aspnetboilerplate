@@ -35,6 +35,7 @@ namespace Abp.Configuration
 
         private readonly ThreadSafeObjectCache<Dictionary<string, SettingInfo>> _userSettingCache;
 
+		/// <inheritdoc/>
         public SettingManager(ISettingDefinitionManager settingDefinitionManager)
         {
             _settingDefinitionManager = settingDefinitionManager;
@@ -49,6 +50,7 @@ namespace Abp.Configuration
 
         #region Public methods
 
+		/// <inheritdoc/>
         public string GetSettingValue(string name)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
@@ -87,11 +89,13 @@ namespace Abp.Configuration
             return settingDefinition.DefaultValue;
         }
 
+		/// <inheritdoc/>
         public T GetSettingValue<T>(string name)
         {
             return (T)Convert.ChangeType(GetSettingValue(name), typeof(T));
         }
 
+		/// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValues()
         {
             var settingDefinitions = new Dictionary<string, SettingDefinition>();
@@ -145,6 +149,7 @@ namespace Abp.Configuration
             return settingValues.Values.ToImmutableList();
         }
 
+		/// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForApplication()
         {
             lock (_applicationSettings.Value)
@@ -155,6 +160,7 @@ namespace Abp.Configuration
             }
         }
 
+		/// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(int tenantId)
         {
             return GetReadOnlyTenantSettings(tenantId).Values
@@ -162,6 +168,7 @@ namespace Abp.Configuration
                 .ToImmutableList();
         }
 
+		/// <inheritdoc/>
         public IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(long userId)
         {
             return GetReadOnlyUserSettings(userId).Values
@@ -169,6 +176,7 @@ namespace Abp.Configuration
                 .ToImmutableList();
         }
 
+		/// <inheritdoc/>
         [UnitOfWork]
         public void ChangeSettingForApplication(string name, string value)
         {
@@ -186,6 +194,7 @@ namespace Abp.Configuration
             }
         }
 
+		/// <inheritdoc/>
         [UnitOfWork]
         public void ChangeSettingForTenant(int tenantId, string name, string value)
         {
@@ -204,6 +213,7 @@ namespace Abp.Configuration
             }
         }
 
+		/// <inheritdoc/>
         [UnitOfWork]
         public void ChangeSettingForUser(long userId, string name, string value)
         {
