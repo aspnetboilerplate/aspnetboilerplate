@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Castle.MicroKernel.Lifestyle;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Dependency
@@ -21,14 +22,14 @@ namespace Abp.Dependency
                     .LifestyleTransient()
                 );
 
-            // Scoped
+            // Scoped (per web request or thread, if HttpContext is not available)
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<IScopedDependency>()
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
-                    .LifestylePerWebRequest()
+                    .LifestyleScoped<HybridPerWebRequestPerThreadScopeAccessor>()
                 );
 
             // Singleton
