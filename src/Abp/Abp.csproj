@@ -138,6 +138,7 @@
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
     <Compile Include="DateTimeRange.cs" />
+    <Compile Include="Dependency\IScopedDependency.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
