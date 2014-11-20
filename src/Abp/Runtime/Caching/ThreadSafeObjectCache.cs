@@ -74,7 +74,7 @@ namespace Abp.Runtime.Caching
         }
 
         /// <summary>
-        /// Gets an item from cache if exists, or calls <see cref="factoryMethod"/> to create cache item and return it.
+        /// Gets an item from cache if exists, or calls <paramref name="factoryMethod"/> to create cache item and return it.
         /// </summary>
         /// <param name="key">Key to get item</param>
         /// <param name="factoryMethod">A factory method to create item if it's not exists in cache</param>
@@ -84,7 +84,7 @@ namespace Abp.Runtime.Caching
         }
 
         /// <summary>
-        /// Gets an item from cache if exists, or calls <see cref="factoryMethod"/> to create cache item and return it.
+        /// Gets an item from cache if exists, or calls <paramref name="factoryMethod"/> to create cache item and return it.
         /// </summary>
         /// <param name="key">Key to get item</param>
         /// <param name="slidingExpiration">Sliding expiration policy</param>
@@ -95,7 +95,7 @@ namespace Abp.Runtime.Caching
         }
 
         /// <summary>
-        /// Gets an item from cache if exists, or calls <see cref="factoryMethod"/> to create cache item and return it.
+        /// Gets an item from cache if exists, or calls <paramref name="factoryMethod"/> to create cache item and return it.
         /// </summary>
         /// <param name="key">Key to get item</param>
         /// <param name="absoluteExpiration">Absolute expiration policy</param>
@@ -106,7 +106,7 @@ namespace Abp.Runtime.Caching
         }
 
         /// <summary>
-        /// Gets an item from cache if exists, or calls <see cref="factoryMethod"/> to create cache item and return it.
+        /// Gets an item from cache if exists, or calls <paramref name="factoryMethod"/> to create cache item and return it.
         /// </summary>
         /// <param name="key">Key to get item</param>
         /// <param name="cacheItemPolicy">Cache policy creation method (called only if item is being added to the cache)</param>

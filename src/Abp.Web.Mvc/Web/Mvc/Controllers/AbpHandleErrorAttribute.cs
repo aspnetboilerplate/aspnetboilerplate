@@ -16,6 +16,10 @@ namespace Abp.Web.Mvc.Controllers
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class AbpHandleErrorAttribute : HandleErrorAttribute /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
     {
+        /// <summary>
+        /// Called when an exception occurs.
+        /// </summary>
+        /// <param name="context">The exception context.</param>
         public override void OnException(ExceptionContext context)
         {
             if (context == null)

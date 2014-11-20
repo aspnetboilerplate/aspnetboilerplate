@@ -31,7 +31,7 @@ namespace Abp.Domain.Repositories
         List<TEntity> GetAllList();
 
         /// <summary>
-        /// Used to get all entities based on given <see cref="predicate"/>.
+        /// Used to get all entities based on given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
         /// <returns>List of all entities</returns>
@@ -40,7 +40,7 @@ namespace Abp.Domain.Repositories
         /// <summary>
         /// Used to run a query over entire entities.
         /// <see cref="UnitOfWorkAttribute"/> attribute is not always necessery (as opposite to <see cref="GetAll"/>)
-        /// if <see cref="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
+        /// if <paramref name="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
         /// </summary>
         /// <typeparam name="T">Type of return value of this method</typeparam>
         /// <param name="queryMethod">This method is used to query over entities</param>
@@ -164,7 +164,7 @@ namespace Abp.Domain.Repositories
         int Count();
 
         /// <summary>
-        /// Gets count of all entities in this repository based on given <see cref="predicate"/>.
+        /// Gets count of all entities in this repository based on given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
@@ -177,7 +177,8 @@ namespace Abp.Domain.Repositories
         long LongCount();
 
         /// <summary>
-        /// Gets count of all entities in this repository based on given <see cref="predicate"/> (use if expected return value is greather than <see cref="int.MaxValue"/>).
+        /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
+        /// (use this overload if expected return value is greather than <see cref="int.MaxValue"/>).
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>

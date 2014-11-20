@@ -3,7 +3,7 @@
 namespace Abp.Resources.Embedded
 {
     /// <summary>
-    /// Stores needed informations of an embedded resource.
+    /// Stores needed information of an embedded resource.
     /// </summary>
     public class EmbeddedResourceInfo
     {

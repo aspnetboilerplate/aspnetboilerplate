@@ -7,7 +7,7 @@ using Abp.Collections.Extensions;
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
-    /// This class is used to store dynamic controller informations.
+    /// This class is used to store dynamic controller information.
     /// </summary>
     internal static class DynamicApiControllerManager
     {

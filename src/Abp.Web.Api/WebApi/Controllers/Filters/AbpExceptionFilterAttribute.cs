@@ -13,6 +13,10 @@ namespace Abp.WebApi.Controllers.Filters
     /// </summary>
     public class AbpExceptionFilterAttribute : ExceptionFilterAttribute
     {
+        /// <summary>
+        /// Raises the exception event.
+        /// </summary>
+        /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
             LogHelper.LogException(context.Exception);

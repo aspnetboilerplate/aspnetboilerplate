@@ -15,7 +15,7 @@ namespace Abp.WebApi.Controllers
     public abstract class AbpApiController : ApiController
     {
         /// <summary>
-        /// Gets current session informations.
+        /// Gets current session information.
         /// </summary>
         public IAbpSession CurrentSession { get; set; }
         

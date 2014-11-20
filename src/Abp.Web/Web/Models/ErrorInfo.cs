@@ -3,7 +3,7 @@
 namespace Abp.Web.Models
 {
     /// <summary>
-    /// Used to store informations about an error.
+    /// Used to store information about an error.
     /// </summary>
     [Serializable]
     public class ErrorInfo
@@ -53,7 +53,7 @@ namespace Abp.Web.Models
         {
             Code = code;
         }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="ErrorInfo"/>.
         /// </summary>

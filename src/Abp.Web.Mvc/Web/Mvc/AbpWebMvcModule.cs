@@ -11,11 +11,13 @@ namespace Abp.Web.Mvc
     [DependsOn(typeof(AbpWebModule))]
     public class AbpWebMvcModule : AbpModule
     {
+        /// <inheritdoc/>
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
         }
 
+        /// <inheritdoc/>
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
