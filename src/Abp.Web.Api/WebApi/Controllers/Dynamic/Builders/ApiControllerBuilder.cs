@@ -47,7 +47,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
-            foreach (var methodInfo in DynamicApiControllerActionFinder.GetMethodsToBeAction(typeof(T)))
+            foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
             }

@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using System.Reflection;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 using Castle.DynamicProxy;
 
 namespace Abp.WebApi.Controllers.Dynamic.Interceptors
@@ -32,7 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
         public void Intercept(IInvocation invocation)
         {
             //If method call is for generic type (T)...
-            if (typeof(T).IsAssignableFrom(invocation.Method.DeclaringType))
+            if (DynamicApiControllerActionHelper.IsMethodOfType(invocation.MethodInvocationTarget, typeof(T)))
             {
                 //Call real object's method
                 try

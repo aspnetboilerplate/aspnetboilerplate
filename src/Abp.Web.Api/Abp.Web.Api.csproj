@@ -88,7 +88,7 @@
   <ItemGroup>
     <Compile Include="WebApi\Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\BatchApiControllerBuilder.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerActionFinder.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerActionHelper.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiServiceNameHelper.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerActionBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\ApiControllerBuilder.cs" />
