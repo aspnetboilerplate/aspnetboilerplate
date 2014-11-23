@@ -13,7 +13,7 @@ namespace Abp.EntityFramework.Tests.Repositories
         [Fact]
         public void Should_Resolve_Generic_Repositories()
         {
-            EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(typeof(MyDbContext), LocalIocManager);
+            EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyDbContext), LocalIocManager);
 
             var entity1Repository = LocalIocManager.Resolve<IRepository<MyEntity1>>();
             entity1Repository.ShouldNotBe(null);

@@ -8,42 +8,14 @@ namespace Abp.AutoMapper
 {
     internal static class AutoMapperHelper
     {
-        public static void CreateMapForTypesInAssembly(Assembly assembly)
+        public static void CreateMap(Type type)
         {
-            Type[] types;
-
-            try
-            {
-                types = assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                types = ex.Types;
-            }
-
-            if (types.IsNullOrEmpty())
-            {
-                return;
-            }
-
-            types = (
-                from type in types
-                where type != null &&
-                      (type.IsDefined(typeof(AutoMapAttribute)) ||
-                       type.IsDefined(typeof(AutoMapFromAttribute)) ||
-                       type.IsDefined(typeof(AutoMapToAttribute)))
-                select type
-                ).ToArray();
-
-            foreach (var type in types)
-            {
-                CreateMap<AutoMapFromAttribute>(type);
-                CreateMap<AutoMapToAttribute>(type);
-                CreateMap<AutoMapAttribute>(type);
-            }
+            CreateMap<AutoMapFromAttribute>(type);
+            CreateMap<AutoMapToAttribute>(type);
+            CreateMap<AutoMapAttribute>(type);
         }
 
-        private static void CreateMap<TAttribute>(Type type)
+        public static void CreateMap<TAttribute>(Type type)
             where TAttribute : AutoMapAttribute
         {
             if (!type.IsDefined(typeof (TAttribute)))

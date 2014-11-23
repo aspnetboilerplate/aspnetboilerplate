@@ -7,7 +7,7 @@ namespace Abp.EntityFramework.Repositories
 {
     internal static class EntityFrameworkGenericRepositoryRegistrar
     {
-        public static void RegisterDbContext(Type dbContextType, IIocManager iocManager)
+        public static void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
             foreach (var entityType in EntityFrameworkHelper.GetEntityTypesInDbContext(dbContextType))
             {

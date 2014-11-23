@@ -17,13 +17,13 @@ namespace Abp.EntityFramework
     /// </summary>
     public class AbpEntityFrameworkModule : AbpModule
     {
-        public IAssemblyFinder AssemblyFinder { private get; set; }
-
         public ILogger Logger { get; set; }
 
-        public AbpEntityFrameworkModule()
+        private readonly ITypeFinder _typeFinder;
+
+        public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
         }
 
@@ -41,50 +41,22 @@ namespace Abp.EntityFramework
 
         private void RegisterGenericRepositories()
         {
-            //TODO: Refactor this code. Also, it's similar to DefaultModuleFinder.FindAll
+            var dbContextTypes =
+                _typeFinder.Find(type =>
+                    type.IsPublic &&
+                    !type.IsAbstract &&
+                    type.IsClass &&
+                    typeof(AbpDbContext).IsAssignableFrom(type)
+                    );
 
-            var allAssemblies = AssemblyFinder.GetAllAssemblies().Distinct();
-
-            foreach (var assembly in allAssemblies)
+            if (dbContextTypes.IsNullOrEmpty())
             {
-                try
-                {
-                    Type[] types;
+                return;
+            }
 
-                    try
-                    {
-                        types = assembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        types = ex.Types;
-                    }
-
-                    if (types.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
-
-                    var dbContextTypes = (
-                        from type in types
-                        where type != null && type.IsPublic && !type.IsAbstract && type.IsClass && typeof(AbpDbContext).IsAssignableFrom(type)
-                        select type
-                        ).ToArray();
-
-                    if (dbContextTypes.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
-
-                    foreach (var dbContextType in dbContextTypes)
-                    {
-                        EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                }
+            foreach (var dbContextType in dbContextTypes)
+            {
+                EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(dbContextType, IocManager);
             }
         }
     }

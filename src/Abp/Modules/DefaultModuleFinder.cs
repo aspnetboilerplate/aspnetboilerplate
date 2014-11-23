@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Abp.Collections.Extensions;
 using Abp.Reflection;
 using Castle.Core.Logging;
 
@@ -12,73 +10,27 @@ namespace Abp.Modules
     {
         public ILogger Logger { get; set; }
 
-        public IAssemblyFinder AssemblyFinder { get; set; }
+        private readonly ITypeFinder _typeFinder;
 
-        public DefaultModuleFinder()
+        public DefaultModuleFinder(ITypeFinder typeFinder)
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
         }
 
         public List<Type> FindAll()
         {
-            var allModules = new List<Type>();
+            var modules = _typeFinder.Find(AbpModule.IsAbpModule).ToList();
+            Logger.Debug("Found " + modules.Count + " ABP modules in total.");
 
-            var allAssemblies = AssemblyFinder.GetAllAssemblies().Distinct();
-
-            foreach (var assembly in allAssemblies)
+            //Copying into new list since it will be modified by FillDependedModules
+            var initialModuleList = modules.ToList(); 
+            foreach (var module in initialModuleList)
             {
-                try
-                {
-                    Logger.Debug("Searching ABP modules in assembly: " + assembly.FullName);
-
-                    Type[] types;
-
-                    try
-                    {
-                        types = assembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        types = ex.Types;
-                    }
-
-                    if (types.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
-
-                    var modules = (from type in types where type != null && AbpModule.IsAbpModule(type) select type).ToArray();
-
-                    if (modules.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
-
-                    Logger.Debug("Found modules:");
-                    foreach (var module in modules)
-                    {
-                        Logger.Debug("- " + module.FullName);
-                    }
-
-                    allModules.AddRange(modules);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                }
+                FillDependedModules(module, modules);
             }
 
-            Logger.Debug("Found " + allModules.Count + " ABP modules in total.");
-
-            var currentModules = allModules.ToList();
-
-            foreach (var module in currentModules)
-            {
-                FillDependedModules(module, allModules);
-            }
-
-            return allModules;
+            return modules;
         }
 
         private void FillDependedModules(Type module, List<Type> allModules)
