@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoMapper\AbpAutoMapperModule.cs" />
     <Compile Include="AutoMapper\AutoMapAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapDirection.cs" />
     <Compile Include="AutoMapper\AutoMapFromAttribute.cs" />
