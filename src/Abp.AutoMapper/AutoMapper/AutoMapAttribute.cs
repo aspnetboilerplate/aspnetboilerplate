@@ -16,11 +16,4 @@ namespace Abp.AutoMapper
             TargetTypes = targetTypes;
         }
     }
-
-    [Flags]
-    public enum AutoMapDirection
-    {
-        From,
-        To
-    }
 }

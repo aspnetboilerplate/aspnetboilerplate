@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\AutoMapAttribute.cs" />
+    <Compile Include="AutoMapper\AutoMapDirection.cs" />
     <Compile Include="AutoMapper\AutoMapFromAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapperHelper.cs" />
     <Compile Include="AutoMapper\AutoMapToAttribute.cs" />
