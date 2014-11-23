@@ -35,7 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
         public void Intercept(IInvocation invocation)
         {
             //If method call is for generic type (T)...
-            if (DynamicApiControllerActionHelper.IsMethodOfType(invocation.MethodInvocationTarget, typeof(T)))
+            if (DynamicApiControllerActionHelper.IsMethodOfType(invocation.Method, typeof(T)))
             {
                 //Call real object's method
                 try

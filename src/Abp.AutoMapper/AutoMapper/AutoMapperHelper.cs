@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using AutoMapper;
@@ -32,14 +31,14 @@ namespace Abp.AutoMapper
 
                 foreach (var targetType in autoMapToAttribute.TargetTypes)
                 {
-                    if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.From))
-                    {
-                        Mapper.CreateMap(type, targetType);                                
-                    }
-
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.To))
                     {
-                        Mapper.CreateMap(targetType, type);
+                        Mapper.CreateMap(type, targetType);
+                    }
+
+                    if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.From))
+                    {
+                        Mapper.CreateMap(targetType, type);                                
                     }
                 }
             }
