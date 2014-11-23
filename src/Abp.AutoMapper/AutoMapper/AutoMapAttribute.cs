@@ -6,9 +6,21 @@ namespace Abp.AutoMapper
     {
         public Type[] TargetTypes { get; private set; }
 
+        internal virtual AutoMapDirection Direction
+        {
+            get { return AutoMapDirection.From | AutoMapDirection.To; }
+        }
+
         public AutoMapAttribute(params Type[] targetTypes)
         {
             TargetTypes = targetTypes;
         }
+    }
+
+    [Flags]
+    public enum AutoMapDirection
+    {
+        From,
+        To
     }
 }

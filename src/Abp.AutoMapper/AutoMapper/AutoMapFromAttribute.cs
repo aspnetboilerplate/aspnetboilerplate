@@ -2,13 +2,17 @@
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapFromAttribute : Attribute
+    public class AutoMapFromAttribute : AutoMapAttribute
     {
-        public Type[] TargetTypes { get; private set; }
+        internal override AutoMapDirection Direction
+        {
+            get { return AutoMapDirection.From; }
+        }
 
         public AutoMapFromAttribute(params Type[] targetTypes)
+            : base(targetTypes)
         {
-            TargetTypes = targetTypes;
+
         }
     }
 }
