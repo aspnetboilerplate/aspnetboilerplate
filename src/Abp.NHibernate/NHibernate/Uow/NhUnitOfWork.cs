@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using NHibernate;
 
@@ -53,6 +54,11 @@ namespace Abp.NHibernate.Uow
         public override void SaveChanges()
         {
             Session.Flush();
+        }
+
+        public override Task SaveChangesAsync()
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

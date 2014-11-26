@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Abp.Dependency;
 
 namespace Abp.Domain.Uow
@@ -33,6 +34,8 @@ namespace Abp.Domain.Uow
         /// since all changes saved at end of a unit of work automatically.
         /// </summary>
         void SaveChanges();
+
+        Task SaveChangesAsync();
 
         /// <summary>
         /// Ends this unit of work.

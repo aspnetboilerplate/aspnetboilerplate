@@ -141,7 +141,7 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges(); //TODO: Call Async
+                await UnitOfWorkScope.Current.SaveChangesAsync();
             }
 
             return entity.Id;
@@ -172,7 +172,7 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges(); //TODO: Call Async
+                await UnitOfWorkScope.Current.SaveChangesAsync();
             }
 
             return entity.Id;

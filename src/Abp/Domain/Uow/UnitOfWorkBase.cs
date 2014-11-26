@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 
 namespace Abp.Domain.Uow
@@ -36,6 +37,8 @@ namespace Abp.Domain.Uow
 
         /// <inheritdoc/>
         public abstract void SaveChanges();
+
+        public abstract Task SaveChangesAsync();
 
         /// <inheritdoc/>
         public abstract void End();

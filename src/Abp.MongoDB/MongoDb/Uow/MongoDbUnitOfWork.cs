@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using MongoDB.Driver;
 
@@ -17,6 +18,11 @@ namespace Abp.MongoDb.Uow
         public override void SaveChanges()
         {
 
+        }
+
+        public override Task SaveChangesAsync()
+        {
+            throw new System.NotImplementedException();
         }
 
         public override void End()

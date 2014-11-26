@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -58,6 +59,14 @@ namespace Abp.EntityFramework.Uow
         public override void SaveChanges()
         {
             _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+        }
+
+        public override async Task SaveChangesAsync()
+        {
+            foreach (var dbContext in _activeDbContexts.Values)
+            {
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         public override void End()
