@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -39,9 +40,18 @@ namespace Abp.EntityFramework.Repositories
             return GetAll().ToList();
         }
 
+        public virtual async Task<List<TEntity>> GetAllListAsync()
+        {
+            return await GetAll().ToListAsync();
+        }
+
         public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).ToList();
+        }
+        public virtual async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).ToListAsync();
         }
 
         public virtual T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
@@ -59,10 +69,25 @@ namespace Abp.EntityFramework.Repositories
 
             return entity;
         }
+        public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
+        {
+            var entity = await FirstOrDefaultAsync(id);
+            if (entity == null)
+            {
+                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
+            }
+
+            return entity;
+        }
 
         public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
+        }
+
+        public virtual async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().SingleAsync(predicate);
         }
 
         public virtual TEntity FirstOrDefault(TPrimaryKey id)
@@ -71,9 +96,20 @@ namespace Abp.EntityFramework.Repositories
                 .FirstOrDefault(CreateEqualityExpression(id));
         }
 
+        public virtual async Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        {
+            return await GetAll()
+                .FirstOrDefaultAsync(CreateEqualityExpression(id));
+        }
+        
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
+        }
+
+        public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().FirstOrDefaultAsync(predicate);
         }
 
         public virtual TEntity Load(TPrimaryKey id)
@@ -86,13 +122,24 @@ namespace Abp.EntityFramework.Repositories
             return Table.Add(entity);
         }
 
-        public TPrimaryKey InsertAndGetId(TEntity entity)
+        public virtual TPrimaryKey InsertAndGetId(TEntity entity)
         {
             entity = Insert(entity);
             
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
                 UnitOfWorkScope.Current.SaveChanges();
+            }
+
+            return entity.Id;
+        }
+        public virtual async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        {
+            entity = Insert(entity);
+
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                UnitOfWorkScope.Current.SaveChanges(); //TODO: Call Async
             }
 
             return entity.Id;
@@ -112,6 +159,18 @@ namespace Abp.EntityFramework.Repositories
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
                 UnitOfWorkScope.Current.SaveChanges();
+            }
+
+            return entity.Id;
+        }
+
+        public virtual async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        {
+            entity = InsertOrUpdate(entity);
+
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                UnitOfWorkScope.Current.SaveChanges(); //TODO: Call Async
             }
 
             return entity.Id;
@@ -164,9 +223,19 @@ namespace Abp.EntityFramework.Repositories
             return GetAll().Count();
         }
 
+        public virtual async Task<int> CountAsync()
+        {
+            return await GetAll().CountAsync();
+        }
+
         public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).Count();
+        }
+
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).CountAsync();
         }
 
         public virtual long LongCount()
@@ -174,9 +243,19 @@ namespace Abp.EntityFramework.Repositories
             return GetAll().LongCount();
         }
 
+        public virtual async Task<long> LongCountAsync()
+        {
+            return await GetAll().LongCountAsync();
+        }
+
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).LongCount();
+        }
+
+        public virtual async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).LongCountAsync();
         }
 
         private static Expression<Func<TEntity, bool>> CreateEqualityExpression(TPrimaryKey id)
