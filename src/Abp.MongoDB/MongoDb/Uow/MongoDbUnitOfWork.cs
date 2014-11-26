@@ -30,6 +30,11 @@ namespace Abp.MongoDb.Uow
 
         }
 
+        public override Task EndAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void Cancel()
         {
 

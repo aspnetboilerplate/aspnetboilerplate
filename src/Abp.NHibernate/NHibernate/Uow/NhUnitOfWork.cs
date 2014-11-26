@@ -82,6 +82,11 @@ namespace Abp.NHibernate.Uow
             }
         }
 
+        public override Task EndAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void Cancel()
         {
             try

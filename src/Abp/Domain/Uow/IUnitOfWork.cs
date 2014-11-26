@@ -21,7 +21,7 @@ namespace Abp.Domain.Uow
         void Initialize(bool isTransactional);
 
         /// <summary>
-        /// Starts this unit of woek.
+        /// Starts this unit of work.
         /// </summary>
         void Begin();
 
@@ -42,6 +42,8 @@ namespace Abp.Domain.Uow
         /// It saves all changes and commit transaction if exists.
         /// </summary>
         void End();
+
+        Task EndAsync();
 
         /// <summary>
         /// Cancels current unit of work.

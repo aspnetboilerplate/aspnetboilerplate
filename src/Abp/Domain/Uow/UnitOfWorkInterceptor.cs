@@ -29,16 +29,15 @@ namespace Abp.Domain.Uow
                 return;
             }
 
-            if (UnitOfWorkScope.Current == null)
-            {
-                //No current uow, run a new one
-                PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
-            }
-            else
+            if (UnitOfWorkScope.Current != null)
             {
                 //Continue with current uow
                 invocation.Proceed();
+                return;
             }
+
+            //No current uow, run a new one
+            PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
         }
 
         private void PerformUow(IInvocation invocation, bool isTransactional)

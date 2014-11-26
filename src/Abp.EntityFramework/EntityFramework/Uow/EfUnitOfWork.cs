@@ -87,6 +87,24 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        public override async Task EndAsync()
+        {
+            try
+            {
+                await SaveChangesAsync();
+                if (_transaction != null)
+                {
+                    _transaction.Complete();
+                }
+
+                TriggerSuccessHandlers();
+            }
+            finally
+            {
+                Dispose();
+            }
+        }
+
         public override void Cancel()
         {
             Dispose();

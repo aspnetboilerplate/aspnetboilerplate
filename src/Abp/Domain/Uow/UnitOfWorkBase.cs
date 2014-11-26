@@ -43,6 +43,8 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public abstract void End();
 
+        public abstract Task EndAsync();
+
         /// <inheritdoc/>
         public abstract void Cancel();
 
