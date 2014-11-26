@@ -51,6 +51,7 @@ namespace Abp.EntityFramework
 
             if (dbContextTypes.IsNullOrEmpty())
             {
+                Logger.Warn("No class found derived from AbpDbContext.");
                 return;
             }
 

@@ -13,8 +13,6 @@ namespace Abp.Reflection
 
         public IAssemblyFinder AssemblyFinder { get; set; }
 
-        public List<Type> _types;
-
         public TypeFinder()
         {
             AssemblyFinder = DefaultAssemblyFinder.Instance;
@@ -23,52 +21,47 @@ namespace Abp.Reflection
 
         public Type[] Find(Func<Type, bool> predicate)
         {
-            EnsureAllTypesLoaded();
-            return _types.Where(predicate).ToArray();
+            return GetAllTypes().Where(predicate).ToArray();
         }
 
         public Type[] FindAll()
         {
-            EnsureAllTypesLoaded();
-            return _types.ToArray();
+            return GetAllTypes().ToArray();
         }
 
-        private void EnsureAllTypesLoaded()
+        private List<Type> GetAllTypes()
         {
-            if (_types != null)
-            {
-                return;
-            }
-
-            _types = new List<Type>();
+            var allTypes = new List<Type>();
 
             foreach (var assembly in AssemblyFinder.GetAllAssemblies().Distinct())
             {
                 try
                 {
-                    Type[] types;
+                    Type[] typesInThisAssembly;
 
                     try
                     {
-                        types = assembly.GetTypes();
+                        typesInThisAssembly = assembly.GetTypes();
                     }
                     catch (ReflectionTypeLoadException ex)
                     {
-                        types = ex.Types;
+                        typesInThisAssembly = ex.Types;
                     }
 
-                    if (types.IsNullOrEmpty())
+                    if (typesInThisAssembly.IsNullOrEmpty())
                     {
                         continue;
                     }
 
-                    _types.AddRange(types.Where(type => type != null));
+                    allTypes.AddRange(typesInThisAssembly.Where(type => type != null));
                 }
                 catch (Exception ex)
                 {
                     Logger.Warn(ex.ToString(), ex);
                 }
             }
+
+            return allTypes;
         }
     }
 }
