@@ -67,6 +67,8 @@
     <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegisterer.cs" />
     <Compile Include="EntityFramework\DefaultContextProvider.cs" />
     <Compile Include="EntityFramework\FactoryContextProvider.cs" />
+    <Compile Include="EntityFramework\Repositories\EfAsyncRepositoryBase.cs" />
+    <Compile Include="EntityFramework\Repositories\EfAsyncRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
     <Compile Include="EntityFramework\EntityFrameworkHelper.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBase.cs" />
