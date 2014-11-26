@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -38,9 +39,19 @@ namespace Abp.MongoDb.Repositories
             return GetAll().ToList();
         }
 
+        public Task<List<TEntity>> GetAllListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).ToList();
+        }
+
+        public Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
@@ -54,9 +65,19 @@ namespace Abp.MongoDb.Repositories
             return Collection.FindOne(query); //TODO: What if no entity with id?
         }
 
+        public Task<TEntity> GetAsync(TPrimaryKey id)
+        {
+            throw new NotImplementedException();
+        }
+
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
+        }
+
+        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public TEntity FirstOrDefault(TPrimaryKey id)
@@ -65,9 +86,19 @@ namespace Abp.MongoDb.Repositories
             return Collection.FindOne(query); //TODO: What if no entity with id?
         }
 
+        public Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        {
+            throw new NotImplementedException();
+        }
+
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
+        }
+
+        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public TEntity Load(TPrimaryKey id)
@@ -87,6 +118,11 @@ namespace Abp.MongoDb.Repositories
             return entity.Id;
         }
 
+        public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public TEntity InsertOrUpdate(TEntity entity)
         {
             return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
@@ -104,6 +140,11 @@ namespace Abp.MongoDb.Repositories
             }
 
             return entity.Id;
+        }
+
+        public Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
         }
 
         public TEntity Update(TEntity entity)
@@ -133,9 +174,19 @@ namespace Abp.MongoDb.Repositories
             return GetAll().Count();
         }
 
+        public Task<int> CountAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Count(predicate);
+        }
+
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public long LongCount()
@@ -143,9 +194,19 @@ namespace Abp.MongoDb.Repositories
             return GetAll().LongCount();
         }
 
+        public Task<long> LongCountAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().LongCount(predicate);
+        }
+
+        public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

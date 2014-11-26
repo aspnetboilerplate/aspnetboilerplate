@@ -49,6 +49,7 @@ namespace Abp.EntityFramework.Repositories
         {
             return GetAll().Where(predicate).ToList();
         }
+
         public virtual async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await GetAll().Where(predicate).ToListAsync();
@@ -69,6 +70,7 @@ namespace Abp.EntityFramework.Repositories
 
             return entity;
         }
+
         public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
         {
             var entity = await FirstOrDefaultAsync(id);

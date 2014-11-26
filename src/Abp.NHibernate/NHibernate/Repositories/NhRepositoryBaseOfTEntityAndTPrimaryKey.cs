@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using NHibernate;
@@ -43,9 +44,19 @@ namespace Abp.NHibernate.Repositories
             return GetAll().ToList();
         }
 
+        public Task<List<TEntity>> GetAllListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).ToList();
+        }
+
+        public Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
@@ -64,9 +75,19 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
+        public Task<TEntity> GetAsync(TPrimaryKey id)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
+        }
+
+        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual TEntity FirstOrDefault(TPrimaryKey id)
@@ -74,9 +95,19 @@ namespace Abp.NHibernate.Repositories
             return Session.Get<TEntity>(id);
         }
 
+        public Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
+        }
+
+        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual TEntity Load(TPrimaryKey id)
@@ -95,6 +126,11 @@ namespace Abp.NHibernate.Repositories
             return Insert(entity).Id;
         }
 
+        public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public TEntity InsertOrUpdate(TEntity entity)
         {
             Session.SaveOrUpdate(entity);
@@ -104,6 +140,11 @@ namespace Abp.NHibernate.Repositories
         public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             return InsertOrUpdate(entity).Id;
+        }
+
+        public Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual TEntity Update(TEntity entity)
@@ -143,9 +184,19 @@ namespace Abp.NHibernate.Repositories
             return GetAll().Count();
         }
 
+        public Task<int> CountAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).Count();
+        }
+
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual long LongCount()
@@ -153,9 +204,19 @@ namespace Abp.NHibernate.Repositories
             return GetAll().LongCount();
         }
 
+        public Task<long> LongCountAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).LongCount();
+        }
+
+        public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

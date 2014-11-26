@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 
@@ -30,12 +31,16 @@ namespace Abp.Domain.Repositories
         /// <returns>List of all entities</returns>
         List<TEntity> GetAllList();
 
+        Task<List<TEntity>> GetAllListAsync();
+
         /// <summary>
         /// Used to get all entities based on given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
         /// <returns>List of all entities</returns>
         List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
+
+        Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Used to run a query over entire entities.
@@ -54,6 +59,8 @@ namespace Abp.Domain.Repositories
         /// <returns>Entity</returns>
         TEntity Get(TPrimaryKey id);
 
+        Task<TEntity> GetAsync(TPrimaryKey id);
+
         /// <summary>
         /// Gets exactly one entity with given predicate.
         /// Throws exception if no entity or more than one entity.
@@ -62,6 +69,8 @@ namespace Abp.Domain.Repositories
         /// <returns></returns>
         TEntity Single(Expression<Func<TEntity, bool>> predicate);
 
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
+
         /// <summary>
         /// Gets an entity with given primary key.
         /// </summary>
@@ -69,12 +78,16 @@ namespace Abp.Domain.Repositories
         /// <returns>Entity or null</returns>
         TEntity FirstOrDefault(TPrimaryKey id);
 
+        Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id);
+
         /// <summary>
         /// Gets an entity with given given predicate.
         /// </summary>
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Creates an entity with given primary key without database access.
@@ -102,6 +115,8 @@ namespace Abp.Domain.Repositories
         /// <returns>Id of the entity</returns>
         TPrimaryKey InsertAndGetId(TEntity entity);
 
+        Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity);
+
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
         /// </summary>
@@ -117,6 +132,8 @@ namespace Abp.Domain.Repositories
         /// <param name="entity">Entity</param>
         /// <returns>Id of the entity</returns>
         TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
+
+        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
         #endregion
 
@@ -163,6 +180,8 @@ namespace Abp.Domain.Repositories
         /// <returns>Count of entities</returns>
         int Count();
 
+        Task<int> CountAsync();
+
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>.
         /// </summary>
@@ -170,11 +189,15 @@ namespace Abp.Domain.Repositories
         /// <returns>Count of entities</returns>
         int Count(Expression<Func<TEntity, bool>> predicate);
 
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
+
         /// <summary>
         /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
         /// </summary>
         /// <returns>Count of entities</returns>
         long LongCount();
+
+        Task<long> LongCountAsync();
 
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
@@ -183,6 +206,8 @@ namespace Abp.Domain.Repositories
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
         long LongCount(Expression<Func<TEntity, bool>> predicate);
+
+        Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
     }
