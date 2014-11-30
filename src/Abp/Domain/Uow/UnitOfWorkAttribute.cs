@@ -51,7 +51,7 @@ namespace Abp.Domain.Uow
         /// </summary>
         /// <param name="methodInfo">Method to get attribute</param>
         /// <returns>The UnitOfWorkAttribute object</returns>
-        internal static UnitOfWorkAttribute GetUnitOfWorkAttributeOrDefault(MemberInfo methodInfo)
+        internal static UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MemberInfo methodInfo)
         {
             var attrs = methodInfo.GetCustomAttributes(typeof(UnitOfWorkAttribute), false);
             if (attrs.Length > 0)
