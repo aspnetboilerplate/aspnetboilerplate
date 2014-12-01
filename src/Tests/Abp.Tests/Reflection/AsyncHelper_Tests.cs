@@ -24,7 +24,7 @@ namespace Abp.Tests.Reflection
         public void Should_Call_AfterAction()
         {
             _asyncMethod1Worked.ShouldBe(false);
-            AsyncHelper.ReturnAfterAction(
+            AsyncHelper.ReturnTaskAfterAction(
                 MyMethod1Async(),
                 async () =>
                 {
@@ -33,7 +33,7 @@ namespace Abp.Tests.Reflection
                 }).Wait();
             
             _asyncMethod2Worked.ShouldBe(false);
-            var returnValue = AsyncHelper.ReturnAfterAction(
+            var returnValue = AsyncHelper.ReturnGenericTaskAfterAction(
                 MyMethod2Async(),
                 async () =>
                 {
