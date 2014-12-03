@@ -44,52 +44,81 @@ namespace Abp.Domain.Uow
 
         private void PerformUow(IInvocation invocation, bool isTransactional)
         {
-            using (var unitOfWork = _iocResolver.ResolveAsDisposable<IUnitOfWork>())
-            {
-                UnitOfWorkScope.Current = unitOfWork.Object;
-                UnitOfWorkScope.Current.Initialize(isTransactional);
-                UnitOfWorkScope.Current.Begin();
+            var unitOfWork = _iocResolver.Resolve<IUnitOfWork>();
+            
+            UnitOfWorkScope.Current = unitOfWork;
+            UnitOfWorkScope.Current.Initialize(isTransactional);
+            UnitOfWorkScope.Current.Begin();
 
+            if (!AsyncHelper.IsAsyncMethod(invocation.Method))
+            {
+                PerformSyncUow(invocation);
+            }
+            else
+            {
+                PerformAsyncUow(invocation);
+            }
+        }
+
+        private void PerformSyncUow(IInvocation invocation)
+        {
+            try
+            {
                 try
                 {
-                    try
-                    {
-                        invocation.Proceed();
+                    invocation.Proceed();
 
-                        if (AsyncHelper.IsAsyncMethod(invocation.Method))
-                        {
-                            if (invocation.Method.ReturnType == typeof(Task))
-                            {
-                                invocation.ReturnValue = AsyncHelper.ReturnTaskAfterAction(
-                                    (Task) invocation.ReturnValue,
-                                    async () => await UnitOfWorkScope.Current.EndAsync()
-                                    );
-                            }
-                            else
-                            {
-                                invocation.ReturnValue = AsyncHelper.CallReturnAfterAction(
-                                    invocation.Method.ReturnType.GenericTypeArguments[0],
-                                    invocation.ReturnValue,
-                                    async () => await UnitOfWorkScope.Current.EndAsync()
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            UnitOfWorkScope.Current.End();
-                        }
-                    }
-                    catch
-                    {
-                        try { UnitOfWorkScope.Current.Cancel(); }
-                        catch { } //Hide exceptions on cancelling
-                        throw;
-                    }
+                    UnitOfWorkScope.Current.End();
                 }
-                finally
+                catch
                 {
-                    UnitOfWorkScope.Current = null;
+                    try { UnitOfWorkScope.Current.Cancel(); }
+                    catch { } //Hide exceptions on cancelling
+                    throw;
                 }
+            }
+            finally
+            {
+                UnitOfWorkScope.Current = null;
+            }
+        }
+
+        private void PerformAsyncUow(IInvocation invocation)
+        {
+            try
+            {
+                invocation.Proceed();
+
+                Task result;
+                if (invocation.Method.ReturnType == typeof(Task))
+                {
+                    result = AsyncHelper.ReturnTaskAfterAction(
+                        (Task)invocation.ReturnValue,
+                        async () => await UnitOfWorkScope.Current.EndAsync()
+                        );
+                }
+                else
+                {
+                    result = (Task)AsyncHelper.CallReturnAfterAction(
+                        invocation.Method.ReturnType.GenericTypeArguments[0],
+                        invocation.ReturnValue,
+                        async () => await UnitOfWorkScope.Current.EndAsync()
+                        );
+                }
+
+                result.ContinueWith(task =>
+                                    {
+                                        _iocResolver.Release(UnitOfWorkScope.Current);
+                                        UnitOfWorkScope.Current = null;
+                                    });
+
+                invocation.ReturnValue = result;
+            }
+            catch
+            {
+                try { UnitOfWorkScope.Current.Cancel(); }
+                catch { } //Hide exceptions on cancelling
+                throw;
             }
         }
     }
