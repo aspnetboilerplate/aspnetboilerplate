@@ -87,9 +87,12 @@ namespace Abp.Tests.Configuration
             //Application level changes
 
             settingManager.ChangeSettingForApplication(MyAppLevelSetting, "53");
+            settingManager.ChangeSettingForApplication(MyAppLevelSetting, "54");
             settingManager.ChangeSettingForApplication(MyAllLevelsSetting, "application level changed value");
 
-            settingManager.GetSettingValue<int>(MyAppLevelSetting).ShouldBe(53);
+            settingManager.SettingStore.GetSettingOrNull(null, null, MyAppLevelSetting).Value.ShouldBe("54");
+
+            settingManager.GetSettingValue<int>(MyAppLevelSetting).ShouldBe(54);
             settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level changed value");
 
             //Tenant level changes
