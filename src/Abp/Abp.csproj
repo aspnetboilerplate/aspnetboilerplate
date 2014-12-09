@@ -71,6 +71,7 @@
     <Compile Include="Application\Navigation\IUserNavigationManager.cs" />
     <Compile Include="Application\Navigation\MenuDefinition.cs" />
     <Compile Include="Application\Navigation\MenuItemDefinition.cs" />
+    <Compile Include="Application\Navigation\MenuItemDefinitionExtensions.cs" />
     <Compile Include="Application\Navigation\UserNavigationManager.cs" />
     <Compile Include="Application\Navigation\NavigationManager.cs" />
     <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
