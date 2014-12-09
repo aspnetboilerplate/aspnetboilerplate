@@ -13,5 +13,22 @@ namespace Abp.Application.Services.Dto
         /// Id of the entity.
         /// </summary>
         public TPrimaryKey Id { get; set; }
+
+        /// <summary>
+        /// Creates a new <see cref="EntityDto{TPrimaryKey}"/> object.
+        /// </summary>
+        public EntityDto()
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="EntityDto{TPrimaryKey}"/> object.
+        /// </summary>
+        /// <param name="id">Id of the entity</param>
+        public EntityDto(TPrimaryKey id)
+        {
+            Id = id;
+        }
     }
 }

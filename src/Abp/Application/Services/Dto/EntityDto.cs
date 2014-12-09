@@ -8,6 +8,21 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public class EntityDto : EntityDto<int>, IEntityDto
     {
+        /// <summary>
+        /// Creates a new <see cref="EntityDto"/> object.
+        /// </summary>
+        public EntityDto()
+        {
 
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="EntityDto"/> object.
+        /// </summary>
+        /// <param name="id">Id of the entity</param>
+        public EntityDto(int id)
+            : base(id)
+        {
+        }
     }
 }

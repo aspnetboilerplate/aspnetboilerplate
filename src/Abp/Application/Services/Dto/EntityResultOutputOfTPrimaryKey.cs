@@ -9,6 +9,22 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public class EntityResultOutput<TPrimaryKey> : EntityDto<TPrimaryKey>, IOutputDto
     {
+        /// <summary>
+        /// Creates a new <see cref="EntityResultOutput{TPrimaryKey}"/> object.
+        /// </summary>
+        public EntityResultOutput()
+        {
 
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="EntityResultOutput{TPrimaryKey}"/> object.
+        /// </summary>
+        /// <param name="id">Id of the entity</param>
+        public EntityResultOutput(TPrimaryKey id)
+            : base(id)
+        {
+
+        }
     }
 }
