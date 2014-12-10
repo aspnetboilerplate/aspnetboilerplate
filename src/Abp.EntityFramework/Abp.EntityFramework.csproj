@@ -72,6 +72,7 @@
     <Compile Include="EntityFramework\Repositories\EfRepositoryBase.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="EntityFramework\IDbContextProvider.cs" />
+    <Compile Include="EntityFramework\SoftDeleting\SoftDeleteAttribute.cs" />
     <Compile Include="EntityFramework\SoftDeleting\SoftDeleteInterceptor.cs" />
     <Compile Include="EntityFramework\SoftDeleting\SoftDeleteQueryVisitor.cs" />
     <Compile Include="EntityFramework\Uow\EfUnitOfWork.cs" />

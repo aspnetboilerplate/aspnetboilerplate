@@ -3,9 +3,13 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.EntityFramework.SoftDeleting;
 using Abp.Runtime.Session;
 
 namespace Abp.EntityFramework
@@ -87,6 +91,13 @@ namespace Abp.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Types<ISoftDelete>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
+
+            // Using SoftDelete Attribute
+            modelBuilder.Conventions.Add(
+                new AttributeToTableAnnotationConvention<SoftDeleteAttribute, string>(
+                    AbpEfConsts.SoftDeleteCustomAnnotationName,
+                    (type, attributes) => attributes.Single().ColumnName)
+                );
         }
 
         public override int SaveChanges()
@@ -158,7 +169,7 @@ namespace Abp.EntityFramework
 
                 softDeleteEntry.State = EntityState.Unchanged;
                 softDeleteEntry.Entity.IsDeleted = true;
-                
+
                 if (entry.Entity is IDeletionAudited)
                 {
                     var deletionAuditedEntry = entry.Cast<IDeletionAudited>();
