@@ -14,9 +14,9 @@ namespace Abp
     public class AbpBootstrapper : IDisposable
     {
         /// <summary>
-        /// Gets/sets _iocManager object used by this class.
+        /// Gets IIocManager object used by this class.
         /// </summary>
-        private readonly IIocManager _iocManager;
+        public IIocManager IocManager { get; private set; }
 
         /// <summary>
         /// Is this object disposed before?
@@ -29,7 +29,7 @@ namespace Abp
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
         /// </summary>
         public AbpBootstrapper()
-            : this(IocManager.Instance)
+            : this(Dependency.IocManager.Instance)
         {
 
         }
@@ -37,27 +37,27 @@ namespace Abp
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        /// <param name="iocManager">IOC manager that is used to bootstrap the ABP system</param>
+        /// <param name="iocManager">IIocManager that is used to bootstrap the ABP system</param>
         public AbpBootstrapper(IIocManager iocManager)
         {
-            _iocManager = iocManager;
+            IocManager = iocManager;
         }
 
         /// <summary>
-        /// Initializes the complete system.
+        /// Initializes the ABP system.
         /// </summary>
         public virtual void Initialize()
         {
-            _iocManager.IocContainer.Install(new AbpCoreInstaller());
+            IocManager.IocContainer.Install(new AbpCoreInstaller());
 
-            _iocManager.Resolve<AbpStartupConfiguration>().Initialize();
+            IocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
-            _moduleManager = _iocManager.Resolve<IAbpModuleManager>();
+            _moduleManager = IocManager.Resolve<IAbpModuleManager>();
             _moduleManager.InitializeModules();
         }
 
         /// <summary>
-        /// Disposes the system.
+        /// Disposes the ABP system.
         /// </summary>
         public virtual void Dispose()
         {
