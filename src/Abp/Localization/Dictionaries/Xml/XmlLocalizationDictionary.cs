@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Xml;
-using Abp.Xml;
+using Abp.Extensions;
 using Abp.Xml.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
@@ -25,7 +25,7 @@ namespace Abp.Localization.Dictionaries.Xml
         private XmlLocalizationDictionary(CultureInfo cultureInfo)
             : base(cultureInfo)
         {
-            
+
         }
 
         #endregion
@@ -71,6 +71,8 @@ namespace Abp.Localization.Dictionaries.Xml
 
             var dictionary = new XmlLocalizationDictionary(new CultureInfo(cultureName));
 
+            var dublicateNames = new List<string>();
+
             var textNodes = settingsXmlDoc.SelectNodes("/localizationDictionary/texts/text");
             if (textNodes != null)
             {
@@ -84,13 +86,16 @@ namespace Abp.Localization.Dictionaries.Xml
 
                     if (dictionary.Contains(name))
                     {
-                        throw new AbpException("A dictionary can not contain same key twice. '" + name + "' is defined more than once.");
+                        dublicateNames.Add(name);
                     }
 
-                    var value = node.GetAttributeValueOrNull("value") ?? node.InnerText;
-
-                    dictionary[name] = value;
+                    dictionary[name] = node.GetAttributeValueOrNull("value") ?? node.InnerText;
                 }
+            }
+
+            if (dublicateNames.Count > 0)
+            {
+                throw new AbpException("A dictionary can not contain same key twice. There are some duplicated names: " + dublicateNames.JoinAsString(", "));
             }
 
             return dictionary;

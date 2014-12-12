@@ -168,6 +168,7 @@
     <Compile Include="Extensions\ComparableExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="IDateTimeRange.cs" />
     <Compile Include="Linq\Extensions\QueryableExtensions.cs" />
