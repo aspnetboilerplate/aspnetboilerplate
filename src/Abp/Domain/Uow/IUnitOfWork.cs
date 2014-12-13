@@ -6,7 +6,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// Defines a unit of work.
     /// </summary>
-    public interface IUnitOfWork : ITransientDependency, IDisposable
+    public interface IUnitOfWork : IScopedDependency, IDisposable
     {
         /// <summary>
         /// Gets if this unit of work is transactional

@@ -1,5 +1,8 @@
 using Abp.Dependency;
 using Castle.DynamicProxy;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {
@@ -9,10 +12,12 @@ namespace Abp.Domain.Uow
     internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
+        private readonly UnitOfWorkScope _unitOfWorkScope;
 
-        public UnitOfWorkInterceptor(IIocResolver iocResolver)
+        public UnitOfWorkInterceptor(IIocResolver iocResolver, UnitOfWorkScope unitOfWorkScope)
         {
             _iocResolver = iocResolver;
+            _unitOfWorkScope = unitOfWorkScope;
         }
 
         /// <summary>
@@ -24,49 +29,44 @@ namespace Abp.Domain.Uow
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrDefault(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
-                //No need to a uow
+                // No need to a uow
                 invocation.Proceed();
                 return;
             }
 
-            if (UnitOfWorkScope.Current == null)
-            {
-                //No current uow, run a new one
-                PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
-            }
-            else
-            {
-                //Continue with current uow
-                invocation.Proceed();
-            }
+            // Perform the work.
+            PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
         }
 
         private void PerformUow(IInvocation invocation, bool isTransactional)
         {
-            using (var unitOfWork = _iocResolver.ResolveAsDisposable<IUnitOfWork>())
-            {
-                try
-                {
-                    UnitOfWorkScope.Current = unitOfWork.Object;
-                    UnitOfWorkScope.Current.Initialize(isTransactional);
-                    UnitOfWorkScope.Current.Begin();
+            var returnType = invocation.Method.ReturnType;
 
-                    try
-                    {
-                        invocation.Proceed();
-                        UnitOfWorkScope.Current.End();
-                    }
-                    catch
-                    {
-                        try { UnitOfWorkScope.Current.Cancel(); } catch { } //Hide exceptions on cancelling
-                        throw;
-                    }
-                }
-                finally
-                {
-                    UnitOfWorkScope.Current = null;
-                }
+            if (IsAsyncMethod(invocation.Method) && typeof(Task).IsAssignableFrom(returnType))
+            {
+                invocation.ReturnValue = InterceptAsync((dynamic)invocation.ReturnValue, invocation, isTransactional);
             }
+            else
+            {
+                // Not needed, all the work will be done by UnitOfWorkScope.
+            }
+        }
+
+        private static async Task InterceptAsync(Task task, IInvocation invocation, bool isTransactional)
+        {
+            await task.ConfigureAwait(false);
+        }
+
+        private static async Task<T> InterceptAsync<T>(Task<T> task, IUnitOfWork unitOfWork, IInvocation invocation)
+        {
+            return await task.ConfigureAwait(false);
+        }
+
+        private static bool IsAsyncMethod(MethodInfo methodInfo)
+        {
+            // Methods returning Task (or derived) types are marked with AsyncStateMachineAttribute by the compiler.
+            // Unless somebody fiddles with the resulting IL in a wierd way this will work on 99% cases.
+            return methodInfo.GetCustomAttribute<AsyncStateMachineAttribute>() != null;
         }
     }
 }

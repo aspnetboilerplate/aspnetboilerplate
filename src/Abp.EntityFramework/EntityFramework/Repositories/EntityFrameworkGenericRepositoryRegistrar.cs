@@ -26,6 +26,12 @@ namespace Abp.EntityFramework.Repositories
                                     typeof(EfRepositoryBase<,>).MakeGenericType(dbContextType, entityType),
                                     DependencyLifeStyle.Transient
                                     );
+
+                                iocManager.Register(
+                                    genericRepositoryType,
+                                    typeof(EfAsyncRepositoryBase<,>).MakeGenericType(dbContextType, entityType),
+                                    DependencyLifeStyle.Transient
+                                    );
                             }
                         }
 
@@ -37,6 +43,12 @@ namespace Abp.EntityFramework.Repositories
                                 typeof(EfRepositoryBase<,,>).MakeGenericType(dbContextType, entityType, primaryKeyType),
                                 DependencyLifeStyle.Transient
                                 );
+
+                            iocManager.Register(
+                                genericRepositoryTypeWithPrimaryKey,
+                                typeof(EfAsyncRepositoryBase<,,>).MakeGenericType(dbContextType, entityType, primaryKeyType),
+                                DependencyLifeStyle.Transient
+                                );                        
                         }
                     }
                 }

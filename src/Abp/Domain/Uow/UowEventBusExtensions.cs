@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Events.Bus;
+using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
@@ -18,7 +19,7 @@ namespace Abp.Domain.Uow
             where TEventData : IEventData
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventData));
+            IocManager.Instance.Resolve<IUnitOfWork>().OnSuccess(() => eventBus.Trigger(eventData));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Abp.Domain.Uow
         public static void TriggerUow<TEventData>(this IEventBus eventBus, object eventSource, TEventData eventData) where TEventData : IEventData
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventSource, eventData));
+            IocManager.Instance.Resolve<IUnitOfWork>().OnSuccess(() => eventBus.Trigger(eventSource, eventData));
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace Abp.Domain.Uow
         public static void TriggerUow(this IEventBus eventBus, Type eventType, EventData eventData)
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventType, eventData));
+            IocManager.Instance.Resolve<IUnitOfWork>().OnSuccess(() => eventBus.Trigger(eventType, eventData));
         }
 
         /// <summary>
@@ -56,12 +57,15 @@ namespace Abp.Domain.Uow
         public static void TriggerUow(this IEventBus eventBus, Type eventType, object eventSource, EventData eventData)
         {
             CheckCurrentUow();
-            UnitOfWorkScope.Current.OnSuccess(() => eventBus.Trigger(eventType, eventSource, eventData));
+            IocManager.Instance.Resolve<IUnitOfWork>().OnSuccess(() => eventBus.Trigger(eventType, eventSource, eventData));
         }
 
         private static void CheckCurrentUow()
         {
-            if (UnitOfWorkScope.Current == null)
+            // Initialize the UnitOfWorkScope.
+            // TODO: Will be needed extra work?
+            var unitOfWork = IocManager.Instance.Resolve<UnitOfWorkScope>();
+            if (unitOfWork.Current == null)
             {
                 throw new AbpException("There is no active unit of work. UnitOfWorkScope.Current is null!");
             }

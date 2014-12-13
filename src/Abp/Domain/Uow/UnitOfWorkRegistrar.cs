@@ -24,13 +24,13 @@ namespace Abp.Domain.Uow
         {
             if (UnitOfWorkHelper.IsConventionalUowClass(handler.ComponentModel.Implementation))
             {
-                //Intercept all methods of all repositories.
+                // Intercept all methods of all repositories.
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
             }
             else if (handler.ComponentModel.Implementation.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
             {
-                //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
-                //TODO: Intecept only UnitOfWork methods, not other methods!
+                // Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
+                // TODO: Intecept only UnitOfWork methods, not other methods!
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
             }
         }

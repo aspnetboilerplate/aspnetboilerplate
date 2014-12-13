@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Resources.nuspec" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">

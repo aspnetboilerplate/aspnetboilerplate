@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.AutoMapper.nuspec" />
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

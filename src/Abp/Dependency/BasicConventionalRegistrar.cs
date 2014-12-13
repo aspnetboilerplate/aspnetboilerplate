@@ -1,16 +1,18 @@
 ﻿using Castle.DynamicProxy;
+using Castle.MicroKernel.Lifestyle;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Dependency
 {
     /// <summary>
-    /// This class is used to register basic dependency implementations such as <see cref="ITransientDependency"/> and <see cref="ISingletonDependency"/>.
+    /// This class is used to register basic dependency implementations such as 
+    /// <see cref="ITransientDependency"/>, <see cref="IScopedDependency"/> and <see cref="ISingletonDependency"/>.
     /// </summary>
     internal class BasicConventionalRegistrar : IConventionalDependencyRegistrar
     {
         public void RegisterAssembly(IConventionalRegistrationContext context)
         {
-            //Transient
+            // Transient
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
@@ -20,7 +22,17 @@ namespace Abp.Dependency
                     .LifestyleTransient()
                 );
 
-            //Singleton
+            // Scoped (per web request or thread, if HttpContext is not available)
+            context.IocManager.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
+                    .IncludeNonPublicTypes()
+                    .BasedOn<IScopedDependency>()
+                    .WithService.Self()
+                    .WithService.DefaultInterfaces()
+                    .LifestyleScoped<HybridPerWebRequestPerThreadScopeAccessor>()
+                );
+
+            // Singleton
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
@@ -30,7 +42,7 @@ namespace Abp.Dependency
                     .LifestyleSingleton()
                 );
 
-            //Windsor Interceptors
+            // Windsor Interceptors
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()

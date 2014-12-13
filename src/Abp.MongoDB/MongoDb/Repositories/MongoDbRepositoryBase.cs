@@ -17,7 +17,6 @@ namespace Abp.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
     {
-
     }
 
     //TODO: Test & Check all methods
@@ -27,6 +26,8 @@ namespace Abp.MongoDb.Repositories
         {
             get { return ((MongoDbUnitOfWork)UnitOfWorkScope.Current).Database.GetCollection<TEntity>(typeof(TEntity).Name); }
         }
+
+        public UnitOfWorkScope UnitOfWorkScope { get; set; }
 
         public IQueryable<TEntity> GetAll()
         {

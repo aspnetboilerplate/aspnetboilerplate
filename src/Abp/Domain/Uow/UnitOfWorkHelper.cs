@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using Abp.Application.Services;
 using Abp.Domain.Repositories;
@@ -34,13 +35,13 @@ namespace Abp.Domain.Uow
         /// <param name="methodInfo">Method info to check</param>
         public static UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MemberInfo methodInfo)
         {
-            var attrs = methodInfo.GetCustomAttributes(typeof (UnitOfWorkAttribute), false);
-            if (attrs.Length <= 0)
+            var attrs = methodInfo.GetCustomAttributes<UnitOfWorkAttribute>(false);
+            if (!attrs.Any())
             {
                 return null;
             }
 
-            return (UnitOfWorkAttribute) attrs[0];
+            return attrs.First();
         }
     }
 }

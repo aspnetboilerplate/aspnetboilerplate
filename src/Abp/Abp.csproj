@@ -47,6 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Windsor.Lifestyles">
+      <HintPath>..\packages\Castle.Windsor.Lifestyles.0.3.0\lib\NET40\Castle.Windsor.Lifestyles.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -139,6 +142,7 @@
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
     <Compile Include="DateTimeRange.cs" />
+    <Compile Include="Dependency\IScopedDependency.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
@@ -147,6 +151,9 @@
     <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
+    <Compile Include="Domain\Repositories\IAsyncRepositoryOfTEntityAndPrimaryKey.cs" />
+    <Compile Include="Domain\Repositories\IAsyncRepositoryOfTEntity.cs" />
+    <Compile Include="Domain\Repositories\IAsyncRepository.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
