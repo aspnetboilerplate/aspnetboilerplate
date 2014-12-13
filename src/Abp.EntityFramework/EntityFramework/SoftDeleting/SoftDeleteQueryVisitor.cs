@@ -1,5 +1,6 @@
 using System.Data.Entity.Core.Common.CommandTrees;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 
 namespace Abp.EntityFramework.SoftDeleting
@@ -8,16 +9,28 @@ namespace Abp.EntityFramework.SoftDeleting
     {
         public override DbExpression Visit(DbScanExpression expression)
         {
-            if (!expression.Target.ElementType.MetadataProperties.Any(mp => mp.Name.EndsWith("customannotation:" + AbpEfConsts.SoftDeleteCustomAnnotationName)))
+            MetadataProperty annotation = expression.Target.ElementType.MetadataProperties
+                                .SingleOrDefault(p => p.Name.EndsWith("customannotation:" + AbpEfConsts.SoftDeleteCustomAnnotationName));
+
+            if (annotation != null)
             {
-                return base.Visit(expression);
+                // Tests if we use the attribute name property, if not we use default property of ISoftDelete Interface
+                string column = annotation.Value is bool ? "IsDeleted" : annotation.Value.ToString();
+
+
+                var table = (EntityType)expression.Target.ElementType;
+
+                var prop = table.Properties.Any(p => p.Name == column) ? column : "IsDeleted";
+
+                var binding = expression.Bind();
+                return binding.Filter(binding.VariableType
+                    .Variable(binding.VariableName)
+                    .Property(prop)
+                    .NotEqual(DbExpression.FromBoolean(true)));
+
             }
 
-            var binding = expression.Bind();
-            return binding
-                .Filter(binding.VariableType.Variable(binding.VariableName)
-                    .Property("IsDeleted")//TODO: User may want to bind to another column name. It's better to use actual database column name
-                    .Equal(DbExpression.FromBoolean(false)));
+            return base.Visit(expression);
         }
     }
 }
