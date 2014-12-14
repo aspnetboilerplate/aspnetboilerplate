@@ -26,7 +26,11 @@
 	</ul>
 	</li>
 	<li><a href="#DocDtoConventions">DTO conventions &amp; validation</a></li>
-	<li><a href="#DocAutoMapping">Auto mapping between DTOs and entities</a></li>
+	<li><a href="#DocAutoMapping">Auto mapping between DTOs and entities</a>
+        <ul>
+            <li><a href="#DocAutoMappingHelpers">Mapping using attributes and extension</a></li>
+        </ul>
+    </li>
 	<li><a href="#DocHelperDtoInterfaces">Helper interfaces</a></li>
 </ul>
 
@@ -207,27 +211,52 @@ a performance problem. It's fast &amp; easy. AutoMapper creates a PersonDto for 
 using naming conventions. Naming conventions can be complex, configurable. Also, 
 you can define custom maps and much more. See <a href="http://automapper.org/" target="_blank">AutoMapper</a>'s documentation 
 for more information.</p>
+<h4 id="DocAutoMappingHelpers">Mapping using attributes and extension</h4>
+<p>
+ASP.NET Boilerplate provides several custom attributes and an extension method to define mappings. Use attribute
+<strong>AutoMap</strong> for two way mapping, <strong>AutoMapFrom</strong> and <strong>AutoMapTo</strong> for one way mapping.
+Use extension method <strong>MapTo</strong> to map one object to another. Use attributes on Your classes:
+<pre lang="cs">[AutoMap(typeof(MyClass2), typeof(MyClass3))]
+private class MyClass1
+{
+    public string TestProp { get; set; }
+}
+private class MyClass2
+{
+    public string TestProp { get; set; }
+}
+private class MyClass3
+{
+    public string TestProp { get; set; }
+}</pre>
+Then You can map them using extension method:
+<pre lang="cs">var obj1 = new MyClass1 { TestProp = "Test value" };
+var obj2 = obj1.MapTo&lt;myclass2&gt;();
+obj2.TestProp.ShouldBe("Test value");
+var obj3 = obj1.MapTo&lt;myclass3&gt;();
+obj3.TestProp.ShouldBe("Test value");
+</pre></p>
 <h3 id="DocHelperDtoInterfaces">Helper interfaces</h3>
-<p>ASP.NET provides some helper interfaces that can be implemented to 
+<p>ASP.NET provides some helper interfaces that can be implemented to
 standardize common DTO property names.</p>
-<p><strong>ILimitedResultRequest </strong>defines <strong>MaxResultCount</strong> 
-property. So, you can implement it in your input DTOs to standardize limiting 
+<p><strong>ILimitedResultRequest </strong>defines <strong>MaxResultCount</strong>
+property. So, you can implement it in your input DTOs to standardize limiting
 result set.</p>
-<p><strong>IPagedResultRequest</strong> extends <strong>ILimitedResultRequest</strong> 
-by adding <strong>SkipCount</strong>. So, we can implement this interface in 
+<p><strong>IPagedResultRequest</strong> extends <strong>ILimitedResultRequest</strong>
+by adding <strong>SkipCount</strong>. So, we can implement this interface in
 SearchPeopleInput for paging:</p>
 <pre lang="cs">public class SearchPeopleInput : IInputDto, IPagedResultRequest
 {
     [StringLength(40, MinimumLength = 1)]
     public string SearchedName { get; set; }
-    
+
     public int MaxResultCount { get; set; }
     public int SkipCount { get; set; }
 }
 </pre>
 <p>As a result to a paged request, you can return an output DTO that implements
-<strong>IHasTotalCount</strong>. Naming standardization helps us to create 
-re-usable codes and conventions. There maybe added more interfaces to ASP.NET 
+<strong>IHasTotalCount</strong>. Naming standardization helps us to create
+re-usable codes and conventions. There maybe added more interfaces to ASP.NET
 Boilerplate in the future.</p>
 
 </body>
