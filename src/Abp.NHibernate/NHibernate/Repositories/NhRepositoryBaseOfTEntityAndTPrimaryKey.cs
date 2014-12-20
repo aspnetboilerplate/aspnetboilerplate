@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using Abp.NHibernate.Uow;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -24,9 +26,9 @@ namespace Abp.NHibernate.Repositories
         /// </summary>
         protected ISession Session { get { return SessionProvider.GetSession(); } }
 
-        public NhRepositoryBase()
+        public NhRepositoryBase(IUowManager uowManager)
         {
-            SessionProvider = DefaultSessionProvider.Instance;
+            SessionProvider = new FactorySessionProvider(() => uowManager.Current.GetSession());
         }
 
         public NhRepositoryBase(Func<ISession> sessionFactory)

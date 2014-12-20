@@ -12,13 +12,6 @@ namespace Abp.Reflection
             await action();
         }
 
-        public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action)
-        {
-            var response = await actualReturnValue;
-            await action();
-            return response;
-        }
-
         public static object CallReturnAfterAction(Type taskReturnType, object actualReturnValue, Func<Task> action)
         {
             return typeof (AsyncHelper)
@@ -33,6 +26,13 @@ namespace Abp.Reflection
                 method.ReturnType == typeof(Task) ||
                 (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
                 );
+        }
+
+        public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action)
+        {
+            var response = await actualReturnValue;
+            await action();
+            return response;
         }
     }
 }

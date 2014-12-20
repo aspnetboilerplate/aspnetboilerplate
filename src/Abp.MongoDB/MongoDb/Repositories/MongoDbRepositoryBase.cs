@@ -26,7 +26,11 @@ namespace Abp.MongoDb.Repositories
     {
         protected MongoCollection<TEntity> Collection
         {
-            get { return ((MongoDbUnitOfWork)UnitOfWorkScope.Current).Database.GetCollection<TEntity>(typeof(TEntity).Name); }
+            get
+            {
+                throw new NotImplementedException();
+                //return ((MongoDbUnitOfWork)UnitOfWorkScope.Current).Database.GetCollection<TEntity>(typeof(TEntity).Name);
+            }
         }
 
         public IQueryable<TEntity> GetAll()
@@ -136,7 +140,8 @@ namespace Abp.MongoDb.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                //UnitOfWorkScope.Current.SaveChanges();
+                throw new NotImplementedException();
             }
 
             return entity.Id;

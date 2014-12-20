@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Threading;
 using System.Web;
 using Abp.Dependency;
+using Abp.Domain.Uow;
+using Abp.Domain.Uow.Web;
 using Abp.Localization;
 using Abp.Reflection;
 using Castle.MicroKernel.Registration;
@@ -25,7 +27,12 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
+            //TODO: Use AbpBootstrapper.IocManager
             IocManager.Instance.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
+
+            //TODO: Use AbpBootstrapper.IocManager
+            //TODO: Move to AbpWebModule?
+            IocManager.Instance.IocContainer.Register(Component.For<IUnitOfWorkScopeManager>().ImplementedBy<HttpContextUnitOfWorkScopeManager>());
 
             AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();

@@ -8,7 +8,7 @@ namespace Abp.MongoDb.Uow
     {
         public MongoDatabase Database { get; set; }
 
-        public override void Begin()
+        protected override void StartInternal()
         {
             var client = new MongoClient("mongodb://localhost"); //TODO: Get from connection string???
             var server = client.GetServer();
@@ -25,22 +25,17 @@ namespace Abp.MongoDb.Uow
             throw new System.NotImplementedException();
         }
 
-        public override void End()
+        protected override void CompleteInternal()
         {
 
         }
 
-        public override Task EndAsync()
+        protected override Task CompleteInternalAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Cancel()
-        {
-
-        }
-
-        public override void Dispose()
+        protected override void DisposeInternal()
         {
 
         }

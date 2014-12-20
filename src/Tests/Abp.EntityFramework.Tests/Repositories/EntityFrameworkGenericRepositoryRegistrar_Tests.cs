@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityFramework.Repositories;
 using Abp.Tests;
 using Shouldly;
@@ -13,6 +14,9 @@ namespace Abp.EntityFramework.Tests.Repositories
         [Fact]
         public void Should_Resolve_Generic_Repositories()
         {
+            LocalIocManager.Register<IUnitOfWorkScopeManager, ThreadStaticUnitOfWorkScopeManager>();
+            LocalIocManager.Register<IUowManager, UowManager>();
+
             EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyDbContext), LocalIocManager);
 
             var entity1Repository = LocalIocManager.Resolve<IRepository<MyEntity1>>();

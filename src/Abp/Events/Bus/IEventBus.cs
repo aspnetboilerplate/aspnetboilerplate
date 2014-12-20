@@ -14,7 +14,7 @@ namespace Abp.Events.Bus
 
         /// <summary>
         /// Registers to an event.
-        /// Given action is called for all event occurences.
+        /// Given action is called for all event occurrences.
         /// </summary>
         /// <param name="action">Action to handle events</param>
         /// <typeparam name="TEventData">Event type</typeparam>
@@ -22,7 +22,7 @@ namespace Abp.Events.Bus
 
         /// <summary>
         /// Registers to an event. 
-        /// Same (given) instance of the handler is used for all event occurences.
+        /// Same (given) instance of the handler is used for all event occurrences.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
         /// <param name="handler">Object to handle the event</param>
@@ -30,7 +30,7 @@ namespace Abp.Events.Bus
 
         /// <summary>
         /// Registers to an event.
-        /// A new instance of <see cref="THandler"/> object is created for every event occurence.
+        /// A new instance of <see cref="THandler"/> object is created for every event occurrence.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
         /// <typeparam name="THandler">Type of the event handler</typeparam>
@@ -38,7 +38,7 @@ namespace Abp.Events.Bus
 
         /// <summary>
         /// Registers to an event.
-        /// Same (given) instance of the handler is used for all event occurences.
+        /// Same (given) instance of the handler is used for all event occurrences.
         /// </summary>
         /// <param name="eventType">Event type</param>
         /// <param name="handler">Object to handle the event</param>

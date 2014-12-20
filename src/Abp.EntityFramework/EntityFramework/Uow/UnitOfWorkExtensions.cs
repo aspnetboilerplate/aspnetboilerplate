@@ -6,7 +6,7 @@ namespace Abp.EntityFramework.Uow
 {
     internal static class UnitOfWorkExtensions
     {
-        public static TDbContext GetDbContext<TDbContext>(this IUnitOfWork unitOfWork) where TDbContext : DbContext
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork) where TDbContext : DbContext
         {
             if (unitOfWork == null)
             {

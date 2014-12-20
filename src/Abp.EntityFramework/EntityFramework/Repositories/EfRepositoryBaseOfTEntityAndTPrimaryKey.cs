@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Uow;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -20,9 +21,9 @@ namespace Abp.EntityFramework.Repositories
 
         protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
         
-        public EfRepositoryBase()
+        public EfRepositoryBase(IUowManager uowManager)
         {
-            DbContextProvider = DefaultContextProvider<TDbContext>.Instance;
+            DbContextProvider = new FactoryContextProvider<TDbContext>(() => uowManager.Current.GetDbContext<TDbContext>());
         }
 
         public EfRepositoryBase(Func<TDbContext> dbContextFactory)
@@ -130,7 +131,7 @@ namespace Abp.EntityFramework.Repositories
             
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                Context.SaveChanges();
             }
 
             return entity.Id;
@@ -141,7 +142,7 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                await UnitOfWorkScope.Current.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
 
             return entity.Id;
@@ -160,7 +161,7 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                Context.SaveChanges();
             }
 
             return entity.Id;
@@ -172,7 +173,7 @@ namespace Abp.EntityFramework.Repositories
 
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
-                await UnitOfWorkScope.Current.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
 
             return entity.Id;
