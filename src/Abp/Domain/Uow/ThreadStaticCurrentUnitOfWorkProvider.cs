@@ -4,8 +4,12 @@ using Castle.Core;
 
 namespace Abp.Domain.Uow
 {
-    public class ThreadStaticUnitOfWorkScopeManager : IUnitOfWorkScopeManager, ISingletonDependency
+    /// <summary>
+    /// ThreadStatic implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
+    /// </summary>
+    public class ThreadStaticCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
     {
+        /// <inheritdoc />
         [DoNotWire]
         public IUnitOfWork Current
         {

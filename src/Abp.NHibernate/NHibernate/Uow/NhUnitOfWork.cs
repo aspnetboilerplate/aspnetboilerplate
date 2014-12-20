@@ -25,7 +25,7 @@ namespace Abp.NHibernate.Uow
             _sessionFactory = sessionFactory;
         }
 
-        protected override void StartInternal()
+        protected override void StartUow()
         {
             Session = _sessionFactory.OpenSession();
             if (IsTransactional)
@@ -47,7 +47,7 @@ namespace Abp.NHibernate.Uow
         /// <summary>
         /// Commits transaction and closes database connection.
         /// </summary>
-        protected override void CompleteInternal()
+        protected override void CompleteUow()
         {
             SaveChanges();
             if (_transaction != null)
@@ -56,15 +56,15 @@ namespace Abp.NHibernate.Uow
             }
         }
 
-        protected async override Task CompleteInternalAsync()
+        protected async override Task CompleteUowAsync()
         {
-            CompleteInternal();
+            CompleteUow();
         }
 
         /// <summary>
         /// Rollbacks transaction and closes database connection.
         /// </summary>
-        protected override void DisposeInternal()
+        protected override void DisposeUow()
         {
             if (_transaction != null)
             {

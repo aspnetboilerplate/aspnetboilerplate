@@ -27,7 +27,7 @@ namespace Abp.EntityFramework.Uow
             _activeDbContexts = new Dictionary<Type, DbContext>();
         }
 
-        protected override void StartInternal()
+        protected override void StartUow()
         {
             if (IsTransactional)
             {
@@ -55,7 +55,7 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        protected override void CompleteInternal()
+        protected override void CompleteUow()
         {
             SaveChanges();
             if (_transaction != null)
@@ -64,7 +64,7 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        protected override async Task CompleteInternalAsync()
+        protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
             if (_transaction != null)
@@ -84,7 +84,7 @@ namespace Abp.EntityFramework.Uow
             return (TDbContext)dbContext;
         }
 
-        protected override void DisposeInternal()
+        protected override void DisposeUow()
         {
             if (_transaction != null)
             {

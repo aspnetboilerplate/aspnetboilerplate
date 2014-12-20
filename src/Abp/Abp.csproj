@@ -148,10 +148,10 @@
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
     <Compile Include="Domain\Uow\IActiveUnitOfWork.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />
-    <Compile Include="Domain\Uow\IUnitOfWorkScopeManager.cs" />
+    <Compile Include="Domain\Uow\ICurrentUnitOfWorkProvider.cs" />
     <Compile Include="Domain\Uow\IUowManager.cs" />
-    <Compile Include="Domain\Uow\ThreadStaticUnitOfWorkScopeManager.cs" />
-    <Compile Include="Domain\Uow\UnitOfWorkCompleteHandle.cs" />
+    <Compile Include="Domain\Uow\ThreadStaticCurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\NullUnitOfWorkCompleteHandle.cs" />
     <Compile Include="Domain\Uow\UowManager.cs" />
     <Compile Include="Reflection\AsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />

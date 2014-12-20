@@ -3,6 +3,11 @@ using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {
+    /// <summary>
+    /// Used to complete a unit of work.
+    /// This interface can not be injected or directly used.
+    /// Use <see cref="IUowManager"/> instead.
+    /// </summary>
     public interface IUnitOfWorkCompleteHandle : IDisposable
     {
         /// <summary>

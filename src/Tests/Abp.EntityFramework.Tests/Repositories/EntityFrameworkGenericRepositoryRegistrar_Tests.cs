@@ -14,7 +14,7 @@ namespace Abp.EntityFramework.Tests.Repositories
         [Fact]
         public void Should_Resolve_Generic_Repositories()
         {
-            LocalIocManager.Register<IUnitOfWorkScopeManager, ThreadStaticUnitOfWorkScopeManager>();
+            LocalIocManager.Register<ICurrentUnitOfWorkProvider, ThreadStaticCurrentUnitOfWorkProvider>();
             LocalIocManager.Register<IUowManager, UowManager>();
 
             EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyDbContext), LocalIocManager);

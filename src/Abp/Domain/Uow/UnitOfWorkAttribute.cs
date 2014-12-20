@@ -4,7 +4,7 @@ using System.Reflection;
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// This attribute is used to indicate that declaring method is transactional (atomic) and should be considered as a unit of work.
+    /// This attribute is used to indicate that declaring method is atomic and should be considered as a unit of work.
     /// A method that has this attribute is intercepted, a database connection is opened and a transaction is started before call the method.
     /// At the end of method call, transaction is commited and all changes applied to the database if there is no exception,
     /// othervise it's rolled back. 
@@ -17,8 +17,9 @@ namespace Abp.Domain.Uow
     {
         /// <summary>
         /// Is this unit of work will be transactional?
+        /// Default value: true.
         /// </summary>
-        public bool? IsTransactional { get; set; } //TODO@Halil: Inform used about default value
+        public bool? IsTransactional { get; set; }
 
         /// <summary>
         /// Used to prevent starting a unit of work for the method.

@@ -32,7 +32,7 @@ namespace Abp.Web
 
             //TODO: Use AbpBootstrapper.IocManager
             //TODO: Move to AbpWebModule?
-            IocManager.Instance.IocContainer.Register(Component.For<IUnitOfWorkScopeManager>().ImplementedBy<HttpContextUnitOfWorkScopeManager>());
+            IocManager.Instance.IocContainer.Register(Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<HttpContextCurrentUnitOfWorkProvider>());
 
             AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();

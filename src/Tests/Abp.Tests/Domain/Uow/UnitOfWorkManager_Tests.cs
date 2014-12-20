@@ -13,7 +13,7 @@ namespace Abp.Tests.Domain.Uow
             var fakeUow = Substitute.For<IUnitOfWork>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IUnitOfWorkScopeManager>().ImplementedBy<ThreadStaticUnitOfWorkScopeManager>().LifestyleSingleton(),
+                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<ThreadStaticCurrentUnitOfWorkProvider>().LifestyleSingleton(),
                 Component.For<IUowManager>().ImplementedBy<UowManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleTransient()
                 );

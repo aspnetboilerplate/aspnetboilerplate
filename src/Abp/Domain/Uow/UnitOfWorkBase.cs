@@ -1,12 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
 using Abp.Extensions;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// Base for UnitOfWork classes.
+    /// Base for all Unit Of Work classes.
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
@@ -28,34 +27,44 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected bool IsDisposed { get; private set; }
 
+        private bool _isStarted;
+        private bool _isCompleted;
+
         /// <inheritdoc/>
         public void Start(bool isTransactional = true)
         {
-            //TODO: Prevent multiple call
+            if (_isStarted)
+            {
+                throw new AbpException("This unit of work has started before.");
+            }
+
+            _isStarted = true;
 
             IsTransactional = isTransactional;
-            StartInternal();
+            StartUow();
         }
 
         /// <inheritdoc/>
         public abstract void SaveChanges();
 
+        /// <inheritdoc/>
         public abstract Task SaveChangesAsync();
 
         /// <inheritdoc/>
         public void Complete()
         {
-            //TODO: Prevent multiple call
+            SetAsCompleted();
 
-            CompleteInternal();
+            CompleteUow();
             Completed.InvokeSafely(this);
         }
 
+        /// <inheritdoc/>
         public async Task CompleteAsync()
         {
-            //TODO: Prevent multiple call
+            SetAsCompleted();
 
-            await CompleteInternalAsync();
+            await CompleteUowAsync();
             Completed.InvokeSafely(this);
         }
 
@@ -69,20 +78,39 @@ namespace Abp.Domain.Uow
 
             IsDisposed = true;
 
-            DisposeInternal();
+            DisposeUow();
 
             Disposed.InvokeSafely(this);
         }
 
         /// <summary>
-        /// 
+        /// Should be implemented by derived classes to start UOW.
         /// </summary>
-        protected abstract void StartInternal();
+        protected abstract void StartUow();
 
-        protected abstract void CompleteInternal();
-        
-        protected abstract Task CompleteInternalAsync();
+        /// <summary>
+        /// Should be implemented by derived classes to complete UOW.
+        /// </summary>
+        protected abstract void CompleteUow();
 
-        protected abstract void DisposeInternal();
+        /// <summary>
+        /// Should be implemented by derived classes to complete UOW.
+        /// </summary>
+        protected abstract Task CompleteUowAsync();
+
+        /// <summary>
+        /// Should be implemented by derived classes to dispose UOW.
+        /// </summary>
+        protected abstract void DisposeUow();
+
+        private void SetAsCompleted()
+        {
+            if (_isCompleted)
+            {
+                throw new AbpException("Complete is called before!");
+            }
+
+            _isCompleted = true;
+        }
     }
 }
