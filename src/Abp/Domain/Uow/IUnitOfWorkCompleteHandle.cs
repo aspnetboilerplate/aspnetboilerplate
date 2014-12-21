@@ -6,7 +6,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// Used to complete a unit of work.
     /// This interface can not be injected or directly used.
-    /// Use <see cref="IUowManager"/> instead.
+    /// Use <see cref="IUnitOfWorkManager"/> instead.
     /// </summary>
     public interface IUnitOfWorkCompleteHandle : IDisposable
     {

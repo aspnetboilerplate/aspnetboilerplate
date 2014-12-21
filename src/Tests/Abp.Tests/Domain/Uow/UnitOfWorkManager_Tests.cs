@@ -14,11 +14,11 @@ namespace Abp.Tests.Domain.Uow
 
             LocalIocManager.IocContainer.Register(
                 Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<ThreadStaticCurrentUnitOfWorkProvider>().LifestyleSingleton(),
-                Component.For<IUowManager>().ImplementedBy<UowManager>().LifestyleSingleton(),
+                Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleTransient()
                 );
 
-            var uowManager = LocalIocManager.Resolve<IUowManager>();
+            var uowManager = LocalIocManager.Resolve<IUnitOfWorkManager>();
 
             using (var uow1 = uowManager.StartNew())
             {

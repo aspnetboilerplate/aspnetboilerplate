@@ -5,7 +5,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// Unit of work manager.
     /// </summary>
-    internal class UowManager : IUowManager, ISingletonDependency
+    internal class UnitOfWorkManager : IUnitOfWorkManager, ISingletonDependency
     {
         private readonly IIocResolver _iocResolver;
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
@@ -15,7 +15,7 @@ namespace Abp.Domain.Uow
             get { return _currentUnitOfWorkProvider.Current; }
         }
 
-        public UowManager(IIocResolver iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
+        public UnitOfWorkManager(IIocResolver iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
             _iocResolver = iocResolver;
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;

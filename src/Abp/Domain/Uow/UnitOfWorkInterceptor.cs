@@ -11,12 +11,12 @@ namespace Abp.Domain.Uow
     internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
-        private readonly IUowManager _uowManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public UnitOfWorkInterceptor(IIocResolver iocResolver, IUowManager uowManager)
+        public UnitOfWorkInterceptor(IIocResolver iocResolver, IUnitOfWorkManager unitOfWorkManager)
         {
             _iocResolver = iocResolver;
-            _uowManager = uowManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            if (_uowManager.Current != null)
+            if (_unitOfWorkManager.Current != null)
             {
                 //Continue with current uow
                 invocation.Proceed();
@@ -58,7 +58,7 @@ namespace Abp.Domain.Uow
 
         private void PerformSyncUow(IInvocation invocation, bool isTransactional)
         {
-            using (var uow = _uowManager.StartNew(isTransactional))
+            using (var uow = _unitOfWorkManager.StartNew(isTransactional))
             {
                 invocation.Proceed();
                 uow.Complete();
@@ -67,7 +67,7 @@ namespace Abp.Domain.Uow
 
         private void PerformAsyncUow(IInvocation invocation, bool isTransactional)
         {
-            var uow = _uowManager.StartNew(isTransactional);
+            var uow = _unitOfWorkManager.StartNew(isTransactional);
 
             invocation.Proceed();
 
