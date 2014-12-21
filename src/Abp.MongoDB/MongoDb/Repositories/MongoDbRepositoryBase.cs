@@ -116,6 +116,12 @@ namespace Abp.MongoDb.Repositories
             return entity;
         }
 
+        public Task<TEntity> InsertAsync(TEntity entity)
+        {
+            Collection.Insert(entity);
+            return Task.FromResult(entity);
+        }
+
         public TPrimaryKey InsertAndGetId(TEntity entity)
         {
             Collection.Insert(entity);

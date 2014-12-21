@@ -97,7 +97,7 @@ namespace Abp.EntityFramework.Repositories
             return await GetAll()
                 .FirstOrDefaultAsync(CreateEqualityExpression(id));
         }
-        
+
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
@@ -118,10 +118,15 @@ namespace Abp.EntityFramework.Repositories
             return Table.Add(entity);
         }
 
+        public virtual Task<TEntity> InsertAsync(TEntity entity)
+        {
+            return Task.FromResult(Table.Add(entity));
+        }
+
         public virtual TPrimaryKey InsertAndGetId(TEntity entity)
         {
             entity = Insert(entity);
-            
+
             if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
             {
                 Context.SaveChanges();
@@ -141,14 +146,14 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
-        public TEntity InsertOrUpdate(TEntity entity)
+        public virtual TEntity InsertOrUpdate(TEntity entity)
         {
             return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
                 ? Insert(entity)
                 : Update(entity);
         }
 
-        public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+        public virtual TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
 
@@ -187,7 +192,7 @@ namespace Abp.EntityFramework.Repositories
             }
             else
             {
-                Table.Remove(entity);                
+                Table.Remove(entity);
             }
         }
 
@@ -213,7 +218,7 @@ namespace Abp.EntityFramework.Repositories
                 Delete(entity);
             }
         }
-        
+
         public virtual int Count()
         {
             return GetAll().Count();
