@@ -21,11 +21,13 @@
 		<li><a href="#DocUpdateEntity">Update</a></li>
 		<li><a href="#DocDeleteEntity">Delete</a></li>
 		<li><a href="#DocOtherRepositoryMethods">Others</a></li>
+		<li><a href="#DocAboutAsyncMethods">About Async methods</a></li>
 	</ul>
 	</li>
 	<li><a href="#DocRepositoryImpl">Repository Implementation</a></li>
 	<li><a href="#DocManageConnection">Managing database connection</a></li>
 	<li><a href="#DocRepositoryLifecycle">Lifecycle of a repository</a></li>
+	<li><a href="#DocRepositoryBestPractices">Repository best practices</a></li>
 </ul>
 
 <p>
@@ -68,9 +70,13 @@
     Getting single entity</h5>
 
 <pre lang="cs">TEntity Get(TPrimaryKey id);
+Task&lt;TEntity&gt; GetAsync(TPrimaryKey id);
 TEntity Single(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task&lt;TEntity&gt; SingleAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 TEntity FirstOrDefault(TPrimaryKey id);
+Task&lt;TEntity&gt; FirstOrDefaultAsync(TPrimaryKey id);
 TEntity FirstOrDefault(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task&lt;TEntity&gt; FirstOrDefaultAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 TEntity Load(TPrimaryKey id);</pre>
 
 <p><strong>Get </strong>method is used to get an Entity with given primary key 
@@ -93,11 +99,15 @@ actually retrieved. It's retrieved from database only if you access to other
 properties of entity. This can be used instead of Get, for performance reasons. 
 It's implemented in NHibernate. If ORM provider does not implements it, Load 
 method works as identical as Get method.</p>
+<p>Some methods have <strong>async</strong> versions to be used in async 
+programming model (See 'about async methods' section).</p>
 
 <h5 id="DocGettingListOfEntities">Getting a list of entities</h5>
 
 <pre>List&lt;TEntity&gt; GetAllList();
+Task&lt;List&lt;TEntity&gt;&gt; GetAllListAsync();
 List&lt;TEntity&gt; GetAllList(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task&lt;List&lt;TEntity&gt;&gt; GetAllListAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 IQueryable&lt;TEntity&gt; GetAll();</pre>
 <p>
     <strong>GetAllList </strong>is used to retrieve all entities from database. 
@@ -133,6 +143,9 @@ a join expression.</p>
 	GetAll() will work without adding UnitOfWork attribute for application 
 	service methods.</p></div>
 
+<p>Some methods have <strong>async</strong> versions to be used in async 
+programming model (See 'about async methods' section).</p>
+
 <h5 id="DocGettingCustom">Custom return value</h5>
 <p>There is also an additional method to provide power of IQueryable without 
 using UnitOfWork attribute in the calling method.</p>
@@ -150,38 +163,89 @@ a projection or something else that executes the query.</p>
 <h4 id="DocInsertEntity">Insert</h4>
 <p>IRepository interface defines simple methods to insert an entity to database:</p>
 <pre lang="cs">TEntity Insert(TEntity entity);
+Task&lt;TEntity&gt; InsertAsync(TEntity entity);
 TPrimaryKey InsertAndGetId(TEntity entity);
+Task&lt;TPrimaryKey&gt; InsertAndGetIdAsync(TEntity entity);
 TEntity InsertOrUpdate(TEntity entity);
-TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);</pre>
+Task&lt;TEntity&gt; InsertOrUpdateAsync(TEntity entity);
+TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
+Task&lt;TPrimaryKey&gt; InsertOrUpdateAndGetIdAsync(TEntity entity);</pre>
 <p><strong>Insert</strong> method simply inserts new entity to database and 
 returns the same inserted entity. <strong>InsertAndGetId</strong> method returns 
 Id of new inserted entity. This is useful if Id is auto increment and you need 
 Id of the new inserted entity. <strong>InsertOrUpdate</strong> inserts or updated given 
 entity by checking it's Id's value. Lastly, <strong>InsertOrUpdateAndGetId</strong> 
 returns Id of the entity after inserting or updating.</p>
+<p>All methods have <strong>async</strong> versions to be used in async 
+programming model (See 'about async methods' section).</p>
 <h4 id="DocUpdateEntity">Update</h4>
 <p>IRepository defines a method to update an existing entity in the database. It 
 gets the entity to be updated and returns the same entity object.</p>
-<pre>TEntity Update(TEntity entity);</pre>
+<pre>TEntity Update(TEntity entity);
+Task&lt;TEntity&gt; UpdateAsync(TEntity entity);</pre>
 <h4 id="DocDeleteEntity">Delete</h4>
 <p>IRepository defines methods to delete an existing entity from the database</p>
 
 <pre>void Delete(TEntity entity);
+Task DeleteAsync(TEntity entity);
 void Delete(TPrimaryKey id);
-void Delete(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
+Task DeleteAsync(TPrimaryKey id);
+void Delete(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task DeleteAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
 <p>First method accepts an existing entity, second one accepts Id of the entity 
 to delete. </p>
 <p>The last one accepts a condition to delete all entities fit to given 
 condition. Notice that all entities matches given predicate will be retrived 
 from database and then deleted. So, use it carefully, it may cause performance 
 problems if there are too many entities with given condition.</p>
+<p>All methods have <strong>async</strong> versions to be used in async 
+programming model (See 'about async methods' section).</p>
 
 <h4 id="DocOtherRepositoryMethods">Others</h4>
 <p>IRepository also provides methods to get count of entities in the table.</p>
 <pre>int Count();
+Task&lt;int&gt; CountAsync();
 int Count(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task&lt;int&gt; CountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 long LongCount();
-long LongCount(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
+Task&lt;long&gt; LongCountAsync();
+long LongCount(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
+Task&lt;long&gt; LongCountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
+
+<p>All methods have <strong>async</strong> versions to be used in async 
+programming model (See 'about async methods' section).</p>
+
+<h4 id="DocAboutAsyncMethods">About Async methods</h4>
+
+<p>ASP.NET Boilerplate supports async programming model. So, repository methods 
+has Async versions. Here, a sample 
+<a href="/Pages/Documents/Application-Services">application service</a> method that uses async model:</p>
+<pre lang="cs">public class PersonAppService : AbpWpfDemoAppServiceBase, IPersonAppService
+{
+    private readonly IRepository&lt;Person&gt; _personRepository;
+
+    public PersonAppService(IRepository&lt;Person&gt; personRepository)
+    {
+        _personRepository = personRepository;
+    }
+
+    public async Task&lt;GetPeopleOutput&gt; GetAllPeople()
+    {
+        var people = await _personRepository.GetAllListAsync();
+            
+        return new GetPeopleOutput
+        {
+            People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(people)
+        };
+    }
+}</pre>
+<p>GetAllPeople method is async and uses GetAllListAsync with awat keyword.</p>
+<p>Async may not be supported by all ORM frameworks. It's supported by 
+EntityFramework. If not supported, Async repository methods works synchronously. 
+Also, for example, InsertAsync works same as Insert in EntityFramework since EF 
+does not write new entities to database until unit of work completes 
+(DbContext.SaveChanges).</p>
+
 <h3 id="DocRepositoryImpl">Repository Implementation</h3>
 
 <p>ASP.NET Boilerplate is designed to be independent from a particular ORM 
@@ -245,6 +309,25 @@ technique. When a repository class needed to be injected, a new instance of the
 class is created automatically by dependency injection container. See
 <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> 
 documentation for more information.</p>
+
+<h3 id="DocRepositoryBestPractices">Repository best practices</h3>
+<ul>
+	<li>For an entity of T, use IRepository&lt;T&gt; wherever it's possible. Don't 
+	create custom repositories unless it's really needed. Pre-defined repository 
+	methods will be enough for many cases.</li>
+	<li>If you are creating a custom repository (by extending 
+	IRepository&lt;TEntity&gt;);<ul>
+		<li>Repository classes should be stateless. That means, you should not 
+		define repository-level state objects and a repository method call 
+		should not effect another call.</li>
+		<li>Custom repository methods should not contain business logic or 
+		application logic. It should just perform data-related or orm-specific 
+		tasks.</li>
+		<li>While repositories can use dependency injection, define less or no 
+		dependency to other services.</li>
+	</ul>
+	</li>
+</ul>
 
 </body>
 

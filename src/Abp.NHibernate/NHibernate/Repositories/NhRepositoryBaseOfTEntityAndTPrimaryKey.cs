@@ -138,6 +138,11 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
+        public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+        {
+            return Task.FromResult(InsertOrUpdate(entity));
+        }
+
         public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             return InsertOrUpdate(entity).Id;
@@ -154,6 +159,11 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
+        public Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            return Task.FromResult(Update(entity));
+        }
+
         public virtual void Delete(TEntity entity)
         {
             if (entity is ISoftDelete)
@@ -167,9 +177,19 @@ namespace Abp.NHibernate.Repositories
             }
         }
 
+        public async Task DeleteAsync(TEntity entity)
+        {
+            Delete(entity);
+        }
+
         public virtual void Delete(TPrimaryKey id)
         {
             Delete(Session.Load<TEntity>(id));
+        }
+
+        public async Task DeleteAsync(TPrimaryKey id)
+        {
+            Delete(id);
         }
 
         public void Delete(Expression<Func<TEntity, bool>> predicate)
@@ -178,6 +198,11 @@ namespace Abp.NHibernate.Repositories
             {
                 Delete(entity);
             }
+        }
+
+        public async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            Delete(predicate);
         }
 
         public virtual int Count()

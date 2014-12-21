@@ -140,6 +140,11 @@ namespace Abp.MongoDb.Repositories
                 : Update(entity);
         }
 
+        public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
@@ -164,9 +169,19 @@ namespace Abp.MongoDb.Repositories
             return entity;
         }
 
+        public Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(TEntity entity)
         {
             Delete(entity.Id);
+        }
+
+        public Task DeleteAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
         }
 
         public void Delete(TPrimaryKey id)
@@ -175,7 +190,17 @@ namespace Abp.MongoDb.Repositories
             Collection.Remove(query);
         }
 
+        public Task DeleteAsync(TPrimaryKey id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }

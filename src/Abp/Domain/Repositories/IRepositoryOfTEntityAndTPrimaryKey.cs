@@ -164,6 +164,12 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        Task<TEntity> InsertOrUpdateAsync(TEntity entity);
+
+        /// <summary>
+        /// Inserts or updates given entity depending on Id's value.
         /// Also returns Id of the entity.
         /// It may require to save current unit of work
         /// to be able to retrieve id.
@@ -192,6 +198,12 @@ namespace Abp.Domain.Repositories
         /// <param name="entity">Entity</param>
         TEntity Update(TEntity entity);
 
+        /// <summary>
+        /// Updates an existing entity.
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        Task<TEntity> UpdateAsync(TEntity entity);
+
         #endregion
 
         #region Delete
@@ -201,12 +213,24 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="entity">Entity to be deleted</param>
         void Delete(TEntity entity);
+        
+        /// <summary>
+        /// Deletes an entity.
+        /// </summary>
+        /// <param name="entity">Entity to be deleted</param>
+        Task DeleteAsync(TEntity entity);
 
         /// <summary>
         /// Deletes an entity by primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
         void Delete(TPrimaryKey id);
+
+        /// <summary>
+        /// Deletes an entity by primary key.
+        /// </summary>
+        /// <param name="id">Primary key of the entity</param>
+        Task DeleteAsync(TPrimaryKey id);
 
         /// <summary>
         /// Deletes many entities by function.
@@ -216,6 +240,15 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
         void Delete(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Deletes many entities by function.
+        /// Notice that: All entities fits to given predicate are retrieved and deleted.
+        /// This may cause major performance problems if there are too many entities with
+        /// given predicate.
+        /// </summary>
+        /// <param name="predicate">A condition to filter entities</param>
+        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
 

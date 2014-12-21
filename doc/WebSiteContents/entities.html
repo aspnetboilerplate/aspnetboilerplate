@@ -152,11 +152,13 @@ since it inherits all:</p>
 <p>&nbsp;As a shortcut, you can derive your entity from <strong>
 FullAuditedEntity</strong> class that implements all.</p>
 <p>NOTE: All audit interfaces and classes have a generic version for defining navigation property 
-your to <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt;).&nbsp;</p>
+to your <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt; and 
+FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).&nbsp;</p>
 <h3 id="DocIEntityInterfaces">IEntity interfaces</h3>
-<p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (<strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
+<p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (and <strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
 If you do not want to derive from Entity class, you can implement these 
-interfaces directly. But this is not the suggested way, unless you have a good 
+interfaces directly. There are also corresponding interfaces for other entity 
+classes. But this is not the suggested way, unless you have a good 
 reason to do not derive from Entity classes.</p>
 
 </body>
