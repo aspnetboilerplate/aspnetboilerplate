@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.Entity.Infrastructure.Interception;
-using System.Linq;
+﻿using System.Data.Entity.Infrastructure.Interception;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
@@ -9,6 +7,7 @@ using Abp.EntityFramework.SoftDeleting;
 using Abp.Modules;
 using Abp.Reflection;
 using Castle.Core.Logging;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
 {
@@ -35,8 +34,16 @@ namespace Abp.EntityFramework
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            DbInterception.Add(new SoftDeleteInterceptor());
+
+            IocManager.IocContainer.Register(
+                Component.For(typeof (IDbContextProvider<>))
+                    .ImplementedBy(typeof (UnitOfWorkDbContextProvider<>))
+                    .LifestyleTransient()
+                );
+            
             RegisterGenericRepositories();
+
+            DbInterception.Add(new SoftDeleteInterceptor());
         }
 
         private void RegisterGenericRepositories()

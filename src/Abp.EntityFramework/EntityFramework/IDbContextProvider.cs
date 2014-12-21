@@ -9,6 +9,6 @@ namespace Abp.EntityFramework
     public interface IDbContextProvider<out TDbContext>
         where TDbContext : DbContext
     {
-        TDbContext GetDbContext();
+        TDbContext DbContext { get; }
     }
 }

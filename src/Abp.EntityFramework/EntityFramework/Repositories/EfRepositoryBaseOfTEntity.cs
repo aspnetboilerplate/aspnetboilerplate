@@ -1,8 +1,6 @@
-using System;
 using System.Data.Entity;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -10,16 +8,9 @@ namespace Abp.EntityFramework.Repositories
         where TEntity : class, IEntity<int>
         where TDbContext : DbContext
     {
-        public EfRepositoryBase(IUowManager uowManager)
-            : base(uowManager)
+        public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
+            : base(dbContextProvider)
         {
-
-        }
-
-        public EfRepositoryBase(Func<TDbContext> dbContextFactory)
-            : base(dbContextFactory)
-        {
-
         }
     }
 }

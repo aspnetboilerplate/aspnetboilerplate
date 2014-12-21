@@ -5,11 +5,11 @@ using System.Linq;
 using System.Reflection;
 using Abp.Reflection;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFramework.Extensions
 {
-    internal static class EntityFrameworkHelper
+    internal static class DbContextExtensions
     {
-        public static IEnumerable<Type> GetEntityTypesInDbContext(Type dbContextType)
+        public static IEnumerable<Type> GetEntityTypes(this Type dbContextType)
         {
             return
                 from property in dbContextType.GetProperties(BindingFlags.Public | BindingFlags.Instance)

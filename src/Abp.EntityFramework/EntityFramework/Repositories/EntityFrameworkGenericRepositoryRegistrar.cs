@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityFramework.Extensions;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -9,7 +10,7 @@ namespace Abp.EntityFramework.Repositories
     {
         public static void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
-            foreach (var entityType in EntityFrameworkHelper.GetEntityTypesInDbContext(dbContextType))
+            foreach (var entityType in dbContextType.GetEntityTypes())
             {
                 foreach (var interfaceType in entityType.GetInterfaces())
                 {

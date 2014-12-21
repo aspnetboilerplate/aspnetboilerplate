@@ -6,8 +6,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.EntityFramework.Uow;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -17,18 +15,13 @@ namespace Abp.EntityFramework.Repositories
     {
         public virtual IDbContextProvider<TDbContext> DbContextProvider { private get; set; }
 
-        protected virtual TDbContext Context { get { return DbContextProvider.GetDbContext(); } }
+        protected virtual TDbContext Context { get { return DbContextProvider.DbContext; } }
 
         protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
-        
-        public EfRepositoryBase(IUowManager uowManager)
-        {
-            DbContextProvider = new FactoryContextProvider<TDbContext>(() => uowManager.Current.GetDbContext<TDbContext>());
-        }
 
-        public EfRepositoryBase(Func<TDbContext> dbContextFactory)
+        public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
         {
-            DbContextProvider = new FactoryContextProvider<TDbContext>(dbContextFactory);
+            DbContextProvider = dbContextProvider;
         }
 
         public virtual IQueryable<TEntity> GetAll()

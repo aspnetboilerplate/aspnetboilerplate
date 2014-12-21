@@ -4,6 +4,6 @@ namespace Abp.NHibernate
 {
     public interface ISessionProvider
     {
-        ISession GetSession();
+        ISession Session { get; }
     }
 }

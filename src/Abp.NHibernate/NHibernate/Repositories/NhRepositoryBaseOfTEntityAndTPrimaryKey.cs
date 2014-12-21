@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.NHibernate.Uow;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -19,21 +17,16 @@ namespace Abp.NHibernate.Repositories
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
     public class NhRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
-        public ISessionProvider SessionProvider { private get; set; }
-
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
         /// </summary>
-        protected ISession Session { get { return SessionProvider.GetSession(); } }
+        protected ISession Session { get { return _sessionProvider.Session; } }
 
-        public NhRepositoryBase(IUowManager uowManager)
-        {
-            SessionProvider = new FactorySessionProvider(() => uowManager.Current.GetSession());
-        }
+        private readonly ISessionProvider _sessionProvider;
 
-        public NhRepositoryBase(Func<ISession> sessionFactory)
+        public NhRepositoryBase(ISessionProvider sessionProvider)
         {
-            SessionProvider = new FactorySessionProvider(sessionFactory);
+            _sessionProvider = sessionProvider;
         }
 
         public virtual IQueryable<TEntity> GetAll()
