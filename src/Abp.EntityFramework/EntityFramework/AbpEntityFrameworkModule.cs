@@ -4,6 +4,7 @@ using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.SoftDeleting;
+using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Reflection;
 using Castle.Core.Logging;

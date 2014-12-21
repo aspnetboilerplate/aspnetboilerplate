@@ -1,8 +1,7 @@
 using System.Data.Entity;
 using Abp.Domain.Uow;
-using Abp.EntityFramework.Uow;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFramework.Uow
 {
     public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> where TDbContext : DbContext
     {
