@@ -115,7 +115,7 @@ use predefined methods. See <a href="/Pages/Documents/Repositories">repository
 documentation</a> for list of all predefined methods.</p>
 <h4>Custom repositories</h4>
 <p>If you want to add some custom method, you should first add it to repository 
-interface, then implement in the repository class. ASP.NET Boilerplate provides a base class <strong>NhRepositoryBase</strong> 
+interface (as a best practice), then implement in the repository class. ASP.NET Boilerplate provides a base class <strong>NhRepositoryBase</strong> 
 to implement repositories easily. To implement IRepository interface, you can 
 just derive your repository from this class.</p>
 <p>Assume that we have a Task entity that can be assigned to a Person (entity) 
@@ -130,10 +130,15 @@ code:</p>
 
 public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
+    public TaskRepository(ISessionProvider sessionProvider)
+        : base(sessionProvider)
+    {
+    }
+
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
         var query = GetAll();
-            
+
         if (assignedPersonId.HasValue)
         {
             query = query.Where(task =&gt; task.AssignedPerson.Id == assignedPersonId.Value);
@@ -156,6 +161,9 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;, ITaskRepositor
 Tasks.</p>
 <p>You can also use <strong>Session </strong>object in repository methods to use 
 full API of NHibernate.</p>
+<p>A repository should get ISessionProvider in it's constructor. In this way, we 
+can easily inject a fake session provider in unit tests. In runtime, ASP.NET 
+Boilerplate automatically injects the right session provider.</p>
 <h4 id="DocAppBaseRepo">Application specific base repository class</h4>
 <p>Although you can derive your repositories from NhRepositoryBase of ASP.NET 
 Boilerplate, it's a better practice to create your own base class that <strong>extends</strong> 
@@ -165,6 +173,11 @@ easily. Example:</p>
 public abstract class MyRepositoryBase&lt;TEntity, TPrimaryKey&gt; : NhRepositoryBase&lt;TEntity, TPrimaryKey&gt;
     where TEntity : class, IEntity&lt;TPrimaryKey&gt;
 {
+    protected MyRepositoryBase(ISessionProvider sessionProvider)
+        : base(sessionProvider)
+    {
+    }
+
     //add common methods for all repositories
 }
 
@@ -172,11 +185,21 @@ public abstract class MyRepositoryBase&lt;TEntity, TPrimaryKey&gt; : NhRepositor
 public abstract class MyRepositoryBase&lt;TEntity&gt; : MyRepositoryBase&lt;TEntity, int&gt;
     where TEntity : class, IEntity&lt;int&gt;
 {
+    protected MyRepositoryBase(ISessionProvider sessionProvider)
+        : base(sessionProvider)
+    {
+    }
+
     //do not add any method here, add the class above (since this inherits it)
 }
 
 public class TaskRepository : MyRepositoryBase&lt;Task&gt;, ITaskRepository
 {
+    public TaskRepository(ISessionProvider sessionProvider)
+        : base(sessionProvider)
+    {
+    }
+
     //Specific methods for task repository
 }</pre>
 

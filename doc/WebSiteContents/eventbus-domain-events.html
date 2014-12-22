@@ -111,10 +111,6 @@ Abp.Events.Bus.Entities</strong> namespace.</p>
 EventBus.Trigger(this, new TaskCompletedEventData { TaskId = 42 }); //Set 'event source' as 'this'
 EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)
 </pre>
-<p>If you're in a unit of work, you can call EventBus.<strong>TriggerUow</strong> 
-extension method to trigger an event only if current unit of work successfully 
-completes (See <a href="/Pages/Documents/Unit-Of-Work#DocSuccessHandler">unit of 
-work documentation</a>).</p>
 <h3 id="DocHandleEvents">Handling events</h3>
 
 <p>To handle an event, you should implement <strong>IEventHandler&lt;T&gt;</strong> 

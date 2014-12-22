@@ -42,10 +42,10 @@ class for your application. An example DbContext is shown below:</p>
 <pre lang="cs">public class SimpleTaskSystemDbContext : AbpDbContext
 {
     public virtual IDbSet&lt;Person&gt; People { get; set; }
-
     public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
 
-    public SimpleTaskSystemDbContext(): base(&quot;MainDb&quot;)
+    public SimpleTaskSystemDbContext()
+        : base(&quot;MyConnectionStringName&quot;)
     {
         
     }
@@ -59,13 +59,15 @@ class for your application. An example DbContext is shown below:</p>
     }
 }</pre>
 <p>It's a regular DbContext class except it's derived from <strong>AbpDbContext</strong> 
-instead of DbContext.</p>
+instead of DbContext. There are many overloaded constructors of AbpDbContext. 
+You can use which you need.</p>
 <p>EntityFramework can map classes to database tables in a 
 conventional way. You even don't need to make any configuration unless you make 
 some custom stuff. In this example, we mapped entities to different tables. As 
 default, Task entity maps to <strong>Tasks</strong> table. But we changed it to 
 be <strong>StsTasks</strong> table. Instead of configuring it with data 
-annotation attributes, I prefered to use fluent configuration.</p>
+annotation attributes, I prefered to use fluent configuration. You can choice 
+the way you like.</p>
 
 <h3 id="DocRepositories">Repositories</h3>
 <p>ASP.NET Boilerplate provides a base class <strong>EfRepositoryBase</strong> 
@@ -79,6 +81,11 @@ to your repositories easily. </p>
 public class SimpleTaskSystemRepositoryBase&lt;TEntity, TPrimaryKey&gt; : EfRepositoryBase&lt;SimpleTaskSystemDbContext, TEntity, TPrimaryKey&gt;
     where TEntity : class, IEntity&lt;TPrimaryKey&gt;
 {
+    public SimpleTaskSystemRepositoryBase(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+        : base(dbContextProvider)
+    {
+    }
+
     //add common methods for all repositories
 }
 
@@ -86,6 +93,11 @@ public class SimpleTaskSystemRepositoryBase&lt;TEntity, TPrimaryKey&gt; : EfRepo
 public class SimpleTaskSystemRepositoryBase&lt;TEntity&gt; : SimpleTaskSystemRepositoryBase&lt;TEntity, int&gt;
     where TEntity : class, IEntity&lt;int&gt;
 {
+    public SimpleTaskSystemRepositoryBase(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+        : base(dbContextProvider)
+    {
+    }
+
     //do not add any method here, add to the class above (because this class inherits it)
 }</pre>
 <p>Notice that we're inheriting from EfRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
@@ -132,10 +144,15 @@ code:</p>
 
 public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
+    public TaskRepository(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+        : base(dbContextProvider)
+    {
+    }
+
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
         var query = GetAll();
-        
+
         if (assignedPersonId.HasValue)
         {
             query = query.Where(task =&gt; task.AssignedPerson.Id == assignedPersonId.Value);
@@ -159,6 +176,9 @@ then implemented it.<strong> GetAll()</strong> returns <strong>IQueryable&lt;Tas
 Tasks.</p>
 <p>You can also use <strong>Context </strong>object in repository methods to 
 reach to your DbContext and directly use Entity Framework infrastructure.</p>
+<p>A repository should get a IDbContextProvider in it's repository. In this way, 
+we can easily inject a fake DbContext provider in unit tests. In runtime, 
+ASP.NET Boilerplate automatically injects the right DbContext provider.</p>
 
 <h3 id="DocSeeAlso">See also</h3>
 <p>See <a href="/Pages/Documents/Repositories">repository documentation</a> 
