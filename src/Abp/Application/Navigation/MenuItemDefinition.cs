@@ -20,6 +20,14 @@ namespace Abp.Application.Navigation
         /// Display name of the menu item. Required.
         /// </summary>
         public ILocalizableString DisplayName { get; private set; }
+        
+        
+        /// <summary>
+        /// The Display Order of the menu
+        /// </summary>
+        public int Order { get; private set; }
+
+
 
         /// <summary>
         /// Icon of the menu item if exists. Optional.
@@ -34,7 +42,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
-        public IList<MenuItemDefinition> Items { get; private set; }
+        public  virtual  IList<MenuItemDefinition> Items { get; private set; }
 
         /// <summary>
         /// A permission name. Only users that has this permission can see this menu item.
