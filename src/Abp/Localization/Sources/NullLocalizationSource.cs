@@ -16,6 +16,8 @@ namespace Abp.Localization.Sources
 
         public string Name { get { return null; } }
 
+        private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
+
         public void Initialize()
         {
             
@@ -33,12 +35,12 @@ namespace Abp.Localization.Sources
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
-            return new List<LocalizedString>();
+            return _emptyStringArray;
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
-            return new List<LocalizedString>();
+            return _emptyStringArray;
         }
     }
 }

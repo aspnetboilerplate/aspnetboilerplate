@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Abp.Application.Services.Dto
 {
@@ -9,6 +10,22 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public class ListResultOutput<T> : ListResultDto<T>, IOutputDto
     {
+        /// <summary>
+        /// Creates a new <see cref="ListResultOutput{T}"/> object.
+        /// </summary>
+        public ListResultOutput()
+        {
 
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ListResultOutput{T}"/> object.
+        /// </summary>
+        /// <param name="items">List of items</param>
+        public ListResultOutput(IReadOnlyList<T> items)
+            : base(items)
+        {
+
+        }
     }
 }
