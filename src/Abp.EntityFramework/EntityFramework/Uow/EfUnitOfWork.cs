@@ -86,16 +86,16 @@ namespace Abp.EntityFramework.Uow
 
         protected override void DisposeUow()
         {
+            _activeDbContexts.Values.ForEach(dbContext =>
+            {
+                dbContext.Dispose();
+                _iocResolver.Release(dbContext);
+            });
+
             if (_transaction != null)
             {
                 _transaction.Dispose();
             }
-
-            _activeDbContexts.Values.ForEach(dbContext =>
-                                       {
-                                           dbContext.Dispose();
-                                           _iocResolver.Release(dbContext);
-                                       });
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Abp.Domain.Uow
         {
             if (_currentUnitOfWorkProvider.Current != null)
             {
-                return new NullUnitOfWorkCompleteHandle();
+                return new InnerUnitOfWorkCompleteHandle();
             }
 
             var uow = _iocResolver.Resolve<IUnitOfWork>();

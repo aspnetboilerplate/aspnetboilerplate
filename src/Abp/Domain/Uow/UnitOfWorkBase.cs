@@ -20,13 +20,8 @@ namespace Abp.Domain.Uow
 
         /// <inheritdoc/>
         public bool IsTransactional { get; private set; }
-        
-        /// <summary>
-        /// Is this object disposed?
-        /// Used to prevent multiple dispose.
-        /// </summary>
-        protected bool IsDisposed { get; private set; }
 
+        protected bool _isDisposed;
         private bool _isStarted;
         private bool _isCompleted;
 
@@ -35,7 +30,7 @@ namespace Abp.Domain.Uow
         {
             if (_isStarted)
             {
-                throw new AbpException("This unit of work has started before.");
+                throw new AbpException("This unit of work has started before. Can not call Start method more than once.");
             }
 
             _isStarted = true;
@@ -71,12 +66,12 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (IsDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            IsDisposed = true;
+            _isDisposed = true;
 
             DisposeUow();
 
