@@ -10,6 +10,7 @@ namespace Abp.AutoMapper.Tests
         {
             //ABP will automatically find and create these mappings!
             AutoMapperHelper.CreateMap(typeof(MyClass1));
+            AutoMapperHelper.CreateMap(typeof(MyClass2));
         }
 
         [Fact]
@@ -25,11 +26,25 @@ namespace Abp.AutoMapper.Tests
         }
 
         [Fact]
+        public void MapTo_Existing_Object_Tests()
+        {
+            var obj1 = new MyClass1 { TestProp = "Test value" };
+
+            var obj2 = new MyClass2();
+            obj1.MapTo(obj2);
+            obj2.TestProp.ShouldBe("Test value");
+
+            var obj3 = new MyClass3();
+            obj2.MapTo(obj3);
+            obj3.TestProp.ShouldBe("Test value");
+        }
+
+        [Fact]
         public void MapFrom_Tests()
         {
             var obj2 = new MyClass2 { TestProp = "Test value" };
 
-            var obj1 = obj2.MapTo< MyClass1>();
+            var obj1 = obj2.MapTo<MyClass1>();
             obj1.TestProp.ShouldBe("Test value");
         }
 
@@ -54,6 +69,7 @@ namespace Abp.AutoMapper.Tests
             public string TestProp { get; set; }
         }
 
+        [AutoMapTo(typeof(MyClass3))]
         private class MyClass2
         {
             public string TestProp { get; set; }
