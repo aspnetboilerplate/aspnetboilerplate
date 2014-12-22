@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Abp.Dependency;
+using Abp.Logging;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using Castle.MicroKernel.Registration;
 using System.Web.Http.Filters;
@@ -103,6 +104,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 );
 
             DynamicApiControllerManager.Register(controllerInfo);
+
+            LogHelper.Logger.DebugFormat("Dynamic web api controller is created for type '{0}' with service name '{1}'.", typeof(T).FullName, controllerInfo.ServiceName);
         }
     }
 }
