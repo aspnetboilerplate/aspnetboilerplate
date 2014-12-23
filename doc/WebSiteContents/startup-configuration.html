@@ -58,7 +58,18 @@ provider to add their own menu items to the main menu. See
 <p>Beside framework's own startup configuration, a module can extend 
 <strong>IAbpModuleConfigurations</strong> interface to provide configuration points for the module. 
 Example:</p>
-<pre>Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;</pre>
+<pre>
+...
+using Abp.Web.Configuration;
+
+public override void PreInitialize() {
+
+	...
+	
+	Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;
+}
+
+</pre>
 <p>In this example, we configured AbpWeb module to send all exceptions to 
 clients.</p>
 <p>Not every module should define this type of configuration. It's generally needed when a 
