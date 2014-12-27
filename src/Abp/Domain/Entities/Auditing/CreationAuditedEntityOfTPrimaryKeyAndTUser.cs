@@ -14,6 +14,6 @@ namespace Abp.Domain.Entities.Auditing
         /// Reference to the creator user of this entity.
         /// </summary>
         [ForeignKey("CreatorUserId")]
-        public TUser CreatorUser { get; set; }
+        public virtual TUser CreatorUser { get; set; }
     }
 }
