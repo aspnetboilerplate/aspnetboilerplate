@@ -26,6 +26,7 @@
 		<li><a href="#DocUowRestrictions">UnitOfWork attribute restrictions</a></li>
 	</ul>
 	</li>
+	<li><a href="#DocUowOptions">Options</a></li>
 	<li><a href="#DocUowMethods">Methods</a><ul>
 		<li><a href="#DocUowSaveChanges">SaveChanges</a></li>
 	</ul>
@@ -153,7 +154,7 @@ public void CreatePerson(CreatePersonInput input)
 connection and transaction, both repositories use same unit of work. Note that 
 no need to UnitOfWork attribute if this is an application service method. See '<a href="#DocUowRestrictions">unit 
 of work method restrictions</a>' section.</p>
-<p>Second appropaches is using the <strong>IUnitOfWorkManager.StartNew(...)</strong> 
+<p>Second appropaches is using the <strong>IUnitOfWorkManager.Begin(...)</strong> 
 method as 
 shown below:</p>
 <pre lang="cs">public class MyService
@@ -173,7 +174,7 @@ shown below:</p>
     {
         var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
 
-        using (var unitOfWork = _unitOfWorkManager.StartNew())
+        using (var unitOfWork = _unitOfWorkManager.Begin())
         {
             _personRepository.Insert(person);
             _statisticsRepository.IncrementPeopleCount();
@@ -183,7 +184,10 @@ shown below:</p>
     }
 }</pre>
 <p>You can inject and use IUnitOfWorkManager as shown here. Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
-should call <strong>Complete</strong> method manually. It's better and 
+should call <strong>Complete</strong> method manually. If you don't call, 
+transaction is rolled back and changes are not saved. Begin method has overloads 
+to set unit of work options.</p>
+<p>It's better and 
 shorter to use <strong>UnitOfWork</strong> attribute if you don't have a good reason.</p>
 
 <h3 id="DocUowDetails">Unit of work in detail</h3>
@@ -308,6 +312,26 @@ Because, ASP.NET Boilerplate uses dynamic proxying for that and private methods
 can not be seen by derived classes. UnitOfWork attribute (and any proxying) does 
 not work if you don't use <a href="/Pages/Documents/Dependency-Injection">
 dependency injection</a> and instantiate the class yourself.</p>
+
+<h3 id="DocUowOptions">Options</h3>
+<p>There are some options can be used to change behaviour of a unit of work.</p>
+<p>First, we can change default values of all unit of works in the
+<a href="/Pages/Documents/Startup-Configuration">startup configuration</a>. This 
+is generally done in PreInitialize method of our
+<a href="/Pages/Documents/Module-System">module</a>.</p>
+<pre lang="cs">public class SimpleTaskSystemCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        Configuration.UnitOfWork.IsolationLevel = IsolationLevel.ReadCommitted;
+        Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(30);
+    }
+
+    //...other module methods
+}</pre>
+<p>Second, we can override defaults for a particular unit of work. For that, <strong>
+UnitOfWork </strong> attribute constructor and IUnitOfWorkManager.<strong>Begin</strong> 
+method have overloads to get options.</p>
 <h3 id="DocUowMethods">Methods</h3>
 <p>UnitOfWork system works seamlessly and invisibly. But, in some special cases, 
 you need to call it's methods.</p>
