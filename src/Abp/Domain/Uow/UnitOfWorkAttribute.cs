@@ -47,6 +47,15 @@ namespace Abp.Domain.Uow
             IsTransactional = isTransactional;
         }
 
+        public UnitOfWorkOptions CreateOptions()
+        {
+            var options = new UnitOfWorkOptions
+            {
+                IsTransactional = IsTransactional
+            };
+            return options;
+        }
+
         /// <summary>
         /// Gets UnitOfWorkAttribute for given method or null if no attribute defined.
         /// </summary>

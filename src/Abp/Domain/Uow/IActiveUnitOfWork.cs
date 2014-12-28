@@ -13,7 +13,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Gets if this unit of work is transactional.
         /// </summary>
-        bool IsTransactional { get; }
+        UnitOfWorkOptions Options { get; }
 
         /// <summary>
         /// This event is raised when this UOW is disposed.

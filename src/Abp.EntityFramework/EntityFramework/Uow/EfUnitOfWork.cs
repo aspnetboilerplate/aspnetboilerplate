@@ -29,15 +29,22 @@ namespace Abp.EntityFramework.Uow
 
         protected override void StartUow()
         {
-            if (IsTransactional)
+            if (Options.IsTransactional == true)
             {
+                var transactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+                };
+
+                if (Options.Timeout.HasValue)
+                {
+                    transactionOptions.Timeout = Options.Timeout.Value;
+                }
+
                 _transaction = new TransactionScope(
-                    TransactionScopeOption.Required, //Required or RequiresNew?
-                    new TransactionOptions
-                    {
-                        IsolationLevel = IsolationLevel.ReadUncommitted, //Make optional?
-                    },
-                    TransactionScopeAsyncFlowOption.Enabled
+                    TransactionScopeOption.Required,
+                    transactionOptions,
+                    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
                     );
             }
         }
@@ -72,7 +79,7 @@ namespace Abp.EntityFramework.Uow
                 _transaction.Complete();
             }
         }
-        
+
         internal TDbContext GetOrCreateDbContext<TDbContext>() where TDbContext : DbContext
         {
             DbContext dbContext;

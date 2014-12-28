@@ -21,7 +21,7 @@ namespace Abp.Domain.Uow
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
-        public IUnitOfWorkCompleteHandle StartNew(bool isTransactional = true)
+        public IUnitOfWorkCompleteHandle StartNew()
         {
             if (_currentUnitOfWorkProvider.Current != null)
             {
@@ -30,11 +30,16 @@ namespace Abp.Domain.Uow
 
             var uow = _iocResolver.Resolve<IUnitOfWork>();
             uow.Disposed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
-            uow.Start(isTransactional);
+            uow.Start();
             
             _currentUnitOfWorkProvider.Current = uow;
 
             return uow;
+        }
+
+        public IUnitOfWorkCompleteHandle StartNew(UnitOfWorkOptions options)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

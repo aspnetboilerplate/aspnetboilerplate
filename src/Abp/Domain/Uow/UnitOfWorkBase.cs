@@ -19,23 +19,23 @@ namespace Abp.Domain.Uow
         public event EventHandler Failed;
 
         /// <inheritdoc/>
-        public bool IsTransactional { get; private set; }
+        public UnitOfWorkOptions Options { get; private set; }
 
         protected bool _isDisposed;
+
         private bool _isStarted;
         private bool _isCompleted;
 
         /// <inheritdoc/>
-        public void Start(bool isTransactional = true)
+        public void Start()
         {
-            if (_isStarted)
-            {
-                throw new AbpException("This unit of work has started before. Can not call Start method more than once.");
-            }
+            Start(new UnitOfWorkOptions());
+        }
 
-            _isStarted = true;
-
-            IsTransactional = isTransactional;
+        public void Start(UnitOfWorkOptions options)
+        {
+            PreventMultipleStart();
+            Options = new UnitOfWorkOptions();
             StartUow();
         }
 
@@ -48,7 +48,7 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Complete()
         {
-            SetAsCompleted();
+            PreventMultipleComplete();
 
             CompleteUow();
             Completed.InvokeSafely(this);
@@ -57,7 +57,7 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public async Task CompleteAsync()
         {
-            SetAsCompleted();
+            PreventMultipleComplete();
 
             await CompleteUowAsync();
             Completed.InvokeSafely(this);
@@ -98,7 +98,17 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected abstract void DisposeUow();
 
-        private void SetAsCompleted()
+        private void PreventMultipleStart()
+        {
+            if (_isStarted)
+            {
+                throw new AbpException("This unit of work has started before. Can not call Start method more than once.");
+            }
+
+            _isStarted = true;
+        }
+
+        private void PreventMultipleComplete()
         {
             if (_isCompleted)
             {

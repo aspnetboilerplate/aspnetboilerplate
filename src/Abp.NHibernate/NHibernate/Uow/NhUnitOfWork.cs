@@ -1,5 +1,7 @@
+using System.Data;
 using System.Threading.Tasks;
 using Abp.Domain.Uow;
+using Abp.Transactions;
 using NHibernate;
 
 namespace Abp.NHibernate.Uow
@@ -28,9 +30,12 @@ namespace Abp.NHibernate.Uow
         protected override void StartUow()
         {
             Session = _sessionFactory.OpenSession();
-            if (IsTransactional)
+            if (Options.IsTransactional == true) //TODO: Use default value if not provided!
             {
-                _transaction = Session.BeginTransaction();                
+                //TODO: Get default values from somewhere...
+                _transaction = Session.BeginTransaction(
+                    Options.IsolationLevel.GetValueOrDefault(System.Transactions.IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
+                    );
             }
         }
 

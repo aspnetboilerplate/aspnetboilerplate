@@ -41,33 +41,33 @@ namespace Abp.Domain.Uow
             }
 
             //No current uow, run a new one
-            PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
+            PerformUow(invocation, unitOfWorkAttr.CreateOptions());
         }
 
-        private void PerformUow(IInvocation invocation, bool isTransactional)
+        private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
         {
             if (!AsyncHelper.IsAsyncMethod(invocation.Method))
             {
-                PerformSyncUow(invocation, isTransactional);
+                PerformSyncUow(invocation, options);
             }
             else
             {
-                PerformAsyncUow(invocation, isTransactional);
+                PerformAsyncUow(invocation, options);
             }
         }
 
-        private void PerformSyncUow(IInvocation invocation, bool isTransactional)
+        private void PerformSyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            using (var uow = _unitOfWorkManager.StartNew(isTransactional))
+            using (var uow = _unitOfWorkManager.StartNew(options))
             {
                 invocation.Proceed();
                 uow.Complete();
             }
         }
 
-        private void PerformAsyncUow(IInvocation invocation, bool isTransactional)
+        private void PerformAsyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            var uow = _unitOfWorkManager.StartNew(isTransactional);
+            var uow = _unitOfWorkManager.StartNew(options);
 
             invocation.Proceed();
 
