@@ -58,18 +58,14 @@ provider to add their own menu items to the main menu. See
 <p>Beside framework's own startup configuration, a module can extend 
 <strong>IAbpModuleConfigurations</strong> interface to provide configuration points for the module. 
 Example:</p>
-<pre>
-...
+<pre>...
 using Abp.Web.Configuration;
-
-public override void PreInitialize() {
-
-	...
-	
-	Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;
+...
+public override void PreInitialize() 
+{
+    Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;
 }
-
-</pre>
+...</pre>
 <p>In this example, we configured AbpWeb module to send all exceptions to 
 clients.</p>
 <p>Not every module should define this type of configuration. It's generally needed when a 
@@ -83,8 +79,7 @@ properties. First, we create a class for these cofigurable properties:</p>
     public bool SampleConfig1 { get; set; }
 
     public string SampleConfig2 { get; set; }
-}
-</pre>
+}</pre>
 <p>Then we register this class to DI on PreInitialize event of MyModule (Thus, 
 it will be injectable):</p>
 <pre lang="cs">IocManager.Register&lt;MyModuleConfig&gt;();</pre>
