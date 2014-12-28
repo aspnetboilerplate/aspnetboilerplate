@@ -11,12 +11,15 @@
         IActiveUnitOfWork Current { get; }
 
         /// <summary>
-        /// Starts a new unit of work.
+        /// Begins a new unit of work.
         /// </summary>
-        /// <param name="isTransactional">Is this unit of work will be transactional</param>
         /// <returns>A handle to be able to complete the unit of work</returns>
         IUnitOfWorkCompleteHandle Begin();
 
+        /// <summary>
+        /// Begins a new unit of work.
+        /// </summary>
+        /// <returns>A handle to be able to complete the unit of work</returns>
         IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options);
     }
 }

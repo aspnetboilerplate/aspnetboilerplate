@@ -71,10 +71,9 @@ namespace Abp.Domain.Uow
 
             invocation.Proceed();
 
-            Task result;
             if (invocation.Method.ReturnType == typeof (Task))
             {
-                result = AsyncHelper.ReturnTaskAfterAction(
+                invocation.ReturnValue = AsyncHelper.ReturnTaskAfterAction(
                     (Task) invocation.ReturnValue,
                     async () =>
                           {
@@ -85,19 +84,16 @@ namespace Abp.Domain.Uow
             }
             else
             {
-                result = (Task) AsyncHelper.CallReturnAfterAction(
+                invocation.ReturnValue = AsyncHelper.CallReturnAfterAction(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
                     async () =>
                           {
                               await uow.CompleteAsync();
                               uow.Dispose();
-                              _iocResolver.Release(uow);
                           }
                     );
             }
-
-            invocation.ReturnValue = result;
         }
     }
 }
