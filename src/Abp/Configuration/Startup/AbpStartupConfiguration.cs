@@ -1,4 +1,5 @@
 ﻿using Abp.Dependency;
+using Abp.Domain.Uow;
 
 namespace Abp.Configuration.Startup
 {
@@ -37,6 +38,11 @@ namespace Abp.Configuration.Startup
         public IModuleConfigurations Modules { get; private set; }
 
         /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        public IUnitOfWorkDefaultOptions UnitOfWork { get; private set; }
+
+        /// <summary>
         /// Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
@@ -56,6 +62,7 @@ namespace Abp.Configuration.Startup
             Navigation = IocManager.Resolve<INavigationConfiguration>();
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
             Settings = IocManager.Resolve<ISettingsConfiguration>();
+            UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
         }
     }
 }

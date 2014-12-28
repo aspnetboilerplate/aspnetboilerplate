@@ -1,4 +1,5 @@
 ﻿using Abp.Dependency;
+using Abp.Domain.Uow;
 
 namespace Abp.Configuration.Startup
 {
@@ -43,5 +44,10 @@ namespace Abp.Configuration.Startup
         /// Modules can write extension methods to <see cref="IModuleConfigurations"/> to add module specific configurations.
         /// </summary>
         IModuleConfigurations Modules { get; }
+
+        /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        IUnitOfWorkDefaultOptions UnitOfWork { get; }
     }
 }

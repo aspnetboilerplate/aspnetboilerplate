@@ -1,7 +1,4 @@
-﻿using System;
-using System.Transactions;
-
-namespace Abp.Domain.Uow
+﻿namespace Abp.Domain.Uow
 {
     /// <summary>
     /// Unit of work manager.
@@ -21,24 +18,5 @@ namespace Abp.Domain.Uow
         IUnitOfWorkCompleteHandle Begin();
 
         IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options);
-    }
-
-    public class UnitOfWorkOptions
-    {
-        public bool? IsTransactional { get; set; }
-
-        /// <summary>
-        /// As milliseconds.
-        /// </summary>
-        public TimeSpan? Timeout { get; set; }
-
-        public IsolationLevel? IsolationLevel { get; set; }
-        
-        public TransactionScopeAsyncFlowOption? AsyncFlowOption { get; set; }
-
-        public UnitOfWorkOptions()
-        {
-            IsTransactional = true; //TODO: Remove later!
-        }
     }
 }

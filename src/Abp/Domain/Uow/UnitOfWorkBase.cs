@@ -27,15 +27,10 @@ namespace Abp.Domain.Uow
         private bool _isCompleted;
 
         /// <inheritdoc/>
-        public void Begin()
-        {
-            Begin(new UnitOfWorkOptions());
-        }
-
         public void Begin(UnitOfWorkOptions options)
         {
             PreventMultipleStart();
-            Options = new UnitOfWorkOptions();
+            Options = options;
             BeginUow();
         }
 

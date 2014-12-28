@@ -9,16 +9,18 @@ namespace Abp.Domain.Uow
     {
         private readonly IIocResolver _iocResolver;
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+        private readonly IUnitOfWorkDefaultOptions _defaultOptions;
 
         public IActiveUnitOfWork Current
         {
             get { return _currentUnitOfWorkProvider.Current; }
         }
 
-        public UnitOfWorkManager(IIocResolver iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
+        public UnitOfWorkManager(IIocResolver iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider, IUnitOfWorkDefaultOptions defaultOptions)
         {
             _iocResolver = iocResolver;
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _defaultOptions = defaultOptions;
         }
 
         public IUnitOfWorkCompleteHandle Begin()
@@ -33,6 +35,8 @@ namespace Abp.Domain.Uow
                 return new InnerUnitOfWorkCompleteHandle();
             }
 
+            options.FillDefaultsForNonProvidedOptions(_defaultOptions);
+            
             var uow = _iocResolver.Resolve<IUnitOfWork>();
             uow.Disposed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
             uow.Begin(options);

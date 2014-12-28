@@ -147,10 +147,13 @@
     <Compile Include="Domain\Uow\IActiveUnitOfWork.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />
     <Compile Include="Domain\Uow\ICurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkDefaultOptions.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\ThreadStaticCurrentUnitOfWorkProvider.cs" />
     <Compile Include="Domain\Uow\InnerUnitOfWorkCompleteHandle.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkDefaultOptions.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Reflection\AsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />

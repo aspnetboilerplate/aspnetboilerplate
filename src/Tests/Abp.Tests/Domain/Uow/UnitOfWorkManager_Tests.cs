@@ -13,6 +13,7 @@ namespace Abp.Tests.Domain.Uow
             var fakeUow = Substitute.For<IUnitOfWork>();
 
             LocalIocManager.IocContainer.Register(
+                Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
                 Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<ThreadStaticCurrentUnitOfWorkProvider>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleTransient()
@@ -22,11 +23,11 @@ namespace Abp.Tests.Domain.Uow
 
             using (var uow1 = uowManager.Begin())
             {
-                fakeUow.Received(1).Begin();
+                fakeUow.Received(1).Begin(Arg.Any<UnitOfWorkOptions>());
 
                 using (var uow2 = uowManager.Begin())
                 {
-                    fakeUow.Received(1).Begin();
+                    fakeUow.Received(1).Begin(Arg.Any<UnitOfWorkOptions>());
 
                     uow2.Complete();
                     
