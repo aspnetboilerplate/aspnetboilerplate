@@ -27,7 +27,7 @@ namespace Abp.EntityFramework.Uow
             _activeDbContexts = new Dictionary<Type, DbContext>();
         }
 
-        protected override void StartUow()
+        protected override void BeginUow()
         {
             if (Options.IsTransactional == true)
             {

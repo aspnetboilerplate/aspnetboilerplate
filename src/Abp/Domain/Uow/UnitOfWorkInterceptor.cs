@@ -58,7 +58,7 @@ namespace Abp.Domain.Uow
 
         private void PerformSyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            using (var uow = _unitOfWorkManager.StartNew(options))
+            using (var uow = _unitOfWorkManager.Begin(options))
             {
                 invocation.Proceed();
                 uow.Complete();
@@ -67,7 +67,7 @@ namespace Abp.Domain.Uow
 
         private void PerformAsyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            var uow = _unitOfWorkManager.StartNew(options);
+            var uow = _unitOfWorkManager.Begin(options);
 
             invocation.Proceed();
 

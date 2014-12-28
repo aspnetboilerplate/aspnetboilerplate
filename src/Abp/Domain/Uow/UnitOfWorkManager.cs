@@ -21,7 +21,12 @@ namespace Abp.Domain.Uow
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
-        public IUnitOfWorkCompleteHandle StartNew()
+        public IUnitOfWorkCompleteHandle Begin()
+        {
+            return Begin(new UnitOfWorkOptions());
+        }
+
+        public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options)
         {
             if (_currentUnitOfWorkProvider.Current != null)
             {
@@ -30,16 +35,11 @@ namespace Abp.Domain.Uow
 
             var uow = _iocResolver.Resolve<IUnitOfWork>();
             uow.Disposed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
-            uow.Start();
-            
+            uow.Begin(options);
+
             _currentUnitOfWorkProvider.Current = uow;
 
             return uow;
-        }
-
-        public IUnitOfWorkCompleteHandle StartNew(UnitOfWorkOptions options)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

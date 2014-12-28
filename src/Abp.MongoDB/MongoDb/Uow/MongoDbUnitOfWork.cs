@@ -8,7 +8,7 @@ namespace Abp.MongoDb.Uow
     {
         public MongoDatabase Database { get; set; }
 
-        protected override void StartUow()
+        protected override void BeginUow()
         {
             var client = new MongoClient("mongodb://localhost"); //TODO: Get from connection string???
             var server = client.GetServer();

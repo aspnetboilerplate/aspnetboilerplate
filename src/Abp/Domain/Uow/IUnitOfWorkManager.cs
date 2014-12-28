@@ -18,9 +18,9 @@ namespace Abp.Domain.Uow
         /// </summary>
         /// <param name="isTransactional">Is this unit of work will be transactional</param>
         /// <returns>A handle to be able to complete the unit of work</returns>
-        IUnitOfWorkCompleteHandle StartNew();
+        IUnitOfWorkCompleteHandle Begin();
 
-        IUnitOfWorkCompleteHandle StartNew(UnitOfWorkOptions options);
+        IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options);
     }
 
     public class UnitOfWorkOptions

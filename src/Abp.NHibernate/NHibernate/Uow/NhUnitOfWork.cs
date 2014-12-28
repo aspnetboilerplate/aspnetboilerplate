@@ -27,7 +27,7 @@ namespace Abp.NHibernate.Uow
             _sessionFactory = sessionFactory;
         }
 
-        protected override void StartUow()
+        protected override void BeginUow()
         {
             Session = _sessionFactory.OpenSession();
             if (Options.IsTransactional == true) //TODO: Use default value if not provided!

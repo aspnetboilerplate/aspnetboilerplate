@@ -27,16 +27,16 @@ namespace Abp.Domain.Uow
         private bool _isCompleted;
 
         /// <inheritdoc/>
-        public void Start()
+        public void Begin()
         {
-            Start(new UnitOfWorkOptions());
+            Begin(new UnitOfWorkOptions());
         }
 
-        public void Start(UnitOfWorkOptions options)
+        public void Begin(UnitOfWorkOptions options)
         {
             PreventMultipleStart();
             Options = new UnitOfWorkOptions();
-            StartUow();
+            BeginUow();
         }
 
         /// <inheritdoc/>
@@ -81,7 +81,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Should be implemented by derived classes to start UOW.
         /// </summary>
-        protected abstract void StartUow();
+        protected abstract void BeginUow();
 
         /// <summary>
         /// Should be implemented by derived classes to complete UOW.

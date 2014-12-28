@@ -7,8 +7,8 @@ namespace Abp.Domain.Uow
     /// </summary>
     public interface IUnitOfWork : IActiveUnitOfWork, IUnitOfWorkCompleteHandle, ITransientDependency
     {
-        void Start();
+        void Begin();
 
-        void Start(UnitOfWorkOptions options);
+        void Begin(UnitOfWorkOptions options);
     }
 }

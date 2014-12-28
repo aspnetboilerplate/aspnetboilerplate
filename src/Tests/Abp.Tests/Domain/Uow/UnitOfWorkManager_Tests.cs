@@ -20,13 +20,13 @@ namespace Abp.Tests.Domain.Uow
 
             var uowManager = LocalIocManager.Resolve<IUnitOfWorkManager>();
 
-            using (var uow1 = uowManager.StartNew())
+            using (var uow1 = uowManager.Begin())
             {
-                fakeUow.Received(1).Start();
+                fakeUow.Received(1).Begin();
 
-                using (var uow2 = uowManager.StartNew())
+                using (var uow2 = uowManager.Begin())
                 {
-                    fakeUow.Received(1).Start();
+                    fakeUow.Received(1).Begin();
 
                     uow2.Complete();
                     
