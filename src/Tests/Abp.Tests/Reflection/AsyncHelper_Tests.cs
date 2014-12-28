@@ -24,22 +24,26 @@ namespace Abp.Tests.Reflection
         public void Should_Call_AfterAction()
         {
             _asyncMethod1Worked.ShouldBe(false);
-            AsyncHelper.ReturnTaskAfterAction(
+            AsyncHelper.WaitTaskAndActionWithFinally(
                 MyMethod1Async(),
                 async () =>
-                {
-                    _asyncMethod1Worked.ShouldBe(true);
-                    await Task.Delay(10);
-                }).Wait();
+                      {
+                          _asyncMethod1Worked.ShouldBe(true);
+                          await Task.Delay(10);
+                      },
+                () => { }
+                ).Wait();
             
             _asyncMethod2Worked.ShouldBe(false);
             var returnValue = AsyncHelper.ReturnGenericTaskAfterAction(
                 MyMethod2Async(),
                 async () =>
-                {
-                    _asyncMethod2Worked.ShouldBe(true);
-                    await Task.Delay(10);
-                }).Result;
+                      {
+                          _asyncMethod2Worked.ShouldBe(true);
+                          await Task.Delay(10);
+                      },
+                () => { }
+                ).Result;
 
             returnValue.ShouldBe(42);
         }

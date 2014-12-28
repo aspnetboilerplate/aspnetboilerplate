@@ -6,18 +6,25 @@ namespace Abp.Reflection
 {
     internal static class AsyncHelper
     {
-        public static async Task ReturnTaskAfterAction(Task actualReturnValue, Func<Task> action)
+        public static async Task WaitTaskAndActionWithFinally(Task actualReturnValue, Func<Task> afterAction, Action finalAction)
         {
-            await actualReturnValue;
-            await action();
+            try
+            {
+                await actualReturnValue;
+                await afterAction();
+            }
+            finally
+            {
+                finalAction();
+            }
         }
 
-        public static object CallReturnAfterAction(Type taskReturnType, object actualReturnValue, Func<Task> action)
+        public static object CallReturnGenericTaskAfterAction(Type taskReturnType, object actualReturnValue, Func<Task> action, Action finalAction)
         {
             return typeof (AsyncHelper)
                 .GetMethod("ReturnGenericTaskAfterAction", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
-                .Invoke(null, new[] {actualReturnValue, action});
+                .Invoke(null, new[] { actualReturnValue, action, finalAction });
         }
 
         public static bool IsAsyncMethod(MethodInfo method)
@@ -28,11 +35,18 @@ namespace Abp.Reflection
                 );
         }
 
-        public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action)
+        public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action, Action finalAction)
         {
-            var response = await actualReturnValue;
-            await action();
-            return response;
+            try
+            {
+                var response = await actualReturnValue;
+                await action();
+                return response;
+            }
+            finally
+            {
+                finalAction();
+            }
         }
     }
 }
