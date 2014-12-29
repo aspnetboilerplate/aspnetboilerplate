@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Abp.Dependency;
 using Abp.Reflection;
 using Castle.DynamicProxy;
 
@@ -10,12 +9,10 @@ namespace Abp.Domain.Uow
     /// </summary>
     internal class UnitOfWorkInterceptor : IInterceptor
     {
-        private readonly IIocResolver _iocResolver;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public UnitOfWorkInterceptor(IIocResolver iocResolver, IUnitOfWorkManager unitOfWorkManager)
+        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager)
         {
-            _iocResolver = iocResolver;
             _unitOfWorkManager = unitOfWorkManager;
         }
 

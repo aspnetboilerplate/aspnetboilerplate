@@ -16,7 +16,10 @@ namespace Abp.Domain.Uow
             get { return _currentUnitOfWorkProvider.Current; }
         }
 
-        public UnitOfWorkManager(IIocResolver iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider, IUnitOfWorkDefaultOptions defaultOptions)
+        public UnitOfWorkManager(
+            IIocResolver iocResolver,
+            ICurrentUnitOfWorkProvider currentUnitOfWorkProvider,
+            IUnitOfWorkDefaultOptions defaultOptions)
         {
             _iocResolver = iocResolver;
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;

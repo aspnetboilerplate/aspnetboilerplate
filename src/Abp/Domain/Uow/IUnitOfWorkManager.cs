@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Unit of work manager.
+    /// Used to begin and control a unit of work.
     /// </summary>
     public interface IUnitOfWorkManager
     {

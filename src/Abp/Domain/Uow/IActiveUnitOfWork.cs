@@ -11,16 +11,6 @@ namespace Abp.Domain.Uow
     public interface IActiveUnitOfWork
     {
         /// <summary>
-        /// Gets if this unit of work is transactional.
-        /// </summary>
-        UnitOfWorkOptions Options { get; }
-
-        /// <summary>
-        /// This event is raised when this UOW is disposed.
-        /// </summary>
-        event EventHandler Disposed;
-
-        /// <summary>
         /// This event is raised when this UOW is successfully completed.
         /// </summary>
         event EventHandler Completed;
@@ -29,6 +19,16 @@ namespace Abp.Domain.Uow
         /// This event is raised when this UOW is failed.
         /// </summary>
         event EventHandler Failed;
+
+        /// <summary>
+        /// This event is raised when this UOW is disposed.
+        /// </summary>
+        event EventHandler Disposed;
+
+        /// <summary>
+        /// Gets if this unit of work is transactional.
+        /// </summary>
+        UnitOfWorkOptions Options { get; }
 
         /// <summary>
         /// Saves all changes until now in this unit of work.

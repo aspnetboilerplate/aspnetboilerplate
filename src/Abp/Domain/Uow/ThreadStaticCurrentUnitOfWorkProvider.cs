@@ -6,6 +6,7 @@ namespace Abp.Domain.Uow
 {
     /// <summary>
     /// ThreadStatic implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
+    /// This is default implementation.
     /// </summary>
     public class ThreadStaticCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
     {

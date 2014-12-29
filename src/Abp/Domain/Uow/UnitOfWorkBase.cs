@@ -10,19 +10,21 @@ namespace Abp.Domain.Uow
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
         /// <inheritdoc/>
-        public event EventHandler Disposed;
-
-        /// <inheritdoc/>
         public event EventHandler Completed;
 
         /// <inheritdoc/>
         public event EventHandler Failed;
 
         /// <inheritdoc/>
+        public event EventHandler Disposed;
+
+        /// <inheritdoc/>
         public UnitOfWorkOptions Options { get; private set; }
 
-        protected bool _isDisposed;
-
+        /// <summary>
+        /// Gets a value indicates that this unit of work is disposed or not.
+        /// </summary>
+        protected bool IsDisposed { get; private set; }
         private bool _isStarted;
         private bool _isCompleted;
 
@@ -61,12 +63,12 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (_isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
 
-            _isDisposed = true;
+            IsDisposed = true;
 
             DisposeUow();
 
