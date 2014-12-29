@@ -83,7 +83,10 @@ namespace Abp.Web.Mvc.Controllers
         private ActionResult GenerateAjaxResult(ExceptionContext context)
         {
             context.HttpContext.Response.StatusCode = 200;
-            return new AbpJsonResult(new MvcAjaxResponse(ErrorInfoBuilder.Instance.BuildForException(context.Exception)));
+            return new AbpJsonResult(
+                new MvcAjaxResponse(
+                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    context.Exception is Abp.Authorization.AbpAuthorizationException));
         }
 
         private ActionResult GenerateNonAjaxResult(ExceptionContext context)

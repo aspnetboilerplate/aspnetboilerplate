@@ -60,6 +60,12 @@ namespace Abp.Web.Models
                        };
             }
 
+            if (exception is Abp.Authorization.AbpAuthorizationException)
+            {
+                var authorizationException = exception as Abp.Authorization.AbpAuthorizationException;
+                return new ErrorInfo(authorizationException.Message);
+            }
+
             return new ErrorInfo(AbpWebLocalizedMessages.InternalServerError);
         }
 
