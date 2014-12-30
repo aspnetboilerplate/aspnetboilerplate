@@ -13,19 +13,33 @@ namespace Abp.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
     {
-
+        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
+            : base(databaseProvider)
+        {
+        }
     }
 
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
+        private readonly IMongoDatabaseProvider _databaseProvider;
+
+        protected MongoDatabase Database
+        {
+            get { return _databaseProvider.Database; }
+        }
+
         protected MongoCollection<TEntity> Collection
         {
             get
             {
-                throw new NotImplementedException();
-                //return ((MongoDbUnitOfWork)UnitOfWorkScope.Current).Database.GetCollection<TEntity>(typeof(TEntity).Name);
+                return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
             }
+        }
+
+        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
+        {
+            _databaseProvider = databaseProvider;
         }
 
         public IQueryable<TEntity> GetAll()

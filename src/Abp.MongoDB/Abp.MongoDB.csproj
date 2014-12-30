@@ -47,8 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Startup\AbpMongoDbConfigurationExtensions.cs" />
     <Compile Include="MongoDb\AbpMongoDbModule.cs" />
+    <Compile Include="MongoDb\Configuration\AbpMongoDbModuleConfiguration.cs" />
+    <Compile Include="MongoDb\Configuration\IAbpMongoDbModuleConfiguration.cs" />
+    <Compile Include="MongoDb\IMongoDatabaseProvider.cs" />
     <Compile Include="MongoDb\Repositories\MongoDbRepositoryBase.cs" />
+    <Compile Include="MongoDb\Uow\UnitOfWorkMongoDatabaseProvider.cs" />
     <Compile Include="MongoDb\Uow\MongoDbUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

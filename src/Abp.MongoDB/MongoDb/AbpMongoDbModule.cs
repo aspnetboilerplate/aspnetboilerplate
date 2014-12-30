@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.MongoDb.Configuration;
 
 namespace Abp.MongoDb
 {
@@ -8,6 +9,11 @@ namespace Abp.MongoDb
     /// </summary>
     public class AbpMongoDbModule : AbpModule
     {
+        public override void PreInitialize()
+        {
+            IocManager.Register<IAbpMongoDbModuleConfiguration, AbpMongoDbModuleConfiguration>();
+        }
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
