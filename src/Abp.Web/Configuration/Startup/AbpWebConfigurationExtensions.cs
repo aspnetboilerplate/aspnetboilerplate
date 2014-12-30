@@ -1,6 +1,6 @@
-﻿using Abp.Configuration.Startup;
+﻿using Abp.Web.Configuration;
 
-namespace Abp.Web.Configuration
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP Web module.

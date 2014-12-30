@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Modules;
-using Abp.NHibernate.Config;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
 using NHibernate;
@@ -17,6 +17,7 @@ namespace Abp.NHibernate
         /// </summary>
         private ISessionFactory _sessionFactory;
         
+        /// <inheritdoc/>
         public override void Initialize()
         {
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
@@ -27,6 +28,7 @@ namespace Abp.NHibernate
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
+        /// <inheritdoc/>
         public override void Shutdown()
         {
             _sessionFactory.Dispose();

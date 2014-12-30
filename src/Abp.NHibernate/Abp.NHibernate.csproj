@@ -72,7 +72,7 @@
     <Compile Include="NHibernate\ISessionProvider.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryInstaller.cs" />
-    <Compile Include="NHibernate\Config\AbpNHibernateConfigurationExtensions.cs" />
+    <Compile Include="Configuration\Startup\AbpNHibernateConfigurationExtensions.cs" />
     <Compile Include="NHibernate\AbpNHibernateModule.cs" />
     <Compile Include="NHibernate\Repositories\NhRepositoryBaseOfTEntity.cs" />
     <Compile Include="NHibernate\Uow\UnitOfWorkSessionProvider.cs" />
@@ -80,8 +80,8 @@
     <Compile Include="NHibernate\Uow\UnitOfWorkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\EntityMappings\EntityMapOfTEntityAndTPrimaryKey.cs" />
-    <Compile Include="NHibernate\Config\AbpNHibernateModuleConfiguration.cs" />
-    <Compile Include="NHibernate\Config\IAbpNHibernateModuleConfiguration.cs" />
+    <Compile Include="NHibernate\Configuration\AbpNHibernateModuleConfiguration.cs" />
+    <Compile Include="NHibernate\Configuration\IAbpNHibernateModuleConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.NHibernate.nuspec" />

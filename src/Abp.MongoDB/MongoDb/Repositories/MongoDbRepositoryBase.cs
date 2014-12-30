@@ -5,24 +5,19 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.MongoDb.Uow;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace Abp.MongoDb.Repositories
 {
-    /* IMPORTANT: MongoDB implementation is experimental and trial purposes for now.
-     */
-
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
     {
 
     }
 
-    //TODO: Test & Check all methods
-    public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+    public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>
     {
         protected MongoCollection<TEntity> Collection
         {

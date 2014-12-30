@@ -1,6 +1,6 @@
-﻿using Abp.Configuration.Startup;
+﻿using Abp.NHibernate.Configuration;
 
-namespace Abp.NHibernate.Config
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP NHibernate module.

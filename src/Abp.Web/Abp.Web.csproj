@@ -61,7 +61,7 @@
     <Compile Include="Web\Models\ValidationErrorInfo.cs" />
     <Compile Include="Web\Configuration\AbpWebModuleConfiguration.cs" />
     <Compile Include="Web\Configuration\IAbpWebModuleConfiguration.cs" />
-    <Compile Include="Web\Configuration\AbpWebConfigurationExtensions.cs" />
+    <Compile Include="Configuration\Startup\AbpWebConfigurationExtensions.cs" />
     <Compile Include="Web\Navigation\INavigationScriptManager.cs" />
     <Compile Include="Web\Navigation\NavigationScriptManager.cs" />
     <Compile Include="Web\Sessions\ISessionScriptManager.cs" />
