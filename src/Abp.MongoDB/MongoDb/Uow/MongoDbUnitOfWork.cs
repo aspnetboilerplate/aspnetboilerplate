@@ -45,7 +45,7 @@ namespace Abp.MongoDb.Uow
 
         protected override void DisposeUow()
         {
-
+            
         }
     }
 }

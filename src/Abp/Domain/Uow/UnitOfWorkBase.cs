@@ -31,6 +31,11 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Begin(UnitOfWorkOptions options)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
             PreventMultipleStart();
             Options = options;
             BeginUow();

@@ -26,10 +26,12 @@ namespace Abp.Extensions
         /// <param name="e">Event argument</param>
         public static void InvokeSafely(this EventHandler eventHandler, object sender, EventArgs e)
         {
-            if (eventHandler != null)
+            if (eventHandler == null)
             {
-                eventHandler(sender, e);
+                return;
             }
+
+            eventHandler(sender, e);
         }
 
         /// <summary>
@@ -42,10 +44,12 @@ namespace Abp.Extensions
         public static void InvokeSafely<TEventArgs>(this EventHandler<TEventArgs> eventHandler, object sender, TEventArgs e)
             where TEventArgs : EventArgs
         {
-            if (eventHandler != null)
+            if (eventHandler == null)
             {
-                eventHandler(sender, e);
+                return;
             }
+
+            eventHandler(sender, e);
         }
     }
 }

@@ -1,9 +1,10 @@
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using MongoDB.Driver;
 
 namespace Abp.MongoDb.Uow
 {
-    public class UnitOfWorkMongoDatabaseProvider : IMongoDatabaseProvider
+    public class UnitOfWorkMongoDatabaseProvider : IMongoDatabaseProvider, ITransientDependency
     {
         public MongoDatabase Database { get { return ((MongoDbUnitOfWork)_currentUnitOfWork.Current).Database; } }
 
