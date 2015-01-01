@@ -80,7 +80,8 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        internal TDbContext GetOrCreateDbContext<TDbContext>() where TDbContext : DbContext
+        internal TDbContext GetOrCreateDbContext<TDbContext>()
+            where TDbContext : DbContext
         {
             DbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
