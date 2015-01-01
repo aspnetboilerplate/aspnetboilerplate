@@ -12,11 +12,11 @@ namespace Abp.Extensions
         /// This is a shortcut for string.Join(...)
         /// </summary>
         /// <param name="source">A collection that contains the strings to concatenate.</param>
-        /// <param name="seperator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>
+        /// <param name="separator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>
         /// <returns>A string that consists of the members of values delimited by the separator string. If values has no members, the method returns System.String.Empty.</returns>
-        public static string JoinAsString(this IEnumerable<string> source, string seperator)
+        public static string JoinAsString(this IEnumerable<string> source, string separator)
         {
-            return string.Join(seperator, source);
+            return string.Join(separator, source);
         }
 
         /// <summary>
@@ -24,12 +24,12 @@ namespace Abp.Extensions
         /// This is a shortcut for string.Join(...)
         /// </summary>
         /// <param name="source">A collection that contains the objects to concatenate.</param>
-        /// <param name="seperator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>
+        /// <param name="separator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>
         /// <typeparam name="T">The type of the members of values.</typeparam>
         /// <returns>A string that consists of the members of values delimited by the separator string. If values has no members, the method returns System.String.Empty.</returns>
-        public static string JoinAsString<T>(this IEnumerable<T> source, string seperator)
+        public static string JoinAsString<T>(this IEnumerable<T> source, string separator)
         {
-            return string.Join(seperator, source);
+            return string.Join(separator, source);
         }
     }
 }
