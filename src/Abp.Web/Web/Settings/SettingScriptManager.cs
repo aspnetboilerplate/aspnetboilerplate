@@ -24,7 +24,7 @@ namespace Abp.Web.Settings
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
-
+            script.AppendLine("    abp.setting = abp.setting || {};");
             script.AppendLine("    abp.setting.values = {");
 
             var settingDefinitions = _settingDefinitionManager
