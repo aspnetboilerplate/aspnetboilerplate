@@ -8,7 +8,7 @@
 
     abpModule.config([
         '$httpProvider', function ($httpProvider) {
-            $httpProvider.interceptors.push(function ($q) {
+            $httpProvider.interceptors.push([ '$q', function ($q) {
 
                 var defaultError = {
                     message: 'Ajax request is not succeed!',
@@ -71,7 +71,7 @@
                     }
 
                 };
-            });
+            }]);
         }
     ]);
 
