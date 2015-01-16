@@ -12,9 +12,6 @@ namespace Abp.Authorization
         /// This method is called once on application startup to allow to define permissions.
         /// </summary>
         /// <param name="context">Permission definition context</param>
-        public virtual void SetPermissions(IPermissionDefinitionContext context)
-        {
-            
-        }
+        public abstract void SetPermissions(IPermissionDefinitionContext context);
     }
 }

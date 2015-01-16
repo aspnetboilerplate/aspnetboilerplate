@@ -118,7 +118,6 @@
     <Compile Include="Authorization\AuthorizationProvider.cs" />
     <Compile Include="Authorization\IPermissionManager.cs" />
     <Compile Include="Authorization\Permission.cs" />
-    <Compile Include="Authorization\PermissionGroup.cs" />
     <Compile Include="Authorization\PermissionManager.cs" />
     <Compile Include="Collections\ITypeList.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />

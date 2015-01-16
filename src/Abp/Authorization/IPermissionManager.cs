@@ -20,20 +20,6 @@ namespace Abp.Authorization
         IReadOnlyList<Permission> GetAllPermissions();
 
         /// <summary>
-        /// Gets <see cref="PermissionGroup"/> object with given <paramref name="name"/> or returns null
-        /// if there is no permission group with given <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name">Unique name of the permission</param>
-        PermissionGroup GetRootGroupOrNull(string name);
-
-        /// <summary>
-        /// Gets all root permission groups.
-        /// All permission groups and permissions can be reached using this method.
-        /// </summary>
-        /// <returns>Root permission groups</returns>
-        IReadOnlyList<PermissionGroup> GetAllRootGroups();
-
-        /// <summary>
         /// Checks if a user is granted for a permission.
         /// </summary>
         /// <param name="userId">Id of the user to check</param>
