@@ -6,6 +6,7 @@ using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
 namespace Abp.Authorization
@@ -16,7 +17,10 @@ namespace Abp.Authorization
     internal class PermissionManager : IPermissionManager, ISingletonDependency, IPermissionDefinitionContext
     {
         public IPermissionGrantStore PermissionGrantStore { get; set; }
+
         public ILogger Logger { get; set; }
+
+        public IAbpSession AbpSession { get; set; }
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
@@ -30,6 +34,7 @@ namespace Abp.Authorization
         {
             PermissionGrantStore = NullPermissionGrantStore.Instance;
             Logger = NullLogger.Instance;
+            AbpSession = NullAbpSession.Instance;
 
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
@@ -67,6 +72,17 @@ namespace Abp.Authorization
         public IReadOnlyList<Permission> GetAllPermissions()
         {
             return _permissions.Values.ToImmutableList();
+        }
+
+        public bool IsGranted(string permissionName)
+        {
+            if (!AbpSession.UserId.HasValue)
+            {
+                Logger.Warn("User is not logged in.");
+                return false;
+            }
+
+            return IsGranted(AbpSession.UserId.Value, permissionName);
         }
 
         public bool IsGranted(long userId, string permissionName)
