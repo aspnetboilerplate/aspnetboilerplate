@@ -64,6 +64,17 @@ namespace Abp.Authorization
             return permission;
         }
 
+        public Permission GetPermission(string name)
+        {
+            var permission = _permissions.GetOrDefault(name);
+            if (permission == null)
+            {
+                throw new AbpException("There is no permission with name: " + name);
+            }
+
+            return permission;
+        }
+
         public Permission GetPermissionOrNull(string name)
         {
             return _permissions.GetOrDefault(name);
