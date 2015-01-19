@@ -1,3 +1,4 @@
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using FluentNHibernate.Mapping;
 
@@ -8,6 +9,17 @@ namespace Abp.NHibernate.EntityMappings
     /// </summary>
     public static class NhMappingExtensions
     {
+        /// <summary>
+        /// Maps full audit columns (defined by <see cref="IFullAudited"/>).
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapFullAudited<TEntity>(this ClassMap<TEntity> mapping)
+            where TEntity : IFullAudited
+        {
+            mapping.MapAudited();
+            mapping.MapDeletionAudited();
+        }
+
         /// <summary>
         /// Maps audit columns. See <see cref="IAudited"/>.
         /// </summary>
@@ -25,16 +37,16 @@ namespace Abp.NHibernate.EntityMappings
         public static void MapCreationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : ICreationAudited
         {
             mapping.MapCreationTime();
-            mapping.Map(x => (x as ICreationAudited).CreatorUserId);
+            mapping.Map(x => x.CreatorUserId);
         }
 
         /// <summary>
-        /// Maps creation audit columns. See <see cref="ICreationAudited"/>.
+        /// Maps CreationTime column. See <see cref="ICreationAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         public static void MapCreationTime<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IHasCreationTime
         {
-            mapping.Map(x => (x as IHasCreationTime).CreationTime);
+            mapping.Map(x => x.CreationTime);
         }
 
         /// <summary>
@@ -43,8 +55,28 @@ namespace Abp.NHibernate.EntityMappings
         /// <typeparam name="TEntity">Entity type</typeparam>
         public static void MapModificationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IModificationAudited
         {
-            mapping.Map(x => (x as IModificationAudited).LastModificationTime);
-            mapping.Map(x => (x as IModificationAudited).LastModifierUserId);
+            mapping.Map(x => x.LastModificationTime);
+            mapping.Map(x => x.LastModifierUserId);
+        }
+
+        /// <summary>
+        /// Maps deletion audit columns (defined by <see cref="IDeletionAudited"/>).
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapDeletionAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IDeletionAudited
+        {
+            mapping.MapIsDeleted();
+            mapping.Map(x => x.DeleterUserId);
+            mapping.Map(x => x.DeletionTime);
+        }
+
+        /// <summary>
+        /// Maps IsDeleted column (defined by <see cref="ISoftDelete"/>).
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapIsDeleted<TEntity>(this ClassMap<TEntity> mapping) where TEntity : ISoftDelete
+        {
+            mapping.Map(x => x.IsDeleted);
         }
     }
 }
