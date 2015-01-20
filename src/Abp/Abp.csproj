@@ -111,8 +111,8 @@
     <Compile Include="Application\Services\Dto\ISortedResultRequest.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Authorization\AbpAuthorizationException.cs" />
-    <Compile Include="Authorization\IPermissionGrantStore.cs" />
-    <Compile Include="Authorization\NullPermissionGrantStore.cs" />
+    <Compile Include="Authorization\IPermissionChecker.cs" />
+    <Compile Include="Authorization\NullPermissionChecker.cs" />
     <Compile Include="Authorization\PermissionDictionary.cs" />
     <Compile Include="Authorization\IPermissionDefinitionContext.cs" />
     <Compile Include="Authorization\AuthorizationProvider.cs" />

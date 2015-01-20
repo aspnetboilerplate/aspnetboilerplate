@@ -1,15 +1,22 @@
+using System.Collections.Generic;
+
 namespace Abp.Authorization
 {
     /// <summary>
-    /// Null (and default) implementation of <see cref="IPermissionGrantStore"/>.
+    /// Null (and default) implementation of <see cref="IPermissionChecker"/>.
     /// </summary>
-    public sealed class NullPermissionGrantStore : IPermissionGrantStore
+    public sealed class NullPermissionChecker : IPermissionChecker
     {
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static NullPermissionGrantStore Instance { get { return SingletonInstance; } }
-        private static readonly NullPermissionGrantStore SingletonInstance = new NullPermissionGrantStore();
+        public static NullPermissionChecker Instance { get { return SingletonInstance; } }
+        private static readonly NullPermissionChecker SingletonInstance = new NullPermissionChecker();
+
+        public bool IsGranted(string permissionName)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Checks if a user is granted for a permission.
@@ -22,7 +29,7 @@ namespace Abp.Authorization
             return true;
         }
 
-        private NullPermissionGrantStore()
+        private NullPermissionChecker()
         {
 
         }

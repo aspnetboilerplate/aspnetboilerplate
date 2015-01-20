@@ -16,7 +16,7 @@ namespace Abp.Authorization
     /// </summary>
     internal class PermissionManager : IPermissionManager, ISingletonDependency, IPermissionDefinitionContext
     {
-        public IPermissionGrantStore PermissionGrantStore { get; set; }
+        public IPermissionChecker PermissionChecker { get; set; }
 
         public ILogger Logger { get; set; }
 
@@ -32,7 +32,7 @@ namespace Abp.Authorization
         /// </summary>
         public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
         {
-            PermissionGrantStore = NullPermissionGrantStore.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
 
@@ -85,6 +85,7 @@ namespace Abp.Authorization
             return _permissions.Values.ToImmutableList();
         }
 
+        //TODO: Remove from here!
         public bool IsGranted(string permissionName)
         {
             if (!AbpSession.UserId.HasValue)
@@ -96,6 +97,7 @@ namespace Abp.Authorization
             return IsGranted(AbpSession.UserId.Value, permissionName);
         }
 
+        //TODO: Remove from here!
         public bool IsGranted(long userId, string permissionName)
         {
             var permission = GetPermissionOrNull(permissionName);
@@ -105,9 +107,10 @@ namespace Abp.Authorization
                 return false;
             }
 
-            return PermissionGrantStore.IsGranted(userId, permissionName);
+            return PermissionChecker.IsGranted(userId, permissionName);
         }
 
+        //TODO: Remove from here!
         public IReadOnlyList<Permission> GetGrantedPermissions(long userId)
         {
             return GetAllPermissions().Where(p => IsGranted(userId, p.Name)).ToImmutableList();

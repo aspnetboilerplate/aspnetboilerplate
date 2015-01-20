@@ -40,7 +40,7 @@ namespace Abp.Authorization
 
                 if (authorizeAttribute.RequireAllPermissions)
                 {
-                    if (!authorizeAttribute.Permissions.All(permissionName => _permissionManager.IsGranted(AbpSession.UserId.Value, permissionName)))
+                    if (!authorizeAttribute.Permissions.All(permissionName => _permissionManager.IsGranted(permissionName)))
                     {
                         throw new AbpAuthorizationException(
                             "Required permissions are not granted. All of these permissions must be granted: " +
@@ -50,7 +50,7 @@ namespace Abp.Authorization
                 }
                 else
                 {
-                    if (!authorizeAttribute.Permissions.Any(permissionName => _permissionManager.IsGranted(AbpSession.UserId.Value, permissionName)))
+                    if (!authorizeAttribute.Permissions.Any(permissionName => _permissionManager.IsGranted(permissionName)))
                     {
                         throw new AbpAuthorizationException(
                             "Required permissions are not granted. At least one of these permissions must be granted: " +
