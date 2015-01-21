@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Models
@@ -7,8 +7,13 @@ namespace Abp.Web.Mvc.Models
     /// This class is used to create standard responses for ajax requests.
     /// </summary>
     [Serializable]
-    public class MvcAjaxResponse : MvcAjaxResponse<object>
+    public class MvcAjaxResponse<TResult> : AjaxResponse<TResult>
     {
+        /// <summary>
+        /// This property can be used to redirect user to a specified URL.
+        /// </summary>
+        public string TargetUrl { get; set; }
+
         /// <summary>
         /// Creates an <see cref="MvcAjaxResponse"/> object.
         /// <see cref="AjaxResponse.Success"/> is set as true.
@@ -33,7 +38,7 @@ namespace Abp.Web.Mvc.Models
         /// <see cref="AjaxResponse.Success"/> is set as true.
         /// </summary>
         /// <param name="result">The actual result object of ajax request</param>
-        public MvcAjaxResponse(object result)
+        public MvcAjaxResponse(TResult result)
             : base(result)
         {
 

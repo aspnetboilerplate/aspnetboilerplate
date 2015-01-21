@@ -48,16 +48,16 @@ namespace Abp.Reflection
         {
             var attributeList = new List<TAttribute>();
 
-            //Add attributes on the class
-            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), true))
-            {
-                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>());
-            }
-
             //Add attributes on the member
             if (memberInfo.IsDefined(typeof(TAttribute), true))
             {
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>());
+            }
+
+            //Add attributes on the class
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), true))
+            {
+                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>());
             }
 
             return attributeList;

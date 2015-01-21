@@ -5,10 +5,10 @@ using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
-using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
@@ -90,9 +90,13 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            if (!(data is AjaxResponse))
+            if (data == null)
             {
-                data = new MvcAjaxResponse(data);
+                data = new AjaxResponse();
+            }
+            else if (!ReflectionHelper.IsAssignableToGenericType(data.GetType(), typeof(AjaxResponse<>)))
+            {
+                data = new AjaxResponse(data);
             }
 
             return new AbpJsonResult
