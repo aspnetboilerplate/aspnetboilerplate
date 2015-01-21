@@ -5,7 +5,6 @@ using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
 using Abp.Collections.Extensions;
-using Abp.Reflection;
 using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
@@ -21,7 +20,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             get
             {
-                return typeof(AjaxResponse<>);
+                return typeof(AjaxResponse);
             }
         }
 
@@ -44,11 +43,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                             return new AjaxResponse();
                         }
 
-                        if (ReflectionHelper.IsAssignableToGenericType(task.Result.GetType(), typeof (AjaxResponse<>)))
+                        if (task.Result is AjaxResponse)
                         {
                             return task.Result;
                         }
-
+                        
                         return new AjaxResponse(task.Result);
                     }
                     catch (AggregateException ex)
