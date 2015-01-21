@@ -1,7 +1,7 @@
 namespace Abp.Authorization
 {
     /// <summary>
-    /// This class is used to perform persistent operations for permissions.
+    /// This class is used to permissions for users.
     /// </summary>
     public interface IPermissionChecker
     {

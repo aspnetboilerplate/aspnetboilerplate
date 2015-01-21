@@ -9,13 +9,14 @@ namespace Abp.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ISingletonDependency
     {
-        private readonly IPermissionManager _permissionManager;
+        public IPermissionChecker PermissionChecker { get; set; }
+
         private readonly INavigationManager _navigationManager;
 
-        public UserNavigationManager(IPermissionManager permissionManager, INavigationManager navigationManager)
+        public UserNavigationManager(INavigationManager navigationManager)
         {
-            _permissionManager = permissionManager;
             _navigationManager = navigationManager;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
 
         public UserMenu GetMenu(string menuName, long? userId)
@@ -47,7 +48,7 @@ namespace Abp.Application.Navigation
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !_permissionManager.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
+                if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !PermissionChecker.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
                 {
                     continue;
                 }

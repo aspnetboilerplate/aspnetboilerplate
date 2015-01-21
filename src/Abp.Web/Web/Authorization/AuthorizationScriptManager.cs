@@ -17,10 +17,13 @@ namespace Abp.Web.Authorization
 
         private readonly IPermissionManager _permissionManager;
 
+        public IPermissionChecker PermissionChecker { get; set; }
+
         /// <inheritdoc/>
         public AuthorizationScriptManager(IPermissionManager permissionManager)
         {
             AbpSession = NullAbpSession.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
 
             _permissionManager = permissionManager;
         }
@@ -28,10 +31,10 @@ namespace Abp.Web.Authorization
         /// <inheritdoc/>
         public string GetScript()
         {
-            var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
-            var grantedPermissions =
+            var allPermissionNames = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
+            var grantedPermissionNames =
                 AbpSession.UserId.HasValue
-                    ? _permissionManager.GetGrantedPermissions(AbpSession.UserId.Value).Select(p => p.Name).ToArray()
+                    ? allPermissionNames.Where(permissionName => PermissionChecker.IsGranted(AbpSession.UserId.Value, permissionName)).ToArray()
                     : new string[0];
 
             var script = new StringBuilder();
@@ -44,11 +47,11 @@ namespace Abp.Web.Authorization
 
             script.AppendLine();
 
-            AppendPermissionList(script, "allPermissions", allPermission);
+            AppendPermissionList(script, "allPermissions", allPermissionNames);
 
             script.AppendLine();
 
-            AppendPermissionList(script, "grantedPermissions", grantedPermissions);
+            AppendPermissionList(script, "grantedPermissions", grantedPermissionNames);
 
             script.AppendLine();
             script.Append("})();");

@@ -85,37 +85,6 @@ namespace Abp.Authorization
             return _permissions.Values.ToImmutableList();
         }
 
-        //TODO: Remove from here!
-        public bool IsGranted(string permissionName)
-        {
-            if (!AbpSession.UserId.HasValue)
-            {
-                Logger.Warn("User is not logged in.");
-                return false;
-            }
-
-            return IsGranted(AbpSession.UserId.Value, permissionName);
-        }
-
-        //TODO: Remove from here!
-        public bool IsGranted(long userId, string permissionName)
-        {
-            var permission = GetPermissionOrNull(permissionName);
-            if (permission == null)
-            {
-                Logger.Warn("Permission is not defined: " + permissionName);
-                return false;
-            }
-
-            return PermissionChecker.IsGranted(userId, permissionName);
-        }
-
-        //TODO: Remove from here!
-        public IReadOnlyList<Permission> GetGrantedPermissions(long userId)
-        {
-            return GetAllPermissions().Where(p => IsGranted(userId, p.Name)).ToImmutableList();
-        }
-
         private AuthorizationProvider CreatePermissionProvider(Type providerType)
         {
             if (!_iocManager.IsRegistered(providerType))

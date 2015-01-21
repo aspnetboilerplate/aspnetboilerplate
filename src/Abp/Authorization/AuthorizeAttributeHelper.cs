@@ -11,12 +11,12 @@ namespace Abp.Authorization
     {
         public IAbpSession AbpSession { get; set; }
 
-        private readonly IPermissionManager _permissionManager;
+        public IPermissionChecker PermissionChecker { get; set; }
 
-        public AuthorizeAttributeHelper(IPermissionManager permissionManager)
+        public AuthorizeAttributeHelper()
         {
             AbpSession = NullAbpSession.Instance;
-            _permissionManager = permissionManager;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
 
         public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
@@ -40,7 +40,7 @@ namespace Abp.Authorization
 
                 if (authorizeAttribute.RequireAllPermissions)
                 {
-                    if (!authorizeAttribute.Permissions.All(permissionName => _permissionManager.IsGranted(permissionName)))
+                    if (!authorizeAttribute.Permissions.All(permissionName => PermissionChecker.IsGranted(permissionName)))
                     {
                         throw new AbpAuthorizationException(
                             "Required permissions are not granted. All of these permissions must be granted: " +
@@ -50,7 +50,7 @@ namespace Abp.Authorization
                 }
                 else
                 {
-                    if (!authorizeAttribute.Permissions.Any(permissionName => _permissionManager.IsGranted(permissionName)))
+                    if (!authorizeAttribute.Permissions.Any(permissionName => PermissionChecker.IsGranted(permissionName)))
                     {
                         throw new AbpAuthorizationException(
                             "Required permissions are not granted. At least one of these permissions must be granted: " +

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Abp.Authorization
 {
     /// <summary>

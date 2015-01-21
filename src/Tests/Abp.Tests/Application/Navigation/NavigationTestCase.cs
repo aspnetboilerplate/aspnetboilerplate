@@ -42,12 +42,15 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(CreateMockPermissionManager(), NavigationManager);
+            UserNavigationManager = new UserNavigationManager(NavigationManager)
+                                    {
+                                        PermissionChecker = CreateMockPermissionChecker()
+                                    };
         }
 
-        private static IPermissionManager CreateMockPermissionManager()
+        private static IPermissionChecker CreateMockPermissionChecker()
         {
-            var permissionManager = Substitute.For<IPermissionManager>();
+            var permissionManager = Substitute.For<IPermissionChecker>();
             permissionManager.IsGranted(1, "Abp.Zero.UserManagement").Returns(true);
             permissionManager.IsGranted(1, "Abp.Zero.RoleManagement").Returns(false);
             return permissionManager;
