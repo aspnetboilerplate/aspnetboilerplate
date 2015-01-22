@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace Abp.Transactions
+namespace Abp.Transactions.Extensions
 {
     internal static class IsolationLevelExtensions
     {
