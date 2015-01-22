@@ -81,6 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WebApi\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="WebApi\Client\AbpRemoteCallException.cs" />
+    <Compile Include="WebApi\Client\AbpWebApiClient.cs" />
+    <Compile Include="WebApi\Client\IAbpWebApiClient.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\BatchApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerActionHelper.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiServiceNameHelper.cs" />
