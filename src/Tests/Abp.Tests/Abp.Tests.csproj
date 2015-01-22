@@ -106,6 +106,7 @@
     <Compile Include="Resources\Embedded\EmbeddedResourceTests.cs" />
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
     <Compile Include="TestBaseWithLocalIocManager.cs" />
+    <Compile Include="Threading\LockExtensions_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

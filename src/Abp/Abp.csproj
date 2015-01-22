@@ -282,7 +282,8 @@
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
-    <Compile Include="Transactions\IsolationLevelExtensions.cs" />
+    <Compile Include="Threading\Extensions\LockExtensions.cs" />
+    <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
