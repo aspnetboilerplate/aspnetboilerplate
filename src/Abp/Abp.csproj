@@ -153,6 +153,7 @@
     <Compile Include="Domain\Uow\UnitOfWorkDefaultOptions.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
     <Compile Include="Reflection\AsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
