@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
-using Abp.Reflection;
+using Abp.Threading;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Reflection
+namespace Abp.Tests.Threading
 {
-    public class AsyncHelper_Tests
+    public class InternalAsyncHelper_Tests
     {
         private bool _asyncMethod1Worked;
         private bool _asyncMethod2Worked;

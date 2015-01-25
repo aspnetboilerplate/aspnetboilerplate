@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Abp.Reflection
+namespace Abp.Threading
 {
     internal static class InternalAsyncHelper
     {

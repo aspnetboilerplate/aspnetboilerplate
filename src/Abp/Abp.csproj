@@ -154,7 +154,7 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
-    <Compile Include="Reflection\InternalAsyncHelper.cs" />
+    <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
@@ -283,6 +283,7 @@
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
+    <Compile Include="Threading\AsyncHelper.cs" />
     <Compile Include="Threading\Extensions\LockExtensions.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />

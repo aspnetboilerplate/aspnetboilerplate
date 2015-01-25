@@ -110,7 +110,8 @@
     <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\AsyncHelper_Tests.cs" />
+    <Compile Include="Threading\AsyncHelper_Tests.cs" />
+    <Compile Include="Threading\InternalAsyncHelper_Tests.cs" />
     <Compile Include="Reflection\ReflectionHelper_Tests.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceTests.cs" />
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
