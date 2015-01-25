@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Castle.DynamicProxy;
 
 namespace Abp.Threading
 {
@@ -24,7 +25,7 @@ namespace Abp.Threading
             return typeof (InternalAsyncHelper)
                 .GetMethod("ReturnGenericTaskAfterAction", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
-                .Invoke(null, new[] { actualReturnValue, action, finalAction });
+                .Invoke(null, new object[] { actualReturnValue, action, finalAction });
         }
 
         public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action, Action finalAction)
@@ -34,6 +35,42 @@ namespace Abp.Threading
                 var response = await actualReturnValue;
                 await action();
                 return response;
+            }
+            finally
+            {
+                finalAction();
+            }
+        }
+
+        public static async Task InvokeWithPreAndFinalActionAsync(IInvocation invocation, Func<Task> preAction, Action finalAction)
+        {
+            try
+            {
+                await preAction();
+                invocation.Proceed();
+                await (Task)invocation.ReturnValue;
+            }
+            finally
+            {
+                finalAction();
+            }
+        }
+
+        public static object CallInvokeWithPreAndFinalActionAsync(Type taskReturnType, IInvocation invocation, Func<Task> preAction, Action finalAction)
+        {
+            return typeof(InternalAsyncHelper)
+                .GetMethod("GenericInvokeWithPreAndFinalActionAsync", BindingFlags.Public | BindingFlags.Static)
+                .MakeGenericMethod(taskReturnType)
+                .Invoke(null, new object[] { invocation, preAction, finalAction });
+        }
+
+        public static async Task<T> GenericInvokeWithPreAndFinalActionAsync<T>(IInvocation invocation, Func<Task> preAction, Action finalAction)
+        {
+            try
+            {
+                await preAction();
+                invocation.Proceed();
+                return await (Task<T>)invocation.ReturnValue;
             }
             finally
             {

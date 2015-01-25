@@ -49,7 +49,7 @@ namespace Abp.Tests.Authorization
             _syncObj.MethodWithoutPermission();
             _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
 
-            _syncObj.MethodWithPermission1();
+            _syncObj.MethodWithPermission1().ShouldBe(42);
             _syncObj.Called_MethodWithPermission1.ShouldBe(true);
 
             _syncObj.MethodWithPermission1AndPermission2();
@@ -75,7 +75,7 @@ namespace Abp.Tests.Authorization
             await _asyncObj.MethodWithoutPermission();
             _asyncObj.Called_MethodWithoutPermission.ShouldBe(true);
 
-            await _asyncObj.MethodWithPermission1Async();
+            (await _asyncObj.MethodWithPermission1Async()).ShouldBe(42);
             _asyncObj.Called_MethodWithPermission1.ShouldBe(true);
 
             await _asyncObj.MethodWithPermission1AndPermission2Async();
@@ -113,9 +113,10 @@ namespace Abp.Tests.Authorization
             }
 
             [AbpAuthorize("Permission1")]
-            public virtual void MethodWithPermission1()
+            public virtual int MethodWithPermission1()
             {
                 Called_MethodWithPermission1 = true;
+                return 42;
             }
 
             //Should not be called since Permission3 is not granted
@@ -168,10 +169,11 @@ namespace Abp.Tests.Authorization
             }
 
             [AbpAuthorize("Permission1")]
-            public virtual async Task MethodWithPermission1Async()
+            public virtual async Task<int> MethodWithPermission1Async()
             {
-                await Task.Delay(1);
                 Called_MethodWithPermission1 = true;
+                await Task.Delay(1);
+                return 42;
             }
 
             //Should not be called since Permission3 is not granted

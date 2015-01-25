@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Reflection;
@@ -47,11 +48,24 @@ namespace Abp.Authorization
         private void InterceptAsync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
         {
             var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>();
-            invocation.ReturnValue = InvokeWithPreAndFinalActionAsync(
-                invocation,
-                async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
-                () => _iocResolver.Release(authorizationAttributeHelper)
-                );
+
+            if (invocation.Method.ReturnType == typeof (Task))
+            {
+                invocation.ReturnValue = InternalAsyncHelper.InvokeWithPreAndFinalActionAsync(
+                    invocation,
+                    async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
+                    () => _iocResolver.Release(authorizationAttributeHelper)
+                    );
+            }
+            else
+            {
+                invocation.ReturnValue = InternalAsyncHelper.CallInvokeWithPreAndFinalActionAsync(
+                    invocation.Method.ReturnType.GenericTypeArguments[0],
+                    invocation,
+                    async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
+                    () => _iocResolver.Release(authorizationAttributeHelper)
+                    );
+            }
         }
 
         private void InterceptSync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
@@ -60,20 +74,6 @@ namespace Abp.Authorization
             {
                 authorizationAttributeHelper.Object.Authorize(authorizeAttributes);
                 invocation.Proceed();
-            }
-        }
-
-        private static async Task InvokeWithPreAndFinalActionAsync(IInvocation invocation, Func<Task> preAction, Action finalAction)
-        {
-            try
-            {
-                await preAction();
-                invocation.Proceed();
-                await (Task)invocation.ReturnValue;
-            }
-            finally
-            {
-                finalAction();
             }
         }
     }

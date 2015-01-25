@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Reflection;
 using Abp.Threading;
@@ -77,7 +78,7 @@ namespace Abp.Domain.Uow
                     uow.Dispose
                     );
             }
-            else
+            else //Task<TResult>
             {
                 invocation.ReturnValue = InternalAsyncHelper.CallReturnGenericTaskAfterAction(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
