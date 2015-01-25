@@ -7,6 +7,7 @@ using Abp.Runtime.Session;
 
 namespace Abp.Authorization
 {
+    //TODO: Implement Async!
     internal class AuthorizeAttributeHelper : ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
