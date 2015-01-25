@@ -9,7 +9,6 @@ namespace Abp.WebApi.Authorization
     /// <summary>
     /// This attribute is used on a method of an <see cref="ApiController"/>
     /// to make that method usable only by authorized users.
-    /// TODO: This class is not implemented yet.
     /// </summary>
     public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
@@ -38,7 +37,8 @@ namespace Abp.WebApi.Authorization
 
             try
             {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<AuthorizeAttributeHelper>())
+                //TODO: Use Async..?
+                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
                 {
                     authorizationAttributeHelper.Object.Authorize(this);
                 }

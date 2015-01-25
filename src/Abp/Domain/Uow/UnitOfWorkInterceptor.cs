@@ -44,13 +44,13 @@ namespace Abp.Domain.Uow
 
         private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            if (!InternalAsyncHelper.IsAsyncMethod(invocation.Method))
+            if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {
-                PerformSyncUow(invocation, options);
+                PerformAsyncUow(invocation, options);
             }
             else
             {
-                PerformAsyncUow(invocation, options);
+                PerformSyncUow(invocation, options);
             }
         }
 

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Session;
+using Abp.Threading;
 
 namespace Abp.Authorization
 {
-    //TODO: Implement Async!
-    internal class AuthorizeAttributeHelper : ITransientDependency
+    internal class AuthorizeAttributeHelper : IAuthorizeAttributeHelper, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
 
@@ -20,12 +20,7 @@ namespace Abp.Authorization
             PermissionChecker = NullPermissionChecker.Instance;
         }
 
-        public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
-        {
-            Authorize(new[] { authorizeAttribute });
-        }
-
-        public void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
+        public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -41,25 +36,49 @@ namespace Abp.Authorization
 
                 if (authorizeAttribute.RequireAllPermissions)
                 {
-                    if (!authorizeAttribute.Permissions.All(permissionName => PermissionChecker.IsGranted(permissionName)))
+                    foreach (var permissionName in authorizeAttribute.Permissions)
                     {
-                        throw new AbpAuthorizationException(
-                            "Required permissions are not granted. All of these permissions must be granted: " +
-                            String.Join(", ", authorizeAttribute.Permissions)
-                            );
+                        if (!await PermissionChecker.IsGrantedAsync(permissionName))
+                        {
+                            throw new AbpAuthorizationException(
+                                "Required permissions are not granted. All of these permissions must be granted: " +
+                                String.Join(", ", authorizeAttribute.Permissions)
+                                );
+                        }
                     }
                 }
                 else
                 {
-                    if (!authorizeAttribute.Permissions.Any(permissionName => PermissionChecker.IsGranted(permissionName)))
+                    foreach (var permissionName in authorizeAttribute.Permissions)
                     {
-                        throw new AbpAuthorizationException(
-                            "Required permissions are not granted. At least one of these permissions must be granted: " +
-                            String.Join(", ", authorizeAttribute.Permissions)
-                            );
+                        if (await PermissionChecker.IsGrantedAsync(permissionName))
+                        {
+                            return; //Authorized
+                        }
                     }
+
+                    //Not authorized!
+                    throw new AbpAuthorizationException(
+                        "Required permissions are not granted. At least one of these permissions must be granted: " +
+                        String.Join(", ", authorizeAttribute.Permissions)
+                        );
                 }
             }
+        }
+
+        public async Task AuthorizeAsync(IAbpAuthorizeAttribute authorizeAttribute)
+        {
+            await AuthorizeAsync(new[] { authorizeAttribute });
+        }
+
+        public void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
+        {
+            AsyncHelper.RunSync(() => AuthorizeAsync(authorizeAttributes));
+        }
+
+        public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
+        {
+            Authorize(new[] { authorizeAttribute });
         }
     }
 }

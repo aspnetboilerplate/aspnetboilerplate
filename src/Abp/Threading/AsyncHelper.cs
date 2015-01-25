@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,6 +49,14 @@ namespace Abp.Threading
                     Thread.CurrentThread.CurrentUICulture = cultureUi;
                     return action();
                 }).Unwrap().GetAwaiter().GetResult();
+        }
+
+        public static bool IsAsyncMethod(MethodInfo method)
+        {
+            return (
+                method.ReturnType == typeof(Task) ||
+                (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                );
         }
     }
 }

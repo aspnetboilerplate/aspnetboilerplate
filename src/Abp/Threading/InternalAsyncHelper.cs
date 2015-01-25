@@ -27,14 +27,6 @@ namespace Abp.Threading
                 .Invoke(null, new[] { actualReturnValue, action, finalAction });
         }
 
-        public static bool IsAsyncMethod(MethodInfo method)
-        {
-            return (
-                method.ReturnType == typeof(Task) ||
-                (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
-                );
-        }
-
         public static async Task<T> ReturnGenericTaskAfterAction<T>(Task<T> actualReturnValue, Func<Task> action, Action finalAction)
         {
             try
