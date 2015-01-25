@@ -43,7 +43,7 @@ namespace Abp.Domain.Uow
 
         private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            if (!AsyncHelper.IsAsyncMethod(invocation.Method))
+            if (!InternalAsyncHelper.IsAsyncMethod(invocation.Method))
             {
                 PerformSyncUow(invocation, options);
             }
@@ -70,7 +70,7 @@ namespace Abp.Domain.Uow
 
             if (invocation.Method.ReturnType == typeof (Task))
             {
-                invocation.ReturnValue = AsyncHelper.WaitTaskAndActionWithFinally(
+                invocation.ReturnValue = InternalAsyncHelper.WaitTaskAndActionWithFinally(
                     (Task) invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
                     uow.Dispose
@@ -78,7 +78,7 @@ namespace Abp.Domain.Uow
             }
             else
             {
-                invocation.ReturnValue = AsyncHelper.CallReturnGenericTaskAfterAction(
+                invocation.ReturnValue = InternalAsyncHelper.CallReturnGenericTaskAfterAction(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Reflection
 {
-    internal static class AsyncHelper
+    internal static class InternalAsyncHelper
     {
         public static async Task WaitTaskAndActionWithFinally(Task actualReturnValue, Func<Task> afterAction, Action finalAction)
         {
@@ -21,7 +21,7 @@ namespace Abp.Reflection
 
         public static object CallReturnGenericTaskAfterAction(Type taskReturnType, object actualReturnValue, Func<Task> action, Action finalAction)
         {
-            return typeof (AsyncHelper)
+            return typeof (InternalAsyncHelper)
                 .GetMethod("ReturnGenericTaskAfterAction", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
                 .Invoke(null, new[] { actualReturnValue, action, finalAction });

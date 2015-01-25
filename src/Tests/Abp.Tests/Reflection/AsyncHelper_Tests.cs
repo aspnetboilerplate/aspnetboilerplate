@@ -14,17 +14,17 @@ namespace Abp.Tests.Reflection
         [Fact]
         public void IsAsync_Should_Work()
         {
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
+            InternalAsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
+            InternalAsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
+            InternalAsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
+            InternalAsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
         }
 
         [Fact]
         public void Should_Call_AfterAction()
         {
             _asyncMethod1Worked.ShouldBe(false);
-            AsyncHelper.WaitTaskAndActionWithFinally(
+            InternalAsyncHelper.WaitTaskAndActionWithFinally(
                 MyMethod1Async(),
                 async () =>
                       {
@@ -35,7 +35,7 @@ namespace Abp.Tests.Reflection
                 ).Wait();
             
             _asyncMethod2Worked.ShouldBe(false);
-            var returnValue = AsyncHelper.ReturnGenericTaskAfterAction(
+            var returnValue = InternalAsyncHelper.ReturnGenericTaskAfterAction(
                 MyMethod2Async(),
                 async () =>
                       {
