@@ -254,7 +254,7 @@ namespace Abp.EntityFramework.Repositories
 
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            foreach (var entity in Table.Where(predicate).ToList())
+            foreach (var entity in GetAll().Where(predicate).ToList())
             {
                 Delete(entity);
             }

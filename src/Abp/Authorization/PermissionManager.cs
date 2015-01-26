@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -16,8 +15,6 @@ namespace Abp.Authorization
     /// </summary>
     internal class PermissionManager : IPermissionManager, ISingletonDependency, IPermissionDefinitionContext
     {
-        public IPermissionChecker PermissionChecker { get; set; }
-
         public ILogger Logger { get; set; }
 
         public IAbpSession AbpSession { get; set; }
@@ -32,7 +29,6 @@ namespace Abp.Authorization
         /// </summary>
         public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
         {
-            PermissionChecker = NullPermissionChecker.Instance;
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
 

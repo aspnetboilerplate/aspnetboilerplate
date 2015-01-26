@@ -87,5 +87,10 @@ namespace Abp.Authorization
             _children.Add(permission);
             return permission;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Permission: {0}]", Name);
+        }
     }
 }

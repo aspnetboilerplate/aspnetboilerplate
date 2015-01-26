@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Abp.Web.Authorization;
 using Abp.Web.Localization;
@@ -16,7 +17,12 @@ namespace Abp.Web.Mvc.Controllers
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
 
-        public AbpScriptsController(ISettingScriptManager settingScriptManager, INavigationScriptManager navigationScriptManager, ILocalizationScriptManager localizationScriptManager, IAuthorizationScriptManager authorizationScriptManager, ISessionScriptManager sessionScriptManager)
+        public AbpScriptsController(
+            ISettingScriptManager settingScriptManager, 
+            INavigationScriptManager navigationScriptManager, 
+            ILocalizationScriptManager localizationScriptManager, 
+            IAuthorizationScriptManager authorizationScriptManager, 
+            ISessionScriptManager sessionScriptManager)
         {
             _settingScriptManager = settingScriptManager;
             _navigationScriptManager = navigationScriptManager;
@@ -25,18 +31,22 @@ namespace Abp.Web.Mvc.Controllers
             _sessionScriptManager = sessionScriptManager;
         }
 
-        public ActionResult GetScripts()
+        public async Task<ActionResult> GetScripts()
         {
             var sb = new StringBuilder();
             
             sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
+            
             sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
-            sb.AppendLine(_authorizationScriptManager.GetScript());
+            
+            sb.AppendLine(await _authorizationScriptManager.GetScriptAsync());
             sb.AppendLine();
+            
             sb.AppendLine(_navigationScriptManager.GetScript());
             sb.AppendLine();
+            
             sb.AppendLine(_settingScriptManager.GetScript());
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
