@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -19,7 +20,7 @@ namespace Abp.Application.Navigation
             PermissionChecker = NullPermissionChecker.Instance;
         }
 
-        public UserMenu GetMenu(string menuName, long? userId)
+        public async Task<UserMenu> GetMenuAsync(string menuName, long? userId)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
@@ -28,16 +29,23 @@ namespace Abp.Application.Navigation
             }
 
             var userMenu = new UserMenu(menuDefinition);
-            FillUserMenuItems(userId, menuDefinition.Items, userMenu.Items);
+            await FillUserMenuItems(userId, menuDefinition.Items, userMenu.Items);
             return userMenu;
         }
 
-        public IReadOnlyList<UserMenu> GetMenus(long? userId)
+        public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId)
         {
-            return _navigationManager.Menus.Values.Select(m => GetMenu(m.Name, userId)).ToImmutableList();
+            var userMenus = new List<UserMenu>();
+
+            foreach (var menu in _navigationManager.Menus.Values)
+            {
+                userMenus.Add(await GetMenuAsync(menu.Name, userId));
+            }
+
+            return userMenus;
         }
 
-        private int FillUserMenuItems(long? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(long? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
             var addedMenuItemCount = 0;
 
@@ -48,13 +56,13 @@ namespace Abp.Application.Navigation
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !PermissionChecker.IsGranted(userId.Value, menuItemDefinition.RequiredPermissionName)))
+                if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !(await PermissionChecker.IsGrantedAsync(userId.Value, menuItemDefinition.RequiredPermissionName))))
                 {
                     continue;
                 }
 
                 var userMenuItem = new UserMenuItem(menuItemDefinition);
-                if (menuItemDefinition.IsLeaf || FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items) > 0)
+                if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                 {
                     userMenuItems.Add(userMenuItem);
                     ++addedMenuItemCount;

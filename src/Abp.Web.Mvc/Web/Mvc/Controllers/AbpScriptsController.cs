@@ -9,6 +9,10 @@ using Abp.Web.Settings;
 
 namespace Abp.Web.Mvc.Controllers
 {
+    /// <summary>
+    /// This controller is used to create client side scripts
+    /// to work with ABP.
+    /// </summary>
     public class AbpScriptsController : AbpController
     {
         private readonly ISettingScriptManager _settingScriptManager;
@@ -17,6 +21,9 @@ namespace Abp.Web.Mvc.Controllers
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public AbpScriptsController(
             ISettingScriptManager settingScriptManager, 
             INavigationScriptManager navigationScriptManager, 
@@ -31,6 +38,10 @@ namespace Abp.Web.Mvc.Controllers
             _sessionScriptManager = sessionScriptManager;
         }
 
+        /// <summary>
+        /// Gets all needed scripts.
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> GetScripts()
         {
             var sb = new StringBuilder();
@@ -44,7 +55,7 @@ namespace Abp.Web.Mvc.Controllers
             sb.AppendLine(await _authorizationScriptManager.GetScriptAsync());
             sb.AppendLine();
             
-            sb.AppendLine(_navigationScriptManager.GetScript());
+            sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
             
             sb.AppendLine(_settingScriptManager.GetScript());

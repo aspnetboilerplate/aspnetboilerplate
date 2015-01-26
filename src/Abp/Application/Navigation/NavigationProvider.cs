@@ -12,9 +12,6 @@ namespace Abp.Application.Navigation
         /// Used to set navigation.
         /// </summary>
         /// <param name="context">Navigation context</param>
-        public virtual void SetNavigation(INavigationProviderContext context)
-        {
-            
-        }
+        public abstract void SetNavigation(INavigationProviderContext context);
     }
 }

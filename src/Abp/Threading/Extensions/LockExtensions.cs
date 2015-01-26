@@ -10,7 +10,7 @@ namespace Abp.Threading.Extensions
         /// <summary>
         /// Executes given <see cref="action"/> by locking given <see cref="source"/> object.
         /// </summary>
-        /// <param name="source">Source object (to be loacked)</param>
+        /// <param name="source">Source object (to be locked)</param>
         /// <param name="action">Action (to be executed)</param>
         public static void Locking(this object source, Action action)
         {
@@ -23,8 +23,8 @@ namespace Abp.Threading.Extensions
         /// <summary>
         /// Executes given <see cref="action"/> by locking given <see cref="source"/> object.
         /// </summary>
-        /// <typeparam name="T">Type of the object (to be loacked)</typeparam>
-        /// <param name="source">Source object (to be loacked)</param>
+        /// <typeparam name="T">Type of the object (to be locked)</typeparam>
+        /// <param name="source">Source object (to be locked)</param>
         /// <param name="action">Action (to be executed)</param>
         public static void Locking<T>(this T source, Action<T> action) where T : class
         {
@@ -37,9 +37,9 @@ namespace Abp.Threading.Extensions
         /// <summary>
         /// Executes given <see cref="func"/> and returns it's value by locking given <see cref="source"/> object.
         /// </summary>
-        /// <typeparam name="T">Type of the object (to be loacked)</typeparam>
+        /// <typeparam name="T">Type of the object (to be locked)</typeparam>
         /// <typeparam name="TResult">Return type</typeparam>
-        /// <param name="source">Source object (to be loacked)</param>
+        /// <param name="source">Source object (to be locked)</param>
         /// <param name="func">Function (to be executed)</param>
         /// <returns>Return value of the <see cref="func"/></returns>
         public static TResult Locking<TResult>(this object source, Func<TResult> func)
@@ -53,9 +53,9 @@ namespace Abp.Threading.Extensions
         /// <summary>
         /// Executes given <see cref="func"/> and returns it's value by locking given <see cref="source"/> object.
         /// </summary>
-        /// <typeparam name="T">Type of the object (to be loacked)</typeparam>
+        /// <typeparam name="T">Type of the object (to be locked)</typeparam>
         /// <typeparam name="TResult">Return type</typeparam>
-        /// <param name="source">Source object (to be loacked)</param>
+        /// <param name="source">Source object (to be locked)</param>
         /// <param name="func">Function (to be executed)</param>
         /// <returns>Return value of the <see cref="func"/></returns>
         public static TResult Locking<T, TResult>(this T source, Func<T, TResult> func) where T : class
