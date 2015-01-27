@@ -58,7 +58,7 @@ namespace Abp.Web.Mvc.Controllers
             sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
             
-            sb.AppendLine(_settingScriptManager.GetScript());
+            sb.AppendLine(await _settingScriptManager.GetScriptAsync());
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }

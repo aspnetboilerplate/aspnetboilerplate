@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Dependency;
 
@@ -19,7 +20,7 @@ namespace Abp.Web.Settings
             _settingManager = settingManager;
         }
 
-        public string GetScript()
+        public async Task<string> GetScriptAsync()
         {
             var script = new StringBuilder();
 
@@ -43,7 +44,7 @@ namespace Abp.Web.Settings
                     script.AppendLine();
                 }
 
-                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + _settingManager.GetSettingValue(settingDefinition.Name).Replace("'", @"\'") + "'");
+                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + (await _settingManager.GetSettingValueAsync(settingDefinition.Name)).Replace("'", @"\'") + "'");
 
                 ++added;
             }

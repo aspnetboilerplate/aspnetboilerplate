@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Runtime.Remoting.Messaging;
 using System.Web;
 using Abp.Dependency;
 using Castle.Core;
@@ -12,7 +12,7 @@ namespace Abp.Domain.Uow.Web
     public class HttpContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
     {
         private const string ContextKey = "Abp.UnitOfWork.Current";
-
+        
         [DoNotWire]
         public IUnitOfWork Current
         {
@@ -20,7 +20,14 @@ namespace Abp.Domain.Uow.Web
             {
                 if (HttpContext.Current == null)
                 {
-                    return _unitOfWork; //Fallback
+                    var unitOfWork = CallContext.LogicalGetData(ContextKey) as IUnitOfWork;
+
+                    if (unitOfWork != null && unitOfWork.IsDisposed)
+                    {
+                        unitOfWork = null;
+                    }
+
+                    return unitOfWork; 
                 }
 
                 return HttpContext.Current.Items[ContextKey] as IUnitOfWork;
@@ -30,15 +37,12 @@ namespace Abp.Domain.Uow.Web
             {
                 if (HttpContext.Current == null)
                 {
-                    _unitOfWork = value;  //Fallback
+                    CallContext.LogicalSetData(ContextKey, value);
                     return;
                 }
 
                 HttpContext.Current.Items[ContextKey] = value;
             }
         }
-
-        [ThreadStatic]
-        private static IUnitOfWork _unitOfWork;
     }
 }

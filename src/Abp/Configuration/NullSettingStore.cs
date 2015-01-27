@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Configuration
 {
@@ -17,31 +18,30 @@ namespace Abp.Configuration
         {
         }
 
-        /// <inheritdoc/>
-        public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+        public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-            return null;
+            return Task.FromResult<SettingInfo>(null);
         }
 
         /// <inheritdoc/>
-        public void Delete(SettingInfo setting)
-        {
-        }
-
-        /// <inheritdoc/>
-        public void Create(SettingInfo setting)
+        public async Task DeleteAsync(SettingInfo setting)
         {
         }
 
         /// <inheritdoc/>
-        public void Update(SettingInfo setting)
+        public async Task CreateAsync(SettingInfo setting)
         {
         }
 
         /// <inheritdoc/>
-        public List<SettingInfo> GetAll(int? tenantId, long? userId)
+        public async Task UpdateAsync(SettingInfo setting)
         {
-            return new List<SettingInfo>();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
+        {
+            return Task.FromResult(new List<SettingInfo>());
         }
     }
 }

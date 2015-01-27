@@ -165,6 +165,7 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
+    <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />

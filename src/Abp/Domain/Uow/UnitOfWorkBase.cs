@@ -24,7 +24,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
         /// </summary>
-        protected bool IsDisposed { get; private set; }
+        public bool IsDisposed { get; private set; }
         private bool _isStarted;
         private bool _isCompleted;
 

@@ -14,8 +14,20 @@ namespace Abp.Domain.Uow
         [DoNotWire]
         public IUnitOfWork Current
         {
-            get { return _unitOfWork; }
-            set { _unitOfWork = value; }
+            get
+            {
+                if (_unitOfWork.IsDisposed)
+                {
+                    _unitOfWork = null;
+                }
+                
+                return _unitOfWork;
+            }
+
+            set
+            {
+                _unitOfWork = value;
+            }
         }
 
         [ThreadStatic]

@@ -1,10 +1,12 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Threading;
 
 namespace Abp.Configuration
 {
     /// <summary>
     /// This class is used to simplify getting settings from anywhere.
+    /// TODO: Remove this class..?
     /// </summary>
     public static class SettingHelper
     {
@@ -23,7 +25,7 @@ namespace Abp.Configuration
         /// <returns>Current value of the setting</returns>
         public static string GetSettingValue(string name)
         {
-            return SettingManager.Value.GetSettingValue(name);
+            return AsyncHelper.RunSync(() => SettingManager.Value.GetSettingValueAsync(name));
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace Abp.Configuration
         /// <returns>Value of the setting</returns>
         public static T GetSettingValue<T>(string name)
         {
-            return SettingManager.Value.GetSettingValue<T>(name);
+            return AsyncHelper.RunSync(() => SettingManager.Value.GetSettingValueAsync<T>(name));
         }
     }
 }
