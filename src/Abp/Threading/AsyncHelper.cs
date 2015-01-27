@@ -1,19 +1,26 @@
 ﻿using System;
-using System.Globalization;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace Abp.Threading
 {
-    //NOTE: This class is taken from Microsoft.AspNet.Identity.EntityFramework project.
-
     /// <summary>
     /// Provides some helper methods to work with async methods.
     /// </summary>
     public static class AsyncHelper
     {
-        private static readonly TaskFactory _taskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None, TaskContinuationOptions.None, TaskScheduler.Default);
+        /// <summary>
+        /// Checks if given method is an async method.
+        /// </summary>
+        /// <param name="method">A method to check</param>
+        public static bool IsAsyncMethod(MethodInfo method)
+        {
+            return (
+                method.ReturnType == typeof(Task) ||
+                (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                );
+        }
 
         /// <summary>
         /// Runs a async method synchronously.
@@ -23,15 +30,7 @@ namespace Abp.Threading
         /// <returns>Result of the async operation</returns>
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)
         {
-            var cultureUi = CultureInfo.CurrentUICulture;
-            var culture = CultureInfo.CurrentCulture;
-            return _taskFactory.StartNew(
-                () =>
-                {
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = cultureUi;
-                    return func();
-                }).Unwrap().GetAwaiter().GetResult();
+            return AsyncContext.Run(func);
         }
 
         /// <summary>
@@ -40,23 +39,7 @@ namespace Abp.Threading
         /// <param name="action">An async action</param>
         public static void RunSync(Func<Task> action)
         {
-            CultureInfo cultureUi = CultureInfo.CurrentUICulture;
-            CultureInfo culture = CultureInfo.CurrentCulture;
-            _taskFactory.StartNew(
-                () =>
-                {
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = cultureUi;
-                    return action();
-                }).Unwrap().GetAwaiter().GetResult();
-        }
-
-        public static bool IsAsyncMethod(MethodInfo method)
-        {
-            return (
-                method.ReturnType == typeof(Task) ||
-                (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
-                );
+            AsyncContext.Run(action);
         }
     }
 }
