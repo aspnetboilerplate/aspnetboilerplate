@@ -26,7 +26,7 @@ namespace Abp.Threading
         /// Runs a async method synchronously.
         /// </summary>
         /// <param name="func">A function that returns a result</param>
-        /// <typeparam name="TResult">Retult type</typeparam>
+        /// <typeparam name="TResult">Result type</typeparam>
         /// <returns>Result of the async operation</returns>
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)
         {
