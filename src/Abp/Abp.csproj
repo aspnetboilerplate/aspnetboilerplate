@@ -134,6 +134,7 @@
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\SettingManagerExtensions.cs" />
     <Compile Include="Configuration\Startup\AuthorizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IAuthorizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />

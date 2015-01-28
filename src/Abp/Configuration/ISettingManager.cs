@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// This is the main interface that must be implemented to be able to load/store values of settings for a data source.
+    /// This is the main interface that must be implemented to be able to load/change values of settings.
     /// </summary>
     public interface ISettingManager
     {
@@ -26,7 +26,7 @@ namespace Abp.Configuration
 
         /// <summary>
         /// Gets current values of all settings.
-        /// It gets all setting values, overwrited by application and the current user if exists.
+        /// It gets all setting values, overwritten by application and the current user if exists.
         /// </summary>
         /// <returns>List of setting values</returns>
         Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync();
