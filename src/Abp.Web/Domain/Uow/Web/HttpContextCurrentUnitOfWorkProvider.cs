@@ -1,5 +1,4 @@
-﻿using System.Runtime.Remoting.Messaging;
-using System.Web;
+﻿using System.Web;
 using Abp.Dependency;
 using Castle.Core;
 
@@ -7,7 +6,7 @@ namespace Abp.Domain.Uow.Web
 {
     /// <summary>
     /// Implements <see cref="ICurrentUnitOfWorkProvider"/> using <see cref="HttpContext.Current"/>.
-    /// Fallbacks to ThreadStatic if <see cref="HttpContext.Current"/> is invalid.
+    /// Fallbacks to <see cref="CallContextCurrentUnitOfWorkProvider"/> if <see cref="HttpContext.Current"/> is invalid.
     /// </summary>
     public class HttpContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
     {
@@ -20,14 +19,7 @@ namespace Abp.Domain.Uow.Web
             {
                 if (HttpContext.Current == null)
                 {
-                    var unitOfWork = CallContext.LogicalGetData(ContextKey) as IUnitOfWork;
-
-                    if (unitOfWork != null && unitOfWork.IsDisposed)
-                    {
-                        unitOfWork = null;
-                    }
-
-                    return unitOfWork; 
+                    return CallContextCurrentUnitOfWorkProvider.StaticUow; //TODO: Can inject it?
                 }
 
                 return HttpContext.Current.Items[ContextKey] as IUnitOfWork;
@@ -37,7 +29,7 @@ namespace Abp.Domain.Uow.Web
             {
                 if (HttpContext.Current == null)
                 {
-                    CallContext.LogicalSetData(ContextKey, value);
+                    CallContextCurrentUnitOfWorkProvider.StaticUow = value; //TODO: Can inject it?
                     return;
                 }
 
