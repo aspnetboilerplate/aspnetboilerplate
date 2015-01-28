@@ -189,13 +189,7 @@ occures, it uses dependency injection to get a reference to the handler and
 releases the handler after handling the event. This is the <strong>suggested</strong> 
 way of using event bus in ASP.NET Boilerplate. </p>
 <h4 id="DocManualRegister">Manually</h4>
-<p>You can also manually register to events. Use manual registration carefully. 
-In a web application, registering to an event can be done in application start 
-for example. It's not true to register to an event during a web request since 
-registered class remains registered after request complete and it re-registers in next 
-request. Then it's may be called multiple times for same event and this cause 
-problems for your application. Also, this registration does not use dependency injection 
-system.</p>
+<p>It is also possible to manually register to events but use it with caution. In a web application, event registration should be done at application start. It's not a good approach to register to an event in a web request since registered classes remain registered after request completion and keep re-registering for each request. This may cause problems for your application since registered class can be called multiple times. Also keep in mind that manual registration does not use dependency injection system.</p>
 <p>There are some overloads of register method of the event bus. The simplest 
 one waits a delegate (or a lambda):</p>
 <pre lang="cs">EventBus.Register&lt;TaskCompletedEventData&gt;(eventData =&gt;
