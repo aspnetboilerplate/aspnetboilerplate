@@ -203,14 +203,14 @@ namespace Abp.EntityFramework.Repositories
 
         public virtual TEntity Update(TEntity entity)
         {
-            Table.Attach(entity);
+            AttachIfNot(entity);
             Context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
 
         public virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
-            Table.Attach(entity);
+            AttachIfNot(entity);
             Context.Entry(entity).State = EntityState.Modified;
             return Task.FromResult(entity);
         }
@@ -303,6 +303,14 @@ namespace Abp.EntityFramework.Repositories
         public virtual async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await GetAll().Where(predicate).LongCountAsync();
+        }
+
+        protected virtual void AttachIfNot(TEntity entity)
+        {
+            if (!Table.Local.Contains(entity))
+            {
+                Table.Attach(entity);
+            }
         }
 
         private static Expression<Func<TEntity, bool>> CreateEqualityExpression(TPrimaryKey id)
