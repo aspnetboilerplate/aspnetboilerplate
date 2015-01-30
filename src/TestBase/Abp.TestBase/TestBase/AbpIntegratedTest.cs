@@ -22,11 +22,18 @@ namespace Abp.TestBase
             LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
 
             AddModules(LocalIocManager.Resolve<TestModuleFinder>().Modules);
-            
+
+            PreInitialize();
+
             _bootstrapper = new AbpBootstrapper(LocalIocManager);
             _bootstrapper.Initialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
+        }
+
+        protected virtual void PreInitialize()
+        {
+            
         }
 
         public virtual void Dispose()
