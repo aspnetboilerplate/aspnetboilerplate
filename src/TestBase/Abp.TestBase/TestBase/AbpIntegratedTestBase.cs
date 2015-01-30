@@ -2,6 +2,7 @@
 using Abp.Collections;
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.Runtime.Session;
 using Abp.TestBase.Modules;
 using Abp.TestBase.Runtime.Session;
 
@@ -23,6 +24,7 @@ namespace Abp.TestBase
             LocalIocManager = new IocManager();
 
             LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
+            LocalIocManager.Register<IAbpSession, TestAbpSession>();
 
             AddModules(LocalIocManager.Resolve<TestModuleFinder>().Modules);
 
