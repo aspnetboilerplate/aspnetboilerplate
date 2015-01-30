@@ -6,7 +6,7 @@ namespace Abp.Domain.Uow
     /// Null implementation of unit of work.
     /// It's used if no component registered for <see cref="IUnitOfWork"/>.
     /// </summary>
-    public sealed class NullUnitOfWork : UnitOfWorkBase
+    public sealed class NullUnitOfWork : UnitOfWorkBase //TODO: Is that needed? Remove it..?
     {
         public override void SaveChanges()
         {
