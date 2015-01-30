@@ -5,12 +5,12 @@ using Abp.Reflection;
 using Abp.Threading;
 using Castle.DynamicProxy;
 
-namespace Abp.Authorization
+namespace Abp.Authorization.Interceptors
 {
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
     /// </summary>
-    internal class AuthorizationInterceptor : IInterceptor
+    public class AuthorizationInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
 

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Authorization.Interceptors;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;

@@ -99,7 +99,7 @@
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
     <Compile Include="Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />

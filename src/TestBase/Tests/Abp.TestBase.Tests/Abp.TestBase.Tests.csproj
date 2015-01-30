@@ -41,6 +41,7 @@
       <HintPath>..\..\..\packages\Shouldly.2.4.0\lib\net40\Shouldly.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpIntegratedTest_InitializeTests.cs" />
+    <Compile Include="Application\Services\MyAppService.cs" />
+    <Compile Include="Application\Services\MyAppService_Tests.cs" />
     <Compile Include="Runtime\Session\SessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
