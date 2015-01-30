@@ -20,7 +20,8 @@ namespace Abp.TestBase.Tests.Application.Services
     public class MyMethodInput : IInputDto
     {
         [Required]
-        public string RequiredStringValue { get; set; }
+        [MinLength(3)]
+        public string MyStringValue { get; set; }
     }
 
     public class MyMethodOutput : IOutputDto
