@@ -26,10 +26,17 @@ namespace Abp.TestBase
 
             AddModules(LocalIocManager.Resolve<TestModuleFinder>().Modules);
 
+            PreInitialize();
+
             _bootstrapper = new AbpBootstrapper(LocalIocManager);
             _bootstrapper.Initialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
+        }
+
+        protected virtual void PreInitialize()
+        {
+            //This method can be overrided to replace some services with fakes.
         }
 
         public virtual void Dispose()

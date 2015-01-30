@@ -7,3 +7,4 @@
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Api\Abp.Web.Api.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
+"..\src\.nuget\NuGet.exe" "pack" "..\src\TestBase\Abp.TestBase\Abp.TestBase.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols

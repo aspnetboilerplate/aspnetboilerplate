@@ -62,6 +62,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Abp.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
