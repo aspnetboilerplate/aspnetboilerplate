@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services;
+﻿using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.TestBase.SampleApplication.People.Dto;
 
@@ -8,6 +9,6 @@ namespace Abp.TestBase.SampleApplication.People
     {
         ListResultOutput<PersonDto> GetPeople(GetPeopleInput input);
 
-        void CreatePerson(CreatePersonInput input);
+        Task CreatePersonAsync(CreatePersonInput input);
     }
 }

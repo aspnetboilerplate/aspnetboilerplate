@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
@@ -32,9 +33,9 @@ namespace Abp.TestBase.SampleApplication.People
             return new ListResultOutput<PersonDto>(people.MapTo<List<PersonDto>>());
         }
 
-        public void CreatePerson(CreatePersonInput input)
+        public async Task CreatePersonAsync(CreatePersonInput input)
         {
-            _personRepository.Insert(input.MapTo<Person>());
+            await _personRepository.InsertAsync(input.MapTo<Person>());
         }
     }
 }

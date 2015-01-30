@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.Dependency;
 using Abp.Runtime.Session;
+using Abp.Tests.TestUtils;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
@@ -87,10 +88,10 @@ namespace Abp.Tests.Authorization
 
             //Non authorized methods
 
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
+            await AssertEx.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
             _asyncObj.Called_MethodWithPermission3.ShouldBe(false);
 
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
+            await AssertEx.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
             _asyncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
         }
 

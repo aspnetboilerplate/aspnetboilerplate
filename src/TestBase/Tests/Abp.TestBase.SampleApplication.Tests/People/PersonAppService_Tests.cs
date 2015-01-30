@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Runtime.Validation;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
+using Abp.TestBase.SampleApplication.Tests.TestUtils;
 using Shouldly;
 using Xunit;
 
@@ -29,22 +32,21 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
-        public void Should_Insert_New_Person()
+        public async Task Should_Insert_New_Person()
         {
-            _personAppService.CreatePerson(new CreatePersonInput { Name = "john" });
+            await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
 
-            UsingDbContext(
-                context =>
+            UsingDbContext(async context =>
                 {
-                    context.People.Count().ShouldBe(_initialPeople.Count + 1);
-                    context.People.FirstOrDefault(p => p.Name == "john").ShouldNotBe(null);
+                    (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
+                    (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
                 });
         }
 
         [Fact]
-        public void Should_Not_Insert_For_Invalid_Input()
+        public async Task Should_Not_Insert_For_Invalid_Input()
         {
-            Assert.Throws<AbpValidationException>(() => _personAppService.CreatePerson(new CreatePersonInput { Name = null }));
+            await AssertEx.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
         }
 
         [Fact]

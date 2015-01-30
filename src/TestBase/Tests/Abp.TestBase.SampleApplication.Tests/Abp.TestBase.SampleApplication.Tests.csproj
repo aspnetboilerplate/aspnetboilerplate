@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestUtils\AssertEx.cs" />
     <Compile Include="People\PersonAppService_Tests.cs" />
     <Compile Include="SampleApplicationTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
