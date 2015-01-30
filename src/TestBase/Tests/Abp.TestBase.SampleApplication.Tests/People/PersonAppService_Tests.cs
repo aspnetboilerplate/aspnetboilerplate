@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
 using Abp.Runtime.Validation;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
@@ -36,11 +37,29 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
 
-            UsingDbContext(async context =>
-                {
-                    (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
-                    (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
-                });
+            await UsingDbContext(async context =>
+            {
+                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
+                (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Rollback_If_Uow_Is_Not_Completed()
+        {
+            //CreatePersonAsync will use same UOW.
+            using (var uow = LocalIocManager.Resolve<IUnitOfWorkManager>().Begin())
+            {
+                await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
+                //await uow.CompleteAsync(); //It's intentionally removed from code to see roll-back
+            }
+
+            //john will not be added since uow is not completed (so, rolled back)
+            await UsingDbContext(async context =>
+            {
+                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count);
+                (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldBe(null);
+            });
         }
 
         [Fact]
