@@ -1,4 +1,5 @@
-﻿using Abp.Tests.Application.Navigation;
+﻿using System.Threading.Tasks;
+using Abp.Tests.Application.Navigation;
 using Abp.Tests.Configuration;
 using Abp.Web.Navigation;
 using Shouldly;
@@ -9,7 +10,7 @@ namespace Abp.Web.Tests.Navigation
     public class NavigationScript_Tests
     {
         [Fact]
-        public void Test1()
+        public async Task Test1()
         {
             var testCase = new NavigationTestCase();
             var scriptManager = new NavigationScriptManager(testCase.UserNavigationManager)
@@ -17,7 +18,7 @@ namespace Abp.Web.Tests.Navigation
                 AbpSession = new MyChangableSession { UserId = 1 }
             };
 
-            var script = scriptManager.GetScript();
+            var script = await scriptManager.GetScriptAsync();
             script.ShouldNotBeNullOrEmpty();
         }
     }

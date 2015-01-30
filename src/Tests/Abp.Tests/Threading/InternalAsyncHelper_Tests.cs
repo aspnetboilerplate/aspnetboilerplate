@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
-using Abp.Reflection;
+using Abp.Threading;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Reflection
+namespace Abp.Tests.Threading
 {
-    public class AsyncHelper_Tests
+    public class InternalAsyncHelper_Tests
     {
         private bool _asyncMethod1Worked;
         private bool _asyncMethod2Worked;
@@ -24,7 +24,7 @@ namespace Abp.Tests.Reflection
         public void Should_Call_AfterAction()
         {
             _asyncMethod1Worked.ShouldBe(false);
-            AsyncHelper.WaitTaskAndActionWithFinally(
+            InternalAsyncHelper.WaitTaskAndActionWithFinally(
                 MyMethod1Async(),
                 async () =>
                       {
@@ -35,7 +35,7 @@ namespace Abp.Tests.Reflection
                 ).Wait();
             
             _asyncMethod2Worked.ShouldBe(false);
-            var returnValue = AsyncHelper.ReturnGenericTaskAfterAction(
+            var returnValue = InternalAsyncHelper.ReturnGenericTaskAfterAction(
                 MyMethod2Async(),
                 async () =>
                       {

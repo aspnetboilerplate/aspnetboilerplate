@@ -6,7 +6,7 @@ namespace Abp.Dependency
     /// <summary>
     /// This class is used to register basic dependency implementations such as <see cref="ITransientDependency"/> and <see cref="ISingletonDependency"/>.
     /// </summary>
-    internal class BasicConventionalRegistrar : IConventionalDependencyRegistrar
+    public class BasicConventionalRegistrar : IConventionalDependencyRegistrar
     {
         public void RegisterAssembly(IConventionalRegistrationContext context)
         {

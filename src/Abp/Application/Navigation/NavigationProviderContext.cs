@@ -4,7 +4,7 @@ namespace Abp.Application.Navigation
     {
         public INavigationManager Manager { get; private set; }
 
-        public NavigationProviderContext(NavigationManager manager)
+        public NavigationProviderContext(INavigationManager manager)
         {
             Manager = manager;
         }

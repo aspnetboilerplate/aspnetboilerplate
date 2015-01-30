@@ -55,7 +55,7 @@ namespace Abp.WebApi.Controllers
             Logger = NullLogger.Instance;
             _localizationSource = NullLocalizationSource.Instance;
         }
-
+        
         /// <summary>
         /// Gets localized string for given key name and current language.
         /// </summary>
@@ -67,6 +67,17 @@ namespace Abp.WebApi.Controllers
         }
 
         /// <summary>
+        /// Gets localized string for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        public string L(string name, params object[] args)
+        {
+            return _localizationSource.GetString(name, args);
+        }
+
+        /// <summary>
         /// Gets localized string for given key name and specified culture information.
         /// </summary>
         /// <param name="name">Key name</param>
@@ -75,6 +86,18 @@ namespace Abp.WebApi.Controllers
         protected virtual string L(string name, CultureInfo culture)
         {
             return _localizationSource.GetString(name, culture);
+        }
+
+        /// <summary>
+        /// Gets localized string for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        public string L(string name, CultureInfo culture, params object[] args)
+        {
+            return _localizationSource.GetString(name, culture, args);
         }
     }
 }

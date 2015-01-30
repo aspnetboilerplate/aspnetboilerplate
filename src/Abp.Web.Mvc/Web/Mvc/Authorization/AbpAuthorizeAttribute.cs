@@ -36,7 +36,8 @@ namespace Abp.Web.Mvc.Authorization
 
             try
             {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<AuthorizeAttributeHelper>())
+                //TODO: Use Async..?
+                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
                 {
                     authorizationAttributeHelper.Object.Authorize(this);
                 }

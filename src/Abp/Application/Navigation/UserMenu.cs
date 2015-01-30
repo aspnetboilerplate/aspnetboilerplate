@@ -33,7 +33,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="UserMenu"/> object from given <see cref="MenuDefinition"/>.
         /// </summary>
-        public UserMenu(MenuDefinition menuDefinition)
+        internal UserMenu(MenuDefinition menuDefinition)
         {
             Name = menuDefinition.Name;
             DisplayName = menuDefinition.DisplayName.Localize();

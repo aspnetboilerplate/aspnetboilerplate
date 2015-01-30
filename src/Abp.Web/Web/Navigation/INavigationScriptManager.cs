@@ -1,4 +1,6 @@
-﻿namespace Abp.Web.Navigation
+﻿using System.Threading.Tasks;
+
+namespace Abp.Web.Navigation
 {
     /// <summary>
     /// Used to generate navigation scripts.
@@ -9,6 +11,6 @@
         /// Used to generate navigation scripts.
         /// </summary>
         /// <returns></returns>
-        string GetScript();
+        Task<string> GetScriptAsync();
     }
 }

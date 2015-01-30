@@ -17,41 +17,53 @@ namespace Abp.Runtime.Validation
         public List<ValidationResult> ValidationErrors { get; set; }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         public AbpValidationException()
         {
-
+            ValidationErrors = new List<ValidationResult>();
         }
 
         /// <summary>
-        /// Contstructor for serializing.
+        /// Constructor for serializing.
         /// </summary>
         public AbpValidationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
+            ValidationErrors = new List<ValidationResult>();
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpValidationException(string message)
             : base(message)
         {
+            ValidationErrors = new List<ValidationResult>();
+        }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Exception message</param>
+        /// <param name="validationErrors">Validation errors</param>
+        public AbpValidationException(string message, List<ValidationResult> validationErrors)
+            : base(message)
+        {
+            ValidationErrors = validationErrors;
         }
 
         /// <summary>
-        /// Contstructor.
+        /// Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
         public AbpValidationException(string message, Exception innerException)
             : base(message, innerException)
         {
-
+            ValidationErrors = new List<ValidationResult>();
         }
     }
 }

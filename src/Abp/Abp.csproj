@@ -47,6 +47,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Nito.AsyncEx">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,7 +99,7 @@
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
     <Compile Include="Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />
@@ -111,8 +120,10 @@
     <Compile Include="Application\Services\Dto\ISortedResultRequest.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Authorization\AbpAuthorizationException.cs" />
+    <Compile Include="Authorization\IAuthorizeAttributeHelper.cs" />
     <Compile Include="Authorization\IPermissionChecker.cs" />
     <Compile Include="Authorization\NullPermissionChecker.cs" />
+    <Compile Include="Authorization\PermissionCheckerExtensions.cs" />
     <Compile Include="Authorization\PermissionDictionary.cs" />
     <Compile Include="Authorization\IPermissionDefinitionContext.cs" />
     <Compile Include="Authorization\AuthorizationProvider.cs" />
@@ -123,6 +134,7 @@
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\SettingManagerExtensions.cs" />
     <Compile Include="Configuration\Startup\AuthorizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IAuthorizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />
@@ -148,12 +160,14 @@
     <Compile Include="Domain\Uow\ICurrentUnitOfWorkProvider.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkDefaultOptions.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkManager.cs" />
-    <Compile Include="Domain\Uow\ThreadStaticCurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\CallContextCurrentUnitOfWorkProvider.cs" />
     <Compile Include="Domain\Uow\InnerUnitOfWorkCompleteHandle.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkDefaultOptions.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
-    <Compile Include="Reflection\AsyncHelper.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
+    <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
+    <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
@@ -282,7 +296,9 @@
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
-    <Compile Include="Transactions\IsolationLevelExtensions.cs" />
+    <Compile Include="Threading\AsyncHelper.cs" />
+    <Compile Include="Threading\Extensions\LockExtensions.cs" />
+    <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Abp.Web.Authorization;
 using Abp.Web.Localization;
@@ -8,6 +9,10 @@ using Abp.Web.Settings;
 
 namespace Abp.Web.Mvc.Controllers
 {
+    /// <summary>
+    /// This controller is used to create client side scripts
+    /// to work with ABP.
+    /// </summary>
     public class AbpScriptsController : AbpController
     {
         private readonly ISettingScriptManager _settingScriptManager;
@@ -16,7 +21,15 @@ namespace Abp.Web.Mvc.Controllers
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
 
-        public AbpScriptsController(ISettingScriptManager settingScriptManager, INavigationScriptManager navigationScriptManager, ILocalizationScriptManager localizationScriptManager, IAuthorizationScriptManager authorizationScriptManager, ISessionScriptManager sessionScriptManager)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public AbpScriptsController(
+            ISettingScriptManager settingScriptManager, 
+            INavigationScriptManager navigationScriptManager, 
+            ILocalizationScriptManager localizationScriptManager, 
+            IAuthorizationScriptManager authorizationScriptManager, 
+            ISessionScriptManager sessionScriptManager)
         {
             _settingScriptManager = settingScriptManager;
             _navigationScriptManager = navigationScriptManager;
@@ -25,19 +38,27 @@ namespace Abp.Web.Mvc.Controllers
             _sessionScriptManager = sessionScriptManager;
         }
 
-        public ActionResult GetScripts()
+        /// <summary>
+        /// Gets all needed scripts.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> GetScripts()
         {
             var sb = new StringBuilder();
             
             sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
+            
             sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
-            sb.AppendLine(_authorizationScriptManager.GetScript());
+            
+            sb.AppendLine(await _authorizationScriptManager.GetScriptAsync());
             sb.AppendLine();
-            sb.AppendLine(_navigationScriptManager.GetScript());
+            
+            sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
-            sb.AppendLine(_settingScriptManager.GetScript());
+            
+            sb.AppendLine(await _settingScriptManager.GetScriptAsync());
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }

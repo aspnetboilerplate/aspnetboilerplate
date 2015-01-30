@@ -56,7 +56,7 @@ namespace Abp.Authorization
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
-        internal Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        public Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
         {
             if (name == null)
             {
@@ -86,6 +86,11 @@ namespace Abp.Authorization
             var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };
             _children.Add(permission);
             return permission;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[Permission: {0}]", Name);
         }
     }
 }

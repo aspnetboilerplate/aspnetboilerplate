@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Dependency;
 using Abp.Runtime.Session;
@@ -18,9 +19,9 @@ namespace Abp.Web.Navigation
             AbpSession = NullAbpSession.Instance;
         }
 
-        public string GetScript()
+        public async Task<string> GetScriptAsync()
         {
-            var userMenus = _userNavigationManager.GetMenus(AbpSession.UserId);
+            var userMenus = await _userNavigationManager.GetMenusAsync(AbpSession.UserId);
 
             var sb = new StringBuilder();
             sb.AppendLine("(function() {");
@@ -44,7 +45,7 @@ namespace Abp.Web.Navigation
             return sb.ToString();
         }
 
-        private void AppendMenu(StringBuilder sb, UserMenu menu)
+        private static void AppendMenu(StringBuilder sb, UserMenu menu)
         {
             sb.AppendLine("        '" + menu.Name + "': {");
 
@@ -78,7 +79,7 @@ namespace Abp.Web.Navigation
             sb.AppendLine("            }");
         }
 
-        private void AppendMenuItem(int indentLength, StringBuilder sb, UserMenuItem menuItem)
+        private static void AppendMenuItem(int indentLength, StringBuilder sb, UserMenuItem menuItem)
         {
             sb.AppendLine("{");
 

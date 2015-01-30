@@ -1,7 +1,6 @@
-using System.Data;
 using System.Threading.Tasks;
 using Abp.Domain.Uow;
-using Abp.Transactions;
+using Abp.Transactions.Extensions;
 using NHibernate;
 
 namespace Abp.NHibernate.Uow

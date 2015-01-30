@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Runtime.Session;
@@ -29,14 +30,22 @@ namespace Abp.Web.Authorization
         }
 
         /// <inheritdoc/>
-        public string GetScript()
+        public async Task<string> GetScriptAsync()
         {
             var allPermissionNames = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
-            var grantedPermissionNames =
-                AbpSession.UserId.HasValue
-                    ? allPermissionNames.Where(permissionName => PermissionChecker.IsGranted(AbpSession.UserId.Value, permissionName)).ToArray()
-                    : new string[0];
+            var grantedPermissionNames = new List<string>();
 
+            if (AbpSession.UserId.HasValue)
+            {
+                foreach (var permissionName in allPermissionNames)
+                {
+                    if (await PermissionChecker.IsGrantedAsync(AbpSession.UserId.Value, permissionName))
+                    {
+                        grantedPermissionNames.Add(permissionName);
+                    }
+                }
+            }
+            
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");

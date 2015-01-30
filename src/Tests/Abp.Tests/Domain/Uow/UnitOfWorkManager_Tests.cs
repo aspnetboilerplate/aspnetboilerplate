@@ -14,7 +14,7 @@ namespace Abp.Tests.Domain.Uow
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
-                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<ThreadStaticCurrentUnitOfWorkProvider>().LifestyleSingleton(),
+                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<CallContextCurrentUnitOfWorkProvider>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleTransient()
                 );

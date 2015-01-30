@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434FA4-ED3F-4A7B-A0D3-8CBB900B1609}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9E8F8E84-8335-48E4-988C-D0C9F37927D6}"
@@ -40,6 +39,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.AutoMapper", "Abp.AutoMapper\Abp.AutoMapper.csproj", "{06EB5F7C-B974-4775-A305-F175D645F7C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.AutoMapper.Tests", "Tests\Abp.AutoMapper.Tests\Abp.AutoMapper.Tests.csproj", "{6C1BB309-3FE8-40A1-A97C-62495CE61AB6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestBase", "TestBase", "{7A90AE8F-6362-4027-AE6F-C33DFEC9BEFF}"
+	ProjectSection(SolutionItems) = preProject
+		TestBase\README.md = TestBase\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.TestBase", "TestBase\Abp.TestBase\Abp.TestBase.csproj", "{F554B0EF-ACF4-4F72-B711-EF36559DCE43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0ED67C81-878D-4F09-903E-B6233D211B72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.TestBase.Tests", "TestBase\Tests\Abp.TestBase.Tests\Abp.TestBase.Tests.csproj", "{040FAC4B-7320-4C94-9555-E82FA13DD921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,6 +117,14 @@ Global
 		{6C1BB309-3FE8-40A1-A97C-62495CE61AB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C1BB309-3FE8-40A1-A97C-62495CE61AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C1BB309-3FE8-40A1-A97C-62495CE61AB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F554B0EF-ACF4-4F72-B711-EF36559DCE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F554B0EF-ACF4-4F72-B711-EF36559DCE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F554B0EF-ACF4-4F72-B711-EF36559DCE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F554B0EF-ACF4-4F72-B711-EF36559DCE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040FAC4B-7320-4C94-9555-E82FA13DD921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040FAC4B-7320-4C94-9555-E82FA13DD921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040FAC4B-7320-4C94-9555-E82FA13DD921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040FAC4B-7320-4C94-9555-E82FA13DD921}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +135,8 @@ Global
 		{662A3C76-DC6E-425C-B389-23B1040AD2F8} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{30F91B61-4BA1-491A-ABE1-B615C1B97E71} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{6C1BB309-3FE8-40A1-A97C-62495CE61AB6} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{F554B0EF-ACF4-4F72-B711-EF36559DCE43} = {7A90AE8F-6362-4027-AE6F-C33DFEC9BEFF}
+		{0ED67C81-878D-4F09-903E-B6233D211B72} = {7A90AE8F-6362-4027-AE6F-C33DFEC9BEFF}
+		{040FAC4B-7320-4C94-9555-E82FA13DD921} = {0ED67C81-878D-4F09-903E-B6233D211B72}
 	EndGlobalSection
 EndGlobal

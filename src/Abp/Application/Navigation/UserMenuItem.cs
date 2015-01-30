@@ -43,7 +43,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="UserMenuItem"/> object from given <see cref="MenuItemDefinition"/>.
         /// </summary>
-        public UserMenuItem(MenuItemDefinition menuItemDefinition)
+        internal UserMenuItem(MenuItemDefinition menuItemDefinition)
         {
             Name = menuItemDefinition.Name;
             Icon = menuItemDefinition.Icon;

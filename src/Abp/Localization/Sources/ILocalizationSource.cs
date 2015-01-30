@@ -21,7 +21,7 @@ namespace Abp.Localization.Sources
         /// <summary>
         /// Gets localized string for given name in current language.
         /// </summary>
-        /// <param name="name">Name</param>
+        /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
         string GetString(string name);
 

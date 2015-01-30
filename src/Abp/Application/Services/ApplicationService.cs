@@ -76,6 +76,17 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
+        /// Gets localized string for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        public string L(string name, params object[] args)
+        {
+            return LocalizationSource.GetString(name, args);
+        }
+
+        /// <summary>
         /// Gets localized string for given key name and specified culture information.
         /// </summary>
         /// <param name="name">Key name</param>
@@ -84,6 +95,18 @@ namespace Abp.Application.Services
         protected virtual string L(string name, CultureInfo culture)
         {
             return LocalizationSource.GetString(name, culture);
+        }
+
+        /// <summary>
+        /// Gets localized string for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        public string L(string name, CultureInfo culture, params object[] args)
+        {
+            return LocalizationSource.GetString(name, culture, args);
         }
     }
 }

@@ -1,5 +1,7 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Reflection;
+using Abp.Threading;
 using Castle.DynamicProxy;
 
 namespace Abp.Domain.Uow
@@ -43,13 +45,13 @@ namespace Abp.Domain.Uow
 
         private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            if (!AsyncHelper.IsAsyncMethod(invocation.Method))
+            if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {
-                PerformSyncUow(invocation, options);
+                PerformAsyncUow(invocation, options);
             }
             else
             {
-                PerformAsyncUow(invocation, options);
+                PerformSyncUow(invocation, options);
             }
         }
 
@@ -70,15 +72,15 @@ namespace Abp.Domain.Uow
 
             if (invocation.Method.ReturnType == typeof (Task))
             {
-                invocation.ReturnValue = AsyncHelper.WaitTaskAndActionWithFinally(
+                invocation.ReturnValue = InternalAsyncHelper.WaitTaskAndActionWithFinally(
                     (Task) invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
                     uow.Dispose
                     );
             }
-            else
+            else //Task<TResult>
             {
-                invocation.ReturnValue = AsyncHelper.CallReturnGenericTaskAfterAction(
+                invocation.ReturnValue = InternalAsyncHelper.CallReturnGenericTaskAfterAction(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),

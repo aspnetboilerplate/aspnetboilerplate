@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -50,10 +51,10 @@ namespace Abp.Tests.Application.Navigation
 
         private static IPermissionChecker CreateMockPermissionChecker()
         {
-            var permissionManager = Substitute.For<IPermissionChecker>();
-            permissionManager.IsGranted(1, "Abp.Zero.UserManagement").Returns(true);
-            permissionManager.IsGranted(1, "Abp.Zero.RoleManagement").Returns(false);
-            return permissionManager;
+            var permissionChecker = Substitute.For<IPermissionChecker>();
+            permissionChecker.IsGrantedAsync(1, "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(1, "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            return permissionChecker;
         }
 
         public class MyNavigationProvider1 : NavigationProvider
