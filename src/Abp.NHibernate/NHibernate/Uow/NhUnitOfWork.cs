@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Transactions.Extensions;
 using NHibernate;
@@ -8,7 +9,7 @@ namespace Abp.NHibernate.Uow
     /// <summary>
     /// Implements Unit of work for NHibernate.
     /// </summary>
-    public class NhUnitOfWork : UnitOfWorkBase
+    public class NhUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         /// <summary>
         /// Gets NHibernate session object to perform queries.

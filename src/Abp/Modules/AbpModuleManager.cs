@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -48,7 +50,8 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = _moduleFinder.FindAll();
+            var moduleTypes = AddMissingDependedModules(_moduleFinder.FindAll());
+            Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
             //Register to IOC container.
             foreach (var moduleType in moduleTypes)
@@ -77,8 +80,8 @@ namespace Abp.Modules
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
 
-            //AbpCoreModule must be the first module
-            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpCoreModule));
+            //AbpKernelModule must be the first module
+            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
             if (startupModuleIndex > 0)
             {
                 var startupModule = _modules[startupModuleIndex];
@@ -119,6 +122,29 @@ namespace Abp.Modules
                     {
                         moduleInfo.Dependencies.Add(dependedModuleInfo);
                     }
+                }
+            }
+        }
+
+        private static ICollection<Type> AddMissingDependedModules(ICollection<Type> allModules)
+        {
+            var initialModules = allModules.ToList();
+            foreach (var module in initialModules)
+            {
+                FillDependedModules(module, allModules);
+            }
+
+            return allModules;
+        }
+
+        private static void FillDependedModules(Type module, ICollection<Type> allModules)
+        {
+            foreach (var dependedModule in AbpModule.FindDependedModuleTypes(module))
+            {
+                if (!allModules.Contains(dependedModule))
+                {
+                    allModules.Add(dependedModule);
+                    FillDependedModules(dependedModule, allModules);
                 }
             }
         }

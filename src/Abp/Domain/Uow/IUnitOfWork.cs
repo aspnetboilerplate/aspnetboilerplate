@@ -1,5 +1,3 @@
-using Abp.Dependency;
-
 namespace Abp.Domain.Uow
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace Abp.Domain.Uow
     /// This interface is internally used by ABP.
     /// Use <see cref="IUnitOfWorkManager.Begin()"/> to start a new unit of work.
     /// </summary>
-    public interface IUnitOfWork : IActiveUnitOfWork, IUnitOfWorkCompleteHandle, ITransientDependency
+    public interface IUnitOfWork : IActiveUnitOfWork, IUnitOfWorkCompleteHandle
     {
         /// <summary>
         /// Begins the unit of work with given options.

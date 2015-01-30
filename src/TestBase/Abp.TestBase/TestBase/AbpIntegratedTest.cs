@@ -1,55 +1,43 @@
 ﻿using System;
-using System.Reflection;
-using Abp.Application.Services.Interceptors;
-using Abp.Authorization.Interceptors;
+using Abp.Collections;
 using Abp.Dependency;
-using Abp.Runtime.Validation.Interception;
+using Abp.Modules;
+using Abp.TestBase.Modules;
 using Abp.TestBase.Runtime.Session;
 
 namespace Abp.TestBase
 {
     public abstract class AbpIntegratedTest : IDisposable
     {
-        public IIocManager LocalIocManager { get; private set; }
+        protected IIocManager LocalIocManager { get; private set; }
 
         protected TestAbpSession AbpSession { get; private set; }
+
+        private readonly AbpBootstrapper _bootstrapper;
 
         protected AbpIntegratedTest()
         {
             LocalIocManager = new IocManager();
 
-            PreInitialize();
-            Initialize();
-            PostInitialize();
+            LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
+
+            AddModules(LocalIocManager.Resolve<TestModuleFinder>().Modules);
+            
+            _bootstrapper = new AbpBootstrapper(LocalIocManager);
+            _bootstrapper.Initialize();
+
+            AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
 
         public virtual void Dispose()
         {
-            Shutdown();
+            _bootstrapper.Dispose();
             LocalIocManager.Dispose();
         }
 
-        protected virtual void PreInitialize()
+        protected virtual void AddModules(ITypeList<AbpModule> modules)
         {
-            LocalIocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
-            ApplicationServiceInterceptorRegistrar.Initialize(LocalIocManager);
-        }
-
-        protected virtual void Initialize()
-        {
-            LocalIocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly()); //TODO: Maybe registering entire assembly is not good..?
-            LocalIocManager.Register<ValidationInterceptor>(DependencyLifeStyle.Transient);
-            LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
-        }
-
-        protected virtual void PostInitialize()
-        {
-            AbpSession = LocalIocManager.Resolve<TestAbpSession>();
-        }
-
-        protected virtual void Shutdown()
-        {
-            
+            modules.Add<TestBaseModule>();
         }
     }
 }

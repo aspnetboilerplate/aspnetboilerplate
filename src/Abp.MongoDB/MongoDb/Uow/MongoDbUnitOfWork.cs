@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.MongoDb.Configuration;
 using MongoDB.Driver;
 
 namespace Abp.MongoDb.Uow
 {
-    public class MongoDbUnitOfWork : UnitOfWorkBase
+    public class MongoDbUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         public MongoDatabase Database { get; private set; }
 

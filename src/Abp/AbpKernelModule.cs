@@ -10,7 +10,7 @@ using Abp.Modules;
 
 namespace Abp
 {
-    internal sealed class AbpCoreModule : AbpModule
+    public sealed class AbpKernelModule : AbpModule
     {
         public override void PreInitialize()
         {
@@ -34,9 +34,19 @@ namespace Abp
 
         public override void PostInitialize()
         {
+            RegisterMissingComponents();
+
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
+        }
+
+        private void RegisterMissingComponents()
+        {
+            if (!IocManager.IsRegistered<IUnitOfWork>())
+            {
+                IocManager.Register<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
+            }
         }
     }
 }

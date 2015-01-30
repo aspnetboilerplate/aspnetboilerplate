@@ -7,17 +7,11 @@ namespace Abp.TestBase.Tests.Application.Services
 {
     public class MyAppService_Tests : AbpIntegratedTest
     {
-        private IMyAppService _myAppService;
+        private readonly IMyAppService _myAppService;
 
-        protected override void Initialize()
+        public MyAppService_Tests()
         {
-            base.Initialize();
             LocalIocManager.Register<IMyAppService, MyAppService>(DependencyLifeStyle.Transient);
-        }
-
-        protected override void PostInitialize()
-        {
-            base.PostInitialize();
             _myAppService = LocalIocManager.Resolve<IMyAppService>();
         }
 

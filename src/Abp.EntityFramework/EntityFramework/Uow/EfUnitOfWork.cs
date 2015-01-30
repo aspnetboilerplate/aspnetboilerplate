@@ -12,7 +12,7 @@ namespace Abp.EntityFramework.Uow
     /// <summary>
     /// Implements Unit of work for Entity Framework.
     /// </summary>
-    public class EfUnitOfWork : UnitOfWorkBase
+    public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         private readonly IDictionary<Type, DbContext> _activeDbContexts;
         private readonly IIocResolver _iocResolver;
