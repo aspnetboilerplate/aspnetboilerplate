@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestBase\AbpIntegratedTest.cs" />
+    <Compile Include="TestBase\AbpIntegratedTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBase\Runtime\Session\TestAbpSession.cs" />
     <Compile Include="TestBase\Modules\TestModuleFinder.cs" />

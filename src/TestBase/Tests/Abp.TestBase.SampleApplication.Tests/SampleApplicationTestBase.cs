@@ -7,7 +7,7 @@ using Castle.MicroKernel.Registration;
 
 namespace Abp.TestBase.SampleApplication.Tests
 {
-    public abstract class SampleApplicationTestBase : AbpIntegratedTest
+    public abstract class SampleApplicationTestBase : AbpIntegratedTestBase
     {
         protected SampleApplicationTestBase()
         {

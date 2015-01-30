@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Abp.TestBase.Tests.Runtime.Session
 {
-    public class SessionTests : AbpIntegratedTest
+    public class SessionTests : AbpIntegratedTestBase
     {
         [Fact]
         public void Should_Be_All_Null_On_Startup()

@@ -7,7 +7,10 @@ using Abp.TestBase.Runtime.Session;
 
 namespace Abp.TestBase
 {
-    public abstract class AbpIntegratedTest : IDisposable
+    /// <summary>
+    /// This is the base class for all tests integrated to ABP.
+    /// </summary>
+    public abstract class AbpIntegratedTestBase : IDisposable
     {
         protected IIocManager LocalIocManager { get; private set; }
 
@@ -15,7 +18,7 @@ namespace Abp.TestBase
 
         private readonly AbpBootstrapper _bootstrapper;
 
-        protected AbpIntegratedTest()
+        protected AbpIntegratedTestBase()
         {
             LocalIocManager = new IocManager();
 

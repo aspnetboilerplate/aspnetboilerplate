@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.TestBase.Tests.Application.Services
 {
-    public class MyAppService_Tests : AbpIntegratedTest
+    public class MyAppService_Tests : AbpIntegratedTestBase
     {
         private readonly IMyAppService _myAppService;
 
