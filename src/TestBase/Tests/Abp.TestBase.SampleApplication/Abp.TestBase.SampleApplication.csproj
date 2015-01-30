@@ -60,6 +60,10 @@
     <Compile Include="SampleApplicationModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Abp.AutoMapper\Abp.AutoMapper.csproj">
+      <Project>{06EB5F7C-B974-4775-A305-F175D645F7C9}</Project>
+      <Name>Abp.AutoMapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Abp.EntityFramework\Abp.EntityFramework.csproj">
       <Project>{948f0caf-3382-4e03-9a0f-0ddb206fe40d}</Project>
       <Name>Abp.EntityFramework</Name>

@@ -11,6 +11,8 @@ namespace Abp.AutoMapper
 
         private readonly ITypeFinder _typeFinder;
 
+        private static bool _createdMappingsBefore;
+
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -19,10 +21,23 @@ namespace Abp.AutoMapper
 
         public override void PreInitialize()
         {
+            CreateMappings();
+        }
+
+        private void CreateMappings()
+        {
+            //We should prevent duplicate mapping in an application, since AutoMapper is static.
+            if (_createdMappingsBefore)
+            {
+                return;
+            }
+
+            _createdMappingsBefore = true;
+
             var types = _typeFinder.Find(type =>
-                type.IsDefined(typeof (AutoMapAttribute)) ||
-                type.IsDefined(typeof (AutoMapFromAttribute)) ||
-                type.IsDefined(typeof (AutoMapToAttribute))
+                type.IsDefined(typeof(AutoMapAttribute)) ||
+                type.IsDefined(typeof(AutoMapFromAttribute)) ||
+                type.IsDefined(typeof(AutoMapToAttribute))
                 );
 
             Logger.DebugFormat("Found {0} classes defines auto mapping attributes", types.Length);

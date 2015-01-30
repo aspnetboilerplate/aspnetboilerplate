@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.TestBase.SampleApplication.People.Dto;
@@ -25,13 +27,14 @@ namespace Abp.TestBase.SampleApplication.People
                 query = query.Where(p => p.Name.Contains(input.NameFilter));
             }
 
-            return new ListResultOutput<PersonDto>(query.ToList().Select(p => new PersonDto {Id = p.Id, Name = p.Name}).ToList());
+            var people = query.ToList();
+
+            return new ListResultOutput<PersonDto>(people.MapTo<List<PersonDto>>());
         }
 
         public void CreatePerson(CreatePersonInput input)
         {
-            var person = new Person {Name = input.Name};
-            _personRepository.Insert(person);
+            _personRepository.Insert(input.MapTo<Person>());
         }
     }
 }
