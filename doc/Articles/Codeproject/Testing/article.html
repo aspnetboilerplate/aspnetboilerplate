@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul class="download">
+	<li><a href="SimpleTaskSystem.zip">Download sample application</a></li>
+</ul>
+
+<h2>Contents</h2>
+
+<ul>
+	<li><a href="#ArticleIntroduction">Introduction</a></li>
+	<li><a href="#ArticleTestProject">Creating a test project</a></li>
+	<li><a href="#ArticlePrepareBase">Preparing a base test class</a></li>
+	<li><a href="#ArticleFirstTest">Creating first test</a></li>
+	<li><a href="#ArticleTestExceptions">Testing exceptions</a></li>
+	<li><a href="#ArticleUsingRepositories">Using repositories in tests</a></li>
+	<li><a href="#ArticleTestAsync">Testing async methods</a></li>
+	<li><a href="#ArticleSummary">Summary</a></li>
+</ul>
+
+<h2 id="ArticleIntroduction">Introduction</h2>
+
+<p>In this article, I'll show you how to create unit test ASP.NET Boilerplate 
+based projects.</p>
+
+<p>Instead of creating a new application to be tested, I'll use the same 
+application developed in
+<a href="http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram" target="_blank">
+this article</a> (<em>Using AngularJs, ASP.NET MVC, Web API and EntityFramework 
+to build NLayered Single Page Web Applications</em>). Solution structure is like 
+that:</p>
+<p>
+<img alt="Solution structrure" height="191" src="solution-structure.png" width="272" /></p>
+<p>We will test SimpleTaskSystem.<strong>Application</strong>, SimpleTaskSystem.<strong>Core
+</strong>and SimpleTaskSystem.<strong>EntityFramework </strong>projects here. 
+This solution includes NHibernate, WebApi and UI projects. Testing presentation 
+layer is a different topic. You can read that article to see how to build this 
+application. Here, I'll focus on testing.&nbsp;</p>
+
+<h2 id="ArticleTestProject">Create a test project</h2>
+
+<p>I created a new trong>Class Library</strong> project named <strong>
+SimpleTaskSystem.Test</strong> a and added following nuget packages:</p>
+<ul>
+	<li><strong>Abp.TestBase</strong>: Provides some classes makes testing 
+	easier for ABP based projects.</li>
+	<li><strong>Abp.EntityFramework</strong>: Since we use EntityFramework as 
+	ORM.</li>
+	<li><strong>Effort.EF6</strong>: Makes it possible to create a fake, 
+	in-memory database for EF that is easy to use and fast.</li>
+	<li><strong>xunit</strong>: The testing framework we'll use. Also, added
+	<strong>xunit.runner.visualstudio</strong> package to run tests in Visual 
+	Studio. This package was pre-release when I writing this article. So, I 
+	selected 'Include Prerelease' in nuget package manager dialog.</li>
+	<li><strong>Shouldly</strong>: This library makes easy to write assertions.</li>
+</ul>
+<p>When we add these packages, their dependencies will also be added 
+automatically. Lastly, we should add reference to SimpleTaskSystem.<strong>Application</strong>, 
+SimpleTaskSystem.<strong>Core </strong>and SimpleTaskSystem.<strong>EntityFramework
+</strong>assemblies since we will test these projects.</p>
+<h2 id="ArticlePrepareBase">Preparing a base test class</h2>
+<p>To create test class easier, I'll create a base class that prepares a fake 
+database connection and projects under test:</p>
+<pre>public abstract class SimpleTaskSystemTestBase : AbpIntegratedTestBase
+{
+    protected SimpleTaskSystemTestBase()
+    {
+        //Fake DbConnection using Effort!
+        LocalIocManager.IocContainer.Register(
+            Component.For&lt;DbConnection&gt;()
+                .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
+                .LifestyleSingleton()
+            );
+
+        //Seed initial data
+        UsingDbContext(context =&gt; new SimpleTaskSystemInitialDataBuilder().Build(context));
+    }
+
+    protected override void AddModules(ITypeList&lt;AbpModule&gt; modules)
+    {
+        base.AddModules(modules);
+
+        //Adding testing modules. Depended modules of these modules are automatically added.
+        modules.Add&lt;SimpleTaskSystemApplicationModule&gt;();
+        modules.Add&lt;SimpleTaskSystemDataModule&gt;();
+    }
+
+    public void UsingDbContext(Action&lt;SimpleTaskSystemDbContext&gt; action)
+    {
+        using (var context = LocalIocManager.Resolve&lt;SimpleTaskSystemDbContext&gt;())
+        {
+            action(context);
+            context.SaveChanges();
+        }
+    }
+
+    public T UsingDbContext&lt;T&gt;(Func&lt;SimpleTaskSystemDbContext, T&gt; func)
+    {
+        T result;
+
+        using (var context = LocalIocManager.Resolve&lt;SimpleTaskSystemDbContext&gt;())
+        {
+            result = func(context);
+            context.SaveChanges();
+        }
+
+        return result;
+    }
+}</pre>
+<p>This base class inherits <strong>AbpIntegratedTestBase</strong>. It's a base 
+class which initializes the ABP system. It defines <strong>LocalIocContainer</strong> 
+property, that is a <strong>IIocManager</strong> object. Each test will work 
+with it's dedicated IIocManager. Thus, tests will be isolated from each other.</p>
+<p>We overrided <strong>AddModules</strong> method to add the modules we want to 
+test (Depended modules are automatically added).</p>
+<p>In the constructor, we're registering <strong>DbConnection</strong> to 
+dependency injection system using <strong>Effort</strong>. We registered it as 
+Singleton (for LocalIocConainer). Thus, same database (and connection) will be 
+used in a test even we create more than one DbContext in same test. 
+<strong>SimpleTaskSystemDbContext</strong> must have a constructor getting DbConnection in order 
+to use this in-memory database. So, I added the constructor below that accepts a 
+DbConnection:</p>
+<pre>public class SimpleTaskSystemDbContext : AbpDbContext
+{
+    public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
+    public virtual IDbSet&lt;Person&gt; People { get; set; }
+
+    public SimpleTaskSystemDbContext()
+        : base(&quot;Default&quot;)
+    {
+
+    }
+
+    public SimpleTaskSystemDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
+    {
+            
+    }
+
+    //This constructor is used in tests
+    public SimpleTaskSystemDbContext(DbConnection connection)
+        : base(connection, true)
+    {
+
+    }
+}</pre>
+<p>In the constructor of SimpleTaskSystemTestBase, we're also creating an initial data in the database. This is 
+important, since some tests require a data present in the database. 
+SimpleTaskSystemInitialDataBuilder class fills database as shown below:</p>
+<pre>public class SimpleTaskSystemInitialDataBuilder
+{
+    public void Build(SimpleTaskSystemDbContext context)
+    {
+        //Add some people            
+        context.People.AddOrUpdate(
+            p =&gt; p.Name,
+            new Person {Name = &quot;Isaac Asimov&quot;},
+            new Person {Name = &quot;Thomas More&quot;},
+            new Person {Name = &quot;George Orwell&quot;},
+            new Person {Name = &quot;Douglas Adams&quot;}
+            );
+        context.SaveChanges();
+
+        //Add some tasks
+        context.Tasks.AddOrUpdate(
+            t =&gt; t.Description,
+            new Task
+            {
+                Description = &quot;my initial task 1&quot;
+            },
+            new Task
+            {
+                Description = &quot;my initial task 2&quot;,
+                State = TaskState.Completed
+            },
+            new Task
+            {
+                Description = &quot;my initial task 3&quot;,
+                AssignedPerson = context.People.Single(p =&gt; p.Name == &quot;Douglas Adams&quot;)
+            },
+            new Task
+            {
+                Description = &quot;my initial task 4&quot;,
+                AssignedPerson = context.People.Single(p =&gt; p.Name == &quot;Isaac Asimov&quot;),
+                State = TaskState.Completed
+            });
+        context.SaveChanges();
+    }
+}</pre>
+<p>SimpleTaskSystemTestBase's UsingDbContext methods makes it easier to create DbContextes when we need to 
+directly use DbContect to work with database. In constructor, we used it. Also, 
+we will see how to use it in tests.</p>
+<p>All out test classes will be inherited from SimpleTaskSystemTestBase. Thus, 
+all tests will be started by initializing ABP, using a fake database with an 
+initial data. We can also add common helper methods to this class in order to 
+make tests easier.</p>
+<h2 id="ArticleFirstTest">Creating first test</h2>
+<p>Now, we will create first unit test to test <strong>CreateTask</strong> 
+method of <strong>TaskAppService</strong> class. TaskAppService class is defined 
+as shown below:</p>
+
+<pre>public class TaskAppService : ApplicationService, ITaskAppService
+{
+    private readonly ITaskRepository _taskRepository;
+    private readonly IRepository&lt;Person&gt; _personRepository;
+        
+    public TaskAppService(ITaskRepository taskRepository, IRepository&lt;Person&gt; personRepository)
+    {
+        _taskRepository = taskRepository;
+        _personRepository = personRepository;
+    }
+        
+    public void CreateTask(CreateTaskInput input)
+    {
+        Logger.Info(&quot;Creating a task for input: &quot; + input);
+
+        var task = new Task { Description = input.Description };
+
+        if (input.AssignedPersonId.HasValue)
+        {
+            task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
+        }
+
+        _taskRepository.Insert(task);
+    }
+
+    //...other methods
+}</pre>
+<p>In unit test, generally, dependencies of testing class is mocked (by creating 
+fake implementations using some mock frameworks). This makes unit testing 
+harder, especially when dependencies grows.</p>
+<p>We will not do it like that since we're using dependency injection. All 
+dependencies will be filled automatically by dependency injection with real 
+implementations, not fakes. Only fake thing is the database. Actually, this is 
+an integration test since it not only tests the TaskAppService, but also test 
+repositories. Even we're testing with validation, unit of work and other systems 
+in ASP.NET Boilerplate. This is very valuable since we're testing the 
+application much more realistic.</p>
+<p>So, let's create first test to test CreateTask method.</p>
+<pre>public class TaskAppService_Tests : SimpleTaskSystemTestBase
+{
+    private readonly ITaskAppService _taskAppService;
+
+    public TaskAppService_Tests()
+    {
+        //Creating the class which is tested (SUT - Software Under Test)
+        _taskAppService = LocalIocManager.Resolve&lt;ITaskAppService&gt;();
+    }
+
+    [Fact]
+    public void Should_Create_New_Tasks()
+    {
+        //Prepare for test
+        var initialTaskCount = UsingDbContext(context =&gt; context.Tasks.Count());
+        var thomasMore = GetPerson(&quot;Thomas More&quot;);
+
+        //Run SUT
+        _taskAppService.CreateTask(
+            new CreateTaskInput
+            {
+                Description = &quot;my test task 1&quot;
+            });
+        _taskAppService.CreateTask(
+            new CreateTaskInput
+            {
+                Description = &quot;my test task 2&quot;,
+                AssignedPersonId = thomasMore.Id
+            });
+
+        //Check results
+        UsingDbContext(context =&gt;
+        {
+            context.Tasks.Count().ShouldBe(initialTaskCount + 2);
+            context.Tasks.FirstOrDefault(t =&gt; t.AssignedPersonId == null &amp;&amp; t.Description == &quot;my test task 1&quot;).ShouldNotBe(null);
+            var task2 = context.Tasks.FirstOrDefault(t =&gt; t.Description == &quot;my test task 2&quot;);
+            task2.ShouldNotBe(null);
+            task2.AssignedPersonId.ShouldBe(thomasMore.Id);
+        });
+    }
+
+    private Person GetPerson(string name)
+    {
+        return UsingDbContext(context =&gt; context.People.Single(p =&gt; p.Name == name));
+    }
+}</pre>
+<p>We inherited from <strong>SimpleTaskSystemTestBas</strong>e as described 
+before. In a unit test, we should create the object this will be tested. In the 
+constructor, I used <strong>LocalIocManager</strong> (dependency injection 
+manager) to create an <strong>ITaskAppService</strong> (it creates 
+TaskAppService since it implements ITaskAppService). In this way, I got rid of 
+creating mock implementations of dependencies.</p>
+<p><strong>Should_Create_New_Tasks</strong> is the test method. It's decorated 
+with <strong>Fact</strong> 
+attribute. Thus, <strong>xunit</strong> understand that this is a test method, and it runs the 
+method.</p>
+<p>In a test method, we generally prepare for the test, run the SUT (software 
+under test - the actual testing code) and check if excepted results occured.</p>
+<p>In Should_Create_New_Tasks method, we will create two tasks, one will be 
+assigned to Thomas More. So, we will get the person (Thomas More) from database 
+to obtain his Id and the current task count in database. Then we're creating two 
+tasks using TaskAppService.CreateTask method. Finally, we're checking if people 
+count increased by 2. We're also trying to get created task from database to see 
+if it actually inserted to database.</p>
+<p>Here, UsingDbContext method helps us while working directly with DbContext. 
+If this test success, we understanda that CreateTask method can create Tasks if 
+we supply appropriate input. Also, repository is working since it inserted to 
+database.</p>
+<p>To run tests, we're opening Visual Studio <strong>Test Explorer</strong> by 
+selecting <strong>TEST\Windows\Test Explorer</strong>:</p>
+<p>
+<img alt="Open Visual Studio Test Explorer" height="219" src="opening-vs-test-explorer.png" width="454" /></p>
+<p>Then we're clicking 'Run All' link in the Test Explorer. It finds and runs 
+all test in the solution:</p>
+<p>
+<img alt="Running first unit test using Visual Studio Test Explorer" height="179" src="running-fist-test.png" width="504" /></p>
+<p>As shown above, our first unit test is passed. Congratulations! A test will 
+fail if testing or tester code is incorrect. Assume that we have forgotten to 
+assign creating task to given person (To test it, comment out the related lines 
+in TaskAppService). When we run test, it will fail:</p>
+<p>
+<img alt="Failing test" height="107" src="first-test-failed.png" width="483" /></p>
+<p>Shouldly library makes fail messages clearer. It also makes it easy to write 
+assertions. Compare Assert with Shouldly's extension method:</p>
+<pre>Assert.Equal(thomasMore.Id, task2.AssignedPersonId); //Using xunit's Assert
+task2.AssignedPersonId.ShouldBe(thomasMore.Id); //Using Shouldly
+</pre>
+<p>I think the second one is more easy and natual to write and read.</p>
+<h2 id="ArticleTestExceptions">Testing exceptions</h2>
+<p>I want to create a second test for the CreateTask method. But, this time with 
+an <strong>invalid input</strong>:</p>
+<pre>[Fact]
+public void Should_Not_Create_Task_Without_Description()
+{
+    //Description is not set
+    Assert.Throws&lt;AbpValidationException&gt;(() =&gt; _taskAppService.CreateTask(new CreateTaskInput()));
+}</pre>
+<p>I expect that CreateTask method throws <strong>AbpValidationException</strong> 
+if I don't set <strong>Description</strong> for creating task since it's marked 
+as <strong>Required </strong>in <strong>CreateTaskInput </strong>DTO class (see 
+source codes). This test success if CreateTask throws the exception, otherwise 
+fails.</p>
+<h2 id="ArticleUsingRepositories">Using repositories in tests</h2>
+<p>I'll test assigning a task from one person to another:</p>
+<pre>//Trying to assign a task of Isaac Asimov to Thomas More
+[Fact]
+public void Should_Change_Assigned_People()
+{
+    //We can work with repositories instead of DbContext
+    var taskRepository = LocalIocManager.Resolve&lt;ITaskRepository&gt;();
+
+    //Obtain test data
+    var isaacAsimov = GetPerson(&quot;Isaac Asimov&quot;);
+    var thomasMore = GetPerson(&quot;Thomas More&quot;);
+    var targetTask = taskRepository.FirstOrDefault(t =&gt; t.AssignedPersonId == isaacAsimov.Id);
+    targetTask.ShouldNotBe(null);
+
+    //Run SUT
+    _taskAppService.UpdateTask(
+        new UpdateTaskInput
+        {
+            TaskId = targetTask.Id,
+            AssignedPersonId = thomasMore.Id
+        });
+
+    //Check result
+    taskRepository.Get(targetTask.Id).AssignedPersonId.ShouldBe(thomasMore.Id);
+}</pre>
+<p>In this test, I used <strong>ITaskRepository</strong> to perform database 
+operations, instead of directly working with DbContext. You can use one or mix 
+of these approaches.</p>
+<h2 id="ArticleTestAsync">Testing async methods</h2>
+<p>We can also test async methods with xunit. See the method written to test 
+GetAllPeople method of PersonAppService. GetAllPeople method is async, so, 
+testing method should be async:</p>
+<pre>[Fact]
+public async Task Should_Get_All_People()
+{
+    var output = await _personAppService.GetAllPeople();
+    output.People.Count.ShouldBe(4);
+}</pre>
+<h2 id="ArticleSummary">Summary</h2>
+<p>In this article, I wanted to show simply testing projects developed upon 
+ASP.NET Boilerplate application framework. ASP.NET Boilerplate provides a good 
+infrastructure to implement test driven development, or simply creating some 
+unit/integration tests for your applications.</p>
+
+</body>
+
+</html>
