@@ -9,7 +9,7 @@
 <body>
 
 <ul class="download">
-	<li><a href="SimpleTaskSystem.zip">Download sample application</a></li>
+	<li><a href="SimpleTaskSystem.zip">Download sample application</a> (or see latest on <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem" target="_blank">github)</a></li>
 </ul>
 
 <h2>Contents</h2>
@@ -27,10 +27,8 @@
 
 <h2 id="ArticleIntroduction">Introduction</h2>
 
-<p>In this article, I'll show you how to create unit test ASP.NET Boilerplate 
-based projects.</p>
-
-<p>Instead of creating a new application to be tested, I'll use the same 
+<p>In this article, I'll show how to create unit tests for ASP.NET Boilerplate 
+based projects. Instead of creating a new application to be tested, I'll use the same 
 application developed in
 <a href="http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram" target="_blank">
 this article</a> (<em>Using AngularJs, ASP.NET MVC, Web API and EntityFramework 
@@ -38,23 +36,23 @@ to build NLayered Single Page Web Applications</em>). Solution structure is like
 that:</p>
 <p>
 <img alt="Solution structrure" height="191" src="solution-structure.png" width="272" /></p>
-<p>We will test SimpleTaskSystem.<strong>Application</strong>, SimpleTaskSystem.<strong>Core
-</strong>and SimpleTaskSystem.<strong>EntityFramework </strong>projects here. 
-This solution includes NHibernate, WebApi and UI projects. Testing presentation 
-layer is a different topic. You can read that article to see how to build this 
+<p>We will test Application services of the project. It includes 
+SimpleTaskSystem.<strong>Core,
+</strong>SimpleTaskSystem.<strong>Application </strong>and SimpleTaskSystem.<strong>EntityFramework </strong>projects. You can read 
+<a href="http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram">this article</a> to see how to build this 
 application. Here, I'll focus on testing.&nbsp;</p>
 
 <h2 id="ArticleTestProject">Create a test project</h2>
 
-<p>I created a new trong>Class Library</strong> project named <strong>
-SimpleTaskSystem.Test</strong> a and added following nuget packages:</p>
+<p>I created a new <strong>Class Library</strong> project named <strong>
+SimpleTaskSystem.Test</strong> and added following nuget packages:</p>
 <ul>
-	<li><strong>Abp.TestBase</strong>: Provides some classes makes testing 
+	<li><strong>Abp.TestBase</strong>: Provides some base classes to make testing 
 	easier for ABP based projects.</li>
-	<li><strong>Abp.EntityFramework</strong>: Since we use EntityFramework as 
+	<li><strong>Abp.EntityFramework</strong>: We use EntityFramework as 
 	ORM.</li>
 	<li><strong>Effort.EF6</strong>: Makes it possible to create a fake, 
-	in-memory database for EF that is easy to use and fast.</li>
+	in-memory database for EF that is easy to use.</li>
 	<li><strong>xunit</strong>: The testing framework we'll use. Also, added
 	<strong>xunit.runner.visualstudio</strong> package to run tests in Visual 
 	Studio. This package was pre-release when I writing this article. So, I 
@@ -66,7 +64,7 @@ automatically. Lastly, we should add reference to SimpleTaskSystem.<strong>Appli
 SimpleTaskSystem.<strong>Core </strong>and SimpleTaskSystem.<strong>EntityFramework
 </strong>assemblies since we will test these projects.</p>
 <h2 id="ArticlePrepareBase">Preparing a base test class</h2>
-<p>To create test class easier, I'll create a base class that prepares a fake 
+<p>To create test classes easier, I'll create a base class that prepares a fake 
 database connection and projects under test:</p>
 <pre>public abstract class SimpleTaskSystemTestBase : AbpIntegratedTestBase
 {
@@ -114,8 +112,8 @@ database connection and projects under test:</p>
         return result;
     }
 }</pre>
-<p>This base class inherits <strong>AbpIntegratedTestBase</strong>. It's a base 
-class which initializes the ABP system. It defines <strong>LocalIocContainer</strong> 
+<p>This base class extends <strong>AbpIntegratedTestBase</strong>. It's a base 
+class which initializes the ABP system. Defines <strong>LocalIocContainer</strong> 
 property, that is a <strong>IIocManager</strong> object. Each test will work 
 with it's dedicated IIocManager. Thus, tests will be isolated from each other.</p>
 <p>We overrided <strong>AddModules</strong> method to add the modules we want to 
@@ -151,9 +149,10 @@ DbConnection:</p>
 
     }
 }</pre>
-<p>In the constructor of SimpleTaskSystemTestBase, we're also creating an initial data in the database. This is 
+<p>In the constructor of SimpleTaskSystemTestBase, we're also creating an 
+<strong>initial data</strong> in the database. This is 
 important, since some tests require a data present in the database. 
-SimpleTaskSystemInitialDataBuilder class fills database as shown below:</p>
+<strong>SimpleTaskSystemInitialDataBuilder</strong> class fills database as shown below:</p>
 <pre>public class SimpleTaskSystemInitialDataBuilder
 {
     public void Build(SimpleTaskSystemDbContext context)
@@ -197,13 +196,14 @@ SimpleTaskSystemInitialDataBuilder class fills database as shown below:</p>
 <p>SimpleTaskSystemTestBase's UsingDbContext methods makes it easier to create DbContextes when we need to 
 directly use DbContect to work with database. In constructor, we used it. Also, 
 we will see how to use it in tests.</p>
-<p>All out test classes will be inherited from SimpleTaskSystemTestBase. Thus, 
+<p>All our test classes will be inherited from SimpleTaskSystemTestBase. Thus, 
 all tests will be started by initializing ABP, using a fake database with an 
-initial data. We can also add common helper methods to this class in order to 
+initial data. We can also add common helper methods to this base class in order to 
 make tests easier.</p>
 <h2 id="ArticleFirstTest">Creating first test</h2>
-<p>Now, we will create first unit test to test <strong>CreateTask</strong> 
-method of <strong>TaskAppService</strong> class. TaskAppService class is defined 
+<p>We will create first unit test to test <strong>CreateTask</strong> 
+method of <strong>TaskAppService</strong> class. TaskAppService class and 
+CreateTask method are defined 
 as shown below:</p>
 
 <pre>public class TaskAppService : ApplicationService, ITaskAppService
@@ -234,14 +234,14 @@ as shown below:</p>
     //...other methods
 }</pre>
 <p>In unit test, generally, dependencies of testing class is mocked (by creating 
-fake implementations using some mock frameworks). This makes unit testing 
+fake implementations using some mock frameworks like Moq and NSubstitute). This makes unit testing 
 harder, especially when dependencies grows.</p>
 <p>We will not do it like that since we're using dependency injection. All 
 dependencies will be filled automatically by dependency injection with real 
-implementations, not fakes. Only fake thing is the database. Actually, this is 
-an integration test since it not only tests the TaskAppService, but also test 
-repositories. Even we're testing with validation, unit of work and other systems 
-in ASP.NET Boilerplate. This is very valuable since we're testing the 
+implementations, not fakes. Only fake thing is the <strong>database</strong>. Actually, this is 
+an integration test since it not only tests the TaskAppService, but also tests 
+repositories. Even, we're testing with validation, unit of work and other 
+infrastructures of ASP.NET Boilerplate. This is very valuable since we're testing the 
 application much more realistic.</p>
 <p>So, let's create first test to test CreateTask method.</p>
 <pre>public class TaskAppService_Tests : SimpleTaskSystemTestBase
@@ -297,41 +297,56 @@ manager) to create an <strong>ITaskAppService</strong> (it creates
 TaskAppService since it implements ITaskAppService). In this way, I got rid of 
 creating mock implementations of dependencies.</p>
 <p><strong>Should_Create_New_Tasks</strong> is the test method. It's decorated 
-with <strong>Fact</strong> 
-attribute. Thus, <strong>xunit</strong> understand that this is a test method, and it runs the 
+with the <strong>Fact</strong> 
+attribute of xUnit. Thus, <strong>xUnit</strong> understand that this is a test method, and it runs the 
 method.</p>
-<p>In a test method, we generally prepare for the test, run the SUT (software 
-under test - the actual testing code) and check if excepted results occured.</p>
+<p>In a test method, we generally follow <strong>AAA</strong> pattern which 
+consists of three steps:</p>
+<ol>
+	<li><strong>Arrange</strong>: Prepare for the test</li>
+	<li><strong>Act</strong>: Run the SUT (software 
+under test - the actual testing code)</li>
+	<li><strong>Assert</strong>: Check and verify the result.</li>
+</ol>
 <p>In Should_Create_New_Tasks method, we will create two tasks, one will be 
-assigned to Thomas More. So, we will get the person (Thomas More) from database 
-to obtain his Id and the current task count in database. Then we're creating two 
-tasks using TaskAppService.CreateTask method. Finally, we're checking if people 
-count increased by 2. We're also trying to get created task from database to see 
-if it actually inserted to database.</p>
+assigned to Thomas More. So, our three steps are:</p>
+<ol>
+	<li><strong>Arrange</strong>: We get the person (Thomas More) from database 
+to obtain his Id and the current task count in database (Also, we created the 
+	TaskAppService in the constructor).</li>
+	<li><strong>Act</strong>: We're creating two 
+tasks using TaskAppService.CreateTask method. </li>
+	<li><strong>Assert</strong>: We're checking if people 
+count increased by 2. We're also trying to get created tasks from database to see 
+if they are correctly inserted to the database.</li>
+</ol>
 <p>Here, UsingDbContext method helps us while working directly with DbContext. 
-If this test success, we understanda that CreateTask method can create Tasks if 
-we supply appropriate input. Also, repository is working since it inserted to 
-database.</p>
+If this test success, we understand that CreateTask method can create Tasks if 
+we supply valid inputs. Also, repository is working since it inserted Tasks to 
+the database.</p>
 <p>To run tests, we're opening Visual Studio <strong>Test Explorer</strong> by 
 selecting <strong>TEST\Windows\Test Explorer</strong>:</p>
 <p>
 <img alt="Open Visual Studio Test Explorer" height="219" src="opening-vs-test-explorer.png" width="454" /></p>
-<p>Then we're clicking 'Run All' link in the Test Explorer. It finds and runs 
+<p>Then we're clicking '<strong>Run All</strong>' link in the Test Explorer. It finds and runs 
 all test in the solution:</p>
 <p>
 <img alt="Running first unit test using Visual Studio Test Explorer" height="179" src="running-fist-test.png" width="504" /></p>
 <p>As shown above, our first unit test is passed. Congratulations! A test will 
 fail if testing or tester code is incorrect. Assume that we have forgotten to 
 assign creating task to given person (To test it, comment out the related lines 
-in TaskAppService). When we run test, it will fail:</p>
+in TaskAppService.CreateTask method). When we run test, it will fail:</p>
 <p>
 <img alt="Failing test" height="107" src="first-test-failed.png" width="483" /></p>
-<p>Shouldly library makes fail messages clearer. It also makes it easy to write 
-assertions. Compare Assert with Shouldly's extension method:</p>
+<p><strong>Shouldly</strong> library makes fail messages clearer. It also makes it easy to write 
+assertions. Compare xUnit's <strong>Assert.Equal</strong> with Shouldly's
+<strong>ShouldBe</strong> extension method:</p>
 <pre>Assert.Equal(thomasMore.Id, task2.AssignedPersonId); //Using xunit's Assert
 task2.AssignedPersonId.ShouldBe(thomasMore.Id); //Using Shouldly
 </pre>
-<p>I think the second one is more easy and natual to write and read.</p>
+<p>I think the second one is more easy and natual to write and read. Shouldly 
+have many other extension methods to make our life easier. See it's 
+documentation.</p>
 <h2 id="ArticleTestExceptions">Testing exceptions</h2>
 <p>I want to create a second test for the CreateTask method. But, this time with 
 an <strong>invalid input</strong>:</p>
@@ -342,12 +357,14 @@ public void Should_Not_Create_Task_Without_Description()
     Assert.Throws&lt;AbpValidationException&gt;(() =&gt; _taskAppService.CreateTask(new CreateTaskInput()));
 }</pre>
 <p>I expect that CreateTask method throws <strong>AbpValidationException</strong> 
-if I don't set <strong>Description</strong> for creating task since it's marked 
+if I don't set <strong>Description</strong> for creating task. Because 
+Description property is marked 
 as <strong>Required </strong>in <strong>CreateTaskInput </strong>DTO class (see 
 source codes). This test success if CreateTask throws the exception, otherwise 
-fails.</p>
+fails. Note that; validating input and throwing exception are made by ASP.NET 
+Boilerplate infrastructure.</p>
 <h2 id="ArticleUsingRepositories">Using repositories in tests</h2>
-<p>I'll test assigning a task from one person to another:</p>
+<p>I'll test to assign a task from one person to another:</p>
 <pre>//Trying to assign a task of Isaac Asimov to Thomas More
 [Fact]
 public void Should_Change_Assigned_People()
@@ -376,9 +393,9 @@ public void Should_Change_Assigned_People()
 operations, instead of directly working with DbContext. You can use one or mix 
 of these approaches.</p>
 <h2 id="ArticleTestAsync">Testing async methods</h2>
-<p>We can also test async methods with xunit. See the method written to test 
-GetAllPeople method of PersonAppService. GetAllPeople method is async, so, 
-testing method should be async:</p>
+<p>We can also test <strong>async</strong> methods with xUnit. See the method written to test 
+<strong>GetAllPeople</strong> method of <strong>PersonAppService</strong>. GetAllPeople method is async, so, 
+testing method should be also async:</p>
 <pre>[Fact]
 public async Task Should_Get_All_People()
 {
