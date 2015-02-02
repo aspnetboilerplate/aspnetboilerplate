@@ -53,8 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Services\MyAppService.cs" />
-    <Compile Include="Application\Services\MyAppService_Tests.cs" />
+    <Compile Include="Application\Services\Validation_Tests.cs" />
     <Compile Include="Runtime\Session\SessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
