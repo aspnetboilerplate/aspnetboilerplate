@@ -5,7 +5,6 @@ using Abp.Modules;
 
 namespace Abp.TestBase.Modules
 {
-    [DependsOn(typeof(AbpKernelModule))]
     public class TestModuleFinder : IModuleFinder
     {
         public ITypeList<AbpModule> Modules { get; private set; }
