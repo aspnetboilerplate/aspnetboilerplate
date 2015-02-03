@@ -92,7 +92,7 @@ namespace Abp.TestBase.Tests.Application.Services
             public string MyStringValue { get; set; }
         }
 
-        public class MyMethod2Input : IInputDto
+        public class MyMethod2Input : IValidate
         {
             [Required]
             [MinLength(2)]
