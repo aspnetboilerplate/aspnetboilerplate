@@ -32,16 +32,54 @@ namespace Abp.TestBase.Tests.Application.Services
             Assert.Throws<AbpValidationException>(() => _myAppService.MyMethod(new MyMethodInput { MyStringValue = "a" })); //MyStringValue's min length should be 3!
         }
 
+        [Fact]
+        public void Should_Work_Proper_With_Right_Nesned_Inputs()
+        {
+            var output = _myAppService.MyMethod2(new MyMethod2Input
+                            {
+                                MyStringValue2 = "test 1",
+                                Input1 = new MyMethodInput {MyStringValue = "test 2"}
+                            });
+            output.Result.ShouldBe(42);
+        }
+
+        [Fact]
+        public void Should_Not_Work_With_Wrong_Nesned_Inputs_1()
+        {
+            Assert.Throws<AbpValidationException>(() =>
+                _myAppService.MyMethod2(new MyMethod2Input
+                {
+                    MyStringValue2 = "test 1",
+                    Input1 = new MyMethodInput() //MyStringValue is not set
+                })); 
+        }
+
+        [Fact]
+        public void Should_Not_Work_With_Wrong_Nesned_Inputs_2()
+        {
+            Assert.Throws<AbpValidationException>(() =>
+                _myAppService.MyMethod2(new MyMethod2Input //Input1 is not set
+                                        {
+                                            MyStringValue2 = "test 1"
+                                        }));
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
         {
             MyMethodOutput MyMethod(MyMethodInput input);
+            MyMethodOutput MyMethod2(MyMethod2Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
         {
             public MyMethodOutput MyMethod(MyMethodInput input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod2(MyMethod2Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
@@ -52,6 +90,16 @@ namespace Abp.TestBase.Tests.Application.Services
             [Required]
             [MinLength(3)]
             public string MyStringValue { get; set; }
+        }
+
+        public class MyMethod2Input : IInputDto
+        {
+            [Required]
+            [MinLength(2)]
+            public string MyStringValue2 { get; set; }
+
+            [Required]
+            public MyMethodInput Input1 { get; set; }
         }
 
         public class MyMethodOutput : IOutputDto
