@@ -24,7 +24,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public PersonAppService_Tests()
         {
             InitializeData();
-            _personAppService = LocalIocManager.Resolve<IPersonAppService>();
+            _personAppService = Resolve<IPersonAppService>();
         }
 
         private void InitializeData()

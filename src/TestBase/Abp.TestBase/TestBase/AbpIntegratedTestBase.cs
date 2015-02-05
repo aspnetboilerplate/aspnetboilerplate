@@ -51,5 +51,47 @@ namespace Abp.TestBase
         {
             modules.Add<TestBaseModule>();
         }
+
+        /// <summary>
+        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <returns>The object instance</returns>
+        protected T Resolve<T>()
+        {
+            return LocalIocManager.Resolve<T>();
+        }
+
+        /// <summary>
+        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The object instance</returns>
+        protected T Resolve<T>(object argumentsAsAnonymousType)
+        {
+            return LocalIocManager.Resolve<T>(argumentsAsAnonymousType);
+        }
+
+        /// <summary>
+        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
+        /// </summary>
+        /// <param name="type">Type of the object to get</param>
+        /// <returns>The object instance</returns>
+        protected object Resolve(Type type)
+        {
+            return LocalIocManager.Resolve(type);
+        }
+
+        /// <summary>
+        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
+        /// </summary>
+        /// <param name="type">Type of the object to get</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The object instance</returns>
+        protected object Resolve(Type type, object argumentsAsAnonymousType)
+        {
+            return LocalIocManager.Resolve(type, argumentsAsAnonymousType);
+        }
     }
 }

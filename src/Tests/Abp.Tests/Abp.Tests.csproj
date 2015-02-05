@@ -90,6 +90,8 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager_Tests.cs" />
     <Compile Include="Events\Bus\ActionBasedEventHandlerTest.cs" />
     <Compile Include="Events\Bus\EventBusTestBase.cs" />
+    <Compile Include="Events\Bus\GenericInheritanceTest.cs" />
+    <Compile Include="Experimental\GenericMethodCallTests.cs" />
     <Compile Include="Events\Bus\InheritanceTest.cs" />
     <Compile Include="Events\Bus\MyDerivedEventData.cs" />
     <Compile Include="Events\Bus\MySimpleEventData.cs" />

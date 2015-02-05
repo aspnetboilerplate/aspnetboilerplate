@@ -6,6 +6,9 @@ using System.Data.Entity.Infrastructure;
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Uow;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Entities;
 using Abp.Runtime.Session;
 
 namespace Abp.EntityFramework
@@ -21,12 +24,23 @@ namespace Abp.EntityFramework
         public IAbpSession AbpSession { get; set; }
 
         /// <summary>
+        /// Used to trigger events.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
+
+        /// <summary>
+        /// Reference to the unit of work manager.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
         protected AbpDbContext()
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -36,6 +50,7 @@ namespace Abp.EntityFramework
             : base(nameOrConnectionString)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -45,6 +60,7 @@ namespace Abp.EntityFramework
             : base(model)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -54,6 +70,7 @@ namespace Abp.EntityFramework
             : base(existingConnection, contextOwnsConnection)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -63,6 +80,7 @@ namespace Abp.EntityFramework
             : base(nameOrConnectionString, model)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -72,6 +90,7 @@ namespace Abp.EntityFramework
             : base(objectContext, dbContextOwnsObjectContext)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -81,6 +100,7 @@ namespace Abp.EntityFramework
             : base(existingConnection, model, contextOwnsConnection)
         {
             AbpSession = NullAbpSession.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -88,7 +108,7 @@ namespace Abp.EntityFramework
             base.OnModelCreating(modelBuilder);
             modelBuilder.Types<ISoftDelete>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
         }
-
+        
         public override int SaveChanges()
         {
             foreach (var entry in ChangeTracker.Entries())
@@ -97,10 +117,12 @@ namespace Abp.EntityFramework
                 {
                     case EntityState.Added:
                         SetCreationAuditProperties(entry);
+                        //TriggerEntityCreatedEvent(entry.Entity); //not implemented yet
                         break;
                     case EntityState.Modified:
                         PreventSettingCreationAuditProperties(entry);
                         SetModificationAuditProperties(entry);
+                        //TriggerEntityUpdatedEvent(entry.Entity); //not implemented yet
                         break;
                     case EntityState.Deleted:
                         PreventSettingCreationAuditProperties(entry);
@@ -110,6 +132,34 @@ namespace Abp.EntityFramework
             }
 
             return base.SaveChanges();
+        }
+
+        private void TriggerEntityUpdatedEvent(object entity)
+        {
+            var entityType = entity.GetType();
+            var eventType = typeof(EntityUpdatedEventData<>).MakeGenericType(entityType);
+
+            if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
+            {
+                EventBus.Trigger(eventType, (EventData)Activator.CreateInstance(eventType, new[] { entity }));
+                return;
+            }
+
+            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (EventData)Activator.CreateInstance(eventType, new[] { entity }));
+        }
+
+        private void TriggerEntityCreatedEvent(object entity)
+        {
+            var entityType = entity.GetType();
+            var eventType = typeof (EntityCreatedEventData<>).MakeGenericType(entityType);
+            
+            if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
+            {
+                EventBus.Trigger(eventType, (EventData) Activator.CreateInstance(eventType, new[] {entity}));
+                return;
+            }
+
+            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (EventData) Activator.CreateInstance(eventType, new[] {entity}));
         }
 
         private void SetCreationAuditProperties(DbEntityEntry entry)

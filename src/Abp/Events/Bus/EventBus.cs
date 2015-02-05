@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
@@ -34,6 +36,8 @@ namespace Abp.Events.Bus
 
         /// <summary>
         /// All registered handler factories.
+        /// Key: Type of the event
+        /// Value: List of handler factories
         /// </summary>
         private readonly Dictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
 
@@ -254,16 +258,30 @@ namespace Abp.Events.Bus
 
             lock (_handlerFactories)
             {
-                foreach (var handlerFactory in _handlerFactories)
+                foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
                 {
-                    if (handlerFactory.Key.IsAssignableFrom(eventType))
-                    {
-                        handlerFactoryList.AddRange(handlerFactory.Value);
-                    }
+                    handlerFactoryList.AddRange(handlerFactory.Value);
                 }
             }
 
             return handlerFactoryList.ToArray();
+        }
+
+        private static bool ShouldTriggerEventForHandler(Type eventType, Type handlerType)
+        {
+            //Should trigger same type
+            if (handlerType == eventType)
+            {
+                return true;
+            }
+
+            //Should trigger 
+            if (handlerType.IsAssignableFrom(eventType))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc/>

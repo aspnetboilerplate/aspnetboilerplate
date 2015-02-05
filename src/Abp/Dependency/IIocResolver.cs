@@ -12,7 +12,7 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
-        /// <returns>The instance object</returns>
+        /// <returns>The object instance</returns>
         T Resolve<T>();
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Abp.Dependency
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
-        /// <returns>The instance object</returns>
+        /// <returns>The object instance</returns>
         T Resolve<T>(object argumentsAsAnonymousType);
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Abp.Dependency
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
-        /// <returns>The instance object</returns>
+        /// <returns>The object instance</returns>
         object Resolve(Type type);
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Abp.Dependency
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
-        /// <returns>The instance object</returns>
+        /// <returns>The object instance</returns>
         object Resolve(Type type, object argumentsAsAnonymousType);
         
         /// <summary>
