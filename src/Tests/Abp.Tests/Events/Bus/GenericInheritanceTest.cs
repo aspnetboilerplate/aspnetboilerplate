@@ -7,7 +7,7 @@ namespace Abp.Tests.Events.Bus
 {
     public class GenericInheritanceTest : EventBusTestBase
     {
-        [Fact] //not implemented yet
+        [Fact]
         public void Should_Trigger_For_Inherited_Generic_1()
         {
             var triggeredEvent = false;
@@ -23,6 +23,24 @@ namespace Abp.Tests.Events.Bus
 
             triggeredEvent.ShouldBe(true);
         }
+
+        //[Fact] //Not implemented yet
+        public void Should_Trigger_For_Inherited_Generic_2()
+        {
+            var triggeredEvent = false;
+
+            EventBus.Register<EntityChangedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Id.ShouldBe(42);
+                    triggeredEvent = true;
+                });
+
+            EventBus.Trigger(new EntityChangedEventData<Student>(new Student { Id = 42 }));
+
+            triggeredEvent.ShouldBe(true);
+        }
+        
         
         public class Person : Entity
         {
