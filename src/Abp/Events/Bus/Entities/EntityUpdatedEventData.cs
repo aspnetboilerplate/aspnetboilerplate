@@ -7,7 +7,7 @@ namespace Abp.Events.Bus.Entities
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     [Serializable]
-    public class EntityUpdatedEventData<TEntity> : EntityEventData<TEntity>
+    public class EntityUpdatedEventData<TEntity> : EntityChangedEventData<TEntity>
     {
         /// <summary>
         /// Constructor.

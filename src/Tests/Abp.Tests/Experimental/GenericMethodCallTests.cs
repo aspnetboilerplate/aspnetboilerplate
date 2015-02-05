@@ -9,10 +9,10 @@ namespace Abp.Tests.Experimental
         [Fact]
         public void Test_Method_BaseEvent_BaseArg()
         {
-            Method_BaseEvent_BaseArg(new EntityEventData<Person>(new Person()));
-            Method_BaseEvent_BaseArg(new EntityEventData<Person>(new Student()));
-            Method_BaseEvent_BaseArg(new EntityUpdatedEventData<Person>(new Person()));
-            Method_BaseEvent_BaseArg(new EntityUpdatedEventData<Person>(new Student()));
+            Method_BaseEvent_BaseArg(new EntityEventData<Person>(new Person())); //TODO: <Student>
+            Method_BaseEvent_BaseArg(new EntityEventData<Person>(new Student())); //TODO: <Student>
+            Method_BaseEvent_BaseArg(new EntityUpdatedEventData<Person>(new Person())); //TODO: <Student>
+            Method_BaseEvent_BaseArg(new EntityUpdatedEventData<Person>(new Student())); //TODO: <Student>
         }
 
         public void Method_BaseEvent_BaseArg(EntityEventData<Person> data)
