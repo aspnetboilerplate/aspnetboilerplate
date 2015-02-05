@@ -134,7 +134,7 @@ namespace Abp.Events.Bus
         /// </summary>
         /// <param name="eventType">Event type</param>
         /// <param name="eventData">Related data for the event</param>
-        void Trigger(Type eventType, EventData eventData);
+        void Trigger(Type eventType, IEventData eventData);
 
         /// <summary>
         /// Triggers an event.
@@ -142,7 +142,7 @@ namespace Abp.Events.Bus
         /// <param name="eventType">Event type</param>
         /// <param name="eventSource">The object which triggers the event</param>
         /// <param name="eventData">Related data for the event</param>
-        void Trigger(Type eventType, object eventSource, EventData eventData);
+        void Trigger(Type eventType, object eventSource, IEventData eventData);
 
         /// <summary>
         /// Triggers an event asynchronously.
@@ -167,7 +167,7 @@ namespace Abp.Events.Bus
         /// <param name="eventType">Event type</param>
         /// <param name="eventData">Related data for the event</param>
         /// <returns>The task to handle async operation</returns>
-        Task TriggerAsync(Type eventType, EventData eventData);
+        Task TriggerAsync(Type eventType, IEventData eventData);
 
         /// <summary>
         /// Triggers an event asynchronously.
@@ -176,7 +176,7 @@ namespace Abp.Events.Bus
         /// <param name="eventSource">The object which triggers the event</param>
         /// <param name="eventData">Related data for the event</param>
         /// <returns>The task to handle async operation</returns>
-        Task TriggerAsync(Type eventType, object eventSource, EventData eventData);
+        Task TriggerAsync(Type eventType, object eventSource, IEventData eventData);
 
 
         #endregion

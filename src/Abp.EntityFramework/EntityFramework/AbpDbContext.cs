@@ -141,11 +141,11 @@ namespace Abp.EntityFramework
 
             if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
             {
-                EventBus.Trigger(eventType, (EventData)Activator.CreateInstance(eventType, new[] { entity }));
+                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
             }
 
-            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (EventData)Activator.CreateInstance(eventType, new[] { entity }));
+            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
 
         private void TriggerEntityCreatedEvent(object entity)
@@ -155,11 +155,11 @@ namespace Abp.EntityFramework
             
             if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
             {
-                EventBus.Trigger(eventType, (EventData) Activator.CreateInstance(eventType, new[] {entity}));
+                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
             }
 
-            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (EventData) Activator.CreateInstance(eventType, new[] {entity}));
+            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
 
         private void SetCreationAuditProperties(DbEntityEntry entry)

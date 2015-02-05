@@ -190,43 +190,23 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            Trigger(null, eventData);
+            Trigger((object)null, eventData);
         }
 
         /// <inheritdoc/>
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-            var eventType = typeof(TEventData);
-
-            eventData.EventSource = eventSource;
-
-            foreach (var factoryToTrigger in GetHandlerFactories(eventType))
-            {
-                var eventHandler = factoryToTrigger.GetHandler() as IEventHandler<TEventData>;
-                if (eventHandler == null)
-                {
-                    throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
-                }
-
-                try
-                {
-                    eventHandler.HandleEvent(eventData);
-                }
-                finally
-                {
-                    factoryToTrigger.ReleaseHandler(eventHandler);
-                }
-            }
+            Trigger(typeof(TEventData), eventSource, eventData);
         }
 
         /// <inheritdoc/>
-        public void Trigger(Type eventType, EventData eventData)
+        public void Trigger(Type eventType, IEventData eventData)
         {
             Trigger(eventType, null, eventData);
         }
 
         /// <inheritdoc/>
-        public void Trigger(Type eventType, object eventSource, EventData eventData)
+        public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
             eventData.EventSource = eventSource;
 
@@ -242,8 +222,9 @@ namespace Abp.Events.Bus
 
                 try
                 {
-                    var method = handlerType.GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance);
-                    method.Invoke(eventHandler, new object[] { eventData });
+                    handlerType
+                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] { eventType }, null)
+                        .Invoke(eventHandler, new object[] { eventData });
                 }
                 finally
                 {
@@ -287,7 +268,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            return TriggerAsync(null, eventData);
+            return TriggerAsync((object)null, eventData);
         }
 
         /// <inheritdoc/>
@@ -308,13 +289,13 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public Task TriggerAsync(Type eventType, EventData eventData)
+        public Task TriggerAsync(Type eventType, IEventData eventData)
         {
             return TriggerAsync(eventType, null, eventData);
         }
 
         /// <inheritdoc/>
-        public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
+        public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
             return Task.Factory.StartNew(
                 () =>

@@ -105,12 +105,12 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public void Trigger(Type eventType, EventData eventData)
+        public void Trigger(Type eventType, IEventData eventData)
         {
         }
 
         /// <inheritdoc/>
-        public void Trigger(Type eventType, object eventSource, EventData eventData)
+        public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
         }
 
@@ -127,13 +127,13 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public Task TriggerAsync(Type eventType, EventData eventData)
+        public Task TriggerAsync(Type eventType, IEventData eventData)
         {
             return new Task(() => { });
         }
 
         /// <inheritdoc/>
-        public Task TriggerAsync(Type eventType, object eventSource, EventData eventData)
+        public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
             return new Task(() => { });
         }
