@@ -3,6 +3,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Entities;
 using Abp.Runtime.Validation;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
@@ -24,7 +26,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public PersonAppService_Tests()
         {
             InitializeData();
-            _personAppService = LocalIocManager.Resolve<IPersonAppService>();
+            _personAppService = Resolve<IPersonAppService>();
         }
 
         private void InitializeData()
@@ -42,6 +44,24 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
                 (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
             });
+        }
+
+        //[Fact] Not implemented yet.
+        public async Task Should_Trigger_Event_On_Create()
+        {
+            var triggeredEvent = false;
+
+            Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("john");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    triggeredEvent = true;
+                });
+
+            await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
+            
+            triggeredEvent.ShouldBe(true);
         }
 
         [Fact]
