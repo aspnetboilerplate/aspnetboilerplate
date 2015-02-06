@@ -79,7 +79,7 @@ implemented, ASP.NET Boilerplate automatically sets CreationTime to the
 
 <pre lang="cs">public interface IHasCreationTime
 {
-   <span lang="tr"> </span>DateTime CreationTime { get; set; }
+   DateTime CreationTime { get; set; }
 }</pre>
 
 <p>The Person class can be re-written to implement the IHasCreationTime
@@ -103,7 +103,7 @@ new entity.</p>
 
 <pre lang="cs">public interface ICreationAudited : IHasCreationTime
 {
-    <span lang="tr">long</span> CreatorUserId { get; set; }
+    long? CreatorUserId { get; set; }
 }</pre>
 
 <p>You can easily implement the function of ICreationAudited by deriving
@@ -117,7 +117,7 @@ automatically set the property when the entity is updated.</p>
 {
     DateTime LastModificationTime { get; set; }
 
-    long LastModifierUserId { get; set; }
+    long LastModifierUserId? { get; set; }
 }</pre>
 
 <p>If an entity requires both of these audit properties, the <strong>IAudited</strong>
@@ -156,9 +156,9 @@ implement the <strong>IDeletionAudited</strong> interface.</p>
 
 <pre lang="cs">public interface IDeletionAudited : ISoftDelete
 {
-    long DeleterUserId { get; set; }
+    long? DeleterUserId { get; set; }
 
-    DateTime DeletionTime { get; set; }
+    DateTime? DeletionTime { get; set; }
 }
 </pre>
 
