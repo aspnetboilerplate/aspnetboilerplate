@@ -3,6 +3,8 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Threading;
+using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -111,6 +113,18 @@ namespace Abp.EntityFramework
         
         public override int SaveChanges()
         {
+            ApplyAbpConcepts();
+            return base.SaveChanges();
+        }
+        
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            ApplyAbpConcepts();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ApplyAbpConcepts()
+        {
             foreach (var entry in ChangeTracker.Entries())
             {
                 switch (entry.State)
@@ -131,8 +145,6 @@ namespace Abp.EntityFramework
                         break;
                 }
             }
-
-            return base.SaveChanges();
         }
 
         private void TriggerEntityCreatedEvent(object entity)
