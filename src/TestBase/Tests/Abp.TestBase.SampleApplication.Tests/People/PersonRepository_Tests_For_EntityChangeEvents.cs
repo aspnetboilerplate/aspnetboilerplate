@@ -18,41 +18,59 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             UsingDbContext(context => context.People.Add(new Person() { Name = "emre" }));
         }
 
-        //[Fact] //Not implemented yet
+        [Fact]
         public void Should_Trigger_Event_On_Create()
         {
-            var triggeredEvent = false;
+            var triggerCount = 0;
 
             Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
-                    triggeredEvent = true;
+                    triggerCount++;
                 });
 
             _personRepository.Insert(new Person { Name = "halil" });
 
-            triggeredEvent.ShouldBe(true);
+            triggerCount.ShouldBe(1);
         }
 
-        //[Fact] //Not implemented yet
+        [Fact]
         public void Should_Trigger_Event_On_Update()
         {
-            var triggeredEvent = false;
+            var triggerCount = 0;
 
             Resolve<IEventBus>().Register<EntityUpdatedEventData<Person>>(
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("emre2");
-                    triggeredEvent = true;
+                    triggerCount++;
                 });
 
             var emrePeson = _personRepository.Single(p => p.Name == "emre");
             emrePeson.Name = "emre2";
             _personRepository.Update(emrePeson);
 
-            triggeredEvent.ShouldBe(true);
+            triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_Trigger_Event_On_Delete()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre");
+                    triggerCount++;
+                });
+
+            var emrePeson = _personRepository.Single(p => p.Name == "emre");
+            _personRepository.Delete(emrePeson.Id);
+
+            triggerCount.ShouldBe(1);
         }
     }
 }

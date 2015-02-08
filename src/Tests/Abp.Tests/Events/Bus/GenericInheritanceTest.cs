@@ -24,7 +24,7 @@ namespace Abp.Tests.Events.Bus
             triggeredEvent.ShouldBe(true);
         }
 
-        //[Fact] //Not implemented yet
+        [Fact]
         public void Should_Trigger_For_Inherited_Generic_2()
         {
             var triggeredEvent = false;

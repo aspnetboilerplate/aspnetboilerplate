@@ -117,16 +117,17 @@ namespace Abp.EntityFramework
                 {
                     case EntityState.Added:
                         SetCreationAuditProperties(entry);
-                        //TriggerEntityCreatedEvent(entry.Entity); //not implemented yet
+                        TriggerEntityCreatedEvent(entry.Entity);
                         break;
                     case EntityState.Modified:
                         PreventSettingCreationAuditProperties(entry);
                         SetModificationAuditProperties(entry);
-                        //TriggerEntityUpdatedEvent(entry.Entity); //not implemented yet
+                        TriggerEntityUpdatedEvent(entry.Entity);
                         break;
                     case EntityState.Deleted:
                         PreventSettingCreationAuditProperties(entry);
                         HandleSoftDelete(entry);
+                        TriggerEntityDeletedEvent(entry.Entity);
                         break;
                 }
             }
@@ -134,25 +135,26 @@ namespace Abp.EntityFramework
             return base.SaveChanges();
         }
 
-        private void TriggerEntityUpdatedEvent(object entity)
-        {
-            var entityType = entity.GetType();
-            var eventType = typeof(EntityUpdatedEventData<>).MakeGenericType(entityType);
-
-            if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
-            {
-                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
-                return;
-            }
-
-            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
-        }
-
         private void TriggerEntityCreatedEvent(object entity)
         {
+            TriggerEntityChangeEvent(typeof (EntityCreatedEventData<>), entity);
+        }
+
+        private void TriggerEntityUpdatedEvent(object entity)
+        {
+            TriggerEntityChangeEvent(typeof(EntityUpdatedEventData<>), entity);
+        }
+
+        private void TriggerEntityDeletedEvent(object entity)
+        {
+            TriggerEntityChangeEvent(typeof(EntityDeletedEventData<>), entity);
+        }
+
+        private void TriggerEntityChangeEvent(Type genericEventType, object entity)
+        {
             var entityType = entity.GetType();
-            var eventType = typeof (EntityCreatedEventData<>).MakeGenericType(entityType);
-            
+            var eventType = genericEventType.MakeGenericType(entityType);
+
             if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
             {
                 EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));

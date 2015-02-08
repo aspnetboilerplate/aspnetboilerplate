@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
 
 namespace Abp.Configuration.Startup
 {
@@ -48,6 +49,11 @@ namespace Abp.Configuration.Startup
         public INavigationConfiguration Navigation { get; private set; }
 
         /// <summary>
+        /// Used to configure <see cref="IEventBus"/>.
+        /// </summary>
+        public IEventBusConfiguration EventBus { get; private set; }
+
+        /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
         public AbpStartupConfiguration(IIocManager iocManager)
@@ -63,6 +69,7 @@ namespace Abp.Configuration.Startup
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
             Settings = IocManager.Resolve<ISettingsConfiguration>();
             UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
+            EventBus = IocManager.Resolve<IEventBusConfiguration>();
         }
     }
 }

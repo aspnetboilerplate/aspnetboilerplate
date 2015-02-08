@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
@@ -209,13 +207,10 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
+            //TODO: This method can be optimized by adding all possibilities to a dictionary.
+
             eventData.EventSource = eventSource;
 
-            TriggerInternal(eventType, eventData);
-        }
-
-        private void TriggerInternal(Type eventType, IEventData eventData)
-        {
             foreach (var factoryToTrigger in GetHandlerFactories(eventType))
             {
                 var eventHandler = factoryToTrigger.GetHandler();
@@ -238,19 +233,22 @@ namespace Abp.Events.Bus
                 }
             }
 
-            //TODO: This is working but not tested and refactored yet!
-            //if (eventType.IsGenericType && eventType.GetGenericArguments().Length == 1 && eventData.GetType().IsAssignableFrom(eventType))
-            //{
-            //    var baseArgType = eventType.GetGenericArguments()[0].BaseType;
-            //    if (baseArgType != null)
-            //    {
-            //        var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArgType);
-            //        var baseData = (IEventData)Activator.CreateInstance(baseEventType, ((IGetData) eventData).GetData());
-            //        baseData.EventTime = eventData.EventTime;
-            //        baseData.EventSource = eventData.EventSource;
-            //        Trigger(baseEventType, baseData);
-            //    }
-            //}
+            //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
+            if (eventType.IsGenericType &&
+                eventType.GetGenericArguments().Length == 1 && 
+                typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
+            {
+                var genericArg = eventType.GetGenericArguments()[0];
+                var baseArg = genericArg.BaseType;
+                if (baseArg != null)
+                {
+                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument) eventData).GetConstructorArgs();
+                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
+                    baseEventData.EventTime = eventData.EventTime;
+                    Trigger(baseEventType, eventData.EventSource, baseEventData);
+                }
+            }
         }
 
         private IEnumerable<IEventHandlerFactory> GetHandlerFactories(Type eventType)

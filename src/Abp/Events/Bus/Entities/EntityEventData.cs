@@ -8,7 +8,7 @@ namespace Abp.Events.Bus.Entities
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     [Serializable]
-    public class EntityEventData<TEntity> : EventData //, IGetData
+    public class EntityEventData<TEntity> : EventData , IEventDataWithInheritableGenericArgument
     {
         /// <summary>
         /// Related entity with this event.
@@ -24,14 +24,9 @@ namespace Abp.Events.Bus.Entities
             Entity = entity;
         }
 
-        //public object[] GetData()
-        //{
-        //    return new object[] { Entity };
-        //}
+        public virtual object[] GetConstructorArgs()
+        {
+            return new object[] { Entity };
+        }
     }
-
-    //public interface IGetData
-    //{
-    //    object[] GetData();
-    //}
 }

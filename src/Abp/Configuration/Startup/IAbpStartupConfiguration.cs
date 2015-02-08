@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
 
 namespace Abp.Configuration.Startup
 {
@@ -22,6 +23,11 @@ namespace Abp.Configuration.Startup
         /// Used to configure navigation.
         /// </summary>
         INavigationConfiguration Navigation { get; }
+
+        /// <summary>
+        /// Used to configure <see cref="IEventBus"/>.
+        /// </summary>
+        IEventBusConfiguration EventBus { get; }
 
         /// <summary>
         /// Used to configure authorization.
