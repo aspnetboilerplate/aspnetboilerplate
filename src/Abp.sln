@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.TestBase.SampleApplicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.TestBase.SampleApplication.Tests", "TestBase\Tests\Abp.TestBase.SampleApplication.Tests\Abp.TestBase.SampleApplication.Tests.csproj", "{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.NHibernate.Tests", "Tests\Abp.NHibernate.Tests\Abp.NHibernate.Tests.csproj", "{0CF3083B-364D-42C9-B6F2-552789FB6ED5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,5 +158,6 @@ Global
 		{040FAC4B-7320-4C94-9555-E82FA13DD921} = {0ED67C81-878D-4F09-903E-B6233D211B72}
 		{81D64020-5E36-4344-ACEC-9B218B5246D0} = {0ED67C81-878D-4F09-903E-B6233D211B72}
 		{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49} = {0ED67C81-878D-4F09-903E-B6233D211B72}
+		{0CF3083B-364D-42C9-B6F2-552789FB6ED5} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal
