@@ -2,6 +2,7 @@
 using Abp.Configuration.Startup;
 using Abp.Modules;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 
 namespace Abp.NHibernate.Tests
@@ -15,10 +16,14 @@ namespace Abp.NHibernate.Tests
             System.Data.SQLite.SQLiteConnection c = null;
 
             Configuration.Modules.AbpNHibernate().FluentConfiguration
-                .Database(SQLiteConfiguration.Standard.InMemory)
+                .Database(SQLiteConfiguration.Standard.InMemory())
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
                 .ExposeConfiguration(cfg =>
                                      {
+                                         //This is not working since it works for a single session!
+                                         //Instead, find a way of working per ISessionFactory.
+                                         cfg.SetProperty("proxyfactory.factory_class", "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle");
+                                         cfg.SetProperty(Environment.ReleaseConnections, "on_close");
                                          new SchemaExport(cfg).Create(true, true);
                                      });
         }

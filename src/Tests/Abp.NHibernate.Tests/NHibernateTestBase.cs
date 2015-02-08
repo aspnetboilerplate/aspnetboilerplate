@@ -8,6 +8,11 @@ namespace Abp.NHibernate.Tests
 {
     public class NHibernateTestBase : AbpIntegratedTestBase
     {
+        public NHibernateTestBase()
+        {
+            
+        }
+
         protected override void AddModules(ITypeList<AbpModule> modules)
         {
             base.AddModules(modules);
