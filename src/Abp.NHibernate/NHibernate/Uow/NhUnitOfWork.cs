@@ -1,3 +1,4 @@
+using System.Data;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -16,6 +17,12 @@ namespace Abp.NHibernate.Uow
         /// </summary>
         public ISession Session { get; private set; }
 
+        /// <summary>
+        /// <see cref="NhUnitOfWork"/> uses this DbConnection if it's set.
+        /// This is usually set in tests.
+        /// </summary>
+        public IDbConnection DbConnection { get; set; }
+
         private readonly ISessionFactory _sessionFactory;
         private ITransaction _transaction;
 
@@ -29,13 +36,15 @@ namespace Abp.NHibernate.Uow
 
         protected override void BeginUow()
         {
-            Session = _sessionFactory.OpenSession();
-            if (Options.IsTransactional == true) //TODO: Use default value if not provided!
+            Session = DbConnection != null
+                ? _sessionFactory.OpenSession(DbConnection)
+                : _sessionFactory.OpenSession();
+
+            if (Options.IsTransactional == true)
             {
-                //TODO: Get default values from somewhere...
-                _transaction = Session.BeginTransaction(
-                    Options.IsolationLevel.GetValueOrDefault(System.Transactions.IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
-                    );
+                _transaction = Options.IsolationLevel.HasValue
+                    ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
+                    : Session.BeginTransaction();
             }
         }
 

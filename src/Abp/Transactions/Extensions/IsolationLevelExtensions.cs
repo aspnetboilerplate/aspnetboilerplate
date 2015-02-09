@@ -7,8 +7,7 @@ namespace Abp.Transactions.Extensions
         /// <summary>
         /// Converts <see cref="System.Transactions.IsolationLevel"/> to <see cref="IsolationLevel"/>.
         /// </summary>
-        public static IsolationLevel ToSystemDataIsolationLevel(
-            this System.Transactions.IsolationLevel isolationLevel)
+        public static IsolationLevel ToSystemDataIsolationLevel(this System.Transactions.IsolationLevel isolationLevel)
         {
             switch (isolationLevel)
             {
