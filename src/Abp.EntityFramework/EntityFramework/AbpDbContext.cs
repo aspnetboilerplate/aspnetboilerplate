@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Runtime.Session;
 
@@ -26,14 +24,9 @@ namespace Abp.EntityFramework
         public IAbpSession AbpSession { get; set; }
 
         /// <summary>
-        /// Used to trigger events.
+        /// Used to trigger entity change events.
         /// </summary>
-        public IEventBus EventBus { get; set; }
-
-        /// <summary>
-        /// Reference to the unit of work manager.
-        /// </summary>
-        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+        public IEntityChangedEventHelper EntityChangedEventHelper { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -42,7 +35,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext()
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -52,7 +45,7 @@ namespace Abp.EntityFramework
             : base(nameOrConnectionString)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -62,7 +55,7 @@ namespace Abp.EntityFramework
             : base(model)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -72,7 +65,7 @@ namespace Abp.EntityFramework
             : base(existingConnection, contextOwnsConnection)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -82,7 +75,7 @@ namespace Abp.EntityFramework
             : base(nameOrConnectionString, model)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -92,7 +85,7 @@ namespace Abp.EntityFramework
             : base(objectContext, dbContextOwnsObjectContext)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         /// <summary>
@@ -102,7 +95,7 @@ namespace Abp.EntityFramework
             : base(existingConnection, model, contextOwnsConnection)
         {
             AbpSession = NullAbpSession.Instance;
-            EventBus = NullEventBus.Instance;
+            EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -131,49 +124,20 @@ namespace Abp.EntityFramework
                 {
                     case EntityState.Added:
                         SetCreationAuditProperties(entry);
-                        TriggerEntityCreatedEvent(entry.Entity);
+                        EntityChangedEventHelper.TriggerEntityCreatedEvent(entry.Entity);
                         break;
                     case EntityState.Modified:
                         PreventSettingCreationAuditProperties(entry);
                         SetModificationAuditProperties(entry);
-                        TriggerEntityUpdatedEvent(entry.Entity);
+                        EntityChangedEventHelper.TriggerEntityUpdatedEvent(entry.Entity);
                         break;
                     case EntityState.Deleted:
                         PreventSettingCreationAuditProperties(entry);
                         HandleSoftDelete(entry);
-                        TriggerEntityDeletedEvent(entry.Entity);
+                        EntityChangedEventHelper.TriggerEntityDeletedEvent(entry.Entity);
                         break;
                 }
             }
-        }
-
-        private void TriggerEntityCreatedEvent(object entity)
-        {
-            TriggerEntityChangeEvent(typeof (EntityCreatedEventData<>), entity);
-        }
-
-        private void TriggerEntityUpdatedEvent(object entity)
-        {
-            TriggerEntityChangeEvent(typeof(EntityUpdatedEventData<>), entity);
-        }
-
-        private void TriggerEntityDeletedEvent(object entity)
-        {
-            TriggerEntityChangeEvent(typeof(EntityDeletedEventData<>), entity);
-        }
-
-        private void TriggerEntityChangeEvent(Type genericEventType, object entity)
-        {
-            var entityType = entity.GetType();
-            var eventType = genericEventType.MakeGenericType(entityType);
-
-            if (UnitOfWorkManager == null || UnitOfWorkManager.Current == null)
-            {
-                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
-                return;
-            }
-
-            UnitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
 
         private void SetCreationAuditProperties(DbEntityEntry entry)

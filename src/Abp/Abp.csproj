@@ -169,6 +169,9 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Events\Bus\Entities\EntityChangedEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\IEntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
     <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />

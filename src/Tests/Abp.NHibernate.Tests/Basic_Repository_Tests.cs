@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using Abp.Domain.Repositories;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Entities;
 using NHibernate.Linq;
 using Shouldly;
 using Xunit;
@@ -31,6 +33,61 @@ namespace Abp.NHibernate.Tests
             insertedPerson.ShouldNotBe(null);
             insertedPerson.IsTransient().ShouldBe(false);
             insertedPerson.Name.ShouldBe("halil");
+        }
+
+        [Fact] //Work in progress.
+        public void Should_Trigger_Event_On_Insert()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    triggerCount++;
+                });
+
+            _personRepository.Insert(new Person { Name = "halil" });
+
+            triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_Trigger_Event_On_Update()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityUpdatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre2");
+                    triggerCount++;
+                });
+
+            var emrePeson = _personRepository.Single(p => p.Name == "emre");
+            emrePeson.Name = "emre2";
+            _personRepository.Update(emrePeson);
+
+            triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_Trigger_Event_On_Delete()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre");
+                    triggerCount++;
+                });
+
+            var emrePeson = _personRepository.Single(p => p.Name == "emre");
+            _personRepository.Delete(emrePeson.Id);
+
+            triggerCount.ShouldBe(1);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities.Auditing;
+using Abp.Events.Bus.Entities;
 using Abp.Runtime.Session;
 using NHibernate;
 using NHibernate.Type;
@@ -9,6 +10,8 @@ namespace Abp.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {
+        public IEntityChangedEventHelper EntityChangedEventHelper { get; set; }
+
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
 
@@ -48,6 +51,8 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
+
+            EntityChangedEventHelper.TriggerEntityCreatedEvent(entity);
 
             return base.OnSave(entity, id, state, propertyNames, types);
         }
@@ -125,7 +130,23 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
+            if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
+            {
+                EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+            }
+            else
+            {
+                EntityChangedEventHelper.TriggerEntityUpdatedEvent(entity);
+            }
+
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types);
+        }
+
+        public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
+            EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+
+            base.OnDelete(entity, id, state, propertyNames, types);
         }
     }
 }
