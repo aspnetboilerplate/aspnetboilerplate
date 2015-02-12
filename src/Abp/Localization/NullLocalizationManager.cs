@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using Abp.Localization.Sources;
 
@@ -31,6 +32,16 @@ namespace Abp.Localization
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
             return _emptyLocalizationSourceArray;
+        }
+
+        public string GetString(string sourceName, string name)
+        {
+            return name;
+        }
+
+        public string GetString(string sourceName, string name, CultureInfo culture)
+        {
+            return name;
         }
     }
 }

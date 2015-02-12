@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Abp.Collections.Extensions;
@@ -93,6 +94,16 @@ namespace Abp.Localization
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
             return _sources.Values.ToImmutableList();
+        }
+
+        public string GetString(string sourceName, string name)
+        {
+            return GetSource(sourceName).GetString(name);
+        }
+
+        public string GetString(string sourceName, string name, CultureInfo culture)
+        {
+            return GetSource(sourceName).GetString(name, culture);
         }
 
         private LanguageInfo GetCurrentLanguage()
