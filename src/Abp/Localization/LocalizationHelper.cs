@@ -37,7 +37,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name)
         {
-            return LocalizationManager.Value.GetSource(sourceName).GetString(name);
+            return LocalizationManager.Value.GetString(sourceName, name);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Abp.Localization
         /// <returns>Localized string</returns>
         public static string GetString(string sourceName, string name, CultureInfo culture)
         {
-            return LocalizationManager.Value.GetSource(sourceName).GetString(name, culture);
+            return LocalizationManager.Value.GetString(sourceName, name, culture);
         }
     }
 }
