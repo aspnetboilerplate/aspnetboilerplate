@@ -65,7 +65,7 @@ namespace Abp.TestBase.Tests.Application.Services
                                         }));
         }
 
-        //[Fact]
+        [Fact] //This is not implemented yet.
         public void Should_Not_Work_With_Wrong_List_Input_1()
         {
             Assert.Throws<AbpValidationException>(() =>

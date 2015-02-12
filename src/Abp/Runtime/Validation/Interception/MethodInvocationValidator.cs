@@ -58,61 +58,57 @@ namespace Abp.Runtime.Validation.Interception
 
             foreach (var parameterValue in _parameterValues)
             {
-                NormalizeParameter(parameterValue); //TODO@Halil: Why not normalize recursively as we did in validation.
+                NormalizeParameter(parameterValue);
             }
         }
 
         /// <summary>
         /// Validates given parameter for given value.
         /// </summary>
-        /// <param name="parameter">Parameter of the method to validate</param>
+        /// <param name="parameterInfo">Parameter of the method to validate</param>
         /// <param name="parameterValue">Value to validate</param>
-        private void ValidateMethodParameter(ParameterInfo parameter, object parameterValue)
+        private void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
             if (parameterValue == null)
             {
-                //TODO@Halil: What if null value is acceptable?
-                //TODO@Halil: What if has default value?
-
-                if (!parameter.IsOptional && !parameter.IsOut)
+                if (!parameterInfo.IsOptional && !parameterInfo.IsOut)
                 {
-                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!", new[] { parameter.Name }));
+                    _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
 
                 return;
             }
 
-            ValidateValueRecursively(parameterValue);
+            ValidateObjectRecursively(parameterValue);
         }
 
-        private void ValidateValueRecursively(object validatingValue)
+        private void ValidateObjectRecursively(object validatingObject)
         {
-            if (!(validatingValue is IValidate))
+            if (!(validatingObject is IValidate))
             {
                 return;
             }
 
-            SetValidationAttributeErrors(validatingValue);
+            SetValidationAttributeErrors(validatingObject);
 
-            if (validatingValue is ICustomValidate)
+            if (validatingObject is ICustomValidate)
             {
-                (validatingValue as ICustomValidate).AddValidationErrors(_validationErrors);
+                (validatingObject as ICustomValidate).AddValidationErrors(_validationErrors);
             }
 
-            var properties = TypeDescriptor.GetProperties(validatingValue).Cast<PropertyDescriptor>();
+            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                var propertyValue = property.GetValue(validatingValue);
-                ValidateValueRecursively(propertyValue);
+                ValidateObjectRecursively(property.GetValue(validatingObject));
             }
         }
 
         /// <summary>
         /// Checks all properties for DataAnnotations attributes.
         /// </summary>
-        private void SetValidationAttributeErrors(object validatingValue)
+        private void SetValidationAttributeErrors(object validatingObject)
         {
-            var properties = TypeDescriptor.GetProperties(validatingValue).Cast<PropertyDescriptor>();
+            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
                 var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
@@ -121,10 +117,10 @@ namespace Abp.Runtime.Validation.Interception
                     continue;
                 }
 
-                var validationContext = new ValidationContext(validatingValue) { DisplayName = property.Name };
+                var validationContext = new ValidationContext(validatingObject) { DisplayName = property.Name };
                 foreach (var attribute in validationAttributes)
                 {
-                    var result = attribute.GetValidationResult(property.GetValue(validatingValue), validationContext);
+                    var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
                     if (result != null)
                     {
                         _validationErrors.Add(result);
