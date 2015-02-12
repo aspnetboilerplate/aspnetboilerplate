@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -84,6 +85,14 @@ namespace Abp.Runtime.Validation.Interception
 
         private void ValidateObjectRecursively(object validatingObject)
         {
+            if (validatingObject is IEnumerable)
+            {
+                foreach (var item in (validatingObject as IEnumerable))
+                {
+                    ValidateObjectRecursively(item);
+                }
+            }
+
             if (!(validatingObject is IValidate))
             {
                 return;

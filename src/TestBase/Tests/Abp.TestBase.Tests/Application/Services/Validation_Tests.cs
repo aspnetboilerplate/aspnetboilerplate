@@ -39,7 +39,7 @@ namespace Abp.TestBase.Tests.Application.Services
             var output = _myAppService.MyMethod2(new MyMethod2Input
                             {
                                 MyStringValue2 = "test 1",
-                                Input1 = new MyMethodInput {MyStringValue = "test 2"}
+                                Input1 = new MyMethodInput { MyStringValue = "test 2" }
                             });
             output.Result.ShouldBe(42);
         }
@@ -52,7 +52,7 @@ namespace Abp.TestBase.Tests.Application.Services
                 {
                     MyStringValue2 = "test 1",
                     Input1 = new MyMethodInput() //MyStringValue is not set
-                })); 
+                }));
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Abp.TestBase.Tests.Application.Services
                                         }));
         }
 
-        [Fact] //This is not implemented yet.
+        [Fact]
         public void Should_Not_Work_With_Wrong_List_Input_1()
         {
             Assert.Throws<AbpValidationException>(() =>
@@ -77,6 +77,21 @@ namespace Abp.TestBase.Tests.Application.Services
                                     {
                                         new MyClassInList {ValueInList = null}
                                     }
+                    }));
+        }
+
+        [Fact]
+        public void Should_Not_Work_With_Wrong_Array_Input_1()
+        {
+            Assert.Throws<AbpValidationException>(() =>
+                _myAppService.MyMethod3(
+                    new MyMethod3Input
+                    {
+                        MyStringValue2 = "test 1",
+                        ArrayItems = new[]
+                                     {
+                                         new MyClassInList {ValueInList = null}
+                                     }
                     }));
         }
 
@@ -130,8 +145,9 @@ namespace Abp.TestBase.Tests.Application.Services
             [MinLength(2)]
             public string MyStringValue2 { get; set; }
 
-            [Required]
             public List<MyClassInList> ListItems { get; set; }
+
+            public MyClassInList[] ArrayItems { get; set; }
         }
 
         public class MyClassInList : IValidate
