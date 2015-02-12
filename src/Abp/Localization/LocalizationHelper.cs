@@ -14,7 +14,10 @@ namespace Abp.Localization
 
         static LocalizationHelper()
         {
-            LocalizationManager = new Lazy<ILocalizationManager>(IocManager.Instance.Resolve<ILocalizationManager>);
+            LocalizationManager = new Lazy<ILocalizationManager>(
+                () => IocManager.Instance.IsRegistered<ILocalizationManager>()
+                    ? IocManager.Instance.Resolve<ILocalizationManager>()
+                    : new NullLocalizationManager());
         }
 
         /// <summary>
