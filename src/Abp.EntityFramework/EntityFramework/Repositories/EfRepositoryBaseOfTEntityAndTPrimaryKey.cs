@@ -217,6 +217,7 @@ namespace Abp.EntityFramework.Repositories
 
         public virtual void Delete(TEntity entity)
         {
+            AttachIfNot(entity);
             if (entity is ISoftDelete)
             {
                 (entity as ISoftDelete).IsDeleted = true;
