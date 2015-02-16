@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Services\Validation_Tests.cs" />
+    <Compile Include="Domain\Repositories\Memory\MemoryRepository_Simple_Tests.cs" />
     <Compile Include="Runtime\Session\SessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

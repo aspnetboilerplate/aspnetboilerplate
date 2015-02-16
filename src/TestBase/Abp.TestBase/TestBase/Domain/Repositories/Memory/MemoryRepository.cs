@@ -9,17 +9,40 @@ using Abp.Domain.Repositories;
 namespace Abp.TestBase.Domain.Repositories.Memory
 {
     //TODO: Implement thread-safety..?
-    //TODO: Generate Id on insert!
+
+    public class MemoryRepository<TEntity> : MemoryRepository<TEntity, int>
+        where TEntity : class, IEntity<int>
+    {
+        public MemoryRepository()
+        {
+
+        }
+
+        public MemoryRepository(MemoryDatabase database)
+            : base(database)
+        {
+
+        }
+    }
+    
     public class MemoryRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
         protected MemoryDatabase Database { get; private set; }
 
-        public List<TEntity> Table { get { return Database.Set<TEntity>(); } }
+        protected List<TEntity> Table { get { return Database.Set<TEntity>(); } }
+
+        private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
+
+        public MemoryRepository()
+        {
+            Database = new MemoryDatabase();
+        }
 
         public MemoryRepository(MemoryDatabase database)
         {
             Database = database;
+            _primaryKeyGenerator = new MemoryPrimaryKeyGenerator<TPrimaryKey>();
         }
 
         public IQueryable<TEntity> GetAll()
@@ -112,6 +135,11 @@ namespace Abp.TestBase.Domain.Repositories.Memory
 
         public TEntity Insert(TEntity entity)
         {
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                entity.Id = _primaryKeyGenerator.GetNext();
+            }
+
             Table.Add(entity);
             return entity;
         }
@@ -242,7 +270,7 @@ namespace Abp.TestBase.Domain.Repositories.Memory
 
         public long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().LongCount(predicate);            
+            return GetAll().LongCount(predicate);
         }
 
         public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
