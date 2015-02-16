@@ -10,6 +10,10 @@ using MongoDB.Driver.Linq;
 
 namespace Abp.MongoDb.Repositories
 {
+    /// <summary>
+    /// Implements IRepository for MongoDB.
+    /// </summary>
+    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
     {
@@ -19,6 +23,11 @@ namespace Abp.MongoDb.Repositories
         }
     }
 
+    /// <summary>
+    /// Implements IRepository for MongoDB.
+    /// </summary>
+    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
+    /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
