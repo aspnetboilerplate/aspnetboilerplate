@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="TestBase\AbpIntegratedTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBase\Domain\Repositories\Memory\MemoryDatabase.cs" />
+    <Compile Include="TestBase\Domain\Repositories\Memory\MemoryRepository.cs" />
     <Compile Include="TestBase\Runtime\Session\TestAbpSession.cs" />
     <Compile Include="TestBase\Modules\TestModuleFinder.cs" />
     <Compile Include="TestBase\TestBaseModule.cs" />
