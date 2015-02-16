@@ -9,6 +9,7 @@ using Abp.Domain.Repositories;
 namespace Abp.TestBase.Domain.Repositories.Memory
 {
     //TODO: Implement thread-safety..?
+    //TODO: Generate Id on insert!
     public class MemoryRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
@@ -111,7 +112,7 @@ namespace Abp.TestBase.Domain.Repositories.Memory
 
         public TEntity Insert(TEntity entity)
         {
-            Table.Add(entity); //TODO: Generate Id!
+            Table.Add(entity);
             return entity;
         }
 
