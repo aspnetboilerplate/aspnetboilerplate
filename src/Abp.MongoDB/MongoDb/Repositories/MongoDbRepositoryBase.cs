@@ -54,7 +54,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<List<TEntity>> GetAllListAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(GetAllList());
         }
 
         public List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
@@ -64,7 +64,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(GetAllList(predicate));
         }
 
         public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
@@ -80,7 +80,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> GetAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Get(id));
         }
 
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
@@ -90,7 +90,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Single(predicate));
         }
 
         public TEntity FirstOrDefault(TPrimaryKey id)
@@ -101,7 +101,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(FirstOrDefault(id));
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -111,7 +111,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(FirstOrDefault(predicate));
         }
 
         public TEntity Load(TPrimaryKey id)
@@ -139,7 +139,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(InsertAndGetId(entity));
         }
 
         public TEntity InsertOrUpdate(TEntity entity)
@@ -151,25 +151,18 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(InsertOrUpdate(entity));
         }
 
         public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
-
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
-            {
-                //UnitOfWorkScope.Current.SaveChanges();
-                throw new NotImplementedException();
-            }
-
             return entity.Id;
         }
 
         public Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(InsertOrUpdateAndGetId(entity));
         }
 
         public TEntity Update(TEntity entity)
@@ -180,7 +173,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<TEntity> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Update(entity));
         }
 
         public void Delete(TEntity entity)
@@ -188,9 +181,9 @@ namespace Abp.MongoDb.Repositories
             Delete(entity.Id);
         }
 
-        public Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            Delete(entity);
         }
 
         public void Delete(TPrimaryKey id)
@@ -199,19 +192,22 @@ namespace Abp.MongoDb.Repositories
             Collection.Remove(query);
         }
 
-        public Task DeleteAsync(TPrimaryKey id)
+        public async Task DeleteAsync(TPrimaryKey id)
         {
-            throw new NotImplementedException();
+            Delete(id);
         }
 
         public void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            foreach (var entity in GetAll().Where(predicate).ToList())
+            {
+                Delete(entity);
+            }
         }
 
-        public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            Delete(predicate);
         }
 
         public int Count()
@@ -221,7 +217,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Count());
         }
 
         public int Count(Expression<Func<TEntity, bool>> predicate)
@@ -231,7 +227,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Count(predicate));
         }
 
         public long LongCount()
@@ -241,7 +237,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<long> LongCountAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(LongCount());
         }
 
         public long LongCount(Expression<Func<TEntity, bool>> predicate)
@@ -251,7 +247,7 @@ namespace Abp.MongoDb.Repositories
 
         public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(LongCount(predicate));
         }
     }
 }
