@@ -10,7 +10,7 @@ namespace Abp.TestBase.Domain.Repositories.Memory
 {
     //TODO: Implement thread-safety..?
 
-    public class MemoryRepository<TEntity> : MemoryRepository<TEntity, int>
+    public class MemoryRepository<TEntity> : MemoryRepository<TEntity, int>, IRepository<TEntity> 
         where TEntity : class, IEntity<int>
     {
         public MemoryRepository()

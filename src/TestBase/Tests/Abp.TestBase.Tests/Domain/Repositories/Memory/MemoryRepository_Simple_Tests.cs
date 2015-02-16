@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
 using Abp.TestBase.Domain.Repositories.Memory;
 using Shouldly;
 using Xunit;
@@ -8,7 +9,7 @@ namespace Abp.TestBase.Tests.Domain.Repositories.Memory
     public class MemoryRepository_Simple_Tests
     {
         private readonly MemoryDatabase _database;
-        private readonly MemoryRepository<MyEntity> _repository;
+        private readonly IRepository<MyEntity> _repository;
 
         public MemoryRepository_Simple_Tests()
         {
