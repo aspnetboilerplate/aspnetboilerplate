@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 
-namespace Abp.MemoryDb
+namespace Abp.MemoryDb.Repositories
 {
     //TODO: Implement thread-safety..?
 
@@ -18,7 +18,7 @@ namespace Abp.MemoryDb
 
         }
 
-        public MemoryRepository(MemoryDatabase database)
+        public MemoryRepository(MemoryDatabase database) //TODO: Change to IMemoryDatabaseProvider
             : base(database)
         {
 

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Abp.Dependency;
 
 namespace Abp.MemoryDb
 {
-    public class MemoryDatabase
+    public class MemoryDatabase : ISingletonDependency
     {
         private readonly Dictionary<Type, object> _sets;
 

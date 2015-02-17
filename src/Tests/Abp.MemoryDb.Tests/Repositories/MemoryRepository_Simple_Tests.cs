@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.MemoryDb.Repositories;
 using Shouldly;
 using Xunit;
 
