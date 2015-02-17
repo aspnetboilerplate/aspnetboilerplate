@@ -57,6 +57,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.TestBase.SampleApplicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.NHibernate.Tests", "Tests\Abp.NHibernate.Tests\Abp.NHibernate.Tests.csproj", "{0CF3083B-364D-42C9-B6F2-552789FB6ED5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MemoryDb", "Abp.MemoryDb\Abp.MemoryDb.csproj", "{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MemoryDb.Tests", "Tests\Abp.MemoryDb.Tests\Abp.MemoryDb.Tests.csproj", "{2322DD68-034A-44FD-8065-90030BE25C47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +147,14 @@ Global
 		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CF3083B-364D-42C9-B6F2-552789FB6ED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2322DD68-034A-44FD-8065-90030BE25C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2322DD68-034A-44FD-8065-90030BE25C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2322DD68-034A-44FD-8065-90030BE25C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2322DD68-034A-44FD-8065-90030BE25C47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,5 +171,6 @@ Global
 		{81D64020-5E36-4344-ACEC-9B218B5246D0} = {0ED67C81-878D-4F09-903E-B6233D211B72}
 		{A9C87FBF-8C8A-4ABD-A0A8-5F79A9DA6A49} = {0ED67C81-878D-4F09-903E-B6233D211B72}
 		{0CF3083B-364D-42C9-B6F2-552789FB6ED5} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{2322DD68-034A-44FD-8065-90030BE25C47} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal

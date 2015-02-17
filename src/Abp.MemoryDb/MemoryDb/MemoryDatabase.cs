@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.TestBase.Domain.Repositories.Memory
+namespace Abp.MemoryDb
 {
     public class MemoryDatabase
     {

@@ -1,10 +1,9 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.TestBase.Domain.Repositories.Memory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.Tests.Domain.Repositories.Memory
+namespace Abp.MemoryDb.Tests.Repositories
 {
     public class MemoryRepository_Simple_Tests
     {

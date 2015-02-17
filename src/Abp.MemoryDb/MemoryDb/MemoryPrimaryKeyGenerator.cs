@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.TestBase.Domain.Repositories.Memory
+namespace Abp.MemoryDb
 {
     public class MemoryPrimaryKeyGenerator<TPrimaryKey>
     {

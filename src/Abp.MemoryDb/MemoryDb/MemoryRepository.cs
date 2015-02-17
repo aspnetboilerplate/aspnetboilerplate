@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 
-namespace Abp.TestBase.Domain.Repositories.Memory
+namespace Abp.MemoryDb
 {
     //TODO: Implement thread-safety..?
 
