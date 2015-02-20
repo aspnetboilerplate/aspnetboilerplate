@@ -127,6 +127,7 @@ namespace Abp.EntityFramework
                         EntityChangedEventHelper.TriggerEntityCreatedEvent(entry.Entity);
                         break;
                     case EntityState.Modified:
+                        //TODO: Soft Delete..?
                         PreventSettingCreationAuditProperties(entry);
                         SetModificationAuditProperties(entry);
                         EntityChangedEventHelper.TriggerEntityUpdatedEvent(entry.Entity);
