@@ -42,7 +42,7 @@ namespace Abp.Authorization
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
-                CreatePermissionProvider(providerType).SetPermissions(this);
+                CreateAuthorizationProvider(providerType).SetPermissions(this);
             }
 
             _permissions.AddAllPermissions();
@@ -81,7 +81,7 @@ namespace Abp.Authorization
             return _permissions.Values.ToImmutableList();
         }
 
-        private AuthorizationProvider CreatePermissionProvider(Type providerType)
+        private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
         {
             if (!_iocManager.IsRegistered(providerType))
             {
