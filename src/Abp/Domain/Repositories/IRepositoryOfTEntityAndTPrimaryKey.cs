@@ -213,7 +213,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="entity">Entity to be deleted</param>
         void Delete(TEntity entity);
-        
+
         /// <summary>
         /// Deletes an entity.
         /// </summary>

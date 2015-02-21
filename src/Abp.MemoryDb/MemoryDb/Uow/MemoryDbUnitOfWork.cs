@@ -1,36 +1,35 @@
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.MongoDb.Configuration;
-using MongoDB.Driver;
+using Abp.MemoryDb.Configuration;
 
-namespace Abp.MongoDb.Uow
+namespace Abp.MemoryDb.Uow
 {
     /// <summary>
     /// Implements Unit of work for MongoDB.
     /// </summary>
-    public class MongoDbUnitOfWork : UnitOfWorkBase, ITransientDependency
+    public class MemoryDbUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         /// <summary>
-        /// Gets a reference to MongoDB Database.
+        /// Gets a reference to Memory Database.
         /// </summary>
-        public MongoDatabase Database { get; private set; }
+        public MemoryDatabase Database { get; private set; }
 
-        private readonly IAbpMongoDbModuleConfiguration _configuration;
+        private readonly IAbpMemoryDbModuleConfiguration _configuration;
+        private readonly MemoryDatabase _memoryDatabase;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration)
+        public MemoryDbUnitOfWork(IAbpMemoryDbModuleConfiguration configuration, MemoryDatabase memoryDatabase)
         {
             _configuration = configuration;
+            _memoryDatabase = memoryDatabase;
         }
 
         protected override void BeginUow()
         {
-            Database = new MongoClient(_configuration.ConnectionString)
-                .GetServer()
-                .GetDatabase(_configuration.DatatabaseName);
+            Database = _memoryDatabase;
         }
 
         public override void SaveChanges()
@@ -40,7 +39,7 @@ namespace Abp.MongoDb.Uow
 
         public override async Task SaveChangesAsync()
         {
-            
+
         }
 
         protected override void CompleteUow()
@@ -55,7 +54,7 @@ namespace Abp.MongoDb.Uow
 
         protected override void DisposeUow()
         {
-            
+
         }
     }
 }

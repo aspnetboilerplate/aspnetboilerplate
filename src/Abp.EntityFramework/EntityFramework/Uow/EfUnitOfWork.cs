@@ -51,14 +51,14 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+            _activeDbContexts.Values.ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()
         {
             foreach (var dbContext in _activeDbContexts.Values)
             {
-                await dbContext.SaveChangesAsync();
+                await SaveChangesInDbContextAsync(dbContext);
             }
         }
 
@@ -104,6 +104,16 @@ namespace Abp.EntityFramework.Uow
             {
                 _transaction.Dispose();
             }
+        }
+
+        protected void SaveChangesInDbContext(DbContext dbContext)
+        {
+            dbContext.SaveChanges();
+        }
+
+        protected async Task SaveChangesInDbContextAsync(DbContext dbContext)
+        {
+            await dbContext.SaveChangesAsync();
         }
     }
 }

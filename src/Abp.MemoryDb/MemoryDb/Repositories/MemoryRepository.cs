@@ -1,59 +1,53 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
-namespace Abp.MongoDb.Repositories
+namespace Abp.MemoryDb.Repositories
 {
-    /// <summary>
-    /// Implements IRepository for MongoDB.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-    public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, int>, IRepository<TEntity>
+    //TODO: Implement thread-safety..?
+
+    public class MemoryRepository<TEntity> : MemoryRepository<TEntity, int>, IRepository<TEntity> 
         where TEntity : class, IEntity<int>
     {
-        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-            : base(databaseProvider)
+        public MemoryRepository()
         {
+
+        }
+
+        public MemoryRepository(MemoryDatabase database) //TODO: Change to IMemoryDatabaseProvider
+            : base(database)
+        {
+
         }
     }
-
-    /// <summary>
-    /// Implements IRepository for MongoDB.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-    /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+    
+    public class MemoryRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        private readonly IMongoDatabaseProvider _databaseProvider;
+        protected MemoryDatabase Database { get; private set; }
 
-        protected MongoDatabase Database
+        protected List<TEntity> Table { get { return Database.Set<TEntity>(); } }
+
+        private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
+
+        public MemoryRepository()
         {
-            get { return _databaseProvider.Database; }
+            Database = new MemoryDatabase();
         }
 
-        protected MongoCollection<TEntity> Collection
+        public MemoryRepository(MemoryDatabase database)
         {
-            get
-            {
-                return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
-            }
-        }
-
-        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-        {
-            _databaseProvider = databaseProvider;
+            Database = database;
+            _primaryKeyGenerator = new MemoryPrimaryKeyGenerator<TPrimaryKey>();
         }
 
         public IQueryable<TEntity> GetAll()
         {
-            return Collection.AsQueryable();
+            return Table.AsQueryable();
         }
 
         public List<TEntity> GetAllList()
@@ -83,42 +77,53 @@ namespace Abp.MongoDb.Repositories
 
         public TEntity Get(TPrimaryKey id)
         {
-            var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
-            return Collection.FindOne(query); //TODO: What if no entity with id?
+            var entity = FirstOrDefault(id);
+            if (entity == null)
+            {
+                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
+            }
+
+            return entity;
         }
 
-        public Task<TEntity> GetAsync(TPrimaryKey id)
+        public async Task<TEntity> GetAsync(TPrimaryKey id)
         {
-            return Task.FromResult(Get(id));
+            var entity = await FirstOrDefaultAsync(id);
+            if (entity == null)
+            {
+                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
+            }
+
+            return entity;
         }
 
-        public TEntity Single(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
         }
 
-        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(Single(predicate));
         }
 
-        public TEntity FirstOrDefault(TPrimaryKey id)
+        public virtual TEntity FirstOrDefault(TPrimaryKey id)
         {
-            var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
-            return Collection.FindOne(query); //TODO: What if no entity with id?
+            return GetAll()
+                .FirstOrDefault(CreateEqualityExpression(id));
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        public virtual Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
             return Task.FromResult(FirstOrDefault(id));
         }
 
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(FirstOrDefault(predicate));
         }
@@ -130,53 +135,64 @@ namespace Abp.MongoDb.Repositories
 
         public TEntity Insert(TEntity entity)
         {
-            Collection.Insert(entity);
+            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            {
+                entity.Id = _primaryKeyGenerator.GetNext();
+            }
+
+            Table.Add(entity);
             return entity;
         }
 
         public Task<TEntity> InsertAsync(TEntity entity)
         {
-            Collection.Insert(entity);
-            return Task.FromResult(entity);
+            return Task.FromResult(Insert(entity));
         }
 
-        public TPrimaryKey InsertAndGetId(TEntity entity)
+        public virtual TPrimaryKey InsertAndGetId(TEntity entity)
         {
-            Collection.Insert(entity);
+            Insert(entity);
             return entity.Id;
         }
 
-        public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        public virtual Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
             return Task.FromResult(InsertAndGetId(entity));
         }
 
-        public TEntity InsertOrUpdate(TEntity entity)
+        public virtual TEntity InsertOrUpdate(TEntity entity)
         {
             return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
                 ? Insert(entity)
                 : Update(entity);
         }
 
-        public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            return Task.FromResult(InsertOrUpdate(entity));
+            return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
+                ? await InsertAsync(entity)
+                : await UpdateAsync(entity);
         }
 
-        public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+        public virtual TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
             return entity.Id;
         }
 
-        public Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        public virtual Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
             return Task.FromResult(InsertOrUpdateAndGetId(entity));
         }
 
         public TEntity Update(TEntity entity)
         {
-            Collection.Save(entity);
+            var index = Table.FindIndex(e => EqualityComparer<TPrimaryKey>.Default.Equals(e.Id, entity.Id));
+            if (index >= 0)
+            {
+                Table[index] = entity;
+            }
+
             return entity;
         }
 
@@ -197,8 +213,11 @@ namespace Abp.MongoDb.Repositories
 
         public void Delete(TPrimaryKey id)
         {
-            var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
-            Collection.Remove(query);
+            var index = Table.FindIndex(e => EqualityComparer<TPrimaryKey>.Default.Equals(e.Id, id));
+            if (index >= 0)
+            {
+                Table.RemoveAt(index);
+            }
         }
 
         public async Task DeleteAsync(TPrimaryKey id)
@@ -221,7 +240,7 @@ namespace Abp.MongoDb.Repositories
 
         public int Count()
         {
-            return GetAll().Count();
+            return Table.Count;
         }
 
         public Task<int> CountAsync()
@@ -241,7 +260,7 @@ namespace Abp.MongoDb.Repositories
 
         public long LongCount()
         {
-            return GetAll().LongCount();
+            return Table.LongCount();
         }
 
         public Task<long> LongCountAsync()
@@ -257,6 +276,18 @@ namespace Abp.MongoDb.Repositories
         public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(LongCount(predicate));
+        }
+
+        private static Expression<Func<TEntity, bool>> CreateEqualityExpression(TPrimaryKey id)
+        {
+            var lambdaParam = Expression.Parameter(typeof(TEntity));
+
+            var lambdaBody = Expression.Equal(
+                Expression.PropertyOrField(lambdaParam, "Id"),
+                Expression.Constant(id, typeof(TPrimaryKey))
+                );
+
+            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
     }
 }
