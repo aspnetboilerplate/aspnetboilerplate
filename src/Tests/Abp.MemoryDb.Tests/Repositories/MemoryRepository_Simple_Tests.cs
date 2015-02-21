@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.MemoryDb.Repositories;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -15,7 +16,10 @@ namespace Abp.MemoryDb.Tests.Repositories
         {
             _database = new MemoryDatabase();
 
-            _repository = new MemoryRepository<MyEntity>(_database);
+            var databaseProvider = Substitute.For<IMemoryDatabaseProvider>();
+            databaseProvider.Database.Returns(_database);
+
+            _repository = new MemoryRepository<MyEntity>(databaseProvider);
 
             //Testing Insert by creating initial data
             _repository.Insert(new MyEntity("test-1"));
