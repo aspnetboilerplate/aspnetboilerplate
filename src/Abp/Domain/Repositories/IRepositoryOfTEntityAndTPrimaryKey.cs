@@ -18,8 +18,8 @@ namespace Abp.Domain.Repositories
         #region Select/Get/Query
 
         /// <summary>
-        /// Used to get a IQueryable that is used to retrive entities from entire table.
-        /// <see cref="UnitOfWorkAttribute"/> attrbute must be used to be able to call this method since this method
+        /// Used to get a IQueryable that is used to retrieve entities from entire table.
+        /// <see cref="UnitOfWorkAttribute"/> attribute must be used to be able to call this method since this method
         /// returns IQueryable and it requires open database connection to use it.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
@@ -53,7 +53,7 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Used to run a query over entire entities.
-        /// <see cref="UnitOfWorkAttribute"/> attribute is not always necessery (as opposite to <see cref="GetAll"/>)
+        /// <see cref="UnitOfWorkAttribute"/> attribute is not always necessary (as opposite to <see cref="GetAll"/>)
         /// if <paramref name="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
         /// </summary>
         /// <typeparam name="T">Type of return value of this method</typeparam>
