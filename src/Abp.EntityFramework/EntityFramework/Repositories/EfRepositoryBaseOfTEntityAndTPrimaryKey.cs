@@ -84,7 +84,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = Insert(entity);
 
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            if (entity.IsTransient())
             {
                 Context.SaveChanges();
             }
@@ -96,7 +96,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = await InsertAsync(entity);
 
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            if (entity.IsTransient())
             {
                 await Context.SaveChangesAsync();
             }
@@ -108,7 +108,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = InsertOrUpdate(entity);
 
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            if (entity.IsTransient())
             {
                 Context.SaveChanges();
             }
@@ -120,7 +120,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = await InsertOrUpdateAsync(entity);
 
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            if (entity.IsTransient())
             {
                 await Context.SaveChangesAsync();
             }

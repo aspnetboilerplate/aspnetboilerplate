@@ -45,7 +45,8 @@
     <Compile Include="MemoryDb\Configuration\IAbpMemoryDbModuleConfiguration.cs" />
     <Compile Include="MemoryDb\MemoryDatabase.cs" />
     <Compile Include="MemoryDb\Repositories\MemoryPrimaryKeyGenerator.cs" />
-    <Compile Include="MemoryDb\Repositories\MemoryRepository.cs" />
+    <Compile Include="MemoryDb\Repositories\MemoryRepositoryOfTEntityAndTPrimaryKey.cs" />
+    <Compile Include="MemoryDb\Repositories\MemoryRepositoryOfTEntity.cs" />
     <Compile Include="MemoryDb\IMemoryDatabaseProvider.cs" />
     <Compile Include="MemoryDb\Uow\MemoryDbUnitOfWork.cs" />
     <Compile Include="MemoryDb\Uow\UnitOfWorkMemoryDatabaseProvider.cs" />
