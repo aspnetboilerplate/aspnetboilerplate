@@ -1,6 +1,8 @@
-﻿using Abp.Modules;
+﻿using Abp.Localization;
+using Abp.Modules;
 using System.Reflection;
 using Abp.Reflection;
+using AutoMapper;
 using Castle.Core.Logging;
 
 namespace Abp.AutoMapper
@@ -8,15 +10,18 @@ namespace Abp.AutoMapper
     public class AbpAutoMapperModule : AbpModule
     {
         public ILogger Logger { get; set; }
+        public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly ITypeFinder _typeFinder;
 
         private static bool _createdMappingsBefore;
-
+        private static readonly object _syncObj = new object();
+        
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
+            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         public override void PreInitialize()
@@ -26,14 +31,23 @@ namespace Abp.AutoMapper
 
         private void CreateMappings()
         {
-            //We should prevent duplicate mapping in an application, since AutoMapper is static.
-            if (_createdMappingsBefore)
+            lock (_syncObj)
             {
-                return;
+                //We should prevent duplicate mapping in an application, since AutoMapper is static.
+                if (_createdMappingsBefore)
+                {
+                    return;
+                }
+
+                FindAndAutoMapTypes();
+                CreateOtherMappings();
+
+                _createdMappingsBefore = true;
             }
+        }
 
-            _createdMappingsBefore = true;
-
+        private void FindAndAutoMapTypes()
+        {
             var types = _typeFinder.Find(type =>
                 type.IsDefined(typeof(AutoMapAttribute)) ||
                 type.IsDefined(typeof(AutoMapFromAttribute)) ||
@@ -46,6 +60,11 @@ namespace Abp.AutoMapper
                 Logger.Debug(type.FullName);
                 AutoMapperHelper.CreateMap(type);
             }
+        }
+
+        private void CreateOtherMappings()
+        {
+            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => LocalizationManager.GetString(ls.SourceName, ls.Name));
         }
     }
 }
