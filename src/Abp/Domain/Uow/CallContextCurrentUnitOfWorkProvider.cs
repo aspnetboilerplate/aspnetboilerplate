@@ -10,7 +10,7 @@ namespace Abp.Domain.Uow
     /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
     /// This is the default implementation.
     /// </summary>
-    public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
+    public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ITransientDependency
     {
         private const string ContextKey = "Abp.UnitOfWork.Current";
 
