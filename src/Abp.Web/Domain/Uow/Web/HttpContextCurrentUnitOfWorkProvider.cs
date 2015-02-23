@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using Abp.Dependency;
 using Castle.Core;
 
 namespace Abp.Domain.Uow.Web
@@ -8,7 +7,7 @@ namespace Abp.Domain.Uow.Web
     /// Implements <see cref="ICurrentUnitOfWorkProvider"/> using <see cref="HttpContext.Current"/>.
     /// Fallbacks to <see cref="CallContextCurrentUnitOfWorkProvider"/> if <see cref="HttpContext.Current"/> is invalid.
     /// </summary>
-    public class HttpContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ISingletonDependency
+    public class HttpContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider
     {
         private const string ContextKey = "Abp.UnitOfWork.Current";
         

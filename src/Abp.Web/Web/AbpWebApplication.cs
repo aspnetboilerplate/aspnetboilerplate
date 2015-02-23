@@ -27,12 +27,12 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
-            //TODO: Use AbpBootstrapper.IocManager
-            IocManager.Instance.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
+            AbpBootstrapper.IocManager.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
 
-            //TODO: Use AbpBootstrapper.IocManager
-            //TODO: Move to AbpWebModule?
-            IocManager.Instance.IocContainer.Register(Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<HttpContextCurrentUnitOfWorkProvider>());
+            //TODO: Move registration to AbpWebModule.PreInitialize?
+            AbpBootstrapper.IocManager.IocContainer.Register(
+                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<HttpContextCurrentUnitOfWorkProvider>().LifestyleTransient()
+                );
 
             AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();
@@ -45,10 +45,12 @@ namespace Abp.Web
 
         protected virtual void Session_Start(object sender, EventArgs e)
         {
+
         }
 
         protected virtual void Session_End(object sender, EventArgs e)
         {
+
         }
 
         /// <summary>
