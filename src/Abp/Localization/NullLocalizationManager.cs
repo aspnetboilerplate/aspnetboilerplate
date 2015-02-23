@@ -19,6 +19,11 @@ namespace Abp.Localization
 
         private readonly IReadOnlyList<ILocalizationSource> _emptyLocalizationSourceArray = new ILocalizationSource[0];
 
+        private NullLocalizationManager()
+        {
+            
+        }
+
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
         {
             return _emptyLanguageArray;
