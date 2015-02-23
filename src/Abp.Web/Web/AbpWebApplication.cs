@@ -27,6 +27,8 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
+            AbpBootstrapper = new AbpBootstrapper();
+
             AbpBootstrapper.IocManager.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
 
             //TODO: Move registration to AbpWebModule.PreInitialize?
@@ -34,7 +36,6 @@ namespace Abp.Web
                 Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<HttpContextCurrentUnitOfWorkProvider>().LifestyleTransient()
                 );
 
-            AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();
         }
 
