@@ -25,7 +25,7 @@ namespace Abp.Dependency.Installers
                 Component.For<ITypeFinder>().ImplementedBy<TypeFinder>().LifestyleSingleton(),
                 Component.For<IModuleFinder>().ImplementedBy<DefaultModuleFinder>().LifestyleTransient(),
                 Component.For<IAbpModuleManager>().ImplementedBy<AbpModuleManager>().LifestyleSingleton(),
-                Component.For<ILocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton()
+                Component.For<ILocalizationManager, LocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton()
                 );
         }
     }

@@ -31,7 +31,11 @@ namespace Abp.Localization
             Logger = NullLogger.Instance;
             _configuration = configuration;
             _sources = new Dictionary<string, ILocalizationSource>();
-            InitializeSources(); //TODO: Should initialize sources after ctor (maybe with a IShouldInitialize method)
+        }
+
+        public void Initialize()
+        {
+            InitializeSources();            
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()

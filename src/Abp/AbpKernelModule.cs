@@ -3,10 +3,10 @@ using Abp.Application.Navigation;
 using Abp.Application.Services.Interceptors;
 using Abp.Authorization;
 using Abp.Configuration;
-using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Localization;
 using Abp.Modules;
 
 namespace Abp
@@ -37,6 +37,7 @@ namespace Abp
         {
             RegisterMissingComponents();
 
+            IocManager.Resolve<LocalizationManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
