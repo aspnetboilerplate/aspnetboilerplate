@@ -33,32 +33,23 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Reference to the localization manager.
-        /// </summary>
-        public ILocalizationManager LocalizationManager { protected get; set; }
-
-        /// <summary>
-        /// Gets/sets name of the localization source that is used in this application service.
+        /// Gets/sets name of the localization source that is used in this controller.
         /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
         protected string LocalizationSourceName
         {
-            get { return LocalizationSource.Name; }
-            set { LocalizationSource = LocalizationManager.GetSource(value); }
+            get { return _localizationSource.Name; }
+            set { _localizationSource = LocalizationHelper.GetSource(value); }
         }
 
-        /// <summary>
-        /// Gets localization source.
-        /// It's valid if <see cref="LocalizationSourceName"/> is set.
-        /// </summary>
-        protected ILocalizationSource LocalizationSource { get; private set; }
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpWebViewPage()
         {
-            LocalizationManager = NullLocalizationManager.Instance;
+            _localizationSource = NullLocalizationSource.Instance;
         }
 
         /// <summary>
@@ -68,7 +59,7 @@ namespace Abp.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected virtual string L(string name)
         {
-            return LocalizationSource.GetString(name);
+            return _localizationSource.GetString(name);
         }
 
         /// <summary>
@@ -79,7 +70,7 @@ namespace Abp.Web.Mvc.Views
         /// <returns>Localized string</returns>
         public string L(string name, params object[] args)
         {
-            return LocalizationSource.GetString(name, args);
+            return _localizationSource.GetString(name, args);
         }
 
         /// <summary>
@@ -90,7 +81,7 @@ namespace Abp.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected virtual string L(string name, CultureInfo culture)
         {
-            return LocalizationSource.GetString(name, culture);
+            return _localizationSource.GetString(name, culture);
         }
 
         /// <summary>
@@ -102,7 +93,7 @@ namespace Abp.Web.Mvc.Views
         /// <returns>Localized string</returns>
         public string L(string name, CultureInfo culture, params object[] args)
         {
-            return LocalizationSource.GetString(name, culture, args);
+            return _localizationSource.GetString(name, culture, args);
         }
     }
 }

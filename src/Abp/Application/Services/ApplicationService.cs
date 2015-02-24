@@ -34,25 +34,38 @@ namespace Abp.Application.Services
         public ILocalizationManager LocalizationManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the logger to write logs.
-        /// </summary>
-        public ILogger Logger { protected get; set; }
-
-        /// <summary>
         /// Gets/sets name of the localization source that is used in this application service.
         /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
-        protected string LocalizationSourceName
-        {
-            get { return LocalizationSource.Name; }
-            set { LocalizationSource = LocalizationManager.GetSource(value); }
-        }
+        protected string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Gets localization source.
         /// It's valid if <see cref="LocalizationSourceName"/> is set.
         /// </summary>
-        protected ILocalizationSource LocalizationSource { get; private set; }
+        protected ILocalizationSource LocalizationSource
+        {
+            get
+            {
+                if (LocalizationSourceName == null)
+                {
+                    throw new AbpException("Must set LocalizationSourceName before, in order to get LocalizationSource");
+                }
+
+                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
+                {
+                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                }
+
+                return _localizationSource;
+            }
+        }
+        private ILocalizationSource _localizationSource;
+
+        /// <summary>
+        /// Reference to the logger to write logs.
+        /// </summary>
+        public ILogger Logger { protected get; set; }
 
         /// <summary>
         /// Constructor.
@@ -61,7 +74,6 @@ namespace Abp.Application.Services
         {
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
-            LocalizationSource = NullLocalizationSource.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
