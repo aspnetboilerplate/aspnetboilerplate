@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -8,7 +6,7 @@ using Abp.Dependency;
 
 namespace Abp.Application.Navigation
 {
-    internal class UserNavigationManager : IUserNavigationManager, ISingletonDependency
+    internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
         public IPermissionChecker PermissionChecker { get; set; }
 

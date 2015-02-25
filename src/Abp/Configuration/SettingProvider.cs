@@ -6,7 +6,7 @@ namespace Abp.Configuration
     /// <summary>
     /// Implement this interface to define settings for a module/application.
     /// </summary>
-    public abstract class SettingProvider : ISingletonDependency
+    public abstract class SettingProvider : ITransientDependency
     {
         /// <summary>
         /// Gets all setting definitions provided by this provider.

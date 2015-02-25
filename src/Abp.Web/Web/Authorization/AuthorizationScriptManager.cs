@@ -11,7 +11,7 @@ namespace Abp.Web.Authorization
     /// <summary>
     /// 
     /// </summary>
-    public class AuthorizationScriptManager : IAuthorizationScriptManager, ISingletonDependency
+    public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
     {
         /// <inheritdoc/>
         public IAbpSession AbpSession { get; set; }

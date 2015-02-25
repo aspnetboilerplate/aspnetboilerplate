@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Dependency;
@@ -7,7 +6,7 @@ using Abp.Runtime.Session;
 
 namespace Abp.Web.Navigation
 {
-    internal class NavigationScriptManager : INavigationScriptManager, ISingletonDependency
+    internal class NavigationScriptManager : INavigationScriptManager, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
 
