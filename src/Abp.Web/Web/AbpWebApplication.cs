@@ -32,7 +32,7 @@ namespace Abp.Web
             AbpBootstrapper.IocManager.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
 
             //TODO: Move registration to AbpWebModule.PreInitialize?
-            AbpBootstrapper.IocManager.Register<ICurrentUnitOfWorkProvider, HttpContextCurrentUnitOfWorkProvider>(DependencyLifeStyle.Transient);
+            //AbpBootstrapper.IocManager.Register<ICurrentUnitOfWorkProvider, HttpContextCurrentUnitOfWorkProvider>(DependencyLifeStyle.Transient);
             //AbpBootstrapper.IocManager.IocContainer.Register(
             //    Component.For<ICurrentUnitOfWorkProvider>()
             //        .ImplementedBy<PerWebRequestUnitOfWorkProvider>()
