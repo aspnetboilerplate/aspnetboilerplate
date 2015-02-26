@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Reflection;
 using Abp.Dependency;
-using Abp.IO;
 using Abp.IO.Extensions;
 
 namespace Abp.Resources.Embedded
@@ -58,7 +58,7 @@ namespace Abp.Resources.Embedded
 
         private EmbeddedResourcePathInfo GetPathInfoForFullPath(string fullPath)
         {
-            foreach (var resourcePathInfo in _resourcePaths.Values)
+            foreach (var resourcePathInfo in _resourcePaths.Values.ToImmutableList()) //TODO@hikalkan: Test for multi-threading (possible multiple enumeration problem).
             {
                 if (fullPath.StartsWith(resourcePathInfo.Path))
                 {

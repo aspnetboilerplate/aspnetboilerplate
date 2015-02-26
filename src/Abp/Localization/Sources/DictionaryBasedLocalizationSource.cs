@@ -10,7 +10,7 @@ namespace Abp.Localization.Sources
     /// This class is used to build a localization source
     /// which works on memory based dictionaries to find strings.
     /// </summary>
-    public class DictionaryBasedLocalizationSource : ILocalizationSource
+    public class DictionaryBasedLocalizationSource : IDictionaryBasedLocalizationSource
     {
         /// <summary>
         /// Unique Name of the source.
@@ -19,6 +19,8 @@ namespace Abp.Localization.Sources
 
         /// <summary>
         /// List of all dictionaries in this source.
+        /// Key: Culture-name
+        /// Value: Dictionary.
         /// </summary>
         private readonly Dictionary<string, ILocalizationDictionary> _dictionaries;
 
