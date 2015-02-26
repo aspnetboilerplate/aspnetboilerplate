@@ -13,8 +13,14 @@ namespace Abp.TestBase
     /// </summary>
     public abstract class AbpIntegratedTestBase : IDisposable
     {
+        /// <summary>
+        /// A reference to the <see cref="IIocManager"/> used for this test.
+        /// </summary>
         protected IIocManager LocalIocManager { get; private set; }
 
+        /// <summary>
+        /// Gets Session object. Can be used to change current user and tenant in tests.
+        /// </summary>
         protected TestAbpSession AbpSession { get; private set; }
 
         private readonly AbpBootstrapper _bootstrapper;
@@ -36,20 +42,23 @@ namespace Abp.TestBase
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
 
+        protected virtual void AddModules(ITypeList<AbpModule> modules)
+        {
+            modules.Add<TestBaseModule>();
+        }
+
+        /// <summary>
+        /// This method can be overrided to replace some services with fakes.
+        /// </summary>
         protected virtual void PreInitialize()
         {
-            //This method can be overrided to replace some services with fakes.
+
         }
 
         public virtual void Dispose()
         {
             _bootstrapper.Dispose();
             LocalIocManager.Dispose();
-        }
-
-        protected virtual void AddModules(ITypeList<AbpModule> modules)
-        {
-            modules.Add<TestBaseModule>();
         }
 
         /// <summary>
