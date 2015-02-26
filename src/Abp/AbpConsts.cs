@@ -8,6 +8,6 @@ namespace Abp
         /// <summary>
         /// Current version of the ABP.
         /// </summary>
-        public const string CurrentVersion = "0.5.2.3";
+        public const string CurrentVersion = "0.5.3.0";
     }
 }

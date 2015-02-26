@@ -55,8 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Uow\Web\HttpContextCurrentUnitOfWorkProvider.cs" />
-    <Compile Include="Domain\Uow\Web\PerWebRequestUnitOfWorkProvider.cs" />
     <Compile Include="Web\Models\AjaxResponse.cs" />
     <Compile Include="Web\Models\ErrorInfoBuilder.cs" />
     <Compile Include="Web\Models\IErrorInfoBuilder.cs" />

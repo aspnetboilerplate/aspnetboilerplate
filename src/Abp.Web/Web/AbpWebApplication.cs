@@ -2,9 +2,6 @@
 using System.Globalization;
 using System.Threading;
 using System.Web;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Domain.Uow.Web;
 using Abp.Localization;
 using Abp.Reflection;
 using Castle.MicroKernel.Registration;
@@ -28,17 +25,7 @@ namespace Abp.Web
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             AbpBootstrapper = new AbpBootstrapper();
-
             AbpBootstrapper.IocManager.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
-
-            //TODO: Move registration to AbpWebModule.PreInitialize?
-            //AbpBootstrapper.IocManager.Register<ICurrentUnitOfWorkProvider, HttpContextCurrentUnitOfWorkProvider>(DependencyLifeStyle.Transient);
-            //AbpBootstrapper.IocManager.IocContainer.Register(
-            //    Component.For<ICurrentUnitOfWorkProvider>()
-            //        .ImplementedBy<PerWebRequestUnitOfWorkProvider>()
-            //        .LifestylePerWebRequest()
-            //    );
-
             AbpBootstrapper.Initialize();
         }
 
