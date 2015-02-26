@@ -43,6 +43,8 @@ namespace Abp.Web.Mvc.Views
         }
 
         private ILocalizationSource _localizationSource;
+        
+        private IPermissionChecker PermissionChecker { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -50,6 +52,7 @@ namespace Abp.Web.Mvc.Views
         protected AbpWebViewPage()
         {
             _localizationSource = NullLocalizationSource.Instance;
+            PermissionChecker = IocManager.Instance.Resolve<IPermissionChecker>();
         }
 
         /// <summary>
@@ -94,6 +97,36 @@ namespace Abp.Web.Mvc.Views
         public string L(string name, CultureInfo culture, params object[] args)
         {
             return _localizationSource.GetString(name, culture, args);
+        }
+        
+        /// <summary>
+        /// Check if user has any permission on the list
+        /// </summary>
+        /// <param name="permissions">A list of permissions to authorize</param>
+        /// <returns>True if user has any of permissions</returns>
+        protected virtual bool hasAnyOfPermissions(params string[] permissions)
+        {
+            foreach (var permissionName in permissions)
+            {
+                if (PermissionChecker.IsGranted(permissionName))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if user has all permissions on the list
+        /// </summary>
+        /// <param name="permissions">A list of permissions to authorize</param>
+        /// <returns>True if user has all permissions</returns>
+        protected virtual bool hasAllOfPermissions(params string[] permissions)
+        {
+            foreach (var permissionName in permissions)
+            {
+                if (!PermissionChecker.IsGranted(permissionName))
+                    return false;
+            }
+            return true;
         }
     }
 }
