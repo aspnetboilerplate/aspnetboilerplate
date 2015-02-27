@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Abp.IO.Extensions;
@@ -32,11 +33,12 @@ namespace Abp.Localization.Sources.Xml
             var resourceNames = _assembly.GetManifestResourceNames();
             foreach (var resourceName in resourceNames)
             {
-                if (resourceName.StartsWith(_rootNamespace)) //TODO: check sourceName
+                if (resourceName.StartsWith(_rootNamespace))
                 {
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
-                        var xmlString = Encoding.UTF8.GetString(stream.GetAllBytes());
+                        var bytes = stream.GetAllBytes();
+                        var xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
                         dictionaries.Add(
                             new LocalizationDictionaryInfo(
                                 XmlLocalizationDictionary.BuildFomXmlString(xmlString),

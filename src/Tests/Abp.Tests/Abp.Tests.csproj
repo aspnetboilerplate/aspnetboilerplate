@@ -133,7 +133,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Localization\TestXmlFiles\Test.tr.xml" />
+    <EmbeddedResource Include="Localization\TestXmlFiles\Test-tr.xml" />
     <EmbeddedResource Include="Localization\TestXmlFiles\Test.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

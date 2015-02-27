@@ -33,8 +33,6 @@ namespace Abp.Localization.Sources.Xml
 
             foreach (var fileName in fileNames)
             {
-                //TODO: check sourceName
-
                 dictionaries.Add(
                     new LocalizationDictionaryInfo(
                         XmlLocalizationDictionary.BuildFomFile(fileName),
