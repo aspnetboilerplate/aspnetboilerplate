@@ -1,4 +1,4 @@
-namespace Abp.Localization.Sources
+namespace Abp.Localization.Sources.Xml
 {
     public class EmbeddedXmlFileLocalizationDictionaryProvider : ILocalizationDictionaryProvider
     {

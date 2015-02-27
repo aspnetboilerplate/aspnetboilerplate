@@ -44,7 +44,6 @@ namespace Abp.Localization.Sources.Xml
         /// <inheritdoc/>
         public override void Initialize()
         {
-            //TODO@hikalkan: We may not need to Initialize method. Can do this in constructor.
             _dictionaryProvider.AddDictionariesToLocalizationSource(this);
         }
     }

@@ -174,7 +174,7 @@
     <Compile Include="Events\Bus\Entities\IEntityChangedEventHelper.cs" />
     <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
-    <Compile Include="Localization\Sources\EmbeddedXmlFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Sources\Xml\EmbeddedXmlFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Sources\IDictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
     <Compile Include="Localization\Sources\ILocalizationDictionaryProvider.cs" />
