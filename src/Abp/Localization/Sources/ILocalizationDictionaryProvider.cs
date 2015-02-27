@@ -1,17 +1,19 @@
-﻿using Abp.Localization.Dictionaries;
+﻿using System.Collections.Generic;
+using Abp.Localization.Dictionaries;
 
 namespace Abp.Localization.Sources
 {
     /// <summary>
-    /// Used to add localization dictionaries (<see cref="ILocalizationDictionary"/>)
-    /// to a <see cref="IDictionaryBasedLocalizationSource"/>.
+    /// Used to get localization dictionaries (<see cref="ILocalizationDictionary"/>)
+    /// for a <see cref="DictionaryBasedLocalizationSource"/>.
     /// </summary>
     public interface ILocalizationDictionaryProvider
     {
         /// <summary>
-        /// This method should add dictionaries to given source.
+        /// Gets all dictionaries for given source name.
         /// </summary>
-        /// <param name="localizationSource">Localization source.</param>
-        void AddDictionariesToLocalizationSource(IDictionaryBasedLocalizationSource localizationSource);
+        /// <param name="sourceName">Localization source name</param>
+        /// <returns>Dictionaries for given source name</returns>
+        IEnumerable<LocalizationDictionaryInfo> GetDictionaries(string sourceName);
     }
 }

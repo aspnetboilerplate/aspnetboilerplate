@@ -10,7 +10,7 @@ namespace Abp.Localization.Sources
     /// This class is used to build a localization source
     /// which works on memory based dictionaries to find strings.
     /// </summary>
-    public class DictionaryBasedLocalizationSource : IDictionaryBasedLocalizationSource
+    public class DictionaryBasedLocalizationSource : ILocalizationSource
     {
         /// <summary>
         /// Unique Name of the source.
@@ -29,33 +29,48 @@ namespace Abp.Localization.Sources
         /// </summary>
         private ILocalizationDictionary _defaultDictionary;
 
+        private readonly ILocalizationDictionaryProvider _dictionaryProvider;
+
         /// <summary>
-        /// Constructor.
+        /// 
         /// </summary>
-        /// <param name="name">Unique Name of the source</param>
-        public DictionaryBasedLocalizationSource(string name)
+        /// <param name="name"></param>
+        /// <param name="dictionaryProvider"></param>
+        public DictionaryBasedLocalizationSource(string name, ILocalizationDictionaryProvider dictionaryProvider)
         {
             Name = name;
             _dictionaries = new Dictionary<string, ILocalizationDictionary>();
-        }
-
-        /// <summary>
-        /// Adds a new dictionary to the source.
-        /// </summary>
-        /// <param name="dictionary">Dictionary to add</param>
-        /// <param name="isDefault">Is this dictionary the default one? Default directory is used when requested string can not found in specified culture</param>
-        public void AddDictionary(ILocalizationDictionary dictionary, bool isDefault = false)
-        {
-            _dictionaries[dictionary.CultureInfo.Name] = dictionary;
-            if (isDefault)
-            {
-                _defaultDictionary = dictionary;
-            }
+            _dictionaryProvider = dictionaryProvider;
         }
 
         /// <inheritdoc/>
         public virtual void Initialize()
         {
+            if (_dictionaryProvider == null)
+            {
+                return;
+            }
+
+            var defaultProvided = false;
+            foreach (var dictionaryInfo in _dictionaryProvider.GetDictionaries(Name))
+            {
+                _dictionaries[dictionaryInfo.Dictionary.CultureInfo.Name] = dictionaryInfo.Dictionary;
+                if (dictionaryInfo.IsDefault)
+                {
+                    if (defaultProvided)
+                    {
+                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + Name);
+                    }
+
+                    _defaultDictionary = dictionaryInfo.Dictionary;
+                    defaultProvided = true;
+                }
+            }
+
+            if (!defaultProvided)
+            {
+                throw new AbpInitializationException("There should be a default localization dictionary for source: " + Name);
+            }
         }
 
         /// <inheritdoc/>

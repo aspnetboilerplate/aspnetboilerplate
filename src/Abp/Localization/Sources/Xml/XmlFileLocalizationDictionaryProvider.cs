@@ -1,11 +1,11 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
 using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Sources.Xml
 {
     /// <summary>
-    /// Provides localization dictionaries from files in a directory.
+    /// Provides localization dictionaries from XML files in a directory.
     /// </summary>
     public class XmlFileLocalizationDictionaryProvider : ILocalizationDictionaryProvider
     {
@@ -24,21 +24,26 @@ namespace Abp.Localization.Sources.Xml
 
             _directoryPath = directoryPath;
         }
-        
-        public void AddDictionariesToLocalizationSource(IDictionaryBasedLocalizationSource localizationSource)
+
+        public IEnumerable<LocalizationDictionaryInfo> GetDictionaries(string sourceName)
         {
-            var files = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
-            var defaultLangFile = files.FirstOrDefault(f => f.EndsWith(localizationSource.Name + ".xml"));
-            if (defaultLangFile == null)
+            var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
+
+            var dictionaries = new List<LocalizationDictionaryInfo>();
+
+            foreach (var fileName in fileNames)
             {
-                throw new AbpException("Can not find default localization file for source " + localizationSource.Name + ". A source must contain a source-name.xml file as default localization.");
+                //TODO: check sourceName
+
+                dictionaries.Add(
+                    new LocalizationDictionaryInfo(
+                        XmlLocalizationDictionary.BuildFomFile(fileName),
+                        isDefault: fileName.EndsWith(sourceName + ".xml")
+                        )
+                    );
             }
 
-            localizationSource.AddDictionary(XmlLocalizationDictionary.BuildFomFile(defaultLangFile), true);
-            foreach (var file in files.Where(f => f != defaultLangFile))
-            {
-                localizationSource.AddDictionary(XmlLocalizationDictionary.BuildFomFile(file));
-            }
+            return dictionaries;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
 using Abp.Localization.Sources;
+using NSubstitute;
 using Xunit;
 
 namespace Abp.Tests.Localization
@@ -11,25 +12,35 @@ namespace Abp.Tests.Localization
 
         public Test_DictionaryBasedLocalizationSource()
         {
-            _localizationSource = new DictionaryBasedLocalizationSource("Test");
+            var dictionaryProvider = Substitute.For<ILocalizationDictionaryProvider>();
 
-            _localizationSource.AddDictionary(new LocalizationDictionaryWithAddMethod(new CultureInfo("en"))
-                                              {
-                                                  {"hello", "Hello"},
-                                                  {"world", "World"},
-                                                  {"fourtyTwo", "Fourty Two (42)"}
-                                              }, true);
+            dictionaryProvider.GetDictionaries("Test").Returns(
+                new[]
+                {
+                    new LocalizationDictionaryInfo(
+                        new LocalizationDictionaryWithAddMethod(new CultureInfo("en"))
+                        {
+                            {"hello", "Hello"},
+                            {"world", "World"},
+                            {"fourtyTwo", "Fourty Two (42)"}
+                        }, true), //Default language
+                    new LocalizationDictionaryInfo(
+                        new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
+                        {
+                            {"hello", "Merhaba"},
+                            {"world", "Dünya"}
+                        }),
+                    new LocalizationDictionaryInfo(
+                        new LocalizationDictionaryWithAddMethod(new CultureInfo("tr-TR"))
+                        {
+                            {"world", "Yeryüzü"}
+                        }),
 
-            _localizationSource.AddDictionary(new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
-                                              {
-                                                  {"hello", "Merhaba"},
-                                                  {"world", "Dünya"}
-                                              });
 
-            _localizationSource.AddDictionary(new LocalizationDictionaryWithAddMethod(new CultureInfo("tr-TR"))
-                                              {
-                                                  {"world", "Yeryüzü"}
-                                              });
+                });
+
+            _localizationSource = new DictionaryBasedLocalizationSource("Test", dictionaryProvider);
+            _localizationSource.Initialize();
         }
 
         [Fact]
