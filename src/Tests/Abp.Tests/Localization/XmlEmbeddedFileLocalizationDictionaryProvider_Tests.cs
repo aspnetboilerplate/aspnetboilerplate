@@ -24,11 +24,15 @@ namespace Abp.Tests.Localization
             var dictionaries = _dictionaryProvider.GetDictionaries("Test").ToList();
             
             dictionaries.Count.ShouldBe(2);
+
+            var enDict = dictionaries.FirstOrDefault(d => d.Dictionary.CultureInfo.Name == "en");
+            enDict.ShouldNotBe(null);
+            enDict.IsDefault.ShouldBe(true);
+            enDict.Dictionary["hello"].ShouldBe("Hello");
             
-            dictionaries.FirstOrDefault(d => d.Dictionary.CultureInfo.Name == "tr").ShouldNotBe(null);
-            dictionaries.FirstOrDefault(d => d.Dictionary.CultureInfo.Name == "en").ShouldNotBe(null);
-            
-            dictionaries.Single(d => d.Dictionary.CultureInfo.Name == "en").IsDefault.ShouldBe(true);
+            var trDict = dictionaries.FirstOrDefault(d => d.Dictionary.CultureInfo.Name == "tr");
+            trDict.ShouldNotBe(null);
+            trDict.Dictionary["hello"].ShouldBe("Merhaba");            
         }
     }
 }
