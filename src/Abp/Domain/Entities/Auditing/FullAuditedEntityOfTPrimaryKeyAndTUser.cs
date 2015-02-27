@@ -8,6 +8,7 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     /// <typeparam name="TUser">Type of the user</typeparam>
+    [Serializable]
     public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey, TUser>, IFullAudited<TUser>
         where TUser : IEntity<long>
     {
