@@ -31,7 +31,7 @@ namespace Abp.Web.Mvc.Views
                 return appPath;
             }
         }
-
+        
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
         /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.

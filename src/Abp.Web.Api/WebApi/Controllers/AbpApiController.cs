@@ -30,6 +30,11 @@ namespace Abp.WebApi.Controllers
         public ISettingManager SettingManager { get; set; }
 
         /// <summary>
+        /// Reference to the permission checker.
+        /// </summary>
+        public IPermissionChecker PermissionChecker { protected get; set; }
+
+        /// <summary>
         /// Reference to the localization manager.
         /// </summary>
         public ILocalizationManager LocalizationManager { protected get; set; }
@@ -76,6 +81,7 @@ namespace Abp.WebApi.Controllers
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
         
         /// <summary>

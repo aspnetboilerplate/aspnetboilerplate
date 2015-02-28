@@ -29,6 +29,11 @@ namespace Abp.Application.Services
         public ISettingManager SettingManager { protected get; set; }
 
         /// <summary>
+        /// Reference to the permission checker.
+        /// </summary>
+        public IPermissionChecker PermissionChecker { protected get; set; }
+
+        /// <summary>
         /// Reference to the localization manager.
         /// </summary>
         public ILocalizationManager LocalizationManager { protected get; set; }
@@ -75,6 +80,7 @@ namespace Abp.Application.Services
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
 
         /// <summary>
