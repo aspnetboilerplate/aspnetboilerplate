@@ -20,25 +20,33 @@
 
     abp.localization = abp.localization || {};
 
-    abp.localization.defaultSourceName = undefined;
-
     abp.localization.localize = function (key, sourceName) {
         sourceName = sourceName || abp.localization.defaultSourceName;
 
         var source = abp.localization.values[sourceName];
 
-        if (source == undefined) {
+        if (!source) {
             abp.log.warn('Could not find localization source: ' + sourceName);
             return key;
         }
 
         var value = source[key];
-        return value == undefined ? key : value;
+        if (value == undefined) {
+            return key;
+        }
+
+        var copiedArguments = Array.prototype.slice.call(arguments, 0);
+        copiedArguments.splice(1, 1);
+        copiedArguments[0] = value;
+
+        return abp.utils.formatString.apply(this, copiedArguments);
     };
 
     abp.localization.getSource = function (sourceName) {
         return function (key) {
-            return abp.localization.localize(key, sourceName);
+            var copiedArguments = Array.prototype.slice.call(arguments, 0);
+            copiedArguments.splice(1, 0, sourceName);
+            return abp.localization.localize.apply(this, copiedArguments);
         };
     };
 
@@ -48,6 +56,7 @@
             && abp.localization.currentCulture.name.indexOf(name) == 0;
     };
 
+    abp.localization.defaultSourceName = undefined;
     abp.localization.abpWeb = abp.localization.getSource('AbpWeb');
 
     /* AUTHORIZATION **********************************************/
@@ -273,11 +282,12 @@
     *  _formatString('Hello {0}','Halil') = 'Hello Halil'
     ************************************************************/
     abp.utils.formatString = function () {
-        if (arguments.length == 0) {
+        if (arguments.length < 1) {
             return null;
         }
 
         var str = arguments[0];
+
         for (var i = 1; i < arguments.length; i++) {
             var placeHolder = '{' + (i - 1) + '}';
             str = str.replace(placeHolder, arguments[i]);
