@@ -16,7 +16,8 @@ namespace Abp.FluentMigrator.Extensions
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIdAsInt32(this ICreateTableWithColumnSyntax table)
         {
-            return table.WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity();
+            return table
+                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity();
         }
 
         /// <summary>
@@ -24,7 +25,8 @@ namespace Abp.FluentMigrator.Extensions
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIdAsInt64(this ICreateTableWithColumnSyntax table)
         {
-            return table.WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity();
+            return table
+                .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity();
         }
 
         /// <summary>
@@ -32,7 +34,17 @@ namespace Abp.FluentMigrator.Extensions
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIsDeletedColumn(this ICreateTableWithColumnSyntax table)
         {
-            return table.WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(false);
+            return table
+                .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(false);
+        }
+
+        /// <summary>
+        /// Adds IsDeleted column to the table. See <see cref="ISoftDelete"/>.
+        /// </summary>
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddIsDeletedColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(false);
         }
 
         /// <summary>
@@ -45,12 +57,30 @@ namespace Abp.FluentMigrator.Extensions
         }
 
         /// <summary>
-        /// Ads creation auditing columns to a table. See <see cref="ICreationAudited"/>.
+        /// Adds creation auditing columns to a table. See <see cref="ICreationAudited"/>.
         /// </summary>
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+        }
+
+        /// <summary>
+        /// Adds IsDeleted column to the table. See <see cref="ISuspendable"/>.
+        /// </summary>
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithIsSuspendedColumn(this ICreateTableWithColumnSyntax table)
+        {
+            return table
+                .WithColumn("IsSuspended").AsBoolean().NotNullable().WithDefaultValue(false);
+        }
+
+        /// <summary>
+        /// Adds IsDeleted column to the table. See <see cref="ISuspendable"/>.
+        /// </summary>
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddIsSuspendedColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("IsSuspended").AsBoolean().NotNullable().WithDefaultValue(false);
         }
     }
 }
