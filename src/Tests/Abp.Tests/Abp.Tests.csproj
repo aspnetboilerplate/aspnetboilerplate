@@ -79,8 +79,9 @@
     <Compile Include="Dependency\IocManager_LifeStyle_Tests.cs" />
     <Compile Include="Dependency\IocManager_Self_Register_Tests.cs" />
     <Compile Include="Dependency\IocManager_Tests.cs" />
-    <Compile Include="Dependency\IRegistrar_And_Resolver_Tests.cs" />
+    <Compile Include="Dependency\Registrar_And_Resolver_Tests.cs" />
     <Compile Include="Dependency\PropertyInjection_Tests.cs" />
+    <Compile Include="Dependency\ShouldInitialize_Simple_Tests.cs" />
     <Compile Include="Dependency\SimpleDisposableObject.cs" />
     <Compile Include="Domain\Entities\Department.cs" />
     <Compile Include="Domain\Entities\Manager.cs" />
