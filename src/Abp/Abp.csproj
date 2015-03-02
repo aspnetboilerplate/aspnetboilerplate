@@ -130,6 +130,7 @@
     <Compile Include="Authorization\IPermissionManager.cs" />
     <Compile Include="Authorization\Permission.cs" />
     <Compile Include="Authorization\PermissionManager.cs" />
+    <Compile Include="Authorization\StaticPermissionChecker.cs" />
     <Compile Include="Collections\ITypeList.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />

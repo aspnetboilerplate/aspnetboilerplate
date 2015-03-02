@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Authorization;
 using Abp.Configuration;
@@ -126,6 +127,24 @@ namespace Abp.WebApi.Controllers
         public string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for a permission.
+        /// </summary>
+        /// <param name="permissionName">Name of the permission</param>
+        protected Task<bool> IsGrantedAsync(string permissionName)
+        {
+            return PermissionChecker.IsGrantedAsync(permissionName);
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for a permission.
+        /// </summary>
+        /// <param name="permissionName">Name of the permission</param>
+        protected bool IsGranted(string permissionName)
+        {
+            return PermissionChecker.IsGranted(permissionName);
         }
     }
 }

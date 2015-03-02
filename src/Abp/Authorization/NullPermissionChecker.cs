@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Abp.Localization;
 
 namespace Abp.Authorization
 {
