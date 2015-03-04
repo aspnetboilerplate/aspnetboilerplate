@@ -148,21 +148,19 @@ namespace Abp.Domain.Repositories
             return Task.FromResult(Update(entity));
         }
 
-        //TODO: Add these methods (Update, UpdateAsync)
+        public virtual TEntity Update(TPrimaryKey id, Action<TEntity> updateAction)
+        {
+            var entity = Get(id);
+            updateAction(entity);
+            return entity;
+        }
 
-        //public virtual TEntity Update(TPrimaryKey id, Action<TEntity> updateAction)
-        //{
-        //    var entity = Get(id);
-        //    updateAction(entity);
-        //    return entity;
-        //}
-
-        //public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
-        //{
-        //    var entity = await GetAsync(id);
-        //    await updateAction(entity);
-        //    return entity;
-        //}
+        public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
+        {
+            var entity = await GetAsync(id);
+            await updateAction(entity);
+            return entity;
+        }
 
         public abstract void Delete(TEntity entity);
         
