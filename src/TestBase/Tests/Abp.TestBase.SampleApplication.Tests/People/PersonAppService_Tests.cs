@@ -37,11 +37,11 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
 
-            //await UsingDbContext(async context =>
-            //{
-            //    (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
-            //    (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
-            //});
+            await UsingDbContext(async context =>
+            {
+                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
+                (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
+            });
         }
 
         [Fact]
