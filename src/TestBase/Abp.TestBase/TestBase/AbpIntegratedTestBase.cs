@@ -69,7 +69,7 @@ namespace Abp.TestBase
         /// <returns>The object instance</returns>
         protected T Resolve<T>()
         {
-            RegisterIfNotRegisteredBefore(typeof(T));
+            EnsureClassRegistered(typeof(T));
             return LocalIocManager.Resolve<T>();
         }
 
@@ -82,7 +82,7 @@ namespace Abp.TestBase
         /// <returns>The object instance</returns>
         protected T Resolve<T>(object argumentsAsAnonymousType)
         {
-            RegisterIfNotRegisteredBefore(typeof(T));
+            EnsureClassRegistered(typeof(T));
             return LocalIocManager.Resolve<T>(argumentsAsAnonymousType);
         }
 
@@ -94,7 +94,7 @@ namespace Abp.TestBase
         /// <returns>The object instance</returns>
         protected object Resolve(Type type)
         {
-            RegisterIfNotRegisteredBefore(type);
+            EnsureClassRegistered(type);
             return LocalIocManager.Resolve(type);
         }
 
@@ -107,7 +107,7 @@ namespace Abp.TestBase
         /// <returns>The object instance</returns>
         protected object Resolve(Type type, object argumentsAsAnonymousType)
         {
-            RegisterIfNotRegisteredBefore(type);
+            EnsureClassRegistered(type);
             return LocalIocManager.Resolve(type, argumentsAsAnonymousType);
         }
 
@@ -116,10 +116,15 @@ namespace Abp.TestBase
         /// </summary>
         /// <param name="type">Type to check and register</param>
         /// <param name="lifeStyle">Lifestyle</param>
-        protected void RegisterIfNotRegisteredBefore(Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Transient)
+        protected void EnsureClassRegistered(Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Transient)
         {
             if (!LocalIocManager.IsRegistered(type))
             {
+                if (!type.IsClass || type.IsAbstract)
+                {
+                    throw new AbpException("Can not register " + type.Name + ". It should be a non-abstract class. If not, it should be registered before.");
+                }
+
                 LocalIocManager.Register(type, lifeStyle);
             }
         }

@@ -27,14 +27,14 @@ namespace Abp.TestBase.Tests.Application.Services
         }
 
         [Fact]
-        public void Should_Not_Work_Proper_With_Wrong_Inputs()
+        public void Should_Not_Work_With_Wrong_Inputs()
         {
             Assert.Throws<AbpValidationException>(() => _myAppService.MyMethod(new MyMethodInput())); //MyStringValue is not supplied!
             Assert.Throws<AbpValidationException>(() => _myAppService.MyMethod(new MyMethodInput { MyStringValue = "a" })); //MyStringValue's min length should be 3!
         }
 
         [Fact]
-        public void Should_Work_Proper_With_Right_Nesned_Inputs()
+        public void Should_Work_With_Right_Nesned_Inputs()
         {
             var output = _myAppService.MyMethod2(new MyMethod2Input
                             {
