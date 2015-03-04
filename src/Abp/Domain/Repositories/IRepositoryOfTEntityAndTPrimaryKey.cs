@@ -204,6 +204,10 @@ namespace Abp.Domain.Repositories
         /// <param name="entity">Entity</param>
         Task<TEntity> UpdateAsync(TEntity entity);
 
+        //TODO: Add these methods
+        //TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
+        //Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
+
         #endregion
 
         #region Delete
