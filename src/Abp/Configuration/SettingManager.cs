@@ -78,14 +78,17 @@ namespace Abp.Configuration
             }
 
             //Get for application if defined
-            if (settingDefinition.Scopes.HasFlag(SettingScopes.Application))
-            {
+            // Setting value for application should always be considered regardless the setting definition scope.
+            // Because if setting definition scope is User or Tenant and no value saved yet in database it should
+            // get the value from saved Application value ( Value with TenantId and UserId equal null).
+            //if (settingDefinition.Scopes.HasFlag(SettingScopes.Application)) if available
+            //{
                 var settingValue = GetSettingValueForApplicationOrNull(name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
                 }
-            }
+            //}
 
             //Not defined, get default value
             return settingDefinition.DefaultValue;
@@ -114,7 +117,12 @@ namespace Abp.Configuration
             foreach (var settingValue in await GetAllSettingValuesForApplicationAsync())
             {
                 var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
+                
+                // Setting value for application should always be considered regardless the setting definition scope.
+                // Because if setting definition scope is User or Tenant and no value saved yet in database it should
+                // get the value from saved Application value ( Value with TenantId and UserId equal null).
+                //if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application)) if available
+                if (setting != null)
                 {
                     settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                 }
