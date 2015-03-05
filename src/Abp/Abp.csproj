@@ -149,7 +149,6 @@
     <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
-    <Compile Include="Constants\PublishAttribute.cs" />
     <Compile Include="DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />

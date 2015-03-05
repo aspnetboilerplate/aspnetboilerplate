@@ -6,7 +6,6 @@ using Abp.Web.Localization;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
 using Abp.Web.Settings;
-using Abp.Web.Constants;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -21,7 +20,6 @@ namespace Abp.Web.Mvc.Controllers
         private readonly ILocalizationScriptManager _localizationScriptManager;
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
-        private readonly IConstantScriptManager _constantScriptManager;
 
         /// <summary>
         /// Constructor.
@@ -30,16 +28,14 @@ namespace Abp.Web.Mvc.Controllers
             ISettingScriptManager settingScriptManager, 
             INavigationScriptManager navigationScriptManager, 
             ILocalizationScriptManager localizationScriptManager, 
-            IAuthorizationScriptManager authorizationScriptManager,
-            ISessionScriptManager sessionScriptManager, 
-            IConstantScriptManager constantScriptManager)
+            IAuthorizationScriptManager authorizationScriptManager, 
+            ISessionScriptManager sessionScriptManager)
         {
             _settingScriptManager = settingScriptManager;
             _navigationScriptManager = navigationScriptManager;
             _localizationScriptManager = localizationScriptManager;
             _authorizationScriptManager = authorizationScriptManager;
             _sessionScriptManager = sessionScriptManager;
-            _constantScriptManager = constantScriptManager;
         }
 
         /// <summary>
@@ -63,9 +59,6 @@ namespace Abp.Web.Mvc.Controllers
             sb.AppendLine();
             
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
-
-            sb.AppendLine();
-            sb.AppendLine(_constantScriptManager.GetScript());
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }
