@@ -42,6 +42,12 @@ namespace Abp.Domain.Uow
         }
 
         /// <inheritdoc/>
+        protected void OnFailed(Exception exception)
+        {
+            Failed.InvokeSafely(this, new UnitOfWorkFailedEventArgs(exception));
+        }
+
+        /// <inheritdoc/>
         public abstract void SaveChanges();
 
         /// <inheritdoc/>
