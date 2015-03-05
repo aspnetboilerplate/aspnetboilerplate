@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Constants\ConstantScriptManager.cs" />
+    <Compile Include="Web\Constants\IConstantScriptManager.cs" />
     <Compile Include="Web\Models\AjaxResponse.cs" />
     <Compile Include="Web\Models\ErrorInfoBuilder.cs" />
     <Compile Include="Web\Models\IErrorInfoBuilder.cs" />
