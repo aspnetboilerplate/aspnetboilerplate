@@ -182,6 +182,7 @@
     <Compile Include="Localization\Sources\ILocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Sources\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Sources\Xml\XmlFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="RandomHelper.cs" />
     <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
