@@ -158,7 +158,7 @@
     <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
-    <Compile Include="Domain\Entities\ISuspendable.cs" />
+    <Compile Include="Domain\Entities\IPassivable.cs" />
     <Compile Include="Domain\Repositories\AbpRepositoryBase.cs" />
     <Compile Include="Domain\Uow\IActiveUnitOfWork.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />

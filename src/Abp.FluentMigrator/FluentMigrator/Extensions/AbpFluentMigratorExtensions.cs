@@ -66,7 +66,7 @@ namespace Abp.FluentMigrator.Extensions
         }
 
         /// <summary>
-        /// Adds IsDeleted column to the table. See <see cref="ISuspendable"/>.
+        /// Adds IsDeleted column to the table. See <see cref="IPassivable"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIsSuspendedColumn(this ICreateTableWithColumnSyntax table)
         {
@@ -75,7 +75,7 @@ namespace Abp.FluentMigrator.Extensions
         }
 
         /// <summary>
-        /// Adds IsDeleted column to the table. See <see cref="ISuspendable"/>.
+        /// Adds IsDeleted column to the table. See <see cref="IPassivable"/>.
         /// </summary>
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddIsSuspendedColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
