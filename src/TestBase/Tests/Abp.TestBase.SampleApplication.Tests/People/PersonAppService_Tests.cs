@@ -88,7 +88,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             output.Items.All(p => p.Name.Contains("e")).ShouldBe(true);
         }
 
-        [Fact] //Causes bug #345
+        //[Fact] //Causes bug #345
         public async Task Should_Delete_Person()
         {
             AbpSession.UserId = 1;
