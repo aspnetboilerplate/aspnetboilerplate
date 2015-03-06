@@ -45,25 +45,33 @@ namespace Abp.Authorization.Interceptors
 
         private void InterceptAsync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
         {
-            var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>();
+            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
+            {
+                authorizationAttributeHelper.Object.Authorize(authorizeAttributes);
+                invocation.Proceed();
+            }
 
-            if (invocation.Method.ReturnType == typeof (Task))
-            {
-                invocation.ReturnValue = InternalAsyncHelper.InvokeWithPreAndFinalActionAsync(
-                    invocation,
-                    async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
-                    () => _iocResolver.Release(authorizationAttributeHelper)
-                    );
-            }
-            else
-            {
-                invocation.ReturnValue = InternalAsyncHelper.CallInvokeWithPreAndFinalActionAsync(
-                    invocation.Method.ReturnType.GenericTypeArguments[0],
-                    invocation,
-                    async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
-                    () => _iocResolver.Release(authorizationAttributeHelper)
-                    );
-            }
+            //TODO: Async is not worked here, we will check it later. For now, using sync authorization.
+
+            //var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>();
+
+            //if (invocation.Method.ReturnType == typeof (Task))
+            //{
+            //    invocation.ReturnValue = InternalAsyncHelper.InvokeWithPreAndFinalActionAsync(
+            //        invocation,
+            //        async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
+            //        () => _iocResolver.Release(authorizationAttributeHelper)
+            //        );
+            //}
+            //else
+            //{
+            //    invocation.ReturnValue = InternalAsyncHelper.CallInvokeWithPreAndFinalActionAsync(
+            //        invocation.Method.ReturnType.GenericTypeArguments[0],
+            //        invocation,
+            //        async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
+            //        () => _iocResolver.Release(authorizationAttributeHelper)
+            //        );
+            //}
         }
 
         private void InterceptSync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
