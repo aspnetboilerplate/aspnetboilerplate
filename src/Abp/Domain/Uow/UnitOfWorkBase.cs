@@ -42,12 +42,6 @@ namespace Abp.Domain.Uow
         }
 
         /// <inheritdoc/>
-        protected void OnFailed(Exception exception)
-        {
-            Failed.InvokeSafely(this, new UnitOfWorkFailedEventArgs(exception));
-        }
-
-        /// <inheritdoc/>
         public abstract void SaveChanges();
 
         /// <inheritdoc/>
@@ -57,18 +51,16 @@ namespace Abp.Domain.Uow
         public void Complete()
         {
             PreventMultipleComplete();
-
             CompleteUow();
-            Completed.InvokeSafely(this);
+            OnCompleted();
         }
 
         /// <inheritdoc/>
         public async Task CompleteAsync()
         {
             PreventMultipleComplete();
-
             await CompleteUowAsync();
-            Completed.InvokeSafely(this);
+            OnCompleted();
         }
 
         /// <inheritdoc/>
@@ -83,7 +75,7 @@ namespace Abp.Domain.Uow
 
             DisposeUow();
 
-            Disposed.InvokeSafely(this);
+            OnDisposed();
         }
 
         /// <summary>
@@ -105,6 +97,31 @@ namespace Abp.Domain.Uow
         /// Should be implemented by derived classes to dispose UOW.
         /// </summary>
         protected abstract void DisposeUow();
+
+        /// <summary>
+        /// Called to trigger <see cref="Completed"/> event.
+        /// </summary>
+        protected virtual void OnCompleted()
+        {
+            Completed.InvokeSafely(this);
+        }
+
+        /// <summary>
+        /// Called to trigger <see cref="Failed"/> event.
+        /// </summary>
+        /// <param name="exception">Exception that cause failure</param>
+        protected virtual void OnFailed(Exception exception)
+        {
+            Failed.InvokeSafely(this, new UnitOfWorkFailedEventArgs(exception));
+        }
+
+        /// <summary>
+        /// Called to trigger <see cref="Disposed"/> event.
+        /// </summary>
+        protected virtual void OnDisposed()
+        {
+            Disposed.InvokeSafely(this);
+        }
 
         private void PreventMultipleStart()
         {
