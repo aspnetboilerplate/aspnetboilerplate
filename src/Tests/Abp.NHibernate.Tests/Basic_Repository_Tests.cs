@@ -101,6 +101,7 @@ namespace Abp.NHibernate.Tests
             _personRepository.Delete(emrePeson.Id);
 
             triggerCount.ShouldBe(1);
+            _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
         }
     }
 }

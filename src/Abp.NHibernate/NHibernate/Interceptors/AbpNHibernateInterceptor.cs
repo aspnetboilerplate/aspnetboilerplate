@@ -1,7 +1,9 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
+using Abp.Extensions;
 using Abp.Runtime.Session;
 using NHibernate;
 using NHibernate.Type;
@@ -130,7 +132,7 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
-            if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
+            if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
             {
                 EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
             }
