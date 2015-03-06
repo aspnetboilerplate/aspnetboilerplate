@@ -10,5 +10,7 @@ namespace Abp.TestBase.SampleApplication.People
         ListResultOutput<PersonDto> GetPeople(GetPeopleInput input);
 
         Task CreatePersonAsync(CreatePersonInput input);
+
+        Task DeletePerson(EntityRequestInput input);
     }
 }
