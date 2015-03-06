@@ -96,7 +96,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync("CanDeletePerson").Returns(async info =>
                                                                         {
-                                                                            await Task.Delay(10); //TODO: Simulate an actual task
+                                                                            await Task.Delay(10);
                                                                             return true;
                                                                         });
 
