@@ -56,7 +56,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
 
-        //[Fact] //TODO: This is not working for soft deletes since it's converted to update!
+        [Fact]
         public void Should_Trigger_Event_On_Delete()
         {
             var triggerCount = 0;

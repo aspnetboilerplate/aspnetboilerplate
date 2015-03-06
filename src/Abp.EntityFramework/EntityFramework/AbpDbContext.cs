@@ -9,6 +9,7 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
+using Abp.Extensions;
 using Abp.Runtime.Session;
 
 namespace Abp.EntityFramework
@@ -127,10 +128,18 @@ namespace Abp.EntityFramework
                         EntityChangedEventHelper.TriggerEntityCreatedEvent(entry.Entity);
                         break;
                     case EntityState.Modified:
-                        //TODO: Soft Delete..?
                         PreventSettingCreationAuditProperties(entry);
                         SetModificationAuditProperties(entry);
-                        EntityChangedEventHelper.TriggerEntityUpdatedEvent(entry.Entity);
+
+                        if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
+                        {
+                            EntityChangedEventHelper.TriggerEntityDeletedEvent(entry.Entity);
+                        }
+                        else
+                        {
+                            EntityChangedEventHelper.TriggerEntityUpdatedEvent(entry.Entity);
+                        }
+
                         break;
                     case EntityState.Deleted:
                         PreventSettingCreationAuditProperties(entry);

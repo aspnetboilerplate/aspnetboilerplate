@@ -103,7 +103,7 @@ namespace Abp.NHibernate.Interceptors
             //Set deletion audits
             if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
             {
-                //@hikalkan: Is deleted before? Normally, a deleted entity should not e updated later but I preferred to check it.
+                //Is deleted before? Normally, a deleted entity should not be updated later but I preferred to check it.
                 var previousIsDeleted = false;
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
