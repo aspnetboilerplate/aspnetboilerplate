@@ -18,11 +18,11 @@ abp.notify.info('a message text', 'optional title');
 abp.notify.warn('a message text', 'optional title');
 abp.notify.error('a message text', 'optional title');</pre>
 
-<p>Notification API is implemented by 
+<p>Notification API is implemented using 
 <a href="http://codeseven.github.io/toastr/demo.html" target="_blank">toastr</a> 
 library by default. To make toastr work, you should include toastr's css &amp; 
 javascript files, then include <strong>abp.toastr.js</strong> to your page as 
-adapter. A toastr success notification is shown as below:</p>
+adapter. A toastr success notification is shown below:</p>
 <p><img alt="Success notification using toastr.js" height="93" src="/SiteFiles/Content/Documents/Resources/success_notification.png" width="322" /></p>
 <p>You can also implement notification in your favourite notification library. 
 Just override all functions in a custom javascript file and include it in to 
