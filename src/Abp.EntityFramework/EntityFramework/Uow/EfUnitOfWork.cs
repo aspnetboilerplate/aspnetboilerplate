@@ -106,30 +106,14 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        protected void SaveChangesInDbContext(DbContext dbContext)
+        protected virtual void SaveChangesInDbContext(DbContext dbContext)
         {
-            try
-            {
-                dbContext.SaveChanges();
-            }
-            catch (Exception saveChangesException)
-            {
-                OnFailed(saveChangesException);
-                throw;
-            }
+            dbContext.SaveChanges();
         }
 
-        protected async Task SaveChangesInDbContextAsync(DbContext dbContext)
+        protected virtual async Task SaveChangesInDbContextAsync(DbContext dbContext)
         {
-            try
-            {
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception saveChangesException)
-            {
-                OnFailed(saveChangesException);
-                throw;
-            }
+            await dbContext.SaveChangesAsync();
         }
     }
 }

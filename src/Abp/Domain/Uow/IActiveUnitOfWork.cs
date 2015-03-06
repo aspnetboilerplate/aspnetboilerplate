@@ -18,7 +18,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// This event is raised when this UOW is failed.
         /// </summary>
-        event EventHandler Failed;
+        event EventHandler<UnitOfWorkFailedEventArgs> Failed;
 
         /// <summary>
         /// This event is raised when this UOW is disposed.

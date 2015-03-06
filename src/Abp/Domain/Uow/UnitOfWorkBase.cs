@@ -13,7 +13,7 @@ namespace Abp.Domain.Uow
         public event EventHandler Completed;
 
         /// <inheritdoc/>
-        public event EventHandler Failed;
+        public event EventHandler<UnitOfWorkFailedEventArgs> Failed;
 
         /// <inheritdoc/>
         public event EventHandler Disposed;
@@ -25,8 +25,26 @@ namespace Abp.Domain.Uow
         /// Gets a value indicates that this unit of work is disposed or not.
         /// </summary>
         public bool IsDisposed { get; private set; }
-        private bool _isStarted;
-        private bool _isCompleted;
+
+        /// <summary>
+        /// Is <see cref="Begin"/> method called before?
+        /// </summary>
+        private bool _isBeginCalledBefore;
+
+        /// <summary>
+        /// Is <see cref="Complete"/> method called before?
+        /// </summary>
+        private bool _isCompleteCalledBefore;
+
+        /// <summary>
+        /// Is this unit of work successfully completed.
+        /// </summary>
+        private bool _succeed;
+
+        /// <summary>
+        /// A reference to the exception if this unit of work failed.
+        /// </summary>
+        private Exception _exception;
 
         /// <inheritdoc/>
         public void Begin(UnitOfWorkOptions options)
@@ -36,7 +54,7 @@ namespace Abp.Domain.Uow
                 throw new ArgumentNullException("options");
             }
 
-            PreventMultipleStart();
+            PreventMultipleBegin();
             Options = options;
             BeginUow();
         }
@@ -51,16 +69,34 @@ namespace Abp.Domain.Uow
         public void Complete()
         {
             PreventMultipleComplete();
-            CompleteUow();
-            OnCompleted();
+            try
+            {
+                CompleteUow();
+                _succeed = true;
+                OnCompleted();
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+                throw;
+            }
         }
 
         /// <inheritdoc/>
         public async Task CompleteAsync()
         {
             PreventMultipleComplete();
-            await CompleteUowAsync();
-            OnCompleted();
+            try
+            {
+                await CompleteUowAsync();
+                _succeed = true;
+                OnCompleted();
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+                throw;
+            }
         }
 
         /// <inheritdoc/>
@@ -73,8 +109,12 @@ namespace Abp.Domain.Uow
 
             IsDisposed = true;
 
-            DisposeUow();
+            if (!_succeed)
+            {
+                OnFailed(_exception);
+            }
 
+            DisposeUow();
             OnDisposed();
         }
 
@@ -123,24 +163,24 @@ namespace Abp.Domain.Uow
             Disposed.InvokeSafely(this);
         }
 
-        private void PreventMultipleStart()
+        private void PreventMultipleBegin()
         {
-            if (_isStarted)
+            if (_isBeginCalledBefore)
             {
                 throw new AbpException("This unit of work has started before. Can not call Start method more than once.");
             }
 
-            _isStarted = true;
+            _isBeginCalledBefore = true;
         }
 
         private void PreventMultipleComplete()
         {
-            if (_isCompleted)
+            if (_isCompleteCalledBefore)
             {
                 throw new AbpException("Complete is called before!");
             }
 
-            _isCompleted = true;
+            _isCompleteCalledBefore = true;
         }
     }
 }
