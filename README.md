@@ -1,6 +1,8 @@
 ASP.NET Boilerplate
 ===
 
+[![Join the chat at https://gitter.im/aspnetboilerplate/aspnetboilerplate](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aspnetboilerplate/aspnetboilerplate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ASP.NET Boilerplate is a starting point for new modern ASP.NET MVC web applications with best practices and most popular tools!
 
 ASP.NET Boilerplate implements __NLayer architecture__ and __Domain Driven Design__ with these tools:
