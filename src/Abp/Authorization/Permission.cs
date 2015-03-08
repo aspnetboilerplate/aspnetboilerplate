@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Localization;
+using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
@@ -41,6 +42,11 @@ namespace Abp.Authorization
         public bool IsGrantedByDefault { get; private set; }
 
         /// <summary>
+        /// Which side can use this permission.
+        /// </summary>
+        public MultiTenancySide MultiTenancySide { get; private set; }
+
+        /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children
@@ -56,7 +62,8 @@ namespace Abp.Authorization
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
-        public Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        /// <param name="multiTenancySide">Which side can use this permission</param>
+        public Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySide multiTenancySide = MultiTenancySide.Host | MultiTenancySide.Tenant)
         {
             if (name == null)
             {
@@ -72,6 +79,7 @@ namespace Abp.Authorization
             DisplayName = displayName;
             IsGrantedByDefault = isGrantedByDefault;
             Description = description;
+            MultiTenancySide = multiTenancySide;
 
             _children = new List<Permission>();
         }

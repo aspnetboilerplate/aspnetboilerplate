@@ -122,6 +122,7 @@
     <Compile Include="Authorization\AbpAuthorizationException.cs" />
     <Compile Include="Authorization\IAuthorizeAttributeHelper.cs" />
     <Compile Include="Authorization\IPermissionChecker.cs" />
+    <Compile Include="MultiTenancy\MultiTenancySide.cs" />
     <Compile Include="Authorization\NullPermissionChecker.cs" />
     <Compile Include="Authorization\PermissionCheckerExtensions.cs" />
     <Compile Include="Authorization\PermissionDictionary.cs" />
