@@ -68,19 +68,19 @@ namespace Abp.FluentMigrator.Extensions
         /// <summary>
         /// Adds IsDeleted column to the table. See <see cref="IPassivable"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrWithColumnSyntax WithIsSuspendedColumn(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithIsActiveColumn(this ICreateTableWithColumnSyntax table, bool defaultValue = true)
         {
             return table
-                .WithColumn("IsSuspended").AsBoolean().NotNullable().WithDefaultValue(false);
+                .WithColumn("IsActive").AsBoolean().NotNullable().WithDefaultValue(defaultValue);
         }
 
         /// <summary>
         /// Adds IsDeleted column to the table. See <see cref="IPassivable"/>.
         /// </summary>
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddIsSuspendedColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddIsActiveColumn(this IAlterTableAddColumnOrAlterColumnSyntax table, bool defaultValue = true)
         {
             return table
-                .AddColumn("IsSuspended").AsBoolean().NotNullable().WithDefaultValue(false);
+                .AddColumn("IsActive").AsBoolean().NotNullable().WithDefaultValue(defaultValue);
         }
     }
 }
