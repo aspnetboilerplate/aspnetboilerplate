@@ -50,9 +50,9 @@ namespace Abp.Authorization
                 throw new AbpException("There is no permission with name: " + name);
             }
 
-            if (!permission.MultiTenancySide.HasFlag(GetCurrentMultiTenancySide()))
+            if (!permission.MultiTenancySide.HasFlag(AbpSession.MultiTenancySide))
             {
-                throw new AbpException(string.Format("Permission {0} is not marked as {1}", name, GetCurrentMultiTenancySide()));
+                throw new AbpException(string.Format("Permission {0} is not marked as {1}", name, AbpSession.MultiTenancySide));
             }
 
             return permission;
@@ -60,17 +60,10 @@ namespace Abp.Authorization
 
         public IReadOnlyList<Permission> GetAllPermissions()
         {
-            var tenancySide = GetCurrentMultiTenancySide();
+            var tenancySide = AbpSession.MultiTenancySide;
             return Permissions.Values
                   .Where(p => p.MultiTenancySide.HasFlag(tenancySide))
                   .ToImmutableList();
-        }
-
-        private MultiTenancySide GetCurrentMultiTenancySide()
-        {
-            return _multiTenancy.IsEnabled && !AbpSession.TenantId.HasValue
-                ? MultiTenancySide.Host
-                : MultiTenancySide.Tenant;
         }
 
         private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
