@@ -89,9 +89,9 @@ namespace Abp.Authorization
         /// A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
-        public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySide multiTenancySide = MultiTenancySide.Host | MultiTenancySide.Tenant)
         {
-            var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySide) { Parent = this };
             _children.Add(permission);
             return permission;
         }

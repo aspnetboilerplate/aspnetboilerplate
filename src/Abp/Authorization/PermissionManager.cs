@@ -5,8 +5,7 @@ using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
-using Abp.Runtime.Session;
-using Castle.Core.Logging;
+using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
@@ -15,10 +14,6 @@ namespace Abp.Authorization
     /// </summary>
     internal class PermissionManager : IPermissionManager, ISingletonDependency, IPermissionDefinitionContext
     {
-        public ILogger Logger { get; set; }
-
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
@@ -29,9 +24,6 @@ namespace Abp.Authorization
         /// </summary>
         public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
 
@@ -48,14 +40,14 @@ namespace Abp.Authorization
             _permissions.AddAllPermissions();
         }
 
-        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySide multiTenancySide = MultiTenancySide.Host | MultiTenancySide.Tenant)
         {
             if (_permissions.ContainsKey(name))
             {
                 throw new AbpException("There is already a permission with name: " + name);
             }
 
-            var permission = new Permission(name, displayName, isGrantedByDefault, description);
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySide);
             _permissions[permission.Name] = permission;
             return permission;
         }
