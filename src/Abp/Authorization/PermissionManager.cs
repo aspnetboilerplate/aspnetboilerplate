@@ -4,20 +4,16 @@ using System.Collections.Immutable;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Localization;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
     /// <summary>
     /// Permission manager.
     /// </summary>
-    internal class PermissionManager : IPermissionManager, ISingletonDependency, IPermissionDefinitionContext
+    internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
-
-        private readonly PermissionDictionary _permissions;
         
         /// <summary>
         /// Constructor.
@@ -26,8 +22,6 @@ namespace Abp.Authorization
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
-
-            _permissions = new PermissionDictionary();
         }
 
         public void Initialize()
@@ -37,24 +31,12 @@ namespace Abp.Authorization
                 CreateAuthorizationProvider(providerType).SetPermissions(this);
             }
 
-            _permissions.AddAllPermissions();
-        }
-
-        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySide multiTenancySide = MultiTenancySide.Host | MultiTenancySide.Tenant)
-        {
-            if (_permissions.ContainsKey(name))
-            {
-                throw new AbpException("There is already a permission with name: " + name);
-            }
-
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySide);
-            _permissions[permission.Name] = permission;
-            return permission;
+            Permissions.AddAllPermissions();
         }
 
         public Permission GetPermission(string name)
         {
-            var permission = _permissions.GetOrDefault(name);
+            var permission = Permissions.GetOrDefault(name);
             if (permission == null)
             {
                 throw new AbpException("There is no permission with name: " + name);
@@ -63,14 +45,9 @@ namespace Abp.Authorization
             return permission;
         }
 
-        public Permission GetPermissionOrNull(string name)
-        {
-            return _permissions.GetOrDefault(name);
-        }
-
         public IReadOnlyList<Permission> GetAllPermissions()
         {
-            return _permissions.Values.ToImmutableList();
+            return Permissions.Values.ToImmutableList();
         }
 
         private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
