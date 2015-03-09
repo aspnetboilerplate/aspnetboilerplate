@@ -54,6 +54,11 @@ namespace Abp.Configuration.Startup
         public IEventBusConfiguration EventBus { get; private set; }
 
         /// <summary>
+        /// Used to configure multi-tenancy.
+        /// </summary>
+        public IMultiTenancyConfig MultiTenancy { get; private set; }
+
+        /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
         public AbpStartupConfiguration(IIocManager iocManager)
@@ -70,6 +75,7 @@ namespace Abp.Configuration.Startup
             Settings = IocManager.Resolve<ISettingsConfiguration>();
             UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
             EventBus = IocManager.Resolve<IEventBusConfiguration>();
+            MultiTenancy = IocManager.Resolve<IMultiTenancyConfig>();
         }
     }
 }

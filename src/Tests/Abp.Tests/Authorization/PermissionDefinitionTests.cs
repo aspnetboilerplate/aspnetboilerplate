@@ -15,7 +15,7 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider1>();
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, new MultiTenancyConfig());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(5);

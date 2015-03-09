@@ -1,4 +1,6 @@
-﻿namespace Abp.Runtime.Session
+﻿using Abp.MultiTenancy;
+
+namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Implements null object pattern for <see cref="IAbpSession"/>.
@@ -16,6 +18,8 @@
 
         /// <inheritdoc/>
         public int? TenantId { get { return null; } }
+
+        public MultiTenancySide MultiTenancySide { get { return MultiTenancySide.Tenant; } }
 
         private NullAbpSession()
         {
