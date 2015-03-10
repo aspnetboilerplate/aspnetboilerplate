@@ -26,16 +26,24 @@ namespace Abp.Configuration
 
         /// <summary>
         /// Gets current values of all settings.
-        /// It gets all setting values, overwritten by application and the current user if exists.
+        /// It gets all setting values, overwritten by application, current tenant (if exists) and the current user (if exists).
         /// </summary>
         /// <returns>List of setting values</returns>
         Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync();
 
         /// <summary>
+        /// Gets current values of all settings.
+        /// It gets default values of all settings then overwrites by given scopes.
+        /// </summary>
+        /// <param name="scopes">One or more scope to overwrite</param>
+        /// <returns>List of setting values</returns>
+        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync(SettingScopes scopes);
+
+        /// <summary>
         /// Gets a list of all setting values specified for the application.
         /// It returns only settings those are explicitly set for the application.
         /// If a setting's default value is used, it's not included the result list.
-        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync"/> method.
+        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync()"/> method.
         /// </summary>
         /// <returns>List of setting values</returns>
         Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync();
@@ -44,7 +52,7 @@ namespace Abp.Configuration
         /// Gets a list of all setting values specified for a tenant.
         /// It returns only settings those are explicitly set for the tenant.
         /// If a setting's default value is used, it's not included the result list.
-        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync"/> method.
+        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync()"/> method.
         /// </summary>
         /// <param name="tenantId">Tenant to get settings</param>
         /// <returns>List of setting values</returns>
@@ -54,7 +62,7 @@ namespace Abp.Configuration
         /// Gets a list of all setting values specified for a user.
         /// It returns only settings those are explicitly set for the user.
         /// If a setting's value is not set for the user (for example if user uses the default value), it's not included the result list.
-        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync"/> method.
+        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync()"/> method.
         /// </summary>
         /// <param name="userId">User to get settings</param>
         /// <returns>All settings of the user</returns>

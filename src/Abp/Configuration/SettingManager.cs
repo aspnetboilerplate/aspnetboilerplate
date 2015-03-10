@@ -97,8 +97,13 @@ namespace Abp.Configuration
             return (T)Convert.ChangeType(await GetSettingValueAsync(name), typeof(T));
         }
 
-        /// <inheritdoc/>
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
+        {
+            return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync(SettingScopes scopes)
         {
             var settingDefinitions = new Dictionary<string, SettingDefinition>();
             var settingValues = new Dictionary<string, ISettingValue>();
@@ -111,20 +116,22 @@ namespace Abp.Configuration
             }
 
             //Overwrite application settings
-            foreach (var settingValue in await GetAllSettingValuesForApplicationAsync())
+            if (scopes.HasFlag(SettingScopes.Application))
             {
-                var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
+                foreach (var settingValue in await GetAllSettingValuesForApplicationAsync())
                 {
-                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                    var setting = settingDefinitions.GetOrDefault(settingValue.Name);
+                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
+                    {
+                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                    }
                 }
             }
 
             //Overwrite tenant settings
-            var tenantId = Session.TenantId;
-            if (tenantId.HasValue)
+            if (scopes.HasFlag(SettingScopes.Tenant) && Session.TenantId.HasValue)
             {
-                foreach (var settingValue in await GetAllSettingValuesForTenantAsync(tenantId.Value))
+                foreach (var settingValue in await GetAllSettingValuesForTenantAsync(Session.TenantId.Value))
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.Tenant))
@@ -135,10 +142,9 @@ namespace Abp.Configuration
             }
 
             //Overwrite user settings
-            var userId = Session.UserId;
-            if (userId.HasValue)
+            if (scopes.HasFlag(SettingScopes.User) && Session.UserId.HasValue)
             {
-                foreach (var settingValue in await GetAllSettingValuesForUserAsync(userId.Value))
+                foreach (var settingValue in await GetAllSettingValuesForUserAsync(Session.UserId.Value))
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.User))
