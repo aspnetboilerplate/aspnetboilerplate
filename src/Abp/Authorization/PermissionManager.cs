@@ -5,7 +5,6 @@ using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
 namespace Abp.Authorization
@@ -19,16 +18,14 @@ namespace Abp.Authorization
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
-        private readonly IMultiTenancyConfig _multiTenancy;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration, IMultiTenancyConfig multiTenancy)
+        public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
-            _multiTenancy = multiTenancy;
             AbpSession = NullAbpSession.Instance;
         }
 
