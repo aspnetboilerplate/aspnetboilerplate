@@ -13,14 +13,14 @@ namespace Abp.Authorization
             Permissions = new PermissionDictionary();
         }
 
-        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySide multiTenancySide = MultiTenancySide.Host | MultiTenancySide.Tenant)
+        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             if (Permissions.ContainsKey(name))
             {
                 throw new AbpException("There is already a permission with name: " + name);
             }
 
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySide);
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides);
             Permissions[permission.Name] = permission;
             return permission;
         }

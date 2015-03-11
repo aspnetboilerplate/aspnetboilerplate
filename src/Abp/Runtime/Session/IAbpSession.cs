@@ -20,6 +20,6 @@ namespace Abp.Runtime.Session
         /// <summary>
         /// Gets current multi-tenancy side.
         /// </summary>
-        MultiTenancySide MultiTenancySide { get; }
+        MultiTenancySides MultiTenancySides { get; }
     }
 }
