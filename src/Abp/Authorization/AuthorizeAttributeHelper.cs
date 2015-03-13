@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Abp.Threading;
@@ -29,40 +27,7 @@ namespace Abp.Authorization
 
             foreach (var authorizeAttribute in authorizeAttributes)
             {
-                if (authorizeAttribute.Permissions.IsNullOrEmpty())
-                {
-                    continue;
-                }
-
-                if (authorizeAttribute.RequireAllPermissions)
-                {
-                    foreach (var permissionName in authorizeAttribute.Permissions)
-                    {
-                        if (!await PermissionChecker.IsGrantedAsync(permissionName))
-                        {
-                            throw new AbpAuthorizationException(
-                                "Required permissions are not granted. All of these permissions must be granted: " +
-                                String.Join(", ", authorizeAttribute.Permissions)
-                                );
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var permissionName in authorizeAttribute.Permissions)
-                    {
-                        if (await PermissionChecker.IsGrantedAsync(permissionName))
-                        {
-                            return; //Authorized
-                        }
-                    }
-
-                    //Not authorized!
-                    throw new AbpAuthorizationException(
-                        "Required permissions are not granted. At least one of these permissions must be granted: " +
-                        String.Join(", ", authorizeAttribute.Permissions)
-                        );
-                }
+                await PermissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions, authorizeAttribute.Permissions);
             }
         }
 
