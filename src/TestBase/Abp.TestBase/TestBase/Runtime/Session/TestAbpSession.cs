@@ -31,7 +31,7 @@ namespace Abp.TestBase.Runtime.Session
             }
         }
 
-        public MultiTenancySides MultiTenancySides { get { return GetCurrentMultiTenancySide(); } }
+        public MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
 
         private readonly IMultiTenancyConfig _multiTenancy;
         private int? _tenantId;

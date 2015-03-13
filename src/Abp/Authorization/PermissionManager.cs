@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Runtime.Session;
 
 namespace Abp.Authorization
 {
@@ -14,8 +12,6 @@ namespace Abp.Authorization
     /// </summary>
     internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
@@ -26,7 +22,6 @@ namespace Abp.Authorization
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
-            AbpSession = NullAbpSession.Instance;
         }
 
         public void Initialize()
@@ -47,20 +42,12 @@ namespace Abp.Authorization
                 throw new AbpException("There is no permission with name: " + name);
             }
 
-            if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySides))
-            {
-                throw new AbpException(string.Format("Permission {0} is not marked as {1}", name, AbpSession.MultiTenancySides));
-            }
-
             return permission;
         }
 
         public IReadOnlyList<Permission> GetAllPermissions()
         {
-            var tenancySide = AbpSession.MultiTenancySides;
-            return Permissions.Values
-                  .Where(p => p.MultiTenancySides.HasFlag(tenancySide))
-                  .ToImmutableList();
+            return Permissions.Values.ToImmutableList();
         }
 
         private AuthorizationProvider CreateAuthorizationProvider(Type providerType)

@@ -9,7 +9,7 @@ namespace Abp.Tests.Configuration
 
         public int? TenantId { get; set; }
 
-        public MultiTenancySides MultiTenancySides
+        public MultiTenancySides MultiTenancySide
         {
             get
             {

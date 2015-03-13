@@ -19,7 +19,7 @@ namespace Abp.Runtime.Session
         /// <inheritdoc/>
         public int? TenantId { get { return null; } }
 
-        public MultiTenancySides MultiTenancySides { get { return MultiTenancySides.Tenant; } }
+        public MultiTenancySides MultiTenancySide { get { return MultiTenancySides.Tenant; } }
 
         private NullAbpSession()
         {
