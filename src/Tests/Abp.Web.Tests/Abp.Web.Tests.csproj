@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ErrorInfoBuilder_Tests.cs" />
+    <Compile Include="MultiTenancy\MultiTenancyScriptManager_Tests.cs" />
     <Compile Include="Navigation\NavigationScriptTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

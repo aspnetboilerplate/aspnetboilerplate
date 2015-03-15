@@ -21,7 +21,7 @@ namespace Abp.Web.Sessions
             script.AppendLine();
 
             script.AppendLine("    abp.session = abp.session || {};");
-            
+
             if (AbpSession.UserId.HasValue)
             {
                 script.AppendLine("    abp.session.userId = " + AbpSession.UserId.Value + ";");
@@ -31,6 +31,8 @@ namespace Abp.Web.Sessions
             {
                 script.AppendLine("    abp.session.tenantId = " + AbpSession.TenantId.Value + ";");
             }
+
+            script.AppendLine("    abp.session.multiTenancySide = " + ((int)AbpSession.MultiTenancySide) + ";");
 
             script.AppendLine();
             script.Append("})();");

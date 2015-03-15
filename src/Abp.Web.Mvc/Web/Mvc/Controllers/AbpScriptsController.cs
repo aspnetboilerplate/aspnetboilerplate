@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Abp.Web.Authorization;
 using Abp.Web.Localization;
+using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
 using Abp.Web.Settings;
@@ -15,6 +16,7 @@ namespace Abp.Web.Mvc.Controllers
     /// </summary>
     public class AbpScriptsController : AbpController
     {
+        private readonly IMultiTenancyScriptManager _multiTenancyScriptManager;
         private readonly ISettingScriptManager _settingScriptManager;
         private readonly INavigationScriptManager _navigationScriptManager;
         private readonly ILocalizationScriptManager _localizationScriptManager;
@@ -25,12 +27,14 @@ namespace Abp.Web.Mvc.Controllers
         /// Constructor.
         /// </summary>
         public AbpScriptsController(
+            IMultiTenancyScriptManager multiTenancyScriptManager,
             ISettingScriptManager settingScriptManager, 
             INavigationScriptManager navigationScriptManager, 
             ILocalizationScriptManager localizationScriptManager, 
             IAuthorizationScriptManager authorizationScriptManager, 
             ISessionScriptManager sessionScriptManager)
         {
+            _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
             _navigationScriptManager = navigationScriptManager;
             _localizationScriptManager = localizationScriptManager;
@@ -45,7 +49,10 @@ namespace Abp.Web.Mvc.Controllers
         public async Task<ActionResult> GetScripts()
         {
             var sb = new StringBuilder();
-            
+
+            sb.AppendLine(_multiTenancyScriptManager.GetScript());
+            sb.AppendLine();
+
             sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
             

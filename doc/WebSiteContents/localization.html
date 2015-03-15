@@ -77,14 +77,17 @@ email content.&lt;/text&gt;
 <p>XML file must be unicode (UTF-8). A <strong>name</strong> is 
 used to identify each text. You can use value attribute or inner text (like the 
 last one) to set value of the localization text.</p>
-<p>To register the localization source, we create an XmlLocalizationSource and add 
-to configuration:</p>
+<p>To register the localization source, we use localization configuration as 
+shown below:</p>
 <pre lang="cs">Configuration.Localization.Sources.Add(
-    new XmlLocalizationSource(
+    new DictionaryBasedLocalizationSource(
         &quot;SimpleTaskSystem&quot;,
-        HttpContext.Current.Server.MapPath(&quot;~/Localization/SimpleTaskSystem&quot;)
-        ));</pre>
-<p>This is done in <strong>Initialize</strong> event of the module (See
+        new XmlFileLocalizationDictionaryProvider(
+            HttpContext.Current.Server.MapPath(&quot;~/Localization/SimpleTaskSystem&quot;)
+            )
+        )
+    );</pre>
+<p>This is done in <strong>PreInitialize</strong> event of a module (See
 <a href="/Pages/Documents/Module-System">module system</a> for more info).</p>
 <p>A localization 
 source must be a <strong>unique name</strong> (SimpleTaskSystem here) and a
@@ -142,7 +145,7 @@ then get a string from the source:</p>
 <pre lang="cs">var source = LocalizationHelper.GetSource("SimpleTaskSystem");
 var s<span lang="tr">1</span> = source.GetString("NewTask");</pre>
 <p>This returns text in the current language. There are also overrides of 
-GetString to get text in different languages.</p>
+GetString to get text in different languages and formatted by arguments.</p>
 <p>If you need to localization in an
 <a href="/Pages/Documents/Application-Services#DocAppServiceClass">application 
 service</a>, in a controller or in a view, there are shortcuts.</p>
@@ -216,6 +219,13 @@ javascript as shown below:</p>
 not repeat source name, you can first get the source then get the text:</p>
 <pre lang="js">var source = abp.localization.getSource('SimpleTaskSystem');
 var s<span lang="tr">1</span> = source('NewTask');</pre>
+<p>Localization method can also get additional format arguments. Example:</p>
+<pre lang="js">abp.localization.localize('RoleDeleteWarningMessage', 'MySource', 'Admin');
+
+//shortcut if source is got using getSource as shown above
+source('RoleDeleteWarningMessage', 'Admin');</pre>
+<p>if RoleDeleteWarningMessage = 'Role {0} will be deleted', then localized text 
+will be 'Role Admin will be deleted'.</p>
 <h3 id="DocConclusion">Conclusion</h3>
 <p>ASP.NET Boilerplate provides ability to use different sources for 
 localization. It also provides an infrastructure to use same localization texts 

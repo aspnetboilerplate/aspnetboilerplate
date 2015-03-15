@@ -9,6 +9,16 @@
 
 <body>
 
+<h3>v0.5.7 (2015-03-11)</h3>
+<ul class="has-github-issues">
+	<li data-issues="390">Add overload for ISettingManager.GetAllSettingValuesAsync to accept scopes</li>
+	<li>Multi-tenancy improvements and bug fixes</li>
+</ul>
+<h3>v0.5.6 (2015-03-09)</h3>
+<ul>
+	<li>Added multi-tenancy to startup configuration.</li>
+	<li>Added PermissionFinder class to get permissions from AuthorizationProviders without initializing ABP. It should not be used normally (should use IPermissionmanager) but this may help to get all permissions in a EF migration to grant permissions or in a unit test.</li>
+</ul>
 <h3>v0.5.5 (2015-03-06)</h3>
 <ul class="has-github-issues">
 	<li data-issues="379">Added <strong>Failed</strong> event to unit of work.</li>
@@ -274,6 +284,9 @@ For breaking changes, see related <strong>
 	<li>Moved javascripts and styles from Abp.Web.Mvc to <strong>Abp.Web</strong> 
 	assembly (nuget package).</li>
 </ul>
+
+<p>See github repository for all releases: 
+<a href="https://github.com/aspnetboilerplate/aspnetboilerplate/releases" target="_blank">https://github.com/aspnetboilerplate/aspnetboilerplate/releases</a></p>
 
 </body>
 
