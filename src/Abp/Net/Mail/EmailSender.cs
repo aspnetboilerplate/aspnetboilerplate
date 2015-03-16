@@ -2,11 +2,12 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Extensions;
 
 namespace Abp.Net.Mail
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender : IEmailSender, ITransientDependency
     {
         private readonly SettingManager _settingManager;
 
