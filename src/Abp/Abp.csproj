@@ -188,6 +188,10 @@
     <Compile Include="Localization\Sources\ILocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Sources\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Sources\Xml\XmlFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Net\Mail\AbpEmailSettingNames.cs" />
+    <Compile Include="Net\Mail\AbpEmailSettingProvider.cs" />
+    <Compile Include="Net\Mail\EmailSender.cs" />
+    <Compile Include="Net\Mail\IEmailSender.cs" />
     <Compile Include="RandomHelper.cs" />
     <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
