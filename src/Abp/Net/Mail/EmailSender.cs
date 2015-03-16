@@ -7,6 +7,7 @@ using Abp.Extensions;
 
 namespace Abp.Net.Mail
 {
+    //TODO@Halil: This is not working yet. I'm working on it.
     public class EmailSender : IEmailSender, ITransientDependency
     {
         private readonly SettingManager _settingManager;
