@@ -8,6 +8,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Modules;
+using Abp.Net.Mail;
 
 namespace Abp
 {
@@ -18,6 +19,7 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
             UnitOfWorkRegistrar.Initialize(IocManager);
             ApplicationServiceInterceptorRegistrar.Initialize(IocManager);
+            Configuration.Settings.Providers.Add<AbpEmailSettingProvider>();
         }
 
         public override void Initialize()

@@ -1,5 +1,8 @@
 ﻿namespace Abp.Net.Mail
 {
+    /// <summary>
+    /// Declares names of the settings defined by <see cref="AbpEmailSettingProvider"/>.
+    /// </summary>
     public class AbpEmailSettingNames
     {
         /// <summary>
@@ -26,5 +29,25 @@
         /// Abp.Net.Mail.Smtp.Domain
         /// </summary>
         public const string Domain = "Abp.Net.Mail.Smtp.Domain";
+
+        /// <summary>
+        /// Abp.Net.Mail.Smtp.EnableSsl
+        /// </summary>
+        public const string EnableSsl = "Abp.Net.Mail.Smtp.EnableSsl";
+
+        /// <summary>
+        /// Abp.Net.Mail.Smtp.UseDefaultCredentials
+        /// </summary>
+        public const string UseDefaultCredentials = "Abp.Net.Mail.Smtp.UseDefaultCredentials";
+
+        /// <summary>
+        /// Abp.Net.Mail.Smtp.DefaultFromAddress
+        /// </summary>
+        public const string DefaultFromAddress = "Abp.Net.Mail.Smtp.DefaultFromAddress";
+
+        /// <summary>
+        /// Abp.Net.Mail.Smtp.DefaultFromDisplayName
+        /// </summary>
+        public const string DefaultFromDisplayName = "Abp.Net.Mail.Smtp.DefaultFromDisplayName";
     }
 }
