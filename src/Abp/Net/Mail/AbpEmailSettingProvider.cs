@@ -5,6 +5,7 @@ namespace Abp.Net.Mail
 {
     /// <summary>
     /// Defines settings to send emails.
+    /// <see cref="AbpEmailSettingNames"/> for all available configurations.
     /// </summary>
     internal class AbpEmailSettingProvider : SettingProvider
     {
