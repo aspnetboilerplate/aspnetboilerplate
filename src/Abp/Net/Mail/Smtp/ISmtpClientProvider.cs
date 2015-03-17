@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace Abp.Net.Mail.Smtp
 {
@@ -13,6 +14,16 @@ namespace Abp.Net.Mail.Smtp
         /// <returns>
         /// An <see cref="SmtpClient"/> object that is ready to send emails.
         /// </returns>
-        SmtpClient CreateSmtpClient();
+        SmtpClient BuildClient();
+
+        /// <summary>
+        /// Sends an email.
+        /// </summary>
+        Task SendEmailAsync(MailMessage mail);
+
+        /// <summary>
+        /// Sends an email.
+        /// </summary>
+        void SendEmail(MailMessage mail);
     }
 }

@@ -13,13 +13,13 @@ namespace Abp.Net.Mail
         {
             return new[]
                    {
-                       new SettingDefinition(AbpEmailSettingNames.Host, "127.0.0.1"),
-                       new SettingDefinition(AbpEmailSettingNames.Port, "25"),
-                       new SettingDefinition(AbpEmailSettingNames.UserName, ""),
-                       new SettingDefinition(AbpEmailSettingNames.Password, ""),
-                       new SettingDefinition(AbpEmailSettingNames.Domain, ""),
-                       new SettingDefinition(AbpEmailSettingNames.EnableSsl, "false"),
-                       new SettingDefinition(AbpEmailSettingNames.UseDefaultCredentials, "true"),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.Host, "127.0.0.1"),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.Port, "25"),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.UserName, ""),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.Password, ""),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.Domain, ""),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.EnableSsl, "false"),
+                       new SettingDefinition(AbpEmailSettingNames.Smtp.UseDefaultCredentials, "true"),
                        new SettingDefinition(AbpEmailSettingNames.DefaultFromAddress, ""),
                        new SettingDefinition(AbpEmailSettingNames.DefaultFromDisplayName, "")
                    };

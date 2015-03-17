@@ -14,9 +14,12 @@ namespace Abp.Net.Mail.Smtp
     public class SmtpEmailSender : IEmailSender, ITransientDependency
     {
         private readonly ISmtpClientProvider _smtpClientProvider;
-        private readonly ISmtpEmailSenderConfiguration _configuration;
+        private readonly IEmailSenderConfiguration _configuration;
 
-        public SmtpEmailSender(ISmtpClientProvider smtpClientProvider, ISmtpEmailSenderConfiguration configuration)
+        /// <summary>
+        /// Creates a new <see cref="SmtpEmailSender"/>.
+        /// </summary>
+        public SmtpEmailSender(ISmtpClientProvider smtpClientProvider, IEmailSenderConfiguration configuration)
         {
             _smtpClientProvider = smtpClientProvider;
             _configuration = configuration;
@@ -35,16 +38,12 @@ namespace Abp.Net.Mail.Smtp
         public async Task SendAsync(MailMessage mail)
         {
             NormalizeMail(mail);
-
-            using (var smtpClient = _smtpClientProvider.CreateSmtpClient())
-            {
-                await smtpClient.SendMailAsync(mail);                
-            }
+            await _smtpClientProvider.SendEmailAsync(mail);
         }
 
         private void NormalizeMail(MailMessage mail)
         {
-            //TODO: Encodings can be configurable.
+            //TODO: Encodings may be configurable.
 
             if (mail.From == null || mail.From.Address.IsNullOrEmpty())
             {

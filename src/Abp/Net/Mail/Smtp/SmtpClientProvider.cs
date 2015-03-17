@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Abp.Extensions;
 
 namespace Abp.Net.Mail.Smtp
@@ -9,43 +10,70 @@ namespace Abp.Net.Mail.Smtp
     /// </summary>
     public class SmtpClientProvider : ISmtpClientProvider
     {
-        private readonly ISmtpClientProviderConfiguration _configuration;
+        private readonly ISmtpClientConfiguration _configuration;
 
-        public SmtpClientProvider(ISmtpClientProviderConfiguration configuration)
+        /// <summary>
+        /// Creates a new <see cref="SmtpClientProvider"/>.
+        /// </summary>
+        /// <param name="configuration">Configuration</param>
+        public SmtpClientProvider(ISmtpClientConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public SmtpClient CreateSmtpClient()
+        public SmtpClient BuildClient()
         {
             var host = _configuration.Host;
             var port = _configuration.Port;
 
             var smtpClient = new SmtpClient(host, port);
-
-            if (_configuration.EnableSsl)
+            try
             {
-                smtpClient.EnableSsl = true;
-            }
+                if (_configuration.EnableSsl)
+                {
+                    smtpClient.EnableSsl = true;
+                }
 
-            if (_configuration.UseDefaultCredentials)
+                if (_configuration.UseDefaultCredentials)
+                {
+                    smtpClient.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    smtpClient.UseDefaultCredentials = false;
+
+                    var userName = _configuration.UserName;
+                    var password = _configuration.Password;
+                    var domain = _configuration.Domain;
+
+                    smtpClient.Credentials = !domain.IsNullOrEmpty()
+                        ? new NetworkCredential(userName, password, domain)
+                        : new NetworkCredential(userName, password);
+                }
+
+                return smtpClient;
+            }
+            catch
             {
-                smtpClient.UseDefaultCredentials = true;
+                smtpClient.Dispose();
+                throw;
             }
-            else
+        }
+
+        public async Task SendEmailAsync(MailMessage mail)
+        {
+            using (var smtpClient = BuildClient())
             {
-                smtpClient.UseDefaultCredentials = false;
-
-                var userName = _configuration.UserName;
-                var password = _configuration.Password;
-                var domain = _configuration.Domain;
-
-                smtpClient.Credentials = !domain.IsNullOrEmpty()
-                    ? new NetworkCredential(userName, password, domain)
-                    : new NetworkCredential(userName, password);
+                await smtpClient.SendMailAsync(mail);
             }
+        }
 
-            return smtpClient;
+        public void SendEmail(MailMessage mail)
+        {
+            using (var smtpClient = BuildClient())
+            {
+                smtpClient.Send(mail);
+            }
         }
     }
 }

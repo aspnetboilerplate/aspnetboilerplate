@@ -1,6 +1,11 @@
-﻿namespace Abp.Net.Mail.Smtp
+﻿using System.Net.Mail;
+
+namespace Abp.Net.Mail.Smtp
 {
-    public interface ISmtpClientProviderConfiguration
+    /// <summary>
+    /// Defines configurations to used by <see cref="SmtpClient"/> object.
+    /// </summary>
+    public interface ISmtpClientConfiguration
     {
         string Host { get; }
 
