@@ -5,7 +5,7 @@ namespace Abp.Net.Mail.Smtp
     /// <summary>
     /// Defines configurations to used by <see cref="SmtpClient"/> object.
     /// </summary>
-    public interface ISmtpClientConfiguration
+    public interface ISmtpEmailSenderConfiguration : IEmailSenderConfiguration
     {
         string Host { get; }
 

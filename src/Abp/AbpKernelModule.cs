@@ -19,7 +19,7 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
             UnitOfWorkRegistrar.Initialize(IocManager);
             ApplicationServiceInterceptorRegistrar.Initialize(IocManager);
-            Configuration.Settings.Providers.Add<AbpEmailSettingProvider>();
+            Configuration.Settings.Providers.Add<EmailSettingProvider>();
         }
 
         public override void Initialize()

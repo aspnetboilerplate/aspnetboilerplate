@@ -1,9 +1,9 @@
 ﻿namespace Abp.Net.Mail
 {
     /// <summary>
-    /// Declares names of the settings defined by <see cref="AbpEmailSettingProvider"/>.
+    /// Declares names of the settings defined by <see cref="EmailSettingProvider"/>.
     /// </summary>
-    public static class AbpEmailSettingNames
+    public static class EmailSettingNames
     {
         /// <summary>
         /// Abp.Net.Mail.DefaultFromAddress
