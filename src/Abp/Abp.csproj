@@ -192,6 +192,7 @@
     <Compile Include="Net\Mail\EmailSettingProvider.cs" />
     <Compile Include="Net\Mail\EmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\IEmailSenderConfiguration.cs" />
+    <Compile Include="Net\Mail\EmailSenderBase.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSender.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\Smtp\SmtpEmailSender.cs" />

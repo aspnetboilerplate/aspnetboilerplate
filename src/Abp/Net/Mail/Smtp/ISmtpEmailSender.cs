@@ -3,7 +3,7 @@ using System.Net.Mail;
 namespace Abp.Net.Mail.Smtp
 {
     /// <summary>
-    /// Used to create <see cref="SmtpClient"/> objects that is configured and ready to use.
+    /// Used to send emails over SMTP.
     /// </summary>
     public interface ISmtpEmailSender : IEmailSender
     {

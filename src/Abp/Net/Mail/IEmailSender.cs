@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Abp.Net.Mail
 {
     /// <summary>
-    /// This service can be used simply send emails.
+    /// This service can be used simply sending emails.
     /// </summary>
     public interface IEmailSender
     {

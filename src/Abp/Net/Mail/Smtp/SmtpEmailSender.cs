@@ -1,15 +1,14 @@
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 using Abp.Extensions;
 
 namespace Abp.Net.Mail.Smtp
 {
     /// <summary>
-    /// Creates <see cref="SmtpClient"/> objects and configures it using  given configuration.
+    /// Used to send emails over SMTP.
     /// </summary>
-    public class SmtpEmailSender : ISmtpEmailSender
+    public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender
     {
         private readonly ISmtpEmailSenderConfiguration _configuration;
 
@@ -18,6 +17,7 @@ namespace Abp.Net.Mail.Smtp
         /// </summary>
         /// <param name="configuration">Configuration</param>
         public SmtpEmailSender(ISmtpEmailSenderConfiguration configuration)
+            : base(configuration)
         {
             _configuration = configuration;
         }
@@ -61,68 +61,19 @@ namespace Abp.Net.Mail.Smtp
             }
         }
 
-        public async Task SendAsync(string to, string subject, string body, bool isBodyHtml = true)
+        protected override async Task SendEmailAsync(MailMessage mail)
         {
-            await SendAsync(_configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
-        }
-
-        public void Send(string to, string subject, string body, bool isBodyHtml = true)
-        {
-            Send(_configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
-        }
-
-        public async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            await SendAsync(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
-        }
-
-        public void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            Send(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
-        }
-
-        public async Task SendAsync(MailMessage mail, bool normalize = true)
-        {
-            NormalizeMail(mail);
             using (var smtpClient = BuildClient())
             {
                 await smtpClient.SendMailAsync(mail);
             }
         }
 
-        public void Send(MailMessage mail, bool normalize = true)
+        protected override void SendEmail(MailMessage mail)
         {
-            NormalizeMail(mail);
             using (var smtpClient = BuildClient())
             {
                 smtpClient.Send(mail);
-            }
-        }
-
-        private void NormalizeMail(MailMessage mail)
-        {
-            if (mail.From == null || mail.From.Address.IsNullOrEmpty())
-            {
-                mail.From = new MailAddress(
-                    _configuration.DefaultFromAddress,
-                    _configuration.DefaultFromDisplayName,
-                    Encoding.UTF8
-                    );
-            }
-
-            if (mail.HeadersEncoding == null)
-            {
-                mail.HeadersEncoding = Encoding.UTF8;
-            }
-
-            if (mail.SubjectEncoding == null)
-            {
-                mail.SubjectEncoding = Encoding.UTF8;
-            }
-
-            if (mail.BodyEncoding == null)
-            {
-                mail.BodyEncoding = Encoding.UTF8;
             }
         }
     }
