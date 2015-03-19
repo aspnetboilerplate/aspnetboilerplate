@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Extensions;
 
 namespace Abp.Net.Mail.Smtp
@@ -8,7 +9,7 @@ namespace Abp.Net.Mail.Smtp
     /// <summary>
     /// Used to send emails over SMTP.
     /// </summary>
-    public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender
+    public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender, ITransientDependency
     {
         private readonly ISmtpEmailSenderConfiguration _configuration;
 

@@ -1,4 +1,5 @@
 ﻿using Abp.Configuration;
+using Abp.Dependency;
 
 namespace Abp.Net.Mail.Smtp
 {
@@ -6,7 +7,7 @@ namespace Abp.Net.Mail.Smtp
     /// Implementation of <see cref="ISmtpEmailSenderConfiguration"/> that reads settings
     /// from <see cref="ISettingManager"/>.
     /// </summary>
-    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration
+    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration, ITransientDependency
     {
         /// <summary>
         /// SMTP Host name/IP.

@@ -8,7 +8,7 @@ namespace Abp.Net.Mail
     /// Implementation of <see cref="IEmailSenderConfiguration"/> that reads settings
     /// from <see cref="ISettingManager"/>.
     /// </summary>
-    public class EmailSenderConfiguration : IEmailSenderConfiguration
+    public abstract class EmailSenderConfiguration : IEmailSenderConfiguration
     {
         public string DefaultFromAddress
         {
@@ -25,7 +25,7 @@ namespace Abp.Net.Mail
         /// <summary>
         /// Creates a new <see cref="EmailSenderConfiguration"/>.
         /// </summary>
-        public EmailSenderConfiguration(ISettingManager settingManager)
+        protected EmailSenderConfiguration(ISettingManager settingManager)
         {
             SettingManager = settingManager;
         }
