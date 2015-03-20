@@ -45,12 +45,14 @@ namespace Abp.Net.Mail.Smtp
                     smtpClient.UseDefaultCredentials = false;
 
                     var userName = _configuration.UserName;
-                    var password = _configuration.Password;
-                    var domain = _configuration.Domain;
-
-                    smtpClient.Credentials = !domain.IsNullOrEmpty()
-                        ? new NetworkCredential(userName, password, domain)
-                        : new NetworkCredential(userName, password);
+                    if (!userName.IsNullOrEmpty())
+                    {
+                        var password = _configuration.Password;
+                        var domain = _configuration.Domain;
+                        smtpClient.Credentials = !domain.IsNullOrEmpty()
+                            ? new NetworkCredential(userName, password, domain)
+                            : new NetworkCredential(userName, password);
+                    }
                 }
 
                 return smtpClient;
