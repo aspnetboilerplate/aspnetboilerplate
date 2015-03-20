@@ -8,7 +8,6 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Validation;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
-using Abp.TestBase.SampleApplication.Tests.TestUtils;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
@@ -69,7 +68,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public async Task Should_Not_Insert_For_Invalid_Input()
         {
-            await AssertEx.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
+            await Assert.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
         }
 
         [Fact]

@@ -57,7 +57,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var disposeCount = 0;
 
             Assert.Throws<ApplicationException>(
-                () =>
+                new Action(() =>
                 {
                     using (var uow = _unitOfWorkManager.Begin())
                     {
@@ -79,7 +79,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                         uow.Complete();
                     }
-                });
+                }));
 
             failedCount.ShouldBe(1);
             disposeCount.ShouldBe(1);
