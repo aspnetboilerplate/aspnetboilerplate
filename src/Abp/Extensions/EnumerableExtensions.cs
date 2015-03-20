@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Abp.Extensions
@@ -30,6 +31,34 @@ namespace Abp.Extensions
         public static string JoinAsString<T>(this IEnumerable<T> source, string separator)
         {
             return string.Join(separator, source);
+        }
+
+        /// <summary>
+        /// Filters a <see cref="IEnumerable{T}"/> by given predicate if given condition is true.
+        /// </summary>
+        /// <param name="source">Enumerable to apply filtering</param>
+        /// <param name="condition">A boolean value</param>
+        /// <param name="predicate">Predicate to filter the enumerable</param>
+        /// <returns>Filtered or not filtered enumerable based on <see cref="condition"/></returns>
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
+        {
+            return condition
+                ? source.Where(predicate)
+                : source;
+        }
+
+        /// <summary>
+        /// Filters a <see cref="IEnumerable{T}"/> by given predicate if given condition is true.
+        /// </summary>
+        /// <param name="source">Enumerable to apply filtering</param>
+        /// <param name="condition">A boolean value</param>
+        /// <param name="predicate">Predicate to filter the enumerable</param>
+        /// <returns>Filtered or not filtered enumerable based on <see cref="condition"/></returns>
+        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, int, bool> predicate)
+        {
+            return condition
+                ? source.Where(predicate)
+                : source;
         }
     }
 }
