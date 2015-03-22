@@ -1,5 +1,4 @@
 ﻿using Abp.Dependency;
-using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
@@ -32,6 +31,13 @@ namespace Abp.Tests.Dependency
             {
                 wrapper.Object.MyData.ShouldBe(42);
             }
+        }
+
+        [Fact]
+        public void Using_Test()
+        {
+            LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
+            LocalIocManager.Using<SimpleDisposableObject>(obj => obj.MyData.ShouldBe(0));
         }
     }
 }

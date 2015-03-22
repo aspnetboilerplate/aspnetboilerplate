@@ -81,5 +81,24 @@ namespace Abp.Dependency
         }
 
         #endregion
+
+        #region Using
+
+        /// <summary>
+        /// This method can be used to resolve and release an object automatically.
+        /// You can use the object in <see cref="action"/>.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to use</typeparam>
+        /// <param name="iocResolver">IIocResolver object</param>
+        /// <param name="action">An action that can use the resolved object</param>
+        public static void Using<T>(this IIocResolver iocResolver, Action<T> action)
+        {
+            using (var wrapper = new DisposableDependencyObjectWrapper<T>(iocResolver))
+            {
+                action(wrapper.Object);
+            }
+        }
+
+        #endregion
     }
 }
