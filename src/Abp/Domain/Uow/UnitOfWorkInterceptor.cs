@@ -65,10 +65,9 @@ namespace Abp.Domain.Uow
                 catch (System.Exception ex)
                 {
                     // Save to unit of work so the error will propagate to the failed handler correctly
-                    UnitOfWorkBase unitOfWorkBase = _unitOfWorkManager.Current as UnitOfWorkBase;
-                    if (unitOfWorkBase != null)
+                    if (_unitOfWorkManager.Current != null)
                     {
-                        unitOfWorkBase.SetException(ex);
+                        _unitOfWorkManager.Current.OnRuntimeError(ex);
                     }
                     // rethrow
                     throw;
@@ -87,10 +86,9 @@ namespace Abp.Domain.Uow
             catch (System.Exception ex)
             {
                 // Save to unit of work so the error will propagate to the failed handler correctly
-                UnitOfWorkBase unitOfWorkBase = _unitOfWorkManager.Current as UnitOfWorkBase;
-                if (unitOfWorkBase != null)
+                if (_unitOfWorkManager.Current != null)
                 {
-                    unitOfWorkBase.SetException(ex);
+                    _unitOfWorkManager.Current.OnRuntimeError(ex);
                 }
                 // rethrow
                 throw;

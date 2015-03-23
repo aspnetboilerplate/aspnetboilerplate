@@ -195,5 +195,11 @@ namespace Abp.Domain.Uow
 
             _isCompleteCalledBefore = true;
         }
+
+        /// <inheritdoc/>
+        public virtual void OnRuntimeError(Exception e)
+        {
+            SetException(e);
+        }
     }
 }
