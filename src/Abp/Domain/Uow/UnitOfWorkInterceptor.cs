@@ -57,8 +57,22 @@ namespace Abp.Domain.Uow
         {
             using (var uow = _unitOfWorkManager.Begin(options))
             {
-                invocation.Proceed();
-                uow.Complete();
+                try
+                {
+                    invocation.Proceed();
+                    uow.Complete();
+                }
+                catch (System.Exception ex)
+                {
+                    // Save to unit of work so the error will propagate to the failed handler correctly
+                    UnitOfWorkBase unitOfWorkBase = _unitOfWorkManager.Current as UnitOfWorkBase;
+                    if (unitOfWorkBase != null)
+                    {
+                        unitOfWorkBase.SetException(ex);
+                    }
+                    // rethrow
+                    throw;
+                }
             }
         }
 
@@ -66,7 +80,21 @@ namespace Abp.Domain.Uow
         {
             var uow = _unitOfWorkManager.Begin(options);
 
-            invocation.Proceed();
+            try
+            {
+                invocation.Proceed();
+            }
+            catch (System.Exception ex)
+            {
+                // Save to unit of work so the error will propagate to the failed handler correctly
+                UnitOfWorkBase unitOfWorkBase = _unitOfWorkManager.Current as UnitOfWorkBase;
+                if (unitOfWorkBase != null)
+                {
+                    unitOfWorkBase.SetException(ex);
+                }
+                // rethrow
+                throw;
+            }
 
             if (invocation.Method.ReturnType == typeof (Task))
             {
