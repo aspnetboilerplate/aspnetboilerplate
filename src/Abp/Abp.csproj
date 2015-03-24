@@ -100,6 +100,13 @@
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
     <Compile Include="Aspects\AspectAttribute.cs" />
     <Compile Include="Auditing\AuditedAttribute.cs" />
+    <Compile Include="Auditing\AuditInfo.cs" />
+    <Compile Include="Auditing\AuditingConfiguration.cs" />
+    <Compile Include="Auditing\AuditingInterceptor.cs" />
+    <Compile Include="Auditing\AuditingSelectorList.cs" />
+    <Compile Include="Auditing\DisableAuditingAttibute.cs" />
+    <Compile Include="Auditing\IAuditingConfiguration.cs" />
+    <Compile Include="Auditing\IAuditingSelectorList.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
