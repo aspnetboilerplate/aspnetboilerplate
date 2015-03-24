@@ -54,8 +54,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="NMemory">
-      <HintPath>..\..\..\packages\NMemory.1.0.1\lib\net45\NMemory.dll</HintPath>
+    <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\NMemory.1.1.0\lib\net45\NMemory.dll</HintPath>
     </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\..\..\packages\NSubstitute.1.8.1.0\lib\net45\NSubstitute.dll</HintPath>
