@@ -6,7 +6,7 @@ namespace Abp.Auditing
      */
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AuditedAttribute : Attribute
+    internal class AuditedAttribute : Attribute
     {
         /// <summary>
         /// Default value: <see cref="AuditUsage.Default"/>
@@ -24,14 +24,14 @@ namespace Abp.Auditing
         }
     }
 
-    public enum AuditUsage
+    internal enum AuditUsage
     {
         Default,
         Enabled,
         Disabled
     }
 
-    public class AuditInfo
+    internal class AuditInfo
     {
         public string ServiceName { get; set; }
         public string MethodName { get; set; }

@@ -98,6 +98,7 @@
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
     <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
+    <Compile Include="Aspects\AspectAttribute.cs" />
     <Compile Include="Auditing\AuditedAttribute.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
