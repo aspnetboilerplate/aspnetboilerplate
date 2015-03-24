@@ -49,7 +49,7 @@ namespace Abp
         private void RegisterMissingComponents()
         {
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<IAuditingStore, SimpleAuditLogger>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
         }
     }
 }

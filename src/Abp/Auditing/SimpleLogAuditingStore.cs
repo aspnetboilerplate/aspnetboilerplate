@@ -1,13 +1,12 @@
-﻿using Abp.Dependency;
-using Castle.Core.Logging;
+﻿using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {
-    internal class SimpleAuditLogger : IAuditingStore, ITransientDependency
+    internal class SimpleLogAuditingStore : IAuditingStore
     {
         public ILogger Logger { get; set; }
 
-        public SimpleAuditLogger()
+        public SimpleLogAuditingStore()
         {
             Logger = NullLogger.Instance;
         }
