@@ -126,6 +126,7 @@
     <Compile Include="Authorization\PermissionFinder.cs" />
     <Compile Include="Configuration\Startup\IMultiTenancyConfig.cs" />
     <Compile Include="Configuration\Startup\MultiTenancyConfig.cs" />
+    <Compile Include="Dependency\IocRegistrarExtensions.cs" />
     <Compile Include="MultiTenancy\MultiTenancySides.cs" />
     <Compile Include="Authorization\NullPermissionChecker.cs" />
     <Compile Include="Authorization\PermissionCheckerExtensions.cs" />

@@ -56,7 +56,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Checks whether given type is registered before.
         /// </summary>
-        /// <typeparam name="TType">Type to check</typeparam>
-        bool IsRegistered<TType>();
+        /// <typeparam name="T">Type to check</typeparam>
+        bool IsRegistered<T>();
     }
 }

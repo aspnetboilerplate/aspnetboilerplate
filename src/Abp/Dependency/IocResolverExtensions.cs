@@ -3,7 +3,7 @@
 namespace Abp.Dependency
 {
     /// <summary>
-    /// Extension methods to IIocResolver interface.
+    /// Extension methods to <see cref="IIocResolver"/> interface.
     /// </summary>
     public static class IocResolverExtensions
     {
