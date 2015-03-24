@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Application.Navigation;
 using Abp.Application.Services.Interceptors;
+using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Dependency;
@@ -47,10 +48,8 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
-            if (!IocManager.IsRegistered<IUnitOfWork>())
-            {
-                IocManager.Register<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            }
+            IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditingStore, SimpleAuditLogger>(DependencyLifeStyle.Transient);
         }
     }
 }

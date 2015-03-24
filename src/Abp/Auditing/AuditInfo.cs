@@ -61,5 +61,13 @@ namespace Abp.Auditing
         /// Exception object, if an exception occured during execution of the method.
         /// </summary>
         public Exception Exception { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "AUDIT LOG: {0}.{1} is executed by user {2} in {3} ms from {4} IP address.",
+                ServiceName, MethodName, UserId, ExecutionDuration, ClientIpAddress
+                );
+        }
     }
 }

@@ -107,6 +107,8 @@
     <Compile Include="Auditing\DisableAuditingAttibute.cs" />
     <Compile Include="Auditing\IAuditingConfiguration.cs" />
     <Compile Include="Auditing\IAuditingSelectorList.cs" />
+    <Compile Include="Auditing\IAuditingStore.cs" />
+    <Compile Include="Auditing\SimpleAuditLogger.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
