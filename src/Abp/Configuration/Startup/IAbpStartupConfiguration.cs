@@ -30,6 +30,11 @@ namespace Abp.Configuration.Startup
         IEventBusConfiguration EventBus { get; }
 
         /// <summary>
+        /// Used to configure multi-tenancy.
+        /// </summary>
+        IMultiTenancyConfig MultiTenancy { get; }
+
+        /// <summary>
         /// Used to configure authorization.
         /// </summary>
         IAuthorizationConfiguration Authorization { get; }

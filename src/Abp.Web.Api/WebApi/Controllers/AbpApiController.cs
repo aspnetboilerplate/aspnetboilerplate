@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Authorization;
 using Abp.Configuration;
@@ -28,6 +29,11 @@ namespace Abp.WebApi.Controllers
         /// Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
+
+        /// <summary>
+        /// Reference to the permission checker.
+        /// </summary>
+        public IPermissionChecker PermissionChecker { protected get; set; }
 
         /// <summary>
         /// Reference to the localization manager.
@@ -76,6 +82,7 @@ namespace Abp.WebApi.Controllers
             CurrentSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
         
         /// <summary>
@@ -120,6 +127,24 @@ namespace Abp.WebApi.Controllers
         public string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for a permission.
+        /// </summary>
+        /// <param name="permissionName">Name of the permission</param>
+        protected Task<bool> IsGrantedAsync(string permissionName)
+        {
+            return PermissionChecker.IsGrantedAsync(permissionName);
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for a permission.
+        /// </summary>
+        /// <param name="permissionName">Name of the permission</param>
+        protected bool IsGranted(string permissionName)
+        {
+            return PermissionChecker.IsGranted(permissionName);
         }
     }
 }

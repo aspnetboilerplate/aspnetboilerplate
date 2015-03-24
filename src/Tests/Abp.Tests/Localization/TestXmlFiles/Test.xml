@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="hello" value="Hello" />
+    <text name="world">World</text>
+  </texts>
+</localizationDictionary>

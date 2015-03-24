@@ -62,8 +62,10 @@
     <Compile Include="Web\Configuration\AbpWebModuleConfiguration.cs" />
     <Compile Include="Web\Configuration\IAbpWebModuleConfiguration.cs" />
     <Compile Include="Configuration\Startup\AbpWebConfigurationExtensions.cs" />
+    <Compile Include="Web\MultiTenancy\MultiTenancyScriptManager.cs" />
     <Compile Include="Web\Navigation\INavigationScriptManager.cs" />
     <Compile Include="Web\Navigation\NavigationScriptManager.cs" />
+    <Compile Include="Web\MultiTenancy\IMultiTenancyScriptManager.cs" />
     <Compile Include="Web\Sessions\ISessionScriptManager.cs" />
     <Compile Include="Web\Sessions\SessionScriptManager.cs" />
     <Compile Include="Web\WebAssemblyFinder.cs" />

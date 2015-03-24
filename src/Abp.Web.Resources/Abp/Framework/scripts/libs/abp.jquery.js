@@ -95,7 +95,12 @@
                     userOptions.success && userOptions.success(data.result, data);
                 } else { //data.success === false
                     if (data.error) {
-                        abp.message.error(data.error.message);
+                        if (data.error.details) {
+                            abp.message.error(data.error.details, data.error.message);
+                        } else {
+                            abp.message.error(data.error.message);
+                        }
+
                         $dfd && $dfd.reject(data.error);
                         userOptions.error && userOptions.error(data.error);
                     }

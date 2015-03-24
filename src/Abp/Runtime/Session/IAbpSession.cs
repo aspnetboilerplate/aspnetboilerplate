@@ -1,4 +1,6 @@
-﻿namespace Abp.Runtime.Session
+﻿using Abp.MultiTenancy;
+
+namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Defines some session information that can be useful for applications.
@@ -14,5 +16,10 @@
         /// Gets current TenantId or null.
         /// </summary>
         int? TenantId { get; }
+
+        /// <summary>
+        /// Gets current multi-tenancy side.
+        /// </summary>
+        MultiTenancySides MultiTenancySide { get; }
     }
 }

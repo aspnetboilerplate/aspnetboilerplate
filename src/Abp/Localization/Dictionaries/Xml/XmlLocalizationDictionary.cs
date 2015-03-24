@@ -16,8 +16,6 @@ namespace Abp.Localization.Dictionaries.Xml
     /// </remarks>
     public class XmlLocalizationDictionary : LocalizationDictionary
     {
-        #region Constructor
-
         /// <summary>
         /// Private constructor.
         /// </summary>
@@ -27,10 +25,6 @@ namespace Abp.Localization.Dictionaries.Xml
         {
 
         }
-
-        #endregion
-
-        #region Public static methods
 
         /// <summary>
         /// Builds an <see cref="XmlLocalizationDictionary"/> from given file.
@@ -52,7 +46,7 @@ namespace Abp.Localization.Dictionaries.Xml
         /// Builds an <see cref="XmlLocalizationDictionary"/> from given xml string.
         /// </summary>
         /// <param name="xmlString">XML string</param>
-        internal static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
+        public static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
         {
             var settingsXmlDoc = new XmlDocument();
             settingsXmlDoc.LoadXml(xmlString);
@@ -100,7 +94,5 @@ namespace Abp.Localization.Dictionaries.Xml
 
             return dictionary;
         }
-
-        #endregion
     }
 }

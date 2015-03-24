@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Abp.Domain.Entities
 {
@@ -7,6 +8,7 @@ namespace Abp.Domain.Entities
     /// An entity can inherit this class of directly implement to IEntity interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+    [Serializable]
     public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     {
         /// <summary>

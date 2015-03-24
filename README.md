@@ -39,8 +39,5 @@ Beside the framework, the first module (https://github.com/aspnetboilerplate/mod
 - User & Role management
 - Setting management
 
-See http://www.aspnetboilerplate.com for more.
-
-An overall view of layers:
-
-![ScreenShot](https://raw.githubusercontent.com/aspnetboilerplate/aspnetboilerplate/master/AbpLayers.png)
+Official web site: http://www.aspnetboilerplate.com
+Forum: http://forum.aspnetboilerplate.com

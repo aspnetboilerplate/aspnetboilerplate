@@ -15,7 +15,7 @@ namespace Abp.NHibernate.Tests
         public Basic_Repository_Tests()
         {
             _personRepository = Resolve<IRepository<Person>>();
-            UsingSession(session => session.Save(new Person() {Name = "emre"}));
+            UsingSession(session => session.Save(new Person() { Name = "emre" }));
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Abp.NHibernate.Tests
         [Fact]
         public void Should_Insert_People()
         {
-            _personRepository.Insert(new Person() {Name = "halil"});
+            _personRepository.Insert(new Person() { Name = "halil" });
 
             var insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
             insertedPerson.ShouldNotBe(null);
@@ -35,7 +35,20 @@ namespace Abp.NHibernate.Tests
             insertedPerson.Name.ShouldBe("halil");
         }
 
-        [Fact] //Work in progress.
+        [Fact]
+        public void Update_With_Action_Test()
+        {
+            var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
+
+            var updatedUser = _personRepository.Update(userBefore.Id, user => user.Name = "yunus");
+            updatedUser.Id.ShouldBe(userBefore.Id);
+            updatedUser.Name.ShouldBe("yunus");
+
+            var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
+            userAfter.Name.ShouldBe("yunus");
+        }
+
+        [Fact]
         public void Should_Trigger_Event_On_Insert()
         {
             var triggerCount = 0;
@@ -88,6 +101,7 @@ namespace Abp.NHibernate.Tests
             _personRepository.Delete(emrePeson.Id);
 
             triggerCount.ShouldBe(1);
+            _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
         }
     }
 }

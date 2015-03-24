@@ -199,10 +199,26 @@ namespace Abp.Domain.Repositories
         TEntity Update(TEntity entity);
 
         /// <summary>
-        /// Updates an existing entity.
+        /// Updates an existing entity. 
         /// </summary>
         /// <param name="entity">Entity</param>
         Task<TEntity> UpdateAsync(TEntity entity);
+
+        /// <summary>
+        /// Updates an existing entity.
+        /// </summary>
+        /// <param name="id">Id of the entity</param>
+        /// <param name="updateAction">Action that can be used to change values of the entity</param>
+        /// <returns>Updated entity</returns>
+        TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
+
+        /// <summary>
+        /// Updates an existing entity.
+        /// </summary>
+        /// <param name="id">Id of the entity</param>
+        /// <param name="updateAction">Action that can be used to change values of the entity</param>
+        /// <returns>Updated entity</returns>
+        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
 
         #endregion
 

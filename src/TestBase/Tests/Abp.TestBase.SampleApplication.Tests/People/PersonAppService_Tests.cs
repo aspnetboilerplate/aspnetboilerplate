@@ -2,11 +2,14 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Validation;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
-using Abp.TestBase.SampleApplication.Tests.TestUtils;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -37,11 +40,11 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
 
-            //await UsingDbContext(async context =>
-            //{
-            //    (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
-            //    (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
-            //});
+            await UsingDbContext(async context =>
+            {
+                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
+                (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
+            });
         }
 
         [Fact]
@@ -65,7 +68,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public async Task Should_Not_Insert_For_Invalid_Input()
         {
-            await AssertEx.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
+            await Assert.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
         }
 
         [Fact]
@@ -82,6 +85,27 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var output = _personAppService.GetPeople(new GetPeopleInput { NameFilter = "e" });
             output.Items.FirstOrDefault(p => p.Name == "emre").ShouldNotBe(null);
             output.Items.All(p => p.Name.Contains("e")).ShouldBe(true);
+        }
+
+        [Fact] //Causes bug #345
+        public async Task Should_Delete_Person()
+        {
+            AbpSession.UserId = 1;
+
+            var permissionChecker = Substitute.For<IPermissionChecker>();
+            permissionChecker.IsGrantedAsync("CanDeletePerson").Returns(async info =>
+                                                                        {
+                                                                            await Task.Delay(10);
+                                                                            return true;
+                                                                        });
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker).LifestyleSingleton()
+                );
+
+            var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
+            await _personAppService.DeletePerson(new EntityRequestInput(halil.Id));
+            (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).ShouldBe(null);
         }
     }
 }

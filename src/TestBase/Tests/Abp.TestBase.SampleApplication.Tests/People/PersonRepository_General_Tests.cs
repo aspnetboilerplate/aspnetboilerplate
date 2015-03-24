@@ -9,6 +9,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
     public class PersonRepository_General_Tests : SampleApplicationTestBase
     {
         private readonly IRepository<Person> _personRepository;
+
         public PersonRepository_General_Tests()
         {
             _personRepository = Resolve<IRepository<Person>>();

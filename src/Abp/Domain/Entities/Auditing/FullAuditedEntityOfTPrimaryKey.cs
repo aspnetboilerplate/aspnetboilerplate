@@ -6,6 +6,7 @@ namespace Abp.Domain.Entities.Auditing
     /// Implements <see cref="IFullAudited"/> to be a base class for full-audited entities.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+    [Serializable]
     public abstract class FullAuditedEntity<TPrimaryKey> : AuditedEntity<TPrimaryKey>, IFullAudited
     {
         /// <summary>

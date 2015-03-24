@@ -36,6 +36,7 @@ namespace Abp.NHibernate.Tests
                 using (var transaction = session.BeginTransaction())
                 {
                     action(session);
+                    session.Flush();
                     transaction.Commit();
                 }
             }
@@ -50,6 +51,7 @@ namespace Abp.NHibernate.Tests
                 using (var transaction = session.BeginTransaction())
                 {
                     result = func(session);
+                    session.Flush();
                     transaction.Commit();
                 }
             }

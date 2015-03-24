@@ -48,7 +48,7 @@ namespace Abp.Threading
             {
                 await preAction();
                 invocation.Proceed();
-                await (Task)invocation.ReturnValue;
+                //await (Task)invocation.ReturnValue;
             }
             finally
             {

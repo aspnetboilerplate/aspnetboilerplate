@@ -22,5 +22,10 @@ namespace Abp.Tests.Dependency
         {
             DisposeCount++;
         }
+
+        public int GetMyData()
+        {
+            return MyData;
+        }
     }
 }

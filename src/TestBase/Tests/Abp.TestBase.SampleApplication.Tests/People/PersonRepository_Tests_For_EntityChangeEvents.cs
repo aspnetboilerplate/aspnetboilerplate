@@ -55,6 +55,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             triggerCount.ShouldBe(1);
         }
 
+
         [Fact]
         public void Should_Trigger_Event_On_Delete()
         {

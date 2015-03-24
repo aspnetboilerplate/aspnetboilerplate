@@ -9,10 +9,52 @@
 
 <body>
 
+<h3>v0.5.8 (2015-03-18)</h3>
+<ul class="has-github-issues">
+	<li data-issues="402">Create a simple service to send mail over SMTP.</li>
+	<li data-issues="404">Add Authorize extension methods to IPermissionChecker.</li>
+	<li data-issues="399">Send multitenancy config to client side.</li>
+</ul>
+
+<h3>v0.5.7 (2015-03-11)</h3>
+<ul class="has-github-issues">
+	<li data-issues="390">Add overload for ISettingManager.GetAllSettingValuesAsync to accept scopes</li>
+	<li>Multi-tenancy improvements and bug fixes</li>
+</ul>
+
+<h3>v0.5.6 (2015-03-09)</h3>
+<ul>
+	<li>Added multi-tenancy to startup configuration.</li>
+	<li>Added PermissionFinder class to get permissions from AuthorizationProviders without initializing ABP. It should not be used normally (should use IPermissionmanager) but this may help to get all permissions in a EF migration to grant permissions or in a unit test.</li>
+</ul>
+<h3>v0.5.5 (2015-03-06)</h3>
+<ul class="has-github-issues">
+	<li data-issues="379">Added <strong>Failed</strong> event to unit of work.</li>
+	<li data-issues="162">Defined <strong>IShouldInitialize</strong> interface for classes those should be initialized before usage.</li>
+	<li data-issues="312">Defined <strong>IPassivable</strong> interface to mark an entity active/passive.</li>
+	<li data-issues="360">Implemented javascript <strong>message</strong> api using	<strong>sweetalert</strong>.</li>
+	<li data-issues="362">Added params to localize methods to simply <strong>format </strong>the localized string.</li>
+	<li data-issues="345,363,364,365,372,376">Other improvements and bugfixes.</li>
+</ul>
+
+See all 
+<a href="https://github.com/aspnetboilerplate/aspnetboilerplate/issues?q=milestone%3A%22ABP+v0.5.5%22+is%3Aclosed" target="_blank">
+<strong>issues</strong></a> resolved in this release.
+
+<h3>v0.5.4 (2015-02-27)</h3>
+<ul class="has-github-issues">
+	<li data-issues="357">Localization improvements.</li>
+	<li data-issues="359">Marked Entity classes as Serializable.</li>
+</ul>
+<h3>v0.5.3 (2015-02-26)</h3>
+<ul class="has-github-issues">
+	<li>Improvements, bugfixes and refactorings.</li>
+</ul>
 <h3>v0.5.2 (2015-02-12)</h3>
 <ul class="has-github-issues">
-	<li data-issues="322">Created events automatically triggered when an entity is inserted, 
-	updated or deleted.</li>
+	<li data-issues="322">Created <strong>events </strong>automatically triggered when an entity is
+	<strong>inserted</strong>, 
+	<strong>updated </strong>or <strong>deleted</strong>.</li>
 	<li data-issues="325">EventBus improvements.</li>
 	<li data-issues="323">Validation improvements.</li>
 	<li>Bugfixes and refactorings.</li>
@@ -250,6 +292,9 @@ For breaking changes, see related <strong>
 	<li>Moved javascripts and styles from Abp.Web.Mvc to <strong>Abp.Web</strong> 
 	assembly (nuget package).</li>
 </ul>
+
+<p>See github repository for all releases: 
+<a href="https://github.com/aspnetboilerplate/aspnetboilerplate/releases" target="_blank">https://github.com/aspnetboilerplate/aspnetboilerplate/releases</a></p>
 
 </body>
 

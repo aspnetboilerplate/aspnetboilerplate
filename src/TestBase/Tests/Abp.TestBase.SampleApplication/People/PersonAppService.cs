@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -36,6 +37,12 @@ namespace Abp.TestBase.SampleApplication.People
         public async Task CreatePersonAsync(CreatePersonInput input)
         {
             await _personRepository.InsertAsync(input.MapTo<Person>());
+        }
+
+        [AbpAuthorize("CanDeletePerson")]
+        public async Task DeletePerson(EntityRequestInput input)
+        {
+            await _personRepository.DeleteAsync(input.Id);
         }
     }
 }

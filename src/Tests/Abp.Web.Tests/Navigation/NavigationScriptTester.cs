@@ -10,7 +10,7 @@ namespace Abp.Web.Tests.Navigation
     public class NavigationScript_Tests
     {
         [Fact]
-        public async Task Test1()
+        public async Task Should_Get_Script()
         {
             var testCase = new NavigationTestCase();
             var scriptManager = new NavigationScriptManager(testCase.UserNavigationManager)

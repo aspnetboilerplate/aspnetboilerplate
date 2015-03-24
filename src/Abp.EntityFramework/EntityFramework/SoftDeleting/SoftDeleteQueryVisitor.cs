@@ -14,10 +14,11 @@ namespace Abp.EntityFramework.SoftDeleting
             }
 
             var binding = expression.Bind();
-            return binding
-                .Filter(binding.VariableType.Variable(binding.VariableName)
-                    .Property("IsDeleted")//TODO: User may want to bind to another column name. It's better to use actual database column name
-                    .Equal(DbExpression.FromBoolean(false)));
+            return binding.Filter(
+                binding.VariableType.Variable(binding.VariableName)
+                    .Property("IsDeleted") //TODO: User may want to bind to another column name. It's better to use actual database column name
+                    .Equal(DbExpression.FromBoolean(false))
+                );
         }
     }
 }

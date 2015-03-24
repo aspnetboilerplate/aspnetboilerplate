@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Abp.Application.Services.Dto;
 
 namespace Abp.Linq.Extensions
@@ -27,10 +28,37 @@ namespace Abp.Linq.Extensions
         /// </summary>
         /// <param name="query">Queryable to apply paging</param>
         /// <param name="pagedResultRequest">An object implements <see cref="IPagedResultRequest"/> interface</param>
-        /// <returns></returns>
         public static IQueryable<T> PageBy<T>(this IQueryable<T> query, IPagedResultRequest pagedResultRequest)
         {
             return query.PageBy(pagedResultRequest.SkipCount, pagedResultRequest.MaxResultCount);
+        }
+
+        /// <summary>
+        /// Filters a <see cref="IQueryable{T}"/> by given predicate if given condition is true.
+        /// </summary>
+        /// <param name="query">Queryable to apply filtering</param>
+        /// <param name="condition">A boolean value</param>
+        /// <param name="predicate">Predicate to filter the query</param>
+        /// <returns>Filtered or not filtered query based on <see cref="condition"/></returns>
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> predicate)
+        {
+            return condition
+                ? query.Where(predicate)
+                : query;
+        }
+
+        /// <summary>
+        /// Filters a <see cref="IQueryable{T}"/> by given predicate if given condition is true.
+        /// </summary>
+        /// <param name="query">Queryable to apply filtering</param>
+        /// <param name="condition">A boolean value</param>
+        /// <param name="predicate">Predicate to filter the query</param>
+        /// <returns>Filtered or not filtered query based on <see cref="condition"/></returns>
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, int, bool>> predicate)
+        {
+            return condition
+                ? query.Where(predicate)
+                : query;
         }
     }
 }
