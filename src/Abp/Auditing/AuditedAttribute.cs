@@ -6,7 +6,7 @@ namespace Abp.Auditing
     /// This attribute is used to apply audit logging for a single method or
     /// all methods of a class or interface.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Interface  | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method)]
     public class AuditedAttribute : Attribute
     {
 

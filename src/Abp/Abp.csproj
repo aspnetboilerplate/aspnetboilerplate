@@ -103,12 +103,14 @@
     <Compile Include="Auditing\AuditInfo.cs" />
     <Compile Include="Auditing\AuditingConfiguration.cs" />
     <Compile Include="Auditing\AuditingInterceptor.cs" />
+    <Compile Include="Auditing\AuditingInterceptorRegistrar.cs" />
     <Compile Include="Auditing\AuditingSelectorList.cs" />
     <Compile Include="Auditing\DisableAuditingAttibute.cs" />
     <Compile Include="Auditing\IAuditingConfiguration.cs" />
     <Compile Include="Auditing\IAuditingSelectorList.cs" />
     <Compile Include="Auditing\IAuditingStore.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />

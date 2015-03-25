@@ -15,11 +15,18 @@ namespace Abp
 {
     public sealed class AbpKernelModule : AbpModule
     {
+        private AuditingInterceptorRegistrar _auditingInterceptorRegistrar;
+
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
+            
             UnitOfWorkRegistrar.Initialize(IocManager);
             ApplicationServiceInterceptorRegistrar.Initialize(IocManager);
+
+            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager); //TODO: may be injected!
+            _auditingInterceptorRegistrar.Initialize();
+
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
         }
 

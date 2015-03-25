@@ -1,6 +1,6 @@
 ﻿namespace Abp.Auditing
 {
-    interface IAuditingStore
+    public interface IAuditingStore
     {
         void Save(AuditInfo auditInfo);
     }

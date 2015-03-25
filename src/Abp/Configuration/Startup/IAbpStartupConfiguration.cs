@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp.Auditing;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 
@@ -28,6 +29,11 @@ namespace Abp.Configuration.Startup
         /// Used to configure <see cref="IEventBus"/>.
         /// </summary>
         IEventBusConfiguration EventBus { get; }
+
+        /// <summary>
+        /// Used to configure auditing.
+        /// </summary>
+        IAuditingConfiguration Auditing { get; }
 
         /// <summary>
         /// Used to configure multi-tenancy.

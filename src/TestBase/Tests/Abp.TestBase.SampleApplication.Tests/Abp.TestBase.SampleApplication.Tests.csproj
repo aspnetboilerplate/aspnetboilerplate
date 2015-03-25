@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditing\SimpleAuditing_Test.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Resolve_Test.cs" />
     <Compile Include="People\PersonRepository_General_Tests.cs" />
     <Compile Include="People\PersonRepository_SoftDelete_Tests.cs" />

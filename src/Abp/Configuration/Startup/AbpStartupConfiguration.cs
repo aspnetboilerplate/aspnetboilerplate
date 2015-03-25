@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp.Auditing;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 
@@ -54,6 +55,11 @@ namespace Abp.Configuration.Startup
         public IEventBusConfiguration EventBus { get; private set; }
 
         /// <summary>
+        /// Used to configure auditing.
+        /// </summary>
+        public IAuditingConfiguration Auditing { get; private set; }
+
+        /// <summary>
         /// Used to configure multi-tenancy.
         /// </summary>
         public IMultiTenancyConfig MultiTenancy { get; private set; }
@@ -76,6 +82,7 @@ namespace Abp.Configuration.Startup
             UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
             EventBus = IocManager.Resolve<IEventBusConfiguration>();
             MultiTenancy = IocManager.Resolve<IMultiTenancyConfig>();
+            Auditing = IocManager.Resolve<IAuditingConfiguration>();
         }
     }
 }

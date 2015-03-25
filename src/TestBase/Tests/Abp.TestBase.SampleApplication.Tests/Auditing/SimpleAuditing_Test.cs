@@ -1,0 +1,120 @@
+﻿using System.Threading.Tasks;
+using Abp.Auditing;
+using Abp.TestBase.SampleApplication.People;
+using Abp.TestBase.SampleApplication.People.Dto;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
+using Xunit;
+
+namespace Abp.TestBase.SampleApplication.Tests.Auditing
+{
+    public class SimpleAuditing_Test : SampleApplicationTestBase
+    {
+        private readonly IPersonAppService _personAppService;
+
+        private IAuditingStore _auditingStore;
+
+        public SimpleAuditing_Test()
+        {
+            _personAppService = Resolve<IPersonAppService>();
+        }
+
+        protected override void PreInitialize()
+        {
+            base.PreInitialize();
+
+            _auditingStore = Substitute.For<IAuditingStore>();
+            LocalIocManager.IocContainer.Register(
+                Component.For<IAuditingStore>().UsingFactoryMethod(() => _auditingStore).LifestyleSingleton()
+                );
+        }
+
+        #region CASES WRITE AUDIT LOGS
+
+        [Fact]
+        public async Task Should_Write_Audits_For_Conventional_Methods()
+        {
+            /* SampleApplicationModule adds auditing selector for all application service methods */
+
+            await _personAppService.CreatePersonAsync(new CreatePersonInput {Name = "john"});
+            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+        }
+
+        [Fact]
+        public void Should_Write_Audits_For_Audited_Class_Virtual_Methods_As_Default()
+        {
+            Resolve<MyServiceWithClassAudited>().Test1();
+            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+        }
+
+        [Fact]
+        public void Should_Write_Audits_For_Audited_Methods()
+        {
+            Resolve<MyServiceWithMethodAudited>().Test1();
+            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+        }
+
+        #endregion
+        
+        #region CASES DON'T WRITE AUDIT LOGS
+
+        [Fact]
+        public void Should_Not_Write_Audits_For_Audited_Class_Non_Virtual_Methods_As_Default()
+        {
+            Resolve<MyServiceWithClassAudited>().Test2();
+            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_Audits_For_Not_Audited_Methods()
+        {
+            Resolve<MyServiceWithMethodAudited>().Test2();
+            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_Audits_For_Not_Audited_Classes()
+        {
+            Resolve<MyServiceWithNotAudited>().Test1();
+            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+        }
+
+        #endregion
+
+        [Audited]
+        public class MyServiceWithClassAudited
+        {
+            public virtual void Test1()
+            {
+                
+            }
+
+            public void Test2()
+            {
+
+            }
+        }
+
+        public class MyServiceWithMethodAudited
+        {
+            [Audited]
+            public virtual void Test1()
+            {
+
+            }
+
+            public virtual void Test2()
+            {
+
+            }
+        }
+
+        public class MyServiceWithNotAudited
+        {
+            public virtual void Test1()
+            {
+
+            }
+        }
+    }
+}
