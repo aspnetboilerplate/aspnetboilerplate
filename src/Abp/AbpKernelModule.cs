@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
-using Abp.Application.Services.Interceptors;
 using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Authorization.Interceptors;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -11,6 +11,7 @@ using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Net.Mail;
+using Abp.Runtime.Validation.Interception;
 
 namespace Abp
 {
@@ -21,11 +22,14 @@ namespace Abp
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
-            
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            ApplicationServiceInterceptorRegistrar.Initialize(IocManager);
 
-            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager); //TODO: may be injected!
+            ValidationInterceptorRegistrar.Initialize(IocManager);
+
+            //TODO: Consider to change order of Uow and Auth interceptors..?
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
+
+            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager);
             _auditingInterceptorRegistrar.Initialize();
 
             Configuration.Auditing.Selectors.Add(

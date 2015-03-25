@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Web;
 using Abp.Dependency;
+using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {
@@ -10,6 +12,8 @@ namespace Abp.Auditing
     /// </summary>
     public class WebAuditInfoProvider : IAuditInfoProvider, ITransientDependency
     {
+        public ILogger Logger { get; set; }
+
         private readonly HttpContext _httpContext;
 
         /// <summary>
@@ -18,6 +22,7 @@ namespace Abp.Auditing
         public WebAuditInfoProvider()
         {
             _httpContext = HttpContext.Current;
+            Logger = NullLogger.Instance;
         }
 
         public void Fill(AuditInfo auditInfo)
@@ -28,9 +33,17 @@ namespace Abp.Auditing
                 return;
             }
 
-            auditInfo.BrowserInfo = GetBrowserInfo(httpContext);
-            auditInfo.ClientIpAddress = GetClientIpAddress(httpContext);
-            auditInfo.ClientName = GetComputerName(httpContext);
+            try
+            {
+                auditInfo.BrowserInfo = GetBrowserInfo(httpContext);
+                auditInfo.ClientIpAddress = GetClientIpAddress(httpContext);
+                auditInfo.ClientName = GetComputerName(httpContext);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Could not obtain web parameters for audit info.");
+                Logger.Warn(ex.ToString(), ex);
+            }
         }
 
         private static string GetBrowserInfo(HttpContext httpContext)

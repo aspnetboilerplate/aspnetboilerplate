@@ -31,7 +31,7 @@ namespace Abp.Auditing
         {
             if (ShouldIntercept(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.AddFirst(new InterceptorReference(typeof(AuditingInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
             }
         }
 
