@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Nito.AsyncEx">
       <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
     </Reference>
@@ -107,9 +111,11 @@
     <Compile Include="Auditing\AuditingInterceptorRegistrar.cs" />
     <Compile Include="Auditing\AuditingSelectorList.cs" />
     <Compile Include="Auditing\DisableAuditingAttribute.cs" />
+    <Compile Include="Auditing\IAuditInfoProvider.cs" />
     <Compile Include="Auditing\IAuditingConfiguration.cs" />
     <Compile Include="Auditing\IAuditingSelectorList.cs" />
     <Compile Include="Auditing\IAuditingStore.cs" />
+    <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
     <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />

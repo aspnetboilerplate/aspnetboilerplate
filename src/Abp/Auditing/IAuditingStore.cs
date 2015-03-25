@@ -13,10 +13,4 @@
         /// <param name="auditInfo">Audit informations</param>
         void Save(AuditInfo auditInfo);
     }
-
-    //TODO: Working on that
-    public interface IAuditInfoPopulator
-    {
-        void Populate(AuditInfo auditInfo);
-    }
 }
