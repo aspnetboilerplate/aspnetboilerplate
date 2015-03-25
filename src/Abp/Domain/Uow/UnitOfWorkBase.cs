@@ -46,6 +46,19 @@ namespace Abp.Domain.Uow
         /// </summary>
         private Exception _exception;
 
+        /// <summary>
+        /// Allows callers to set the exception if there was an error
+        /// that occurred while performing the unit of work.
+        /// </summary>
+        internal void SetException(Exception exc)
+        {
+            // Only save the first exception
+            if (_exception == null)
+            {
+                _exception = exc;
+            }
+        }
+
         /// <inheritdoc/>
         public void Begin(UnitOfWorkOptions options)
         {
@@ -77,7 +90,7 @@ namespace Abp.Domain.Uow
             }
             catch (Exception ex)
             {
-                _exception = ex;
+                SetException(ex);
                 throw;
             }
         }
@@ -94,7 +107,7 @@ namespace Abp.Domain.Uow
             }
             catch (Exception ex)
             {
-                _exception = ex;
+                SetException(ex);
                 throw;
             }
         }
@@ -181,6 +194,12 @@ namespace Abp.Domain.Uow
             }
 
             _isCompleteCalledBefore = true;
+        }
+
+        /// <inheritdoc/>
+        public virtual void OnRuntimeError(Exception e)
+        {
+            SetException(e);
         }
     }
 }

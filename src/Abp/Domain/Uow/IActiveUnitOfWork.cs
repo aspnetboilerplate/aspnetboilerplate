@@ -24,7 +24,15 @@ namespace Abp.Domain.Uow
         /// This event is raised when this UOW is disposed.
         /// </summary>
         event EventHandler Disposed;
-        
+
+        /// <summary>
+        /// Called when an error occurs while executing a dynamic 
+        /// function in the context of this UnitOfWork so that the 
+        /// UnitOfWork may know about it and better error handling
+        /// may be implemented.
+        /// </summary>
+        void OnRuntimeError(Exception e);
+
         /// <summary>
         /// Gets if this unit of work is transactional.
         /// </summary>
