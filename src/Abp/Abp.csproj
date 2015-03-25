@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
+    <Compile Include="AbpServiceBase.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
     <Compile Include="Application\Navigation\INavigationManager.cs" />
@@ -105,7 +106,7 @@
     <Compile Include="Auditing\AuditingInterceptor.cs" />
     <Compile Include="Auditing\AuditingInterceptorRegistrar.cs" />
     <Compile Include="Auditing\AuditingSelectorList.cs" />
-    <Compile Include="Auditing\DisableAuditingAttibute.cs" />
+    <Compile Include="Auditing\DisableAuditingAttribute.cs" />
     <Compile Include="Auditing\IAuditingConfiguration.cs" />
     <Compile Include="Auditing\IAuditingSelectorList.cs" />
     <Compile Include="Auditing\IAuditingStore.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Net\Mail\EmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\IEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\EmailSenderBase.cs" />
+    <Compile Include="Net\Mail\NullEmailSender.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSender.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\Smtp\SmtpEmailSender.cs" />

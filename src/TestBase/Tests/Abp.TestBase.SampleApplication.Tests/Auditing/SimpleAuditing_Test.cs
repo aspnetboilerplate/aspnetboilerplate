@@ -34,7 +34,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         [Fact]
         public async Task Should_Write_Audits_For_Conventional_Methods()
         {
-            /* SampleApplicationModule adds auditing selector for all application service methods */
+            /* All application service methods are audited as conventional. */
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput {Name = "john"});
             _auditingStore.Received().Save(Arg.Any<AuditInfo>());
@@ -57,6 +57,15 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         #endregion
         
         #region CASES DON'T WRITE AUDIT LOGS
+
+        [Fact]
+        public void Should_Not_Write_Audits_For_Conventional_Methods_If_Disabled_Auditing()
+        {
+            /* GetPeople has DisableAuditing attribute. */
+
+            _personAppService.GetPeople(new GetPeopleInput());
+            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+        }
 
         [Fact]
         public void Should_Not_Write_Audits_For_Audited_Class_Non_Virtual_Methods_As_Default()

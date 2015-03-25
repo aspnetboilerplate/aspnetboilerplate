@@ -73,7 +73,7 @@ namespace Abp.Auditing
                 return true;
             }
 
-            if (methodInfo.IsDefined(typeof(DisableAuditingAttibute)))
+            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute)))
             {
                 return false;
             }
@@ -86,7 +86,7 @@ namespace Abp.Auditing
                     return true;
                 }
 
-                if (classType.IsDefined(typeof(DisableAuditingAttibute)))
+                if (classType.IsDefined(typeof(DisableAuditingAttribute)))
                 {
                     return false;
                 }

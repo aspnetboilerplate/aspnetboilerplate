@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Application.Navigation;
+using Abp.Application.Services;
 using Abp.Application.Services.Interceptors;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -26,6 +27,13 @@ namespace Abp
 
             _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager); //TODO: may be injected!
             _auditingInterceptorRegistrar.Initialize();
+
+            Configuration.Auditing.Selectors.Add(
+                new NamedTypeSelector(
+                    "Abp.ApplicationServices",
+                    type => typeof (IApplicationService).IsAssignableFrom(type)
+                    )
+                );
 
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
         }
