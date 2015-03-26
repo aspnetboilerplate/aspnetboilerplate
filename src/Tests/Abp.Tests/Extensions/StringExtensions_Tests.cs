@@ -20,7 +20,7 @@ namespace Abp.Tests.Extensions
             //Case differences
             "TurkeY".EnsureEndsWith('y').ShouldBe("TurkeYy");
             "TurkeY".EnsureEndsWith('y', StringComparison.InvariantCultureIgnoreCase).ShouldBe("TurkeY");
-            
+
             //Edge cases for Turkish 'i'.
             "TAKSÝ".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKSÝ");
             "TAKSÝ".EnsureEndsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("TAKSÝi");
@@ -95,26 +95,34 @@ namespace Abp.Tests.Extensions
         public void Truncate_Test()
         {
             const string str = "This is a test string";
+            const string nullValue = null;
 
             str.Truncate(7).ShouldBe("This is");
             str.Truncate(0).ShouldBe("");
             str.Truncate(100).ShouldBe(str);
+
+            nullValue.Truncate(5).ShouldBe(null);
         }
 
         [Fact]
         public void TruncateWithPostFix_Test()
         {
             const string str = "This is a test string";
+            const string nullValue = null;
 
-            str.TruncateWithPostfix(3).ShouldBe("Thi...");
-            str.TruncateWithPostfix(12).ShouldBe("This is a te...");
-            str.TruncateWithPostfix(0).ShouldBe("...");
+            str.TruncateWithPostfix(3).ShouldBe("...");
+            str.TruncateWithPostfix(12).ShouldBe("This is a...");
+            str.TruncateWithPostfix(0).ShouldBe("");
             str.TruncateWithPostfix(100).ShouldBe(str);
 
-            str.TruncateWithPostfix(3, "~").ShouldBe("Thi~");
-            str.TruncateWithPostfix(12, "~").ShouldBe("This is a te~");
-            str.TruncateWithPostfix(0, "~").ShouldBe("~");
+            nullValue.Truncate(5).ShouldBe(null);
+
+            str.TruncateWithPostfix(3, "~").ShouldBe("Th~");
+            str.TruncateWithPostfix(12, "~").ShouldBe("This is a t~");
+            str.TruncateWithPostfix(0, "~").ShouldBe("");
             str.TruncateWithPostfix(100, "~").ShouldBe(str);
+            
+            nullValue.TruncateWithPostfix(5, "~").ShouldBe(null);
         }
 
         [Fact]

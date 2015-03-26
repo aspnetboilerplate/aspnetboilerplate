@@ -21,6 +21,11 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
             if (str.EndsWith(c.ToString(CultureInfo.InvariantCulture), comparisonType))
             {
                 return str;
@@ -34,6 +39,11 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
             if (str.EndsWith(c.ToString(culture), ignoreCase, culture))
             {
                 return str;
@@ -55,6 +65,11 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
             if (str.StartsWith(c.ToString(CultureInfo.InvariantCulture), comparisonType))
             {
                 return str;
@@ -68,6 +83,11 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
             if (str.StartsWith(c.ToString(culture), ignoreCase, culture))
             {
                 return str;
@@ -123,6 +143,11 @@ namespace Abp.Extensions
         /// <param name="n">Count of the occurence</param>
         public static int NthIndexOf(this string str, char c, int n)
         {
+            if (str == null)
+            {
+                throw new ArgumentNullException("str");
+            }
+
             var count = 0;
             for (var i = 0; i < str.Length; i++)
             {
@@ -204,6 +229,11 @@ namespace Abp.Extensions
         public static T ToEnum<T>(this string value)
             where T : struct
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
             return (T)Enum.Parse(typeof(T), value);
         }
 
@@ -217,6 +247,11 @@ namespace Abp.Extensions
         public static T ToEnum<T>(this string value, bool ignoreCase)
             where T : struct
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
             return (T)Enum.Parse(typeof(T), value, ignoreCase);
         }
 
@@ -259,7 +294,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                return null;
             }
 
             if (str.Length <= maxLength)
@@ -273,6 +308,7 @@ namespace Abp.Extensions
         /// <summary>
         /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// It adds a "..." postfix to end of the string if it's truncated.
+        /// Returning string can not be longer than maxLength.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength)
@@ -283,21 +319,32 @@ namespace Abp.Extensions
         /// <summary>
         /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
+        /// Returning string can not be longer than maxLength.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                return null;
             }
 
+            if (str == string.Empty || maxLength == 0)
+            {
+                return string.Empty;
+            }
+            
             if (str.Length <= maxLength)
             {
                 return str;
             }
 
-            return str.Left(maxLength) + postfix;
+            if (maxLength <= postfix.Length)
+            {
+                return postfix.Left(maxLength);
+            }
+
+            return str.Left(maxLength - postfix.Length) + postfix;
         }
     }
 }
