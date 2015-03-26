@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
@@ -17,6 +18,29 @@ namespace Abp
         /// Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { protected get; set; }
+
+        /// <summary>
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
+
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
         /// <summary>
         /// Reference to the localization manager.
