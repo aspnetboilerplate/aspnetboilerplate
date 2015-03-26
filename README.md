@@ -38,6 +38,7 @@ Beside the framework, the first module (https://github.com/aspnetboilerplate/mod
 - Authentication & Authorization (Implementing ASP.NET Identity Framework)
 - User & Role management
 - Setting management
+- Audit logging
 
 Official web site: http://www.aspnetboilerplate.com
 Forum: http://forum.aspnetboilerplate.com
