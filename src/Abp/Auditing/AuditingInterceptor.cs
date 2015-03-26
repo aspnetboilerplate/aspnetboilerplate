@@ -73,7 +73,7 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                _auditingStore.Save(auditInfo);
+                _auditingStore.Save(auditInfo); //TODO: Call async when target method is async.
             }
         }
 

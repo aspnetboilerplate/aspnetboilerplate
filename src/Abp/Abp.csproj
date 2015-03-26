@@ -102,6 +102,7 @@
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
+    <Compile Include="Auditing\AuditingStoreExtensions.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptorRegistrar.cs" />
     <Compile Include="Aspects\AspectAttribute.cs" />
     <Compile Include="Auditing\AuditedAttribute.cs" />

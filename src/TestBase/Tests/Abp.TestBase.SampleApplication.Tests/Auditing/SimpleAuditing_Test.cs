@@ -37,21 +37,21 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             /* All application service methods are audited as conventional. */
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput {Name = "john"});
-            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Write_Audits_For_Audited_Class_Virtual_Methods_As_Default()
         {
             Resolve<MyServiceWithClassAudited>().Test1();
-            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Write_Audits_For_Audited_Methods()
         {
             Resolve<MyServiceWithMethodAudited>().Test1();
-            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
+            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         #endregion
@@ -64,28 +64,28 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             /* GetPeople has DisableAuditing attribute. */
 
             _personAppService.GetPeople(new GetPeopleInput());
-            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Not_Write_Audits_For_Audited_Class_Non_Virtual_Methods_As_Default()
         {
             Resolve<MyServiceWithClassAudited>().Test2();
-            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Not_Write_Audits_For_Not_Audited_Methods()
         {
             Resolve<MyServiceWithMethodAudited>().Test2();
-            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Not_Write_Audits_For_Not_Audited_Classes()
         {
             Resolve<MyServiceWithNotAudited>().Test1();
-            _auditingStore.DidNotReceive().Save(Arg.Any<AuditInfo>());
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         #endregion
