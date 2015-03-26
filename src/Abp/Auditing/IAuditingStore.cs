@@ -1,4 +1,6 @@
-﻿namespace Abp.Auditing
+﻿using System.Threading.Tasks;
+
+namespace Abp.Auditing
 {
     /// <summary>
     /// This interface should be implemented by vendors to
@@ -11,6 +13,6 @@
         /// Should save audits to a persistent store.
         /// </summary>
         /// <param name="auditInfo">Audit informations</param>
-        void Save(AuditInfo auditInfo);
+        Task SaveAsync(AuditInfo auditInfo);
     }
 }

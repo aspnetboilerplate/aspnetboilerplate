@@ -1,4 +1,5 @@
-﻿using Castle.Core.Logging;
+﻿using System.Threading.Tasks;
+using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {
@@ -14,9 +15,10 @@ namespace Abp.Auditing
             Logger = NullLogger.Instance;
         }
 
-        public void Save(AuditInfo auditInfo)
+        public Task SaveAsync(AuditInfo auditInfo)
         {
             Logger.Info(auditInfo.ToString());
+            return Task.FromResult(0);
         }
     }
 }
