@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 
 namespace Abp.Domain.Uow
@@ -80,28 +81,14 @@ namespace Abp.Domain.Uow
 
         public virtual void DisableFilter(string filterName)
         {
-            if (!_disabledFilters.Contains(filterName))
-            {
-                _disabledFilters.Add(filterName);
-            }
-
-            if (_enabledFilters.Contains(filterName))
-            {
-                _enabledFilters.Remove(filterName);
-            }
+            _disabledFilters.AddIfNotContains(filterName);
+            _enabledFilters.Remove(filterName);
         }
 
         public virtual void EnableFilter(string filterName)
         {
-            if (_disabledFilters.Contains(filterName))
-            {
-                _disabledFilters.Remove(filterName);
-            }
-
-            if (!_enabledFilters.Contains(filterName))
-            {
-                _enabledFilters.Add(filterName);
-            }
+            _enabledFilters.AddIfNotContains(filterName);
+            _disabledFilters.Remove(filterName);
         }
 
         /// <inheritdoc/>
