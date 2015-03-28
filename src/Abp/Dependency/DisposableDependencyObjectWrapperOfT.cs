@@ -1,51 +1,29 @@
-using System;
-
 namespace Abp.Dependency
 {
-    //TODO: Simplify this class using DisposeActionHelper
+    internal class DisposableDependencyObjectWrapper : DisposableDependencyObjectWrapper<object>, IDisposableDependencyObjectWrapper
+    {
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object obj)
+            : base(iocResolver, obj)
+        {
+
+        }
+    }
+
     internal class DisposableDependencyObjectWrapper<T> : IDisposableDependencyObjectWrapper<T>
     {
         private readonly IIocResolver _iocResolver;
 
         public T Object { get; private set; }
 
-        public DisposableDependencyObjectWrapper(IIocResolver iocResolver)
+        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, T obj)
         {
             _iocResolver = iocResolver;
-            Object = iocResolver.Resolve<T>();
-        }
-
-        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object argumentsAsAnonymousType)
-        {
-            _iocResolver = iocResolver;
-            Object = iocResolver.Resolve<T>(argumentsAsAnonymousType);
-        }
-
-        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type)
-        {
-            CheckType(type);
-            _iocResolver = iocResolver;
-            Object = (T)iocResolver.Resolve(type);
-        }
-
-        public DisposableDependencyObjectWrapper(IIocResolver iocResolver, Type type, object argumentsAsAnonymousType)
-        {
-            CheckType(type);
-            _iocResolver = iocResolver;
-            Object = (T)iocResolver.Resolve(type, argumentsAsAnonymousType);
+            Object = obj;
         }
 
         public void Dispose()
         {
             _iocResolver.Release(Object);
-        }
-
-        private static void CheckType(Type type)
-        {
-            if (!typeof(T).IsAssignableFrom(type))
-            {
-                throw new ArgumentException("Given type is not convertible to generic type definition!", "type");
-            }
         }
     }
 }

@@ -228,7 +228,6 @@
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
-    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
