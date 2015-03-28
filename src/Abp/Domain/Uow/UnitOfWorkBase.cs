@@ -65,6 +65,11 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public abstract Task SaveChangesAsync();
 
+        public virtual void DisableFilter(string filterName)
+        {
+
+        }
+
         /// <inheritdoc/>
         public void Complete()
         {

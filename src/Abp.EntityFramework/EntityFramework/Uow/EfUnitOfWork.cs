@@ -6,6 +6,7 @@ using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Castle.Core.Internal;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -15,6 +16,7 @@ namespace Abp.EntityFramework.Uow
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         private readonly IDictionary<Type, DbContext> _activeDbContexts;
+        private readonly List<string> _disabledFilters;
         private readonly IIocResolver _iocResolver;
         private TransactionScope _transaction;
 
@@ -25,6 +27,7 @@ namespace Abp.EntityFramework.Uow
         {
             _iocResolver = iocResolver;
             _activeDbContexts = new Dictionary<Type, DbContext>();
+            _disabledFilters = new List<string>();
         }
 
         protected override void BeginUow()
@@ -80,13 +83,34 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        public override void DisableFilter(string filterName)
+        {
+            if (_disabledFilters.Contains(filterName))
+            {
+                return;
+            }
+
+            _disabledFilters.Add(filterName);
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.DisableFilter(filterName);
+            }
+        }
+
         internal TDbContext GetOrCreateDbContext<TDbContext>()
             where TDbContext : DbContext
         {
             DbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                _activeDbContexts[typeof(TDbContext)] = dbContext = _iocResolver.Resolve<TDbContext>();
+                dbContext = _iocResolver.Resolve<TDbContext>();
+
+                foreach (var disabledFilter in _disabledFilters)
+                {
+                    dbContext.DisableFilter(disabledFilter);
+                }
+
+                _activeDbContexts[typeof(TDbContext)] = dbContext;
             }
 
             return (TDbContext)dbContext;

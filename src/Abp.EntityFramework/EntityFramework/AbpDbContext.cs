@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
@@ -18,7 +19,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext
+    public abstract class AbpDbContext : DbContext, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.
@@ -100,10 +101,15 @@ namespace Abp.EntityFramework
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
+        public void Initialize()
+        {
+            Database.Initialize(false);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Filter("SoftDelete", (ISoftDelete d) => d.IsDeleted, false);
+            modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
         }
         
         public override int SaveChanges()

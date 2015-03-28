@@ -52,5 +52,11 @@ namespace Abp.Domain.Uow
         /// since all changes saved at end of a unit of work automatically.
         /// </summary>
         Task SaveChangesAsync();
+
+        /// <summary>
+        /// Disables a data filter.
+        /// </summary>
+        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        void DisableFilter(string filterName);
     }
 }

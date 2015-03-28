@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Repositories;
+﻿using System.Linq;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
@@ -23,6 +25,23 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var persons = _personRepository.GetAllList();
             persons.Count.ShouldBe(1);
             persons[0].Name.ShouldBe("emre");
+        }
+
+        [Fact]
+        public void Should_Retrieve_Soft_Deleteds_When_Filter_Disabled()
+        {
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            using (var ouw = uowManager.Begin())
+            {
+                uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete);
+
+                var persons = _personRepository.GetAllList().OrderBy(p => p.Name).ToList();
+                persons.Count.ShouldBe(2);
+                persons[0].Name.ShouldBe("emre");
+                persons[1].Name.ShouldBe("halil");
+
+                ouw.Complete();
+            }
         }
     }
 }
