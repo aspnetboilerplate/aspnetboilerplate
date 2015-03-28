@@ -52,6 +52,11 @@ namespace Abp.EntityFramework.Tests.Repositories
             {
                 CalledConstructorWithConnectionString = true;
             }
+
+            public override void Initialize()
+            {
+
+            }
         }
     }
 }

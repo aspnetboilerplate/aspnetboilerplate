@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Extensions;
 
@@ -46,6 +47,18 @@ namespace Abp.Domain.Uow
         /// </summary>
         private Exception _exception;
 
+        protected readonly List<string> _disabledFilters;
+        protected readonly List<string> _enabledFilters;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected UnitOfWorkBase()
+        {
+            _disabledFilters = new List<string>();
+            _enabledFilters = new List<string>();
+        }
+
         /// <inheritdoc/>
         public void Begin(UnitOfWorkOptions options)
         {
@@ -67,7 +80,28 @@ namespace Abp.Domain.Uow
 
         public virtual void DisableFilter(string filterName)
         {
+            if (!_disabledFilters.Contains(filterName))
+            {
+                _disabledFilters.Add(filterName);
+            }
 
+            if (_enabledFilters.Contains(filterName))
+            {
+                _enabledFilters.Remove(filterName);
+            }
+        }
+
+        public virtual void EnableFilter(string filterName)
+        {
+            if (_disabledFilters.Contains(filterName))
+            {
+                _disabledFilters.Remove(filterName);
+            }
+
+            if (!_enabledFilters.Contains(filterName))
+            {
+                _enabledFilters.Add(filterName);
+            }
         }
 
         /// <inheritdoc/>

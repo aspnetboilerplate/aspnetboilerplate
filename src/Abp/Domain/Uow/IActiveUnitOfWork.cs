@@ -55,8 +55,16 @@ namespace Abp.Domain.Uow
 
         /// <summary>
         /// Disables a data filter.
+        /// Does nothing if it's already disabled.
         /// </summary>
         /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
         void DisableFilter(string filterName);
+
+        /// <summary>
+        /// Enables a data filter.
+        /// Does nothing if it's already disabled.
+        /// </summary>
+        /// <param name="filterName"></param>
+        void EnableFilter(string filterName);
     }
 }

@@ -16,7 +16,6 @@ namespace Abp.EntityFramework.Uow
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         private readonly IDictionary<Type, DbContext> _activeDbContexts;
-        private readonly List<string> _disabledFilters;
         private readonly IIocResolver _iocResolver;
         private TransactionScope _transaction;
 
@@ -27,7 +26,6 @@ namespace Abp.EntityFramework.Uow
         {
             _iocResolver = iocResolver;
             _activeDbContexts = new Dictionary<Type, DbContext>();
-            _disabledFilters = new List<string>();
         }
 
         protected override void BeginUow()
@@ -85,15 +83,19 @@ namespace Abp.EntityFramework.Uow
 
         public override void DisableFilter(string filterName)
         {
-            if (_disabledFilters.Contains(filterName))
-            {
-                return;
-            }
-
-            _disabledFilters.Add(filterName);
+            base.DisableFilter(filterName);
             foreach (var activeDbContext in _activeDbContexts.Values)
             {
                 activeDbContext.DisableFilter(filterName);
+            }
+        }
+
+        public override void EnableFilter(string filterName)
+        {
+            base.EnableFilter(filterName);
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.EnableFilter(filterName);
             }
         }
 
@@ -105,9 +107,14 @@ namespace Abp.EntityFramework.Uow
             {
                 dbContext = _iocResolver.Resolve<TDbContext>();
 
-                foreach (var disabledFilter in _disabledFilters)
+                foreach (var filterName in _disabledFilters)
                 {
-                    dbContext.DisableFilter(disabledFilter);
+                    dbContext.DisableFilter(filterName);
+                }
+
+                foreach (var filterName in _enabledFilters)
+                {
+                    dbContext.EnableFilter(filterName);
                 }
 
                 _activeDbContexts[typeof(TDbContext)] = dbContext;

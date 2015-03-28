@@ -101,7 +101,7 @@ namespace Abp.EntityFramework
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             Database.Initialize(false);
         }
