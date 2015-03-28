@@ -2,6 +2,7 @@ using System;
 
 namespace Abp.Dependency
 {
+    //TODO: Simplify this class using DisposeActionHelper
     internal class DisposableDependencyObjectWrapper<T> : IDisposableDependencyObjectWrapper<T>
     {
         private readonly IIocResolver _iocResolver;
