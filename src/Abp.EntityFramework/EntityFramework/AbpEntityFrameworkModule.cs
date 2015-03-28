@@ -1,9 +1,7 @@
-﻿using System.Data.Entity.Infrastructure.Interception;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
-using Abp.EntityFramework.SoftDeleting;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Reflection;
@@ -43,8 +41,6 @@ namespace Abp.EntityFramework
                 );
             
             RegisterGenericRepositories();
-
-            DbInterception.Add(new SoftDeleteInterceptor());
         }
 
         private void RegisterGenericRepositories()

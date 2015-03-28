@@ -11,6 +11,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework
 {
@@ -102,7 +103,7 @@ namespace Abp.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Types<ISoftDelete>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
+            modelBuilder.Filter("SoftDelete", (ISoftDelete d) => d.IsDeleted, false);
         }
         
         public override int SaveChanges()

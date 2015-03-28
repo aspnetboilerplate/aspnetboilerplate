@@ -31,7 +31,7 @@ namespace Abp.EntityFramework.Tests.Repositories
             var context2 = LocalIocManager.Resolve<MyDbContext>();
             context2.CalledConstructorWithConnectionString.ShouldBe(false);
 
-            LocalIocManager.Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString = "Server=localhost;Database:test;User=sa;Password=123";
+            LocalIocManager.Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString = "Server=localhost;Database=test;User=sa;Password=123";
 
             //Should call constructor with nameOrConnectionString since IAbpStartupConfiguration.DefaultNameOrConnectionString is set.
             var context3 = LocalIocManager.Resolve<MyDbContext>();
