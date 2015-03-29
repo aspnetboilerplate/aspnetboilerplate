@@ -40,6 +40,8 @@ namespace Abp
                 );
 
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
+
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
         }
 
         public override void Initialize()

@@ -120,6 +120,7 @@
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
     <Compile Include="DisposeAction.cs" />
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
+    <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
     <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />

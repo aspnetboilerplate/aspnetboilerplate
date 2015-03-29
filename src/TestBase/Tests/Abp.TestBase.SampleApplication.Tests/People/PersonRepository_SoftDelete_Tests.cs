@@ -19,11 +19,26 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
-        public void Should_Not_Retrieve_Soft_Deleteds()
+        public void Should_Not_Retrieve_Soft_Deleteds_As_Default()
         {
             var persons = _personRepository.GetAllList();
             persons.Count.ShouldBe(1);
             persons[0].Name.ShouldBe("emre");
+        }
+
+        [Fact]
+        public void Should_Retrive_Soft_Deleteds_If_Filter_Is_Disabled()
+        {
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            using (var ouw = uowManager.Begin())
+            {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    _personRepository.GetAllList().Count.ShouldBe(2); //Getting deleted people                    
+                }
+
+                ouw.Complete();
+            }
         }
 
         [Fact]
@@ -32,13 +47,28 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var uowManager = Resolve<IUnitOfWorkManager>();
             using (var ouw = uowManager.Begin())
             {
-                _personRepository.GetAllList().Count.ShouldBe(1);
+                _personRepository.GetAllList().Count.ShouldBe(1); //not getting deleted people since soft-delete is enabled by default
 
-                uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete);
-                _personRepository.GetAllList().Count.ShouldBe(2);
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    _personRepository.GetAllList().Count.ShouldBe(2); //Getting deleted people
 
-                uowManager.Current.EnableFilter(AbpDataFilters.SoftDelete);
-                _personRepository.GetAllList().Count.ShouldBe(1);
+                    using (uowManager.Current.EnableFilter(AbpDataFilters.SoftDelete)) //re-enabling filter
+                    {
+                        _personRepository.GetAllList().Count.ShouldBe(1); //not getting deleted people   
+
+                        using (uowManager.Current.EnableFilter(AbpDataFilters.SoftDelete)) //enabling filter has no effect since it's already enabed
+                        {
+                            _personRepository.GetAllList().Count.ShouldBe(1); //not getting deleted people   
+                        }
+
+                        _personRepository.GetAllList().Count.ShouldBe(1); //not getting deleted people   
+                    }
+
+                    _personRepository.GetAllList().Count.ShouldBe(2); //Getting deleted people
+                }
+
+                _personRepository.GetAllList().Count.ShouldBe(1); //not getting deleted people since soft-delete is enabled by default
 
                 ouw.Complete();
             }

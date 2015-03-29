@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
 using Abp.Extensions;
+using Abp.Utils.Etc;
 
 namespace Abp.Domain.Uow
 {
@@ -11,6 +12,7 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+
         /// <inheritdoc/>
         public event EventHandler Completed;
 
@@ -48,16 +50,17 @@ namespace Abp.Domain.Uow
         /// </summary>
         private Exception _exception;
 
-        protected readonly List<string> _disabledFilters;
-        protected readonly List<string> _enabledFilters;
+        /// <summary>
+        /// Data filter configurations for this unit of work.
+        /// </summary>
+        protected List<DataFilterConfiguration> Filters { get; private set; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected UnitOfWorkBase()
+        protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
         {
-            _disabledFilters = new List<string>();
-            _enabledFilters = new List<string>();
+            Filters = defaultOptions.Filters.ToList();
         }
 
         /// <inheritdoc/>
@@ -69,7 +72,10 @@ namespace Abp.Domain.Uow
             }
 
             PreventMultipleBegin();
-            Options = options;
+            Options = options; //TODO: Do not set options like that!
+
+            SetOptions(options);
+
             BeginUow();
         }
 
@@ -79,16 +85,39 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public abstract Task SaveChangesAsync();
 
-        public virtual void DisableFilter(string filterName)
+        public IDisposable DisableFilter(string filterName)
         {
-            _disabledFilters.AddIfNotContains(filterName);
-            _enabledFilters.Remove(filterName);
+            var filterIndex = GetFilterIndex(filterName);
+            if (!Filters[filterIndex].IsEnabled)
+            {
+                return NullDisposable.Instance;
+            }
+
+            ApplyDisableFilter(filterName);
+
+            Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
+            
+            return new DisposeAction(() => EnableFilter(filterName));
         }
 
-        public virtual void EnableFilter(string filterName)
+        public IDisposable EnableFilter(string filterName)
         {
-            _enabledFilters.AddIfNotContains(filterName);
-            _disabledFilters.Remove(filterName);
+            var filterIndex = GetFilterIndex(filterName);
+            if (Filters[filterIndex].IsEnabled)
+            {
+                return NullDisposable.Instance;
+            }
+
+            ApplyEnableFilter(filterName);
+
+            Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
+            
+            return new DisposeAction(() => DisableFilter(filterName));
+        }
+
+        public virtual bool IsFilterEnabled(string filterName)
+        {
+            return GetFilter(filterName).IsEnabled;
         }
 
         /// <inheritdoc/>
@@ -165,6 +194,28 @@ namespace Abp.Domain.Uow
         protected abstract void DisposeUow();
 
         /// <summary>
+        /// Concrete Unit of work classes should implement this
+        /// method in order to disable a filter.
+        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
+        /// </summary>
+        /// <param name="filterName">Filter name</param>
+        protected virtual void ApplyDisableFilter(string filterName)
+        {
+            throw new NotImplementedException("DisableFilter is not implemented for " + GetType().FullName);
+        }
+
+        /// <summary>
+        /// Concrete Unit of work classes should implement this
+        /// method in order to enable a filter.
+        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
+        /// </summary>
+        /// <param name="filterName">Filter name</param>
+        protected virtual void ApplyEnableFilter(string filterName)
+        {
+            throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
+        }
+
+        /// <summary>
         /// Called to trigger <see cref="Completed"/> event.
         /// </summary>
         protected virtual void OnCompleted()
@@ -207,6 +258,40 @@ namespace Abp.Domain.Uow
             }
 
             _isCompleteCalledBefore = true;
+        }
+
+        private void SetOptions(UnitOfWorkOptions options)
+        {
+            for (var i = 0; i < Filters.Count; i++)
+            {
+                var filterOverride = options.FilterOverrides.FirstOrDefault(f => f.FilterName == Filters[i].FilterName);
+                if (filterOverride != null)
+                {
+                    Filters[i] = filterOverride;
+                }
+            }
+        }
+
+        private DataFilterConfiguration GetFilter(string filterName)
+        {
+            var filter = Filters.FirstOrDefault(f => f.FilterName == filterName);
+            if (filter == null)
+            {
+                throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
+            }
+
+            return filter;
+        }
+
+        private int GetFilterIndex(string filterName)
+        {
+            var filterIndex = Filters.FindIndex(f => f.FilterName == filterName);
+            if (filterIndex < 0)
+            {
+                throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
+            }
+
+            return filterIndex;
         }
     }
 }

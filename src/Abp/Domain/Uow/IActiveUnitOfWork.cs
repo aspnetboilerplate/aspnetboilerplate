@@ -1,4 +1,5 @@
 using System;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
@@ -55,16 +56,26 @@ namespace Abp.Domain.Uow
 
         /// <summary>
         /// Disables a data filter.
-        /// Does nothing if it's already disabled.
+        /// Does nothing if it's already disabled. 
+        /// Use this method in a using statement to re-enable filter if needed.
         /// </summary>
         /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
-        void DisableFilter(string filterName);
+        /// <returns>A <see cref="IDisposable"/> handle to take back the disable effect.</returns>
+        IDisposable DisableFilter(string filterName);
 
         /// <summary>
         /// Enables a data filter.
-        /// Does nothing if it's already disabled.
+        /// Does nothing if it's already enabled.
+        /// Use this method in a using statement to re-disable filter if needed.
         /// </summary>
-        /// <param name="filterName"></param>
-        void EnableFilter(string filterName);
+        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        /// <returns>A <see cref="IDisposable"/> handle to take back the enable effect.</returns>
+        IDisposable EnableFilter(string filterName);
+
+        /// <summary>
+        /// Checks if a filter is enabled or not.
+        /// </summary>
+        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        bool IsFilterEnabled(string filterName);
     }
 }

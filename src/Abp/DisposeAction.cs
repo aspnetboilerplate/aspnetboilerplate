@@ -16,15 +16,17 @@ namespace Abp
         /// <param name="action">Action to be executed when this object is disposed.</param>
         public DisposeAction(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException("action");
+            }
+
             _action = action;
         }
 
         public void Dispose()
         {
-            if (_action != null)
-            {
-                _action();
-            }
+            _action();
         }
     }
 }

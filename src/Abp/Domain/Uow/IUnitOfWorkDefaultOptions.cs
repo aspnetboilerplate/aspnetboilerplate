@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Transactions;
 
 namespace Abp.Domain.Uow
@@ -24,5 +25,17 @@ namespace Abp.Domain.Uow
         /// This is used if <see cref="IsTransactional"/> is true.
         /// </summary>
         IsolationLevel? IsolationLevel { get; set; }
+
+        /// <summary>
+        /// Gets list of all data filter configurations.
+        /// </summary>
+        IReadOnlyList<DataFilterConfiguration> Filters { get; }
+
+        /// <summary>
+        /// Registers a data filter to unit of work system.
+        /// </summary>
+        /// <param name="filterName">Name of the filter.</param>
+        /// <param name="isEnabledByDefault">Is filter enabled by default.</param>
+        void RegisterFilter(string filterName, bool isEnabledByDefault);
     }
 }
