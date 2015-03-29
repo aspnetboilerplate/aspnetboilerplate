@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="IAudited"/> interface.
+    /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="IAudited{TUser}"/> interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of primary key</typeparam>
     [Serializable]

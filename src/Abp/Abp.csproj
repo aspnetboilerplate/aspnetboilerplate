@@ -93,6 +93,8 @@
     <Compile Include="Application\Services\Dto\EntityRequestInputOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutput.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutputOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IEntityDto.cs" />
     <Compile Include="Application\Services\Dto\IEntityDtoOfPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IListResult.cs" />
@@ -396,9 +398,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Application\Services\Interceptors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
