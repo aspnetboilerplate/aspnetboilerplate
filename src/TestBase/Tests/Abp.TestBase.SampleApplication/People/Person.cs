@@ -13,6 +13,11 @@ namespace Abp.TestBase.SampleApplication.People
         [MaxLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
-        public bool IsDeleted { get; set; }
+        [ForeignKey("ContactListId")]
+        public virtual ContactList ContactList { get; set; }
+
+        public virtual int ContactListId { get; set; }
+
+        public virtual bool IsDeleted { get; set; }
     }
 }

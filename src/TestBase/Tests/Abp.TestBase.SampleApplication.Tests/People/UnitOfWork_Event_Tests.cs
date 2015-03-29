@@ -28,7 +28,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             using (var uow = _unitOfWorkManager.Begin())
             {
-                _personRepository.Insert(new Person { Name = "emre" });
+                _personRepository.Insert(new Person { ContactListId = 1, Name = "john" });
 
                 _unitOfWorkManager.Current.Completed += (sender, args) =>
                                                         {
@@ -44,7 +44,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 uow.Complete();
             }
 
-            UsingDbContext(context => context.People.Any(p => p.Name == "emre").ShouldBe(true));
+            UsingDbContext(context => context.People.Any(p => p.Name == "john").ShouldBe(true));
 
             completeCount.ShouldBe(1);
             disposeCount.ShouldBe(1);

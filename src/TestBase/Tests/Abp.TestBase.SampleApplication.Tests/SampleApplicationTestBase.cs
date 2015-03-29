@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Abp.Collections;
 using Abp.Modules;
 using Abp.TestBase.SampleApplication.EntityFramework;
+using Abp.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.TestBase.SampleApplication.Tests
@@ -18,6 +20,38 @@ namespace Abp.TestBase.SampleApplication.Tests
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
                 );
+
+            CreateInitialData();
+        }
+
+        private void CreateInitialData()
+        {
+            UsingDbContext(
+                context =>
+                {
+                    context.ContactLists.Add(
+                        new ContactList
+                        {
+                            TenantId = 1,
+                            Name = "List of Tenant-1",
+                            People = new List<Person>
+                                     {
+                                         new Person {Name = "halil"},
+                                         new Person {Name = "emre", IsDeleted = true}
+                                     }
+                        });
+
+                    context.ContactLists.Add(
+                        new ContactList
+                        {
+                            TenantId = 2,
+                            Name = "List of Tenant-2",
+                            People = new List<Person>
+                                     {
+                                         new Person {Name = "asimov"},
+                                     }
+                        });
+                });
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)

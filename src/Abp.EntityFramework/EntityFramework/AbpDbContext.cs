@@ -104,20 +104,24 @@ namespace Abp.EntityFramework
         public virtual void Initialize()
         {
             Database.Initialize(false);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpSession.TenantId ?? 0);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpSession.TenantId);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t) => t.TenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t) => t.TenantId, 0);
         }
-        
+
         public override int SaveChanges()
         {
             ApplyAbpConcepts();
             return base.SaveChanges();
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             ApplyAbpConcepts();
@@ -203,7 +207,7 @@ namespace Abp.EntityFramework
 
                 softDeleteEntry.State = EntityState.Unchanged;
                 softDeleteEntry.Entity.IsDeleted = true;
-                
+
                 if (entry.Entity is IDeletionAudited)
                 {
                     var deletionAuditedEntry = entry.Cast<IDeletionAudited>();

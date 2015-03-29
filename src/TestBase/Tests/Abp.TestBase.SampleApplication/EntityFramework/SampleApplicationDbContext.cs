@@ -7,6 +7,8 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
 {
     public class SampleApplicationDbContext : AbpDbContext
     {
+        public virtual IDbSet<ContactList> ContactLists { get; set; }
+
         public virtual IDbSet<Person> People { get; set; }
 
         public SampleApplicationDbContext()

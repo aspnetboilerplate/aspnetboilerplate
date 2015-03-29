@@ -8,9 +8,22 @@ namespace Abp.Domain.Uow
     public static class AbpDataFilters
     {
         /// <summary>
-        /// Soft delete filter. Filters soft-deleted data.
+        /// Soft delete filter.
+        /// Prevents getting deleted data from database.
         /// See <see cref="ISoftDelete"/> interface.
         /// </summary>
         public const string SoftDelete = "SoftDelete";
+
+        /// <summary>
+        /// Tenant filter to prevent getting data that is
+        /// not belong to current tenant.
+        /// </summary>
+        public const string MustHaveTenant = "MustHaveTenant";
+
+        /// <summary>
+        /// Tenant filter to prevent getting data that is
+        /// not belong to current tenant.
+        /// </summary>
+        public const string MayHaveTenant = "MayHaveTenant";
     }
 }

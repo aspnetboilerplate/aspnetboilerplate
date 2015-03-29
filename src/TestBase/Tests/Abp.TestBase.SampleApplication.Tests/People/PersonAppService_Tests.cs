@@ -18,50 +18,64 @@ namespace Abp.TestBase.SampleApplication.Tests.People
     public class PersonAppService_Tests : SampleApplicationTestBase
     {
         private readonly IPersonAppService _personAppService;
-        private readonly List<Person> _initialPeople = new List<Person>()
-        {
-            new Person {Name = "halil"},
-            new Person {Name = "emre"}
-        };
 
         public PersonAppService_Tests()
         {
-            InitializeData();
             _personAppService = Resolve<IPersonAppService>();
-        }
-
-        private void InitializeData()
-        {
-            UsingDbContext(context => _initialPeople.ForEach(person => context.People.Add(person)));
         }
 
         [Fact]
         public async Task Should_Insert_New_Person()
         {
-            await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
+            ContactList contactList = null;
+            int peopleCount = 0;
+
+            await UsingDbContext(
+                async context =>
+                      {
+                          contactList = await context.ContactLists.FirstOrDefaultAsync();
+                          peopleCount = await context.People.CountAsync();
+                      });
+
+            await _personAppService.CreatePersonAsync(
+                new CreatePersonInput
+                {
+                    ContactListId = contactList.Id,
+                    Name = "john"
+                });
 
             await UsingDbContext(async context =>
             {
-                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count + 1);
                 (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldNotBe(null);
+                (await context.People.CountAsync()).ShouldBe(peopleCount + 1);
             });
         }
 
         [Fact]
         public async Task Should_Rollback_If_Uow_Is_Not_Completed()
         {
+            ContactList contactList = null;
+            int peopleCount = 0;
+
+            await UsingDbContext(
+                async context =>
+                {
+                    contactList = await context.ContactLists.FirstOrDefaultAsync();
+                    peopleCount = await context.People.CountAsync();
+                });
+
             //CreatePersonAsync will use same UOW.
             using (var uow = LocalIocManager.Resolve<IUnitOfWorkManager>().Begin())
             {
-                await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = "john" });
+                await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = contactList.Id, Name = "john" });
                 //await uow.CompleteAsync(); //It's intentionally removed from code to see roll-back
             }
 
             //john will not be added since uow is not completed (so, rolled back)
             await UsingDbContext(async context =>
             {
-                (await context.People.CountAsync()).ShouldBe(_initialPeople.Count);
                 (await context.People.FirstOrDefaultAsync(p => p.Name == "john")).ShouldBe(null);
+                (await context.People.CountAsync()).ShouldBe(peopleCount);
             });
         }
 
@@ -75,19 +89,19 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public void Should_Get_All_People_Without_Filter()
         {
             var output = _personAppService.GetPeople(new GetPeopleInput());
-            output.Items.Count.ShouldBe(_initialPeople.Count);
+            output.Items.Count.ShouldBe(UsingDbContext(context => context.People.Count()));
             output.Items.FirstOrDefault(p => p.Name == "halil").ShouldNotBe(null);
         }
 
         [Fact]
         public void Should_Get_Related_People_With_Filter()
         {
-            var output = _personAppService.GetPeople(new GetPeopleInput { NameFilter = "e" });
-            output.Items.FirstOrDefault(p => p.Name == "emre").ShouldNotBe(null);
-            output.Items.All(p => p.Name.Contains("e")).ShouldBe(true);
+            var output = _personAppService.GetPeople(new GetPeopleInput { NameFilter = "h" });
+            output.Items.FirstOrDefault(p => p.Name == "halil").ShouldNotBe(null);
+            output.Items.All(p => p.Name.Contains("h")).ShouldBe(true);
         }
 
-        [Fact] //Causes bug #345
+        [Fact]
         public async Task Should_Delete_Person()
         {
             AbpSession.UserId = 1;

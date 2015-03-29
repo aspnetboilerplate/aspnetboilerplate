@@ -36,7 +36,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             /* All application service methods are audited as conventional. */
 
-            await _personAppService.CreatePersonAsync(new CreatePersonInput {Name = "john"});
+            await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = 1, Name = "john" });
             _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
         }
 
@@ -55,7 +55,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         #endregion
-        
+
         #region CASES DON'T WRITE AUDIT LOGS
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             public virtual void Test1()
             {
-                
+
             }
 
             public void Test2()

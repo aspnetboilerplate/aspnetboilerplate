@@ -13,16 +13,14 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public PersonRepository_General_Tests()
         {
             _personRepository = Resolve<IRepository<Person>>();
-
-            UsingDbContext(context => context.People.Add(new Person() { Name = "emre" }));
         }
 
         [Fact]
         public void Should_Delete_Entity_Not_In_Context()
         {
-            var person = UsingDbContext(context => context.People.Single(p => p.Name == "emre"));
+            var person = UsingDbContext(context => context.People.Single(p => p.Name == "halil"));
             _personRepository.Delete(person);
-            UsingDbContext(context => context.People.FirstOrDefault(p => p.Name == "emre")).ShouldBe(null);
+            UsingDbContext(context => context.People.FirstOrDefault(p => p.Name == "halil")).ShouldBe(null);
         }
     }
 }

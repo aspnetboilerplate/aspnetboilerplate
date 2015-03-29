@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContactList.cs" />
     <Compile Include="EntityFramework\Repositories\SampleApplicationEfRepositoryBase.cs" />
     <Compile Include="EntityFramework\SampleApplicationDbContext.cs" />
     <Compile Include="People\Dto\CreatePersonInput.cs" />
