@@ -55,22 +55,22 @@ namespace Abp.Domain.Uow
         Task SaveChangesAsync();
 
         /// <summary>
-        /// Disables a data filter.
-        /// Does nothing if it's already disabled. 
-        /// Use this method in a using statement to re-enable filter if needed.
+        /// Disables one or more data filters.
+        /// Does nothing for a filter if it's already disabled. 
+        /// Use this method in a using statement to re-enable filters if needed.
         /// </summary>
-        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        /// <param name="filterNames">One or more filter names. <see cref="AbpDataFilters"/> for standard filters.</param>
         /// <returns>A <see cref="IDisposable"/> handle to take back the disable effect.</returns>
-        IDisposable DisableFilter(string filterName);
+        IDisposable DisableFilter(params string[] filterNames);
 
         /// <summary>
-        /// Enables a data filter.
-        /// Does nothing if it's already enabled.
-        /// Use this method in a using statement to re-disable filter if needed.
+        /// Enables one or more data filters.
+        /// Does nothing for a filter if it's already enabled.
+        /// Use this method in a using statement to re-disable filters if needed.
         /// </summary>
-        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        /// <param name="filterNames">One or more filter names. <see cref="AbpDataFilters"/> for standard filters.</param>
         /// <returns>A <see cref="IDisposable"/> handle to take back the enable effect.</returns>
-        IDisposable EnableFilter(string filterName);
+        IDisposable EnableFilter(params string[] filterNames);
 
         /// <summary>
         /// Checks if a filter is enabled or not.

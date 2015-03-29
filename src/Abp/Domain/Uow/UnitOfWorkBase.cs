@@ -85,35 +85,74 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public abstract Task SaveChangesAsync();
 
-        public IDisposable DisableFilter(string filterName)
+        //public IDisposable DisableFilter(string filterName)
+        //{
+        //    var filterIndex = GetFilterIndex(filterName);
+        //    if (!Filters[filterIndex].IsEnabled)
+        //    {
+        //        return NullDisposable.Instance;
+        //    }
+
+        //    ApplyDisableFilter(filterName);
+
+        //    Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
+            
+        //    return new DisposeAction(() => EnableFilter(filterName));
+        //}
+
+        public IDisposable DisableFilter(params string[] filterNames)
         {
-            var filterIndex = GetFilterIndex(filterName);
-            if (!Filters[filterIndex].IsEnabled)
+            var disabledFilters = new List<string>();
+            
+            foreach (var filterName in filterNames)
             {
-                return NullDisposable.Instance;
+                var filterIndex = GetFilterIndex(filterName);
+                if (Filters[filterIndex].IsEnabled)
+                {
+                    disabledFilters.Add(filterName);
+                    Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
+                }
             }
 
-            ApplyDisableFilter(filterName);
+            disabledFilters.ForEach(ApplyDisableFilter);
 
-            Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
-            
-            return new DisposeAction(() => EnableFilter(filterName));
+            return new DisposeAction(() => EnableFilter(disabledFilters.ToArray()));
         }
 
-        public IDisposable EnableFilter(string filterName)
+        //public IDisposable EnableFilter(string filterName)
+        //{
+        //    var filterIndex = GetFilterIndex(filterName);
+        //    if (Filters[filterIndex].IsEnabled)
+        //    {
+        //        return NullDisposable.Instance;
+        //    }
+
+        //    ApplyEnableFilter(filterName);
+
+        //    Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
+            
+        //    return new DisposeAction(() => DisableFilter(filterName));
+        //}
+
+        public IDisposable EnableFilter(params string[] filterNames)
         {
-            var filterIndex = GetFilterIndex(filterName);
-            if (Filters[filterIndex].IsEnabled)
+            var enabledFilters = new List<string>();
+            
+            foreach (var filterName in filterNames)
             {
-                return NullDisposable.Instance;
+                var filterIndex = GetFilterIndex(filterName);
+                if (!Filters[filterIndex].IsEnabled)
+                {
+                    enabledFilters.Add(filterName);
+                    Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
+                }
             }
 
-            ApplyEnableFilter(filterName);
-
-            Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
+            enabledFilters.ForEach(ApplyEnableFilter);
             
-            return new DisposeAction(() => DisableFilter(filterName));
+            return new DisposeAction(() => DisableFilter(enabledFilters.ToArray()));
         }
+
 
         public virtual bool IsFilterEnabled(string filterName)
         {
