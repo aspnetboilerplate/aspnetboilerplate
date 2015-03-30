@@ -1,25 +1,24 @@
-using Abp.Authorization.Interceptors;
+using Abp.Application.Services;
 using Abp.Dependency;
-using Abp.Runtime.Validation.Interception;
 using Castle.Core;
+using Castle.MicroKernel;
 
-namespace Abp.Application.Services.Interceptors
+namespace Abp.Authorization.Interceptors
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.
     /// </summary>
-    public static class ApplicationServiceInterceptorRegistrar
+    internal static class AuthorizationInterceptorRegistrar
     {
         public static void Initialize(IIocManager iocManager)
         {
             iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;            
         }
 
-        private static void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
+        private static void Kernel_ComponentRegistered(string key, IHandler handler)
         {
             if (typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
                 handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
             }
         }

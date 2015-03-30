@@ -14,8 +14,6 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public PersonRepository_Tests_For_EntityChangeEvents()
         {
             _personRepository = Resolve<IRepository<Person>>();
-
-            UsingDbContext(context => context.People.Add(new Person() { Name = "emre" }));
         }
 
         [Fact]
@@ -31,7 +29,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     triggerCount++;
                 });
 
-            _personRepository.Insert(new Person { Name = "halil" });
+            _personRepository.Insert(new Person { ContactListId = 1, Name = "halil" });
 
             triggerCount.ShouldBe(1);
         }
@@ -44,13 +42,13 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             Resolve<IEventBus>().Register<EntityUpdatedEventData<Person>>(
                 eventData =>
                 {
-                    eventData.Entity.Name.ShouldBe("emre2");
+                    eventData.Entity.Name.ShouldBe("halil2");
                     triggerCount++;
                 });
 
-            var emrePeson = _personRepository.Single(p => p.Name == "emre");
-            emrePeson.Name = "emre2";
-            _personRepository.Update(emrePeson);
+            var person = _personRepository.Single(p => p.Name == "halil");
+            person.Name = "halil2";
+            _personRepository.Update(person);
 
             triggerCount.ShouldBe(1);
         }
@@ -64,12 +62,12 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
                 eventData =>
                 {
-                    eventData.Entity.Name.ShouldBe("emre");
+                    eventData.Entity.Name.ShouldBe("halil");
                     triggerCount++;
                 });
 
-            var emrePeson = _personRepository.Single(p => p.Name == "emre");
-            _personRepository.Delete(emrePeson.Id);
+            var person = _personRepository.Single(p => p.Name == "halil");
+            _personRepository.Delete(person.Id);
 
             triggerCount.ShouldBe(1);
         }

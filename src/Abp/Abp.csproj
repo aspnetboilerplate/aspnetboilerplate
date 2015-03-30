@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Nito.AsyncEx">
       <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
     </Reference>
@@ -71,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
+    <Compile Include="AbpServiceBase.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
     <Compile Include="Application\Navigation\INavigationManager.cs" />
@@ -88,6 +93,8 @@
     <Compile Include="Application\Services\Dto\EntityRequestInputOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutput.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutputOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDtoOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IEntityDto.cs" />
     <Compile Include="Application\Services\Dto\IEntityDtoOfPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IListResult.cs" />
@@ -97,7 +104,26 @@
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
-    <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
+    <Compile Include="Auditing\AuditingStoreExtensions.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptorRegistrar.cs" />
+    <Compile Include="Aspects\AspectAttribute.cs" />
+    <Compile Include="Auditing\AuditedAttribute.cs" />
+    <Compile Include="Auditing\AuditInfo.cs" />
+    <Compile Include="Auditing\AuditingConfiguration.cs" />
+    <Compile Include="Auditing\AuditingInterceptor.cs" />
+    <Compile Include="Auditing\AuditingInterceptorRegistrar.cs" />
+    <Compile Include="Auditing\AuditingSelectorList.cs" />
+    <Compile Include="Auditing\DisableAuditingAttribute.cs" />
+    <Compile Include="Auditing\IAuditInfoProvider.cs" />
+    <Compile Include="Auditing\IAuditingConfiguration.cs" />
+    <Compile Include="Auditing\IAuditingSelectorList.cs" />
+    <Compile Include="Auditing\IAuditingStore.cs" />
+    <Compile Include="Auditing\NullAuditInfoProvider.cs" />
+    <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="DisposeAction.cs" />
+    <Compile Include="Domain\Uow\AbpDataFilters.cs" />
+    <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
+    <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
@@ -127,6 +153,7 @@
     <Compile Include="Configuration\Startup\IMultiTenancyConfig.cs" />
     <Compile Include="Configuration\Startup\MultiTenancyConfig.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Dependency\IocRegistrarExtensions.cs" />
     <Compile Include="MultiTenancy\MultiTenancySides.cs" />
     <Compile Include="Authorization\NullPermissionChecker.cs" />
     <Compile Include="Authorization\PermissionCheckerExtensions.cs" />
@@ -194,6 +221,7 @@
     <Compile Include="Net\Mail\EmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\IEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\EmailSenderBase.cs" />
+    <Compile Include="Net\Mail\NullEmailSender.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSender.cs" />
     <Compile Include="Net\Mail\Smtp\ISmtpEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\Smtp\SmtpEmailSender.cs" />
@@ -204,7 +232,6 @@
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
-    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IIocManager.cs" />

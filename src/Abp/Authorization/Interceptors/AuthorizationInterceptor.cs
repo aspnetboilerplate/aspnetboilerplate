@@ -45,7 +45,7 @@ namespace Abp.Authorization.Interceptors
 
         private void InterceptAsync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
         {
-            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
+            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>()) //TODO: Inject?
             {
                 authorizationAttributeHelper.Object.Authorize(authorizeAttributes);
                 invocation.Proceed();

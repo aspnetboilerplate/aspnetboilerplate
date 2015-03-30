@@ -24,6 +24,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Gets all permissions.
         /// </summary>
-        IReadOnlyList<Permission> GetAllPermissions();
+        /// <param name="tenancyFilter">Can be passed false to disable tenancy filter.</param>
+        IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true);
     }
 }

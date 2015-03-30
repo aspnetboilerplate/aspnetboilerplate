@@ -1,4 +1,5 @@
 using System;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
@@ -52,5 +53,29 @@ namespace Abp.Domain.Uow
         /// since all changes saved at end of a unit of work automatically.
         /// </summary>
         Task SaveChangesAsync();
+
+        /// <summary>
+        /// Disables one or more data filters.
+        /// Does nothing for a filter if it's already disabled. 
+        /// Use this method in a using statement to re-enable filters if needed.
+        /// </summary>
+        /// <param name="filterNames">One or more filter names. <see cref="AbpDataFilters"/> for standard filters.</param>
+        /// <returns>A <see cref="IDisposable"/> handle to take back the disable effect.</returns>
+        IDisposable DisableFilter(params string[] filterNames);
+
+        /// <summary>
+        /// Enables one or more data filters.
+        /// Does nothing for a filter if it's already enabled.
+        /// Use this method in a using statement to re-disable filters if needed.
+        /// </summary>
+        /// <param name="filterNames">One or more filter names. <see cref="AbpDataFilters"/> for standard filters.</param>
+        /// <returns>A <see cref="IDisposable"/> handle to take back the enable effect.</returns>
+        IDisposable EnableFilter(params string[] filterNames);
+
+        /// <summary>
+        /// Checks if a filter is enabled or not.
+        /// </summary>
+        /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
+        bool IsFilterEnabled(string filterName);
     }
 }

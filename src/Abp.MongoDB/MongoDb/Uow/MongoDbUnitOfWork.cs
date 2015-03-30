@@ -21,7 +21,8 @@ namespace Abp.MongoDb.Uow
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration)
+        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(defaultOptions)
         {
             _configuration = configuration;
         }
@@ -40,7 +41,7 @@ namespace Abp.MongoDb.Uow
 
         public override async Task SaveChangesAsync()
         {
-            
+
         }
 
         protected override void CompleteUow()
@@ -55,7 +56,7 @@ namespace Abp.MongoDb.Uow
 
         protected override void DisposeUow()
         {
-            
+
         }
     }
 }

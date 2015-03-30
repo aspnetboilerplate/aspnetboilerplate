@@ -6,6 +6,7 @@ using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Castle.Core.Internal;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -21,7 +22,8 @@ namespace Abp.EntityFramework.Uow
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
-        public EfUnitOfWork(IIocResolver iocResolver)
+        public EfUnitOfWork(IIocResolver iocResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(defaultOptions)
         {
             _iocResolver = iocResolver;
             _activeDbContexts = new Dictionary<Type, DbContext>();
@@ -80,13 +82,43 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        protected override void ApplyDisableFilter(string filterName)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.DisableFilter(filterName);
+            }
+        }
+
+        protected override void ApplyEnableFilter(string filterName)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.EnableFilter(filterName);
+            }
+        }
+
         internal TDbContext GetOrCreateDbContext<TDbContext>()
             where TDbContext : DbContext
         {
             DbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                _activeDbContexts[typeof(TDbContext)] = dbContext = _iocResolver.Resolve<TDbContext>();
+                dbContext = _iocResolver.Resolve<TDbContext>();
+
+                foreach (var filter in Filters)
+                {
+                    if (filter.IsEnabled)
+                    {
+                        dbContext.EnableFilter(filter.FilterName);
+                    }
+                    else
+                    {
+                        dbContext.DisableFilter(filter.FilterName);
+                    }
+                }
+
+                _activeDbContexts[typeof(TDbContext)] = dbContext;
             }
 
             return (TDbContext)dbContext;

@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework
 {
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext
+    public abstract class AbpDbContext : DbContext, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.
@@ -99,18 +101,27 @@ namespace Abp.EntityFramework
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
 
+        public virtual void Initialize()
+        {
+            Database.Initialize(false);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpSession.TenantId ?? 0);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpSession.TenantId);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Types<ISoftDelete>().Configure(c => c.HasTableAnnotation(AbpEfConsts.SoftDeleteCustomAnnotationName, true));
+            modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t) => t.TenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t) => t.TenantId, 0);
         }
-        
+
         public override int SaveChanges()
         {
             ApplyAbpConcepts();
             return base.SaveChanges();
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             ApplyAbpConcepts();
@@ -196,7 +207,7 @@ namespace Abp.EntityFramework
 
                 softDeleteEntry.State = EntityState.Unchanged;
                 softDeleteEntry.Entity.IsDeleted = true;
-                
+
                 if (entry.Entity is IDeletionAudited)
                 {
                     var deletionAuditedEntry = entry.Cast<IDeletionAudited>();

@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Runtime.Session;
 
 namespace Abp.Authorization
 {
@@ -12,6 +14,8 @@ namespace Abp.Authorization
     /// </summary>
     internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
+        public IAbpSession AbpSession { get; set; }
+
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
@@ -22,6 +26,8 @@ namespace Abp.Authorization
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
+
+            AbpSession = NullAbpSession.Instance;
         }
 
         public void Initialize()
@@ -45,9 +51,11 @@ namespace Abp.Authorization
             return permission;
         }
 
-        public IReadOnlyList<Permission> GetAllPermissions()
+        public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
-            return Permissions.Values.ToImmutableList();
+            return Permissions.Values
+                .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+                .ToImmutableList();
         }
 
         private AuthorizationProvider CreateAuthorizationProvider(Type providerType)

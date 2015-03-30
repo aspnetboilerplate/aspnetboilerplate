@@ -14,6 +14,24 @@ namespace Abp.AutoMapper.Tests
         }
 
         [Fact]
+        public void Map_Null_Tests()
+        {
+            MyClass1 obj1 = null;
+            var obj2 = obj1.MapTo<MyClass2>();
+            obj2.ShouldBe(null);
+        }
+
+        [Fact]
+        public void Map_Null_Existing_Object_Tests()
+        {
+            MyClass1 obj1 = null;
+
+            var obj2 = new MyClass2 { TestProp = "before map" };
+            obj1.MapTo(obj2);
+            obj2.TestProp.ShouldBe("before map");
+        }
+
+        [Fact]
         public void MapTo_Tests()
         {
             var obj1 = new MyClass1 { TestProp = "Test value" };
@@ -61,6 +79,15 @@ namespace Abp.AutoMapper.Tests
             list2.Count.ShouldBe(2);
             list2[0].TestProp.ShouldBe("Test value 1");
             list2[1].TestProp.ShouldBe("Test value 2");
+        }
+
+        [Fact]
+        public void Map_Should_Set_Null_Existing_Object_Tests()
+        {
+            MyClass1 obj1 = new MyClass1 { TestProp = null };
+            var obj2 = new MyClass2 { TestProp = "before map" };
+            obj1.MapTo(obj2);
+            obj2.TestProp.ShouldBe(null);
         }
 
         [AutoMap(typeof(MyClass2), typeof(MyClass3))]
