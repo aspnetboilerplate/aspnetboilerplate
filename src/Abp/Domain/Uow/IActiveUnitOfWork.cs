@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Policy;
 using System.Threading.Tasks;
 
@@ -30,6 +31,11 @@ namespace Abp.Domain.Uow
         /// Gets if this unit of work is transactional.
         /// </summary>
         UnitOfWorkOptions Options { get; }
+
+        /// <summary>
+        /// Gets data filter configurations for this unit of work.
+        /// </summary>
+        IReadOnlyList<DataFilterConfiguration> Filters { get; }
 
         /// <summary>
         /// Is this UOW disposed?

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Extensions;
+using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 using Abp.Utils.Etc;
 
 namespace Abp.Domain.Uow
@@ -12,7 +15,6 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-
         /// <inheritdoc/>
         public event EventHandler Completed;
 
@@ -25,10 +27,22 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public UnitOfWorkOptions Options { get; private set; }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<DataFilterConfiguration> Filters
+        {
+            get { return _filters.ToImmutableList(); }
+        }
+        private readonly List<DataFilterConfiguration> _filters;
+
         /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
         /// </summary>
         public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Reference to current ABP session.
+        /// </summary>
+        public IAbpSession AbpSession { private get; set; }
 
         /// <summary>
         /// Is <see cref="Begin"/> method called before?
@@ -51,16 +65,12 @@ namespace Abp.Domain.Uow
         private Exception _exception;
 
         /// <summary>
-        /// Data filter configurations for this unit of work.
-        /// </summary>
-        protected List<DataFilterConfiguration> Filters { get; private set; }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
         {
-            Filters = defaultOptions.Filters.ToList();
+            _filters = defaultOptions.Filters.ToList();
+            AbpSession = NullAbpSession.Instance;
         }
 
         /// <inheritdoc/>
@@ -74,7 +84,7 @@ namespace Abp.Domain.Uow
             PreventMultipleBegin();
             Options = options; //TODO: Do not set options like that!
 
-            SetOptions(options);
+            SetFilters(options.FilterOverrides);
 
             BeginUow();
         }
@@ -85,21 +95,7 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public abstract Task SaveChangesAsync();
 
-        //public IDisposable DisableFilter(string filterName)
-        //{
-        //    var filterIndex = GetFilterIndex(filterName);
-        //    if (!Filters[filterIndex].IsEnabled)
-        //    {
-        //        return NullDisposable.Instance;
-        //    }
-
-        //    ApplyDisableFilter(filterName);
-
-        //    Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
-            
-        //    return new DisposeAction(() => EnableFilter(filterName));
-        //}
-
+        /// <inheritdoc/>
         public IDisposable DisableFilter(params string[] filterNames)
         {
             var disabledFilters = new List<string>();
@@ -107,10 +103,10 @@ namespace Abp.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (Filters[filterIndex].IsEnabled)
+                if (_filters[filterIndex].IsEnabled)
                 {
                     disabledFilters.Add(filterName);
-                    Filters[filterIndex] = new DataFilterConfiguration(filterName, false);
+                    _filters[filterIndex] = new DataFilterConfiguration(filterName, false);
                 }
             }
 
@@ -119,21 +115,7 @@ namespace Abp.Domain.Uow
             return new DisposeAction(() => EnableFilter(disabledFilters.ToArray()));
         }
 
-        //public IDisposable EnableFilter(string filterName)
-        //{
-        //    var filterIndex = GetFilterIndex(filterName);
-        //    if (Filters[filterIndex].IsEnabled)
-        //    {
-        //        return NullDisposable.Instance;
-        //    }
-
-        //    ApplyEnableFilter(filterName);
-
-        //    Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
-            
-        //    return new DisposeAction(() => DisableFilter(filterName));
-        //}
-
+        /// <inheritdoc/>
         public IDisposable EnableFilter(params string[] filterNames)
         {
             var enabledFilters = new List<string>();
@@ -141,10 +123,10 @@ namespace Abp.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (!Filters[filterIndex].IsEnabled)
+                if (!_filters[filterIndex].IsEnabled)
                 {
                     enabledFilters.Add(filterName);
-                    Filters[filterIndex] = new DataFilterConfiguration(filterName, true);
+                    _filters[filterIndex] = new DataFilterConfiguration(filterName, true);
                 }
             }
 
@@ -152,8 +134,8 @@ namespace Abp.Domain.Uow
             
             return new DisposeAction(() => DisableFilter(enabledFilters.ToArray()));
         }
-
-
+        
+        /// <inheritdoc/>
         public virtual bool IsFilterEnabled(string filterName)
         {
             return GetFilter(filterName).IsEnabled;
@@ -299,21 +281,47 @@ namespace Abp.Domain.Uow
             _isCompleteCalledBefore = true;
         }
 
-        private void SetOptions(UnitOfWorkOptions options)
+        private void SetFilters(List<DataFilterConfiguration> filterOverrides)
         {
-            for (var i = 0; i < Filters.Count; i++)
+            for (var i = 0; i < _filters.Count; i++)
             {
-                var filterOverride = options.FilterOverrides.FirstOrDefault(f => f.FilterName == Filters[i].FilterName);
+                var filterOverride = filterOverrides.FirstOrDefault(f => f.FilterName == _filters[i].FilterName);
                 if (filterOverride != null)
                 {
-                    Filters[i] = filterOverride;
+                    _filters[i] = filterOverride;
                 }
             }
+
+            if (AbpSession.MultiTenancySide == MultiTenancySides.Host)
+            {
+                ChangeFilterValueIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
+            }
+        }
+
+        private void ChangeFilterValueIfNotOverrided(List<DataFilterConfiguration> filterOverrides, string filterName, bool isEnabled)
+        {
+            if (filterOverrides.Any(f => f.FilterName == filterName))
+            {
+                return;
+            }
+
+            var index = _filters.FindIndex(f => f.FilterName == filterName);
+            if (index < 0)
+            {
+                return;
+            }
+
+            if (_filters[index].IsEnabled == isEnabled)
+            {
+                return;
+            }
+
+            _filters[index] = new DataFilterConfiguration(filterName, isEnabled);
         }
 
         private DataFilterConfiguration GetFilter(string filterName)
         {
-            var filter = Filters.FirstOrDefault(f => f.FilterName == filterName);
+            var filter = _filters.FirstOrDefault(f => f.FilterName == filterName);
             if (filter == null)
             {
                 throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
@@ -324,7 +332,7 @@ namespace Abp.Domain.Uow
 
         private int GetFilterIndex(string filterName)
         {
-            var filterIndex = Filters.FindIndex(f => f.FilterName == filterName);
+            var filterIndex = _filters.FindIndex(f => f.FilterName == filterName);
             if (filterIndex < 0)
             {
                 throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
