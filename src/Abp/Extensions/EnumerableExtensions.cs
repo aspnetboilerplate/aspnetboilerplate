@@ -54,7 +54,7 @@ namespace Abp.Extensions
         /// <param name="condition">A boolean value</param>
         /// <param name="predicate">Predicate to filter the enumerable</param>
         /// <returns>Filtered or not filtered enumerable based on <see cref="condition"/></returns>
-        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, int, bool> predicate)
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, int, bool> predicate)
         {
             return condition
                 ? source.Where(predicate)
