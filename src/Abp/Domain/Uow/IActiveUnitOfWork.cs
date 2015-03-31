@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
@@ -83,5 +82,13 @@ namespace Abp.Domain.Uow
         /// </summary>
         /// <param name="filterName">Name of the filter. <see cref="AbpDataFilters"/> for standard filters.</param>
         bool IsFilterEnabled(string filterName);
+
+        /// <summary>
+        /// Sets (overrides) value of a filter parameter.
+        /// </summary>
+        /// <param name="filterName">Name of the filter</param>
+        /// <param name="parameterName">Parameter's name</param>
+        /// <param name="value">Value of the parameter to be set</param>
+        void SetFilterParameter(string filterName, string parameterName, object value);
     }
 }

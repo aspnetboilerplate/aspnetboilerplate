@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
-using Abp.Utils.Etc;
 
 namespace Abp.Domain.Uow
 {
@@ -98,6 +97,8 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public IDisposable DisableFilter(params string[] filterNames)
         {
+            //TODO: Check if filters exists?
+
             var disabledFilters = new List<string>();
             
             foreach (var filterName in filterNames)
@@ -118,6 +119,8 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public IDisposable EnableFilter(params string[] filterNames)
         {
+            //TODO: Check if filters exists?
+
             var enabledFilters = new List<string>();
             
             foreach (var filterName in filterNames)
@@ -136,9 +139,17 @@ namespace Abp.Domain.Uow
         }
         
         /// <inheritdoc/>
-        public virtual bool IsFilterEnabled(string filterName)
+        public bool IsFilterEnabled(string filterName)
         {
             return GetFilter(filterName).IsEnabled;
+        }
+
+        /// <inheritdoc/>
+        public void SetFilterParameter(string filterName, string parameterName, object value)
+        {
+            var filter = GetFilter(filterName);
+            filter.FilterParameters[parameterName] = value;
+            ApplyFilterParameterValue(filterName, parameterName, value);
         }
 
         /// <inheritdoc/>
@@ -234,6 +245,18 @@ namespace Abp.Domain.Uow
         protected virtual void ApplyEnableFilter(string filterName)
         {
             throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
+        }
+
+
+        /// <summary>
+        /// Concrete Unit of work classes should implement this
+        /// method in order to set a parameter's value.
+        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
+        /// </summary>
+        /// <param name="filterName">Filter name</param>
+        protected virtual void ApplyFilterParameterValue(string filterName, string parameterName, object value)
+        {
+            throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
         }
 
         /// <summary>

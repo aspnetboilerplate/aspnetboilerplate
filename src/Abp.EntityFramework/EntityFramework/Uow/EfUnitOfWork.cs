@@ -98,6 +98,14 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
+            }
+        }
+
         internal TDbContext GetOrCreateDbContext<TDbContext>()
             where TDbContext : DbContext
         {
@@ -115,6 +123,12 @@ namespace Abp.EntityFramework.Uow
                     else
                     {
                         dbContext.DisableFilter(filter.FilterName);
+                    }
+
+                    foreach (var filterParameter in filter.FilterParameters)
+                    {
+                        //TODO: Implement if filterParameter.Value is Func<object>!
+                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
                     }
                 }
 
