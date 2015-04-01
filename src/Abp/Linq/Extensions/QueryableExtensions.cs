@@ -6,7 +6,7 @@ using Abp.Application.Services.Dto;
 namespace Abp.Linq.Extensions
 {
     /// <summary>
-    /// Some useful extension methods for IQueryable.
+    /// Some useful extension methods for <see cref="IQueryable{T}"/>.
     /// </summary>
     public static class QueryableExtensions
     {

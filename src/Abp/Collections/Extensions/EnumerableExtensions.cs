@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Abp.Extensions
-{    /// <summary> 
-    /// Extension methods for <see cref="Enumerable"/> class.
+namespace Abp.Collections.Extensions
+{    
+    /// <summary> 
+    /// Extension methods for <see cref="IEnumerable{T}"/>.
     /// </summary>
     public static class EnumerableExtensions
     {

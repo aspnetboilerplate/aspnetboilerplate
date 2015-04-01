@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
-using System;
 
 namespace Abp.Modules
 {
@@ -29,16 +27,13 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// Sorts modules accorting to dependencies.
-        /// If module A depends on mobule B, A comes after B in the returned List.
+        /// Sorts modules according to dependencies.
+        /// If module A depends on module B, A comes after B in the returned List.
         /// </summary>
         /// <returns>Sorted list</returns>
         public List<AbpModuleInfo> GetSortedModuleListByDependency()
         {
-            var orderedList = this.SortByDependencies<AbpModuleInfo>(x => x.Dependencies).ToList();
-
-            return orderedList;
+            return this.SortByDependencies(x => x.Dependencies).ToList();
         }
-
     }
 }
