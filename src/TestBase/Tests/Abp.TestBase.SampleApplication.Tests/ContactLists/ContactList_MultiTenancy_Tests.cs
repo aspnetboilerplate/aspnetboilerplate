@@ -2,6 +2,7 @@
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.TestBase.SampleApplication.ContacLists;
 using Shouldly;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             //A tenant can reach to it's own data
             AbpSession.TenantId = 1;
             _contactListRepository.GetAllList().Any(cl => cl.TenantId != AbpSession.TenantId).ShouldBe(false);
-            
+
             //A tenant can reach to it's own data
             AbpSession.TenantId = 2;
             _contactListRepository.GetAllList().Any(cl => cl.TenantId != AbpSession.TenantId).ShouldBe(false);
@@ -43,7 +44,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
             //We can also set tenantId parameter's value without changing AbpSession.TenantId
             var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-            using (var unitOfWork = Resolve<IUnitOfWorkManager>().Begin())
+            using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
                 _contactListRepository.GetAllList().Count.ShouldBe(2);
@@ -52,12 +53,14 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 {
                     //We can not get any entity since filter is enabled (even we're host)
                     _contactListRepository.GetAllList().Count.ShouldBe(0);
-                 
+
                     //We're overriding filter parameter's value
                     unitOfWorkManager.Current.SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, 1);
 
                     //We should only get tenant 1's entities since we set tenantId to 1
-                    _contactListRepository.GetAllList().Any(cl => cl.TenantId != 1).ShouldBe(false);
+                    var contactLists = _contactListRepository.GetAllList();
+                    contactLists.Count.ShouldBe(1);
+                    contactLists.Any(cl => cl.TenantId != 1).ShouldBe(false);
                 }
 
                 unitOfWork.Complete();

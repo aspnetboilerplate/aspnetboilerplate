@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
 using Abp.EntityFramework;
+using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.People;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
@@ -10,6 +11,8 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         public virtual IDbSet<ContactList> ContactLists { get; set; }
 
         public virtual IDbSet<Person> People { get; set; }
+
+        public virtual IDbSet<Message> Messages { get; set; }
 
         public SampleApplicationDbContext()
         {
