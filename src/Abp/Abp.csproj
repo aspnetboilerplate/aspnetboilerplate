@@ -152,7 +152,7 @@
     <Compile Include="Authorization\PermissionFinder.cs" />
     <Compile Include="Configuration\Startup\IMultiTenancyConfig.cs" />
     <Compile Include="Configuration\Startup\MultiTenancyConfig.cs" />
-    <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Collections\Extensions\ListExtensions.cs" />
     <Compile Include="Dependency\IocRegistrarExtensions.cs" />
     <Compile Include="MultiTenancy\MultiTenancySides.cs" />
     <Compile Include="Authorization\NullPermissionChecker.cs" />
@@ -251,7 +251,7 @@
     <Compile Include="Extensions\ComparableExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Collections\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="IDateTimeRange.cs" />
     <Compile Include="Linq\Extensions\QueryableExtensions.cs" />
@@ -280,7 +280,6 @@
     <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\ISettingStore.cs" />
     <Compile Include="Configuration\NullSettingStore.cs" />
-    <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingDefinition.cs" />
     <Compile Include="Configuration\SettingDefinitionGroup.cs" />
     <Compile Include="Configuration\SettingHelper.cs" />

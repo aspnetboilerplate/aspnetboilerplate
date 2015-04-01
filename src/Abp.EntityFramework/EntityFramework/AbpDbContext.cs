@@ -104,16 +104,16 @@ namespace Abp.EntityFramework
         public virtual void Initialize()
         {
             Database.Initialize(false);
-            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpSession.TenantId ?? 0);
-            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpSession.TenantId);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t) => t.TenantId, 0);
-            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t) => t.TenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
 
         public override int SaveChanges()

@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Abp.Collections;
 using Abp.Modules;
+using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
@@ -50,6 +51,31 @@ namespace Abp.TestBase.SampleApplication.Tests
                                      {
                                          new Person {Name = "asimov"},
                                      }
+                        });
+                });
+
+            UsingDbContext(
+                context =>
+                {
+                    context.Messages.Add(
+                        new Message
+                        {
+                            TenantId = null,
+                            Text = "host-message-1"
+                        });
+
+                    context.Messages.Add(
+                        new Message
+                        {
+                            TenantId = 1,
+                            Text = "tenant-1-message-1"
+                        });
+
+                    context.Messages.Add(
+                        new Message
+                        {
+                            TenantId = 1,
+                            Text = "tenant-1-message-2"
                         });
                 });
         }

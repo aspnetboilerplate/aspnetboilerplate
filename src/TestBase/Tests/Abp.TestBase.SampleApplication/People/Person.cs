@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
+using Abp.TestBase.SampleApplication.ContacLists;
 
 namespace Abp.TestBase.SampleApplication.People
 {

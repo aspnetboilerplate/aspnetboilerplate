@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.TestBase.SampleApplication.People;
 
-namespace Abp.TestBase.SampleApplication
+namespace Abp.TestBase.SampleApplication.ContacLists
 {
-    [Table("Contacts")]
+    [Table("ContactLists")]
     public class ContactList : Entity, IMustHaveTenant
     {
         public virtual int TenantId { get; set; }

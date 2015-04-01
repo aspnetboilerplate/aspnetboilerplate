@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Abp.Extensions
+namespace Abp.Collections.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="IList"/> class.
+    /// Extension methods for <see cref="IList{T}"/>.
     /// </summary>
     public static class ListExtensions
     {
-        #region SortByDependencies
-        /* See: http://www.codeproject.com/Articles/869059/Topological-sorting-in-Csharp
-         *      http://en.wikipedia.org/wiki/Topological_sorting
-         */
-
         /// <summary>
         /// Sort a list by a topological sorting, which consider their  dependencies
         /// </summary>
@@ -25,6 +17,10 @@ namespace Abp.Extensions
         /// <returns></returns>
         public static IList<T> SortByDependencies<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getDependencies)
         {
+            /* See: http://www.codeproject.com/Articles/869059/Topological-sorting-in-Csharp
+             *      http://en.wikipedia.org/wiki/Topological_sorting
+             */
+
             var sorted = new List<T>();
             var visited = new Dictionary<T, bool>();
 
@@ -53,7 +49,7 @@ namespace Abp.Extensions
             {
                 if (inProcess)
                 {
-                    throw new ArgumentException("Cyclic dependency found.");
+                    throw new ArgumentException("Cyclic dependency found!");
                 }
             }
             else
@@ -73,6 +69,5 @@ namespace Abp.Extensions
                 sorted.Add(item);
             }
         }
-        #endregion
     }
 }

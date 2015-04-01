@@ -14,6 +14,7 @@ namespace Abp.Extensions
         /// <param name="obj">Object to cast</param>
         /// <returns>Casted object</returns>
         public static T As<T>(this object obj)
+            where T : class
         {
             return (T)obj;
         }
