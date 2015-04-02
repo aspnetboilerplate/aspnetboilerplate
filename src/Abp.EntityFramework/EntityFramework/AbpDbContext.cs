@@ -144,6 +144,11 @@ namespace Abp.EntityFramework
 
                         if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
                         {
+                            if (entry.Entity is IDeletionAudited)
+                            {
+                                SetDeletionAuditProperties(entry.Entity.As<IDeletionAudited>());
+                            }
+
                             EntityChangedEventHelper.TriggerEntityDeletedEvent(entry.Entity);
                         }
                         else
@@ -201,20 +206,26 @@ namespace Abp.EntityFramework
 
         private void HandleSoftDelete(DbEntityEntry entry)
         {
-            if (entry.Entity is ISoftDelete)
+            if (!(entry.Entity is ISoftDelete))
             {
-                var softDeleteEntry = entry.Cast<ISoftDelete>();
-
-                softDeleteEntry.State = EntityState.Unchanged;
-                softDeleteEntry.Entity.IsDeleted = true;
-
-                if (entry.Entity is IDeletionAudited)
-                {
-                    var deletionAuditedEntry = entry.Cast<IDeletionAudited>();
-                    deletionAuditedEntry.Entity.DeletionTime = DateTime.Now; //TODO: UtcNow?
-                    deletionAuditedEntry.Entity.DeleterUserId = AbpSession.UserId;
-                }
+                return;
             }
+
+            var softDeleteEntry = entry.Cast<ISoftDelete>();
+
+            softDeleteEntry.State = EntityState.Unchanged;
+            softDeleteEntry.Entity.IsDeleted = true;
+
+            if (entry.Entity is IDeletionAudited)
+            {
+                SetDeletionAuditProperties(entry.Cast<IDeletionAudited>().Entity);
+            }
+        }
+
+        private void SetDeletionAuditProperties(IDeletionAudited entity)
+        {
+            entity.DeletionTime = DateTime.Now; //TODO: UtcNow?
+            entity.DeleterUserId = AbpSession.UserId;
         }
     }
 }
