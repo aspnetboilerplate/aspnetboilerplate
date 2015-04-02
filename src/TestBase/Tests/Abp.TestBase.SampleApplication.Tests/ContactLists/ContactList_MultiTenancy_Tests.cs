@@ -21,6 +21,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
         [Fact]
         public void MustHaveTenant_Filter_Tests()
         {
+            AbpSession.UserId = 1;
+
             //A tenant can reach to it's own data
             AbpSession.TenantId = 1;
             _contactListRepository.GetAllList().Any(cl => cl.TenantId != AbpSession.TenantId).ShouldBe(false);
