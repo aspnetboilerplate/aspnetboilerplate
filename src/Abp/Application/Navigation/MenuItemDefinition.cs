@@ -58,7 +58,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
-        public IList<MenuItemDefinition> Items { get; private set; }
+        public virtual IList<MenuItemDefinition> Items { get; private set; }
 
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
