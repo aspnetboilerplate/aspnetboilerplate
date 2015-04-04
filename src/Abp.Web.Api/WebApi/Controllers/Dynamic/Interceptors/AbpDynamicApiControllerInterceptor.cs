@@ -1,4 +1,5 @@
 using System.Reflection;
+using Abp.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Castle.DynamicProxy;
 
@@ -44,7 +45,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
                 {
                     if (targetInvocation.InnerException != null)
                     {
-                        throw targetInvocation.InnerException;
+                        targetInvocation.InnerException.ReThrow();
                     }
 
                     throw;
