@@ -6,8 +6,8 @@ namespace Abp.Configuration
 {
     /// <summary>
     /// This class is used to simplify getting settings from anywhere.
-    /// TODO: Remove this class..?
     /// </summary>
+    [Obsolete("Don't use this class wherever possible since it breaks testability of the code and may be removed in the future.")]
     public static class SettingHelper
     {
         private static readonly Lazy<ISettingManager> SettingManager;
@@ -35,6 +35,7 @@ namespace Abp.Configuration
         /// <param name="name">Unique name of the setting</param>
         /// <returns>Value of the setting</returns>
         public static T GetSettingValue<T>(string name)
+            where T : struct
         {
             return AsyncHelper.RunSync(() => SettingManager.Value.GetSettingValueAsync<T>(name));
         }

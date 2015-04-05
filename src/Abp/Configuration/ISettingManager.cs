@@ -10,19 +10,37 @@ namespace Abp.Configuration
     {
         /// <summary>
         /// Gets current value of a setting.
-        /// It gets the setting value, overwritten by application and the current user if exists.
+        /// It gets the setting value, overwritten by application, current tenant and current user if exists.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
         /// <returns>Current value of the setting</returns>
         Task<string> GetSettingValueAsync(string name);
 
         /// <summary>
-        /// Gets value of a setting.
+        /// Gets current value of a setting for the application level.
         /// </summary>
-        /// <typeparam name="T">Type of the setting to get</typeparam>
         /// <param name="name">Unique name of the setting</param>
-        /// <returns>Value of the setting</returns>
-        Task<T> GetSettingValueAsync<T>(string name);
+        /// <returns>Current value of the setting for the application</returns>
+        Task<string> GetSettingValueForApplicationAsync(string name);
+
+        /// <summary>
+        /// Gets current value of a setting for a tenant level.
+        /// It gets the setting value, overwritten by given tenant.
+        /// </summary>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <returns>Current value of the setting</returns>
+        Task<string> GetSettingValueForTenantAsync(string name, int tenantId);
+
+        /// <summary>
+        /// Gets current value of a setting for a user level.
+        /// It gets the setting value, overwritten by given tenant and user.
+        /// </summary>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <param name="userId">User id</param>
+        /// <returns>Current value of the setting for the user</returns>
+        Task<string> GetSettingValueForUserAsync(string name, int tenantId, long userId);
 
         /// <summary>
         /// Gets current values of all settings.

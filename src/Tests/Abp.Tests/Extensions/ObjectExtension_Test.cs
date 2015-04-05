@@ -1,4 +1,5 @@
-﻿using Abp.Extensions;
+﻿using System;
+using Abp.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -14,6 +15,21 @@ namespace Abp.Tests.Extensions
 
             obj = null;
             obj.As<ObjectExtensions_Tests>().ShouldBe(null);
+        }
+
+        [Fact]
+        public void To_Tests()
+        {
+            "42".To<int>().ShouldBeOfType<int>().ShouldBe(42);
+            "42".To<Int32>().ShouldBeOfType<Int32>().ShouldBe(42);
+            "28173829281734".To<long>().ShouldBeOfType<long>().ShouldBe(28173829281734);
+            "28173829281734".To<Int64>().ShouldBeOfType<Int64>().ShouldBe(28173829281734);
+
+            "false".To<bool>().ShouldBeOfType<bool>().ShouldBe(false);
+            "True".To<bool>().ShouldBeOfType<bool>().ShouldBe(true);
+            
+            Assert.Throws<FormatException>(() => "test".To<bool>());
+            Assert.Throws<FormatException>(() => "test".To<int>());
         }
 
         [Fact]
