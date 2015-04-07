@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+<style type="text/css">
+.auto-style1 {
+	text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<ul>
+	<li>Introduction</li>
+	<li>Defining settings</li>
+	<li>Getting setting values<ul>
+		<li>Server side</li>
+		<li>Client side</li>
+	</ul>
+	</li>
+	<li>Changing settings</li>
+</ul>
+<h3 id="DocServerSide">Introduction</h3>
+<p>Every application need to store some settings and use these settings in 
+somewhere in the application. ASP.NET Boilerplate provides a flexible and strong 
+infrastructure to store/retrieve <strong>application</strong>, <strong>tenant
+</strong>and <strong>user</strong> level settings usable both in <strong>server
+</strong>and <strong>client </strong>sides.</p>
+<p>A setting is a <strong>name-value string</strong> pair that is generally 
+stored in a database (or another source). We can store non-string values by 
+converting to/from string (or serialize/deserialize).</p>
+<p>A setting has a <strong>name</strong> that is key to store/get it's <strong>
+value</strong>. There are three <strong>setting scopes</strong> (or levels) 
+defined in <strong>SettingScopes</strong> enum:</p>
+<ul>
+	<li><strong>Application</strong>: An application scoped setting is used for 
+	user/tenant independed settings. For example, we can define a setting named 
+	"SmtpServerAddress" to get server's IP address when sending emails. If this 
+	setting has a single value (not changes based on users), then we can define 
+	it as Application scoped.</li>
+	<li><strong>Tenant</strong>: If the application is multi-tenant, we can 
+	define tenant-specific settings.</li>
+	<li><strong>User</strong>: We can use a user scoped setting to store/get 
+	value of the setting specific to each user.</li>
+</ul>
+<p>SettingScopes enum has <strong>Flags </strong>attribute, so we can define a 
+setting with <strong>more than one scopes</strong>.</p>
+<p>Setting scope is <strong>hierarchic</strong>. For example, if we define a 
+setting's scope as "Application | Tenant | User" and try to get value of the the 
+setting;</p>
+<ul>
+	<li>We get the user-specific value if it's defined (overrided) by the user.</li>
+	<li>If not, we get the tenant-specific value if it's defined (overrided) by 
+	the tenant.</li>
+	<li>If not, we get the application value if it's defined.</li>
+	<li>If not, we get the <strong>default value</strong>.</li>
+</ul>
+<p>Default value can be <strong>null </strong>or <strong>empty </strong>string.</p>
+
+<div class="bs-callout bs-callout-warning"><h4>About ISettingStore</h4>
+<p><span class="auto-style1">Note</span>: <strong>ISettingStore</strong> 
+interface must be implemented in order to use setting system. While you can 
+implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
+project.</p>
+</div>
+
+<h3 id="DocGetLogger">Defining settings</h3>
+<p>...&nbsp;</p>
+<h3>Getting setting values</h3>
+<h4>Server side</h4>
+<p>...</p>
+<h4>Client side</h4>
+<p>...</p>
+<h3>Changing settings</h3>
+<p>...</p>
+
+</body>
+
+</html>
