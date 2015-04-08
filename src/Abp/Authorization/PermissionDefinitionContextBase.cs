@@ -13,7 +13,7 @@ namespace Abp.Authorization
             Permissions = new PermissionDictionary();
         }
 
-        public Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
+        public Permission CreatePermission(string name, ILocalizableString displayName = null, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             if (Permissions.ContainsKey(name))
             {
