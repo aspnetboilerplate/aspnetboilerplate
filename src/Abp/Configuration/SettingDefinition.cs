@@ -1,4 +1,5 @@
-﻿using Abp.Localization;
+﻿using System;
+using Abp.Localization;
 
 namespace Abp.Configuration
 {
@@ -59,6 +60,11 @@ namespace Abp.Configuration
         /// <param name="isVisibleToClients">Can clients see this setting and it's value</param>
         public SettingDefinition(string name, string defaultValue, ILocalizableString displayName = null, SettingDefinitionGroup group = null, ILocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             Name = name;
             DefaultValue = defaultValue;
             DisplayName = displayName;
