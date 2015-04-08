@@ -40,7 +40,7 @@ namespace Abp.Configuration
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <returns>Current value of the setting for the user</returns>
-        Task<string> GetSettingValueForUserAsync(string name, int tenantId, long userId);
+        Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId);
 
         /// <summary>
         /// Gets current values of all settings.

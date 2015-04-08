@@ -68,7 +68,7 @@ namespace Abp.Configuration
             return GetSettingValueInternalAsync(name, tenantId);
         }
 
-        public Task<string> GetSettingValueForUserAsync(string name, int tenantId, long userId)
+        public Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId)
         {
             return GetSettingValueInternalAsync(name, tenantId, userId);
         }
