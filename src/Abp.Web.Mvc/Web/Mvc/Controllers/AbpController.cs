@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        public IAbpSession CurrentSession { get; set; }
+        public IAbpSession AbpSession { get; set; }
 
         /// <summary>
         /// Reference to the permission manager.
@@ -79,11 +80,17 @@ namespace Abp.Web.Mvc.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Gets current session information.
+        /// </summary>
+        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        protected IAbpSession CurrentSession { get { return AbpSession; } }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpController()
         {
-            CurrentSession = NullAbpSession.Instance;
+            AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
