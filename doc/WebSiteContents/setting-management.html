@@ -105,7 +105,8 @@ defined in <strong>SettingScopes</strong> enum:</p>
 <p>SettingScopes enum has <strong>Flags </strong>attribute, so we can define a 
 setting with <strong>more than one scopes</strong>.</p>
 <p>Setting scope is <strong>hierarchic</strong>. For example, if we define a 
-setting's scope as "Application | Tenant | User" and try to get value of the the 
+setting's scope as "Application | Tenant | User" and try to get <strong>current value 
+</strong>of the the 
 setting;</p>
 <ul>
 	<li>We get the user-specific value if it's defined (overrided) by the user.</li>
@@ -121,8 +122,15 @@ setting;</p>
 client.</p>
 <h4>Server side</h4>
 <p><strong>ISettingManager </strong>should be used to perform setting 
-operations. We can inject and use it anywhere in the application.</p>
-<p>&nbsp;</p>
+operations. We can inject and use it anywhere in the application. 
+ISettingManager defines many methods to get a setting's value.</p>
+<p>Most used method is <strong>GetSettingValue </strong>(or GetSettingValueAsync 
+for async call). It returns <strong>current value </strong>of the setting based 
+on default value, application, tenant and user settings (as described in Setting 
+scope section before). Example:</p>
+<p>...</p>
+<p>There are also methods to get a specific tenant or user's setting value or 
+list of all setting values.</p>
 <p>Since ISettingManager is widely used, some special base classes (like 
 ApplicationService, DomainService and AppController) has a property named
 <strong>SettingManager</strong>. If we derive from this classes, no need to 
