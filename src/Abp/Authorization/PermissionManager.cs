@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Extensions;
+using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
 namespace Abp.Authorization
@@ -55,6 +56,13 @@ namespace Abp.Authorization
         {
             return Permissions.Values
                 .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+                .ToImmutableList();
+        }
+
+        public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
+        {
+            return Permissions.Values
+                .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                 .ToImmutableList();
         }
 
