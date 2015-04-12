@@ -9,7 +9,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
-        public ActionResult ChangeCulture(string cultureName, string returnUrl = "")
+        public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
             if (!GlobalizationHelper.IsValidCultureCode(cultureName))
             {
@@ -28,7 +28,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Redirect(returnUrl);
             }
 
-            return Redirect("/");
+            return Redirect(Request.ApplicationPath);
         }
     }
 }
