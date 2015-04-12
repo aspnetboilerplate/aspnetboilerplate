@@ -18,6 +18,11 @@ namespace Abp.Localization.Sources
 
         private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
 
+        private NullLocalizationSource()
+        {
+            
+        }
+
         public void Initialize()
         {
             

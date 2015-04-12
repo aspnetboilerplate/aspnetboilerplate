@@ -61,6 +61,21 @@ namespace Abp.Localization
 
                 _sources[source.Name] = source;
                 source.Initialize();
+
+                //Extending dictionaries
+                if (source is IDictionaryBasedLocalizationSource)
+                {
+                    var dictionaryBasedSource = source as IDictionaryBasedLocalizationSource;
+                    var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
+                    foreach (var extension in extensions)
+                    {
+                        foreach (var dictionaryInfo in extension.DictionaryProvider.GetDictionaries(source.Name))
+                        {
+                            dictionaryBasedSource.Extend(dictionaryInfo.Dictionary);
+                        }
+                    }
+                }
+
                 Logger.Debug("Initialized localization source: " + source.Name);
             }
         }

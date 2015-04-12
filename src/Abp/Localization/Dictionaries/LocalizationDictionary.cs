@@ -21,7 +21,7 @@ namespace Abp.Localization.Dictionaries
                 var localizedString = GetOrNull(name);
                 return localizedString == null ? null : localizedString.Value;
             }
-            protected set
+            set
             {
                 _dictionary[name] = new LocalizedString(name, value, CultureInfo);
             }

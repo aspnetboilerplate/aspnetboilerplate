@@ -122,10 +122,12 @@
     <Compile Include="Auditing\IAuditingStore.cs" />
     <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceExtensionInfo.cs" />
     <Compile Include="DisposeAction.cs" />
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
     <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Localization\Sources\IDictionaryBasedLocalizationSource.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="Timing\Clock.cs" />
     <Compile Include="Timing\IClockProvider.cs" />
