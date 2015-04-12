@@ -122,6 +122,7 @@
     <Compile Include="Auditing\IAuditingStore.cs" />
     <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="Strings\FormattedStringValueExtracter.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensionInfo.cs" />
     <Compile Include="DisposeAction.cs" />
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
