@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using Abp.Localization;
+using Abp.Timing;
 using Abp.Web.Mvc.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
@@ -15,7 +16,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 throw new AbpException("Unknown language: " + cultureName + ". It must be a valid culture!");
             }
 
-            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = DateTime.Now.AddYears(2) });
+            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
 
             if (Request.IsAjaxRequest())
             {

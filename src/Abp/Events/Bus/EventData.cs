@@ -1,4 +1,5 @@
 using System;
+using Abp.Timing;
 
 namespace Abp.Events.Bus
 {
@@ -23,7 +24,7 @@ namespace Abp.Events.Bus
         /// </summary>
         protected EventData()
         {
-            EventTime = DateTime.Now;
+            EventTime = Clock.Now;
         }
     }
 }

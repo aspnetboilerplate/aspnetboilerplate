@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp
+namespace Abp.Timing
 {
     /// <summary>
     /// Defines interface for a DateTime range.

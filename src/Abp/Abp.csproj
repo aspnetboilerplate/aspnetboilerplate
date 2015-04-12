@@ -126,6 +126,8 @@
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
     <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Timing\Clock.cs" />
+    <Compile Include="Timing\IClockProvider.cs" />
     <Compile Include="MultiTenancy\MultiTenancyExtensions.cs" />
     <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
@@ -186,7 +188,7 @@
     <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
-    <Compile Include="DateTimeRange.cs" />
+    <Compile Include="Timing\DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
@@ -257,7 +259,7 @@
     <Compile Include="Extensions\DayOfWeekExtensions.cs" />
     <Compile Include="Collections\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
-    <Compile Include="IDateTimeRange.cs" />
+    <Compile Include="Timing\IDateTimeRange.cs" />
     <Compile Include="Linq\Extensions\QueryableExtensions.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
     <Compile Include="Localization\ILocalizableString.cs" />
@@ -363,6 +365,8 @@
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
     <Compile Include="Threading\AsyncHelper.cs" />
     <Compile Include="Threading\Extensions\LockExtensions.cs" />
+    <Compile Include="Timing\LocalClockProvider.cs" />
+    <Compile Include="Timing\UtcClockProvider.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />

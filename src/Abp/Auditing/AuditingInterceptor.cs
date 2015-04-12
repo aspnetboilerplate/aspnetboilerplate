@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
 using Newtonsoft.Json;
@@ -54,7 +55,7 @@ namespace Abp.Auditing
                               : "",
                 MethodName = invocation.MethodInvocationTarget.Name,
                 Parameters = ConvertArgumentsToJson(invocation),
-                ExecutionTime = DateTime.Now //TODO: UtcNow?
+                ExecutionTime = Clock.Now
             };
 
             _auditInfoProvider.Fill(auditInfo);

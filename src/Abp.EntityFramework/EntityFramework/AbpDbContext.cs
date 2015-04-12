@@ -12,6 +12,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework
@@ -170,7 +171,7 @@ namespace Abp.EntityFramework
         {
             if (entry.Entity is IHasCreationTime)
             {
-                entry.Cast<IHasCreationTime>().Entity.CreationTime = DateTime.Now; //TODO: UtcNow?
+                entry.Cast<IHasCreationTime>().Entity.CreationTime = Clock.Now;
             }
 
             if (entry.Entity is ICreationAudited)
@@ -199,7 +200,7 @@ namespace Abp.EntityFramework
             {
                 var auditedEntry = entry.Cast<IModificationAudited>();
 
-                auditedEntry.Entity.LastModificationTime = DateTime.Now; //TODO: UtcNow?
+                auditedEntry.Entity.LastModificationTime = Clock.Now;
                 auditedEntry.Entity.LastModifierUserId = AbpSession.UserId;
             }
         }
@@ -224,7 +225,7 @@ namespace Abp.EntityFramework
 
         private void SetDeletionAuditProperties(IDeletionAudited entity)
         {
-            entity.DeletionTime = DateTime.Now; //TODO: UtcNow?
+            entity.DeletionTime = Clock.Now;
             entity.DeleterUserId = AbpSession.UserId;
         }
     }
