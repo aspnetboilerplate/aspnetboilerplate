@@ -14,6 +14,12 @@ namespace Abp.Tests.Text.Formatting
                 "My name is {0}.",
                 new NameValue("0", "Neo")
                 );
+
+            Test_Matched(
+                "User halil does not exist.",
+                "User {0} does not exist.",
+                new NameValue("0", "halil")
+                );
         }
 
         [Fact]
@@ -22,6 +28,21 @@ namespace Abp.Tests.Text.Formatting
             Test_Not_Matched(
                 "My name is Neo.",
                 "My name is Marry."
+                );
+
+            Test_Not_Matched(
+                "Role {0} does not exist.",
+                "User name {0} is invalid, can only contain letters or digits."
+                );
+
+            Test_Not_Matched(
+                "{0} cannot be null or empty.",
+                "Incorrect password."
+                );
+
+            Test_Not_Matched(
+                "Incorrect password.",
+                "{0} cannot be null or empty."
                 );
         }
 
