@@ -46,10 +46,18 @@ namespace Abp.Tests.Text.Formatting
                 );
         }
 
-        private void Test_Matched(string str, string format, params NameValue[] expectedPairs)
+        [Fact]
+        public void IsMatch_Test()
+        {
+            string[] values;
+            FormattedStringValueExtracter.IsMatch("User halil does not exist.", "User {0} does not exist.", out values).ShouldBe(true);
+            values[0].ShouldBe("halil");
+        }
+
+        private static void Test_Matched(string str, string format, params NameValue[] expectedPairs)
         {
             var result = new FormattedStringValueExtracter().Extract(str, format);
-            result.IsMatched.ShouldBe(true);
+            result.IsMatch.ShouldBe(true);
 
             if (expectedPairs == null)
             {
@@ -72,7 +80,7 @@ namespace Abp.Tests.Text.Formatting
         private void Test_Not_Matched(string str, string format)
         {
             var result = new FormattedStringValueExtracter().Extract(str, format);
-            result.IsMatched.ShouldBe(false);
+            result.IsMatch.ShouldBe(false);
         }
     }
 }

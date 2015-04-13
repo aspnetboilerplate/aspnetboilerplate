@@ -7,8 +7,22 @@ using Abp.Text.Formatting;
 
 namespace Abp.Text
 {
+    /// <summary>
+    /// This class is used to extract dynamic values from a formatted string.
+    /// It works as reverse of <see cref="string.Format(string,object)"/>
+    /// </summary>
+    /// <example>
+    /// Say that str is "My name is Neo." and format is "My name is {name}.".
+    /// Then Extract method gets "Neo" as "name".  
+    /// </example>
     public class FormattedStringValueExtracter
     {
+        /// <summary>
+        /// Extracts dynamic values from a formatted string.
+        /// </summary>
+        /// <param name="str">String including dynamic values</param>
+        /// <param name="format">Format of the string</param>
+        /// <param name="ignoreCase">True, to search case-insensitive.</param>
         public ExtractionResult Extract(string str, string format, bool ignoreCase = false)
         {
             var stringComparison = ignoreCase
@@ -39,10 +53,10 @@ namespace Abp.Text
                     {
                         if (!str.StartsWith(currentToken.Text, stringComparison))
                         {
-                            result.IsMatched = false;
+                            result.IsMatch = false;
                             return result;
                         }
-                        
+
                         str = str.Substring(currentToken.Text.Length);
                     }
                     else
@@ -50,13 +64,13 @@ namespace Abp.Text
                         var matchIndex = str.IndexOf(currentToken.Text, stringComparison);
                         if (matchIndex < 0)
                         {
-                            result.IsMatched = false;
+                            result.IsMatch = false;
                             return result;
                         }
 
                         Debug.Assert(previousToken != null, "previousToken can not be null since i > 0 here");
-                        
-                        result.Matches.Add(new FormattedStringDynamicValueMatch(previousToken.Text, str.Substring(0, matchIndex)));
+
+                        result.Matches.Add(new NameValue(previousToken.Text, str.Substring(0, matchIndex)));
                         str = str.Substring(matchIndex + currentToken.Text.Length);
                     }
                 }
@@ -65,37 +79,54 @@ namespace Abp.Text
             var lastToken = formatTokens.Last();
             if (lastToken.Type == FormatStringTokenType.DynamicValue)
             {
-                result.Matches.Add(new FormattedStringDynamicValueMatch(lastToken.Text, str));
+                result.Matches.Add(new NameValue(lastToken.Text, str));
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Checks if given <see cref="str"/> fits to given <see cref="format"/>.
+        /// Also gets extracted values.
+        /// </summary>
+        /// <param name="str">String including dynamic values</param>
+        /// <param name="format">Format of the string</param>
+        /// <param name="values">Array of extracted values if matched</param>
+        /// <param name="ignoreCase">True, to search case-insensitive</param>
+        /// <returns>True, if matched.</returns>
+        public static bool IsMatch(string str, string format, out string[] values, bool ignoreCase = false)
+        {
+            var result = new FormattedStringValueExtracter().Extract(str, format, ignoreCase);
+            if (!result.IsMatch)
+            {
+                values = new string[0];
+                return false;
+            }
 
+            values = result.Matches.Select(m => m.Value).ToArray();
+            return true;
+        }
+
+        /// <summary>
+        /// Used as return value of <see cref="Extract"/> method.
+        /// </summary>
         public class ExtractionResult
         {
-            public bool IsMatched { get; set; }
+            /// <summary>
+            /// Is fully matched.
+            /// </summary>
+            public bool IsMatch { get; set; }
 
-            public List<FormattedStringDynamicValueMatch> Matches { get; private set; }
+            /// <summary>
+            /// List of matched dynamic values.
+            /// </summary>
+            public List<NameValue> Matches { get; private set; }
 
-            public ExtractionResult(bool isMatched)
+            internal ExtractionResult(bool isMatch)
             {
-                IsMatched = isMatched;
-                Matches = new List<FormattedStringDynamicValueMatch>();
+                IsMatch = isMatch;
+                Matches = new List<NameValue>();
             }
-        }
-    }
-
-    public class FormattedStringDynamicValueMatch
-    {
-        public string Name { get; private set; }
-
-        public string Value { get; private set; }
-
-        public FormattedStringDynamicValueMatch(string name, string value)
-        {
-            Name = name;
-            Value = value;
         }
     }
 }

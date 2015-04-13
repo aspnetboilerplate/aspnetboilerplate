@@ -133,7 +133,6 @@
     <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Localization\Sources\IDictionaryBasedLocalizationSource.cs" />
-    <Compile Include="StringHelper.cs" />
     <Compile Include="Timing\Clock.cs" />
     <Compile Include="Timing\IClockProvider.cs" />
     <Compile Include="MultiTenancy\MultiTenancyExtensions.cs" />
