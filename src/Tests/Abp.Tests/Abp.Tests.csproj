@@ -112,7 +112,7 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
-    <Compile Include="FormattedStringValueExtracter_Tests.cs" />
+    <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
     <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
