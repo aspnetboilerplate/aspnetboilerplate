@@ -120,6 +120,7 @@
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelper_Tests.cs" />
+    <Compile Include="Text\Formatting\FormattedStringTokenizer_Test.cs" />
     <Compile Include="Threading\AsyncHelper_Tests.cs" />
     <Compile Include="Threading\InternalAsyncHelper_Tests.cs" />
     <Compile Include="Reflection\ReflectionHelper_Tests.cs" />

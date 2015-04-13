@@ -122,7 +122,10 @@
     <Compile Include="Auditing\IAuditingStore.cs" />
     <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
-    <Compile Include="Strings\FormattedStringValueExtracter.cs" />
+    <Compile Include="Text\Formatting\FormatStringToken.cs" />
+    <Compile Include="Text\Formatting\FormatStringTokenType.cs" />
+    <Compile Include="Text\Formatting\FormatStringTokenizer.cs" />
+    <Compile Include="Text\FormattedStringValueExtracter.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensionInfo.cs" />
     <Compile Include="DisposeAction.cs" />
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
