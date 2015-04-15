@@ -9,7 +9,7 @@ namespace Abp
     /// </summary>
     public static class RandomHelper
     {
-        private static readonly Random _rnd = new Random();
+        private static readonly Random Rnd = new Random();
 
         /// <summary>
         /// Returns a random number within a specified range.
@@ -23,9 +23,9 @@ namespace Abp
         /// </returns>
         public static int GetRandom(int minValue, int maxValue)
         {
-            lock (_rnd)
+            lock (Rnd)
             {
-                return _rnd.Next(minValue, maxValue);
+                return Rnd.Next(minValue, maxValue);
             }
         }
 
@@ -40,9 +40,9 @@ namespace Abp
         /// </returns>
         public static int GetRandom(int maxValue)
         {
-            lock (_rnd)
+            lock (Rnd)
             {
-                return _rnd.Next(maxValue);
+                return Rnd.Next(maxValue);
             }
         }
 
@@ -52,9 +52,9 @@ namespace Abp
         /// <returns>A 32-bit signed integer greater than or equal to zero and less than <see cref="int.MaxValue"/>.</returns>
         public static int GetRandom()
         {
-            lock (_rnd)
+            lock (Rnd)
             {
-                return _rnd.Next();
+                return Rnd.Next();
             }
         }
 

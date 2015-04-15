@@ -5,6 +5,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using NHibernate;
 using NHibernate.Type;
 
@@ -37,7 +38,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "CreationTime")
                     {
-                        state[i] = (entity as IHasCreationTime).CreationTime = DateTime.Now; //TODO: UtcNow?
+                        state[i] = (entity as IHasCreationTime).CreationTime = Clock.Now;
                     }
                 }
             }
@@ -93,7 +94,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "LastModificationTime")
                     {
-                        currentState[i] = (entity as IModificationAudited).LastModificationTime = DateTime.Now; //TODO: UtcNow?
+                        currentState[i] = (entity as IModificationAudited).LastModificationTime = Clock.Now;
                     }
                     else if (propertyNames[i] == "LastModifierUserId")
                     {
@@ -122,7 +123,7 @@ namespace Abp.NHibernate.Interceptors
                     {
                         if (propertyNames[i] == "DeletionTime")
                         {
-                            currentState[i] = (entity as IDeletionAudited).DeletionTime = DateTime.Now; //TODO: UtcNow?
+                            currentState[i] = (entity as IDeletionAudited).DeletionTime = Clock.Now;
                         }
                         else if (propertyNames[i] == "DeleterUserId")
                         {

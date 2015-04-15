@@ -63,16 +63,11 @@ namespace Abp.Authorization
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
-        public Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
+        public Permission(string name, ILocalizableString displayName = null, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-
-            if (displayName == null)
-            {
-                throw new ArgumentNullException("displayName");
             }
 
             Name = name;
@@ -89,7 +84,7 @@ namespace Abp.Authorization
         /// A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
-        public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
+        public Permission CreateChildPermission(string name, ILocalizableString displayName = null, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides) { Parent = this };
             _children.Add(permission);

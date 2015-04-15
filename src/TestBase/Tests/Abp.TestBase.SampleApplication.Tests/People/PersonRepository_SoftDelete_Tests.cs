@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
@@ -65,6 +66,47 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 }
 
                 _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(false); //not getting deleted people
+
+                ouw.Complete();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Set_Deletion_Audit_Informations()
+        {
+            const long userId = 42;
+
+            AbpSession.UserId = userId;
+
+            //Get an entity to delete
+            var personToBeDeleted = (await _personRepository.GetAllListAsync()).FirstOrDefault();
+            personToBeDeleted.ShouldNotBe(null);
+
+            //Deletion audit properties should be null since it's not deleted yet
+            personToBeDeleted.IsDeleted.ShouldBe(false);
+            personToBeDeleted.DeletionTime.ShouldBe(null);
+            personToBeDeleted.DeleterUserId.ShouldBe(null);
+            
+            //Delete it
+            await _personRepository.DeleteAsync(personToBeDeleted.Id);
+
+            //Check if it's deleted
+            (await _personRepository.FirstOrDefaultAsync(personToBeDeleted.Id)).ShouldBe(null);
+
+            //Get deleted entity again and check audit informations
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            using (var ouw = uowManager.Begin())
+            {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    personToBeDeleted = await _personRepository.FirstOrDefaultAsync(personToBeDeleted.Id);
+                    personToBeDeleted.ShouldNotBe(null);
+
+                    //Deletion audit properties should be set
+                    personToBeDeleted.IsDeleted.ShouldBe(true);
+                    personToBeDeleted.DeletionTime.ShouldNotBe(null);
+                    personToBeDeleted.DeleterUserId.ShouldBe(userId);
+                }
 
                 ouw.Complete();
             }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp
+namespace Abp.Timing
 {
     /// <summary>
     /// A basic implementation of <see cref="IDateTimeRange"/> to store a date range.
@@ -18,7 +18,7 @@ namespace Abp
         /// </summary>
         public DateTime EndTime { get; set; }
 
-        private static DateTime Now { get { return DateTime.Now; } }
+        private static DateTime Now { get { return Clock.Now; } }
 
         /// <summary>
         /// Creates a new <see cref="DateTimeRange"/> object.
@@ -214,9 +214,9 @@ namespace Abp
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="DateTimeRange"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Abp.DateTimeRange"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="DateTimeRange"/>.</returns>
         public override string ToString()
         {
             return string.Format("[{0} - {1}]", StartTime, EndTime);

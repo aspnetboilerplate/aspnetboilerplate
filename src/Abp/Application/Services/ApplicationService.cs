@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Runtime.Session;
 
@@ -12,8 +13,8 @@ namespace Abp.Application.Services
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        public IAbpSession CurrentSession { protected get; set; }
-
+        public IAbpSession AbpSession { get; set; }
+        
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>
@@ -25,11 +26,17 @@ namespace Abp.Application.Services
         public IPermissionChecker PermissionChecker { protected get; set; }
 
         /// <summary>
+        /// Gets current session information.
+        /// </summary>
+        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        protected IAbpSession CurrentSession { get { return AbpSession; } }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected ApplicationService()
         {
-            CurrentSession = NullAbpSession.Instance;
+            AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
         }
 

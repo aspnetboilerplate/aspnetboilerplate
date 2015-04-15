@@ -100,7 +100,7 @@ namespace Abp.Domain.Uow
             //TODO: Check if filters exists?
 
             var disabledFilters = new List<string>();
-            
+
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
@@ -122,7 +122,7 @@ namespace Abp.Domain.Uow
             //TODO: Check if filters exists?
 
             var enabledFilters = new List<string>();
-            
+
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
@@ -134,10 +134,10 @@ namespace Abp.Domain.Uow
             }
 
             enabledFilters.ForEach(ApplyEnableFilter);
-            
+
             return new DisposeAction(() => DisableFilter(enabledFilters.ToArray()));
         }
-        
+
         /// <inheritdoc/>
         public bool IsFilterEnabled(string filterName)
         {
@@ -147,8 +147,13 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void SetFilterParameter(string filterName, string parameterName, object value)
         {
-            var filter = GetFilter(filterName);
-            filter.FilterParameters[parameterName] = value;
+            var filterIndex = GetFilterIndex(filterName);
+
+            var newfilter = new DataFilterConfiguration(_filters[filterIndex]);
+            newfilter.FilterParameters[parameterName] = value;
+
+            _filters[filterIndex] = newfilter;
+
             ApplyFilterParameterValue(filterName, parameterName, value);
         }
 
@@ -315,13 +320,18 @@ namespace Abp.Domain.Uow
                 }
             }
 
-            if (AbpSession.MultiTenancySide == MultiTenancySides.Host)
+            if (!AbpSession.UserId.HasValue)
             {
-                ChangeFilterValueIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
+                ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MayHaveTenant, false);
+                ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
+            }
+            else if (AbpSession.MultiTenancySide == MultiTenancySides.Host)
+            {
+                ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
             }
         }
 
-        private void ChangeFilterValueIfNotOverrided(List<DataFilterConfiguration> filterOverrides, string filterName, bool isEnabled)
+        private void ChangeFilterIsEnabledIfNotOverrided(List<DataFilterConfiguration> filterOverrides, string filterName, bool isEnabled)
         {
             if (filterOverrides.Any(f => f.FilterName == filterName))
             {

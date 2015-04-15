@@ -10,7 +10,7 @@ namespace Abp.Localization.Sources
     /// This class is used to build a localization source
     /// which works on memory based dictionaries to find strings.
     /// </summary>
-    public class DictionaryBasedLocalizationSource : ILocalizationSource
+    public class DictionaryBasedLocalizationSource : IDictionaryBasedLocalizationSource
     {
         /// <summary>
         /// Unique Name of the source.
@@ -172,6 +172,28 @@ namespace Abp.Localization.Sources
             }
 
             return dict.Values.ToImmutableList();
+        }
+
+        /// <summary>
+        /// Extends the source with given dictionary.
+        /// </summary>
+        /// <param name="dictionary">Dictionary to extend the source</param>
+        public void Extend(ILocalizationDictionary dictionary)
+        {
+            //Add
+            ILocalizationDictionary existingDictionary;
+            if (!_dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            {
+                _dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                return;
+            }
+
+            //Override
+            var localizedStrings = dictionary.GetAllStrings();
+            foreach (var localizedString in localizedStrings)
+            {
+                existingDictionary[localizedString.Name] = localizedString.Value;
+            }
         }
     }
 }

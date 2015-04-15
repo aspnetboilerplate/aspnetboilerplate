@@ -2,7 +2,7 @@
 
 namespace Abp.IO.Extensions
 {
-    internal static class StreamExtensions
+    public static class StreamExtensions
     {
         public static byte[] GetAllBytes(this Stream stream)
         {

@@ -20,6 +20,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
         [Fact]
         public void MayHaveTenant_Filter_Tests()
         {
+            AbpSession.UserId = 1;
+
             //A tenant can reach to it's own data
             AbpSession.TenantId = 1;
             _messageRepository.Count().ShouldBe(2);

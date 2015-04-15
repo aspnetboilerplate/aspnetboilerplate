@@ -8,7 +8,7 @@ namespace Abp.Runtime.Session
     public interface IAbpSession
     {
         /// <summary>
-        /// Gets current UserId of null.
+        /// Gets current UserId or null.
         /// </summary>
         long? UserId { get; }
 

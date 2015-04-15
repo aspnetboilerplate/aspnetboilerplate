@@ -112,12 +112,14 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
+    <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
     <Compile Include="Localization\Test_DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\LocalizationDictionaryWithAddMethod.cs" />
     <Compile Include="Localization\Test_XmlLocalizationDictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Text\Formatting\FormattedStringTokenizer_Test.cs" />
     <Compile Include="Threading\AsyncHelper_Tests.cs" />
     <Compile Include="Threading\InternalAsyncHelper_Tests.cs" />
     <Compile Include="Reflection\ReflectionHelper_Tests.cs" />

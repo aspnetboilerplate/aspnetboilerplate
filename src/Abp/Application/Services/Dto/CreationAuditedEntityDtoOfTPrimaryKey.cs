@@ -1,5 +1,6 @@
 using System;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 
 namespace Abp.Application.Services.Dto
 {
@@ -25,7 +26,7 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         protected CreationAuditedEntityDto()
         {
-            CreationTime = DateTime.Now;
+            CreationTime = Clock.Now;
         }
     }
 }

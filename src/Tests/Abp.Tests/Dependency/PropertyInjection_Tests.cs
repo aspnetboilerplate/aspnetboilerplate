@@ -34,9 +34,9 @@ namespace Abp.Tests.Dependency
         {
             public void TestSession()
             {
-                CurrentSession.ShouldNotBe(null);
-                CurrentSession.TenantId.ShouldBe(1);
-                CurrentSession.UserId.ShouldBe(42);
+                AbpSession.ShouldNotBe(null);
+                AbpSession.TenantId.ShouldBe(1);
+                AbpSession.UserId.ShouldBe(42);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Authorization;
@@ -18,7 +19,7 @@ namespace Abp.WebApi.Controllers
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        public IAbpSession CurrentSession { get; set; }
+        public IAbpSession AbpSession { get; set; }
         
         /// <summary>
         /// Reference to the permission manager.
@@ -75,11 +76,17 @@ namespace Abp.WebApi.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Gets current session information.
+        /// </summary>
+        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        protected IAbpSession CurrentSession { get { return AbpSession; } }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpApiController()
         {
-            CurrentSession = NullAbpSession.Instance;
+            AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;

@@ -41,7 +41,7 @@ namespace Abp.Tests.Configuration
 
             var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
             settingManager.SettingStore = new MemorySettingStore();
-            settingManager.Session = session;
+            settingManager.AbpSession = session;
 
             session.TenantId = 1;
 
@@ -88,7 +88,7 @@ namespace Abp.Tests.Configuration
             var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
             {
                 SettingStore = new MemorySettingStore(),
-                Session = session
+                AbpSession = session
             };
 
             //Application level changes
@@ -124,7 +124,7 @@ namespace Abp.Tests.Configuration
             var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
             {
                 SettingStore = store,
-                Session = session
+                AbpSession = session
             };
 
             session.TenantId = 1;

@@ -5,6 +5,7 @@ using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
 using Abp.Collections.Extensions;
+using Abp.Extensions;
 using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
@@ -52,7 +53,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     }
                     catch (AggregateException ex)
                     {
-                        ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                        ex.InnerException.ReThrow();
                         throw; // The previous line will throw, but we need this to makes compiler happy
                     }
                 });

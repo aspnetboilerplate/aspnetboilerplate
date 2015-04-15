@@ -2,6 +2,7 @@
 using System.Linq;
 using Abp.Localization.Sources;
 using NSubstitute;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Localization
@@ -70,6 +71,31 @@ namespace Abp.Tests.Localization
             Assert.Equal("Fourty Two (42)", localizedStrings[0].Value);
             Assert.Equal("Merhaba", localizedStrings[1].Value);
             Assert.Equal("Yeryüzü", localizedStrings[2].Value);
+        }
+
+        [Fact]
+        public void Should_Extend_LocalizationSource_Overriding()
+        {
+            _localizationSource.Extend(
+                new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
+                {
+                    {"hello", "Selam"},
+                });
+
+            _localizationSource.GetString("hello", new CultureInfo("tr-TR")).ShouldBe("Selam");
+        }
+
+        [Fact]
+        public void Should_Extend_LocalizationSource_With_New_Language()
+        {
+            _localizationSource.Extend(
+                new LocalizationDictionaryWithAddMethod(new CultureInfo("fr"))
+                {
+                    {"hello", "Bonjour"},
+                });
+
+            _localizationSource.GetString("hello", new CultureInfo("fr")).ShouldBe("Bonjour");
+            _localizationSource.GetString("world", new CultureInfo("fr")).ShouldBe("World"); //not localed into french
         }
     }
 }

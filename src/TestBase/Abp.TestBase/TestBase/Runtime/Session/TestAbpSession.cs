@@ -39,7 +39,6 @@ namespace Abp.TestBase.Runtime.Session
         public TestAbpSession(IMultiTenancyConfig multiTenancy)
         {
             _multiTenancy = multiTenancy;
-
         }
 
         private MultiTenancySides GetCurrentMultiTenancySide()

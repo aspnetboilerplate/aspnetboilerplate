@@ -8,5 +8,9 @@ namespace Abp.Configuration.Startup
     /// </summary>
     public interface ILocalizationSourceList : IList<ILocalizationSource>
     {
+        /// <summary>
+        /// Extensions for dictionay based localization sources.
+        /// </summary>
+        IList<LocalizationSourceExtensionInfo> Extensions { get; }
     }
 }
