@@ -98,7 +98,6 @@ namespace Abp.Auditing
 
                 return JsonConvert.SerializeObject(
                     dictionary,
-                    Formatting.Indented,
                     new JsonSerializerSettings
                     {
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
