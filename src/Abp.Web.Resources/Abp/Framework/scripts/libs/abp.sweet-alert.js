@@ -1,6 +1,6 @@
 ﻿var abp = abp || {};
 (function ($) {
-    if (!sweetAlert || !jQuery) {
+    if (!sweetAlert || !$) {
         return;
     }
 
@@ -53,27 +53,30 @@
             }
         );
 
-        sweetAlert(opts);
+        return $.Deferred(function ($dfd) {
+            sweetAlert(opts, function (value) {
+                $dfd.resolve(value);
+            });
+        });
     };
 
     abp.message.info = function (message, title) {
-        showMessage('info', message, title);
+        return showMessage('info', message, title);
     };
 
     abp.message.success = function (message, title) {
-        showMessage('success', message, title);
+        return showMessage('success', message, title);
     };
 
     abp.message.warn = function (message, title) {
-        showMessage('warn', message, title);
+        return showMessage('warn', message, title);
     };
 
     abp.message.error = function (message, title) {
-        showMessage('error', message, title);
+        return showMessage('error', message, title);
     };
 
     abp.message.confirm = function (message, titleOrCallback, callback) {
-
         var userOpts = {
             text: message
         };
@@ -91,8 +94,11 @@
             userOpts
         );
 
-        sweetAlert(opts, function (isConfirmed) {
-            callback && callback(isConfirmed);
+        return $.Deferred(function ($dfd) {
+            sweetAlert(opts, function (isConfirmed) {
+                callback && callback(isConfirmed);
+                $dfd.resolve(isConfirmed);
+            });
         });
     };
 
