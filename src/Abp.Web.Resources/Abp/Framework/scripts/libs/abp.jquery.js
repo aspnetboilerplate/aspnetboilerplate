@@ -13,6 +13,8 @@
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
+        options.success = undefined;
+        options.error = undefined;
         return $.Deferred(function ($dfd) {
             $.ajax(options)
                 .done(function (data) {
