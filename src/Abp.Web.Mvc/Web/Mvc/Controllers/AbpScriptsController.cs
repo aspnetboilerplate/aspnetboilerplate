@@ -67,7 +67,20 @@ namespace Abp.Web.Mvc.Controllers
             
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
 
+            sb.AppendLine(GetTriggerScript());
+
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
+        }
+
+        private string GetTriggerScript()
+        {
+            var script = new StringBuilder();
+
+            script.AppendLine("(function(){");
+            script.AppendLine("    abp.event.trigger('abp.dynamicScriptsInitialized');");
+            script.Append("})();");
+
+            return script.ToString();
         }
     }
 }

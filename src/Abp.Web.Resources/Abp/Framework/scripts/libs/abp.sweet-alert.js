@@ -26,11 +26,11 @@
             },
             confirm: {
                 type: 'warning',
-                title: abp.localization.abpWeb('AreYouSure'),
+                title: 'Are you sure?',
                 showCancelButton: true,
-                cancelButtonText: abp.localization.abpWeb('Cancel'),
+                cancelButtonText: 'Cancel',
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: abp.localization.abpWeb('Yes')
+                confirmButtonText: 'Yes'
             }
         }
     };
@@ -54,8 +54,8 @@
         );
 
         return $.Deferred(function ($dfd) {
-            sweetAlert(opts, function (value) {
-                $dfd.resolve(value);
+            sweetAlert(opts, function () {
+                $dfd.resolve();
             });
         });
     };
@@ -97,9 +97,15 @@
         return $.Deferred(function ($dfd) {
             sweetAlert(opts, function (isConfirmed) {
                 callback && callback(isConfirmed);
-                $dfd.resolve(isConfirmed);
+                $dfd.resolve();
             });
         });
     };
+
+    abp.event.on('abp.dynamicScriptsInitialized', function () {
+        abp.libs.sweetAlert.config.confirm.title = abp.localization.abpWeb('AreYouSure');
+        abp.libs.sweetAlert.config.confirm.cancelButtonText = abp.localization.abpWeb('Cancel');
+        abp.libs.sweetAlert.config.confirm.confirmButtonText = abp.localization.abpWeb('Yes');
+    });
 
 })(jQuery);
