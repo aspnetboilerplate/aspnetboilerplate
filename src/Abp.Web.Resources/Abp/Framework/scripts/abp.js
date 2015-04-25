@@ -276,6 +276,41 @@
         abp.log.warn('abp.ui.clearBusy is not implemented!');
     };
 
+    /* SIMPLE EVENT BUS *****************************************/
+
+    abp.event = (function() {
+
+        var _callbacks = {};
+
+        var on = function(eventName, callback) {
+            if (!_callbacks[eventName]) {
+                _callbacks[eventName] = [];
+            }
+
+            _callbacks[eventName].push(callback);
+        };
+
+        var trigger = function(eventName) {
+            var callbacks = _callbacks[eventName];
+            if (!callbacks || !callbacks.length) {
+                return;
+            }
+
+            var args = Array.prototype.slice.call(arguments, 1);
+            for (var i = 0; i < callbacks.length; i++) {
+                callbacks[i].apply(this, args);
+            }
+        };
+
+        // Public interface ///////////////////////////////////////////////////
+
+        return {
+            on: on,
+            trigger: trigger
+        };
+    })();
+
+
     /* UTILS ***************************************************/
 
     abp.utils = abp.utils || {};
