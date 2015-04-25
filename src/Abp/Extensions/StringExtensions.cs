@@ -115,9 +115,6 @@ namespace Abp.Extensions
         /// <summary>
         /// Gets a substring of a string from beginning of the string.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="len"></param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Left(this string str, int len)
@@ -133,6 +130,14 @@ namespace Abp.Extensions
             }
 
             return str.Substring(0, len);
+        }
+
+        /// <summary>
+        /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
+        /// </summary>
+        public static string NormalizeLineEndings(this string str)
+        {
+            return str.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
         }
 
         /// <summary>
@@ -168,9 +173,6 @@ namespace Abp.Extensions
         /// <summary>
         /// Gets a substring of a string from end of the string.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="len"></param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Right(this string str, int len)
@@ -188,6 +190,37 @@ namespace Abp.Extensions
             return str.Substring(str.Length - len, len);
         }
 
+        /// <summary>
+        /// Uses string.Split method to split given string by given separator.
+        /// </summary>
+        public static string[] Split(this string str, string separator)
+        {
+            return str.Split(new[] { separator }, StringSplitOptions.None);
+        }
+
+        /// <summary>
+        /// Uses string.Split method to split given string by given separator.
+        /// </summary>
+        public static string[] Split(this string str, string separator, StringSplitOptions options)
+        {
+            return str.Split(new[] { separator }, options);
+        }
+
+        /// <summary>
+        /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+        /// </summary>
+        public static string[] SplitToLines(this string str)
+        {
+            return str.Split(Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+        /// </summary>
+        public static string[] SplitToLines(this string str, StringSplitOptions options)
+        {
+            return str.Split(Environment.NewLine, options);
+        }
 
         /// <summary>
         /// Converts PascalCase string to camelCase string.
@@ -333,7 +366,7 @@ namespace Abp.Extensions
             {
                 return string.Empty;
             }
-            
+
             if (str.Length <= maxLength)
             {
                 return str;
