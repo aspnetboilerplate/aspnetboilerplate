@@ -9,18 +9,18 @@ namespace Abp.Reflection
     /// Default implementation of <see cref="IAssemblyFinder"/>.
     /// If gets assemblies from current domain.
     /// </summary>
-    internal class DefaultAssemblyFinder : IAssemblyFinder
+    public class CurrentDomainAssemblyFinder : IAssemblyFinder
     {
         /// <summary>
-        /// Gets Singleton instance of <see cref="DefaultAssemblyFinder"/>.
+        /// Gets Singleton instance of <see cref="CurrentDomainAssemblyFinder"/>.
         /// </summary>
-        public static DefaultAssemblyFinder Instance { get { return SingletonInstance; } }
-        private static readonly DefaultAssemblyFinder SingletonInstance = new DefaultAssemblyFinder();
+        public static CurrentDomainAssemblyFinder Instance { get { return SingletonInstance; } }
+        private static readonly CurrentDomainAssemblyFinder SingletonInstance = new CurrentDomainAssemblyFinder();
 
         /// <summary>
         /// Private constructor to disable instancing.
         /// </summary>
-        private DefaultAssemblyFinder()
+        private CurrentDomainAssemblyFinder()
         {
 
         }

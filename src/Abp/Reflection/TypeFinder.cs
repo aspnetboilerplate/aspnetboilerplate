@@ -15,7 +15,7 @@ namespace Abp.Reflection
 
         public TypeFinder()
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            AssemblyFinder = CurrentDomainAssemblyFinder.Instance;
             Logger = NullLogger.Instance;
         }
 

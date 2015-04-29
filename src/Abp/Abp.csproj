@@ -274,7 +274,7 @@
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DependsOnAttribute.cs" />
-    <Compile Include="Reflection\DefaultAssemblyFinder.cs" />
+    <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
     <Compile Include="Modules\DefaultModuleFinder.cs" />
     <Compile Include="Modules\IAbpModuleManager.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />
