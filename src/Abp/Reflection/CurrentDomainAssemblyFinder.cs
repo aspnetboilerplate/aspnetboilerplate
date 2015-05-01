@@ -17,14 +17,6 @@ namespace Abp.Reflection
         public static CurrentDomainAssemblyFinder Instance { get { return SingletonInstance; } }
         private static readonly CurrentDomainAssemblyFinder SingletonInstance = new CurrentDomainAssemblyFinder();
 
-        /// <summary>
-        /// Private constructor to disable instancing.
-        /// </summary>
-        private CurrentDomainAssemblyFinder()
-        {
-
-        }
-
         public List<Assembly> GetAllAssemblies()
         {
             return AppDomain.CurrentDomain.GetAssemblies().ToList();

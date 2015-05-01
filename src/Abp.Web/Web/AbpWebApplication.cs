@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Threading;
 using System.Web;
+using Abp.Dependency;
 using Abp.Localization;
 using Abp.Reflection;
-using Castle.MicroKernel.Registration;
 
 namespace Abp.Web
 {
@@ -17,15 +17,19 @@ namespace Abp.Web
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        private AbpBootstrapper AbpBootstrapper { get; set; }
+        protected AbpBootstrapper AbpBootstrapper { get; private set; }
+
+        protected AbpWebApplication()
+        {
+            AbpBootstrapper = new AbpBootstrapper();
+        }
 
         /// <summary>
         /// This method is called by ASP.NET system on web application's startup.
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
-            AbpBootstrapper = new AbpBootstrapper();
-            AbpBootstrapper.IocManager.IocContainer.Register(Component.For<IAssemblyFinder>().ImplementedBy<WebAssemblyFinder>());
+            AbpBootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             AbpBootstrapper.Initialize();
         }
 
