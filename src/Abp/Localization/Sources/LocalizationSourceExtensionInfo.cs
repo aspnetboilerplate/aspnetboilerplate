@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="dictionaryProvider">Extension dictionaries</param>
-        internal LocalizationSourceExtensionInfo(string sourceName, ILocalizationDictionaryProvider dictionaryProvider)
+        public LocalizationSourceExtensionInfo(string sourceName, ILocalizationDictionaryProvider dictionaryProvider)
         {
             SourceName = sourceName;
             DictionaryProvider = dictionaryProvider;
