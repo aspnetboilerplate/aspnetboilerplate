@@ -68,7 +68,7 @@ infrastructure to store/retrieve <strong>application</strong>, <strong>tenant
 <h3 id="DocUsingSession">Using session properties</h3>
 <p>AbpSession defines a few key properties:</p>
 <ul>
-	<li>&nbsp;<strong>UserId</strong>: Id of the current user or null if there 
+	<li><strong>UserId</strong>: Id of the current user or null if there 
 	is no current user. It can not be null if the calling code is authorized.</li>
 	<li><strong>TenantId</strong>: Id of the current tenant or null if there is 
 	no current tenant.</li>
@@ -77,7 +77,7 @@ infrastructure to store/retrieve <strong>application</strong>, <strong>tenant
 <p>UserId and TenantId is <strong>nullable</strong>. There is also non-nullable
 <strong>GetUserId()</strong> and <strong>GetTenantId()</strong> methods. If 
 you're sure there is a current user, you can call GetUserId(). If current user 
-is null, this method throws exception. GetTenantId is also similar.</p>
+is null, this method throws exception. GetTenantId() is also similar.</p>
 
 </body>
 

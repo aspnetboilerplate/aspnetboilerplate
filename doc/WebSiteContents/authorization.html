@@ -33,7 +33,8 @@ based</strong> infrastructure to implement authorization.</p>
 <p>Authorization system uses <strong>IPermissionChecker</strong> to check 
 permissions. While you can 
 implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
-project.</p>
+project. If it's not implemented, NullPermissionChecker is used that grants all 
+permissions to everyone.</p>
 </div>
 
 <h3 id="DocDefinePermission">Defining permissions</h3>

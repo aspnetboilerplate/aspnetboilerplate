@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+<style type="text/css">
+.auto-style1 {
+	text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocIntro">Introduction</a></li>
+	<li>Pre-defined filters<ul>
+		<li>ISoftDelete</li>
+		<li>IMustHaveTenant</li>
+		<li>IMayHaveTenant</li>
+	</ul>
+	</li>
+	<li>Defining custom filters</li>
+	<li>Enable/Disable filters</li>
+	<li>Setting filter parameters</li>
+</ul>
+<h3 id="DocIntro">Introduction</h3>
+<p>It's common to use the <a href="/Pages/Documents/Entities#DocSoftDelete">
+<strong>soft-delete</strong></a> pattern which is used to not delete an entity 
+from database but only mark it as 'deleted'. So, if an entity is soft-deleted, 
+it should not be accidently retrieved into the application. To provide that, we 
+would add a SQL <strong>where</strong> condition like 'IsDeleted = false' in 
+every query we select entities. This is a tedious but more importantly a 
+forgettable task. So, there should be an automatic way of it.</p>
+<p>ASP.NET Boilerplate provides <strong>data filters </strong>those can be used 
+to automatically filter queries based on some rules. There are some pre-defined 
+filters, but also you can create your own filters.</p>
+<h3>Pre-defined filters</h3>
+<h4>ISoftDelete</h4>
+<p>Soft-delete filter is used to automatically filter (extract from results) 
+deleted entities while querying database. If an
+<a href="/Pages/Documents/Entities">entity</a> should be soft-deleted, it must 
+implement <strong>ISoftDelete</strong> interface which defines only IsDeleted 
+property. Example:</p>
+<pre lang="cs">public class Person : Entity, ISoftDelete
+{
+    public virtual string Name { get; set; }
+
+    public virtual bool IsDeleted { get; set; }
+}</pre>
+<p>A <strong>Person </strong>entity is not actually deleted from database, 
+instead <strong>IsDeleted </strong>property is set to true when need to delete 
+it. This is done automatically by ASP.NET Boilerplate when you use <strong>
+<a href="/Pages/Documents/Repositories#DocDeleteEntity">IRepository.Delete</a></strong> 
+method (you can manually set IsDeleted to true, but Delete method is more 
+natural and preffered way).</p>
+<p>After implementing ISoftDelete, when you get list of People from database, 
+deleted people are not retrieved. Here, an example class that uses a person 
+repository to get all people:</p>
+<pre lang="cs">public class MyService
+{
+    private readonly IRepository&lt;Person&gt; _personRepository;
+
+    public MyService(IRepository&lt;Person&gt; personRepository)
+    {
+        _personRepository = personRepository;
+    }
+
+    public List&lt;Person&gt; GetPeople()
+    {
+        return _personRepository.GetAllList();
+    }
+}</pre>
+<p>GetPeople method only gets Person entities which has IsDeleted = false (not 
+deleted). All repository methods and also navigation properties properly works. 
+We could add some other Where conditions, joins.. etc. It will automatically add 
+IsDeleted = false condition properly.</p>
+
+<div class="bs-callout bs-callout-warning">
+	<h4>When enabled?</h4>
+	<p>ISoftDelete filter is always enabled unless you explicitly disable it.</p>
+</div>
+
+<p><span class="auto-style1">A side note</span>: If you implement
+<a href="/Pages/Documents/Entities#DocSoftDelete">IDeletionAudited</a> (which 
+extends ISoftDelete) then deletion time and deleter user id are also 
+automatically set by ASP.NET Boilerplate.</p>
+<h4>IMustHaveTenant</h4>
+<p>If you are building multi-tenant applications (store all tenant datas in 
+single database), you definitely do not want a tenant accidently see others 
+data. You can implement <strong>IMustHaveTenant</strong> in that case. Example:</p>
+<pre lang="cs">public class Product : IMustHaveTenant
+{
+    public virtual int TenantId { get; set; }
+        
+    public virtual string Name { get; set; }
+}</pre>
+<p><strong>IMustHaveTenant</strong> defines <strong>TenantId </strong>to 
+distinguish different tenant entities. ASP.NET Boilerplate uses
+<a href="/Pages/Documents/AbpSession">IAbpSession</a> to get current TenantId 
+and automatically filter query for the current tenant.</p>
+
+<div class="bs-callout bs-callout-warning">
+	<h4>When enabled?</h4>
+	<p>IMustHaveTenant is enabled by default.</p>
+	<p>If current user is not logged in to the system or current user is a <strong>host</strong> user (Host user is an upper level user that can 
+	manage tenants and tenant datas), ASP.NET Boilerplate automatically <strong>
+	disables</strong> IMustHaveTenant filter. Thus, all data of all tenant's can be 
+	retrieved to the application. Notice that this is not about security, you should 
+	always <a href="/Pages/Documents/Authorization">authorize</a> sensitive data.</p>
+</div>
+
+<h4>IMayHaveTenant</h4>
+<p>If an entity class shared by tenants and the host (that means an entity may 
+be owned by a tenant or the host), you can use IMayHaveTenant filter. <strong>
+IMayHaveTenant</strong> interface also defines <strong>TenantId</strong> but it's <strong>
+nullable</strong>.</p>
+<pre lang="cs">public class Product : IMayHaveTenant
+{
+    public virtual int? TenantId { get; set; }
+        
+    public virtual string Name { get; set; }
+}</pre>
+<p>A null value means this is a host entity, a non-null value means this entity 
+owned by a tenant which's Id is the TenantId. ASP.NET Boilerplate uses
+<a href="/Pages/Documents/AbpSession">IAbpSession</a> to get current TenantId. 
+IMayHaveTenant filter is not common as much as 
+IMustHaveTenant. But you may need it for common structures used by host and tenants.</p>
+
+<div class="bs-callout bs-callout-warning">
+	<h4>When enabled?</h4>
+	<p>IMayHaveTenant is enabled by default.</p>
+	<p>If current user is not logged in to the system, ASP.NET Boilerplate automatically <strong>
+	disables</strong> IMayHaveTenant filter. Thus, all data of host's and all tenant's can be 
+	retrieved to the application. Notice that this is not about security, you should 
+	always <a href="/Pages/Documents/Authorization">authorize</a> sensitive 
+	data.</p>
+</div>
+
+<h3>Defining custom filters</h3>
+<p>...</p>
+<h3>Enable/Disable filters</h3>
+<p>...</p>
+<h3>Setting filter parameters</h3>
+<p>...</p>
+<p>TODO-NOTE: Data filters are not implemented in NHibernate!</p>
+
+</body>
+
+</html>
