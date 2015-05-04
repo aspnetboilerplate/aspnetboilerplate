@@ -113,6 +113,11 @@ namespace Abp.Auditing
 
         private bool ShouldSaveAudit(MethodInfo methodInfo)
         {
+            if (!methodInfo.IsPublic)
+            {
+                return false;
+            }
+
             if (methodInfo.IsDefined(typeof (AuditedAttribute)))
             {
                 return true;

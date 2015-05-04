@@ -24,6 +24,15 @@ namespace Abp.WebApi
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
+
+            //TODO: Still testing 
+            //Configuration.Auditing.Selectors.Add(
+            //    new NamedTypeSelector(
+            //        "Abp.WebApi.Controllers",
+            //        type => typeof (ApiController).IsAssignableFrom(type) &&
+            //                !typeof(IDynamicApiController).IsAssignableFrom(type)
+            //        )
+            //    );
         }
 
         /// <inheritdoc/>

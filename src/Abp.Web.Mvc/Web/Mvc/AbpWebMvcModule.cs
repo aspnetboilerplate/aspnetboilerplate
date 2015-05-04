@@ -15,6 +15,14 @@ namespace Abp.Web.Mvc
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
+
+            //TODO: Still testing 
+            //Configuration.Auditing.Selectors.Add(
+            //    new NamedTypeSelector(
+            //        "Abp.Web.Mvc.Controllers",
+            //        type => typeof (Controller).IsAssignableFrom(type)
+            //        )
+            //    );
         }
 
         /// <inheritdoc/>

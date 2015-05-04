@@ -95,6 +95,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\Clients\DynamicApiClientBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Clients\IApiClientBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Clients\IDynamicApiClient.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\IDynamicApiController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
