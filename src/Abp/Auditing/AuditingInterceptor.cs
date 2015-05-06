@@ -16,20 +16,22 @@ namespace Abp.Auditing
     internal class AuditingInterceptor : IInterceptor
     {
         public IAbpSession AbpSession { get; set; }
+
         public ILogger Logger { get; set; }
 
-        private readonly IAuditingStore _auditingStore;
+        public IAuditingStore AuditingStore { get; set; }
+        
         private readonly IAuditingConfiguration _configuration;
         private readonly IAuditInfoProvider _auditInfoProvider;
 
-        public AuditingInterceptor(IAuditingStore auditingStore, IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider)
+        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider)
         {
-            _auditingStore = auditingStore;
             _configuration = configuration;
             _auditInfoProvider = auditInfoProvider;
             
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
+            AuditingStore = SimpleLogAuditingStore.Instance;
         }
 
         public void Intercept(IInvocation invocation)
@@ -74,7 +76,7 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                _auditingStore.Save(auditInfo); //TODO: Call async when target method is async.
+                AuditingStore.Save(auditInfo); //TODO: Call async when target method is async.
             }
         }
 

@@ -8,6 +8,12 @@ namespace Abp.Auditing
     /// </summary>
     public class SimpleLogAuditingStore : IAuditingStore
     {
+        /// <summary>
+        /// Singleton instance.
+        /// </summary>
+        public static SimpleLogAuditingStore Instance { get { return SingletonInstance; } }
+        private static readonly SimpleLogAuditingStore SingletonInstance = new SimpleLogAuditingStore();
+
         public ILogger Logger { get; set; }
 
         public SimpleLogAuditingStore()
