@@ -22,9 +22,10 @@
 		<li>IMayHaveTenant</li>
 	</ul>
 	</li>
-	<li>Defining custom filters</li>
-	<li>Enable/Disable filters</li>
+	<li>Disable filters</li>
+	<li>Enable filters</li>
 	<li>Setting filter parameters</li>
+	<li>Defining custom filters</li>
 </ul>
 <h3 id="DocIntro">Introduction</h3>
 <p>It's common to use the <a href="/Pages/Documents/Entities#DocSoftDelete">
@@ -139,11 +140,47 @@ IMustHaveTenant. But you may need it for common structures used by host and tena
 	data.</p>
 </div>
 
-<h3>Defining custom filters</h3>
-<p>...</p>
-<h3>Enable/Disable filters</h3>
-<p>...</p>
+<h3>Disable filters</h3>
+<p>You can disable a filter per <a href="/Pages/Documents/Unit-Of-Work">unit of 
+work</a> by calling <strong>DisableFilter</strong> method as shown below:</p>
+<pre lang="cs">var people1 = _personRepository.GetAllList();
+
+using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+{
+    var people2 = _personRepository.GetAllList();                
+}
+
+var people3 = _personRepository.GetAllList();</pre>
+<p>DisableFilter method gets one or more filter names as strings. 
+AbpDataFilters.SoftDelete is a constant string that contains name of the soft 
+delete filter.</p>
+<p>people2 can also get deleted people while people1 and people3 will be only 
+non-deleted people. With using statement, you can disable a filter in a scope. 
+If you don't use using stamement, the filter will be disabled until end of the&nbsp; 
+current unit of work or you enable it again.</p>
+<p>You can inject IUnitOfWorkManager and use as in the example. Also, you can 
+use CurrentUnitOfWork property as a shortcut in an application service (derived 
+from ApplicationService class).</p>
+
+<div class="bs-callout bs-callout-warning">
+	<h4>About using statement</h4>
+	<p>Note: If a filter is enabled when you call 
+	the DisableFilter method with a using statement, the filter is disabled, then 
+	automatically re-enabled after using statement. But if the filter was already 
+	disabled before the using statement, DisableFilter actually does nothing and it remains disabled even after 
+	the using statement.</p>
+</div>
+
+<h3>Enable filters</h3>
+<p>You can enable a filter in a unit of work using <strong>EnableFilter </strong>
+method, as similar to DisableFilter. EnableFilter also returns disposable to 
+automatically re-disable the filter.</p>
 <h3>Setting filter parameters</h3>
+<p>A filter can be <strong>parametric</strong>. IMustHaveTenant filter is an 
+example of these types of filters since current tenant's Id is determined on 
+runtime. For such filters, we can change filter value if needed. Example:</p>
+<p>...</p>
+<h3>Defining custom filters</h3>
 <p>...</p>
 <p>TODO-NOTE: Data filters are not implemented in NHibernate!</p>
 
