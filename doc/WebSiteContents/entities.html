@@ -15,7 +15,6 @@
 		<li><a href="#DocAuditing">Auditing</a></li>
 		<li><a href="#DocSoftDelete">Soft delete</a></li>
 		<li><a href="#DocActivePassive">Active/Passive</a></li>
-		<li></li>
 	</ul>
 	</li>
 	<li><a href="#DocIEntityInterfaces">IEntity interfaces</a></li>
@@ -156,7 +155,7 @@ FullAuditedEntity</strong> class that implements all.</p>
 <p>NOTE: All audit interfaces and classes have a generic version for defining navigation property 
 to your <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt; and 
 FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).&nbsp;</p>
-<h4>Active/Passive</h4>
+<h4 id="DocActivePassive">Active/Passive</h4>
 <p>Some entities need to be marked as Active or Passive. Then you may take 
 action upon active/passive state of the entity. You can implement <strong>
 IPassivable</strong> interface that is created for this reason. It defines
