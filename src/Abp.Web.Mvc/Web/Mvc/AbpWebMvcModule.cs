@@ -15,14 +15,6 @@ namespace Abp.Web.Mvc
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
-
-            //TODO: Still testing 
-            //Configuration.Auditing.Selectors.Add(
-            //    new NamedTypeSelector(
-            //        "Abp.Web.Mvc.Controllers",
-            //        type => typeof (Controller).IsAssignableFrom(type)
-            //        )
-            //    );
         }
 
         /// <inheritdoc/>
@@ -31,7 +23,7 @@ namespace Abp.Web.Mvc
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager.IocContainer.Kernel));
-            GlobalFilters.Filters.Add(new AbpHandleErrorAttribute());
+            GlobalFilters.Filters.Add(IocManager.Resolve<AbpHandleErrorAttribute>());
         }
     }
 }

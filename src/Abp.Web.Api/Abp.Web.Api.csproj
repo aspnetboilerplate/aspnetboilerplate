@@ -133,6 +133,7 @@
     <Compile Include="WebApi\Controllers\AbpControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiRouteConfig.cs" />
+    <Compile Include="WebApi\Controllers\Filters\AuditLoggingFilterAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Api.nuspec" />

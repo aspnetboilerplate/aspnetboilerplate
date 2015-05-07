@@ -17,12 +17,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         public SimpleAuditing_Test()
         {
             _personAppService = Resolve<IPersonAppService>();
+            Resolve<IAuditingConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
         protected override void PreInitialize()
         {
             base.PreInitialize();
-
             _auditingStore = Substitute.For<IAuditingStore>();
             LocalIocManager.IocContainer.Register(
                 Component.For<IAuditingStore>().UsingFactoryMethod(() => _auditingStore).LifestyleSingleton()

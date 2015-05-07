@@ -27,7 +27,12 @@ namespace Abp.Logging
 
         public static void LogException(Exception ex)
         {
-            Logger.Error(ex.ToString(), ex);
+            LogException(Logger, ex);
+        }
+
+        public static void LogException(ILogger logger, Exception ex)
+        {
+            logger.Error(ex.ToString(), ex);
             LogValidationErrors(ex);
         }
 

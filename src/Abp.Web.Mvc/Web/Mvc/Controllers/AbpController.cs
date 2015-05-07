@@ -208,13 +208,15 @@ namespace Abp.Web.Mvc.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            base.OnActionExecuting(filterContext);
             HandleAuditingBeforeAction(filterContext);
+
+            base.OnActionExecuting(filterContext);
         }
         
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
+
             HandleAuditingAfterAction(filterContext);                
         }
 
@@ -236,28 +238,28 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext),
+                GetMethodInfo(filterContext.ActionDescriptor),
                 AuditingConfiguration,
                 AbpSession,
                 true
                 );
         }
 
-        private MethodInfo GetMethodInfo(ActionExecutingContext filterContext)
+        private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
         {
-            if (filterContext.ActionDescriptor is ReflectedActionDescriptor)
+            if (actionDescriptor is ReflectedActionDescriptor)
             {
-                return ((ReflectedActionDescriptor) filterContext.ActionDescriptor).MethodInfo;
+                return ((ReflectedActionDescriptor)actionDescriptor).MethodInfo;
             }
 
-            if (filterContext.ActionDescriptor is ReflectedAsyncActionDescriptor)
+            if (actionDescriptor is ReflectedAsyncActionDescriptor)
             {
-                return ((ReflectedAsyncActionDescriptor)filterContext.ActionDescriptor).MethodInfo;
+                return ((ReflectedAsyncActionDescriptor)actionDescriptor).MethodInfo;
             }
 
-            if (filterContext.ActionDescriptor is TaskAsyncActionDescriptor)
+            if (actionDescriptor is TaskAsyncActionDescriptor)
             {
-                return ((TaskAsyncActionDescriptor)filterContext.ActionDescriptor).MethodInfo;
+                return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
             }
 
             return null;
@@ -271,7 +273,7 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            var methodInfo = GetMethodInfo(filterContext);
+            var methodInfo = GetMethodInfo(filterContext.ActionDescriptor);
 
             _actionStopwatch = Stopwatch.StartNew();
             _auditInfo = new AuditInfo
@@ -282,7 +284,7 @@ namespace Abp.Web.Mvc.Controllers
                                 ? methodInfo.DeclaringType.FullName
                                 : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                 MethodName = methodInfo.Name,
-                Parameters = ConvertArgumentsToJson(filterContext),
+                Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
                 ExecutionTime = Clock.Now
             };
         }
@@ -307,20 +309,20 @@ namespace Abp.Web.Mvc.Controllers
             AuditingStore.Save(_auditInfo);
         }
 
-        private string ConvertArgumentsToJson(ActionExecutingContext filterContext)
+        private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
         {
             try
             {
-                if (filterContext.ActionParameters.IsNullOrEmpty())
+                if (arguments.IsNullOrEmpty())
                 {
                     return "{}";
                 }
 
                 var dictionary = new Dictionary<string, object>();
 
-                foreach (var parameter in filterContext.ActionParameters)
+                foreach (var argument in arguments)
                 {
-                    dictionary[parameter.Key] = parameter.Value;
+                    dictionary[argument.Key] = argument.Value;
                 }
 
                 return JsonConvert.SerializeObject(
