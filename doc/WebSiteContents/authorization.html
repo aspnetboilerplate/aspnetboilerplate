@@ -98,7 +98,7 @@ public void CreateUser(CreateUserInput input)
 }</pre>
 <p>CreateUser method can not be called by a user who is not granted for permission "<em>Administration.UserManagement.CreateUser</em>".</p>
 <p>AbpAuthorize attribute also checks if current user is logged in (using
-<a href="/Pages/Documents/Session">IAbpSession.UserId</a>). So, if we declare an 
+<a href="/Pages/Documents/Abp-Session">IAbpSession.UserId</a>). So, if we declare an 
 AbpAuthorize for a method, it at least checks for login:</p>
 <pre lang="cs">[AbpAuthorize]
 public void SomeMethod(SomeMethodInput input)
@@ -157,7 +157,7 @@ Authorize</strong> method:</p>
 }</pre>
 <p>Since authorization generally implemented in application layer, <strong>
 ApplicationService</strong> base class injects and defines PermissionChecker 
-property. Those, permission checker can be used without injecting in application 
+property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
 
 </body>

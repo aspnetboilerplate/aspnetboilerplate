@@ -180,10 +180,10 @@ from ApplicationService class).</p>
 
 <div class="bs-callout bs-callout-warning">
 	<h4>About using statement</h4>
-	<p>&nbsp;If a filter is enabled when you call 
+	<p>If a filter is enabled when you call 
 	the DisableFilter method with a using statement, the filter is disabled, then 
-	automatically re-enabled after using statement.</p>
-	<p>But if the filter was already 
+	automatically re-enabled after using statement.
+	But if the filter was already 
 	disabled before the using statement, DisableFilter actually does nothing and 
 	the filter remains disabled even after 
 	the using statement.</p>
@@ -199,7 +199,7 @@ automatically re-disable the filter.</p>
 example of these types of filters since current tenant's Id is determined on 
 runtime. For such filters, we can change filter value if needed. Example:</p>
 <pre lang="cs">CurrentUnitOfWork.SetFilterParameter("PersonFilter", "personId", 42);</pre>
-<p>Another example: To set the tenantId value for the IMayHaveTenant&nbsp;filter:</p>
+<p>Another example: To set the tenantId value for the IMayHaveTenant filter:</p>
 <pre lang="cs">CurrentUnitOfWork.SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 42);</pre>
 
 <h3 id="DocDefineCustomFilters">Defining custom filters</h3>
