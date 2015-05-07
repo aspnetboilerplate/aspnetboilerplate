@@ -1,17 +1,24 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Reflection;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Castle.Core.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -86,6 +93,17 @@ namespace Abp.Web.Mvc.Controllers
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
+        /// This object i used to measure an action execute duration.
+        /// </summary>
+        private Stopwatch _actionStopwatch;
+
+        private AuditInfo _auditInfo;
+
+        public IAuditingConfiguration AuditingConfiguration { get; set; }
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
+        public IAuditingStore AuditingStore { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpController()
@@ -94,6 +112,7 @@ namespace Abp.Web.Mvc.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
+            AuditingStore = SimpleLogAuditingStore.Instance;
         }
 
         /// <summary>
@@ -183,6 +202,86 @@ namespace Abp.Web.Mvc.Controllers
                 ContentEncoding = contentEncoding,
                 JsonRequestBehavior = behavior
             };
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled)
+            {
+                HandleAuditingBeforeAction(filterContext);
+            }
+        }
+        
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            base.OnActionExecuted(filterContext);
+
+            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled)
+            {
+                HandleAuditingAfterAction(filterContext);
+            }
+        }
+
+        private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
+        {
+            _actionStopwatch = Stopwatch.StartNew();
+            _auditInfo = new AuditInfo
+            {
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId,
+                ServiceName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
+                MethodName = filterContext.ActionDescriptor.ActionName,
+                Parameters = ConvertArgumentsToJson(filterContext),
+                ExecutionTime = Clock.Now
+            };
+        }
+
+        private void HandleAuditingAfterAction(ActionExecutedContext filterContext)
+        {
+            _actionStopwatch.Stop();
+
+            _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
+            _auditInfo.Exception = filterContext.Exception;
+
+            if (AuditInfoProvider != null)
+            {
+                AuditInfoProvider.Fill(_auditInfo);                
+            }
+
+            AuditingStore.Save(_auditInfo);
+        }
+
+        private string ConvertArgumentsToJson(ActionExecutingContext filterContext)
+        {
+            try
+            {
+                if (filterContext.ActionParameters.IsNullOrEmpty())
+                {
+                    return "{}";
+                }
+
+                var dictionary = new Dictionary<string, object>();
+
+                foreach (var parameter in filterContext.ActionParameters)
+                {
+                    dictionary[parameter.Key] = parameter.Value;
+                }
+
+                return JsonConvert.SerializeObject(
+                    dictionary,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." + _auditInfo.MethodName);
+                Logger.Warn(ex.ToString(), ex);
+                return "{}";
+            }
         }
     }
 }
