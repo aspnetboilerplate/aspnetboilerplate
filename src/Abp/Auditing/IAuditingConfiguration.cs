@@ -12,6 +12,12 @@
         bool IsEnabled { get; set; }
 
         /// <summary>
+        /// Set true to enable saving audit logs if current user is not logged in.
+        /// Default: false.
+        /// </summary>
+        bool IsEnabledForAnonymousUsers { get; set; }
+
+        /// <summary>
         /// Used to configure auditing for MVC Controllers.
         /// </summary>
         IMvcControllersAuditingConfiguration MvcControllers { get; }

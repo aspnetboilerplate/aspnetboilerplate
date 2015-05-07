@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Mvc.Async;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -207,32 +209,79 @@ namespace Abp.Web.Mvc.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-
-            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled && AuditingConfiguration.MvcControllers.IsEnabled)
-            {
-                HandleAuditingBeforeAction(filterContext);
-            }
+            HandleAuditingBeforeAction(filterContext);
         }
         
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
+            HandleAuditingAfterAction(filterContext);                
+        }
 
-            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled && AuditingConfiguration.MvcControllers.IsEnabled)
+        protected virtual bool ShouldSaveAudit(ActionExecutingContext filterContext)
+        {
+            if (AuditingConfiguration == null)
             {
-                HandleAuditingAfterAction(filterContext);
+                return false;
             }
+
+            if (!AuditingConfiguration.MvcControllers.IsEnabled)
+            {
+                return false;
+            }
+
+            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
+            {
+                return false;                
+            }
+
+            return AuditingHelper.ShouldSaveAudit(
+                GetMethodInfo(filterContext),
+                AuditingConfiguration,
+                AbpSession,
+                true
+                );
+        }
+
+        private MethodInfo GetMethodInfo(ActionExecutingContext filterContext)
+        {
+            if (filterContext.ActionDescriptor is ReflectedActionDescriptor)
+            {
+                return ((ReflectedActionDescriptor) filterContext.ActionDescriptor).MethodInfo;
+            }
+
+            if (filterContext.ActionDescriptor is ReflectedAsyncActionDescriptor)
+            {
+                return ((ReflectedAsyncActionDescriptor)filterContext.ActionDescriptor).MethodInfo;
+            }
+
+            if (filterContext.ActionDescriptor is TaskAsyncActionDescriptor)
+            {
+                return ((TaskAsyncActionDescriptor)filterContext.ActionDescriptor).MethodInfo;
+            }
+
+            return null;
         }
 
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
         {
+            if (!ShouldSaveAudit(filterContext))
+            {
+                _auditInfo = null;
+                return;
+            }
+
+            var methodInfo = GetMethodInfo(filterContext);
+
             _actionStopwatch = Stopwatch.StartNew();
             _auditInfo = new AuditInfo
             {
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
-                ServiceName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                MethodName = filterContext.ActionDescriptor.ActionName,
+                ServiceName = methodInfo.DeclaringType != null
+                                ? methodInfo.DeclaringType.FullName
+                                : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
+                MethodName = methodInfo.Name,
                 Parameters = ConvertArgumentsToJson(filterContext),
                 ExecutionTime = Clock.Now
             };
@@ -240,6 +289,11 @@ namespace Abp.Web.Mvc.Controllers
 
         private void HandleAuditingAfterAction(ActionExecutedContext filterContext)
         {
+            if (_auditInfo == null || _actionStopwatch == null)
+            {
+                return;
+            }
+
             _actionStopwatch.Stop();
 
             _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);

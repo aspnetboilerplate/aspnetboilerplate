@@ -10,5 +10,11 @@
         /// Default: true.
         /// </summary>
         bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Used to enable/disable auditing for child MVC actions.
+        /// Default: false.
+        /// </summary>
+        bool IsEnabledForChildActions { get; set; }
     }
 }

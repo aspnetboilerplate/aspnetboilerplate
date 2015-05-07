@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Abp.Auditing;
 using Abp.Web.Authorization;
 using Abp.Web.Localization;
 using Abp.Web.MultiTenancy;
@@ -45,7 +46,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <summary>
         /// Gets all needed scripts.
         /// </summary>
-        /// <returns></returns>
+        [DisableAuditing]
         public async Task<ActionResult> GetScripts()
         {
             var sb = new StringBuilder();
@@ -72,7 +73,7 @@ namespace Abp.Web.Mvc.Controllers
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }
 
-        private string GetTriggerScript()
+        private static string GetTriggerScript()
         {
             var script = new StringBuilder();
 
