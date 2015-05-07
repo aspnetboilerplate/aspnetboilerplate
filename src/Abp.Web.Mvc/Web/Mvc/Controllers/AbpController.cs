@@ -208,7 +208,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             base.OnActionExecuting(filterContext);
 
-            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled)
+            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled && AuditingConfiguration.MvcControllers.IsEnabled)
             {
                 HandleAuditingBeforeAction(filterContext);
             }
@@ -218,7 +218,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             base.OnActionExecuted(filterContext);
 
-            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled)
+            if (AuditingConfiguration != null && AuditingConfiguration.IsEnabled && AuditingConfiguration.MvcControllers.IsEnabled)
             {
                 HandleAuditingAfterAction(filterContext);
             }

@@ -102,6 +102,8 @@
     <Compile Include="Application\Services\Dto\IPagedResult.cs" />
     <Compile Include="Application\Services\Dto\ListResultDto.cs" />
     <Compile Include="Application\Services\Dto\ListResultOutput.cs" />
+    <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\NullableIdInput.cs" />
