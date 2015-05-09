@@ -89,7 +89,8 @@ repository) to build permission definitions using some other sources.</p>
 
 <h3 id="DocCheckPermission">Checking permissions</h3>
 <h4 id="DocUsingAbpAuthorize">Using AbpAuthorize attribute</h4>
-<p><strong>AbpAuthorize</strong> attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
+<p><strong>AbpAuthorize</strong> (AbpMvcAuthorize for MVC Controllers and 
+AbpApiAuthorize for Web API Controllers) attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
 <a href="/Pages/Documents/Application-Services">application service</a> method shown below:</p>
 <pre lang="cs">[AbpAuthorize(&quot;Administration.UserManagement.CreateUser&quot;)]
 public void CreateUser(CreateUserInput input)
@@ -105,7 +106,7 @@ public void SomeMethod(SomeMethodInput input)
 {
     //A user can not execute this method if he did not login.
 }</pre>
-<p>AbpAuthorize attribute notes</p>
+<h5>AbpAuthorize attribute notes</h5>
 <p>ASP.NET Boilerplate uses power of dynamic method interception for 
 authorization. So, there is some restrictions for the methods use AbpAuthorize 
 attribute.</p>
@@ -117,17 +118,18 @@ attribute.</p>
 </ul>
 <p>Also,</p>
 <ul>
-	<li>Can use it for any public method if the method is called over an 
-	interface (like Application Services used over interface).</li>
-	<li>A method should be virtual (public or protected) if it's called directly 
+	<li>Can use it for any <strong>public</strong> method if the method is called over an 
+	<strong>interface </strong>(like Application Services used over interface).</li>
+	<li>A method should be <strong>virtual</strong> if it's called directly 
 	from class reference (like ASP.NET MVC or Web API Controllers).</li>
+	<li>A method should be <strong>virtual</strong> if it's <strong>protected</strong>.</li>
 </ul>
 <p><span class="auto-style1"><strong>Notice</strong></span>; There are three 
-AbpAuthorize attribute in different namespaces (and layers). In an application 
+AbpAuthorize attributes: In an application 
 service (application layer), we use <strong>Abp.Authorization.AbpAuthorize</strong> 
 class. In an MVC controller (web layer), we use <strong>
-Abp.Web.Mvc.Authorization.AbpAuthorize</strong> class and in ASP.NET Web API, we 
-use <strong>Abp.WebApi.Authorization.AbpAuthorize</strong> attribute. This 
+Abp.Web.Mvc.Authorization.AbpMvcAuthorize</strong> class and in ASP.NET Web API, we 
+use <strong>Abp.WebApi.Authorization.AbpApiAuthorize</strong> attribute. This 
 difference comes from inheritance. In MVC side, it's derived from MVC's own 
 Authorize class. In Web API side it's derived from Web API's Authorize class. 
 Thus, it's better integrated to MVC and Web API. But, in application layer it's 
