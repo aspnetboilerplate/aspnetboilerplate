@@ -80,7 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WebApi\Authorization\AbpAuthorizeAttribute.cs" />
+    <Compile Include="WebApi\Authorization\AbpApiAuthorizeAttribute.cs" />
     <Compile Include="WebApi\Client\AbpRemoteCallException.cs" />
     <Compile Include="WebApi\Client\AbpWebApiClient.cs" />
     <Compile Include="WebApi\Client\IAbpWebApiClient.cs" />

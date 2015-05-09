@@ -10,7 +10,7 @@ namespace Abp.WebApi.Authorization
     /// This attribute is used on a method of an <see cref="ApiController"/>
     /// to make that method usable only by authorized users.
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
+    public class AbpApiAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
         /// <inheritdoc/>
         public string[] Permissions { get; set; }
@@ -19,10 +19,10 @@ namespace Abp.WebApi.Authorization
         public bool RequireAllPermissions { get; set; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
+        /// Creates a new instance of <see cref="AbpApiAuthorizeAttribute"/> class.
         /// </summary>
         /// <param name="permissions">A list of permissions to authorize</param>
-        public AbpAuthorizeAttribute(params string[] permissions)
+        public AbpApiAuthorizeAttribute(params string[] permissions)
         {
             Permissions = permissions;
         }
