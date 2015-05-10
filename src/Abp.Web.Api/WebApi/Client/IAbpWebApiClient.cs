@@ -1,4 +1,6 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Abp.WebApi.Client
@@ -18,6 +20,11 @@ namespace Abp.WebApi.Client
         /// Default: 90 seconds.
         /// </summary>
         TimeSpan Timeout { get; set; }
+
+        /// <summary>
+        /// Used to set cookies for requests.
+        /// </summary>
+        Collection<Cookie> Cookies { get; }
 
         /// <summary>
         /// Makes post request that does not get or return value.
