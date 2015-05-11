@@ -320,12 +320,7 @@ namespace Abp.Domain.Uow
                 }
             }
 
-            if (!AbpSession.UserId.HasValue)
-            {
-                ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MayHaveTenant, false);
-                ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
-            }
-            else if (AbpSession.MultiTenancySide == MultiTenancySides.Host)
+            if (!AbpSession.UserId.HasValue || AbpSession.MultiTenancySide == MultiTenancySides.Host)
             {
                 ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
             }

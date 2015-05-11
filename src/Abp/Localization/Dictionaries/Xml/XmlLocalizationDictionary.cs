@@ -84,7 +84,7 @@ namespace Abp.Localization.Dictionaries.Xml
                         dublicateNames.Add(name);
                     }
 
-                    dictionary[name] = node.GetAttributeValueOrNull("value") ?? node.InnerText;
+                    dictionary[name] = (node.GetAttributeValueOrNull("value") ?? node.InnerText).NormalizeLineEndings();
                 }
             }
 

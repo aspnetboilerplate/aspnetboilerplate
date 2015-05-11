@@ -6,8 +6,14 @@ namespace Abp.Auditing
     /// <summary>
     /// Implements <see cref="IAuditingStore"/> to simply write audits to logs.
     /// </summary>
-    internal class SimpleLogAuditingStore : IAuditingStore
+    public class SimpleLogAuditingStore : IAuditingStore
     {
+        /// <summary>
+        /// Singleton instance.
+        /// </summary>
+        public static SimpleLogAuditingStore Instance { get { return SingletonInstance; } }
+        private static readonly SimpleLogAuditingStore SingletonInstance = new SimpleLogAuditingStore();
+
         public ILogger Logger { get; set; }
 
         public SimpleLogAuditingStore()

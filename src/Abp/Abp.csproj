@@ -102,6 +102,9 @@
     <Compile Include="Application\Services\Dto\IPagedResult.cs" />
     <Compile Include="Application\Services\Dto\ListResultDto.cs" />
     <Compile Include="Application\Services\Dto\ListResultOutput.cs" />
+    <Compile Include="Auditing\AuditingHelper.cs" />
+    <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\NullableIdInput.cs" />
@@ -274,7 +277,7 @@
     <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DependsOnAttribute.cs" />
-    <Compile Include="Reflection\DefaultAssemblyFinder.cs" />
+    <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
     <Compile Include="Modules\DefaultModuleFinder.cs" />
     <Compile Include="Modules\IAbpModuleManager.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />

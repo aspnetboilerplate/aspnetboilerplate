@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,6 +21,8 @@ namespace Abp.WebApi.Client
 
         public TimeSpan Timeout { get; set; }
 
+        public Collection<Cookie> Cookies { get; private set; }
+
         static AbpWebApiClient()
         {
             DefaultTimeout = TimeSpan.FromSeconds(90);
@@ -27,6 +31,7 @@ namespace Abp.WebApi.Client
         public AbpWebApiClient()
         {
             Timeout = DefaultTimeout;
+            Cookies = new Collection<Cookie>();
         }
 
         public async Task PostAsync(string url, int? timeout = null)
@@ -48,33 +53,49 @@ namespace Abp.WebApi.Client
         public async Task<TResult> PostAsync<TResult>(string url, object input, int? timeout = null)
             where TResult : class, new()
         {
-            using (var client = new HttpClient())
+            var cookieContainer = new CookieContainer();
+            using (var handler = new HttpClientHandler {CookieContainer = cookieContainer})
             {
-                client.Timeout = timeout.HasValue ? TimeSpan.FromMilliseconds(timeout.Value) : Timeout;
-
-                if (!BaseUrl.IsNullOrEmpty())
+                using (var client = new HttpClient(handler))
                 {
-                    client.BaseAddress = new Uri(BaseUrl);
-                }
+                    client.Timeout = timeout.HasValue ? TimeSpan.FromMilliseconds(timeout.Value) : Timeout;
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                using (var requestContent = new StringContent(Object2JsonString(input), Encoding.UTF8, "application/json"))
-                {
-                    using (var response = await client.PostAsync(url, requestContent))
+                    if (!BaseUrl.IsNullOrEmpty())
                     {
-                        if (!response.IsSuccessStatusCode)
+                        client.BaseAddress = new Uri(BaseUrl);
+                    }
+
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    using (var requestContent = new StringContent(Object2JsonString(input), Encoding.UTF8, "application/json"))
+                    {
+                        foreach (var cookie in Cookies)
                         {
-                            throw new AbpException("Could not made request to " + url + "! StatusCode: " + response.StatusCode + ", ReasonPhrase: " + response.ReasonPhrase);
+                            if (!BaseUrl.IsNullOrEmpty())
+                            {
+                                cookieContainer.Add(new Uri(BaseUrl), cookie);
+                            }
+                            else
+                            {
+                                cookieContainer.Add(cookie);
+                            }
                         }
 
-                        var ajaxResponse = JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
-                        if (!ajaxResponse.Success)
+                        using (var response = await client.PostAsync(url, requestContent))
                         {
-                            throw new AbpRemoteCallException(ajaxResponse.Error);
-                        }
+                            if (!response.IsSuccessStatusCode)
+                            {
+                                throw new AbpException("Could not made request to " + url + "! StatusCode: " + response.StatusCode + ", ReasonPhrase: " + response.ReasonPhrase);
+                            }
 
-                        return ajaxResponse.Result;
+                            var ajaxResponse = JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
+                            if (!ajaxResponse.Success)
+                            {
+                                throw new AbpRemoteCallException(ajaxResponse.Error);
+                            }
+
+                            return ajaxResponse.Result;
+                        }
                     }
                 }
             }

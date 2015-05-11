@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -16,31 +14,28 @@ namespace Abp.Auditing
     internal class AuditingInterceptor : IInterceptor
     {
         public IAbpSession AbpSession { get; set; }
+
         public ILogger Logger { get; set; }
 
-        private readonly IAuditingStore _auditingStore;
+        public IAuditingStore AuditingStore { get; set; }
+        
         private readonly IAuditingConfiguration _configuration;
+
         private readonly IAuditInfoProvider _auditInfoProvider;
 
-        public AuditingInterceptor(IAuditingStore auditingStore, IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider)
+        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider)
         {
-            _auditingStore = auditingStore;
             _configuration = configuration;
             _auditInfoProvider = auditInfoProvider;
             
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
+            AuditingStore = SimpleLogAuditingStore.Instance;
         }
 
         public void Intercept(IInvocation invocation)
         {
-            if (!_configuration.IsEnabled)
-            {
-                invocation.Proceed();
-                return;
-            }
-
-            if (!ShouldSaveAudit(invocation.MethodInvocationTarget))
+            if (!AuditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget, _configuration, AbpSession))
             {
                 invocation.Proceed();
                 return;
@@ -74,7 +69,7 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                _auditingStore.Save(auditInfo); //TODO: Call async when target method is async.
+                AuditingStore.Save(auditInfo); //TODO: Call async when target method is async.
             }
         }
 
@@ -98,7 +93,6 @@ namespace Abp.Auditing
 
                 return JsonConvert.SerializeObject(
                     dictionary,
-                    Formatting.Indented,
                     new JsonSerializerSettings
                     {
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -110,40 +104,6 @@ namespace Abp.Auditing
                 Logger.Warn(ex.ToString(), ex);
                 return "{}";
             }
-        }
-
-        private bool ShouldSaveAudit(MethodInfo methodInfo)
-        {
-            if (methodInfo.IsDefined(typeof (AuditedAttribute)))
-            {
-                return true;
-            }
-
-            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute)))
-            {
-                return false;
-            }
-
-            var classType = methodInfo.DeclaringType;
-            if (classType != null)
-            {
-                if (classType.IsDefined(typeof(AuditedAttribute)))
-                {
-                    return true;
-                }
-
-                if (classType.IsDefined(typeof(DisableAuditingAttribute)))
-                {
-                    return false;
-                }
-
-                if (_configuration.Selectors.Any(selector => selector.Predicate(classType)))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

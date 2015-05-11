@@ -44,9 +44,9 @@ namespace Abp.WebApi
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new AbpControllerActivator());
         }
 
-        private static void InitializeFilters()
+        private void InitializeFilters()
         {
-            GlobalConfiguration.Configuration.Filters.Add(new AbpExceptionFilterAttribute());
+            GlobalConfiguration.Configuration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
         private static void InitializeFormatters()

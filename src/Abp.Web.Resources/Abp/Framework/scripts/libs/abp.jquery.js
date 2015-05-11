@@ -1,6 +1,10 @@
 ﻿var abp = abp || {};
 (function ($) {
 
+    if (!$) {
+        return;
+    }
+
     /* JQUERY ENHANCEMENTS ***************************************************/
 
     // abp.ajax -> uses $.ajax ------------------------------------------------
@@ -9,6 +13,8 @@
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
+        options.success = undefined;
+        options.error = undefined;
         return $.Deferred(function ($dfd) {
             $.ajax(options)
                 .done(function (data) {
@@ -94,11 +100,12 @@
                     $dfd && $dfd.resolve(data.result, data);
                     userOptions.success && userOptions.success(data.result, data);
                 } else { //data.success === false
+                    var messagePromise = null;
                     if (data.error) {
                         if (data.error.details) {
-                            abp.message.error(data.error.details, data.error.message);
+                            messagePromise = abp.message.error(data.error.details, data.error.message);
                         } else {
-                            abp.message.error(data.error.message);
+                            messagePromise = abp.message.error(data.error.message);
                         }
 
                         $dfd && $dfd.reject(data.error);
@@ -106,12 +113,24 @@
                     }
 
                     if (data.unAuthorizedRequest && !data.targetUrl) {
-                        location.reload();
+                        if (messagePromise) {
+                            messagePromise.done(function () {
+                                location.reload();
+                            });
+                        } else {
+                            location.reload();
+                        }
                     }
                 }
 
                 if (data.targetUrl) {
-                    location.href = data.targetUrl;
+                    if (messagePromise) {
+                        messagePromise.done(function () {
+                            location.href = data.targetUrl;
+                        });
+                    } else {
+                        location.href = data.targetUrl;
+                    }
                 }
             } else { //no data sent to back
                 $dfd && $dfd.resolve();

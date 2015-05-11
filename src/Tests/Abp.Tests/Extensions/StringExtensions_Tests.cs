@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Abp.Extensions;
 using Shouldly;
 using Xunit;
@@ -80,6 +81,15 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
+        public void NormalizeLineEndings_Test()
+        {
+            const string str = "This\r\n is a\r test \n string";
+            var normalized = str.NormalizeLineEndings();
+            var lines = normalized.SplitToLines();
+            lines.Length.ShouldBe(4);
+        }
+
+        [Fact]
         public void NthIndexOf_Test()
         {
             const string str = "This is a test string";
@@ -121,7 +131,7 @@ namespace Abp.Tests.Extensions
             str.TruncateWithPostfix(12, "~").ShouldBe("This is a t~");
             str.TruncateWithPostfix(0, "~").ShouldBe("");
             str.TruncateWithPostfix(100, "~").ShouldBe(str);
-            
+
             nullValue.TruncateWithPostfix(5, "~").ShouldBe(null);
         }
 

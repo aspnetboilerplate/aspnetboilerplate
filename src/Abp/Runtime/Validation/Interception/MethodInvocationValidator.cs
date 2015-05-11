@@ -126,7 +126,11 @@ namespace Abp.Runtime.Validation.Interception
                     continue;
                 }
 
-                var validationContext = new ValidationContext(validatingObject) { DisplayName = property.Name };
+                var validationContext = new ValidationContext(validatingObject)
+                {
+                    DisplayName = property.Name,
+                    MemberName = property.Name
+                };
                 foreach (var attribute in validationAttributes)
                 {
                     var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);

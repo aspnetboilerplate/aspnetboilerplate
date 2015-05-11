@@ -7,7 +7,7 @@ using Abp.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.People
+namespace Abp.TestBase.SampleApplication.Tests.Uow
 {
     public class UnitOfWork_Event_Tests : SampleApplicationTestBase
     {
@@ -32,11 +32,13 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 _unitOfWorkManager.Current.Completed += (sender, args) =>
                                                         {
+                                                            _unitOfWorkManager.Current.ShouldBe(null);
                                                             completeCount++;
                                                         };
 
                 _unitOfWorkManager.Current.Disposed += (sender, args) =>
                                                        {
+                                                           _unitOfWorkManager.Current.ShouldBe(null);
                                                            completeCount.ShouldBe(1);
                                                            disposeCount++;
                                                        };
@@ -63,14 +65,18 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     {
                         _personRepository.Insert(new Person()); //Name is intentionally not set to cause exception
 
+                        _unitOfWorkManager.Current.ShouldNotBe(null);
+
                         _unitOfWorkManager.Current.Failed += (sender, args) =>
                         {
+                            _unitOfWorkManager.Current.ShouldBe(null);
                             args.Exception.ShouldBe(null); //Can not set it!
                             failedCount++;
                         };
 
                         _unitOfWorkManager.Current.Disposed += (sender, args) =>
                         {
+                            _unitOfWorkManager.Current.ShouldBe(null);
                             failedCount.ShouldBe(1);
                             disposeCount++;
                         };
@@ -97,6 +103,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 _unitOfWorkManager.Current.Failed += (sender, args) =>
                 {
+                    _unitOfWorkManager.Current.ShouldBe(null);
                     args.Exception.ShouldNotBe(null);
                     args.Exception.ShouldBeOfType(typeof(DbEntityValidationException));
                     failedCount++;
@@ -104,6 +111,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 _unitOfWorkManager.Current.Disposed += (sender, args) =>
                 {
+                    _unitOfWorkManager.Current.ShouldBe(null);
                     failedCount.ShouldBe(1);
                     disposeCount++;
                 };

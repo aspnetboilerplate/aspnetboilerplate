@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Auditing</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocIntro">Introduction</a></li>
+	<li><a href="#DocConfig">Configuration</a></li>
+	<li><a href="#DocEnableDisableByAttrs">Enable/Disable by attributes</a></li>
+	<li><a href="#DocNotes">Notes</a></li>
+</ul>
+
+<h3 id="DocIntro">Introduction</h3>
+<p>Wikipedia: "<em>An audit trail (also called audit log) is a security-relevant chronological record, set of records, and/or destination and source of records that provide documentary evidence of the sequence of activities that have affected at any time a specific operation, procedure, or even</em>".</p>
+<p>ASP.NET Boilerplate provides an infrastructure to automatically log all 
+interactions with the application. It can record intended method calls with 
+caller info and arguments. </p>
+<p>Basically, saved fields are: Related <strong>tenant id</strong>, caller
+<strong>user id</strong>, called <strong>service name</strong> (the class of the 
+called method), called <strong>method name</strong>, execution <strong>
+parameters</strong> (serialized into JSON), <strong>execution time</strong>, 
+execution <strong>duration</strong> (as milliseconds), client <strong>IP address</strong>, 
+client's <strong>computer name</strong> and the <strong>exception</strong> (if 
+method throws an exception).</p>
+<p>Wtih these informations, we not just know who did the operation, also can 
+measure <strong>performance</strong> of the application and observe <strong>exceptions</strong> thrown. 
+Even more, you can get <strong>statistics</strong> about usage of your 
+application.</p>
+<p>Auditing system uses <a href="/Pages/Documents/Abp-Session"><strong>
+IAbpSession</strong></a> to get current UserId and TenantId.</p>
+
+<div class="bs-callout bs-callout-warning">
+	<h4>About IAuditingStore</h4>
+	<p><span class="auto-style1">Auditing system uses IAuditingStore</span> to 
+	save audit informatins. While you can 
+	implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
+	project. If you don't implement it, SimpleLogAuditingStore is used and it 
+	writes audit informations to the <a href="/Pages/Documents/Logging">log</a>.</p>
+</div>
+
+<h3 id="DocConfig">Configuration</h3>
+<p>To configure auditing, you can use <strong>Configuration.Auditing</strong> 
+property in your <a href="/Pages/Documents/Module-System">module</a>'s 
+PreInitialize method. Auditing is <strong>enabled by default</strong>. You can 
+disable it as shown below.</p>
+<pre lang="cs">public class MyModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        Configuration.Auditing.IsEnabled = false;
+    }
+
+    //...
+}</pre>
+<p>Here, a list of auditing configuration properties:</p>
+<ul>
+	<li><strong>IsEnabled</strong>: Used to enable/disable auditing system 
+	completely. Default: <strong>true</strong>.</li>
+	<li><strong>IsEnabledForAnonymousUsers</strong>: If this is set to true, 
+	audit logs are saved also for users those are not logged in to the system. 
+	Default: <strong>false</strong>.</li>
+	<li><strong>MvcControllers</strong>: Used to configure auditing for ASP.NET MVC Controllers.<ul>
+		<li><strong>IsEnabled</strong>: Used to enable/disable auditing for MVC controllers. 
+		Default: <strong>true</strong>.</li>
+		<li><strong>IsEnabledForChildActions</strong>: Used to enable/disable auditing for child MVC actions. 
+		Default: <strong>false</strong>.</li>
+	</ul>
+	</li>
+	<li><strong>Selectors</strong>: Used to select other classes to save audit logs.</li>
+</ul>
+<p>As you see, auditing for <strong>MVC</strong> controller are seperately 
+configured since a different technique is used for it.</p>
+<p><strong>Selectors</strong> is a list of predicates to select other types to 
+save audit logs. A selector has a unique <strong>name </strong>and a <strong>
+predicate</strong>. The only <strong>default</strong> selector in this list is used to select
+<strong>application service classes</strong>. It's defined as shown below:</p>
+<pre lang="cs">Configuration.Auditing.Selectors.Add(
+    new NamedTypeSelector(
+        "Abp.ApplicationServices",
+        type =&gt; typeof (IApplicationService).IsAssignableFrom(type)
+    )
+);</pre>
+<p>You can add your selectors in your module's PreInitialize method. Also, you 
+can remove the selector above by name if you don't like to save audit logs for 
+application services. That's why it has a unique name (Use simple LINQ to find 
+the selector in Selectors and remove it if you want).</p>
+
+<h3 id="DocEnableDisableByAttrs">Enable/Disable by attributes</h3>
+<p>While you can select auditing classes by configuration, you can use <strong>
+Audited</strong> and <strong>DisableAuditing</strong> attributes for a single 
+class or a single method. An example:</p>
+<pre lang="cs">[Audited]
+public class MyClass
+{
+    public void MyMethod1(int a)
+    {
+        //...
+    }
+
+    [DisableAuditing]
+    public void MyMethod2(string b)
+    {
+        //...
+    }
+
+    public void MyMethod3(int a, int b)
+    {
+        //...
+    }
+}</pre>
+<p>All methods of MyClass are audited except MyMethod2 since it's explicitly 
+disabled. Audited attribute can be used for a method to just save audits for the 
+desired method.</p>
+<h3 id="DocNotes">Notes</h3>
+<ul>
+	<li>A method must be <strong>public </strong>in order to saving audit logs. 
+	Private and protected methods are ignored.</li>
+	<li>A method must be <strong>virtual </strong>if it's called over class 
+	reference. This is not needed if it's injected using it's interface (like 
+	injecting IPersonService interface to use PersonService class). This is 
+	needed since ASP.NET Boilerplate uses dynamic proxying and interception. 
+	This is not true for <strong>MVC </strong>Controller actions. They may not 
+	be virtual.</li>
+</ul>
+
+</body>
+
+</html>

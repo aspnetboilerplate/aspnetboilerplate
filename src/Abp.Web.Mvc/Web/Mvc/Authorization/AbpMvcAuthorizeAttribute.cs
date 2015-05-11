@@ -9,7 +9,7 @@ namespace Abp.Web.Mvc.Authorization
     /// This attribute is used on an action of an MVC <see cref="Controller"/>
     /// to make that action usable only by authorized users. 
     /// </summary>
-    public class AbpAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
+    public class AbpMvcAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
         /// <inheritdoc/>
         public string[] Permissions { get; set; }
@@ -18,10 +18,10 @@ namespace Abp.Web.Mvc.Authorization
         public bool RequireAllPermissions { get; set; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbpAuthorizeAttribute"/> class.
+        /// Creates a new instance of <see cref="AbpMvcAuthorizeAttribute"/> class.
         /// </summary>
         /// <param name="permissions">A list of permissions to authorize</param>
-        public AbpAuthorizeAttribute(params string[] permissions)
+        public AbpMvcAuthorizeAttribute(params string[] permissions)
         {
             Permissions = permissions;
         }

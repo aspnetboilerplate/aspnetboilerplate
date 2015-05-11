@@ -59,16 +59,10 @@ domain layer normally). <strong>ApplicationService</strong>, <strong>
 AbpController</strong> and <strong>AbpApiController</strong> base classes has
 <strong>AbpSession</strong> already injected. So, you can directly use 
 AbpSession property in an application service method for instance.</p>
-<p>Every application need to store some settings and use these settings in 
-somewhere in the application. ASP.NET Boilerplate provides a strong 
-infrastructure to store/retrieve <strong>application</strong>, <strong>tenant
-</strong>and <strong>user</strong> level settings usable both in <strong>server
-</strong>and <strong>client </strong>sides.</p>
-
 <h3 id="DocUsingSession">Using session properties</h3>
 <p>AbpSession defines a few key properties:</p>
 <ul>
-	<li>&nbsp;<strong>UserId</strong>: Id of the current user or null if there 
+	<li><strong>UserId</strong>: Id of the current user or null if there 
 	is no current user. It can not be null if the calling code is authorized.</li>
 	<li><strong>TenantId</strong>: Id of the current tenant or null if there is 
 	no current tenant.</li>
@@ -77,7 +71,7 @@ infrastructure to store/retrieve <strong>application</strong>, <strong>tenant
 <p>UserId and TenantId is <strong>nullable</strong>. There is also non-nullable
 <strong>GetUserId()</strong> and <strong>GetTenantId()</strong> methods. If 
 you're sure there is a current user, you can call GetUserId(). If current user 
-is null, this method throws exception. GetTenantId is also similar.</p>
+is null, this method throws exception. GetTenantId() is also similar.</p>
 
 </body>
 

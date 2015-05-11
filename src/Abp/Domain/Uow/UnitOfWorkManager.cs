@@ -41,12 +41,21 @@ namespace Abp.Domain.Uow
             options.FillDefaultsForNonProvidedOptions(_defaultOptions);
             
             var uow = _iocResolver.Resolve<IUnitOfWork>();
-            
+
+            uow.Completed += (sender, args) =>
+            {
+                _currentUnitOfWorkProvider.Current = null;
+            };
+
+            uow.Failed += (sender, args) =>
+            {
+                _currentUnitOfWorkProvider.Current = null;
+            };
+
             uow.Disposed += (sender, args) =>
-                            {
-                                _currentUnitOfWorkProvider.Current = null;
-                                _iocResolver.Release(uow);
-                            };
+            {
+                _iocResolver.Release(uow);
+            };
 
             uow.Begin(options);
 
