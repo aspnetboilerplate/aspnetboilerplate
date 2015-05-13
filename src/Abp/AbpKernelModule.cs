@@ -9,6 +9,8 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
+using Abp.Localization.Sources;
+using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Runtime.Validation.Interception;
@@ -42,6 +44,13 @@ namespace Abp
                     type => typeof (IApplicationService).IsAssignableFrom(type)
                     )
                 );
+
+            Configuration.Localization.Sources.Add(
+                new DictionaryBasedLocalizationSource(
+                    AbpConsts.LocalizationSourceName,
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                        )));
 
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
 
