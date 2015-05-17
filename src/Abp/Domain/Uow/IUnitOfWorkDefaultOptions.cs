@@ -37,5 +37,12 @@ namespace Abp.Domain.Uow
         /// <param name="filterName">Name of the filter.</param>
         /// <param name="isEnabledByDefault">Is filter enabled by default.</param>
         void RegisterFilter(string filterName, bool isEnabledByDefault);
+
+        /// <summary>
+        /// Overrides a data filter definition.
+        /// </summary>
+        /// <param name="filterName">Name of the filter.</param>
+        /// <param name="isEnabledByDefault">Is filter enabled by default.</param>
+        void OverrideFilter(string filterName, bool isEnabledByDefault);
     }
 }

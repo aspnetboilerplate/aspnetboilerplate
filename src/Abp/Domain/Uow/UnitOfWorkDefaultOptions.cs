@@ -32,6 +32,12 @@ namespace Abp.Domain.Uow
             _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
         }
 
+        public void OverrideFilter(string filterName, bool isEnabledByDefault)
+        {
+            _filters.RemoveAll(f => f.FilterName == filterName);
+            _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+        }
+
         public UnitOfWorkDefaultOptions()
         {
             _filters = new List<DataFilterConfiguration>();
