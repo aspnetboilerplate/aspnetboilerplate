@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="SmtpHost">SMTP host</text>
+    <text name="SmtpPort">SMTP port</text>
+    <text name="Username">User name</text>
+    <text name="Password">Password</text>
+    <text name="DomainName">Domain name</text>
+    <text name="UseSSL">Use SSL</text>
+    <text name="UseDefaultCredentials">Use default credentials</text>
+    <text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
+    <text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
+  </texts>
+</localizationDictionary>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="SmtpHost">SMTP sunucusu</text>
+    <text name="SmtpPort">SMTP portu</text>
+    <text name="Username">Kullanıcı adı</text>
+    <text name="Password">Şifre</text>
+    <text name="DomainName">Domain adı</text>
+    <text name="UseSSL">SSL kullan</text>
+    <text name="UseDefaultCredentials">Varsayılan yetkilendirmeleri kullan</text>
+    <text name="DefaultFromSenderEmailAddress">Varsayılan gönderici e-posta adresi</text>
+    <text name="DefaultFromSenderDisplayName">Varsayılan gönderici görünen ismi</text>
+  </texts>
+</localizationDictionary>

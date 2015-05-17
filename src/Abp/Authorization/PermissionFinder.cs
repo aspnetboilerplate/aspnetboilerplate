@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Abp.Authorization
@@ -14,28 +13,27 @@ namespace Abp.Authorization
         /// <summary>
         /// Collects and gets all permissions in given providers.
         /// This method can be used to get permissions in database migrations or in unit tests where Abp is not initialized.
-        /// Otherwise, use <see cref="IPermissionManager.GetAllPermissions"/> method.
+        /// Otherwise, use <see cref="IPermissionManager.GetAllPermissions(bool)"/> method.
         /// 
         /// </summary>
-        /// <param name="providerTypes">Providers</param>
+        /// <param name="authorizationProviders">Authorization providers</param>
         /// <returns>List of permissions</returns>
         /// <remarks>
-        /// This method creates instances of <see cref="providerTypes"/> by order and
+        /// This method creates instances of <see cref="authorizationProviders"/> by order and
         /// calls <see cref="AuthorizationProvider.SetPermissions"/> to build permission list.
         /// So, providers should not use dependency injection.
         /// </remarks>
-        public static IReadOnlyList<Permission> GetAllPermissions(params Type[] providerTypes)
+        public static IReadOnlyList<Permission> GetAllPermissions(params AuthorizationProvider[] authorizationProviders)
         {
-            return new InternalPermissionFinder(providerTypes).GetAllPermissions();
+            return new InternalPermissionFinder(authorizationProviders).GetAllPermissions();
         }
 
         internal class InternalPermissionFinder : PermissionDefinitionContextBase
         {
-            public InternalPermissionFinder(params Type[] providerTypes)
+            public InternalPermissionFinder(params AuthorizationProvider[] authorizationProviders)
             {
-                foreach (var authorizationProviderType in providerTypes)
+                foreach (var provider in authorizationProviders)
                 {
-                    var provider = (AuthorizationProvider)Activator.CreateInstance(authorizationProviderType);
                     provider.SetPermissions(this);
                 }
 
