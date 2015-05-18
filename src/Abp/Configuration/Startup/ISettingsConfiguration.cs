@@ -8,7 +8,7 @@ namespace Abp.Configuration.Startup
     public interface ISettingsConfiguration
     {
         /// <summary>
-        /// List of authorization providers.
+        /// List of settings providers.
         /// </summary>
         ITypeList<SettingProvider> Providers { get; }
     }
