@@ -71,7 +71,7 @@ namespace Abp
                 throw new ArgumentException("objs can not be null or empty!", "objs");
             }
 
-            return objs[GetRandom(0, objs.Length - 1)];
+            return objs[GetRandom(0, objs.Length)];
         }
     }
 }
