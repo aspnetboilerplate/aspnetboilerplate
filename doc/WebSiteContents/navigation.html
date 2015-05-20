@@ -80,11 +80,13 @@ provider class to create such a menu can be as below:</p>
 <p>A MenuItemDefinition can have a unique <strong>name</strong>, a localizable
 <strong>display name</strong>, a <strong>url</strong> and an <strong>icon</strong>. 
 Also, a menu item may require a permission to show this menu to a particular 
-user (permission system 
-is being developed and not documented yet).</p>
+user (See <a href="/Pages/Documents/Authorization">authorization</a>).</p>
 <p><strong>INavigationProviderContext</strong> has methods to get existing menu 
 items, add menus and menu items. Thus, different modules can add it's own items 
 to the menu.</p>
+<p>There may be one or mor menu in an application. <strong>context.Manager.MainMenu</strong> 
+references the default, main menu. We can create and add more menus using
+<strong>context.Manager.Menus</strong> property.</p>
 <p>After creating the navigation provider, we should register it to ASP.NET 
 Boilerplate configuration on <strong>PreInitialize</strong> event of our
 <a href="/Pages/Documents/Module-System">module</a>:</p>
