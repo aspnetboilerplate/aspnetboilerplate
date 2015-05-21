@@ -39,17 +39,9 @@ namespace Abp.RavenDb.Repositories
             get { return _databaseProvider.Database; }
         }
 
-        //protected RavenCollection<TEntity> Collection
-        //{
-        //    get
-        //    {
-        //        return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
-        //    }
-        //}
-
         protected IQueryable<TEntity> Collection
         {
-            get { return _databaseProvider.Database.Query<TEntity>(); }
+            get { return Database.Query<TEntity>(); }
         }
 
         public RavenDbRepositoryBase(IRavenDatabaseProvider databaseProvider)
@@ -59,35 +51,28 @@ namespace Abp.RavenDb.Repositories
 
         public override IQueryable<TEntity> GetAll()
         {
-            //return Collection.AsQueryable();
-            //return Database.
             return Collection;
         }
 
         public override TEntity Get(TPrimaryKey id)
         {
-            return _databaseProvider.Database.Load<TEntity>(id.ToString());
+            return Database.Load<TEntity>(id.ToString());
         }
 
         public override TEntity FirstOrDefault(TPrimaryKey id)
         {
-            return _databaseProvider.Database.Query<TEntity>().FirstOrDefault(e => e.Id.Equals(id));
-            //var query = _databaseProvider.Database.Query<TEntity>(e => e.Id)
-            //var query = RavenDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
-            //return Collection.FindOne(query); //TODO: What if no entity with id?
+            return Database.Query<TEntity>().FirstOrDefault(e => e.Id.Equals(id));
         }
 
         public override TEntity Insert(TEntity entity)
         {
-            //Collection.Insert(entity);
             _databaseProvider.Database.Store(entity);
             return entity;
         }
+
         public override TEntity Update(TEntity entity)
         {
-            //Collection.Save(entity);
-            _databaseProvider.Database.Store(entity);
-            return entity;
+            return Insert(entity);
         }
 
         public override void Delete(TEntity entity)
@@ -98,8 +83,6 @@ namespace Abp.RavenDb.Repositories
         public override void Delete(TPrimaryKey id)
         {
             _databaseProvider.Database.Delete(id);
-            //var query = RavenDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
-            //Collection.Remove(query);
         }
     }
 }

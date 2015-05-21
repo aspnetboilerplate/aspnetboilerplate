@@ -28,7 +28,7 @@ namespace Abp.RavenDb
             IDocumentStore store = new DocumentStore()
             {
                 Url = configuration.Url,
-                DefaultDatabase = configuration.DefaultDatatabaseName
+                DefaultDatabase = configuration.DatabaseName
             }.Initialize();
 
             return store;

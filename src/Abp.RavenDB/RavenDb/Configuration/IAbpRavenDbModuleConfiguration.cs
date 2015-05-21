@@ -6,6 +6,6 @@ namespace Abp.RavenDb.Configuration
     {
         string Url { get; set; }
 
-        string DefaultDatatabaseName { get; set; }
+        string DatabaseName { get; set; }
     }
 }

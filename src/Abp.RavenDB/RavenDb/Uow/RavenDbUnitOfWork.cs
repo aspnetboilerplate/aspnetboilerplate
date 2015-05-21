@@ -40,7 +40,7 @@ namespace Abp.RavenDb.Uow
 
         public override async Task SaveChangesAsync()
         {
-            Database.SaveChanges();
+
         }
 
         protected override void CompleteUow()
