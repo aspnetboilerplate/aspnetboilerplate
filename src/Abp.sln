@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434FA4-ED3F-4A7B-A0D3-8CBB900B1609}"
 	ProjectSection(SolutionItems) = preProject
@@ -60,6 +60,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MemoryDb", "Abp.MemoryDb\Abp.MemoryDb.csproj", "{4DF45D0E-A50F-4FD0-8B4D-2548B256994F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MemoryDb.Tests", "Tests\Abp.MemoryDb.Tests\Abp.MemoryDb.Tests.csproj", "{2322DD68-034A-44FD-8065-90030BE25C47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.RavenDB", "Abp.RavenDB\Abp.RavenDB.csproj", "{7A85C515-E45A-46C9-8DF4-228A3600A496}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{2322DD68-034A-44FD-8065-90030BE25C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2322DD68-034A-44FD-8065-90030BE25C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2322DD68-034A-44FD-8065-90030BE25C47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A85C515-E45A-46C9-8DF4-228A3600A496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A85C515-E45A-46C9-8DF4-228A3600A496}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A85C515-E45A-46C9-8DF4-228A3600A496}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A85C515-E45A-46C9-8DF4-228A3600A496}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
