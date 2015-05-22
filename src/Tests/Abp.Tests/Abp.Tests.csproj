@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -112,6 +113,7 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
+    <Compile Include="Runtime\Caching\ThreadSafeObjectCache_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
