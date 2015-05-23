@@ -182,7 +182,7 @@ namespace Abp.EntityFramework
                 }
                 else
                 {
-                    if (this.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
+                    if (newEntryTenantId.TenantId != AbpSession.TenantId && this.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
                         throw new DbEntityValidationException(
                             string.Format("To manually set the tenantId you must disable the teanancy filter {0}",
                                 entry.Entity.GetType().FullName));
