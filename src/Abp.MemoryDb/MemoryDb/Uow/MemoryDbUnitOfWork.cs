@@ -6,7 +6,7 @@ using Abp.MemoryDb.Configuration;
 namespace Abp.MemoryDb.Uow
 {
     /// <summary>
-    /// Implements Unit of work for MongoDB.
+    /// Implements Unit of work for MemoryDb.
     /// </summary>
     public class MemoryDbUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
