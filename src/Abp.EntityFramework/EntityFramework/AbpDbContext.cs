@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
@@ -137,6 +138,7 @@ namespace Abp.EntityFramework
                 {
                     case EntityState.Added:
                         SetCreationAuditProperties(entry);
+                        SetCreationTenantProperties(entry);
                         EntityChangedEventHelper.TriggerEntityCreatedEvent(entry.Entity);
                         break;
                     case EntityState.Modified:
@@ -163,6 +165,27 @@ namespace Abp.EntityFramework
                         HandleSoftDelete(entry);
                         EntityChangedEventHelper.TriggerEntityDeletedEvent(entry.Entity);
                         break;
+                }
+            }
+        }
+
+        private void SetCreationTenantProperties(DbEntityEntry entry)
+        {
+            if (AbpSession.TenantId == null) return;
+            if (entry.Entity is IMustHaveTenant)
+            {
+                var newEntryTenantId = entry.Cast<IMustHaveTenant>().Entity;
+
+                if (newEntryTenantId.TenantId == 0)
+                {
+                    newEntryTenantId.TenantId = AbpSession.GetTenantId();
+                }
+                else
+                {
+                    if (newEntryTenantId.TenantId != AbpSession.TenantId && this.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
+                        throw new DbEntityValidationException(
+                            string.Format("To manually set the tenantId you must disable the teanancy filter {0}",
+                                entry.Entity.GetType().FullName));
                 }
             }
         }
