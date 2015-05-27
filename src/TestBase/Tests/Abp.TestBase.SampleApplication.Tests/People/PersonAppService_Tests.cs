@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
@@ -90,7 +89,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public void Should_Get_All_People_Without_Filter()
         {
             var output = _personAppService.GetPeople(new GetPeopleInput());
-            output.Items.Count.ShouldBe(UsingDbContext(context => context.People.Count()));
+            output.Items.Count.ShouldBe(UsingDbContext(context => context.People.Count(p => !p.IsDeleted)));
             output.Items.FirstOrDefault(p => p.Name == "halil").ShouldNotBe(null);
         }
 
@@ -120,7 +119,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
             await _personAppService.DeletePerson(new EntityRequestInput(halil.Id));
-            (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).ShouldBe(null);
+            (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted.ShouldBe(true);
         }
     }
 }

@@ -8,6 +8,7 @@ using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.TestBase.SampleApplication.Tests
 {
@@ -90,6 +91,7 @@ namespace Abp.TestBase.SampleApplication.Tests
         {
             using (var context = LocalIocManager.Resolve<SampleApplicationDbContext>())
             {
+                context.DisableAllFilters();
                 action(context);
                 context.SaveChanges();
             }
@@ -101,6 +103,7 @@ namespace Abp.TestBase.SampleApplication.Tests
 
             using (var context = LocalIocManager.Resolve<SampleApplicationDbContext>())
             {
+                context.DisableAllFilters();
                 result = func(context);
                 context.SaveChanges();
             }
@@ -114,6 +117,7 @@ namespace Abp.TestBase.SampleApplication.Tests
 
             using (var context = LocalIocManager.Resolve<SampleApplicationDbContext>())
             {
+                context.DisableAllFilters();
                 result = await func(context);
                 context.SaveChanges();
             }

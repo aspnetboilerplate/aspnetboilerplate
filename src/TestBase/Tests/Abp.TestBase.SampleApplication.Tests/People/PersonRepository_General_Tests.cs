@@ -20,7 +20,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             var person = UsingDbContext(context => context.People.Single(p => p.Name == "halil"));
             _personRepository.Delete(person);
-            UsingDbContext(context => context.People.FirstOrDefault(p => p.Name == "halil")).ShouldBe(null);
+            UsingDbContext(context => context.People.FirstOrDefault(p => p.Name == "halil")).IsDeleted.ShouldBe(true);
         }
     }
 }
