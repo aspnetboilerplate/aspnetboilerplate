@@ -8,7 +8,7 @@ ASP.NET Boilerplate is a starting point for new modern web applications using be
 
 ### Framework
 
-ASP.NET Boilerplate is an application framework built on latest __ASP.NET MVC__ & __Web API__ technologies. It makes easy to use dependency injection, logging, validation, exception handling, localization and so on. It makes these not only itself but also using most popular framework and libraries
+ASP.NET Boilerplate is an application framework built on latest __ASP.NET MVC__ & __Web API__ technologies. It makes easy to use dependency injection, logging, validation, exception handling, localization and so on. It makes these not only itself but also using most popular framework and libraries.
 
 ### Architecture
 
