@@ -57,6 +57,8 @@ Module-Zero is the module that implements abstract concepts of the framework, al
 - Setting management
 - Audit logging
 
+See https://github.com/aspnetboilerplate/module-zero for more
+
 Links
 -----
 
