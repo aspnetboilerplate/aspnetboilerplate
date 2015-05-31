@@ -43,9 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.8.1.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NSubstitute.1.8.1.0\lib\net45\NSubstitute.dll</HintPath>
+    <Reference Include="NSubstitute, Version=1.8.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSubstitute.1.8.2.0\lib\net45\NSubstitute.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Shouldly, Version=2.5.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ErrorInfoBuilder_Tests.cs" />
+    <Compile Include="Localization\AbpWebLocalizationTests.cs" />
     <Compile Include="MultiTenancy\MultiTenancyScriptManager_Tests.cs" />
     <Compile Include="Navigation\NavigationScriptTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestBase\Abp.TestBase\Abp.TestBase.csproj">
+      <Project>{f554b0ef-acf4-4f72-b711-ef36559dce43}</Project>
+      <Name>Abp.TestBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj">
       <Project>{D1E31E85-0F7E-43BC-91E2-F9E544ECEBD5}</Project>
