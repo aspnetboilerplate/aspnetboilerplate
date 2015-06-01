@@ -72,7 +72,7 @@ namespace Abp.Configuration
         {
             return GetSettingValueInternalAsync(name, tenantId, userId);
         }
-        
+
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
         {
             return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User);
@@ -97,10 +97,20 @@ namespace Abp.Configuration
                 foreach (var settingValue in await GetAllSettingValuesForApplicationAsync())
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
+
+                    //TODO: Conditions get complicated, try to simplify it
+                    if (setting == null || !setting.Scopes.HasFlag(SettingScopes.Application))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        continue;
                     }
+
+                    if (!setting.IsInherited &&
+                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) || (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
+                    {
+                        continue;
+                    }
+
+                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                 }
             }
 
@@ -110,10 +120,20 @@ namespace Abp.Configuration
                 foreach (var settingValue in await GetAllSettingValuesForTenantAsync(AbpSession.TenantId.Value))
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Tenant))
+                    
+                    //TODO: Conditions get complicated, try to simplify it
+                    if (setting == null || !setting.Scopes.HasFlag(SettingScopes.Tenant))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        continue;
                     }
+
+                    if (!setting.IsInherited && 
+                        (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue))
+                    {
+                        continue;
+                    }
+
+                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                 }
             }
 
@@ -233,6 +253,11 @@ namespace Abp.Configuration
                 {
                     return settingValue.Value;
                 }
+
+                if (!settingDefinition.IsInherited)
+                {
+                    return settingDefinition.DefaultValue;
+                }
             }
 
             //Get for tenant if defined
@@ -242,6 +267,11 @@ namespace Abp.Configuration
                 if (settingValue != null)
                 {
                     return settingValue.Value;
+                }
+
+                if (!settingDefinition.IsInherited)
+                {
+                    return settingDefinition.DefaultValue;
                 }
             }
 
@@ -272,23 +302,22 @@ namespace Abp.Configuration
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
 
-            //For Tenant and User, Application's value overrides Setting Definition's default value.
-            if (tenantId.HasValue || userId.HasValue)
+            if (settingDefinition.IsInherited)
             {
-                var applicationValue = GetSettingValueForApplicationOrNull(name);
-                if (applicationValue != null)
+                //For Tenant and User, Application's value overrides Setting Definition's default value.
+                if (tenantId.HasValue || userId.HasValue)
                 {
-                    defaultValue = applicationValue.Value;
+                    var applicationValue = GetSettingValueForApplicationOrNull(name);
+                    if (applicationValue != null)
+                    {
+                        defaultValue = applicationValue.Value;
+                    }
                 }
-            }
 
-            //For User, Tenants's value overrides Application's default value.
-            if (userId.HasValue)
-            {
-                var currentTenantId = AbpSession.TenantId;
-                if (currentTenantId.HasValue)
+                //For User, Tenants's value overrides Application's default value.
+                if (userId.HasValue && AbpSession.TenantId.HasValue)
                 {
-                    var tenantValue = await GetSettingValueForTenantOrNull(currentTenantId.Value, name);
+                    var tenantValue = await GetSettingValueForTenantOrNull(AbpSession.TenantId.Value, name);
                     if (tenantValue != null)
                     {
                         defaultValue = tenantValue.Value;
@@ -301,14 +330,13 @@ namespace Abp.Configuration
             {
                 if (settingValue != null)
                 {
-                    //_settingRepository.Delete(settingValue);
                     await SettingStore.DeleteAsync(settingValue);
                 }
 
                 return null;
             }
 
-            //It's not default value and not stored on database, so insert it
+            //If it's not default value and not stored on database, then insert it
             if (settingValue == null)
             {
                 settingValue = new SettingInfo
@@ -323,7 +351,7 @@ namespace Abp.Configuration
                 return settingValue;
             }
 
-            //It's same value as it's, no need to update
+            //It's same value in database, no need to update
             if (settingValue.Value == value)
             {
                 return settingValue;
@@ -367,7 +395,6 @@ namespace Abp.Configuration
             return dictionary;
         }
 
-
         private async Task<ImmutableDictionary<string, SettingInfo>> GetReadOnlyTenantSettings(int tenantId)
         {
             var cachedDictionary = await GetTenantSettingsFromCache(tenantId);
@@ -376,6 +403,7 @@ namespace Abp.Configuration
                 return cachedDictionary.ToImmutableDictionary();
             }
         }
+
         private async Task<ImmutableDictionary<string, SettingInfo>> GetReadOnlyUserSettings(long userId)
         {
             var cachedDictionary = await GetUserSettingsFromCache(userId);
