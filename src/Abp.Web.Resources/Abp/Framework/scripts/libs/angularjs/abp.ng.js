@@ -4,16 +4,84 @@
         return;
     }
 
+    abp.ng = abp.ng || {};
+
+    abp.ng.http = {
+        defaultError: {
+            message: 'Ajax request is not succeed!',
+            details: 'Error detail is not sent by server.'
+        },
+
+        logError: function (error) {
+            abp.log.error(error);
+        },
+
+        showError: function (error) {
+            if (error.details) {
+                return abp.message.error(error.details, error.message);
+            } else {
+                return abp.message.error(error.message);
+            }
+        },
+
+        handleTargetUrl: function (targetUrl) {
+            location.href = targetUrl;
+        },
+
+        handleUnAuthorizedRequest: function (messagePromise, targetUrl) {
+            if (messagePromise) {
+                messagePromise.done(function () {
+                    if (!targetUrl) {
+                        location.reload();
+                    } else {
+                        abp.ng.http.handleTargetUrl(targetUrl);
+                    }
+                });
+            } else {
+                if (!targetUrl) {
+                    location.reload();
+                } else {
+                    abp.ng.http.handleTargetUrl(targetUrl);
+                }
+            }
+        },
+
+        handleResponse: function (response, defer) {
+            var originalData = response.data;
+
+            if (originalData.success === true) {
+                response.data = originalData.result;
+                defer.resolve(response);
+
+                if (originalData.targetUrl) {
+                    abp.ng.http.handleTargetUrl(originalData.targetUrl);
+                }
+            } else { //data.success === false
+                var messagePromise = null;
+
+                if (originalData.error) {
+                    messagePromise = abp.ng.http.showError(originalData.error);
+                } else {
+                    originalData.error = defaultError;
+                }
+
+                abp.ng.http.logError(originalData.error);
+
+                response.data = originalData.error;
+                defer.reject(response);
+
+                if (originalData.unAuthorizedRequest) {
+                    abp.ng.http.handleUnAuthorizedRequest(messagePromise, originalData.targetUrl);
+                }
+            }
+        }
+    }
+
     var abpModule = angular.module('abp', []);
 
     abpModule.config([
         '$httpProvider', function ($httpProvider) {
             $httpProvider.interceptors.push(['$q', function ($q) {
-
-                var defaultError = {
-                    message: 'Ajax request is not succeed!',
-                    details: 'Error detail is not sent by server.'
-                };
 
                 return {
 
@@ -30,56 +98,24 @@
                             return response;
                         }
 
-                        var originalData = response.data;
                         var defer = $q.defer();
 
-                        if (originalData.success === true) {
-                            response.data = originalData.result;
-                            defer.resolve(response);
-                        } else { //data.success === false
-                            var messagePromise = null;
-                            if (originalData.error) {
-                                if (originalData.error.details) {
-                                    messagePromise = abp.message.error(originalData.error.details, originalData.error.message);
-                                } else {
-                                    messagePromise = abp.message.error(originalData.error.message);
-                                }
-                            } else {
-                                originalData.error = defaultError;
-                            }
-
-                            abp.log.error(originalData.error.message + ' | ' + originalData.error.details);
-
-                            response.data = originalData.error;
-                            defer.reject(response);
-
-                            if (originalData.unAuthorizedRequest && !originalData.targetUrl) {
-                                if (messagePromise) {
-                                    messagePromise.done(function () {
-                                        location.reload();
-                                    });
-                                } else {
-                                    location.reload();
-                                }
-                            }
-                        }
-
-                        if (originalData.targetUrl) {
-                            if (messagePromise) {
-                                messagePromise.done(function () {
-                                    location.href = originalData.targetUrl;
-                                });
-                            } else {
-                                location.href = originalData.targetUrl;
-                            }
-                        }
+                        abp.ng.http.handleResponse(response, defer);
 
                         return defer.promise;
                     },
 
-                    'responseError': function (error) {
-                        abp.message.error(error.data, error.statusText);
-                        abp.log.error(error);
+                    'responseError': function (ngError) {
+                        var error = {
+                            message: ngError.data,
+                            details: ngError.statusText,
+                            responseError: true
+                        }
+
+                        abp.ng.http.showError(error);
+
+                        abp.ng.http.logError(error);
+
                         return $q.reject(error);
                     }
 
