@@ -195,16 +195,18 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            if (AbpSession.TenantId == null)
+            var currentTenantId = (int)this.GetFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId);
+
+            if (currentTenantId == 0)
             {
-                throw new DbEntityValidationException("Can not save a IMustHaveTenant entity while MustHaveTenant filter is enabled and there is no tenant logged in!");
+                throw new DbEntityValidationException("Can not save a IMustHaveTenant entity while MustHaveTenant filter is enabled and current filter parameter value is not set (Probably, no tenant user logged in)!");
             }
 
             if (tenantEntity.TenantId == 0)
             {
-                tenantEntity.TenantId = AbpSession.GetTenantId();
+                tenantEntity.TenantId = currentTenantId;
             }
-            else if (tenantEntity.TenantId != AbpSession.GetTenantId())
+            else if (tenantEntity.TenantId != currentTenantId)
             {
                 throw new DbEntityValidationException("Can not set IMustHaveTenant.TenantId to a different value than current tenant's Id while MustHaveTenant filter is enabled!");
             }
@@ -217,9 +219,11 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            if (entry.Cast<IMayHaveTenant>().Entity.TenantId != AbpSession.TenantId)
+            var currentTenantId = (int?)this.GetFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId);
+
+            if (entry.Cast<IMayHaveTenant>().Entity.TenantId != currentTenantId)
             {
-                throw new DbEntityValidationException("Can not set TenantId to a different value from current session (IAbpSession.TenantId) while MayHaveTenant filter is enabled!");
+                throw new DbEntityValidationException("Can not set TenantId to a different value from the current filter parameter value while MayHaveTenant filter is enabled!");
             }
         }
 
