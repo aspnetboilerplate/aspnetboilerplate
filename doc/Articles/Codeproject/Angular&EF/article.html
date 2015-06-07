@@ -31,6 +31,7 @@ A screenshot of the sample application.</p>
 	<li><a href="#ArticleBuildWebApiServices">Build Web API services</a></li>
 	<li><a href="#ArticleDevelopSpa">Develop the SPA</a></li>
 	<li><a href="#ArticleLocalization">Localization</a></li>
+	<li><a href="#ArticleUnitTest">Unit testing</a></li>
 	<li><a href="#ArticleSummary">Summary</a></li>
 	<li><a href="#ArticleHistory">Article history</a></li>
 	<li><a href="#ArticleReferences">References</a></li>
@@ -50,7 +51,8 @@ A screenshot of the sample application.</p>
 	<li>And <strong>ASP.NET Boilerplate</strong> as startup template and application framework.</li>
 </ul>
 
-<p><strong>ASP.NET Boilerplate</strong> [1] is an open source project that combines all these frameworks/libraries to make you start easily to develop your application. It also provides us an infrastructure to develop applications in <strong>best practices</strong>. It naturally supports <strong>Dependency Injection</strong>, <strong>Domain Driven Design </strong>and <strong>Layered Architecture</strong>.</p>
+<p><strong>ASP.NET Boilerplate</strong> [1] is an open source application 
+framework that combines all of these frameworks and libraries to make you start easily to develop your application. It also provides us an infrastructure to develop applications in <strong>best practices</strong>. It naturally supports <strong>Dependency Injection</strong>, <strong>Domain Driven Design </strong>and <strong>Layered Architecture</strong>.</p>
 
 <p>The sample application also implements <strong>validation</strong>, <strong> exception handling</strong>, <strong>localization</strong> and <strong> responsive design</strong>.</p>
 
@@ -73,7 +75,8 @@ Durandal, just ignore these 2 projects.</p>
 
 <h2 id="ArticleCreateEntities">Create entities</h2>
 
-<p>I&#39;m creating a simple application to create <strong>tasks</strong> and assing tasks to <strong>people</strong>. So, I need <strong>Task</strong> and <strong> Person</strong> entities.</p>
+<p>I&#39;m creating a simple application to create <strong>tasks</strong> and assing 
+these tasks to <strong>people</strong>. So, I need <strong>Task</strong> and <strong> Person</strong> entities.</p>
 
 <p><strong>Task</strong> entity simply defines a Description, CreationTime and a State for a Task. It also has an optional reference to a Person (AssignedPerson):</p>
 
@@ -143,7 +146,8 @@ for Task and Person. This is my DbContext class:</p>
 <h2 id="ArticleDbMigrations">Create Database Migrations</h2>
 
 <p>We&#39;ll use EntityFramework&#39;s Code First Migrations to create and maintain the database schema. 
-ASP.NET Boilerplate template has enabled migrations by default and added a <strong>Configuration</strong>class as shown below::</p>
+ASP.NET Boilerplate template has enabled migrations by default and added a <strong>Configuration </strong>
+class as shown below:</p>
 
 <pre lang="cs">
 internalinternal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSystem.EntityFramework.SimpleTaskSystemDbContext&gt;
@@ -223,7 +227,14 @@ PM&gt; Update-Database</pre>
 
 <h2 id="ArticleDefineRepositories">Define repositories</h2>
 
-<p>In domain driven design, repositories used to implement database-specific codes. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
+<p>In domain driven design, repositories used to implement database-specific codes. 
+ASP.NET Boilerplate creates an automatic repository for each entity using 
+generic <strong>IRepository</strong> interface. IRepository defines common 
+methods for select, insert, update, delete and a few more:</p>
+<p>
+<img alt="IRepository interface" height="741" src="irepository-interface-v3.png" width="494" /></p>
+<p>We can extend these repository upon our needs. I will extend it to create a 
+Task repository. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
 
 <pre lang="cs">
 public interface ITaskRepository : IRepository&lt;Task, long&gt;
@@ -231,11 +242,8 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
     List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state);
 }</pre>
 
-<p>It extends generic <strong>IRepository</strong> interface of ASP.NET Boilerplate. IRepository defines common methods for select, insert, update, delete and a few more:</p>
-
-<p><img alt="Generic IRepository interface" height="385" src="irepository-interface2.png" width="460" /></p>
-
-<p>So, <strong>ITaskRepository</strong> inherently defines all these methods as default. It can also add it&#39;s own methods as I defined <strong>GetAllWithPeople(...)</strong>. </p>
+<p>It extends generic <strong>IRepository</strong> interface of ASP.NET 
+Boilerplate. So, <strong>ITaskRepository</strong> inherently defines all these methods as default. It can also add it&#39;s own methods as I defined <strong>GetAllWithPeople(...)</strong>. </p>
 <p>No need to create a repository for Person since default methods are enough 
 for me. ASP.NET Boilerplate provides a way of injecting generic repositories 
 without creating a repository class. We will see it in TaskAppService class in 
@@ -620,17 +628,31 @@ showing menu in the angular way.</p>
 &lt;/localizationDictionary&gt;
 </pre>
 
+<h2 id="ArticleUnitTest">Unit testing</h2>
+<p>ASP.NET Boilerplate is designed to be testable. I authored an article to show unit and 
+integration testing for ABP based projects. 
+See the article:&nbsp;<a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor">Unit testing
+in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate</a>.</p>
+
 <h2 id="ArticleSummary">Summary</h2>
 
-<p>In this article, I demonstrated how to develop an NLayered ASP.NET MVC web application with a SPA and responsive user interface. I used ASP.NET Boilerplate since it makes easy to develop such applications using best practices and saves our time.</p>
+<p>In this article, I demonstrated how to develop an NLayered ASP.NET MVC web application with a SPA and responsive user interface. I used ASP.NET Boilerplate since it makes easy to develop such applications using best practices and saves our time. 
+Use these links for moe:</p>
 
-<p>I did write an article &quot;<a href="http://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate">Introduction to ASP.NET Boilerplate</a>&quot; that explains ASP.NET Boilerplate in more deep. Also, you can check the <a href="http://www.aspnetboilerplate.com/Pages/Documents">documentation</a> for more information. Finally, you can get source codes on <a href="https://github.com/aspnetboilerplate">github repository</a>. If you want to be informed about ASP.NET Boilerplate, follow <a href="https://twitter.com/aspboilerplate">@aspboilerplate</a> on twitter.</p>
+<ul>
+	<li>Official site and documentation: <a href="http://www.aspnetboilerplate.com/">aspnetboilerplate.com</a></li>
+	<li>Official forum: <a href="http://forum.aspnetboilerplate.com/">forum.aspnetboilerplate.com</a></li>
+	<li>Github repositories: <a href="https://github.com/aspnetboilerplate">github repository</a></li>
+	<li>Folloe on twitter: <a href="https://twitter.com/aspboilerplate">@aspboilerplate</a></li>
+</ul>
 
 <h2 id="ArticleHistory">Article history</h2>
 
 <ul>
-	<li><strong>2014-11-03</strong>: Updated article and sample project for ABP 
-	v0.4.1.</li>
+	<li><strong>2015-06-08</strong>: Updated article and sample project for ABP v0.6.3.1.</li>
+	<li><strong>2015-02-20</strong>: Added link to unit test article and updated the sample project</li>
+	<li><strong>2015-01-05</strong>: Updated sample project for ABP v0.5.</li>
+	<li><strong>2014-11-03</strong>: Updated article and sample project for ABP v0.4.1.</li>
 	<li><strong>2014-09-08</strong>: Updated article and sample project for ABP v0.3.2.</li>
 	<li><strong>2014-08-17</strong>: Updated sample project to ABP v0.3.1.2.</li>
 	<li><strong>2014-07-22</strong>: Updated sample project to ABP v0.3.0.1.</li>
