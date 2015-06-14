@@ -9,9 +9,6 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntro">Introduction</a></li>
-</ul>
 <h3>Creating the project</h3>
 <p>If you have created your project before, you can skip to the next section. If 
 not, go to <a href="/Templates">templates</a> page and create your project. I 
@@ -57,9 +54,9 @@ public class Tenant : AbpTenant&lt;Tenant, User&gt;
 
 }</pre>
 <p>You can add your custom properties here. In this way, we can extend base 
-user, role and tenant classes easily.</p>
+user, role and tenant classes upon our needs.</p>
 <h4>Managers (domain services)</h4>
-<p>Then, we should implement base user, role and tenant manager and store 
+<p>We should implement base user, role and tenant manager and store 
 classes since they are also abstract.</p>
 <p>Start from <strong>user store</strong> and <strong>user manager</strong>:</p>
 <pre lang="cs">public class UserStore : AbpUserStore&lt;Tenant, Role, User&gt;
@@ -170,14 +167,16 @@ public class AbpZeroSampleDataModule : AbpModule
 {
     //...
 }</pre>
+<h5>DbContext</h5>
 <p>Go to your DbContext class and change base class from AbpDbContext to 
 <strong>AbpZeroDbContext</strong> as shown below:</p>
 <pre lang="cs">public class AbpZeroSampleDbContext : <strong>AbpZeroDbContext&lt;Tenant, Role, User&gt;</strong>
 {
     //...
 }</pre>
-<p>Thus, <strong>entities</strong> from module-zero is added to your db context. 
-Now, we should create database migrations since our db context is changed.
+<p>Thus, base entities from module-zero is added to your db context.</p>
+<h5>Database Migration</h5>
+<p>Now, we should create database migrations since our db context is changed.
 <strong>Open Package Manager Console</strong> and type the following command:</p>
 <pre>Add-Migration "AbpZero_Installed"</pre>
 <p>Surely, you can select a different migration name. Don't forget to select 
@@ -189,9 +188,264 @@ Then type the following command to update database schema:</p>
 <p>You can check EntityFramework's code-first migration
 <a href="https://msdn.microsoft.com/en-us/data/jj591621.aspx" target="_blank">
 documentation</a> for more information.</p>
+<p>Initial Data</p>
 <p>If you check your database, you will see that tables are created but they are 
-empty. You can use EntityFramework's <strong>seed </strong>to fill initial data.</p>
-<p>...</p>
+empty. You can use EntityFramework's <strong>seed </strong>to fill initial data. 
+You can use such a class as initial data builder:</p>
+<pre lang="cs">public class DefaultTenantRoleAndUserBuilder
+{
+    private readonly AbpZeroSampleDbContext _context;
+
+    public DefaultTenantRoleAndUserBuilder(AbpZeroSampleDbContext context)
+    {
+        _context = context;
+    }
+
+    public void Build()
+    {
+        CreateUserAndRoles();
+    }
+
+    private void CreateUserAndRoles()
+    {
+        //Admin role for tenancy owner
+
+        var adminRoleForTenancyOwner = _context.Roles.FirstOrDefault(r =&gt; r.TenantId == null &amp;&amp; r.Name == &quot;Admin&quot;);
+        if (adminRoleForTenancyOwner == null)
+        {
+            adminRoleForTenancyOwner = _context.Roles.Add(new Role {Name = &quot;Admin&quot;, DisplayName = &quot;Admin&quot;});
+            _context.SaveChanges();
+        }
+
+        //Admin user for tenancy owner
+
+        var adminUserForTenancyOwner = _context.Users.FirstOrDefault(u =&gt; u.TenantId == null &amp;&amp; u.UserName == &quot;admin&quot;);
+        if (adminUserForTenancyOwner == null)
+        {
+            adminUserForTenancyOwner = _context.Users.Add(
+                new User
+                {
+                    TenantId = null,
+                    UserName = &quot;admin&quot;,
+                    Name = &quot;System&quot;,
+                    Surname = &quot;Administrator&quot;,
+                    EmailAddress = &quot;admin@aspnetboilerplate.com&quot;,
+                    IsEmailConfirmed = true,
+                    Password = &quot;AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==&quot; //123qwe
+                });
+
+            _context.SaveChanges();
+
+            _context.UserRoles.Add(new UserRole(adminUserForTenancyOwner.Id, adminRoleForTenancyOwner.Id));
+
+            _context.SaveChanges();
+        }
+
+        //Default tenant
+
+        var defaultTenant = _context.Tenants.FirstOrDefault(t =&gt; t.TenancyName == &quot;Default&quot;);
+        if (defaultTenant == null)
+        {
+            defaultTenant = _context.Tenants.Add(new Tenant {TenancyName = &quot;Default&quot;, Name = &quot;Default&quot;});
+            _context.SaveChanges();
+        }
+
+        //Admin role for &#39;Default&#39; tenant
+
+        var adminRoleForDefaultTenant = _context.Roles.FirstOrDefault(r =&gt; r.TenantId == defaultTenant.Id &amp;&amp; r.Name == &quot;Admin&quot;);
+        if (adminRoleForDefaultTenant == null)
+        {
+            adminRoleForDefaultTenant = _context.Roles.Add(new Role { TenantId = defaultTenant.Id, Name = &quot;Admin&quot;, DisplayName = &quot;Admin&quot; });
+            _context.SaveChanges();
+        }
+
+        //Admin for &#39;Default&#39; tenant
+
+        var adminUserForDefaultTenant = _context.Users.FirstOrDefault(u =&gt; u.TenantId == defaultTenant.Id &amp;&amp; u.UserName == &quot;admin&quot;);
+        if (adminUserForDefaultTenant == null)
+        {
+            adminUserForDefaultTenant = _context.Users.Add(
+                new User
+                {
+                    TenantId = defaultTenant.Id,
+                    UserName = &quot;admin&quot;,
+                    Name = &quot;System&quot;,
+                    Surname = &quot;Administrator&quot;,
+                    EmailAddress = &quot;admin@aspnetboilerplate.com&quot;,
+                    IsEmailConfirmed = true,
+                    Password = &quot;AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==&quot; //123qwe
+                });
+            _context.SaveChanges();
+
+            _context.UserRoles.Add(new UserRole(adminUserForDefaultTenant.Id, adminRoleForDefaultTenant.Id));
+            _context.SaveChanges();
+        }
+    }
+}</pre>
+<p>This class creates default tenant, roles and users. We can use it in EF's
+<strong>Configuration</strong> class to seed our database:</p>
+<pre lang="cs">internal sealed class Configuration : DbMigrationsConfiguration&lt;AbpZeroSample.EntityFramework.AbpZeroSampleDbContext&gt;
+{
+    public Configuration()
+    {
+        AutomaticMigrationsEnabled = false;
+        ContextKey = &quot;AbpZeroSample&quot;;
+    }
+
+<strong>    protected override void Seed(AbpZeroSample.EntityFramework.AbpZeroSampleDbContext context)
+    {
+        context.DisableAllFilters();
+        new DefaultTenantRoleAndUserBuilder(context).Build();
+    }
+</strong>}</pre>
+<p>Here, we disabled data filters (so we can freely manipulate database) and 
+used the initial data builder class.</p>
+<h3>Presentation Layer</h3>
+<h4>Nuget Packages</h4>
+<p>Add the following nuget packages to the .Web project:</p>
+<ul>
+	<li>Abp.Zero.EntityFramework (this will also add Abp.Zero and all 
+	dependencies)</li>
+	<li>Microsoft.AspNet.Identity.Owin</li>
+	<li>Microsoft.Owin.Host.SystemWeb</li>
+</ul>
+<h4>Owin Startup Class</h4>
+<p>Add an Owin Startup class like that:</p>
+<pre lang="cs">using AbpZeroSample.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
+using Owin;
+
+<strong>[assembly: OwinStartup(typeof(Startup))]
+</strong>
+namespace AbpZeroSample.Web
+{
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            // Enable the application to use a cookie to store information for the signed in user
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString(&quot;/Account/Login&quot;)
+            });
+
+            // Use a cookie to temporarily store information about a user logging in with a third party login provider
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+        }
+    }
+}</pre>
+<h4>Account Controller</h4>
+<p>We can create a Controller for login/logout as shown below:</p>
+<pre lang="cs">public class AccountController : AbpZeroSampleControllerBase
+{
+    private readonly UserManager _userManager;
+
+    private IAuthenticationManager AuthenticationManager
+    {
+        get
+        {
+            return HttpContext.GetOwinContext().Authentication;
+        }
+    }
+
+    public AccountController(<strong>UserManager userManager</strong>)
+    {
+        _userManager = userManager;
+    }
+
+    public ActionResult Login(string returnUrl = &quot;&quot;)
+    {
+        if (string.IsNullOrWhiteSpace(returnUrl))
+        {
+            returnUrl = Request.ApplicationPath;
+        }
+
+        ViewBag.ReturnUrl = returnUrl;
+
+        return View();
+    }
+
+    [HttpPost]
+    public async Task&lt;JsonResult&gt; Login(LoginViewModel loginModel, string returnUrl = &quot;&quot;)
+    {
+        if (!ModelState.IsValid)
+        {
+            throw new UserFriendlyException(&quot;Your form is invalid!&quot;);
+        }
+
+        var loginResult = await _userManager.LoginAsync(
+            loginModel.UsernameOrEmailAddress,
+            loginModel.Password,
+            loginModel.TenancyName
+            );
+
+        switch (loginResult.Result)
+        {
+            case AbpLoginResultType.Success:
+                break;
+            case AbpLoginResultType.InvalidUserNameOrEmailAddress:
+            case AbpLoginResultType.InvalidPassword:
+                throw new UserFriendlyException(&quot;Invalid user name or password!&quot;);
+            case AbpLoginResultType.InvalidTenancyName:
+                throw new UserFriendlyException(&quot;No tenant with name: &quot; + loginModel.TenancyName);
+            case AbpLoginResultType.TenantIsNotActive:
+                throw new UserFriendlyException(&quot;Tenant is not active: &quot; + loginModel.TenancyName);
+            case AbpLoginResultType.UserIsNotActive:
+                throw new UserFriendlyException(&quot;User is not active: &quot; + loginModel.UsernameOrEmailAddress);
+            case AbpLoginResultType.UserEmailIsNotConfirmed:
+                throw new UserFriendlyException(&quot;Your email address is not confirmed!&quot;);
+            default: //Can not fall to default for now. But other result types can be added in the future and we may forget to handle it
+                throw new UserFriendlyException(&quot;Unknown problem with login: &quot; + loginResult.Result);
+        }
+
+        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+        AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = loginModel.RememberMe }, loginResult.Identity);
+
+        if (string.IsNullOrWhiteSpace(returnUrl))
+        {
+            returnUrl = Request.ApplicationPath;
+        }
+
+        return Json(new MvcAjaxResponse { TargetUrl = returnUrl });
+    }
+
+    public ActionResult Logout()
+    {
+        AuthenticationManager.SignOut();
+        return RedirectToAction(&quot;Login&quot;);
+    }
+}</pre>
+<p>With a simple LoginViewModel:</p>
+<pre lang="cs">public class LoginViewModel
+{
+    public string TenancyName { get; set; }
+
+    [Required]
+    public string UsernameOrEmailAddress { get; set; }
+
+    [Required]
+    public string Password { get; set; }
+
+    public bool RememberMe { get; set; }
+}</pre>
+<h4>Login View</h4>
+<p>To be able to use AccountController, we should create a login page.</p>
+<p>TODO: ...</p>
+<h4>Secure The Application</h4>
+<p>Now, we can add an AbpAuthorize attribute to HomeController to ensure only 
+authenticated users can enter to the page:</p>
+<pre lang="cs"><strong>[AbpMvcAuthorize]</strong>
+public class HomeController : AbpZeroSampleControllerBase
+{
+    public ActionResult Index()
+    { 
+        return View(&quot;~/App/Main/views/layout/layout.cshtml&quot;); //Layout of the angular application.
+    }
+}</pre>
+<p>TODO: ...</p>
 
 </body>
 
