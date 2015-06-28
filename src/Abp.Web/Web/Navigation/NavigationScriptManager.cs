@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.Runtime.Session;
 
 namespace Abp.Web.Navigation
@@ -55,6 +56,11 @@ namespace Abp.Web.Navigation
                 sb.AppendLine("            displayName: '" + menu.DisplayName + "',");
             }
 
+            if (menu.CustomData != null)
+            {
+                sb.AppendLine("            customData: " + JsonHelper.ConvertToJson(menu.CustomData, true) + ",");
+            }
+
             sb.Append("            items: ");
 
             if (menu.Items.Count <= 0)
@@ -97,6 +103,11 @@ namespace Abp.Web.Navigation
             if (menuItem.DisplayName != null)
             {
                 sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + menuItem.DisplayName.Replace("'", @"\'") + "',");
+            }
+
+            if (menuItem.CustomData != null)
+            {
+                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + JsonHelper.ConvertToJson(menuItem.CustomData, true) + ",");
             }
 
             sb.Append(new string(' ', indentLength + 4) + "items: [");
