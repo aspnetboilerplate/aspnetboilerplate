@@ -7,8 +7,6 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Auditing
 {
