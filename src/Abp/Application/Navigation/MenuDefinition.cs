@@ -10,14 +10,19 @@ namespace Abp.Application.Navigation
     public class MenuDefinition : IHasMenuItemDefinitions
     {
         /// <summary>
-        /// Unique name of the menu in the application. 
+        /// Unique name of the menu in the application. Required.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
-        /// Display name of the menu.
+        /// Display name of the menu. Required.
         /// </summary>
         public ILocalizableString DisplayName { get; set; }
+
+        /// <summary>
+        /// Can be used to store a custom object related to this menu. Optional.
+        /// </summary>
+        public object CustomData { get; set; }
 
         /// <summary>
         /// Menu items (first level).
@@ -29,7 +34,8 @@ namespace Abp.Application.Navigation
         /// </summary>
         /// <param name="name">Unique name of the menu</param>
         /// <param name="displayName">Display name of the menu</param>
-        public MenuDefinition(string name, ILocalizableString displayName)
+        /// <param name="customData">Can be used to store a custom object related to this menu.</param>
+        public MenuDefinition(string name, ILocalizableString displayName, object customData = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -43,6 +49,7 @@ namespace Abp.Application.Navigation
 
             Name = name;
             DisplayName = displayName;
+            CustomData = customData;
 
             Items = new List<MenuItemDefinition>();
         }
