@@ -44,7 +44,7 @@ namespace Abp.Web.Settings
                     script.AppendLine();
                 }
 
-                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + (await _settingManager.GetSettingValueAsync(settingDefinition.Name)).Replace("'", @"\'") + "'");
+                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + (await _settingManager.GetSettingValueAsync(settingDefinition.Name)).Replace("'", @"\'").Replace(@"\", @"\\") + "'");
 
                 ++added;
             }
