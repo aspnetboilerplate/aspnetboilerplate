@@ -11,9 +11,96 @@
 
 <ul>
 	<li><a href="#DocIntro">Introduction</a></li>
+	<li>IDomainService interface and DomainService class</li>
+	<li>Example</li>
 </ul>
 <h3 id="DocIntro">Introduction</h3>
-<p>THIS DOCUMENT IS NOT READY YET.</p>
+<p>Domain Services (or just Service, in DDD) is used to perform domain 
+operations and business rules. Eric Evans describes a good Service in three 
+characteristics (in his DDD book):</p>
+<ol>
+	<li>The <strong>operation</strong> relates to a <strong>domain concept</strong> 
+	that is not a natural part of an Entity or Value Object.</li>
+	<li>The <strong>interface</strong> is defined in terms of other elements of
+	<strong>domain model</strong>.</li>
+	<li>The operation is <strong>stateless</strong>.</li>
+</ol>
+<p>Unlike <a href="/Pages/Documents/Application-Services">Application Services</a> 
+which gets/returns <a href="/Pages/Documents/Data-Transfer-Objects">Data 
+Transfer Objects</a>, a Domain Service gets/returns <strong>domain objects</strong> 
+(like <a href="/Pages/Documents/Entities">entities</a> or value types). </p>
+<p>A Domain Service is can be used by Application Services and other Domain 
+Services, but not directly used by presentation layer (application service is 
+for that).</p>
+<h3>IDomainService interface and DomainService class</h3>
+<p>ASP.NET Boilerplate defines <strong>IDomainService interface</strong> that is 
+implemented by all domain services conventionally. When it's implemented, the 
+domain service is <strong>automatically registered</strong> to
+<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> system 
+as <strong>transient</strong>.</p>
+
+<p>Also, a domain service (optionally) can inherit from <strong>DomainService 
+class</strong>. Thus, it can use power of some inherited properties for logging, 
+localization and so on... Surely, even if it does not inherit, it can inject 
+they if needs.</p>
+
+<h3>Example</h3>
+<p>Assume that we have a task management system and we have business rules while 
+assigning a task to a person.</p>
+<p>First, we define an interface for the service (not required, but as a good 
+practice):</p>
+<pre lang="cs">public interface ITaskManager : IDomainService
+{
+    void AssignTaskToPerson(Task task, Person person);
+}</pre>
+<p>As you can see, <strong>TaskManager</strong> service gets domain objects: a
+<strong>Task</strong> and a <strong>Person</strong>. There are some conventions 
+of naming domain services. It can be TaskManager, TaskService or 
+TaskDomainService...</p>
+<p>Let's see the implementation:</p>
+<pre lang="cs">public class TaskManager : DomainService, ITaskManager
+{
+    public const int MaxActiveTaskCountForAPerson = 3;
+
+    private readonly ITaskRepository _taskRepository;
+
+    public TaskManager(ITaskRepository taskRepository)
+    {
+        _taskRepository = taskRepository;
+    }
+
+    public void AssignTaskToPerson(Task task, Person person)
+    {
+        if (task.AssignedPersonId == person.Id)
+        {
+            return;
+        }
+
+        if (task.State != TaskState.Active)
+        {
+            throw new ApplicationException(&quot;Can not assign a task to a person when task is not active!&quot;);
+        }
+
+        if (HasPersonMaximumAssignedTask(person))
+        {
+            throw new UserFriendlyException(L(&quot;MaxPersonTaskLimitMessage&quot;, person.Name));
+        }
+
+        task.AssignedPersonId = person.Id;
+    }
+
+    private bool HasPersonMaximumAssignedTask(Person person)
+    {
+        var assignedTaskCount = _taskRepository.Count(t =&gt; t.State == TaskState.Active &amp;&amp; t.AssignedPersonId == person.Id);
+        return assignedTaskCount &gt;= MaxActiveTaskCountForAPerson;
+    }
+}</pre>
+<p>We have two business rules here:</p>
+<ul>
+	<li>A task should be in Active state in order to assign it to a new Person.</li>
+	<li>A person can have a maximum of 3 active tasks.</li>
+</ul>
+<p>TODO: ...</p>
 
 </body>
 
