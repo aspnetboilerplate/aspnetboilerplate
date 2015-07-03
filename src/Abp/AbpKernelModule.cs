@@ -31,12 +31,11 @@ namespace Abp
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            //TODO: Consider to change order of Uow and Auth interceptors..?
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
-
             _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager);
             _auditingInterceptorRegistrar.Initialize();
+
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
                 new NamedTypeSelector(

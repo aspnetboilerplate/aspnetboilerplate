@@ -98,6 +98,7 @@
     <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />
     <Compile Include="Web\Mvc\Extensions\HtmlHelperResourceExtensions.cs" />
+    <Compile Include="Web\Mvc\Models\ModelStateExtensions.cs" />
     <Compile Include="Web\Mvc\Models\MvcAjaxResponse.cs" />
     <Compile Include="Web\Mvc\Models\MvcAjaxResponseOfTResult.cs" />
     <Compile Include="Web\Mvc\Models\ErrorViewModel.cs" />

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Abp.Collections.Extensions;
+using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Auditing
 {
@@ -18,7 +17,7 @@ namespace Abp.Auditing
         public ILogger Logger { get; set; }
 
         public IAuditingStore AuditingStore { get; set; }
-        
+
         private readonly IAuditingConfiguration _configuration;
 
         private readonly IAuditInfoProvider _auditInfoProvider;
@@ -27,7 +26,7 @@ namespace Abp.Auditing
         {
             _configuration = configuration;
             _auditInfoProvider = auditInfoProvider;
-            
+
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             AuditingStore = SimpleLogAuditingStore.Instance;
@@ -91,12 +90,7 @@ namespace Abp.Auditing
                     dictionary[parameter.Name] = argument;
                 }
 
-                return JsonConvert.SerializeObject(
-                    dictionary,
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
+                return JsonHelper.ConvertToJson(dictionary, true);
             }
             catch (Exception ex)
             {

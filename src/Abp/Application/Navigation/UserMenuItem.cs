@@ -28,6 +28,11 @@ namespace Abp.Application.Navigation
         public string Url { get; set; }
 
         /// <summary>
+        /// A custom object related to this menu item.
+        /// </summary>
+        public object CustomData { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item.
         /// </summary>
         public IList<UserMenuItem> Items { get; private set; }
@@ -49,6 +54,7 @@ namespace Abp.Application.Navigation
             Icon = menuItemDefinition.Icon;
             DisplayName = menuItemDefinition.DisplayName.Localize();
             Url = menuItemDefinition.Url;
+            CustomData = menuItemDefinition.CustomData;
             Items = new List<UserMenuItem>();
         }
     }
