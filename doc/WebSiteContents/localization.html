@@ -129,6 +129,9 @@ the localization source as shown below:</p>
 assembly containing XML files (GetExecutingAssembly simply refers to current 
 assembly) and a <strong>namespace</strong> of XML files (namespace is calculated 
 assembly name + folder hierarchy of XML files). </p>
+<p>Note that: When adding language postfix to embedded XML files, don't use dot 
+notation like 'MySource.tr.xml', instead use dash like '<strong>MySource-tr.xml</strong>' 
+since dot notation causes problems when finding resources.</p>
 <h4 id="DocLocalizeResources">Resource files</h4>
 <p>Localization text can also be stored in .NET's resource files. We can create 
 a resource file for each language as shown below (Right click to the project, 
@@ -250,9 +253,51 @@ var s<span lang="tr">1</span> = source('NewTask');</pre>
 source('RoleDeleteWarningMessage', 'Admin');</pre>
 <p>if RoleDeleteWarningMessage = 'Role {0} will be deleted', then localized text 
 will be 'Role Admin will be deleted'.</p>
-<h3 id="DocConclusion">Extending localization sources</h3>
-<p>TODO</p>
-<h3>Conclusion</h3>
+
+<h3 id="DocExtending">Extending localization sources</h3>
+<p>Assume that we use a module which defines it's own localization source. We 
+may need to change it's localized texts, add new texts or translate to other languages. 
+ASP.NET Boilerplate allows extending a localization source. It currently works 
+for XML files (Actually any localization source implements 
+IDictionaryBasedLocalizationSource interface).</p>
+<p>ASP.NET Boilerplate also defines some localization sources. For instance,
+<strong>Abp.Web</strong> nuget package defines a localization source named "<strong>AbpWeb</strong>" 
+as embedded XML files:</p>
+<p>
+<img alt="AbpWeb localization source files" height="147" src="/SiteFiles/Content/Documents/Resources/AbpWeb-localization-source.png" width="216" /></p>
+<p>&nbsp;Default (English) XML file 
+is like below (only first two texts are shown):</p>
+<pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;localizationDictionary culture=&quot;en&quot;&gt;
+  &lt;texts&gt;
+    &lt;text name=&quot;InternalServerError&quot; value=&quot;An internal error occurred during your request!&quot; /&gt;
+    &lt;text name=&quot;ValidationError&quot; value=&quot;Your request is not valid!&quot; /&gt;
+    ...
+  &lt;/texts&gt;
+&lt;/localizationDictionary&gt;</pre>
+<p>To extend AbpWeb source, we can define XML files. Assume that we only want to 
+change <strong>InternalServerError</strong> text. We can define an XML file as shown below:</p>
+<pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;localizationDictionary culture=&quot;en&quot;&gt;
+  &lt;texts&gt;
+    &lt;text name=&quot;InternalServerError&quot; value=&quot;Sorry :( It seems there is a problem. Let us to solve it and please try again later.&quot; /&gt;
+  &lt;/texts&gt;
+&lt;/localizationDictionary&gt;</pre>
+<p>Then we can register it on PreInitialize method of our module:</p>
+<pre lang="cs"><strong>Configuration.Localization.Sources.Extensions.Add</strong>(
+    new LocalizationSourceExtensionInfo(&quot;<strong>AbpWeb</strong>&quot;,
+        new XmlFileLocalizationDictionaryProvider(
+            HttpContext.Current.Server.MapPath(&quot;<strong>~/Localization/AbpWebExtensions</strong>&quot;)
+            )
+        )
+    );</pre>
+
+<p>We could use XmlEmbeddedFileLocalizationDictionaryProvider if want to create 
+embedded resource XML files (see Localization sources section). ASP.NET 
+Boilerplate overrides (merges) base localization source with our XML files. We 
+can also add new language files.</p>
+
+<h3 id="DocConclusion">Conclusion</h3>
 <p>ASP.NET Boilerplate provides ability to use different sources for 
 localization. It also provides an infrastructure to use same localization texts 
 both in server and client side code.</p>
