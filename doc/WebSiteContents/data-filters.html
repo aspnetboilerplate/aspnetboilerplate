@@ -104,11 +104,11 @@ automatically set by ASP.NET Boilerplate.</p>
 <p>If you are building multi-tenant applications (store all tenant datas in 
 single database), you definitely do not want a tenant accidently see other's 
 data. You can implement <strong>IMustHaveTenant</strong> in that case. Example:</p>
-<pre lang="cs">public class Product : IMustHaveTenant
+<pre lang="cs">public class Product : Entity, <strong>IMustHaveTenant</strong>
 {
-    public virtual int TenantId { get; set; }
+    <strong>public int TenantId { get; set; }</strong>
         
-    public virtual string Name { get; set; }
+    public string Name { get; set; }
 }</pre>
 <p><strong>IMustHaveTenant</strong> defines <strong>TenantId </strong>to 
 distinguish different tenant entities. ASP.NET Boilerplate uses
@@ -131,11 +131,11 @@ object may
 be owned by a tenant or the host), you can use IMayHaveTenant filter. <strong>
 IMayHaveTenant</strong> interface defines <strong>TenantId</strong> but it's <strong>
 nullable</strong>.</p>
-<pre lang="cs">public class Product : IMayHaveTenant
+<pre lang="cs">public class Role : Entity, <strong>IMayHaveTenant</strong>
 {
-    public virtual int? TenantId { get; set; }
+    <strong>public int? TenantId { get; set; }</strong>
         
-    public virtual string Name { get; set; }
+    public string RoleName { get; set; }
 }</pre>
 <p>A <strong>null</strong> value means this is a <strong>host</strong> entity, a <strong>non-null</strong> value means this entity 
 owned by a <strong>tenant</strong> which's Id is the TenantId. ASP.NET Boilerplate uses
@@ -259,7 +259,7 @@ multi-tenancy and so on.</p>
 
 <h3 id="DicOtherORMs">Other ORMs</h3>
 <p>ASP.NET Boilerplate data filtering is implemented just for <strong>EntityFramework</strong>. 
-Not available for other ORM tools yet.&nbsp; But, actually, you can mimic it for 
+Not available for other ORMs yet.&nbsp; But, actually, you can mimic it for 
 most cases as long as you're using <strong>repositories</strong> to get data. In this case, you 
 can create a custom <a href="/Pages/Documents/Repositories">repository</a> and 
 override <strong>GetAll</strong> and other data retrieve methods if needed.</p>
