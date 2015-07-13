@@ -43,7 +43,7 @@ namespace Abp.Configuration
             _settingDefinitionManager = settingDefinitionManager;
 
             AbpSession = NullAbpSession.Instance;
-            SettingStore = NullSettingStore.Instance; //Should be constructor injection? For that, ISettingStore must be registered!
+            SettingStore = DefaultConfigSettingStore.Instance;
 
             _applicationSettings = new Lazy<Dictionary<string, SettingInfo>>(() => AsyncHelper.RunSync(GetApplicationSettingsFromDatabase), true); //TODO: Run async
             _tenantSettingCache = new AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>>(new MemoryCache(GetType().FullName + ".TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
