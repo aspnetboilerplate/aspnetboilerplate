@@ -45,7 +45,7 @@ namespace Abp.EntityFramework.Tests.Repositories
             entity2Repository.ShouldNotBe(null);
 
             //Entity 3
-            var entity3Repository = LocalIocManager.Resolve<IRepository<MyEntity3, Guid>>();
+            var entity3Repository = LocalIocManager.Resolve<IMyModuleRepository<MyEntity3, Guid>>();
             (entity3Repository is EfRepositoryBase<MyModuleDbContext, MyEntity3, Guid>).ShouldBe(true);
             entity3Repository.ShouldNotBe(null);
         }
@@ -55,7 +55,12 @@ namespace Abp.EntityFramework.Tests.Repositories
             public virtual DbSet<MyEntity2> MyEntities2 { get; set; }
         }
 
-        [DisableAutoRepositoryForBaseDbContext]
+        [AutoRepositoryType(
+            typeof(IMyModuleRepository<>), 
+            typeof(IMyModuleRepository<,>), 
+            typeof(MyModuleRepositoryBase<>), 
+            typeof(MyModuleRepositoryBase<,>)
+            )]
         public class MyModuleDbContext : MyBaseDbContext
         {
             public virtual DbSet<MyEntity3> MyEntities3 { get; set; }
@@ -63,7 +68,7 @@ namespace Abp.EntityFramework.Tests.Repositories
 
         public abstract class MyBaseDbContext : AbpDbContext
         {
-            public virtual IDbSet<MyEntity1> MyEntities1 { get; set; }            
+            public virtual IDbSet<MyEntity1> MyEntities1 { get; set; }
         }
 
         public class MyEntity1 : Entity
@@ -79,6 +84,36 @@ namespace Abp.EntityFramework.Tests.Repositories
         public class MyEntity3 : Entity<Guid>
         {
 
+        }
+
+        public interface IMyModuleRepository<TEntity> : IRepository<TEntity>
+            where TEntity : class, IEntity<int>
+        {
+
+        }
+
+        public interface IMyModuleRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+            where TEntity : class, IEntity<TPrimaryKey>
+        {
+
+        }
+
+        public class MyModuleRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
+            where TEntity : class, IEntity<TPrimaryKey>
+        {
+            public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
+                : base(dbContextProvider)
+            {
+            }
+        }
+
+        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, int>, IMyModuleRepository<TEntity>
+            where TEntity : class, IEntity<int>
+        {
+            public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
+                : base(dbContextProvider)
+            {
+            }
         }
     }
 }
