@@ -69,6 +69,7 @@
     <Compile Include="EntityFramework\AbpDbContext.cs" />
     <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegisterer.cs" />
     <Compile Include="EntityFramework\Extensions\QueryableExtensions.cs" />
+    <Compile Include="EntityFramework\Repositories\DisableAutoRepositoryForBaseDbContextAttribute.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
     <Compile Include="EntityFramework\Extensions\DbContextExtensions.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntity.cs" />

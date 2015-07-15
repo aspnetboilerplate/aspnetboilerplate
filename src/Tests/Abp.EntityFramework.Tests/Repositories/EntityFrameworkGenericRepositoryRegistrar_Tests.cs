@@ -22,25 +22,29 @@ namespace Abp.EntityFramework.Tests.Repositories
                 Component.For<IDbContextProvider<MyModuleDbContext>>().UsingFactoryMethod(() => fakeModuleDbContextProvider)
                 );
 
-            EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager);
             EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager);
+            EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager);
         }
 
         [Fact]
         public void Should_Resolve_Generic_Repositories()
         {
+            //Entity 1 (with default PK)
             var entity1Repository = LocalIocManager.Resolve<IRepository<MyEntity1>>();
             entity1Repository.ShouldNotBe(null);
             (entity1Repository is EfRepositoryBase<MyMainDbContext, MyEntity1>).ShouldBe(true);
 
+            //Entity 1 (with specified PK)
             var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1, int>>();
             entity1RepositoryWithPk.ShouldNotBe(null);
             (entity1RepositoryWithPk is EfRepositoryBase<MyMainDbContext, MyEntity1, int>).ShouldBe(true);
 
+            //Entity 2
             var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2, long>>();
             (entity2Repository is EfRepositoryBase<MyMainDbContext, MyEntity2, long>).ShouldBe(true);
             entity2Repository.ShouldNotBe(null);
 
+            //Entity 3
             var entity3Repository = LocalIocManager.Resolve<IRepository<MyEntity3, Guid>>();
             (entity3Repository is EfRepositoryBase<MyModuleDbContext, MyEntity3, Guid>).ShouldBe(true);
             entity3Repository.ShouldNotBe(null);
@@ -48,17 +52,18 @@ namespace Abp.EntityFramework.Tests.Repositories
 
         public class MyMainDbContext : MyBaseDbContext
         {
-            public DbSet<MyEntity2> MyEntities2 { get; set; }
+            public virtual DbSet<MyEntity2> MyEntities2 { get; set; }
         }
 
+        [DisableAutoRepositoryForBaseDbContext]
         public class MyModuleDbContext : MyBaseDbContext
         {
-            public DbSet<MyEntity3> MyEntities3 { get; set; }
+            public virtual DbSet<MyEntity3> MyEntities3 { get; set; }
         }
 
         public abstract class MyBaseDbContext : AbpDbContext
         {
-            public IDbSet<MyEntity1> MyEntities1 { get; set; }            
+            public virtual IDbSet<MyEntity1> MyEntities1 { get; set; }            
         }
 
         public class MyEntity1 : Entity

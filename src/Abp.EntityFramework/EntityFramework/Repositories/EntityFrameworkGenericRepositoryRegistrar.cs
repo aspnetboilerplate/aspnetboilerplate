@@ -10,7 +10,9 @@ namespace Abp.EntityFramework.Repositories
     {
         public static void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
-            foreach (var entityType in dbContextType.GetEntityTypes())
+            var includeBase = !dbContextType.IsDefined(typeof (DisableAutoRepositoryForBaseDbContextAttribute), false);
+
+            foreach (var entityType in dbContextType.GetEntityTypes(includeBase))
             {
                 foreach (var interfaceType in entityType.GetInterfaces())
                 {
