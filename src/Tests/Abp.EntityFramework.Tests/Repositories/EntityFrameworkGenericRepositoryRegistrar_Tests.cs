@@ -55,7 +55,7 @@ namespace Abp.EntityFramework.Tests.Repositories
             public virtual DbSet<MyEntity2> MyEntities2 { get; set; }
         }
 
-        [AutoRepositoryType(
+        [AutoRepositoryTypes(
             typeof(IMyModuleRepository<>), 
             typeof(IMyModuleRepository<,>), 
             typeof(MyModuleRepositoryBase<>), 

@@ -1,7 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 using Abp.EntityFramework.Extensions;
 using Abp.Reflection.Extensions;
 
@@ -11,15 +10,10 @@ namespace Abp.EntityFramework.Repositories
     {
         public static void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
-            var autoRepositoryAttr = dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypeAttribute>();
+            var autoRepositoryAttr = dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>();
             if (autoRepositoryAttr == null)
             {
-                autoRepositoryAttr = new AutoRepositoryTypeAttribute( //TODO: Make a default static property!
-                    typeof (IRepository<>),
-                    typeof (IRepository<,>),
-                    typeof (EfRepositoryBase<,>),
-                    typeof (EfRepositoryBase<,,>)
-                    );
+                autoRepositoryAttr = AutoRepositoryTypesAttribute.Default;
             }
 
             foreach (var entityType in dbContextType.GetEntityTypes())
