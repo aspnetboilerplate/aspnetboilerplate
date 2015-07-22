@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Transactions.Extensions;
+using FluentNHibernate.Cfg;
 using NHibernate;
 
 namespace Abp.NHibernate.Uow
@@ -90,6 +91,17 @@ namespace Abp.NHibernate.Uow
             }
 
             Session.Dispose();
+        }
+
+        protected override void ApplyEnableFilter(string filterName)
+        {
+            var session = _sessionFactory.GetCurrentSession();
+            session.EnableFilter(filterName);
+        }
+        protected override void ApplyDisableFilter(string filterName)
+        {
+            var session = _sessionFactory.GetCurrentSession();
+            session.DisableFilter(filterName);
         }
     }
 }
