@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Abp.Dependency;
@@ -95,13 +98,11 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyEnableFilter(string filterName)
         {
-            var session = _sessionFactory.GetCurrentSession();
-            session.EnableFilter(filterName);
+            Session.EnableFilter(filterName);
         }
         protected override void ApplyDisableFilter(string filterName)
         {
-            var session = _sessionFactory.GetCurrentSession();
-            session.DisableFilter(filterName);
+            Session.DisableFilter(filterName);
         }
     }
 }
