@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="NHibernate\EntityMappings\NhMappingExtensions.cs" />
     <Compile Include="NHibernate\EntityMappings\EntityMapOfTEntity.cs" />
+    <Compile Include="NHibernate\Filters\MayHaveTenantFilter.cs" />
     <Compile Include="NHibernate\Filters\MustHaveTenantFilter.cs" />
     <Compile Include="NHibernate\Interceptors\AbpNHibernateInterceptor.cs" />
     <Compile Include="NHibernate\ISessionProvider.cs" />

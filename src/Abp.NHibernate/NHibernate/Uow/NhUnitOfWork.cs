@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.NHibernate.Filters;
 using Abp.Transactions.Extensions;
 using FluentNHibernate.Cfg;
 using NHibernate;
@@ -45,12 +47,16 @@ namespace Abp.NHibernate.Uow
                 ? _sessionFactory.OpenSession(DbConnection)
                 : _sessionFactory.OpenSession();
 
+            
+
             if (Options.IsTransactional == true)
             {
                 _transaction = Options.IsolationLevel.HasValue
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
             }
+
+            Session.EnableFilter("MustHaveTenant").SetParameter("Tenant", AbpSession.TenantId);
         }
 
         public override void SaveChanges()
@@ -98,11 +104,19 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyEnableFilter(string filterName)
         {
-            Session.EnableFilter(filterName);
+            if( Session.GetEnabledFilter(filterName) == null )
+                Session.EnableFilter(filterName);
         }
         protected override void ApplyDisableFilter(string filterName)
         {
-            Session.DisableFilter(filterName);
+            if ( Session.GetEnabledFilter(filterName) != null )
+                Session.DisableFilter(filterName);
+        }
+
+        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
+        {
+            Session.GetEnabledFilter(filterName)
+                .SetParameter(parameterName, value);
         }
     }
 }

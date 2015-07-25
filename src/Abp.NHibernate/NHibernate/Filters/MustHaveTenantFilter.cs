@@ -3,13 +3,19 @@ using NHibernate;
 
 namespace Abp.NHibernate.Filters
 {
+    /// <summary>
+    /// Add filter MustHaveTenant 
+    /// </summary>
     public class MustHaveTenantFilter : FilterDefinition
     {
+        /// <summary>
+        /// Contructor
+        /// </summary>
         public MustHaveTenantFilter()
         {
             WithName("MustHaveTenant")
-                .WithCondition(":TenantId IS NOT NULL OR TenantId == :TenantId )")
-                .AddParameter("TenantId", NHibernateUtil.Int64);
+                .WithCondition("TenantId = :Tenant")
+                .AddParameter("Tenant", NHibernateUtil.Int64);
         }
     }
 }
