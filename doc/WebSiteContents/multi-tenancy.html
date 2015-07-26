@@ -64,6 +64,10 @@ group tenants in different servers.</p>
 <h3>Multi-Tenancy in ASP.NET Boilerplate</h3>
 <p>ASP.NET Boilerplate provides infrastructure to create a <strong>single-deployment, 
 single-database, multi-tenant</strong> architecture.</p>
+	<h4>Enabling Multi Tenancy</h4>
+	<p>Multi-tenancy is disabled by default. We can enable it in PreInitialize 
+	of our module as shown below:</p>
+	<pre lang="cs">Configuration.MultiTenancy.IsEnabled = true;&nbsp;</pre>
 <h4>Host vs Tenant</h4>
 <p>First, we should define two terms used in a multi-tenant system:</p>
 <ul>
