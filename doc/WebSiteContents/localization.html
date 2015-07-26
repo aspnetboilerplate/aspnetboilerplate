@@ -164,7 +164,8 @@ class to make implementation easier.</p>
 <p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
 <h4 id="DocInServer">In server side</h4>
-<p>In server side code, you can simply call <strong>LocalizationHelper.GetString </strong>
+<p>In server side, we can inject <strong>ILocalizationManager</strong> and use 
+it's <strong>GetString</strong> method. If we can not inject it, we can simply call <strong>LocalizationHelper.GetString </strong>
 with source name and text name:</p>
 <pre lang="cs">var s1 = LocalizationHelper.GetString("SimpleTaskSystem", "NewTask");</pre>
 <p>To do not repeat source name always, you can first <strong>get the source</strong>, 
@@ -173,9 +174,13 @@ then get a string from the source:</p>
 var s<span lang="tr">1</span> = source.GetString("NewTask");</pre>
 <p>This returns text in the current language. There are also overrides of 
 GetString to get text in different languages and formatted by arguments.</p>
+<p>Note that: Prefer injecting and using ILocalizationManager where possible 
+since LocalizationHelper is static and statics are not well testable (for who 
+writes unit tests).</p>
 <p>If you need to localization in an
 <a href="/Pages/Documents/Application-Services#DocAppServiceClass">application 
-service</a>, in a controller or in a view, there are shortcuts.</p>
+service</a>, in a controller or in a view, there are shortcut <strong>L</strong> 
+methods.</p>
 <h4 id="DocInControllers">In MVC controllers</h4>
 <p>Localization texts are generally needed in MVC Controller and Views. There is 
 a shortcut for that. See the sample controller below:</p>
