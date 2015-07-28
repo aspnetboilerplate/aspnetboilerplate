@@ -14,15 +14,8 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntroduction">Introduction</a></li>
-	<li><a href="#DocDefinePermission">Defining permissions</a></li>
-	<li><a href="#DocCheckPermission">Checking permissions</a><ul>
-		<li><a href="#DocUsingAbpAuthorize">Using AbpAuthorize attribute</a></li>
-		<li><a href="#DocUsingPermissionChecker">Using IPermissionChecker</a></li>
-	</ul>
-	</li>
-</ul>
+<div class="document-contents">
+
 <h3 id="DocIntroduction">Introduction</h3>
 <p>Almost all enterprise applications use authorization in some level. 
 Authorization is used to check if a user is allowed to perform some specific 
@@ -161,6 +154,13 @@ Authorize</strong> method:</p>
 ApplicationService</strong> base class injects and defines PermissionChecker 
 property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
+
+<h3>Permission Manager</h3>
+<p>We may need to definitions of permission. <strong>IPermissionManager</strong> 
+can be <a href="/Pages/Documents/Dependency-Injection">injected</a> and used in 
+that case. </p>
+
+</div>
 
 </body>
 

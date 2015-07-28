@@ -9,6 +9,8 @@
 
 <body>
 
+<div class="document-contents">
+
 <h3>What Is Multi Tenancy?</h3>
 <p><a href="https://en.wikipedia.org/wiki/Multitenancy">Wikipedia</a>: "Software 
 <strong>Multitenancy</strong> refers to a software <strong>architecture</strong> in which a 
@@ -62,6 +64,10 @@ group tenants in different servers.</p>
 <h3>Multi-Tenancy in ASP.NET Boilerplate</h3>
 <p>ASP.NET Boilerplate provides infrastructure to create a <strong>single-deployment, 
 single-database, multi-tenant</strong> architecture.</p>
+	<h4>Enabling Multi Tenancy</h4>
+	<p>Multi-tenancy is disabled by default. We can enable it in PreInitialize 
+	of our module as shown below:</p>
+	<pre lang="cs">Configuration.MultiTenancy.IsEnabled = true;&nbsp;</pre>
 <h4>Host vs Tenant</h4>
 <p>First, we should define two terms used in a multi-tenant system:</p>
 <ul>
@@ -108,7 +114,7 @@ defining <strong>TenantId</strong> property. An example entitiy that implements 
 }</pre>
 <p>Thus, ASP.NET Boilerplate knows that this is a tenant-specific entity and 
 automatically isolates entities of a tenant from other tenants.</p>
-<p>IMayHaveTenant interface</p>
+<h5>IMayHaveTenant interface</h5>
 <p>We may need to share an <strong>entity type</strong> between host and tenants. So, an entity 
 may be owned by a tenant or the host. IMayHaveTenant interface also defines 
 <strong>TenantId</strong> (similar to IMustHaveTenant), but <strong>nullable</strong> in this case. An example 
@@ -136,6 +142,8 @@ Boilerplate checks it on saving changes to database if related data filters are
 enabled.&nbsp;</p>
 <p>See <a href="/Pages/Documents/Data-Filters">data filters</a> document for 
 more information on data filters.</p>
+
+</div>
 
 </body>
 
