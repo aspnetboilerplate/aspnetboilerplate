@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/xxmgkxx/aspnetboilerplate.png?label=ready&title=Ready)](https://waffle.io/xxmgkxx/aspnetboilerplate)
+
 ASP.NET Boilerplate
 ===================
 
