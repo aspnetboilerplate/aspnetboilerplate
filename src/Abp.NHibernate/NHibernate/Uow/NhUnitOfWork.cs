@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.NHibernate.Filters;
+using Abp.Runtime.Session;
 using Abp.Transactions.Extensions;
 using FluentNHibernate.Cfg;
 using NHibernate;
@@ -18,6 +19,10 @@ namespace Abp.NHibernate.Uow
     /// </summary>
     public class NhUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
+        /// <summary>
+        /// Used to get current session values.
+        /// </summary>
+        public IAbpSession AbpSession { get; set; }
         /// <summary>
         /// Gets NHibernate session object to perform queries.
         /// </summary>
@@ -38,6 +43,7 @@ namespace Abp.NHibernate.Uow
         public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
             : base(defaultOptions)
         {
+            AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
         }
 
@@ -55,8 +61,30 @@ namespace Abp.NHibernate.Uow
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
             }
+            
+            this.CheckAndSetMayHaveTenant();
+            this.CheckAndSetMustHaveTenant();
 
-            Session.EnableFilter("MustHaveTenant").SetParameter("Tenant", AbpSession.TenantId);
+        }
+
+        protected virtual void CheckAndSetMustHaveTenant()
+        {
+            if (this.IsFilterEnabled(AbpDataFilters.MustHaveTenant)) return;
+            if (AbpSession.TenantId == null) return;
+            ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
+            ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant,
+                AbpDataFilters.Parameters.TenantId,
+                AbpSession.GetTenantId()); //ApplyFilter
+        }
+
+        protected virtual void CheckAndSetMayHaveTenant()
+        {
+            if (this.IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
+            if (AbpSession.TenantId == null) return;
+            ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
+            ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant,
+                AbpDataFilters.Parameters.TenantId,
+                AbpSession.TenantId); //ApplyFilter
         }
 
         public override void SaveChanges()

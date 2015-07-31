@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+﻿using Abp.Domain.Uow;
+using FluentNHibernate.Mapping;
 using NHibernate;
 
 namespace Abp.NHibernate.Filters
@@ -13,8 +14,9 @@ namespace Abp.NHibernate.Filters
         /// </summary>
         public MayHaveTenantFilter()
         {
-            WithName("MayHaveTenant")
-                .WithCondition("'1' IS NULL OR TenantId = '1' )");
+            WithName(AbpDataFilters.MayHaveTenant)
+                .AddParameter("tenantId", NHibernateUtil.Int32)
+                .WithCondition("TenantId = :tenantId )");
         }
     }
 }
