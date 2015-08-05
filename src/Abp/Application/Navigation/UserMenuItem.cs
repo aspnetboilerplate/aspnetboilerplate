@@ -23,6 +23,11 @@ namespace Abp.Application.Navigation
         public string DisplayName { get; private set; }
 
         /// <summary>
+        /// The Display order of the menu. Optional.
+        /// </summary>
+        public int Order { get; set; }
+
+        /// <summary>
         /// The URL to navigate when this menu item is selected.
         /// </summary>
         public string Url { get; set; }
@@ -53,6 +58,7 @@ namespace Abp.Application.Navigation
             Name = menuItemDefinition.Name;
             Icon = menuItemDefinition.Icon;
             DisplayName = menuItemDefinition.DisplayName.Localize();
+            Order = menuItemDefinition.Order;
             Url = menuItemDefinition.Url;
             CustomData = menuItemDefinition.CustomData;
             Items = new List<UserMenuItem>();
