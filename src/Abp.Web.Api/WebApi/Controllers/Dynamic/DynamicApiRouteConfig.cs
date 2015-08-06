@@ -10,10 +10,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <summary>
         /// Registers dynamic api controllers
         /// </summary>
-        public static void Register()
+        /// <param name="httpConfiguration"></param>
+        public static void Register(HttpConfiguration httpConfiguration)
         {
             //Dynamic Web APIs (with area name)
-            GlobalConfiguration.Configuration.Routes.MapHttpRoute(
+            httpConfiguration.Routes.MapHttpRoute(
                 name: "AbpDynamicWebApi",
                 routeTemplate: "api/services/{*serviceNameWithAction}"
                 );

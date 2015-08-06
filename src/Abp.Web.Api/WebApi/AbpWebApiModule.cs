@@ -5,6 +5,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Abp.Modules;
 using Abp.Web;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
@@ -24,6 +25,7 @@ namespace Abp.WebApi
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
+            IocManager.Register<IAbpWebApiModuleConfiguration, AbpWebApiModuleConfiguration>();
         }
 
         /// <inheritdoc/>
@@ -31,36 +33,38 @@ namespace Abp.WebApi
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            InitializeAspNetServices();
-            InitializeFilters();
-            InitializeFormatters();
-            InitializeRoutes();
+            var httpConfiguration = IocManager.Resolve<IAbpWebApiModuleConfiguration>().HttpConfiguration;
+
+            InitializeAspNetServices(httpConfiguration);
+            InitializeFilters(httpConfiguration);
+            InitializeFormatters(httpConfiguration);
+            InitializeRoutes(httpConfiguration);
         }
 
-        private static void InitializeAspNetServices()
+        private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new AbpControllerActivator());
+            httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+            httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
         }
 
-        private void InitializeFilters()
+        private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
-            GlobalConfiguration.Configuration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
-        private static void InitializeFormatters()
+        private void InitializeFormatters(HttpConfiguration httpConfiguration)
         {
-            GlobalConfiguration.Configuration.Formatters.Clear();
+            httpConfiguration.Formatters.Clear();
             var formatter = new JsonMediaTypeFormatter();
             formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            GlobalConfiguration.Configuration.Formatters.Add(formatter);
-            GlobalConfiguration.Configuration.Formatters.Add(new PlainTextFormatter());
+            httpConfiguration.Formatters.Add(formatter);
+            httpConfiguration.Formatters.Add(new PlainTextFormatter());
         }
 
-        private static void InitializeRoutes()
+        private void InitializeRoutes(HttpConfiguration httpConfiguration)
         {
-            DynamicApiRouteConfig.Register();
+            DynamicApiRouteConfig.Register(httpConfiguration);
         }
     }
 }
