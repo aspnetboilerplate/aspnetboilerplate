@@ -155,6 +155,18 @@ ApplicationService</strong> base class injects and defines PermissionChecker
 property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
 
+<h4>Client Side (Javascript)</h4>
+
+<p>In the client side, we can use API defined in <strong>abp.auth</strong> 
+namespace. In most case, we need to check if current user has a specific 
+permission (with permission name). Example:</p>
+<pre lang="js">abp.auth.hasPermission('Administration.UserManagement.CreateUser');</pre>
+
+<p>You can also use <strong>abp.auth.grantedPermissions</strong> to get all 
+granted permissions or <strong>abp.auth.allPermissions</strong> to get all 
+available permission names in the application. Check <strong>abp.auth</strong> 
+namespace on runtime for others.</p>
+
 <h3>Permission Manager</h3>
 <p>We may need to definitions of permission. <strong>IPermissionManager</strong> 
 can be <a href="/Pages/Documents/Dependency-Injection">injected</a> and used in 
