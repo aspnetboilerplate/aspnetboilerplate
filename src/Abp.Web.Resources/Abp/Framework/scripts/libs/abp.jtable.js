@@ -65,6 +65,7 @@
             };
         },
 
+        //CREATE ACTION ADAPTER
         _adaptCreateActionforAbp: function () {
             var self = this;
             var originalCreateAction = self.options.actions.createAction;
@@ -87,6 +88,7 @@
             };
         },
 
+        //UPDATE ACTION ADAPTER
         _adaptUpdateActionforAbp: function () {
             var self = this;
             var originalUpdateAction = self.options.actions.updateAction;
