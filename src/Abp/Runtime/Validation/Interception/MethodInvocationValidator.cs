@@ -93,7 +93,7 @@ namespace Abp.Runtime.Validation.Interception
 
         private void ValidateObjectRecursively(object validatingObject)
         {
-            if (validatingObject is IEnumerable)
+            if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
             {
                 foreach (var item in (validatingObject as IEnumerable))
                 {
