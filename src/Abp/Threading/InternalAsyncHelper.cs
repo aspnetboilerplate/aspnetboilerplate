@@ -7,6 +7,12 @@ namespace Abp.Threading
 {
     internal static class InternalAsyncHelper
     {
+        public static async Task WaitTaskAndAction(Task actualReturnValue, Func<Task> afterAction)
+        {
+            await actualReturnValue;
+            await afterAction();
+        }
+
         public static async Task WaitTaskAndActionWithFinally(Task actualReturnValue, Func<Task> afterAction, Action finalAction)
         {
             try

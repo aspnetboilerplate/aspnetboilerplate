@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
+using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
@@ -40,13 +42,27 @@ namespace Abp.Auditing
                 return;
             }
 
+            var auditInfo = CreateAuditInfo(invocation);
+
+            if (AsyncHelper.IsAsyncMethod(invocation.Method))
+            {
+                PerformAsyncAuditing(invocation, auditInfo);
+            }
+            else
+            {
+                PerformSyncAuditing(invocation, auditInfo);
+            }
+        }
+
+        private AuditInfo CreateAuditInfo(IInvocation invocation)
+        {
             var auditInfo = new AuditInfo
             {
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
                 ServiceName = invocation.MethodInvocationTarget.DeclaringType != null
-                              ? invocation.MethodInvocationTarget.DeclaringType.FullName
-                              : "",
+                    ? invocation.MethodInvocationTarget.DeclaringType.FullName
+                    : "",
                 MethodName = invocation.MethodInvocationTarget.Name,
                 Parameters = ConvertArgumentsToJson(invocation),
                 ExecutionTime = Clock.Now
@@ -54,7 +70,13 @@ namespace Abp.Auditing
 
             _auditInfoProvider.Fill(auditInfo);
 
+            return auditInfo;
+        }
+
+        private void PerformSyncAuditing(IInvocation invocation, AuditInfo auditInfo)
+        {
             var stopwatch = Stopwatch.StartNew();
+
             try
             {
                 invocation.Proceed();
@@ -68,8 +90,55 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                AuditingStore.Save(auditInfo); //TODO: Call async when target method is async.
+                AuditingStore.Save(auditInfo);
             }
+        }
+        private void PerformAsyncAuditing(IInvocation invocation, AuditInfo auditInfo)
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            invocation.Proceed();
+
+            if (invocation.Method.ReturnType == typeof(Task))
+            {
+                invocation.ReturnValue = InternalAsyncHelper.WaitTaskAndAction(
+                    (Task) invocation.ReturnValue,
+                    async () =>
+                    {
+                        stopwatch.Stop();
+                        auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                        await AuditingStore.SaveAsync(auditInfo);
+                    });
+            }
+            else //Task<TResult>
+            {
+                invocation.ReturnValue = InternalAsyncHelper.CallReturnGenericTaskAfterAction(
+                    invocation.Method.ReturnType.GenericTypeArguments[0],
+                    invocation.ReturnValue,
+                    async () =>
+                    {
+                        stopwatch.Stop();
+                        auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                        await AuditingStore.SaveAsync(auditInfo);
+                    },
+                    () => { }); //TODO: Make an overload that not receives finally action!
+            }
+            
+            //TODO: Handle exceptions!
+            //try
+            //{
+            //}
+            //catch (Exception ex)
+            //{
+            //    auditInfo.Exception = ex;
+            //    throw;
+            //}
+            //finally
+            //{
+            //    stopwatch.Stop();
+            //    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+            //    AuditingStore.Save(auditInfo);
+            //}
         }
 
         private string ConvertArgumentsToJson(IInvocation invocation)
