@@ -8,13 +8,13 @@ namespace Abp.Auditing
 {
     internal class AuditingInterceptorRegistrar
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IIocManager _iocManager;
+        private readonly IAuditingConfiguration _auditingConfiguration;
 
         public AuditingInterceptorRegistrar(IIocManager iocManager)
         {
-            _auditingConfiguration = _iocManager.Resolve<IAuditingConfiguration>();
             _iocManager = iocManager;
+            _auditingConfiguration = _iocManager.Resolve<IAuditingConfiguration>();
         }
 
         public void Initialize()
