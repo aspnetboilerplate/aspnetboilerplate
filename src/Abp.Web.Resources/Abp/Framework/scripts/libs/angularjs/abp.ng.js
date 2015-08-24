@@ -116,7 +116,7 @@
 
                         abp.ng.http.logError(error);
 
-                        return $q.reject(error);
+                        return $q.reject(ngError);
                     }
 
                 };
