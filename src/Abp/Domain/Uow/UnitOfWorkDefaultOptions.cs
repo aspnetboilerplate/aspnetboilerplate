@@ -7,6 +7,8 @@ namespace Abp.Domain.Uow
 {
     internal class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
     {
+        public TransactionScopeOption Scope { get; set; }
+
         /// <inheritdoc/>
         public bool IsTransactional { get; set; }
 
@@ -42,6 +44,7 @@ namespace Abp.Domain.Uow
         {
             _filters = new List<DataFilterConfiguration>();
             IsTransactional = true;
+            Scope = TransactionScopeOption.Required;
         }
     }
 }

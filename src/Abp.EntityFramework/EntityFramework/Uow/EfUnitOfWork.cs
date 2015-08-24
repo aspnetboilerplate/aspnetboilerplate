@@ -44,7 +44,7 @@ namespace Abp.EntityFramework.Uow
                 }
 
                 _transaction = new TransactionScope(
-                    TransactionScopeOption.Required,
+                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                     transactionOptions,
                     Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
                     );

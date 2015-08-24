@@ -14,6 +14,10 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+        public string Id { get; private set; }
+
+        public IUnitOfWork Outer { get; set; }
+
         /// <inheritdoc/>
         public event EventHandler Completed;
 
@@ -68,6 +72,7 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
         {
+            Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
             AbpSession = NullAbpSession.Instance;
         }

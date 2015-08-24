@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Collections.Extensions;
+using Abp.Domain.Uow;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Threading;
@@ -23,11 +25,13 @@ namespace Abp.Auditing
         private readonly IAuditingConfiguration _configuration;
 
         private readonly IAuditInfoProvider _auditInfoProvider;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider)
+        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider, IUnitOfWorkManager unitOfWorkManager)
         {
             _configuration = configuration;
             _auditInfoProvider = auditInfoProvider;
+            _unitOfWorkManager = unitOfWorkManager;
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
@@ -101,44 +105,19 @@ namespace Abp.Auditing
 
             if (invocation.Method.ReturnType == typeof(Task))
             {
-                invocation.ReturnValue = InternalAsyncHelper.WaitTaskAndAction(
+                invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithFinally(
                     (Task) invocation.ReturnValue,
-                    async () =>
-                    {
-                        stopwatch.Stop();
-                        auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                        await AuditingStore.SaveAsync(auditInfo);
-                    });
+                    exception => SaveAuditInfo(auditInfo, stopwatch, exception)
+                    );
             }
             else //Task<TResult>
             {
-                invocation.ReturnValue = InternalAsyncHelper.CallReturnGenericTaskAfterAction(
+                invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithFinallyAndGetResult(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
-                    async () =>
-                    {
-                        stopwatch.Stop();
-                        auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                        await AuditingStore.SaveAsync(auditInfo);
-                    },
-                    () => { }); //TODO: Make an overload that not receives finally action!
+                    exception => SaveAuditInfo(auditInfo, stopwatch, exception)
+                    );
             }
-            
-            //TODO: Handle exceptions!
-            //try
-            //{
-            //}
-            //catch (Exception ex)
-            //{
-            //    auditInfo.Exception = ex;
-            //    throw;
-            //}
-            //finally
-            //{
-            //    stopwatch.Stop();
-            //    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-            //    AuditingStore.Save(auditInfo);
-            //}
         }
 
         private string ConvertArgumentsToJson(IInvocation invocation)
@@ -166,6 +145,19 @@ namespace Abp.Auditing
                 Logger.Warn("Could not serialize arguments for method: " + invocation.MethodInvocationTarget.Name);
                 Logger.Warn(ex.ToString(), ex);
                 return "{}";
+            }
+        }
+
+        private void SaveAuditInfo(AuditInfo auditInfo, Stopwatch stopwatch, Exception exception)
+        {
+            stopwatch.Stop();
+            auditInfo.Exception = exception;
+            auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            {
+                AuditingStore.Save(auditInfo);
+                uow.Complete();
             }
         }
     }
