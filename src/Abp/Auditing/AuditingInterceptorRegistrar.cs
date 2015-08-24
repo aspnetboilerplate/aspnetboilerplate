@@ -11,9 +11,9 @@ namespace Abp.Auditing
         private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IIocManager _iocManager;
 
-        public AuditingInterceptorRegistrar(IAuditingConfiguration auditingConfiguration, IIocManager iocManager)
+        public AuditingInterceptorRegistrar(IIocManager iocManager)
         {
-            _auditingConfiguration = auditingConfiguration;
+            _auditingConfiguration = _iocManager.Resolve<IAuditingConfiguration>();
             _iocManager = iocManager;
         }
 

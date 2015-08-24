@@ -31,10 +31,11 @@ namespace Abp
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager.Resolve<IAuditingConfiguration>(), IocManager);
+            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager);
             _auditingInterceptorRegistrar.Initialize();
 
             UnitOfWorkRegistrar.Initialize(IocManager);
+            
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
