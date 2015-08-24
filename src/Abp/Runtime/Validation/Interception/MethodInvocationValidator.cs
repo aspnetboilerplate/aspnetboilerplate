@@ -14,6 +14,7 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     internal class MethodInvocationValidator
     {
+        private readonly MethodInfo _method;
         private readonly object[] _parameterValues;
         private readonly ParameterInfo[] _parameters;
         private readonly List<ValidationResult> _validationErrors;
@@ -25,6 +26,7 @@ namespace Abp.Runtime.Validation.Interception
         /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
         public MethodInvocationValidator(MethodInfo method, object[] parameterValues)
         {
+            _method = method;
             _parameterValues = parameterValues;
             _parameters = method.GetParameters();
             _validationErrors = new List<ValidationResult>();
@@ -35,6 +37,12 @@ namespace Abp.Runtime.Validation.Interception
         /// </summary>
         public void Validate()
         {
+            if (!_method.IsPublic)
+            {
+                //Validate only public methods!
+                return;
+            }
+
             if (_parameters.IsNullOrEmpty())
             {
                 //Object has no parameter, no need to validate.
