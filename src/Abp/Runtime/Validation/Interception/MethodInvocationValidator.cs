@@ -43,6 +43,12 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
+            if (_method.IsDefined(typeof (DisableValidationAttribute)))
+            {
+                //Don't validate if explicitly requested!
+                return;                
+            }
+
             if (_parameters.IsNullOrEmpty())
             {
                 //Object has no parameter, no need to validate.
