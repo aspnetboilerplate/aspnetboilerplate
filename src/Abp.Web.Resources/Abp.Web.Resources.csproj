@@ -60,6 +60,12 @@
     <Content Include="Abp\Framework\styles\abp.min.css">
       <DependentUpon>abp.css</DependentUpon>
     </Content>
+    <Content Include="Abp\Framework\styles\abp.mixings.css">
+      <DependentUpon>abp.mixings.less</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\abp.mixings.min.css">
+      <DependentUpon>abp.mixings.css</DependentUpon>
+    </Content>
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Resources.nuspec" />
+    <Content Include="Abp\Framework\styles\abp.mixings.less" />
+    <None Include="Abp\Framework\styles\abp.mixings.css.map">
+      <DependentUpon>abp.mixings.css</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">

@@ -1,0 +1,105 @@
+﻿// COMMON MIXINGS ///////////////////////////////////////////////////////////////////////
+
+//Clearing
+
+.abp-clear-margin-padding() {
+    padding: 0;
+    margin: 0;
+}
+
+.abp-clear-list-styles() {
+    .abp-clear-margin-padding;
+    list-style: none;
+}
+
+//Docking
+
+@abp-default-dock-margin: 0;
+
+.abp-dock(top, @margin: @abp-default-dock-margin) {
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
+.abp-dock(right, @margin: @abp-default-dock-margin) {
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.abp-dock(bottom, @margin: @abp-default-dock-margin) {
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.abp-dock(left, @margin: @abp-default-dock-margin) {
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.abp-dock(top-left, @margin: @abp-default-dock-margin) {
+    left: 0;
+    top: 0;
+}
+
+.abp-dock(top-right, @margin: @abp-default-dock-margin) {
+    top: 0;
+    right: 0;
+}
+
+.abp-dock(bottom-right, @margin: @abp-default-dock-margin) {
+    bottom: 0;
+    right: 0;
+}
+
+.abp-dock(bottom-left, @margin: @abp-default-dock-margin) {
+    bottom: 0;
+    left: 0;
+}
+
+.abp-dock(@direction, @margin: @abp-default-dock-margin) {
+    position: absolute;
+    margin: @margin;
+}
+
+//Background
+
+.abp-vertical-gradient(@top_color, @bottom_color) {
+    background: @top_color; // Old browsers
+    background: -moz-linear-gradient(top, @top_color 0%, @bottom_color 100%); // FF3.6+
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@top_color), color-stop(100%,@bottom_color)); // Chrome,Safari4+
+    background: -webkit-linear-gradient(top, @top_color 0%,@bottom_color 100%); // Chrome10+,Safari5.1+
+    background: -o-linear-gradient(top, @top_color 0%,@bottom_color 100%); // Opera 11.10+
+    background: -ms-linear-gradient(top, @top_color 0%,@bottom_color 100%); // IE10+
+    background: linear-gradient(to bottom, @top_color 0%,@bottom_color 100%); // W3C
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@{top_color}', endColorstr='@{bottom_color}',GradientType=0 ); // IE6-9
+}
+
+.abp-horizontal-gradient(@left_color, @right_color) {
+    background: rgb(238,238,238); // Old browsers
+    background: -moz-linear-gradient(left, @left_color 0%, @right_color 100%); // FF3.6+
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,@left_color), color-stop(100%,@right_color)); // Chrome,Safari4+
+    background: -webkit-linear-gradient(left, @left_color 0%,@right_color 100%); // Chrome10+,Safari5.1+
+    background: -o-linear-gradient(left, @left_color 0%,@right_color 100%); // Opera 11.10+
+    background: -ms-linear-gradient(left, @left_color 0%,@right_color 100%); // IE10+
+    background: linear-gradient(to right, @left_color 0%,@right_color 100%); // W3C
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@{left_color}', endColorstr='@{right_color}',GradientType=1 ); // IE6-9
+}
+
+//Misc
+
+.abp-border-radius(@radius) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.abp-opacity(@value) {
+    opacity: @value;
+    //IE8 and earlier
+    @ieValue: @value * 100;
+    filter: alpha(opacity=@ieValue);
+}
