@@ -34,8 +34,8 @@
         },
 
         defaultError: {
-            message: 'Ajax request is not succeed!',
-            details: 'Error detail is not sent by server.'
+            message: 'Ajax request did not succeed!',
+            details: 'Error detail not sent by server.'
         },
 
         logError: function (error) {
