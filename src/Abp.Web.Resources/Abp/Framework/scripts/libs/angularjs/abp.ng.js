@@ -56,7 +56,7 @@
                 if (originalData.targetUrl) {
                     abp.ng.http.handleTargetUrl(originalData.targetUrl);
                 }
-            } else { //data.success === false
+            } else if(originalData.success === false) {
                 var messagePromise = null;
 
                 if (originalData.error) {
