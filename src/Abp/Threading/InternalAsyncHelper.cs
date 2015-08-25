@@ -45,6 +45,38 @@ namespace Abp.Threading
             }
         }
 
+        public static async Task AwaitTaskWithPreActionAndPostActionAndFinally(Func<Task> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        {
+            Exception exception = null;
+
+            try
+            {
+                if (preAction != null)
+                {
+                    await preAction();
+                }
+
+                await actualReturnValue();
+
+                if (postAction != null)
+                {
+                    await postAction();
+                }
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+            finally
+            {
+                if (finalAction != null)
+                {
+                    finalAction(exception);                    
+                }
+            }
+        }
+
         public static async Task<T> AwaitTaskWithFinallyAndGetResult<T>(Task<T> actualReturnValue, Action<Exception> finalAction)
         {
             Exception exception = null;
@@ -99,6 +131,48 @@ namespace Abp.Threading
                 .GetMethod("AwaitTaskWithPostActionAndFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
                 .Invoke(null, new object[] { actualReturnValue, action, finalAction });
+        }
+
+        public static async Task<T> AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult<T>(Func<Task<T>> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        {
+            Exception exception = null;
+
+            try
+            {
+                if (preAction != null)
+                {
+                    await preAction();
+                }
+
+                var result = await actualReturnValue();
+
+                if (postAction != null)
+                {
+                    await postAction();                    
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+            finally
+            {
+                if (finalAction != null)
+                {
+                    finalAction(exception);
+                }
+            }
+        }
+
+        public static object CallAwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult(Type taskReturnType, Func<object> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        {
+            return typeof(InternalAsyncHelper)
+                .GetMethod("AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
+                .MakeGenericMethod(taskReturnType)
+                .Invoke(null, new object[] { actualReturnValue, preAction, postAction, finalAction });
         }
     }
 }
