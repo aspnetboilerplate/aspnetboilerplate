@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
 
@@ -21,21 +22,23 @@ namespace Abp.Localization
         public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
 
         private readonly ILocalizationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationManager(ILocalizationConfiguration configuration)
+        public LocalizationManager(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
             _configuration = configuration;
+            _iocResolver = iocResolver;
             _sources = new Dictionary<string, ILocalizationSource>();
         }
 
         public void Initialize()
         {
-            InitializeSources();            
+            InitializeSources();
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
@@ -60,7 +63,7 @@ namespace Abp.Localization
                 }
 
                 _sources[source.Name] = source;
-                source.Initialize();
+                source.Initialize(_configuration, _iocResolver);
 
                 //Extending dictionaries
                 if (source is IDictionaryBasedLocalizationSource)

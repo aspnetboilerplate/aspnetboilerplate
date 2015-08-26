@@ -8,27 +8,29 @@ namespace Abp.Configuration.Startup
     /// </summary>
     internal class LocalizationConfiguration : ILocalizationConfiguration
     {
-        /// <summary>
-        /// Used to set languages available for this application.
-        /// </summary>
+        /// <inheritdoc/>
         public IList<LanguageInfo> Languages { get; private set; }
 
-        /// <summary>
-        /// List of localization sources.
-        /// </summary>
+        /// <inheritdoc/>
         public ILocalizationSourceList Sources { get; private set; }
 
-        /// <summary>
-        /// Used to enable/disable localization system.
-        /// Default: true.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsEnabled { get; set; }
+
+        /// <inheritdoc/>
+        public bool ReturnGivenTextIfNotFound { get; set; }
+
+        /// <inheritdoc/>
+        public bool WrapGivenTextIfNotFound { get; set; }
 
         public LocalizationConfiguration()
         {
             Languages = new List<LanguageInfo>();
             Sources = new LocalizationSourceList();
+
             IsEnabled = true;
+            ReturnGivenTextIfNotFound = true;
+            WrapGivenTextIfNotFound = true;
         }
     }
 }

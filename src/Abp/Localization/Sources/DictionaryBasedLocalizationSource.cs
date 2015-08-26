@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Localization.Dictionaries;
+using Abp.Logging;
+using Castle.Core.Logging;
 
 namespace Abp.Localization.Sources
 {
@@ -29,6 +34,8 @@ namespace Abp.Localization.Sources
         /// </summary>
         private ILocalizationDictionary _defaultDictionary;
 
+        private ILocalizationConfiguration _configuration;
+
         private readonly ILocalizationDictionaryProvider _dictionaryProvider;
 
         /// <summary>
@@ -44,8 +51,10 @@ namespace Abp.Localization.Sources
         }
 
         /// <inheritdoc/>
-        public virtual void Initialize()
+        public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
+            _configuration = configuration;
+
             if (_dictionaryProvider == null)
             {
                 return;
@@ -84,7 +93,8 @@ namespace Abp.Localization.Sources
         {
             var cultureCode = culture.Name;
 
-            //Try to get from original dictionary
+            //Try to get from original dictionary (with country code)
+            
             ILocalizationDictionary originalDictionary;
             if (_dictionaries.TryGetValue(cultureCode, out originalDictionary))
             {
@@ -95,7 +105,8 @@ namespace Abp.Localization.Sources
                 }
             }
 
-            //Try to get from same language dictionary
+            //Try to get from same language dictionary (without country code)
+            
             if (cultureCode.Length == 5) //Example: "tr-TR" (length=5)
             {
                 var langCode = cultureCode.Substring(0, 2);
@@ -111,18 +122,45 @@ namespace Abp.Localization.Sources
             }
 
             //Try to get from default language
+            
             if (_defaultDictionary == null)
             {
-                throw new AbpException("Can not find '" + name + "' and no default language is defined!");
+                var exceptionMessage = string.Format(
+                    "Can not find '{0}' in localization source '{1}'! No default language is defined!",
+                    name, Name
+                    );
+
+                if (_configuration.ReturnGivenTextIfNotFound)
+                {
+                    LogHelper.Logger.Warn(exceptionMessage);
+                    return _configuration.WrapGivenTextIfNotFound
+                        ? string.Format("[{0}]", name)
+                        : name;
+                }
+
+                throw new AbpException(exceptionMessage);
             }
 
             var strDefault = _defaultDictionary.GetOrNull(name);
-            if (strDefault != null)
+            if (strDefault == null)
             {
-                return strDefault.Value;
+                var exceptionMessage = string.Format(
+                    "Can not find '{0}' in localization source '{1}'!",
+                    name, Name
+                    );
+
+                if (_configuration.ReturnGivenTextIfNotFound)
+                {
+                    LogHelper.Logger.Warn(exceptionMessage);
+                    return _configuration.WrapGivenTextIfNotFound
+                        ? string.Format("[{0}]", name)
+                        : name;
+                }
+
+                throw new AbpException(exceptionMessage);
             }
 
-            throw new AbpException("Can not find a localized string for '" + name + "' in source '" + Name + "'!");
+            return strDefault.Value;
         }
 
         /// <inheritdoc/>

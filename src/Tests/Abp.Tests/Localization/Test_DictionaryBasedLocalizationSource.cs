@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Localization.Sources;
 using NSubstitute;
 using Shouldly;
@@ -41,7 +43,7 @@ namespace Abp.Tests.Localization
                 });
 
             _localizationSource = new DictionaryBasedLocalizationSource("Test", dictionaryProvider);
-            _localizationSource.Initialize();
+            _localizationSource.Initialize(new LocalizationConfiguration(), new IocManager());
         }
 
         [Fact]
@@ -96,6 +98,12 @@ namespace Abp.Tests.Localization
 
             _localizationSource.GetString("hello", new CultureInfo("fr")).ShouldBe("Bonjour");
             _localizationSource.GetString("world", new CultureInfo("fr")).ShouldBe("World"); //not localed into french
+        }
+
+        [Fact]
+        public void Should_Return_Given_Text_If_Not_Found()
+        {
+            _localizationSource.GetString("An undefined text").ShouldBe("[An undefined text]");
         }
     }
 }

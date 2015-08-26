@@ -5,9 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Logging;
 
-namespace Abp.Localization.Sources.Resource 
+namespace Abp.Localization.Sources.Resource
 {
     /// <summary>
     /// This class is used to simplify to create a localization source that
@@ -25,6 +27,8 @@ namespace Abp.Localization.Sources.Resource
         /// </summary>
         public ResourceManager ResourceManager { get; private set; }
 
+        private ILocalizationConfiguration _configuration;
+
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
         public ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
@@ -36,9 +40,9 @@ namespace Abp.Localization.Sources.Resource
         /// <summary>
         /// This method is called by ABP before first usage.
         /// </summary>
-        public virtual void Initialize()
+        public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -48,7 +52,13 @@ namespace Abp.Localization.Sources.Resource
         /// <returns>Localized string</returns>
         public virtual string GetString(string name)
         {
-            return ResourceManager.GetString(name);
+            var value = ResourceManager.GetString(name);
+            if (value == null)
+            {
+                return ReturnGivenNameOrThrowException(name);
+            }
+
+            return value;
         }
 
         /// <summary>
@@ -59,7 +69,13 @@ namespace Abp.Localization.Sources.Resource
         /// <returns>Localized string</returns>
         public virtual string GetString(string name, CultureInfo culture)
         {
-            return ResourceManager.GetString(name, culture);
+            var value = ResourceManager.GetString(name, culture);
+            if (value == null)
+            {
+                return ReturnGivenNameOrThrowException(name);
+            }
+
+            return value;
         }
 
         /// <summary>
@@ -80,6 +96,24 @@ namespace Abp.Localization.Sources.Resource
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
+        }
+
+        private string ReturnGivenNameOrThrowException(string name)
+        {
+            var exceptionMessage = string.Format(
+                "Can not find '{0}' in localization source '{1}'!",
+                name, Name
+                );
+
+            if (_configuration.ReturnGivenTextIfNotFound)
+            {
+                LogHelper.Logger.Warn(exceptionMessage);
+                return _configuration.WrapGivenTextIfNotFound
+                    ? string.Format("[{0}]", name)
+                    : name;
+            }
+
+            throw new AbpException(exceptionMessage);
         }
     }
 }
