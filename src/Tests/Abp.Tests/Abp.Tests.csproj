@@ -120,6 +120,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\ThreadSafeObjectCache_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />

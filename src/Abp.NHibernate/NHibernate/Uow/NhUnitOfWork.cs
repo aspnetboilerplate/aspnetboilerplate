@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.NHibernate.Filters;
 using Abp.Runtime.Session;
 using Abp.Transactions.Extensions;
-using FluentNHibernate.Cfg;
 using NHibernate;
 
 namespace Abp.NHibernate.Uow
