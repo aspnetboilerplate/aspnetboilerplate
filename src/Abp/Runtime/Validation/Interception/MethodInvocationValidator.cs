@@ -68,7 +68,10 @@ namespace Abp.Runtime.Validation.Interception
 
             if (_validationErrors.Any())
             {
-                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.") { ValidationErrors = _validationErrors };
+                throw new AbpValidationException(
+                    "Method arguments are not valid! See ValidationErrors for details.",
+                    _validationErrors
+                    );
             }
 
             foreach (var parameterValue in _parameterValues)
@@ -145,6 +148,7 @@ namespace Abp.Runtime.Validation.Interception
                     DisplayName = property.Name,
                     MemberName = property.Name
                 };
+
                 foreach (var attribute in validationAttributes)
                 {
                     var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
