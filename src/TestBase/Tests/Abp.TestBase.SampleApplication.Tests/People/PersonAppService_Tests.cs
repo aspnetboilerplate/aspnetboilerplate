@@ -32,10 +32,10 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             await UsingDbContext(
                 async context =>
-                      {
-                          contactList = await context.ContactLists.FirstOrDefaultAsync();
-                          peopleCount = await context.People.CountAsync();
-                      });
+                {
+                    contactList = await context.ContactLists.FirstOrDefaultAsync();
+                    peopleCount = await context.People.CountAsync();
+                });
 
             await _personAppService.CreatePersonAsync(
                 new CreatePersonInput
@@ -120,6 +120,12 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
             await _personAppService.DeletePerson(new EntityRequestInput(halil.Id));
             (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted.ShouldBe(true);
+        }
+
+        [Fact]
+        public void Test_TestPrimitiveMethod()
+        {
+            _personAppService.TestPrimitiveMethod(42, "adana", new EntityRequestInput(7)).ShouldBe("42#adana#7");
         }
     }
 }
