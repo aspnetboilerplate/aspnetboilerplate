@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
@@ -150,16 +151,34 @@ namespace Abp.Domain.Uow
         }
 
         /// <inheritdoc/>
-        public void SetFilterParameter(string filterName, string parameterName, object value)
+        public IDisposable SetFilterParameter(string filterName, string parameterName, object value)
         {
             var filterIndex = GetFilterIndex(filterName);
 
             var newfilter = new DataFilterConfiguration(_filters[filterIndex]);
+
+            //Store old value
+            object oldValue = null;
+            var hasOldValue = newfilter.FilterParameters.ContainsKey(filterName);
+            if (hasOldValue)
+            {
+                oldValue = newfilter.FilterParameters[filterName];
+            }
+
             newfilter.FilterParameters[parameterName] = value;
 
             _filters[filterIndex] = newfilter;
 
             ApplyFilterParameterValue(filterName, parameterName, value);
+
+            return new DisposeAction(() =>
+            {
+                //Restore old value
+                if (hasOldValue)
+                {
+                    SetFilterParameter(filterName, parameterName, oldValue);
+                }
+            });
         }
 
         /// <inheritdoc/>

@@ -89,6 +89,6 @@ namespace Abp.Domain.Uow
         /// <param name="filterName">Name of the filter</param>
         /// <param name="parameterName">Parameter's name</param>
         /// <param name="value">Value of the parameter to be set</param>
-        void SetFilterParameter(string filterName, string parameterName, object value);
+        IDisposable SetFilterParameter(string filterName, string parameterName, object value);
     }
 }
