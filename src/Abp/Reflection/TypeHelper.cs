@@ -22,5 +22,20 @@ namespace Abp.Reflection
         {
             return obj.GetType() == typeof(Func<TReturn>);
         }
+
+        public static bool IsPrimitiveIncludingNullable(Type type)
+        {
+            if (type.IsPrimitive)
+            {
+                return true;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                return type.GenericTypeArguments[0].IsPrimitive;
+            }
+
+            return false;
+        }
     }
 }

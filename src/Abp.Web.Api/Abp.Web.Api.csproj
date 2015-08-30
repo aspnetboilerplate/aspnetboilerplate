@@ -101,7 +101,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\IDynamicApiController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ActionScriptingHelper.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\ActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\AngularActionScriptWriter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\IScriptProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ProxyScriptType.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpControllerDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\ActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\JQueryActionScriptGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\JQueryProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />

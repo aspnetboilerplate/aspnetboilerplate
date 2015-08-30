@@ -2,7 +2,7 @@ using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
-    internal class ActionScriptProxyGenerator
+    internal class JQueryActionScriptGenerator
     {
         private readonly DynamicApiControllerInfo _controllerInfo;
         private readonly DynamicApiActionInfo _actionInfo;
@@ -19,7 +19,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
             type: '{type}',
             data: JSON.stringify({postData})";
 
-        public ActionScriptProxyGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo actionInfo)
+        public JQueryActionScriptGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo actionInfo)
         {
             _controllerInfo = controllerInfo;
             _actionInfo = actionInfo;

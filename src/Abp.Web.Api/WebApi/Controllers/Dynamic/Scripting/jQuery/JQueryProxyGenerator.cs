@@ -56,7 +56,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 
         private static void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
-            var generator = new ActionScriptProxyGenerator(controllerInfo, methodInfo);
+            var generator = new JQueryActionScriptGenerator(controllerInfo, methodInfo);
             script.AppendLine(generator.GenerateMethod());
         }
     }

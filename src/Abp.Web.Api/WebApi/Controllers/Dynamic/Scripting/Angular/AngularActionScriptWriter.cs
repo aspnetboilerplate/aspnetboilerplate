@@ -4,12 +4,12 @@ using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
 {
-    internal class ActionScriptWriter
+    internal class AngularActionScriptWriter
     {
         private readonly DynamicApiControllerInfo _controllerInfo;
         private readonly DynamicApiActionInfo _actionInfo;
 
-        public ActionScriptWriter(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
+        public AngularActionScriptWriter(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
             _controllerInfo = controllerInfo;
             _actionInfo = methodInfo;

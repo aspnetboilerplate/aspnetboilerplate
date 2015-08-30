@@ -29,7 +29,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
 
             foreach (var methodInfo in _controllerInfo.Actions.Values)
             {
-                var actionWriter = new ActionScriptWriter(_controllerInfo, methodInfo);
+                var actionWriter = new AngularActionScriptWriter(_controllerInfo, methodInfo);
                 actionWriter.WriteTo(script);
             }
 

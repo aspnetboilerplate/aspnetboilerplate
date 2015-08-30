@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Abp.Extensions;
+using Abp.Reflection;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
-    internal static  class ActionScriptingHelper
+    internal static class ActionScriptingHelper
     {
         public static string GenerateUrlWithParameters(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo actionInfo)
         {
@@ -13,7 +15,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
             var primitiveParameters = actionInfo.Method
                 .GetParameters()
-                .Where(p => p.ParameterType.IsPrimitive)
+                .Where(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
                 .ToArray();
 
             if (!primitiveParameters.Any())
@@ -53,7 +55,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             var parameters = actionInfo.Method
                 .GetParameters()
-                .Where(p => !p.ParameterType.IsPrimitive)
+                .Where(p => !TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
                 .ToArray();
 
             if (parameters.Length <= 0)
