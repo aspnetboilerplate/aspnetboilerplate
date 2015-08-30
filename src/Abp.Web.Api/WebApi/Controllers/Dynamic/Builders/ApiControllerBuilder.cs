@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
+using Abp.WebApi.Controllers.Dynamic.Selectors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -25,6 +26,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Action Filters to apply to the whole Dynamic Controller.
         /// </summary>
         private IFilter[] _filters;
+
+        private bool _conventionalVerbs;
 
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
@@ -77,6 +80,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return _actionBuilders[methodName];
         }
 
+        public IApiControllerBuilder<T> WithConventionalVerbs()
+        {
+            _conventionalVerbs = true;
+            return this;
+        }
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
@@ -96,6 +105,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 if (actionBuilder.DontCreate)
                 {
                     continue;
+                }
+
+                if (_conventionalVerbs && !actionBuilder.Verb.HasValue)
+                {
+                    actionBuilder.WithVerb(DynamicApiVerbHelper.GetConventionalVerbForMethodName(actionBuilder.ActionName));
                 }
 
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo();

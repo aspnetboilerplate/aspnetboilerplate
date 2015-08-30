@@ -1,5 +1,6 @@
 using System;
 using System.Web.Http.Filters;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -28,6 +29,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="serviceNameSelector">Service name selector</param>
         /// <returns></returns>
         IBatchApiControllerBuilder<T> WithServiceName(Func<Type, string> serviceNameSelector);
+        
+        /// <summary>
+        /// Use conventional Http Verbs by method names.
+        /// By default, it uses <see cref="HttpVerb.Post"/> for all actions.
+        /// </summary>
+        /// <returns>The current Controller Builder</returns>
+        IBatchApiControllerBuilder<T> WithConventionalVerbs();
 
         /// <summary>
         /// Builds the controller.
