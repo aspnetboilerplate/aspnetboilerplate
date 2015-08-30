@@ -115,6 +115,7 @@
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\HttpVerbExtensions.cs" />
     <Compile Include="WebApi\Controllers\Filters\AbpExceptionFilterAttribute.cs" />
     <Compile Include="WebApi\AbpWebApiModule.cs" />
     <Compile Include="WebApi\Controllers\AbpApiController.cs" />

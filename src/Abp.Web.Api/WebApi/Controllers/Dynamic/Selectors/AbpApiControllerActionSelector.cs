@@ -38,12 +38,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var actionName = DynamicApiServiceNameHelper.GetActionNameInServiceNameWithAction(serviceNameWithAction);
 
             //Get action information
-            if (!controllerInfo.Actions.ContainsKey(actionName))
+            DynamicApiActionInfo actionInfo;
+            if (!controllerInfo.Actions.TryGetValue(actionName, out actionInfo))
             {
                 throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
             }
 
-            return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, controllerInfo.Actions[actionName].Method, controllerInfo.Actions[actionName].Filters);
+            if (!actionInfo.Verb.IsEqualTo(controllerContext.Request.Method))
+            {
+                throw new AbpException(
+                    "There is an action " + actionName +
+                    " defined for api controller " + controllerInfo.ServiceName + 
+                    " but with a different HTTP Verb. Request verb is " + controllerContext.Request.Method + 
+                    ". It should be " + actionInfo.Verb);                
+            }
+
+            return new DyanamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionInfo.Method, actionInfo.Filters);
         }
     }
 }
