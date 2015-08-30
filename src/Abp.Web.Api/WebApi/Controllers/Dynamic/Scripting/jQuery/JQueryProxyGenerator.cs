@@ -1,6 +1,5 @@
 using System.Text;
 using Abp.Extensions;
-using Abp.WebApi.Controllers.Dynamic.Scripting.jQuery.Actions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
@@ -57,7 +56,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 
         private static void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
-            var generator = methodInfo.Verb.CreateActionScriptProxyGenerator(controllerInfo, methodInfo);
+            var generator = new ActionScriptProxyGenerator(controllerInfo, methodInfo);
             script.AppendLine(generator.GenerateMethod());
         }
     }
