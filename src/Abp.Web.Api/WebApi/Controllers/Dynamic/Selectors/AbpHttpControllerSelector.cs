@@ -52,6 +52,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 return base.SelectController(request);                
             }
 
+            //Normalize serviceNameWithAction
+            if (serviceNameWithAction.EndsWith("/"))
+            {
+                serviceNameWithAction = serviceNameWithAction.Substring(0, serviceNameWithAction.Length - 1);
+                routeData.Values["serviceNameWithAction"] = serviceNameWithAction;
+            }
+
             //Get the dynamic controller
             var hasActionName = false;
             var controllerInfo = DynamicApiControllerManager.FindOrNull(serviceNameWithAction);
