@@ -71,7 +71,7 @@ namespace Abp.WebApi
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
-        private void InitializeFormatters(HttpConfiguration httpConfiguration)
+        private static void InitializeFormatters(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Formatters.Clear();
             var formatter = new JsonMediaTypeFormatter();
@@ -80,9 +80,13 @@ namespace Abp.WebApi
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
         }
 
-        private void InitializeRoutes(HttpConfiguration httpConfiguration)
+        private static void InitializeRoutes(HttpConfiguration httpConfiguration)
         {
-            DynamicApiRouteConfig.Register(httpConfiguration);
+            //Dynamic Web APIs (with area name)
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpDynamicWebApi",
+                routeTemplate: "api/services/{*serviceNameWithAction}"
+                );
         }
     }
 }

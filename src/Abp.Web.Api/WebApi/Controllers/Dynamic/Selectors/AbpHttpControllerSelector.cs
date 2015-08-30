@@ -33,27 +33,43 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <returns>The controller to be used</returns>
         public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-            if (request != null)
+            //Get request and route data
+            if (request == null)
             {
-                var routeData = request.GetRouteData();
-                if (routeData != null)
-                {
-                    string serviceNameWithAction;
-                    if (routeData.Values.TryGetValue("serviceNameWithAction", out serviceNameWithAction) && DynamicApiServiceNameHelper.IsValidServiceNameWithAction(serviceNameWithAction))
-                    {
-                        var serviceName = DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
-                        var controllerInfo = DynamicApiControllerManager.FindOrNull(serviceName);
-                        if (controllerInfo != null)
-                        {
-                            var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo.ServiceName, controllerInfo.ApiControllerType, controllerInfo.Filters);
-                            controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
-                            return controllerDescriptor;
-                        }
-                    }
-                }
+                return base.SelectController(null);
             }
 
-            return base.SelectController(request);
+            var routeData = request.GetRouteData();
+            if (routeData == null)
+            {
+                return base.SelectController(request);
+            }
+
+            //Get serviceNameWithAction from route
+            string serviceNameWithAction;
+            if (!routeData.Values.TryGetValue("serviceNameWithAction", out serviceNameWithAction))
+            {
+                return base.SelectController(request);                
+            }
+
+            //Check service name
+            if (!DynamicApiServiceNameHelper.IsValidServiceNameWithAction(serviceNameWithAction))
+            {
+                return base.SelectController(request);
+            }
+
+            //Find the dynamic api controller service
+            var serviceName = DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
+            var controllerInfo = DynamicApiControllerManager.FindOrNull(serviceName);
+            if (controllerInfo == null)
+            {
+                return base.SelectController(request);
+            }
+
+            //Create the controller descriptor
+            var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo.ServiceName, controllerInfo.ApiControllerType, controllerInfo.Filters);
+            controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
+            return controllerDescriptor;
         }
     }
 }
