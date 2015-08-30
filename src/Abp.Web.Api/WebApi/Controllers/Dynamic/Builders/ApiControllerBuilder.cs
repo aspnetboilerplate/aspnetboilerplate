@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Abp.Dependency;
-using Abp.Logging;
-using Abp.WebApi.Controllers.Dynamic.Interceptors;
-using Castle.MicroKernel.Registration;
 using System.Web.Http.Filters;
+using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -86,7 +83,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), _filters);
+            var controllerInfo = new DynamicApiControllerInfo(
+                _serviceName, 
+                typeof(T),
+                typeof(DynamicApiController<T>),
+                typeof(AbpDynamicApiControllerInterceptor<T>),
+                _filters
+                );
             
             foreach (var actionBuilder in _actionBuilders.Values)
             {
@@ -97,15 +100,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo();
             }
-
-            IocManager.Instance.IocContainer.Register(
-                Component.For<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient(),
-                Component.For<DynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
-                );
-
+            
             DynamicApiControllerManager.Register(controllerInfo);
-
-            LogHelper.Logger.DebugFormat("Dynamic web api controller is created for type '{0}' with service name '{1}'.", typeof(T).FullName, controllerInfo.ServiceName);
         }
     }
 }

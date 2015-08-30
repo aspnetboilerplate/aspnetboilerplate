@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using Abp.Logging;
 using Abp.Modules;
 using Abp.Web;
 using Abp.WebApi.Configuration;
@@ -11,6 +12,7 @@ using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
+using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 
 namespace Abp.WebApi
@@ -39,6 +41,22 @@ namespace Abp.WebApi
             InitializeFilters(httpConfiguration);
             InitializeFormatters(httpConfiguration);
             InitializeRoutes(httpConfiguration);
+        }
+
+        public override void PostInitialize()
+        {
+            foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
+            {
+                IocManager.IocContainer.Register(
+                    Component.For(controllerInfo.InterceptorType).LifestyleTransient(),
+                    Component.For(controllerInfo.ApiControllerType)
+                        .Proxy.AdditionalInterfaces(controllerInfo.ServiceInterfaceType)
+                        .Interceptors(controllerInfo.InterceptorType)
+                        .LifestyleTransient()
+                    );
+
+                LogHelper.Logger.DebugFormat("Dynamic web api controller is created for type '{0}' with service name '{1}'.", controllerInfo.ServiceInterfaceType.FullName, controllerInfo.ServiceName);
+            }
         }
 
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
