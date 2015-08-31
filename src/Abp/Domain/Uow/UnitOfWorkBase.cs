@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;

@@ -81,7 +81,6 @@ namespace Abp.Domain.Uow
                 throw new AbpException("Can not set unit of work! UnitOfWorkDictionary.TryAdd returns false!");
             }
 
-            logger.Debug("Entering a new UOW scope: " + unitOfWorkKey);
             CallContext.LogicalSetData(ContextKey, unitOfWorkKey);
         }
 
@@ -106,7 +105,6 @@ namespace Abp.Domain.Uow
             UnitOfWorkDictionary.TryRemove(unitOfWorkKey, out unitOfWork);
             if (unitOfWork.Outer == null)
             {
-                logger.Debug("Exiting from UOW: " + unitOfWorkKey + " (no outer)");
                 CallContext.FreeNamedDataSlot(ContextKey);
                 return;
             }
@@ -122,7 +120,6 @@ namespace Abp.Domain.Uow
                 return;
             }
 
-            logger.Debug("Exiting from UOW: " + unitOfWorkKey + " and returned to outer UOW: " + outerUnitOfWorkKey);
             CallContext.LogicalSetData(ContextKey, outerUnitOfWorkKey);
         }
 
