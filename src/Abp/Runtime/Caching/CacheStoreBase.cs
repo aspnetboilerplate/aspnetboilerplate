@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
 
 namespace Abp.Runtime.Caching
 {
-    public abstract class CacheStoreBase<TKey, TValue> : ICacheStore<TKey, TValue>, ITransientDependency, IDisposable
+    public abstract class CacheStoreBase<TKey, TValue> : ICacheStore<TKey, TValue>
     {
         public string Name { get; private set; }
 
@@ -39,9 +38,12 @@ namespace Abp.Runtime.Caching
             return Task.FromResult(0);
         }
 
-        public virtual void Dispose()
+        public abstract void Clear();
+        
+        public Task ClearAsync()
         {
-
+            Clear();
+            return Task.FromResult(0);
         }
     }
 }

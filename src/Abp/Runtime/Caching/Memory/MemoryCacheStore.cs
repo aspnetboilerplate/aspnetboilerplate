@@ -5,12 +5,12 @@ namespace Abp.Runtime.Caching.Memory
 {
     public class MemoryCacheStore<TKey, TValue> : CacheStoreBase<TKey, TValue>
     {
-        private readonly MemoryCache _memoryCache;
+        private MemoryCache _memoryCache;
 
         public MemoryCacheStore(string name)
             : base(name)
         {
-            _memoryCache = new MemoryCache(name);
+            _memoryCache = new MemoryCache(Name);
         }
 
         public override TValue GetOrDefault(TKey key)
@@ -20,7 +20,7 @@ namespace Abp.Runtime.Caching.Memory
 
         public override void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null)
         {
-            //TODO: Optimize by using a default CacheItemPolicy
+            //TODO: Optimize by using a default CacheItemPolicy?
             _memoryCache.Set(
                 key.ToString(),
                 value,
@@ -33,6 +33,12 @@ namespace Abp.Runtime.Caching.Memory
         public override void Remove(TKey key)
         {
             _memoryCache.Remove(key.ToString());
+        }
+
+        public override void Clear()
+        {
+            _memoryCache.Dispose();
+            _memoryCache = new MemoryCache(Name);
         }
     }
 }

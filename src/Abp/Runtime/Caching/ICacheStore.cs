@@ -20,5 +20,9 @@ namespace Abp.Runtime.Caching
         void Remove(TKey key);
         
         Task RemoveAsync(TKey key);
+
+        void Clear();
+
+        Task ClearAsync();
     }
 }

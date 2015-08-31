@@ -11,7 +11,7 @@ namespace Abp.Runtime.Caching.Memory
 
         protected override ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name)
         {
-            IocManager.RegisterIfNot<MemoryCacheStore<TKey, TValue>>();
+            IocManager.RegisterIfNot<MemoryCacheStore<TKey, TValue>>(DependencyLifeStyle.Transient);
             return IocManager.Resolve<MemoryCacheStore<TKey, TValue>>(new {name});
         }
     }
