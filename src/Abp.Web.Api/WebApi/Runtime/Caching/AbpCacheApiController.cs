@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
+using Abp.Collections.Extensions;
+using Abp.Extensions;
 using Abp.Runtime.Caching;
+using Abp.UI;
 using Abp.WebApi.Controllers;
 
 namespace Abp.WebApi.Runtime.Caching
@@ -17,13 +20,19 @@ namespace Abp.WebApi.Runtime.Caching
         [HttpPost]
         public async Task Clear(ClearCacheModel model)
         {
-            if (!ModelState.IsValid)
+            if (model.Password.IsNullOrEmpty())
             {
-                //TODO: throw exception!
+                throw new UserFriendlyException("Password can not be null or empty!");
             }
 
-            //TODO: Check password!
+            //TODO: Define a password setting and check the password!
 
+            if (model.Caches.IsNullOrEmpty())
+            {
+                await _cacheProvider.ClearAllCacheStoresAsync();
+                return;
+            }
+            
             foreach (var cache in model.Caches)
             {
                 await _cacheProvider.ClearCacheStoreAsync(cache);
