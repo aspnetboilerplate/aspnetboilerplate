@@ -133,6 +133,7 @@
     <Compile Include="Runtime\Caching\CacheStoreBase.cs" />
     <Compile Include="Runtime\Caching\ICacheProvider.cs" />
     <Compile Include="Runtime\Caching\ICacheStore.cs" />
+    <Compile Include="Runtime\Caching\ICacheStoreCommon.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheStore.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheProvider.cs" />
     <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />

@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System;
+using Abp.Dependency;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -9,10 +10,10 @@ namespace Abp.Runtime.Caching.Memory
         {
         }
 
-        protected override ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name)
+        protected override ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime)
         {
             IocManager.RegisterIfNot<MemoryCacheStore<TKey, TValue>>(DependencyLifeStyle.Transient);
-            return IocManager.Resolve<MemoryCacheStore<TKey, TValue>>(new {name});
+            return IocManager.Resolve<MemoryCacheStore<TKey, TValue>>(new { name, defaultSlidingExpireTime });
         }
     }
 }

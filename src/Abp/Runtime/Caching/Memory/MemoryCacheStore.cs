@@ -8,7 +8,14 @@ namespace Abp.Runtime.Caching.Memory
         private MemoryCache _memoryCache;
 
         public MemoryCacheStore(string name)
-            : base(name)
+            : base(name, null)
+        {
+            _memoryCache = new MemoryCache(Name);
+        }
+
+
+        public MemoryCacheStore(string name, TimeSpan defaultSlidingExpireTime)
+            : base(name, defaultSlidingExpireTime)
         {
             _memoryCache = new MemoryCache(Name);
         }
@@ -39,6 +46,12 @@ namespace Abp.Runtime.Caching.Memory
         {
             _memoryCache.Dispose();
             _memoryCache = new MemoryCache(Name);
+        }
+
+        public override void Dispose()
+        {
+            _memoryCache.Dispose();
+            base.Dispose();
         }
     }
 }

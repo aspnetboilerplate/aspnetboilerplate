@@ -17,9 +17,9 @@ namespace Abp.Runtime.Caching
             CacheStores = new ConcurrentDictionary<string, object>();
         }
 
-        public virtual ICacheStore<TKey, TValue> GetCacheStore<TKey, TValue>(string name)
+        public virtual ICacheStore<TKey, TValue> GetCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
         {
-            var cacheStore = CacheStores.GetOrAdd(name, CreateCacheStore<TKey, TValue>);
+            var cacheStore = CacheStores.GetOrAdd(name, n => CreateCacheStore<TKey, TValue>(n, defaultSlidingExpireTime));
 
             if (!(cacheStore is ICacheStore<TKey, TValue>))
             {
@@ -29,19 +29,49 @@ namespace Abp.Runtime.Caching
             return cacheStore as ICacheStore<TKey, TValue>;
         }
 
-        public virtual Task<ICacheStore<TKey, TValue>> GetCacheStoreAsync<TKey, TValue>(string name)
+        public virtual Task<ICacheStore<TKey, TValue>> GetCacheStoreAsync<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
         {
-            return Task.FromResult(GetCacheStore<TKey, TValue>(name));
+            return Task.FromResult(GetCacheStore<TKey, TValue>(name, defaultSlidingExpireTime));
         }
 
-        public void Dispose()
+        public virtual bool RemoveCacheStore(string name)
+        {
+            object cacheStoreObj;
+            if (!CacheStores.TryRemove(name, out cacheStoreObj))
+            {
+                return false;
+            }
+
+            IocManager.Release(cacheStoreObj);
+            return true;
+        }
+
+        public virtual Task<bool> RemoveCacheStoreAsync(string name)
+        {
+            return Task.FromResult(RemoveCacheStore(name));
+        }
+
+        public virtual void ClearAllCacheStores()
         {
             foreach (var cacheStore in CacheStores)
             {
                 IocManager.Release(cacheStore);
             }
+
+            CacheStores.Clear();
         }
 
-        protected abstract ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name);
+        public virtual Task ClearAllCacheStoresAsync()
+        {
+            ClearAllCacheStores();
+            return Task.FromResult(0);
+        }
+
+        public virtual void Dispose()
+        {
+            ClearAllCacheStores();
+        }
+
+        protected abstract ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime);
     }
 }
