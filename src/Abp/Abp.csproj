@@ -129,6 +129,12 @@
     <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Runtime\Caching\CacheProviderBase.cs" />
+    <Compile Include="Runtime\Caching\CacheStoreBase.cs" />
+    <Compile Include="Runtime\Caching\ICacheProvider.cs" />
+    <Compile Include="Runtime\Caching\ICacheStore.cs" />
+    <Compile Include="Runtime\Caching\Memory\MemoryCacheStore.cs" />
+    <Compile Include="Runtime\Caching\Memory\MemoryCacheProvider.cs" />
     <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
     <Compile Include="Text\Formatting\FormatStringToken.cs" />
     <Compile Include="Text\Formatting\FormatStringTokenType.cs" />
@@ -248,7 +254,7 @@
     <Compile Include="Net\Mail\Smtp\SmtpEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\IEmailSender.cs" />
     <Compile Include="RandomHelper.cs" />
-    <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\AsyncThreadSafeObjectCache.cs" />
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
@@ -327,7 +333,7 @@
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="AbpKernelModule.cs" />
-    <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />

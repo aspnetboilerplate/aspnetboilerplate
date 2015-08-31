@@ -3,7 +3,7 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Abp.Runtime.Caching
+namespace Abp.Runtime.Caching.Memory
 {
     /// <summary>
     /// This class is used to store items to a thread safe and generic cache in a simple manner.

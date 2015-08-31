@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Caching;
-using Abp.Runtime.Caching;
+using Abp.Runtime.Caching.Memory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Runtime.Caching
+namespace Abp.Tests.Runtime.Caching.Memory
 {
     public class ThreadSafeObjectCache_Tests
     {
@@ -40,7 +40,6 @@ namespace Abp.Tests.Runtime.Caching
             
             aValue.ShouldBe("A-value-1");
             cacheCallCount.ShouldBe(2);
-
         }
     }
 }
