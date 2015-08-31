@@ -51,25 +51,65 @@ namespace Abp.Runtime.Caching
             return Task.FromResult(RemoveCacheStore(name));
         }
 
-        public virtual void ClearAllCacheStores()
+        public bool ClearCacheStore(string name)
+        {
+            object cacheStoreObj;
+            if (!CacheStores.TryGetValue(name, out cacheStoreObj))
+            {
+                return false;
+            }
+
+            ((ICacheStoreCommon)cacheStoreObj).Clear();
+            return true;
+        }
+
+        public async Task<bool> ClearCacheStoreAsync(string name)
+        {
+            object cacheStoreObj;
+            if (!CacheStores.TryGetValue(name, out cacheStoreObj))
+            {
+                return false;
+            }
+
+            await ((ICacheStoreCommon)cacheStoreObj).ClearAsync();
+            return true;
+        }
+
+        public virtual void RemoveAllCacheStores()
         {
             foreach (var cacheStore in CacheStores)
             {
-                IocManager.Release(cacheStore);
+                IocManager.Release(cacheStore.Value);
             }
 
             CacheStores.Clear();
         }
 
-        public virtual Task ClearAllCacheStoresAsync()
+        public virtual Task RemoveAllCacheStoresAsync()
         {
-            ClearAllCacheStores();
+            RemoveAllCacheStores();
             return Task.FromResult(0);
+        }
+
+        public void ClearAllCacheStores()
+        {
+            foreach (var cacheStore in CacheStores)
+            {
+                ((ICacheStoreCommon)cacheStore.Value).Clear();
+            }
+        }
+
+        public async Task ClearAllCacheStoresAsync()
+        {
+            foreach (var cacheStore in CacheStores)
+            {
+                await ((ICacheStoreCommon)cacheStore.Value).ClearAsync();
+            }
         }
 
         public virtual void Dispose()
         {
-            ClearAllCacheStores();
+            RemoveAllCacheStores();
         }
 
         protected abstract ICacheStore<TKey, TValue> CreateCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime);

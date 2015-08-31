@@ -13,6 +13,14 @@ namespace Abp.Runtime.Caching
 
         Task<bool> RemoveCacheStoreAsync(string name);
 
+        bool ClearCacheStore(string name);
+
+        Task<bool> ClearCacheStoreAsync(string name);
+
+        void RemoveAllCacheStores();
+
+        Task RemoveAllCacheStoresAsync();
+
         void ClearAllCacheStores();
 
         Task ClearAllCacheStoresAsync();
