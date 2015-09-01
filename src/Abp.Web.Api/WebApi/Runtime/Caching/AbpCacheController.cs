@@ -53,7 +53,7 @@ namespace Abp.WebApi.Runtime.Caching
 
         private async Task CheckPassword(string password)
         {
-            var actualPassword = await SettingManager.GetSettingValueAsync(ClearCacheSettingSettingNames.Password);
+            var actualPassword = await SettingManager.GetSettingValueAsync(ClearCacheSettingNames.Password);
             if (actualPassword != password)
             {
                 throw new UserFriendlyException("Password is not correct!");

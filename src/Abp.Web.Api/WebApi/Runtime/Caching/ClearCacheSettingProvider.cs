@@ -9,7 +9,7 @@ namespace Abp.WebApi.Runtime.Caching
         {
             return new[]
             {
-                new SettingDefinition(ClearCacheSettingSettingNames.Password, "123qweasdZXC")
+                new SettingDefinition(ClearCacheSettingNames.Password, "123qweasdZXC")
             };
         }
     }

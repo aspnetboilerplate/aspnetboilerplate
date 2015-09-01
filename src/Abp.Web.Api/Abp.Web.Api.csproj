@@ -135,7 +135,7 @@
     <Compile Include="WebApi\Runtime\Caching\ClearAllCacheModel.cs" />
     <Compile Include="WebApi\Runtime\Caching\ClearCacheModel.cs" />
     <Compile Include="WebApi\Runtime\Caching\ClearCacheSettingProvider.cs" />
-    <Compile Include="WebApi\Runtime\Caching\ClearCacheSettingSettingNames.cs" />
+    <Compile Include="WebApi\Runtime\Caching\ClearCacheSettingNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Api.nuspec" />

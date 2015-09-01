@@ -1,6 +1,6 @@
 ﻿namespace Abp.WebApi.Runtime.Caching
 {
-    public static class ClearCacheSettingSettingNames
+    public static class ClearCacheSettingNames
     {
         /// <summary>
         /// Abp.WebApi.Runtime.Caching.ClearPassword
