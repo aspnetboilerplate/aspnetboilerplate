@@ -15,7 +15,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
         {
             LocalIocManager.Register<ICacheProvider, MemoryCacheProvider>();
             _cacheProvider = LocalIocManager.Resolve<ICacheProvider>();
-            _cacheStore = _cacheProvider.GetCacheStore<string, MyCacheItem>("MyCacheItems");
+            _cacheStore = _cacheProvider.GetOrCreateCacheStore<string, MyCacheItem>("MyCacheItems");
         }
 
         [Fact]

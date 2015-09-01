@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 
@@ -16,8 +19,13 @@ namespace Abp.Runtime.Caching
             IocManager = iocManager;
             CacheStores = new ConcurrentDictionary<string, object>();
         }
-
-        public virtual ICacheStore<TKey, TValue> GetCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
+        
+        public IReadOnlyList<ICacheStoreCommon> GetAllCacheStores()
+        {
+            return CacheStores.Values.Cast<ICacheStoreCommon>().ToImmutableList();
+        }
+        
+        public virtual ICacheStore<TKey, TValue> GetOrCreateCacheStore<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
         {
             var cacheStore = CacheStores.GetOrAdd(name, n => CreateCacheStore<TKey, TValue>(n, defaultSlidingExpireTime));
 
@@ -29,9 +37,25 @@ namespace Abp.Runtime.Caching
             return cacheStore as ICacheStore<TKey, TValue>;
         }
 
-        public virtual Task<ICacheStore<TKey, TValue>> GetCacheStoreAsync<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
+        public virtual Task<ICacheStore<TKey, TValue>> GetOrCreateCacheStoreAsync<TKey, TValue>(string name, TimeSpan? defaultSlidingExpireTime = null)
         {
-            return Task.FromResult(GetCacheStore<TKey, TValue>(name, defaultSlidingExpireTime));
+            return Task.FromResult(GetOrCreateCacheStore<TKey, TValue>(name, defaultSlidingExpireTime));
+        }
+
+        public virtual ICacheStore<TKey, TValue> GetCacheStoreOrNull<TKey, TValue>(string name)
+        {
+            object cacheStore;
+            if (!CacheStores.TryGetValue(name, out cacheStore))
+            {
+                return null;
+            }
+
+            if (!(cacheStore is ICacheStore<TKey, TValue>))
+            {
+                throw new AbpException("Invalid cache store type request! Existing cache store's type is " + cacheStore.GetType().AssemblyQualifiedName + " but requested type is " + typeof(ICacheStore<TKey, TValue>).AssemblyQualifiedName);
+            }
+
+            return cacheStore as ICacheStore<TKey, TValue>;
         }
 
         public virtual bool RemoveCacheStore(string name)
@@ -51,30 +75,6 @@ namespace Abp.Runtime.Caching
             return Task.FromResult(RemoveCacheStore(name));
         }
 
-        public bool ClearCacheStore(string name)
-        {
-            object cacheStoreObj;
-            if (!CacheStores.TryGetValue(name, out cacheStoreObj))
-            {
-                return false;
-            }
-
-            ((ICacheStoreCommon)cacheStoreObj).Clear();
-            return true;
-        }
-
-        public async Task<bool> ClearCacheStoreAsync(string name)
-        {
-            object cacheStoreObj;
-            if (!CacheStores.TryGetValue(name, out cacheStoreObj))
-            {
-                return false;
-            }
-
-            await ((ICacheStoreCommon)cacheStoreObj).ClearAsync();
-            return true;
-        }
-
         public virtual void RemoveAllCacheStores()
         {
             foreach (var cacheStore in CacheStores)
@@ -89,22 +89,6 @@ namespace Abp.Runtime.Caching
         {
             RemoveAllCacheStores();
             return Task.FromResult(0);
-        }
-
-        public void ClearAllCacheStores()
-        {
-            foreach (var cacheStore in CacheStores)
-            {
-                ((ICacheStoreCommon)cacheStore.Value).Clear();
-            }
-        }
-
-        public async Task ClearAllCacheStoresAsync()
-        {
-            foreach (var cacheStore in CacheStores)
-            {
-                await ((ICacheStoreCommon)cacheStore.Value).ClearAsync();
-            }
         }
 
         public virtual void Dispose()

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Runtime.Caching
 {
-    public interface ICacheStoreCommon : IDisposable
+    public interface ICacheStoreCommon : IDisposable //TODO: Think a better naming!
     {
         string Name { get; }
 

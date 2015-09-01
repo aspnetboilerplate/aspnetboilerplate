@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
@@ -32,9 +33,10 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            foreach (var cache in model.Caches)
+            var cacheStores = _cacheProvider.GetAllCacheStores().Where(c => model.Caches.Contains(c.Name));
+            foreach (var cacheStore in cacheStores)
             {
-                await _cacheProvider.ClearCacheStoreAsync(cache);
+                await cacheStore.ClearAsync();
             }
         }
 
@@ -48,7 +50,11 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            await _cacheProvider.ClearAllCacheStoresAsync();
+            var cacheStores = _cacheProvider.GetAllCacheStores();
+            foreach (var cacheStore in cacheStores)
+            {
+                await cacheStore.ClearAsync();
+            }
         }
 
         private async Task CheckPassword(string password)
