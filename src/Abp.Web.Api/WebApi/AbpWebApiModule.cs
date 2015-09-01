@@ -12,6 +12,7 @@ using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
+using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 
@@ -28,6 +29,8 @@ namespace Abp.WebApi
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
             IocManager.Register<IAbpWebApiModuleConfiguration, AbpWebApiModuleConfiguration>();
+
+            Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
         }
 
         /// <inheritdoc/>
