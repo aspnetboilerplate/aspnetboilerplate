@@ -1,6 +1,9 @@
 using System.Reflection;
 using Abp.Web;
 using System.Web.Http.Filters;
+using System.Linq;
+using Abp.Reflection;
+using System;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -82,7 +85,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _filters = filters;
             return this;
         }
-        
+
         /// <summary>
         /// Tells builder to not create action for this method.
         /// </summary>
@@ -108,12 +111,23 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public DynamicApiActionInfo BuildActionInfo()
         {
-            if (Verb == null)
+            if (
+                Verb == null ||
+                (Verb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+                )
             {
                 Verb = DynamicApiVerbHelper.GetDefaultHttpVerb();
             }
 
             return new DynamicApiActionInfo(ActionName, Verb.Value, _methodInfo, _filters);
+        }
+
+        public static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
+        {
+            return !methodInfo
+            .GetParameters()
+            .Where(p => !TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
+            .Any();
         }
     }
 }
