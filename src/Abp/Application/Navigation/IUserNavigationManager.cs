@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Navigation
 {
@@ -12,12 +13,12 @@ namespace Abp.Application.Navigation
         /// </summary>
         /// <param name="menuName">Unique name of the menu</param>
         /// <param name="userId">User id or null for anonymous users</param>
-        UserMenu GetMenu(string menuName, long? userId);
+        Task<UserMenu> GetMenuAsync(string menuName, long? userId);
 
         /// <summary>
         /// Gets all menus specialized for given user.
         /// </summary>
         /// <param name="userId">User id or null for anonymous users</param>
-        IReadOnlyList<UserMenu> GetMenus(long? userId);
+        Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId);
     }
 }

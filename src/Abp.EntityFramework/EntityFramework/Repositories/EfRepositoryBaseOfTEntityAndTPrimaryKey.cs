@@ -2,130 +2,161 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Dynamic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.EntityFramework.Uow;
 
 namespace Abp.EntityFramework.Repositories
 {
-    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+    /// <summary>
+    /// Implements IRepository for Entity Framework.
+    /// </summary>
+    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
+    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
+    /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
+    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
-        protected virtual TDbContext Context { get { return UnitOfWorkScope.Current.GetDbContext<TDbContext>(); } }
+        /// <summary>
+        /// Gets EF DbContext object.
+        /// </summary>
+        protected virtual TDbContext Context { get { return _dbContextProvider.DbContext; } }
 
+        /// <summary>
+        /// Gets DbSet for given entity.
+        /// </summary>
         protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
 
-        public virtual IQueryable<TEntity> GetAll()
+        private readonly IDbContextProvider<TDbContext> _dbContextProvider;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dbContextProvider"></param>
+        public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
+        {
+            _dbContextProvider = dbContextProvider;
+        }
+
+        public override IQueryable<TEntity> GetAll()
         {
             return Table;
         }
 
-        public virtual List<TEntity> GetAllList()
+        public override async Task<List<TEntity>> GetAllListAsync()
         {
-            return GetAll().ToList();
+            return await GetAll().ToListAsync();
         }
 
-        public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
+        public override async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).ToList();
+            return await GetAll().Where(predicate).ToListAsync();
         }
 
-        public virtual T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
+        public override async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return queryMethod(GetAll());
+            return await GetAll().SingleAsync(predicate);
         }
 
-        public virtual TEntity Get(TPrimaryKey key)
+        public override async Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            var entity = FirstOrDefault(key);
-            if (entity == null)
-            {
-                throw new AbpException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + key);
-            }
-
-            return entity;
+            return await GetAll().FirstOrDefaultAsync(CreateEqualityExpressionForId(id));
         }
 
-        public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
+        public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Single(predicate);
+            return await GetAll().FirstOrDefaultAsync(predicate);
         }
 
-        public virtual TEntity FirstOrDefault(TPrimaryKey key)
-        {
-            return GetAll().Where("Id = @0", key).FirstOrDefault(); //TODO: Get actual primary key name
-        }
-
-        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
-        {
-            return GetAll().FirstOrDefault(predicate);
-        }
-
-        public virtual TEntity Load(TPrimaryKey key)
-        {
-            return Get(key); //EntityFramework has no Load as like NHibernate.
-        }
-
-        public virtual TEntity Insert(TEntity entity)
+        public override TEntity Insert(TEntity entity)
         {
             return Table.Add(entity);
         }
 
-        public TPrimaryKey InsertAndGetId(TEntity entity)
+        public override Task<TEntity> InsertAsync(TEntity entity)
+        {
+            return Task.FromResult(Table.Add(entity));
+        }
+
+        public override TPrimaryKey InsertAndGetId(TEntity entity)
         {
             entity = Insert(entity);
-            
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+
+            if (entity.IsTransient())
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                Context.SaveChanges();
             }
 
             return entity.Id;
         }
 
-        public TEntity InsertOrUpdate(TEntity entity)
+        public override async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
-            return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
-                ? Insert(entity)
-                : Update(entity);
+            entity = await InsertAsync(entity);
+
+            if (entity.IsTransient())
+            {
+                await Context.SaveChangesAsync();
+            }
+
+            return entity.Id;
         }
 
-        public TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+        public override TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
 
-            if (EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey)))
+            if (entity.IsTransient())
             {
-                UnitOfWorkScope.Current.SaveChanges();
+                Context.SaveChanges();
             }
 
             return entity.Id;
         }
 
-        public virtual TEntity Update(TEntity entity)
+        public override async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
-            Table.Attach(entity);
+            entity = await InsertOrUpdateAsync(entity);
+
+            if (entity.IsTransient())
+            {
+                await Context.SaveChangesAsync();
+            }
+
+            return entity.Id;
+        }
+
+        public override TEntity Update(TEntity entity)
+        {
+            AttachIfNot(entity);
             Context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
 
-        public virtual void Delete(TEntity entity)
+        public override Task<TEntity> UpdateAsync(TEntity entity)
         {
+            AttachIfNot(entity);
+            Context.Entry(entity).State = EntityState.Modified;
+            return Task.FromResult(entity);
+        }
+
+        public override void Delete(TEntity entity)
+        {
+            AttachIfNot(entity);
+
             if (entity is ISoftDelete)
             {
                 (entity as ISoftDelete).IsDeleted = true;
             }
             else
             {
-                Table.Remove(entity);                
+                Table.Remove(entity);
             }
         }
 
-        public virtual void Delete(TPrimaryKey id)
+        public override void Delete(TPrimaryKey id)
         {
             var entity = Table.Local.FirstOrDefault(ent => EqualityComparer<TPrimaryKey>.Default.Equals(ent.Id, id));
             if (entity == null)
@@ -140,32 +171,32 @@ namespace Abp.EntityFramework.Repositories
             Delete(entity);
         }
 
-        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
+        public override async Task<int> CountAsync()
         {
-            foreach (var entity in Table.Where(predicate).ToList())
+            return await GetAll().CountAsync();
+        }
+
+        public override async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).CountAsync();
+        }
+
+        public override async Task<long> LongCountAsync()
+        {
+            return await GetAll().LongCountAsync();
+        }
+
+        public override async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).LongCountAsync();
+        }
+
+        protected virtual void AttachIfNot(TEntity entity)
+        {
+            if (!Table.Local.Contains(entity))
             {
-                Delete(entity);
+                Table.Attach(entity);
             }
-        }
-        
-        public virtual int Count()
-        {
-            return GetAll().Count();
-        }
-
-        public virtual int Count(Expression<Func<TEntity, bool>> predicate)
-        {
-            return GetAll().Where(predicate).Count();
-        }
-
-        public virtual long LongCount()
-        {
-            return GetAll().LongCount();
-        }
-
-        public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
-        {
-            return GetAll().Where(predicate).LongCount();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Abp.Events.Bus.Entities
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     [Serializable]
-    public abstract class EntityEventData<TEntity> : EventData
+    public class EntityEventData<TEntity> : EventData , IEventDataWithInheritableGenericArgument
     {
         /// <summary>
         /// Related entity with this event.
@@ -19,9 +19,14 @@ namespace Abp.Events.Bus.Entities
         /// Constructor.
         /// </summary>
         /// <param name="entity">Related entity with this event</param>
-        protected EntityEventData(TEntity entity)
+        public EntityEventData(TEntity entity)
         {
             Entity = entity;
+        }
+
+        public virtual object[] GetConstructorArgs()
+        {
+            return new object[] { Entity };
         }
     }
 }

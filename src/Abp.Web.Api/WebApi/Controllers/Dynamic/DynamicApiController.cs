@@ -8,7 +8,7 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// A dynamic ApiController is used to transparently expose an object (Generally an Application Service class)
     /// to remote clients.
     /// </remarks>
-    public class DynamicApiController<T> : AbpApiController
+    public class DynamicApiController<T> : AbpApiController, IDynamicApiController
     {
 
     }

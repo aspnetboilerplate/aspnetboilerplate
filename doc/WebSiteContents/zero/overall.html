@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocIntro">Introduction</a></li>
+	<li><a href="#DocIdentity">Microsoft ASP.NET Identity Framework</a></li>
+	<li><a href="#DocPermissions">Permissions</a></li>
+	<li><a href="#DocSession">Session</a></li>
+	<li><a href="#DocRoles">Role management</a><ul>
+		<li><a href="#DocDefaultRoles">Default role(s)</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocUserManagement">User management</a></li>
+	<li><a href="#DocMultiTenancy">Multi tenancy</a></li>
+	<li><a href="#DocSettings">Setting management</a></li>
+	<li><a href="#DocAuditLogs">Audit logging</a></li>
+</ul>
+
+<h3 id="DocIntro">Introduction</h3>
+<p><strong>Module Zero </strong>implements fundamental concepts of ASP.NET 
+Boilerplate framework such as tenant management (multi-tenancy), role 
+management, user management, <a href="/Pages/Documents/Abp-Session">session</a>,
+<a href="/Pages/Documents/Authorization">authorization</a> (permission system),
+<a href="/Pages/Documents/Setting-Management">setting 
+management</a> and <a href="/Pages/Documents/Audit-Logging">audit logging</a>.</p>
+
+<h3 id="DocIdentity">Microsoft ASP.NET Identity Framework</h3>
+<p>Module Zero is based on Microsoft's
+<a href="http://www.asp.net/identity" target="_blank">ASP.NET Identity Framework</a>. 
+It extends user and role managers and implements user and role stores using generic repositories. 
+It supports any ORM that can be used with ASP.NET Boilerplate 
+(like Entity Framework and NHibernate).</p>
+<p>While module zero extends Identity Framework, it has many unique features as 
+described below.</p>
+
+<h3 id="DocPermissions">Permissions</h3>
+<p>In ASP.NET Boilerplate system, users are authorized by permissions. A <strong>
+permission </strong>is a specific privilege for a certain functionality of the 
+application. It can be "entering a specific page", or "performing some specific 
+action in a page" or a more general access right (like downloading excel files 
+in the application). See <a href="/Pages/Documents/Authorization">authorization documentation</a>
+for more information.</p>
+
+<h3 id="DocSession">Session</h3>
+<p>Module zero implements<strong> <a href="/Pages/Documents/Abp-Session">IAbpSession</a></strong>. 
+You can inject it anywhere to get current user and tenant ids.</p>
+
+<h3 id="DocRoles">Role Management</h3>
+<p>Roles are used to <strong>group permissions</strong>. When a user has a role, 
+then he/she will have all permissions of that role. In module-zero, roles can be 
+dynamic or static:</p>
+<ul>
+	<li><strong>Static role</strong>: A static role has a known <strong>name
+	</strong>(like 'admin') and can not change this name (we can change <strong>
+	display name</strong>). It's exists on the system startup and can not be 
+	deleted. Thus, we can write codes based on a static role name.</li>
+	<li><strong>Dynamic (non static) role</strong>: We can create a dynamic role 
+	after deployment. Then we can grant permissions for that role, we can assign 
+	the role to some users and we can delete it. We can not know names of 
+	dynamic roles in development time.</li>
+</ul>
+
+<h4 id="DocDefaultRoles">Default role(s)</h4>
+<p>One or more roles can be set as <strong>default</strong>. Default roles are 
+assigned to new added/registered users as default. This is not a development 
+time property and can be set or changed after deployment.</p>
+
+<h3 id="DocUserManagement">User Management</h3>
+<p>Users are people who can <strong>login </strong>to the application and 
+perform some operations based on their <strong>permissions</strong>.</p>
+<p>A user can have zero or more <strong>roles</strong>. A user inherits union of 
+permissions of his all roles. Also, we can set <strong>user-specific permission</strong>. 
+A user specific permission setting overrides role settings for this permission.</p>
+
+<h3 id="DocMultiTenancy">Multi Tenancy</h3>
+<p>
+<a href="http://en.wikipedia.org/wiki/Multitenancy" target="_blank">Wikipedia</a>: 
+Multitenancy refers to a software architecture in which a single instance of a 
+software runs on a server and serves multiple tenants (customers).</p>
+<p>ASP.NET Boilerplate <strong>supports</strong>, module-zero <strong>implements
+</strong>multi-tenancy. Thus, we can have an application <strong>deployed
+</strong>into single environment and used by <strong>multiple customers </strong>
+(tenants) simultaneously. </p>
+<p>A tenant can have it's own <strong>roles</strong>, <strong>users </strong>and
+<strong>settings</strong>. It's not limited to roles, users and settings. We can implement <strong>
+IMustHaveTenant</strong> and <strong>IMayHaveTenant</strong> for entities which 
+should be tenant-specific. ASP.NET Boilerplate automatically hides (filters) 
+other tenant entities when logged in with a tenant's user. See
+<span><a href="/Pages/Documents/Data-Filters">data filters</a></span> documentation.</p>
+
+<h3 id="DocSettings">Setting Management</h3>
+<p>Module zero implements setting store of ASP.NET Boilerplate to store/retrieve 
+settings to/from database. See <span>
+<a href="/Pages/Documents/Setting-Management">setting documentation</a></span> 
+for more information.</p>
+
+<h3 id="DocAuditLogs">Audit Logging</h3>
+<p>Module zero implements ASP.NET Boilerplate's <span>
+<a href="/Pages/Documents/Audit-Logging">audit 
+logging</a></span> system. Thus, automatically logs all user actions to the database.</p>
+
+</body>
+
+</html>

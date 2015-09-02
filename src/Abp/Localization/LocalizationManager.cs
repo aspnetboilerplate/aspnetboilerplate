@@ -1,31 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Localization.Sources;
+using Castle.Core.Logging;
 
 namespace Abp.Localization
 {
     internal class LocalizationManager : ILocalizationManager
     {
+        public ILogger Logger { get; set; }
+
         /// <summary>
         /// Gets current language for the application.
         /// </summary>
         public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
 
         private readonly ILocalizationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
         private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationManager(ILocalizationConfiguration configuration)
+        public LocalizationManager(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
+            Logger = NullLogger.Instance;
             _configuration = configuration;
+            _iocResolver = iocResolver;
             _sources = new Dictionary<string, ILocalizationSource>();
+        }
+
+        public void Initialize()
+        {
             InitializeSources();
         }
 
@@ -38,9 +50,11 @@ namespace Abp.Localization
         {
             if (!_configuration.IsEnabled)
             {
+                Logger.Debug("Localization disabled.");
                 return;
             }
 
+            Logger.Debug(string.Format("Initializing {0} localization sources.", _configuration.Sources.Count));
             foreach (var source in _configuration.Sources)
             {
                 if (_sources.ContainsKey(source.Name))
@@ -49,7 +63,23 @@ namespace Abp.Localization
                 }
 
                 _sources[source.Name] = source;
-                source.Initialize();
+                source.Initialize(_configuration, _iocResolver);
+
+                //Extending dictionaries
+                if (source is IDictionaryBasedLocalizationSource)
+                {
+                    var dictionaryBasedSource = source as IDictionaryBasedLocalizationSource;
+                    var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
+                    foreach (var extension in extensions)
+                    {
+                        foreach (var dictionaryInfo in extension.DictionaryProvider.GetDictionaries(source.Name))
+                        {
+                            dictionaryBasedSource.Extend(dictionaryInfo.Dictionary);
+                        }
+                    }
+                }
+
+                Logger.Debug("Initialized localization source: " + source.Name);
             }
         }
 
@@ -69,7 +99,7 @@ namespace Abp.Localization
             {
                 throw new ArgumentNullException("name");
             }
-            
+
             ILocalizationSource source;
             if (!_sources.TryGetValue(name, out source))
             {
@@ -86,6 +116,16 @@ namespace Abp.Localization
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
             return _sources.Values.ToImmutableList();
+        }
+
+        public string GetString(string sourceName, string name)
+        {
+            return GetSource(sourceName).GetString(name);
+        }
+
+        public string GetString(string sourceName, string name, CultureInfo culture)
+        {
+            return GetSource(sourceName).GetString(name, culture);
         }
 
         private LanguageInfo GetCurrentLanguage()

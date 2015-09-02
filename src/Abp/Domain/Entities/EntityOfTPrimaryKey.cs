@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Abp.Domain.Entities
 {
@@ -7,6 +8,7 @@ namespace Abp.Domain.Entities
     /// An entity can inherit this class of directly implement to IEntity interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+    [Serializable]
     public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     {
         /// <summary>
@@ -23,6 +25,7 @@ namespace Abp.Domain.Entities
             return EqualityComparer<TPrimaryKey>.Default.Equals(Id, default(TPrimaryKey));
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is Entity<TPrimaryKey>))
@@ -54,11 +57,13 @@ namespace Abp.Domain.Entities
             return Id.Equals(other.Id);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return Id.GetHashCode();
         }
 
+        /// <inheritdoc/>
         public static bool operator ==(Entity<TPrimaryKey> left, Entity<TPrimaryKey> right)
         {
             if (Equals(left, null))
@@ -69,11 +74,13 @@ namespace Abp.Domain.Entities
             return left.Equals(right);
         }
 
+        /// <inheritdoc/>
         public static bool operator !=(Entity<TPrimaryKey> left, Entity<TPrimaryKey> right)
         {
             return !(left == right);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Format("[{0} {1}]", GetType().Name, Id);

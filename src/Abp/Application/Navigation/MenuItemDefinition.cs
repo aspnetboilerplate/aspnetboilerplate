@@ -19,33 +19,33 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Display name of the menu item. Required.
         /// </summary>
-        public ILocalizableString DisplayName { get; private set; }
-
+        public ILocalizableString DisplayName { get; set; }
+        
+        /// <summary>
+        /// The Display order of the menu. Optional.
+        /// </summary>
+        public int Order { get; set; }
+        
         /// <summary>
         /// Icon of the menu item if exists. Optional.
         /// </summary>
-        public string Icon { get; private set; }
+        public string Icon { get; set; }
         
         /// <summary>
         /// The URL to navigate when this menu item is selected. Optional.
         /// </summary>
-        public string Url { get; private set; }
-
-        /// <summary>
-        /// Sub items of this menu item. Optional.
-        /// </summary>
-        public IList<MenuItemDefinition> Items { get; private set; }
+        public string Url { get; set; }
 
         /// <summary>
         /// A permission name. Only users that has this permission can see this menu item.
         /// Optional.
         /// </summary>
-        public string RequiredPermissionName { get; private set; }
+        public string RequiredPermissionName { get; set; }
 
         /// <summary>
         /// This can be set to true if only authenticated users should see this menu item.
         /// </summary>
-        public bool RequiresAuthentication { get; private set; }
+        public bool RequiresAuthentication { get; set; }
 
         /// <summary>
         /// Returns true if this menu item has no child <see cref="Items"/>.
@@ -56,9 +56,19 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
+        /// Can be used to store a custom object related to this menu item. Optional.
+        /// </summary>
+        public object CustomData { get; set; }
+
+        /// <summary>
+        /// Sub items of this menu item. Optional.
+        /// </summary>
+        public virtual IList<MenuItemDefinition> Items { get; private set; }
+
+        /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null)
+        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null, int order = 0, object customData = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -76,7 +86,9 @@ namespace Abp.Application.Navigation
             Url = url;
             RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
-            
+            Order = order;
+            CustomData = customData;
+
             Items = new List<MenuItemDefinition>();
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
@@ -11,7 +10,6 @@ namespace Abp.Logging
     /// <summary>
     /// This class can be used to write logs from somewhere where it's a little hard to get a reference to the <see cref="ILogger"/>.
     /// Normally, get <see cref="ILogger"/> using property injection.
-    /// TODO: Remove this class?
     /// </summary>
     internal class LogHelper
     {
@@ -29,7 +27,12 @@ namespace Abp.Logging
 
         public static void LogException(Exception ex)
         {
-            Logger.Error(ex.Message, ex);
+            LogException(Logger, ex);
+        }
+
+        public static void LogException(ILogger logger, Exception ex)
+        {
+            logger.Error(ex.ToString(), ex);
             LogValidationErrors(ex);
         }
 

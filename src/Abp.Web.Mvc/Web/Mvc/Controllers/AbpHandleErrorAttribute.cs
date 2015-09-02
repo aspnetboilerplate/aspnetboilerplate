@@ -1,12 +1,14 @@
 using System;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
+using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -14,8 +16,22 @@ namespace Abp.Web.Mvc.Controllers
     /// Used internally by ABP to handle exceptions on MVC actions.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class AbpHandleErrorAttribute : HandleErrorAttribute /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
+    public class AbpHandleErrorAttribute : HandleErrorAttribute, ITransientDependency /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
     {
+        public ILogger Logger { get; set; }
+
+        public IEventBus EventBus { get; set; }
+
+        public AbpHandleErrorAttribute()
+        {
+            Logger = NullLogger.Instance;
+            EventBus = NullEventBus.Instance;
+        }
+
+        /// <summary>
+        /// Called when an exception occurs.
+        /// </summary>
+        /// <param name="context">The exception context.</param>
         public override void OnException(ExceptionContext context)
         {
             if (context == null)
@@ -31,7 +47,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             //Always log exception
-            LogHelper.LogException(context.Exception);
+            LogHelper.LogException(Logger, context.Exception);
 
             // If custom errors are disabled, we need to let the normal ASP.NET exception handler
             // execute so that the user can see useful debugging information.
@@ -68,18 +84,23 @@ namespace Abp.Web.Mvc.Controllers
             context.HttpContext.Response.TrySkipIisCustomErrors = true;
 
             //Trigger an event, so we can register it.
-            EventBus.Default.Trigger(this, new AbpHandledExceptionData(context.Exception));
+            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
-        private bool IsAjaxRequest(ExceptionContext context)
+        private static bool IsAjaxRequest(ExceptionContext context)
         {
             return context.HttpContext.Request.IsAjaxRequest();
         }
 
-        private ActionResult GenerateAjaxResult(ExceptionContext context)
+        private static ActionResult GenerateAjaxResult(ExceptionContext context)
         {
             context.HttpContext.Response.StatusCode = 200;
-            return new AbpJsonResult(new MvcAjaxResponse(ErrorInfoBuilder.Instance.BuildForException(context.Exception)));
+            return new AbpJsonResult(
+                new MvcAjaxResponse(
+                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    context.Exception is Abp.Authorization.AbpAuthorizationException
+                    )
+                );
         }
 
         private ActionResult GenerateNonAjaxResult(ExceptionContext context)

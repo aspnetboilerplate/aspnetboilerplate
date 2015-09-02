@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Runtime.Session;
@@ -10,28 +11,41 @@ namespace Abp.Web.Authorization
     /// <summary>
     /// 
     /// </summary>
-    public class AuthorizationScriptManager : IAuthorizationScriptManager, ISingletonDependency
+    public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
     {
+        /// <inheritdoc/>
         public IAbpSession AbpSession { get; set; }
 
         private readonly IPermissionManager _permissionManager;
 
+        public IPermissionChecker PermissionChecker { get; set; }
+
+        /// <inheritdoc/>
         public AuthorizationScriptManager(IPermissionManager permissionManager)
         {
             AbpSession = NullAbpSession.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
 
             _permissionManager = permissionManager;
         }
 
-        public string GetAuthorizationScript()
+        /// <inheritdoc/>
+        public async Task<string> GetScriptAsync()
         {
-            var allPermission = _permissionManager.GetAllPermissions().Select(p => p.Name).ToList();
-            var grantedPermissions =
-                AbpSession.UserId.HasValue
-                    ? _permissionManager.GetGrantedPermissions(AbpSession.UserId.Value).Select(p => p.Name).ToArray()
-                    : new string[0];
+            var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
+            var grantedPermissionNames = new List<string>();
 
-
+            if (AbpSession.UserId.HasValue)
+            {
+                foreach (var permissionName in allPermissionNames)
+                {
+                    if (await PermissionChecker.IsGrantedAsync(AbpSession.UserId.Value, permissionName))
+                    {
+                        grantedPermissionNames.Add(permissionName);
+                    }
+                }
+            }
+            
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
@@ -42,11 +56,11 @@ namespace Abp.Web.Authorization
 
             script.AppendLine();
 
-            AppendPermissionList(script, "allPermissions", allPermission);
+            AppendPermissionList(script, "allPermissions", allPermissionNames);
 
             script.AppendLine();
 
-            AppendPermissionList(script, "grantedPermissions", grantedPermissions);
+            AppendPermissionList(script, "grantedPermissions", grantedPermissionNames);
 
             script.AppendLine();
             script.Append("})();");

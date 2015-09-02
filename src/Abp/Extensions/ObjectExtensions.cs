@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Abp.Extensions
 {
@@ -14,8 +15,21 @@ namespace Abp.Extensions
         /// <param name="obj">Object to cast</param>
         /// <returns>Casted object</returns>
         public static T As<T>(this object obj)
+            where T : class
         {
             return (T)obj;
+        }
+
+        /// <summary>
+        /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
+        /// </summary>
+        /// <param name="obj">Object to be converted</param>
+        /// <typeparam name="T">Type of the target object</typeparam>
+        /// <returns>Converted object</returns>
+        public static T To<T>(this object obj)
+            where T : struct
+        {
+            return (T)Convert.ChangeType(obj, typeof(T));
         }
 
         /// <summary>

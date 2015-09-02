@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic.Interceptors;
-using Castle.MicroKernel.Registration;
 using System.Web.Http.Filters;
+using Abp.WebApi.Controllers.Dynamic.Interceptors;
+using Abp.WebApi.Controllers.Dynamic.Selectors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -28,6 +27,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         private IFilter[] _filters;
 
+        private bool _conventionalVerbs;
+
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
@@ -47,7 +48,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
-            foreach (var methodInfo in DynamicApiControllerActionFinder.GetMethodsToBeAction(typeof(T)))
+            foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
             }
@@ -79,13 +80,25 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return _actionBuilders[methodName];
         }
 
+        public IApiControllerBuilder<T> WithConventionalVerbs()
+        {
+            _conventionalVerbs = true;
+            return this;
+        }
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>
         public void Build()
         {
-            var controllerInfo = new DynamicApiControllerInfo(_serviceName, typeof(DynamicApiController<T>), typeof(T), _filters);
+            var controllerInfo = new DynamicApiControllerInfo(
+                _serviceName, 
+                typeof(T),
+                typeof(DynamicApiController<T>),
+                typeof(AbpDynamicApiControllerInterceptor<T>),
+                _filters
+                );
             
             foreach (var actionBuilder in _actionBuilders.Values)
             {
@@ -94,14 +107,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     continue;
                 }
 
+                if (_conventionalVerbs && !actionBuilder.Verb.HasValue)
+                {
+                    actionBuilder.WithVerb(DynamicApiVerbHelper.GetConventionalVerbForMethodName(actionBuilder.ActionName));
+                }
+
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo();
             }
-
-            IocManager.Instance.IocContainer.Register(
-                Component.For<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient(),
-                Component.For<DynamicApiController<T>>().Proxy.AdditionalInterfaces(new[] { typeof(T) }).Interceptors<AbpDynamicApiControllerInterceptor<T>>().LifestyleTransient()
-                );
-
+            
             DynamicApiControllerManager.Register(controllerInfo);
         }
     }

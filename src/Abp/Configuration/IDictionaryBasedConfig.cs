@@ -9,11 +9,11 @@ namespace Abp.Configuration
     {
         /// <summary>
         /// Used to set a string named configuration.
-        /// If there is already a configuration with same <see cref="name"/>, it's overwritten.
+        /// If there is already a configuration with same <paramref name="name"/>, it's overwritten.
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
-        /// <returns>Returns the passed <see cref="value"/></returns>
+        /// <returns>Returns the passed <paramref name="value"/></returns>
         void Set<T>(string name, T value);
 
         /// <summary>

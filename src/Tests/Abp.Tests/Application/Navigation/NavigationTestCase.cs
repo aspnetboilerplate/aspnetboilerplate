@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -42,15 +43,18 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(CreateMockPermissionManager(), NavigationManager);
+            UserNavigationManager = new UserNavigationManager(NavigationManager)
+                                    {
+                                        PermissionChecker = CreateMockPermissionChecker()
+                                    };
         }
 
-        private static IPermissionManager CreateMockPermissionManager()
+        private static IPermissionChecker CreateMockPermissionChecker()
         {
-            var permissionManager = Substitute.For<IPermissionManager>();
-            permissionManager.IsGranted(1, "Abp.Zero.UserManagement").Returns(true);
-            permissionManager.IsGranted(1, "Abp.Zero.RoleManagement").Returns(false);
-            return permissionManager;
+            var permissionChecker = Substitute.For<IPermissionChecker>();
+            permissionChecker.IsGrantedAsync(1, "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(1, "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            return permissionChecker;
         }
 
         public class MyNavigationProvider1 : NavigationProvider
@@ -69,7 +73,8 @@ namespace Abp.Tests.Application.Navigation
                                 new FixedLocalizableString("User management"),
                                 "fa fa-users",
                                 "#/admin/users",
-                                requiredPermissionName: "Abp.Zero.UserManagement"
+                                requiredPermissionName: "Abp.Zero.UserManagement",
+                                customData: "A simple test data"
                                 )
                         ).AddItem(
                             new MenuItemDefinition(
@@ -94,10 +99,18 @@ namespace Abp.Tests.Application.Navigation
                         "Abp.Zero.Administration.Setting",
                         new FixedLocalizableString("Setting management"),
                         icon: "fa fa-cog",
-                        url: "#/admin/settings"
+                        url: "#/admin/settings",
+                        customData: new MyCustomDataClass { Data1 = 42, Data2 = "FortyTwo" }
                         )
                     );
             }
+        }
+
+        public class MyCustomDataClass
+        {
+            public int Data1 { get; set; }
+
+            public string Data2 { get; set; }
         }
     }
 }

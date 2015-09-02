@@ -31,6 +31,7 @@ A screenshot of the sample application.</p>
 	<li><a href="#ArticleBuildWebApiServices">Build Web API services</a></li>
 	<li><a href="#ArticleDevelopSpa">Develop the SPA</a></li>
 	<li><a href="#ArticleLocalization">Localization</a></li>
+	<li><a href="#ArticleUnitTest">Unit testing</a></li>
 	<li><a href="#ArticleSummary">Summary</a></li>
 	<li><a href="#ArticleHistory">Article history</a></li>
 	<li><a href="#ArticleReferences">References</a></li>
@@ -50,9 +51,7 @@ A screenshot of the sample application.</p>
 	<li>And <strong>ASP.NET Boilerplate</strong> as startup template and application framework.</li>
 </ul>
 
-<p><strong>ASP.NET Boilerplate</strong> [1] is an open source project that combines all these frameworks/libraries to make you start easily to develop your application. It also provides us an infrastructure to develop applications in <strong>best practices</strong>. It naturally supports <strong>Dependency Injection</strong>, <strong>Domain Driven Design </strong>and <strong>Layered Architecture</strong>.</p>
-
-<p>The sample application also implements <strong>validation</strong>, <strong> exception handling</strong>, <strong>localization</strong> and <strong> responsive design</strong>.</p>
+<p><strong>ASP.NET Boilerplate</strong> [1] is an open source application framework that combines all of these frameworks and libraries to make you start easily to develop your application. It provides us an infrastructure to develop applications in <strong>best practices</strong>. It naturally supports <strong>Dependency Injection</strong>, <strong>Domain Driven Design </strong>and <strong>Layered Architecture</strong>. The sample application also implements <strong>validation</strong>, <strong> exception handling</strong>, <strong>localization</strong> and <strong> responsive design</strong>.</p>
 
 <h2 id="ArticleApplication">Create the application from boilerplate template</h2>
 
@@ -62,15 +61,15 @@ A screenshot of the sample application.</p>
 
 <p><img alt="Create template by ASP.NET Boilerplate" src="create-abp-template.png" style="width:100%;" /></p>
 
-<p>Here, I selected <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. It created and downloaded my solution. I opened it in Visual Studio 2013:</p>
+<p>Here, I selected <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. It created and downloaded my solution.</p>
 
-<p><img alt="Solution structure" height="110" src="abp-template-projects.png" width="315" /></p>
+<p>There are 5 projects included in the solution. <strong>Core</strong> project for domain (business) layer, <strong>Application</strong> project for application layer, <strong>WebApi</strong> project to implement Web Api controllers, <strong> Web</strong> project for presentation layer and finally <strong> EntityFramework</strong> project for EntityFramework implementation.</p>
 
-<p>There are 5 projects included in the solution. <strong>Core</strong> project for domain (business) layer, <strong>Application</strong> project for application layer, <strong>WebApi</strong> project to implement Web Api controllers, <strong> Web</strong> project for presentation layer and finally <strong> Infrastructure.EntityFramework</strong> project for EntityFramework implementation.</p>
+<p><strong>Note</strong>: If you download sample solution for this acticle, you will see 7 projects in the solution. I improved template to support NHibernate and Durandal also for same application. If you don&#39;t interest in NHibernate or Durandal, just ignore these 2 projects.</p>
 
 <h2 id="ArticleCreateEntities">Create entities</h2>
 
-<p>I&#39;m creating a simple application to create <strong>tasks</strong> and assing tasks to <strong>people</strong>. So, I need <strong>Task</strong> and <strong> Person</strong> entities.</p>
+<p>I&#39;m creating a simple application to create <strong>tasks</strong> and assing these tasks to <strong>people</strong>. So, I need <strong>Task</strong> and <strong> Person</strong> entities.</p>
 
 <p><strong>Task</strong> entity simply defines a Description, CreationTime and a State for a Task. It also has an optional reference to a Person (AssignedPerson):</p>
 
@@ -109,49 +108,39 @@ public class Person : Entity
 
 <h2 id="ArticleDbContext">Create DbContext</h2>
 
-<p>As you know, EntityFramework works with <strong>DbContext</strong> class. We should first define it. ASP.NET Boilerplate template creates a DbContext template for us. I added <strong>IDbSet</strong>s for Task and Person. I also made some configuration on <strong>OnModelCreating</strong> method. These configurations could be achived with data annotations on entities. I did not prefer it but you can do it in that way. This is my DbContext class:</p>
+<p>As you know, EntityFramework works with <strong>DbContext</strong> class. We should first define it. ASP.NET Boilerplate template creates a DbContext template for us. I just added <strong>IDbSet</strong>s for Task and Person. This is my DbContext class:</p>
 
 <pre lang="cs">
 public class SimpleTaskSystemDbContext : AbpDbContext
 {
     public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
+
     public virtual IDbSet&lt;Person&gt; People { get; set; }
 
     public SimpleTaskSystemDbContext()
-        : base(&quot;MainDb&quot;)
+        : base(&quot;Default&quot;)
     {
 
     }
 
-    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    public SimpleTaskSystemDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
     {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity&lt;Person&gt;().ToTable(&quot;StsPeople&quot;);
-        modelBuilder.Entity&lt;Task&gt;().ToTable(&quot;StsTasks&quot;).HasOptional(t =&gt; t.AssignedPerson);
+            
     }
 }</pre>
 
-<p>It uses <strong>MainDb</strong> connection string in web.config. It&#39;s defined as shown below:</p>
+<p>It uses <strong>Default</strong> connection string in web.config. It&#39;s defined as shown below:</p>
 
 <pre lang="xml">
 &lt;add name=&quot;MainDb&quot; connectionString=&quot;Server=localhost; Database=<strong>SimpleTaskSystemDb</strong>; Trusted_Connection=True;&quot; providerName=&quot;System.Data.SqlClient&quot; /&gt;</pre>
 
 <h2 id="ArticleDbMigrations">Create Database Migrations</h2>
 
-<p>We&#39;ll use EntityFramework&#39;s Code First Migrations to create and maintain the database schema. Open the Package Manager Console and type the following command (<strong>Default project</strong> must be set to SimpleTaskSystem.Infrastructure.EntityFramework in console window):</p>
-
-<pre>
-PM&gt; Enable-Migrations</pre>
-
-<p>A screenshot from package manager console (Selecting default project):</p>
-
-<p><img alt="Package manager console enable migrations" height="104" src="pkm-console.png" width="590" /></p>
-
-<p>This will enable migrations for our DbContext (SimpleTaskSystemDbContext) and create a <strong>Configuration</strong> class as shown below:</p>
+<p>We&#39;ll use EntityFramework&#39;s Code First Migrations to create and maintain the database schema. ASP.NET Boilerplate template has enabled migrations by default and added a <strong>Configuration </strong> class as shown below:</p>
 
 <pre lang="cs">
-internal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSystem.EntityFramework.SimpleTaskSystemDbContext&gt;
+internalinternal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSystem.EntityFramework.SimpleTaskSystemDbContext&gt;
 {
     public Configuration()
     {
@@ -170,12 +159,11 @@ internal sealed class Configuration : DbMigrationsConfiguration&lt;SimpleTaskSys
     }
 }</pre>
 
-<p>In the Seed method, I added four people for initial data. Now, I&#39;ll create the <strong>initial migration</strong>:</p>
+<p>In the Seed method, I added four people for initial data. Now, I&#39;ll create the <strong>initial migration</strong>. I opened Package Manager Console and typed the following command:</p>
 
-<pre>
-PM&gt; Add-Migration &quot;InitialCreate&quot;</pre>
+<p><img alt="Visual studio Package manager console" height="110" src="pkm-console2.png" width="590" /></p>
 
-<p>This command creates a class named InitialCreate as shown below:</p>
+<p><strong>Add-Migration &quot;InitialCreate&quot;</strong> command creates a class named InitialCreate as shown below:</p>
 
 <pre lang="cs">
 public partial class InitialCreate : DbMigration
@@ -220,7 +208,7 @@ public partial class InitialCreate : DbMigration
 <pre>
 PM&gt; Update-Database</pre>
 
-<p>This command runs the migrations, creates the database and populates the initial data for us:</p>
+<p>This command runs migrations, creates the database and populates the initial data for us:</p>
 
 <p><img alt="Database created by EntityFramework Migrations" height="147" src="sql-db.png" width="207" /></p>
 
@@ -228,7 +216,11 @@ PM&gt; Update-Database</pre>
 
 <h2 id="ArticleDefineRepositories">Define repositories</h2>
 
-<p>In domain driven design, repositories used to implement database-specific codes. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
+<p>In domain driven design, repositories used to implement database-specific codes. ASP.NET Boilerplate creates an automatic repository for each entity using generic <strong>IRepository</strong> interface. IRepository defines common methods for select, insert, update, delete and a few more:</p>
+
+<p><img alt="IRepository interface" height="741" src="irepository-interface-v3.png" width="494" /></p>
+
+<p>We can extend these repository upon our needs. I will extend it to create a Task repository. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
 
 <pre lang="cs">
 public interface ITaskRepository : IRepository&lt;Task, long&gt;
@@ -236,27 +228,20 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
     List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state);
 }</pre>
 
-<p>It extends generic <strong>IRepository</strong> interface of ASP.NET Boilerplate. IRepository defines common methods for select, insert, update, delete and a few more:</p>
+<p>It extends generic <strong>IRepository</strong> interface of ASP.NET Boilerplate. So, <strong>ITaskRepository</strong> inherently defines all these methods as default. It can also add it&#39;s own methods as I defined <strong>GetAllWithPeople(...)</strong>.</p>
 
-<p><img alt="Generic IRepository interface" height="308" src="irepository-interface.png" width="464" /></p>
-
-<p>So, <strong>ITaskRepository</strong> inherently defines all these methods as default. It can also add it&#39;s own methods as I defined <strong>GetAllWithPeople(...)</strong>. IPersonRepository is simpler, does not define any additional methods to IRepository:</p>
-
-<pre lang="cs">
-public interface IPersonRepository : IRepository&lt;Person&gt;
-{
-}</pre>
+<p>No need to create a repository for Person since default methods are enough for me. ASP.NET Boilerplate provides a way of injecting generic repositories without creating a repository class. We will see it in TaskAppService class in &#39;Build application services&#39; section..</p>
 
 <p>I defined repository interfaces in the <strong>Core</strong> project since they are parts of domain/business layer.</p>
 
 <h2 id="ArticleImplementRepositories">Implement repositories</h2>
 
-<p>We should implement the interfaces defined above. I&#39;m implementing repositories in <strong>Infrastructure.EntityFramework</strong> project. Thus, domain layer becomes completely independent from EntityFramework.</p>
+<p>We should implement the ITaskRepository interface defined above. I&#39;m implementing repositories in <strong>EntityFramework</strong> project. Thus, domain layer becomes completely independent from EntityFramework.</p>
 
-<p>When we created the project template, ASP.NET Boilerplate defined a generic base class for repositories 
-in our project: <strong>SimpleTaskSystemRepositoryBase</strong>. It&#39;s a good practice to have such a base class since we can later add some common methods for our repositories. You can see definition of this class in the code. I just derive from it for <strong>TaskRepository</strong> implementation:</p>
+<p>When we created the project template, ASP.NET Boilerplate defined a generic base class for repositories in our project: <strong>SimpleTaskSystemRepositoryBase</strong>. It&#39;s a good practice to have such a base class since we can later add some common methods for our repositories. You can see definition of this class in the code. I just derive from it for <strong>TaskRepository</strong> implementation:</p>
 
-<pre lang="cs">public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
+<pre lang="cs">
+public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
@@ -287,16 +272,7 @@ in our project: <strong>SimpleTaskSystemRepositoryBase</strong>. It&#39;s a good
 
 <p><strong>TaskRepository</strong> is derived from <strong>SimpleTaskSystemRepositoryBase</strong> and implements <strong> ITaskRepository</strong> we defined above.</p>
 
-<p>GetAllWithPeople is our specific method to get tasks where AssignedPerson 
-included (pre-fetched) and optionally filtered by some conditions. We can freely use 
-Context (EF's DBContext) object and database in repositories. ASP.NET Boilerplate manages database connection, transaction, creating and disposing the DbContext for us (See <a href="http://www.aspnetboilerplate.com/Pages/Documents/Repositories"> documentation</a> for more information)</p>
-
-<p>Implementing PersonRepository is much simpler since it does not define any additional methods:</p>
-
-<pre lang="cs">
-public class PersonRepository : SimpleTaskSystemRepositoryBase&lt;Person&gt;, IPersonRepository
-{
-}</pre>
+<p>GetAllWithPeople is our specific method to get tasks where AssignedPerson included (pre-fetched) and optionally filtered by some conditions. We can freely use Context (EF&#39;s DBContext) object and database in repositories. ASP.NET Boilerplate manages database connection, transaction, creating and disposing the DbContext for us (See <a href="http://www.aspnetboilerplate.com/Pages/Documents/Repositories"> documentation</a> for more information)</p>
 
 <h2 id="ArticleBuildAppServices">Build application services</h2>
 
@@ -312,18 +288,19 @@ public interface ITaskAppService : IApplicationService
 
 <p><strong>ITaskAppService</strong> extends <strong>IApplicationService</strong>. Thus, ASP.NET Boilerplate automatically provides some features for this class (like dependency injection and validation). Now, let&#39;s implement ITaskAppService:</p>
 
-<pre lang="cs">public class TaskAppService : ApplicationService, ITaskAppService
+<pre lang="cs">
+public class TaskAppService : ApplicationService, ITaskAppService
 {
     //These members set in constructor using constructor injection.
         
     private readonly ITaskRepository _taskRepository;
-    private readonly IPersonRepository _personRepository;
+    private readonly IRepository&lt;Person&gt; _personRepository;
         
     /// &lt;summary&gt;
     ///In constructor, we can get needed classes/interfaces.
     ///They are sent here by dependency injection system automatically.
     /// &lt;/summary&gt;
-    public TaskAppService(ITaskRepository taskRepository, IPersonRepository personRepository)
+    public TaskAppService(ITaskRepository taskRepository, IRepository&lt;Person&gt; personRepository)
     {
         _taskRepository = taskRepository;
         _personRepository = personRepository;
@@ -349,7 +326,7 @@ public interface ITaskAppService : IApplicationService
         //Retrieving a task entity with given id using standard Get method of repositories.
         var task = _taskRepository.Get(input.TaskId);
 
-        //Updating changed peoperties of the retrieved task entity.
+        //Updating changed properties of the retrieved task entity.
 
         if (input.State.HasValue)
         {
@@ -369,7 +346,7 @@ public interface ITaskAppService : IApplicationService
     public void CreateTask(CreateTaskInput input)
     {
         //We can use Logger, it&#39;s defined in ApplicationService class.
-        Logger.Info(&quot;Creating a new task with description: &quot; + input.Description);
+        Logger.Info(&quot;Creating a task for input: &quot; + input);
 
         //Creating a new Task entity with given input&#39;s properties
         var task = new Task { Description = input.Description };
@@ -384,8 +361,9 @@ public interface ITaskAppService : IApplicationService
     }
 }</pre>
 
-<p><strong>TaskAppService</strong> uses repositories for database operations. It gets references in it&#39;s constructor via <strong>constructor injection</strong> 
-pattern. ASP.NET Boilerplate naturally implements dependency injection, so we can use constructor injection or property injection freely (See more on dependency injection in ASP.NET Boilerplate <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dependency-Injection"> documentation</a>).</p>
+<p><strong>TaskAppService</strong> uses repositories for database operations. It gets references in it&#39;s constructor via <strong>constructor injection</strong> pattern. ASP.NET Boilerplate naturally implements dependency injection, so we can use constructor injection or property injection freely (See more on dependency injection in ASP.NET Boilerplate <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dependency-Injection"> documentation</a>).</p>
+
+<p>Notice that we&#39;re using PersonRepository by injecting <strong>IRepository&lt;Person&gt;</strong>. ASP.NET Boilerplate automatically creates repositories for our entities. If default methods of IRepository enough for us, we don&#39;t have to create repository classes.</p>
 
 <p>Application service methods works with Data Transfer Objects (DTOs). It&#39;s a best practice and I definitely suggest to use this pattern. But you don&#39;t have to do it as long as you can deal with <a href="http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects"> problems</a> of exposing Entities to presentation layer.</p>
 
@@ -395,10 +373,7 @@ pattern. ASP.NET Boilerplate naturally implements dependency injection, so we ca
 
 <p>In the <strong>CreateTask</strong> method, I simply created a new Task and inserted to database using the IRepository&#39;s Insert method.</p>
 
-<p>ASP.NET Boilerplate's <strong>ApplicationService</strong> class has some properties to make developing application services easier. For example, it defines a <strong>Logger</strong> property for logging. So, we derived TaskAppService from ApplicationService and used 
-it's Logger property here. It's optional to derive from this class but required 
-to implement IApplicationService (notice that ITaskAppService extends 
-IApplicationService).</p>
+<p>ASP.NET Boilerplate&#39;s <strong>ApplicationService</strong> class has some properties to make developing application services easier. For example, it defines a <strong>Logger</strong> property for logging. So, we derived TaskAppService from ApplicationService and used it&#39;s Logger property here. It&#39;s optional to derive from this class but required to implement IApplicationService (notice that ITaskAppService extends IApplicationService).</p>
 
 <h3>Validation</h3>
 
@@ -451,18 +426,14 @@ public class UpdateTaskInput : IInputDto, ICustomValidate
 
 <p>I want to expose my application services to remote clients. Thus, my AngularJs application can easily call these service methods using <strong>AJAX</strong>.</p>
 
-<p>ASP.NET Boilerplate provides an <strong>automatic</strong> way of exposing desired application service methods as ASP.NET Web API. I just use <strong>DynamicApiControllerBuilder</strong> as shown below:</p>
+<p>ASP.NET Boilerplate provides an <strong>automatic</strong> way of exposing application service methods as ASP.NET Web API. I just use <strong>DynamicApiControllerBuilder</strong> as shown below:</p>
 
 <pre lang="cs">
 DynamicApiControllerBuilder
-    .For&lt;ITaskAppService&gt;(&quot;tasksystem/task&quot;)
-    .Build();
-
-DynamicApiControllerBuilder
-    .For&lt;IPersonAppService&gt;(&quot;tasksystem/person&quot;)
+    .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof (SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     .Build();</pre>
 
-<p>We&#39;ll see how to call these services via AJAX.</p>
+<p>For this example, ASP.NET Boilerplate finds all interfaces inherits IApplicationService in Application layer assembly and creates a web api controller for each application service class. There are alternative syntaxes for fine control. We&#39;ll see how to call these services via AJAX.</p>
 
 <h2 id="ArticleDevelopSpa">Develop the SPA</h2>
 
@@ -470,40 +441,38 @@ DynamicApiControllerBuilder
 
 <p>ASP.NET Boilerplate provides a <strong>template</strong> that makes easy to start with AngularJs. The template has two pages (Home and About) with smooth transition between pages. Uses Twitter <strong>Bootstrap</strong> as HTML/CSS framework (thus, it&#39;s responsive). It&#39;s also localized into English and Turkish with ASP.NET Boilerplate&#39;s localization system (You can easly add other languages or remove one of them).</p>
 
-<p>We first change route of the template. AngularJs provides a strong rotuing 
-mechanism to map URLs to views. We will have two views: <strong>task list</strong> and <strong>new task</strong>. So, we will change route definition in <strong>app.js</strong> as shown below:</p>
+<p>We first change route of the template. ASP.NET Boilerplate template uses AngularUI-Router, the de-facto standard router of AngularJs. It provides state based routing modal. We will have two views: <strong>task list</strong> and <strong>new task</strong>. So, we will change route definition in <strong>app.js</strong> as shown below:</p>
 
 <pre lang="js">
-app.constant(&#39;routes&#39;, [
-    {
-        url: &#39;/&#39;,
-        config: {
-            templateUrl: &#39;/App/Main/views/task/list.cshtml&#39;,
-            menuText: localize(&#39;TaskList&#39;),
-            menuItem: &#39;TaskList&#39;
-        }
-    },
-    {
-        url: &#39;/new&#39;,
-        config: {
-            templateUrl: &#39;/App/Main/views/task/new.cshtml&#39;,
-            menuText: localize(&#39;NewTask&#39;),
-            menuItem: &#39;NewTask&#39;
-        }
+app.config([
+    &#39;$stateProvider&#39;, &#39;$urlRouterProvider&#39;,
+    function ($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise(&#39;/&#39;);
+        $stateProvider
+            .state(&#39;tasklist&#39;, {
+                url: &#39;/&#39;,
+                templateUrl: &#39;/App/Main/views/task/list.cshtml&#39;,
+                menu: &#39;TaskList&#39; //Matches to name of &#39;TaskList&#39; menu in SimpleTaskSystemNavigationProvider
+            })
+            .state(&#39;newtask&#39;, {
+                url: &#39;/new&#39;,
+                templateUrl: &#39;/App/Main/views/task/new.cshtml&#39;,
+                menu: &#39;NewTask&#39; //Matches to name of &#39;NewTask&#39; menu in SimpleTaskSystemNavigationProvider
+            });
     }
 ]);</pre>
 
 <p><strong>app.js</strong> is the main javascript file to configure and start our SPA. Notice that we&#39;re using <strong>cshtml files as views</strong>! Normally, html files are used as views in AngularJs. ASP.NET Boilerplate makes it possible to use cshtml files. Thus we will have the power of <strong>razor</strong> engine to generate HTML.</p>
 
-<p><strong>layout.cshtml</strong> understands this route configuration and generates the top menu. So, when you add a new route, it will apper in the top menu automatically. See it&#39;s source for details.</p>
+<p>ASP.NET Boilerplate provides an infrastructure to create and show <strong> menu</strong>s in an application. It allows to define menu in C# and use same menu both in C# and javascript. See <strong>SimpleTaskSystemNavigationProvider</strong> class for creating menu and see <strong>header.js/header.cshtml</strong> for showing menu in the angular way.</p>
 
-<p>First, I'm creating an Angular <strong>controller</strong> for the <strong>task list</strong> view:</p>
+<p>First, I&#39;m creating an Angular <strong>controller</strong> for the <strong>task list</strong> view:</p>
 
 <pre lang="js">
 (function() {
     var app = angular.module(&#39;app&#39;);
 
-    var controllerId = &#39;sts.controllers.views.task.list&#39;;
+    var controllerId = &#39;sts.views.task.list&#39;;
     app.controller(controllerId, [
         &#39;$scope&#39;, &#39;abp.services.tasksystem.task&#39;,
         function($scope, taskService) {
@@ -520,11 +489,14 @@ app.constant(&#39;routes&#39;, [
             });
 
             vm.refreshTasks = function() {
-                taskService.getTasks({
-                    state: $scope.selectedTaskState &gt; 0 ? $scope.selectedTaskState : null
-                }).success(function(data) {
-                    vm.tasks = data.tasks;
-                });
+                abp.ui.setBusy( //Set whole page busy until getTasks complete
+                    null,
+                    taskService.getTasks({ //Call application service method directly from javascript
+                        state: $scope.selectedTaskState &gt; 0 ? $scope.selectedTaskState : null
+                    }).success(function(data) {
+                        vm.tasks = data.tasks;
+                    })
+                );
             };
 
             vm.changeTaskState = function(task) {
@@ -551,7 +523,7 @@ app.constant(&#39;routes&#39;, [
     ]);
 })();</pre>
 
-<p>I defined name of the controller as &#39;<strong>sts.controllers.views.task.list</strong>&#39;. This my convention (for scalable code-base) but you can simply name it as &#39;ListController&#39;. AngularJs also uses <strong>dependency injection</strong>. We&#39;re injecting &#39;<strong>$scope</strong>&#39; and &#39;<strong>abp.services.tasksystem.task</strong>&#39; here. First one is Angular&#39;s scope variable, second one is the automatically created javascript service proxy for ITaskAppService (we built it before in &#39;Build Web API services&#39; section).</p>
+<p>I defined name of the controller as &#39;<strong>sts.views.task.list</strong>&#39;. This my convention (for scalable code-base) but you can simply name it as &#39;ListController&#39;. AngularJs also uses <strong>dependency injection</strong>. We&#39;re injecting &#39;<strong>$scope</strong>&#39; and &#39;<strong>abp.services.tasksystem.task</strong>&#39; here. First one is Angular&#39;s scope variable, second one is the automatically created javascript service proxy for ITaskAppService (we built it before in &#39;Build Web API services&#39; section).</p>
 
 <p>ASP.NET Boilerplate provides infrastructure to use same <a href="http://www.aspnetboilerplate.com/Pages/Documents/Localization"> localization</a> texts both in server and client (see it&#39;s documentation for details).&nbsp;</p>
 
@@ -562,7 +534,7 @@ app.constant(&#39;routes&#39;, [
 <p>Let&#39;s see the view side of task list:</p>
 
 <pre lang="html">
-&lt;div class=&quot;panel panel-default&quot; <strong>ng-controller</strong>=&quot;sts.controllers.views.task.list as vm&quot;&gt;
+&lt;div class=&quot;panel panel-default&quot; <strong>ng-controller</strong>=&quot;sts.views.task.list as vm&quot;&gt;
 
     &lt;div class=&quot;panel-heading&quot; style=&quot;position: relative;&quot;&gt;
         &lt;div class=&quot;row&quot;&gt;
@@ -632,17 +604,30 @@ app.constant(&#39;routes&#39;, [
 &lt;/localizationDictionary&gt;
 </pre>
 
+<h2 id="ArticleUnitTest">Unit testing</h2>
+
+<p>ASP.NET Boilerplate is designed to be testable. I authored an article to show unit and integration testing for ABP based projects. See the article:&nbsp;<a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor">Unit testing in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate</a>.</p>
+
 <h2 id="ArticleSummary">Summary</h2>
 
-<p>In this article, I demonstrated how to develop an NLayered ASP.NET MVC web application with a SPA and responsive user interface. I used ASP.NET Boilerplate since it makes easy to develop such applications using best practices and saves our time.</p>
+<p>In this article, I demonstrated how to develop an NLayered ASP.NET MVC web application with a SPA and responsive user interface. I used ASP.NET Boilerplate since it makes easy to develop such applications using best practices and saves our time. Use these links for moe:</p>
 
-<p>I did write an article &quot;<a href="http://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate">Introduction to ASP.NET Boilerplate</a>&quot; that explains ASP.NET Boilerplate in more deep. Also, you can check the <a href="http://www.aspnetboilerplate.com/Pages/Documents">documentation</a> for more information. Finally, you can get source codes on <a href="https://github.com/aspnetboilerplate">github repository</a>. If you want to be informed about ASP.NET Boilerplate, follow <a href="https://twitter.com/aspboilerplate">@aspboilerplate</a> on twitter.</p>
+<ul>
+	<li>Official site and documentation: <a href="http://www.aspnetboilerplate.com/">aspnetboilerplate.com</a></li>
+	<li>Official forum: <a href="http://forum.aspnetboilerplate.com/">forum.aspnetboilerplate.com</a></li>
+	<li>Github repositories: <a href="https://github.com/aspnetboilerplate">github.com/aspnetboilerplate</a></li>
+	<li>Follow on twitter: <a href="https://twitter.com/aspboilerplate">@aspboilerplate</a></li>
+	<li>Enterprise startup template:&nbsp;<a href="http://aspnetzero.com">aspnetzero.com</a></li>
+</ul>
 
 <h2 id="ArticleHistory">Article history</h2>
 
 <ul>
-	<li><strong>2014-09-08</strong>: Updated article and sample project for ABP 
-	v0.3.2.</li>
+	<li><strong>2015-06-08</strong>: Updated article and sample project for ABP v0.6.3.1.</li>
+	<li><strong>2015-02-20</strong>: Added link to unit test article and updated the sample project</li>
+	<li><strong>2015-01-05</strong>: Updated sample project for ABP v0.5.</li>
+	<li><strong>2014-11-03</strong>: Updated article and sample project for ABP v0.4.1.</li>
+	<li><strong>2014-09-08</strong>: Updated article and sample project for ABP v0.3.2.</li>
 	<li><strong>2014-08-17</strong>: Updated sample project to ABP v0.3.1.2.</li>
 	<li><strong>2014-07-22</strong>: Updated sample project to ABP v0.3.0.1.</li>
 	<li><strong>2014-07-11</strong>: Added screenshot of &#39;Enable-Migrations&#39; command.</li>
@@ -653,7 +638,6 @@ app.constant(&#39;routes&#39;, [
 <h2 id="ArticleReferences">References</h2>
 
 <p>[1] ASP.NET Boilerplate official website: <a href="http://www.aspnetboilerplate.com">http://www.aspnetboilerplate.com</a></p>
-
 
 <!-- END OF THE ARTICLE -->
 

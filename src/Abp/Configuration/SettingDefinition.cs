@@ -1,4 +1,5 @@
-﻿using Abp.Localization;
+﻿using System;
+using Abp.Localization;
 
 namespace Abp.Configuration
 {
@@ -31,6 +32,12 @@ namespace Abp.Configuration
         public SettingScopes Scopes { get; private set; }
 
         /// <summary>
+        /// Is this setting inherited from parent scopes.
+        /// Default: True.
+        /// </summary>
+        public bool IsInherited { get; set; }
+
+        /// <summary>
         /// Gets/sets group for this setting.
         /// </summary>
         public SettingDefinitionGroup Group { get; private set; }
@@ -43,7 +50,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Can clients see this setting and it's value.
         /// It maybe dangerous for some settings to be visible to clients (such as email server password).
-        /// Defaut: false.
+        /// Default: false.
         /// </summary>
         public bool IsVisibleToClients { get; private set; }
 
@@ -56,9 +63,15 @@ namespace Abp.Configuration
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>
-        /// <param name="isVisibleToClients">Can clients see this setting and it's value</param>
-        public SettingDefinition(string name, string defaultValue, ILocalizableString displayName = null, SettingDefinitionGroup group = null, ILocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false)
+        /// <param name="isVisibleToClients">Can clients see this setting and it's value. Default: false</param>
+        /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
+        public SettingDefinition(string name, string defaultValue, ILocalizableString displayName = null, SettingDefinitionGroup group = null, ILocalizableString description = null, SettingScopes scopes = SettingScopes.Application, bool isVisibleToClients = false, bool isInherited = true)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             Name = name;
             DefaultValue = defaultValue;
             DisplayName = displayName;
@@ -66,6 +79,7 @@ namespace Abp.Configuration
             Description = description;
             Scopes = scopes;
             IsVisibleToClients = isVisibleToClients;
+            IsInherited = isInherited;
         }
     }
 }

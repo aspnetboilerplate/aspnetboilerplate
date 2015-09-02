@@ -1,12 +1,13 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
+using System.Threading.Tasks;
 using Abp.Application.Navigation;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.Runtime.Session;
 
 namespace Abp.Web.Navigation
 {
-    internal class NavigationScriptManager : INavigationScriptManager, ISingletonDependency
+    internal class NavigationScriptManager : INavigationScriptManager, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
 
@@ -18,9 +19,9 @@ namespace Abp.Web.Navigation
             AbpSession = NullAbpSession.Instance;
         }
 
-        public string GetScript()
+        public async Task<string> GetScriptAsync()
         {
-            var userMenus = _userNavigationManager.GetMenus(AbpSession.UserId);
+            var userMenus = await _userNavigationManager.GetMenusAsync(AbpSession.UserId);
 
             var sb = new StringBuilder();
             sb.AppendLine("(function() {");
@@ -44,7 +45,7 @@ namespace Abp.Web.Navigation
             return sb.ToString();
         }
 
-        private void AppendMenu(StringBuilder sb, UserMenu menu)
+        private static void AppendMenu(StringBuilder sb, UserMenu menu)
         {
             sb.AppendLine("        '" + menu.Name + "': {");
 
@@ -53,6 +54,11 @@ namespace Abp.Web.Navigation
             if (menu.DisplayName != null)
             {
                 sb.AppendLine("            displayName: '" + menu.DisplayName + "',");
+            }
+
+            if (menu.CustomData != null)
+            {
+                sb.AppendLine("            customData: " + JsonHelper.ConvertToJson(menu.CustomData, true) + ",");
             }
 
             sb.Append("            items: ");
@@ -78,11 +84,12 @@ namespace Abp.Web.Navigation
             sb.AppendLine("            }");
         }
 
-        private void AppendMenuItem(int indentLength, StringBuilder sb, UserMenuItem menuItem)
+        private static void AppendMenuItem(int indentLength, StringBuilder sb, UserMenuItem menuItem)
         {
             sb.AppendLine("{");
 
             sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + menuItem.Name + "',");
+            sb.AppendLine(new string(' ', indentLength + 4) + "order: '" + menuItem.Order + "',");
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
             {
@@ -97,6 +104,11 @@ namespace Abp.Web.Navigation
             if (menuItem.DisplayName != null)
             {
                 sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + menuItem.DisplayName.Replace("'", @"\'") + "',");
+            }
+
+            if (menuItem.CustomData != null)
+            {
+                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + JsonHelper.ConvertToJson(menuItem.CustomData, true) + ",");
             }
 
             sb.Append(new string(' ', indentLength + 4) + "items: [");

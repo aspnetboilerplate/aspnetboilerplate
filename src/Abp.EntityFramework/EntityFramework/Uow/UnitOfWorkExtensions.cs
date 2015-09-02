@@ -4,9 +4,19 @@ using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Uow
 {
-    internal static class UnitOfWorkExtensions
+    /// <summary>
+    /// Extension methods for UnitOfWork.
+    /// </summary>
+    public static class UnitOfWorkExtensions
     {
-        public static TDbContext GetDbContext<TDbContext>(this IUnitOfWork unitOfWork) where TDbContext : DbContext
+        /// <summary>
+        /// Gets a DbContext as a part of active unit of work.
+        /// This method can be called when current unit of work is an <see cref="EfUnitOfWork"/>.
+        /// </summary>
+        /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
+        /// <param name="unitOfWork">Current (active) unit of work</param>
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork) 
+            where TDbContext : DbContext
         {
             if (unitOfWork == null)
             {

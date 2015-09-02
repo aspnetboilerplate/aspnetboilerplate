@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Abp.Authorization
 {
@@ -8,40 +9,38 @@ namespace Abp.Authorization
     internal class PermissionDictionary : Dictionary<string, Permission>
     {
         /// <summary>
-        /// Adds permissions to dictionary in given group and it's all child groups recursively.
+        /// Adds all child permissions of current permissions recursively.
+        /// This is needed, because, 
         /// </summary>
-        public void AddGroupPermissionsRecursively(PermissionGroup permissionGroup)
+        public void AddAllPermissions()
         {
-            //Add permissions in given group
-            foreach (var permission in permissionGroup.Permissions)
+            foreach (var permission in Values.ToList())
             {
                 AddPermissionRecursively(permission);
-            }
-
-            //Add permissions in all child groups recursively
-            foreach (var childGroup in permissionGroup.Children)
-            {
-                AddGroupPermissionsRecursively(childGroup);
             }
         }
 
         /// <summary>
         /// Adds a permission and it's all child permissions to dictionary.
         /// </summary>
-        /// <param name="permission"></param>
+        /// <param name="permission">Permission to be added</param>
         private void AddPermissionRecursively(Permission permission)
         {
             //Prevent multiple adding of same named permission.
             Permission existingPermission;
             if (TryGetValue(permission.Name, out existingPermission))
             {
-                throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);
+                if (existingPermission != permission)
+                {
+                    throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);                    
+                }
+            }
+            else
+            {
+                this[permission.Name] = permission;
             }
 
-            //Add permission
-            this[permission.Name] = permission;
-
-            //Add child permissions
+            //Add child permissions (recursive call)
             foreach (var childPermission in permission.Children)
             {
                 AddPermissionRecursively(childPermission);

@@ -1,7 +1,11 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Events.Bus.Entities;
+using Abp.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using NHibernate;
 using NHibernate.Type;
 
@@ -9,6 +13,8 @@ namespace Abp.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {
+        public IEntityChangedEventHelper EntityChangedEventHelper { get; set; }
+
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
 
@@ -32,7 +38,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "CreationTime")
                     {
-                        state[i] = (entity as IHasCreationTime).CreationTime = DateTime.Now; //TODO: UtcNow?
+                        state[i] = (entity as IHasCreationTime).CreationTime = Clock.Now;
                     }
                 }
             }
@@ -48,6 +54,8 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
+
+            EntityChangedEventHelper.TriggerEntityCreatedEvent(entity);
 
             return base.OnSave(entity, id, state, propertyNames, types);
         }
@@ -86,7 +94,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "LastModificationTime")
                     {
-                        currentState[i] = (entity as IModificationAudited).LastModificationTime = DateTime.Now; //TODO: UtcNow?
+                        currentState[i] = (entity as IModificationAudited).LastModificationTime = Clock.Now;
                     }
                     else if (propertyNames[i] == "LastModifierUserId")
                     {
@@ -98,7 +106,7 @@ namespace Abp.NHibernate.Interceptors
             //Set deletion audits
             if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
             {
-                //@hikalkan: Is deleted bofore? Normally, a deleted entity should not e updated later but I preferred to check it.
+                //Is deleted before? Normally, a deleted entity should not be updated later but I preferred to check it.
                 var previousIsDeleted = false;
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
@@ -115,7 +123,7 @@ namespace Abp.NHibernate.Interceptors
                     {
                         if (propertyNames[i] == "DeletionTime")
                         {
-                            currentState[i] = (entity as IDeletionAudited).DeletionTime = DateTime.Now; //TODO: UtcNow?
+                            currentState[i] = (entity as IDeletionAudited).DeletionTime = Clock.Now;
                         }
                         else if (propertyNames[i] == "DeleterUserId")
                         {
@@ -125,7 +133,23 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
+            if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
+            {
+                EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+            }
+            else
+            {
+                EntityChangedEventHelper.TriggerEntityUpdatedEvent(entity);
+            }
+
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types);
+        }
+
+        public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
+            EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+
+            base.OnDelete(entity, id, state, propertyNames, types);
         }
     }
 }

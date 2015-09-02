@@ -9,8 +9,6 @@
 
 <body>
 
-<!-- START OF THE DOCUMENT -->
-
 <ul>
 	<li><a href="#DocEventBus">EventBus</a><ul>
 		<li><a href="#DocGetDefaultEventBus">Getting the default instance</a></li>
@@ -85,10 +83,17 @@ triggers this event when it automatically handles any exception. This is
 especially useful if you want to get more information about exceptions (even 
 ASP.NET Boilerplate automatically logs all exceptions). You can register to this 
 event to be informed when an exception occurs.</p>
-<p>There are also generic event data classes for entity changes (create, update 
-and delete). They are just helper classes, not triggered by ASP.NET Boilerplate. 
-You can use and trigger they for entities you want. They are defined in <strong>
-Abp.Events.Bus.Entities</strong> namespace.</p>
+<p>There are also generic event data classes for entity changes: <strong>
+EntityCreatedEventData&lt;TEntity&gt;</strong>, <strong>
+EntityUpdatedEventData&lt;TEntity&gt;</strong> and <strong>
+EntityDeletedEventData&lt;TEntity&gt;</strong>. They are defined in <strong>
+Abp.Events.Bus.Entities</strong> namespace. These events are automatically 
+triggered by ASP.NET Boilerplate when an entity is inserted, updated or deleted. 
+If you have a Person entity, can register to EntityCreatedEventData&lt;Person&gt; to 
+be informed when a new Person created and inserted to database. These events 
+also supports inheritance. If Student class derived from Person class and you 
+registered to EntityCreatedEventData&lt;Person&gt;, you will be informed when a Person 
+or Student inserted.</p>
 <h3 id="DocTriggerEvents">Triggering events</h3>
 <p>Triggering an event is simple:</p>
 <pre lang="cs">public class TaskAppService : ApplicationService
@@ -111,10 +116,6 @@ Abp.Events.Bus.Entities</strong> namespace.</p>
 EventBus.Trigger(this, new TaskCompletedEventData { TaskId = 42 }); //Set 'event source' as 'this'
 EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)
 </pre>
-<p>If you're in a unit of work, you can call EventBus.<strong>TriggerUow</strong> 
-extension method to trigger an event only if current unit of work successfully 
-completes (See <a href="/Pages/Documents/Unit-Of-Work#DocSuccessHandler">unit of 
-work documentation</a>).</p>
 <h3 id="DocHandleEvents">Handling events</h3>
 
 <p>To handle an event, you should implement <strong>IEventHandler&lt;T&gt;</strong> 
@@ -195,13 +196,7 @@ occures, it uses dependency injection to get a reference to the handler and
 releases the handler after handling the event. This is the <strong>suggested</strong> 
 way of using event bus in ASP.NET Boilerplate. </p>
 <h4 id="DocManualRegister">Manually</h4>
-<p>You can also manually register to events. Use manual registration carefully. 
-In a web application, registering to an event can be done in application start 
-for example. It's not true to register to an event during a web request since 
-registered class remains registered after request complete and it re-registers in next 
-request. Then it's may be called multiple times for same event and this cause 
-problems for your application. Also, this registration does not use dependency injection 
-system.</p>
+<p>It is also possible to manually register to events but use it with caution. In a web application, event registration should be done at application start. It's not a good approach to register to an event in a web request since registered classes remain registered after request completion and keep re-registering for each request. This may cause problems for your application since registered class can be called multiple times. Also keep in mind that manual registration does not use dependency injection system.</p>
 <p>There are some overloads of register method of the event bus. The simplest 
 one waits a delegate (or a lambda):</p>
 <pre lang="cs">EventBus.Register&lt;TaskCompletedEventData&gt;(eventData =&gt;
@@ -269,8 +264,6 @@ Unregistering handler object must be the same object which is registered before.
 <p>Lastly, EventBus provides a <strong>UnregisterAll&lt;T&gt;()</strong> method to 
 unregister all handlers of an event and <strong>UnregisterAll()</strong> method 
 to unregister all handlers of all events.</p>
-
-<!-- END OF THE DOCUMENT -->
 
 </body>
 

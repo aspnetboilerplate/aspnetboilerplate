@@ -9,13 +9,12 @@
 
 <body>
 
-<!-- START OF THE DOCUMENT -->
-
 <ul>
 	<li><a href="#DocEntityClasses">Entity classes</a></li>
 	<li><a href="#DocConventionalInterfaces">Conventional interfaces</a><ul>
 		<li><a href="#DocAuditing">Auditing</a></li>
 		<li><a href="#DocSoftDelete">Soft delete</a></li>
+		<li><a href="#DocActivePassive">Active/Passive</a></li>
 	</ul>
 	</li>
 	<li><a href="#DocIEntityInterfaces">IEntity interfaces</a></li>
@@ -154,14 +153,24 @@ since it inherits all:</p>
 <p>&nbsp;As a shortcut, you can derive your entity from <strong>
 FullAuditedEntity</strong> class that implements all.</p>
 <p>NOTE: All audit interfaces and classes have a generic version for defining navigation property 
-your to <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt;).&nbsp;</p>
+to your <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt; and 
+FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).&nbsp;</p>
+<h4 id="DocActivePassive">Active/Passive</h4>
+<p>Some entities need to be marked as Active or Passive. Then you may take 
+action upon active/passive state of the entity. You can implement <strong>
+IPassivable</strong> interface that is created for this reason. It defines
+<strong>IsActive</strong> property.</p>
+<p>If your entity will be active on first creation, you can set IsActive to true 
+in the constructor.</p>
+<p>This is different than soft delete (IsDeleted). If an entity is soft deleted, 
+it can not be retrieved from database (ABP prevents it as default). But, for 
+active/passive entities, it's completely up to you to control getting entities.</p>
 <h3 id="DocIEntityInterfaces">IEntity interfaces</h3>
-<p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (<strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
+<p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (and <strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
 If you do not want to derive from Entity class, you can implement these 
-interfaces directly. But this is not the suggested way, unless you have a good 
+interfaces directly. There are also corresponding interfaces for other entity 
+classes. But this is not the suggested way, unless you have a good 
 reason to do not derive from Entity classes.</p>
-
-<!-- END OF THE DOCUMENT -->
 
 </body>
 

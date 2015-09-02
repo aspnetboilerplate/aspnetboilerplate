@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Reflection;
 using Abp.Dependency;
-using Abp.IO;
 using Abp.IO.Extensions;
 
 namespace Abp.Resources.Embedded
@@ -23,6 +23,7 @@ namespace Abp.Resources.Embedded
             _resourceCache = new ConcurrentDictionary<string, EmbeddedResourceInfo>();
         }
 
+        /// <inheritdoc/>
         public void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace)
         {
             if (_resourcePaths.ContainsKey(rootPath))
@@ -33,6 +34,7 @@ namespace Abp.Resources.Embedded
             _resourcePaths[rootPath] = new EmbeddedResourcePathInfo(rootPath, assembly, resourceNamespace);
         }
 
+        /// <inheritdoc/>
         public EmbeddedResourceInfo GetResource(string fullPath)
         {
             //Get from cache if exists!
@@ -56,7 +58,7 @@ namespace Abp.Resources.Embedded
 
         private EmbeddedResourcePathInfo GetPathInfoForFullPath(string fullPath)
         {
-            foreach (var resourcePathInfo in _resourcePaths.Values)
+            foreach (var resourcePathInfo in _resourcePaths.Values.ToImmutableList()) //TODO@hikalkan: Test for multi-threading (possible multiple enumeration problem).
             {
                 if (fullPath.StartsWith(resourcePathInfo.Path))
                 {

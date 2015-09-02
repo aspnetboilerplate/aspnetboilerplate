@@ -1,121 +1,179 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Reflection;
 using Castle.Core.Internal;
+using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
     /// <summary>
-    /// Implements Unit of work for NHibernate.
+    /// Implements Unit of work for Entity Framework.
     /// </summary>
-    public class EfUnitOfWork : UnitOfWorkBase
+    public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        /// <summary>
-        /// List of DbContexes actively used in this unit of work.
-        /// </summary>
         private readonly IDictionary<Type, DbContext> _activeDbContexts;
-
-        /// <summary>
-        /// Reference to the currently running transcation.
-        /// </summary>
+        private readonly IIocResolver _iocResolver;
         private TransactionScope _transaction;
 
-        private readonly IIocManager _iocManager;
-
         /// <summary>
-        /// Is this object disposed?
-        /// Used to prevent multiple dispose.
+        /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
-        private bool _disposed;
-
-        public EfUnitOfWork(IIocManager iocManager)
+        public EfUnitOfWork(IIocResolver iocResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(defaultOptions)
         {
-            _iocManager = iocManager;
+            _iocResolver = iocResolver;
             _activeDbContexts = new Dictionary<Type, DbContext>();
         }
 
-        public override void Begin()
+        protected override void BeginUow()
         {
-            try
+            if (Options.IsTransactional == true)
             {
-                _activeDbContexts.Clear();
-                var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted };
-                if (IsTransactional)
+                var transactionOptions = new TransactionOptions
                 {
-                    _transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions); //Required or RequiresNew?
+                    IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+                };
+
+                if (Options.Timeout.HasValue)
+                {
+                    transactionOptions.Timeout = Options.Timeout.Value;
                 }
-            }
-            catch
-            {
-                Dispose();
-                throw;
+
+                _transaction = new TransactionScope(
+                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
+                    transactionOptions,
+                    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
+                    );
             }
         }
 
         public override void SaveChanges()
         {
-            _activeDbContexts.Values.ForEach(dbContext => dbContext.SaveChanges());
+            _activeDbContexts.Values.ForEach(SaveChangesInDbContext);
         }
 
-        public override void End()
+        public override async Task SaveChangesAsync()
         {
-            try
+            foreach (var dbContext in _activeDbContexts.Values)
             {
-                SaveChanges();
-                if (_transaction != null)
-                {
-                    _transaction.Complete();
-                }
-
-                TriggerSuccessHandlers();
-            }
-            finally
-            {
-                Dispose();
+                await SaveChangesInDbContextAsync(dbContext);
             }
         }
 
-        public override void Cancel()
+        protected override void CompleteUow()
         {
-            Dispose();
-        }
-
-        public override void Dispose()
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            _disposed = true;
-
+            SaveChanges();
             if (_transaction != null)
             {
-                _transaction.Dispose();
-                _transaction = null;
+                _transaction.Complete();
             }
-
-            _activeDbContexts.Values.ForEach(dbContext =>
-                                       {
-                                           dbContext.Dispose();
-                                           _iocManager.Release(dbContext);
-                                       });
-
-            _activeDbContexts.Clear();
         }
 
-        internal TDbContext GetOrCreateDbContext<TDbContext>() where TDbContext : DbContext
+        protected override async Task CompleteUowAsync()
+        {
+            await SaveChangesAsync();
+            if (_transaction != null)
+            {
+                _transaction.Complete();
+            }
+        }
+
+        protected override void ApplyDisableFilter(string filterName)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.DisableFilter(filterName);
+            }
+        }
+
+        protected override void ApplyEnableFilter(string filterName)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                activeDbContext.EnableFilter(filterName);
+            }
+        }
+
+        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
+        {
+            foreach (var activeDbContext in _activeDbContexts.Values)
+            {
+                if (TypeHelper.IsFunc<object>(value))
+                {
+                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
+                }
+                else
+                {
+                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
+                }
+            }
+        }
+
+        internal TDbContext GetOrCreateDbContext<TDbContext>()
+            where TDbContext : DbContext
         {
             DbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                _activeDbContexts[typeof(TDbContext)] = dbContext = _iocManager.Resolve<TDbContext>();
+                dbContext = _iocResolver.Resolve<TDbContext>();
+
+                foreach (var filter in Filters)
+                {
+                    if (filter.IsEnabled)
+                    {
+                        dbContext.EnableFilter(filter.FilterName);
+                    }
+                    else
+                    {
+                        dbContext.DisableFilter(filter.FilterName);
+                    }
+
+                    foreach (var filterParameter in filter.FilterParameters)
+                    {
+                        if (TypeHelper.IsFunc<object>(filterParameter.Value))
+                        {
+                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
+                        }
+                        else
+                        {
+                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
+                        }
+                    }
+                }
+
+                _activeDbContexts[typeof(TDbContext)] = dbContext;
             }
 
             return (TDbContext)dbContext;
+        }
+
+        protected override void DisposeUow()
+        {
+            _activeDbContexts.Values.ForEach(dbContext =>
+            {
+                dbContext.Dispose();
+                _iocResolver.Release(dbContext);
+            });
+
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+            }
+        }
+
+        protected virtual void SaveChangesInDbContext(DbContext dbContext)
+        {
+            dbContext.SaveChanges();
+        }
+
+        protected virtual async Task SaveChangesInDbContextAsync(DbContext dbContext)
+        {
+            await dbContext.SaveChangesAsync();
         }
     }
 }

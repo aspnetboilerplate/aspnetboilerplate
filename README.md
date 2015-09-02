@@ -1,46 +1,67 @@
+
 ASP.NET Boilerplate
-===
+===================
 
-ASP.NET Boilerplate is a starting point for new modern ASP.NET MVC web applications with best practices and most popular tools!
+What is ABP?
+------------
 
-ASP.NET Boilerplate implements __NLayer architecture__ and __Domain Driven Design__ with these tools:
+ASP.NET Boilerplate is a starting point for new modern web applications using best practices and most popular tools. It's aimed to be a __SOLID__ model, a general-purpose __application framework__ and a project __template__.
 
-- Server side
-  - ASP.NET MVC and ASP.NET Web API (as web framework)
-  - Castle windsor (as Dependency Injection container)
-  - EntityFramework or NHibernate+FluentNHibernate+FluentMigrations (for ORM and DB migrations)
-  - Log4Net (for logging)
-  - AutoMapper (for DTO adapters and other mappings)
-- Client side
-  - Twitter bootstrap (as HTML & CSS framework)
-  - Less (as CSS pre-compiler)
-  - AngularJs or DurandalJs (as Single Page Application (SPA) framework)
-  - jQuery (as DOM & Ajax library)
-  - Modernizr (for feature detection)
-  - Other JS libraries: jQuery.validate, jQuery.form, jQuery.blockUI, json2
+### Framework
 
-It adds it's own techniques such as:
-- Modular architecture
+ASP.NET Boilerplate is an application framework built on latest __ASP.NET MVC__ & __Web API__ technologies. It makes easy to use dependency injection, logging, validation, exception handling, localization and so on. It makes these not only itself but also using most popular framework and libraries.
+
+### Architecture
+
+ASP.NET Boilerplate implements __NLayer architecture__ (Domain, Application, Infrastructure and Presentation Layers) and __Domain Driven Design__ (Entities, Repositories, Domain/Application Services, DTO's...). Also implements and provides a good infrastructure to implement __best practices__ such as __Dependency Injection__.
+
+### Template
+
+ASP.NET Boilerplate easily creates startup template for your project. It includes most used framework and libraries by default. Also allows you to choice __Single-Page__ (SPA: Angularjs or Durandaljs) or __Multi-Page__ (MVC) architecture, EntityFramework or NHibernate as ORM.
+
+Features
+--------
+
+### Framework
+
+These are some key features of the framework itself:
+
+- Modular and NLayered architecture
+- Multi-tenancy
+- Dependency Injection
+- Domain Driven Design
 - Unit of work implementation
-- Event bus implementation for domain events
-- Easily working with embedded resources
-- Auto-creating Web API layer for Application Services
-- Auto-creating Javascript proxy layer to use Web API layer
-- Javascript helper methods for ajax, notifications, message boxes, making UI busy...
-
-Also adds standard stuff:
-- Localization
+- Flexible Localization system
+- Automatic data filters
+- Audit logging
+- Setting management
+- Menu management
+- Authorization
 - Exception handling
 - Validation
 - Logging
+- Event bus for domain events
+- Auto-creating Web API layer for Application Services
+- Auto-creating Javascript proxy layer to use Web API layer
+- Javascript helper methods for ajax, notifications, message boxes, making UI busy...
+- Easily working with embedded resources
+- Useful extension and helper methods
 
-Beside the framework, the first module (https://github.com/aspnetboilerplate/module-zero) is being developed to implement:
-- Authentication & Authorization (Implementing ASP.NET Identity Framework)
-- User & Role management
+### Module-Zero
+
+Module-Zero is the module that implements abstract concepts of the framework, also adds some useful stuff for enterprise web applications:
+
+- Multi-tenancy
+- Role management
+- User management
+- Session management
 - Setting management
+- Audit logging
 
-See http://www.aspnetboilerplate.com for more.
+See https://github.com/aspnetboilerplate/module-zero for more
 
-An overall view of layers:
+Links
+-----
 
-![ScreenShot](https://raw.githubusercontent.com/aspnetboilerplate/aspnetboilerplate/master/AbpLayers.png)
+* Web site: http://www.aspnetboilerplate.com
+* Forum: http://forum.aspnetboilerplate.com

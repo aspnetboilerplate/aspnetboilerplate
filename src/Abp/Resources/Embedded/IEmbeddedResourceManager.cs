@@ -15,7 +15,7 @@ namespace Abp.Resources.Embedded
         /// This is an arbitrary value with any deep.
         /// </param>
         /// <param name="assembly">The assembly contains resources.</param>
-        /// <param name="resourceNamespace">Namespace in the <see cref="assembly"/> that matches to the root path</param>
+        /// <param name="resourceNamespace">Namespace in the <paramref name="assembly"/> that matches to the root path</param>
         void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace);
 
         /// <summary>

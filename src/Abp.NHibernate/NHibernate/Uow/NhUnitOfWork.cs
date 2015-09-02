@@ -1,4 +1,9 @@
+using System.Data;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
+using Abp.Transactions.Extensions;
 using NHibernate;
 
 namespace Abp.NHibernate.Uow
@@ -6,48 +11,74 @@ namespace Abp.NHibernate.Uow
     /// <summary>
     /// Implements Unit of work for NHibernate.
     /// </summary>
-    public class NhUnitOfWork : UnitOfWorkBase
+    public class NhUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
+        /// <summary>
+        /// Used to get current session values.
+        /// </summary>
+        public IAbpSession AbpSession { get; set; }
         /// <summary>
         /// Gets NHibernate session object to perform queries.
         /// </summary>
         public ISession Session { get; private set; }
 
         /// <summary>
-        /// Reference to the session factory.
+        /// <see cref="NhUnitOfWork"/> uses this DbConnection if it's set.
+        /// This is usually set in tests.
         /// </summary>
-        private readonly ISessionFactory _sessionFactory;
+        public IDbConnection DbConnection { get; set; }
 
-        /// <summary>
-        /// Reference to the currently running transcation.
-        /// </summary>
+        private readonly ISessionFactory _sessionFactory;
         private ITransaction _transaction;
 
         /// <summary>
-        /// Is this object disposed?
-        /// Used to prevent multiple dispose.
+        /// Creates a new instance of <see cref="NhUnitOfWork"/>.
         /// </summary>
-        private bool _disposed;
-
-        /// <summary>
-        /// Creates a new instance of NhUnitOfWork.
-        /// </summary>
-        /// <param name="sessionFactory"></param>
-        public NhUnitOfWork(ISessionFactory sessionFactory)
+        public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(defaultOptions)
         {
+            AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
         }
 
-        /// <summary>
-        /// Opens database connection and begins transaction.
-        /// </summary>
-        public override void Begin()
+        protected override void BeginUow()
         {
-            Session = _sessionFactory.OpenSession();
-            if (IsTransactional)
+            Session = DbConnection != null
+                ? _sessionFactory.OpenSession(DbConnection)
+                : _sessionFactory.OpenSession();
+
+            
+
+            if (Options.IsTransactional == true)
             {
-                _transaction = Session.BeginTransaction();                
+                _transaction = Options.IsolationLevel.HasValue
+                    ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
+                    : Session.BeginTransaction();
             }
+            
+            this.CheckAndSetMayHaveTenant();
+            this.CheckAndSetMustHaveTenant();
+
+        }
+
+        protected virtual void CheckAndSetMustHaveTenant()
+        {
+            if (this.IsFilterEnabled(AbpDataFilters.MustHaveTenant)) return;
+            if (AbpSession.TenantId == null) return;
+            ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
+            ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant,
+                AbpDataFilters.Parameters.TenantId,
+                AbpSession.GetTenantId()); //ApplyFilter
+        }
+
+        protected virtual void CheckAndSetMayHaveTenant()
+        {
+            if (this.IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
+            if (AbpSession.TenantId == null) return;
+            ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
+            ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant,
+                AbpDataFilters.Parameters.TenantId,
+                AbpSession.TenantId); //ApplyFilter
         }
 
         public override void SaveChanges()
@@ -55,66 +86,59 @@ namespace Abp.NHibernate.Uow
             Session.Flush();
         }
 
+        public override Task SaveChangesAsync()
+        {
+            Session.Flush();
+            return Task.FromResult(0);
+        }
+
         /// <summary>
         /// Commits transaction and closes database connection.
         /// </summary>
-        public override void End()
+        protected override void CompleteUow()
         {
-            try
+            SaveChanges();
+            if (_transaction != null)
             {
-                SaveChanges();
-                if (_transaction != null)
-                {
-                    _transaction.Commit();                    
-                }
-
-                TriggerSuccessHandlers();
-            }
-            finally
-            {
-                Dispose();
+                _transaction.Commit();
             }
         }
 
-        public override void Cancel()
+        protected override Task CompleteUowAsync()
         {
-            try
-            {
-                if (_transaction != null)
-                {
-                    _transaction.Rollback();
-                }
-            }
-            finally 
-            {
-                Dispose();
-            }
+            CompleteUow();
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// Rollbacks transaction and closes database connection.
         /// </summary>
-        public override void Dispose()
+        protected override void DisposeUow()
         {
-            if (_disposed)
+            if (_transaction != null)
             {
-                return;
+                _transaction.Dispose();
+                _transaction = null;
             }
 
-            _disposed = true;
+            Session.Dispose();
+        }
 
-            try
-            {
-                if (_transaction != null)
-                {
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-            }
-            finally
-            {
-                Session.Dispose();                
-            }
+        protected override void ApplyEnableFilter(string filterName)
+        {
+            if( Session.GetEnabledFilter(filterName) == null )
+                Session.EnableFilter(filterName);
+        }
+        protected override void ApplyDisableFilter(string filterName)
+        {
+            if ( Session.GetEnabledFilter(filterName) != null )
+                Session.DisableFilter(filterName);
+        }
+
+        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
+        {
+            Session.GetEnabledFilter(filterName)
+                .SetParameter(parameterName, value);
         }
     }
 }

@@ -7,44 +7,16 @@ namespace Abp.Modules
 {
     internal class DefaultModuleFinder : IModuleFinder
     {
-        public IAssemblyFinder AssemblyFinder { get; set; }
+        private readonly ITypeFinder _typeFinder;
 
-        public DefaultModuleFinder()
+        public DefaultModuleFinder(ITypeFinder typeFinder)
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            _typeFinder = typeFinder;
         }
 
-        public List<Type> FindAll()
+        public ICollection<Type> FindAll()
         {
-            var allModules = new List<Type>();            
-            
-            allModules.AddRange(
-                from assembly in AssemblyFinder.GetAllAssemblies()
-                from type in assembly.GetTypes()
-                where AbpModule.IsAbpModule(type)
-                select type
-                );
-
-            var currentModules = allModules.ToList();
-
-            foreach (var module in currentModules)
-            {
-                FillDependedModules(module, allModules);
-            }
-            
-            return allModules;
-        }
-
-        private void FillDependedModules(Type module, List<Type> allModules)
-        {
-            foreach (var dependedModule in AbpModule.FindDependedModuleTypes(module))
-            {
-                if (!allModules.Contains(dependedModule))
-                {
-                    allModules.Add(dependedModule);
-                    FillDependedModules(dependedModule, allModules);
-                }
-            }
+            return _typeFinder.Find(AbpModule.IsAbpModule).ToList();
         }
     }
 }

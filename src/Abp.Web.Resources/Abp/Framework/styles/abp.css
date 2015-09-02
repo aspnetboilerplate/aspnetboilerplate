@@ -2,32 +2,32 @@
   cursor: pointer;
 }
 .abp-dock-top {
-  left: 0px;
-  top: 0px;
-  right: 0px;
+  left: 0;
+  top: 0;
+  right: 0;
   position: absolute;
-  margin: 0px;
+  margin: 0;
 }
 .abp-dock-right {
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
+  right: 0;
+  top: 0;
+  bottom: 0;
   position: absolute;
-  margin: 0px;
+  margin: 0;
 }
 .abp-dock-bottom {
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   position: absolute;
-  margin: 0px;
+  margin: 0;
 }
 .abp-dock-left {
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
+  left: 0;
+  top: 0;
+  bottom: 0;
   position: absolute;
-  margin: 0px;
+  margin: 0;
 }
 .abp-busy-indicator-small {
   width: 36px;

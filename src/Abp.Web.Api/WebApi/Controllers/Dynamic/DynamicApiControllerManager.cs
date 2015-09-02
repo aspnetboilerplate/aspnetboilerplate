@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Collections;
 using Abp.Collections.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
-    /// This class is used to store dynamic controller informations.
+    /// This class is used to store dynamic controller information.
     /// </summary>
     internal static class DynamicApiControllerManager
     {
@@ -15,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic
 
         static DynamicApiControllerManager()
         {
-            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
+            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>

@@ -26,19 +26,19 @@
 		<li><a href="#DocUowRestrictions">UnitOfWork attribute restrictions</a></li>
 	</ul>
 	</li>
+	<li><a href="#DocUowOptions">Options</a></li>
 	<li><a href="#DocUowMethods">Methods</a><ul>
 		<li><a href="#DocUowSaveChanges">SaveChanges</a></li>
 	</ul>
 	</li>
-	<li><a href="#DocHandlers">Handlers</a><ul>
-		<li><a href="#DocSuccessHandler">Success handler</a></li>
+	<li><a href="#DocEvents">Events</a><ul>
 	</ul>
 	</li>
 </ul>
 
 <h3 id="DocCommonApproaches">Common connection &amp; transaction management approaches</h3>
 <p>Connection and transaction management is one of the most important concepts 
-is in an application that uses a database. When to open a connection, when to 
+in an application that uses a database. When to open a connection, when to 
 start a transaction, how to dispose the connection and so on.. </p>
 <p>As probably you know, .NET uses connection pooling. So, creating a connection 
 actually gets a connection from the pool since creating a new connection has a 
@@ -103,7 +103,8 @@ all of these automatically. Here, a sample repository:</p>
 </pre>
 <p>This sample uses NHibernate as ORM. As shown above, no database connection 
 (Session in NHibernate) open/close code is written.</p>
-<p>If a repository method calls another repository method, both uses same 
+<p>If a repository method calls another repository method (in general, if a unit 
+of work method calls another unit of work method), both uses same 
 connection &amp; transaction. The first entering method manages connection &amp; 
 transaction, others use it.</p>
 <h4 id="DocAppServices">Application services</h4>
@@ -139,7 +140,7 @@ rolls back if any exception occurs. In that way, all database operations in
 CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).</p>
 <h4 id="DocUow">Unit Of Work</h4>
 <p>Unit of work <strong>implicitly</strong> works for repository and application service methods. 
-You should <strong>explicitly </strong>use it if want to control database connection and 
+You should <strong>explicitly </strong>use it if you want to control database connection and 
 transaction somewhere else. There are two approaches for this.</p>
 <p>First and preferred approach is using <strong>UnitOfWorkAttribute</strong>. Example:</p>
 <pre lang="cs">[UnitOfWork]
@@ -151,24 +152,43 @@ public void CreatePerson(CreatePersonInput input)
 }</pre>
 <p>Thus, CreatePerson methods becomes unit of work and manages database 
 connection and transaction, both repositories use same unit of work. Note that 
-no need to UnitOfWork attribute if this is an application service method.</p>
-<p>Second appropaches is using the <strong>UnitOfWorkScope </strong>as 
+no need to UnitOfWork attribute if this is an application service method. See '<a href="#DocUowRestrictions">unit 
+of work method restrictions</a>' section.</p>
+<p>Second appropaches is using the <strong>IUnitOfWorkManager.Begin(...)</strong> 
+method as 
 shown below:</p>
-<pre lang="cs">public void CreatePerson(CreatePersonInput input)
+<pre lang="cs">public class MyService
 {
-    var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+    private readonly IPersonRepository _personRepository;
+    private readonly IStatisticsRepository _statisticsRepository;
 
-    using (var unitOfWork = new UnitOfWorkScope())
+    public MyService(IUnitOfWorkManager unitOfWorkManager, IPersonRepository personRepository, IStatisticsRepository statisticsRepository)
     {
-        _personRepository.Insert(person);
-        _statisticsRepository.IncrementPeopleCount();
+        _unitOfWorkManager = unitOfWorkManager;
+        _personRepository = personRepository;
+        _statisticsRepository = statisticsRepository;
+    }
 
-        unitOfWork.Commit();
+    public void CreatePerson(CreatePersonInput input)
+    {
+        var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
+
+        using (var unitOfWork = _unitOfWorkManager.Begin())
+        {
+            _personRepository.Insert(person);
+            _statisticsRepository.IncrementPeopleCount();
+
+            unitOfWork.Complete();
+        }
     }
 }</pre>
-<p>Thus, you can create more <strong>limited scope</strong> transactions. In this approach, you 
-should call Commit method manually. It's better and 
-shorter to use UnitOfWork attribute if you don't have a good reason.</p>
+<p>You can inject and use IUnitOfWorkManager as shown here. Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
+should call <strong>Complete</strong> method manually. If you don't call, 
+transaction is rolled back and changes are not saved. Begin method has overloads 
+to set unit of work options.</p>
+<p>It's better and 
+shorter to use <strong>UnitOfWork</strong> attribute if you don't have a good reason.</p>
 
 <h3 id="DocUowDetails">Unit of work in detail</h3>
 <h4 id="DocDisablingUow">Disabling unit of work</h4>
@@ -226,7 +246,7 @@ changes it, it can be non-transactional of course.</p>
 <p>If a unit of work method (a method declared with UnitOfWork attribute) calls 
 another unit of work method, they share same connection and transaction. First 
 method manages connection, others use it. This true for methods run in same
-<strong>Thread</strong>. Actually, when a unit of work scope begins, all codes 
+<strong>Thread</strong> (or in same request for web applications). Actually, when a unit of work scope begins, all codes 
 executing in same thread shares same connection and transaction until the unit of 
 work scope ends. This is true both for UnitOfWork attribute and UnitOfWorkScope 
 class. If you create a seperated Thread/Task, it uses own unit of work.</p>
@@ -270,8 +290,8 @@ public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
 
     return new SearchPeopleOutput { People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(people) };
 }</pre>
-<p>Here, we must use UnitOfWork attribute since ToList() method of IQueryable is 
-called in the method body, and the database connection must be open when 
+<p>Here, SearchPeople method must be unit of work since ToList() method of IQueryable is 
+called in the method body, and database connection must be open when 
 IQueryable.ToList() is executed.</p>
 <p>Like that for GetAll() method, you must use unit of work if a database 
 connection is needed out of the repository. Note that application service 
@@ -292,6 +312,26 @@ Because, ASP.NET Boilerplate uses dynamic proxying for that and private methods
 can not be seen by derived classes. UnitOfWork attribute (and any proxying) does 
 not work if you don't use <a href="/Pages/Documents/Dependency-Injection">
 dependency injection</a> and instantiate the class yourself.</p>
+
+<h3 id="DocUowOptions">Options</h3>
+<p>There are some options can be used to change behaviour of a unit of work.</p>
+<p>First, we can change default values of all unit of works in the
+<a href="/Pages/Documents/Startup-Configuration">startup configuration</a>. This 
+is generally done in PreInitialize method of our
+<a href="/Pages/Documents/Module-System">module</a>.</p>
+<pre lang="cs">public class SimpleTaskSystemCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        Configuration.UnitOfWork.IsolationLevel = IsolationLevel.ReadCommitted;
+        Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(30);
+    }
+
+    //...other module methods
+}</pre>
+<p>Second, we can override defaults for a particular unit of work. For that, <strong>
+UnitOfWork </strong> attribute constructor and IUnitOfWorkManager.<strong>Begin</strong> 
+method have overloads to get options.</p>
 <h3 id="DocUowMethods">Methods</h3>
 <p>UnitOfWork system works seamlessly and invisibly. But, in some special cases, 
 you need to call it's methods.</p>
@@ -299,15 +339,18 @@ you need to call it's methods.</p>
 <p>ASP.NET Boilerplate saves all changes at end of a unit of work, you don't 
 have to do anything. But, sometimes, you may want to save changes to database in 
 middle of a unit of work operation. In this case, you can 
-call&nbsp;UnitOfWorkScope.Current.<strong>SaveChanges()</strong> method. An example 
+inject IUnitOfWorkManager and&nbsp;call IUnitOfWorkManager.Current.<strong>SaveChanges()</strong> method. An example 
 usage may be saving changes to get Id of a new inserted
 <a href="/Pages/Documents/Entities">Entity</a> in <a href="/Pages/Documents/EntityFramework-Integration">
 EntityFramework</a>. Note that: if current unit of work is transactional, all 
 changes in the transaction are rolled back if an exception occurs, even saved 
 changes.</p>
 
-<h3 id="DocHandlers">Handlers</h3>
-<h4 id="DocSuccessHandler">Success handler</h4>
+<h3 id="DocEvents">Events</h3>
+<p>A unit of work has <strong>Completed</strong>, <strong>Failed</strong> and <strong>Disposed</strong> events. 
+You can register to these events and perform needed operations. Inject 
+IUnitOfWorkManager and use IUnitOfWorkManager.Current property to get active 
+unit of work and register to it's events.</p>
 <p>You may want to run some code when current unit of work successfully 
 completed. Example:</p>
 <pre lang="cs">public void CreateTask(CreateTaskInput input)
@@ -317,23 +360,12 @@ completed. Example:</p>
     if (input.AssignedPersonId.HasValue)
     {
         task.AssignedPersonId = input.AssignedPersonId.Value;
-        
-        UnitOfWorkScope.Current.OnSuccess(() =&gt;
-        {
-            //TODO: Send email to assigned person
-        });
+
+        _unitOfWorkManager.Current.Completed += (sender, args) =&gt; { /* TODO: Send email to assigned person */ };
     }
 
     _taskRepository.Insert(task);
 }</pre>
-<p>UnitOfWorkScope.Current.<strong>OnSuccess</strong> method accepts a 
-lambda expression (delegate) that is run when current unit of work successfully 
-completed (commited to database). You can call it multiple times and all of them 
-run in order.</p>
-<p>A usage of OnSuccess can be triggering an EventBus event. There is a 
-shortcut as EventBus.<strong>TriggerUow</strong> 
-for that (See <a href="/Pages/Documents/EventBus-Domain-Events">EventBus 
-documentation</a>).</p>
 
 </body>
 

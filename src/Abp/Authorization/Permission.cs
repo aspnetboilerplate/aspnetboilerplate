@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Localization;
+using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
@@ -41,6 +42,11 @@ namespace Abp.Authorization
         public bool IsGrantedByDefault { get; private set; }
 
         /// <summary>
+        /// Which side can use this permission.
+        /// </summary>
+        public MultiTenancySides MultiTenancySides { get; private set; }
+
+        /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children
@@ -56,22 +62,19 @@ namespace Abp.Authorization
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
-        internal Permission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        /// <param name="multiTenancySides">Which side can use this permission</param>
+        public Permission(string name, ILocalizableString displayName = null, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             if (name == null)
             {
                 throw new ArgumentNullException("name");
             }
 
-            if (displayName == null)
-            {
-                throw new ArgumentNullException("displayName");
-            }
-
             Name = name;
             DisplayName = displayName;
             IsGrantedByDefault = isGrantedByDefault;
             Description = description;
+            MultiTenancySides = multiTenancySides;
 
             _children = new List<Permission>();
         }
@@ -81,11 +84,16 @@ namespace Abp.Authorization
         /// A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
-        public Permission CreateChildPermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null)
+        public Permission CreateChildPermission(string name, ILocalizableString displayName = null, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
-            var permission = new Permission(name, displayName, isGrantedByDefault, description) { Parent = this };
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides) { Parent = this };
             _children.Add(permission);
             return permission;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[Permission: {0}]", Name);
         }
     }
 }

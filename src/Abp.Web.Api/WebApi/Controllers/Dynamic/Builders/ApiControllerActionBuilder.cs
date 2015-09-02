@@ -16,6 +16,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public string ActionName { get; private set; }
 
         /// <summary>
+        /// Selected Http verb.
+        /// </summary>
+        public HttpVerb? Verb { get; private set; }
+
+        /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
         /// </summary>
         private readonly ApiControllerBuilder<T> _controllerBuilder;
@@ -31,19 +36,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private IFilter[] _filters;
 
         /// <summary>
-        /// Selected Http verb.
-        /// </summary>
-        private HttpVerb? _verb;
-
-        /// <summary>
         /// A flag to set if no action will be created for this method.
         /// </summary>
         public bool DontCreate { get; private set; }
-
-        /// <summary>
-        /// Default HTTP verb if not set.
-        /// </summary>
-        private const HttpVerb DefaultVerb = HttpVerb.Post;
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
@@ -64,7 +59,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> WithVerb(HttpVerb verb)
         {
-            _verb = verb;
+            Verb = verb;
             return this;
         }
 
@@ -113,12 +108,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         public DynamicApiActionInfo BuildActionInfo()
         {
-            if (_verb == null)
+            if (Verb == null)
             {
-                _verb = DefaultVerb;
+                Verb = DynamicApiVerbHelper.GetDefaultHttpVerb();
             }
 
-            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo, _filters);
+            return new DynamicApiActionInfo(ActionName, Verb.Value, _methodInfo, _filters);
         }
     }
 }

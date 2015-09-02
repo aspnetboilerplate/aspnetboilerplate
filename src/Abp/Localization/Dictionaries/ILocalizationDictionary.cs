@@ -17,10 +17,10 @@ namespace Abp.Localization.Dictionaries
         /// Gets/sets a string for this dictionary with given name (key).
         /// </summary>
         /// <param name="name">Name to get/set</param>
-        string this[string name] { get; }
+        string this[string name] { get; set; }
 
         /// <summary>
-        /// Gets a <see cref="LocalizedString"/> for given <see cref="name"/>.
+        /// Gets a <see cref="LocalizedString"/> for given <paramref name="name"/>.
         /// </summary>
         /// <param name="name">Name (key) to get localized string</param>
         /// <returns>The localized string or null if not found in this dictionary</returns>

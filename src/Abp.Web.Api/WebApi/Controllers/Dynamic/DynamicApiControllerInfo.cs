@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic
@@ -15,19 +16,19 @@ namespace Abp.WebApi.Controllers.Dynamic
         public string ServiceName { get; private set; }
 
         /// <summary>
-        /// Controller type.
+        /// Service interface type.
         /// </summary>
-        public Type Type { get; private set; }
+        public Type ServiceInterfaceType { get; private set; }
 
         /// <summary>
-        /// Dyanmic proxied type.
+        /// Api Controller type.
         /// </summary>
-        public Type ProxiedType { get; private set; }
+        public Type ApiControllerType { get; private set; }
 
         /// <summary>
-        /// All actions of the controller.
+        /// Interceptor type.
         /// </summary>
-        public IDictionary<string, DynamicApiActionInfo> Actions { get; private set; }
+        public Type InterceptorType { get; private set; }
 
         /// <summary>
         /// Dynamic Action Filters for this controller.
@@ -35,19 +36,27 @@ namespace Abp.WebApi.Controllers.Dynamic
         public IFilter[] Filters { get; set; }
 
         /// <summary>
+        /// All actions of the controller.
+        /// </summary>
+        public IDictionary<string, DynamicApiActionInfo> Actions { get; private set; }
+
+        /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
         /// <param name="serviceName">Name of the service</param>
-        /// <param name="type">Controller type</param>
-        /// <param name="proxiedType">Proxied type</param>
-        public DynamicApiControllerInfo(string serviceName, Type type, Type proxiedType, IFilter[] filters = null)
+        /// <param name="serviceInterfaceType">Service interface type</param>
+        /// <param name="apiControllerType">Api Controller type</param>
+        /// <param name="interceptorType">Interceptor type</param>
+        /// <param name="filters">Filters</param>
+        public DynamicApiControllerInfo(string serviceName, Type serviceInterfaceType, Type apiControllerType, Type interceptorType, IFilter[] filters = null)
         {
             ServiceName = serviceName;
-            Type = type;
-            ProxiedType = proxiedType;
-
-            Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
+            ServiceInterfaceType = serviceInterfaceType;
+            ApiControllerType = apiControllerType;
+            InterceptorType = interceptorType;
             Filters = filters ?? new IFilter[] { }; //Assigning or initialzing the action filters.
+
+            Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }

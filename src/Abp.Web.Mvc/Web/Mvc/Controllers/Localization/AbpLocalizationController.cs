@@ -1,36 +1,24 @@
 ﻿using System;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Auditing;
 using Abp.Localization;
-using Abp.Web.Localization;
+using Abp.Timing;
 using Abp.Web.Mvc.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
-        private readonly ILocalizationScriptManager _localizationScriptManager;
-
-        public AbpLocalizationController(ILocalizationScriptManager localizationScriptManager)
-        {
-            _localizationScriptManager = localizationScriptManager;
-        }
-
-        public ContentResult GetScripts()
-        {
-            var script = _localizationScriptManager.GetLocalizationScript();
-            return Content(script, "application/x-javascript", Encoding.UTF8);
-        }
-
-        public ActionResult ChangeCulture(string cultureName, string returnUrl = "")
+        [DisableAuditing]
+        public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
             if (!GlobalizationHelper.IsValidCultureCode(cultureName))
             {
                 throw new AbpException("Unknown language: " + cultureName + ". It must be a valid culture!");
             }
 
-            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = DateTime.Now.AddYears(2) });
+            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
 
             if (Request.IsAjaxRequest())
             {
@@ -42,7 +30,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Redirect(returnUrl);
             }
 
-            return Redirect("/");
+            return Redirect(Request.ApplicationPath);
         }
     }
 }

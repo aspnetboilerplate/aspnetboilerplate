@@ -30,9 +30,10 @@ namespace Abp.Dependency
         /// <summary>
         /// Registers a type as self registration.
         /// </summary>
-        /// <typeparam name="TService">Type of the class</typeparam>
+        /// <typeparam name="T">Type of the class</typeparam>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
-        void Register<TService>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TService : class;
+        void Register<T>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+            where T : class;
 
         /// <summary>
         /// Registers a type as self registration.
@@ -52,10 +53,10 @@ namespace Abp.Dependency
             where TImpl : class, TType;
 
         /// <summary>
-        /// Registers a class as self registration.
+        /// Registers a type with it's implementation.
         /// </summary>
         /// <param name="type">Type of the class</param>
-        /// <param name="impl">The type that implements <see cref="type"/></param>
+        /// <param name="impl">The type that implements <paramref name="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton);
 

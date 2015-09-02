@@ -59,7 +59,7 @@ namespace Abp.Tests.Startup
 
     public class MyTestModuleFinder : IModuleFinder
     {
-        public List<Type> FindAll()
+        public ICollection<Type> FindAll()
         {
             return new List<Type>
                    {

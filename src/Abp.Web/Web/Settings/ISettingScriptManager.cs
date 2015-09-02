@@ -1,4 +1,6 @@
-﻿namespace Abp.Web.Settings
+﻿using System.Threading.Tasks;
+
+namespace Abp.Web.Settings
 {
     /// <summary>
     /// Define interface to get setting scripts
@@ -8,6 +10,6 @@
         /// <summary>
         /// Gets Javascript that contains setting values.
         /// </summary>
-        string GetSettingScript();
+        Task<string> GetScriptAsync();
     }
 }

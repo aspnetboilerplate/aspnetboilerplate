@@ -1,10 +1,20 @@
-﻿namespace Abp.Configuration.Startup
+﻿using Abp.Auditing;
+using Abp.Dependency;
+using Abp.Domain.Uow;
+using Abp.Events.Bus;
+
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used to configure ABP and modules on startup.
     /// </summary>
     public interface IAbpStartupConfiguration : IDictionaryBasedConfig
     {
+        /// <summary>
+        /// Gets the IOC manager associated with this configuration.
+        /// </summary>
+        IIocManager IocManager { get; }
+
         /// <summary>
         /// Used to set localization configuration.
         /// </summary>
@@ -14,6 +24,21 @@
         /// Used to configure navigation.
         /// </summary>
         INavigationConfiguration Navigation { get; }
+
+        /// <summary>
+        /// Used to configure <see cref="IEventBus"/>.
+        /// </summary>
+        IEventBusConfiguration EventBus { get; }
+
+        /// <summary>
+        /// Used to configure auditing.
+        /// </summary>
+        IAuditingConfiguration Auditing { get; }
+
+        /// <summary>
+        /// Used to configure multi-tenancy.
+        /// </summary>
+        IMultiTenancyConfig MultiTenancy { get; }
 
         /// <summary>
         /// Used to configure authorization.
@@ -36,5 +61,10 @@
         /// Modules can write extension methods to <see cref="IModuleConfigurations"/> to add module specific configurations.
         /// </summary>
         IModuleConfigurations Modules { get; }
+
+        /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        IUnitOfWorkDefaultOptions UnitOfWork { get; }
     }
 }

@@ -1,5 +1,6 @@
-using System;
+ï»¿using System;
 using System.Globalization;
+using System.Linq;
 using Abp.Extensions;
 using Shouldly;
 using Xunit;
@@ -20,10 +21,10 @@ namespace Abp.Tests.Extensions
             //Case differences
             "TurkeY".EnsureEndsWith('y').ShouldBe("TurkeYy");
             "TurkeY".EnsureEndsWith('y', StringComparison.InvariantCultureIgnoreCase).ShouldBe("TurkeY");
-            
+
             //Edge cases for Turkish 'i'.
-            "TAKSÝ".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKSÝ");
-            "TAKSÝ".EnsureEndsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("TAKSÝi");
+            "TAKSÄ°".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKSÄ°");
+            "TAKSÄ°".EnsureEndsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("TAKSÄ°i");
         }
 
         [Fact]
@@ -38,8 +39,8 @@ namespace Abp.Tests.Extensions
             "Turkey".EnsureStartsWith('t', StringComparison.InvariantCultureIgnoreCase).ShouldBe("Turkey");
 
             //Edge cases for Turkish 'i'.
-            "Ýstanbul".EnsureStartsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("Ýstanbul");
-            "Ýstanbul".EnsureStartsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("iÝstanbul");
+            "Ä°stanbul".EnsureStartsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("Ä°stanbul");
+            "Ä°stanbul".EnsureStartsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("iÄ°stanbul");
         }
 
         [Fact]
@@ -47,7 +48,7 @@ namespace Abp.Tests.Extensions
         {
             "helloWorld".ToPascalCase().ShouldBe("HelloWorld");
             "istanbul".ToPascalCase().ShouldBe("Istanbul");
-            "istanbul".ToPascalCase(new CultureInfo("tr-TR")).ShouldBe("Ýstanbul");
+            "istanbul".ToPascalCase(new CultureInfo("tr-TR")).ShouldBe("Ä°stanbul");
         }
 
         [Fact]
@@ -55,8 +56,8 @@ namespace Abp.Tests.Extensions
         {
             "HelloWorld".ToCamelCase().ShouldBe("helloWorld");
             "Istanbul".ToCamelCase().ShouldBe("istanbul");
-            "Istanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("ýstanbul");
-            "Ýstanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("istanbul");
+            "Istanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("Ä±stanbul");
+            "Ä°stanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("istanbul");
         }
 
         [Fact]
@@ -80,29 +81,58 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
+        public void NormalizeLineEndings_Test()
+        {
+            const string str = "This\r\n is a\r test \n string";
+            var normalized = str.NormalizeLineEndings();
+            var lines = normalized.SplitToLines();
+            lines.Length.ShouldBe(4);
+        }
+
+        [Fact]
+        public void NthIndexOf_Test()
+        {
+            const string str = "This is a test string";
+
+            str.NthIndexOf('i', 0).ShouldBe(-1);
+            str.NthIndexOf('i', 1).ShouldBe(2);
+            str.NthIndexOf('i', 2).ShouldBe(5);
+            str.NthIndexOf('i', 3).ShouldBe(18);
+            str.NthIndexOf('i', 4).ShouldBe(-1);
+        }
+
+        [Fact]
         public void Truncate_Test()
         {
             const string str = "This is a test string";
+            const string nullValue = null;
 
             str.Truncate(7).ShouldBe("This is");
             str.Truncate(0).ShouldBe("");
             str.Truncate(100).ShouldBe(str);
+
+            nullValue.Truncate(5).ShouldBe(null);
         }
 
         [Fact]
         public void TruncateWithPostFix_Test()
         {
             const string str = "This is a test string";
+            const string nullValue = null;
 
-            str.TruncateWithPostfix(3).ShouldBe("Thi...");
-            str.TruncateWithPostfix(12).ShouldBe("This is a te...");
-            str.TruncateWithPostfix(0).ShouldBe("...");
+            str.TruncateWithPostfix(3).ShouldBe("...");
+            str.TruncateWithPostfix(12).ShouldBe("This is a...");
+            str.TruncateWithPostfix(0).ShouldBe("");
             str.TruncateWithPostfix(100).ShouldBe(str);
 
-            str.TruncateWithPostfix(3, "~").ShouldBe("Thi~");
-            str.TruncateWithPostfix(12, "~").ShouldBe("This is a te~");
-            str.TruncateWithPostfix(0, "~").ShouldBe("~");
+            nullValue.Truncate(5).ShouldBe(null);
+
+            str.TruncateWithPostfix(3, "~").ShouldBe("Th~");
+            str.TruncateWithPostfix(12, "~").ShouldBe("This is a t~");
+            str.TruncateWithPostfix(0, "~").ShouldBe("");
             str.TruncateWithPostfix(100, "~").ShouldBe(str);
+
+            nullValue.TruncateWithPostfix(5, "~").ShouldBe(null);
         }
 
         [Fact]

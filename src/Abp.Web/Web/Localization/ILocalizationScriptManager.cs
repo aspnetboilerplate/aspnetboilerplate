@@ -8,14 +8,14 @@ namespace Abp.Web.Localization
     public interface ILocalizationScriptManager
     {
         /// <summary>
-        /// Gets Javascript that contains all localization informations in current culture.
+        /// Gets Javascript that contains all localization information in current culture.
         /// </summary>
-        string GetLocalizationScript();
+        string GetScript();
 
         /// <summary>
-        /// Gets Javascript that contains all localization informations in given culture.
+        /// Gets Javascript that contains all localization information in given culture.
         /// </summary>
         /// <param name="cultureInfo">Culture to get script</param>
-        string GetLocalizationScript(CultureInfo cultureInfo);
+        string GetScript(CultureInfo cultureInfo);
     }
 }

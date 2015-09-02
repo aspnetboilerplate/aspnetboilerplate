@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 
 namespace Abp.Localization.Sources
 {
@@ -16,7 +18,14 @@ namespace Abp.Localization.Sources
 
         public string Name { get { return null; } }
 
-        public void Initialize()
+        private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
+
+        private NullLocalizationSource()
+        {
+            
+        }
+
+        public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             
         }
@@ -33,12 +42,12 @@ namespace Abp.Localization.Sources
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
-            return new List<LocalizedString>();
+            return _emptyStringArray;
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
-            return new List<LocalizedString>();
+            return _emptyStringArray;
         }
     }
 }

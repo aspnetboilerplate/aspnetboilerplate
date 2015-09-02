@@ -1,79 +1,61 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.Authorization;
-using Abp.Configuration;
-using Abp.Localization;
-using Abp.Localization.Sources;
 using Abp.Runtime.Session;
-using Castle.Core.Logging;
 
 namespace Abp.Application.Services
 {
     /// <summary>
     /// This class can be used as a base class for application services. 
     /// </summary>
-    public abstract class ApplicationService : IApplicationService
+    public abstract class ApplicationService : AbpServiceBase, IApplicationService
     {
         /// <summary>
-        /// Gets current session informations.
+        /// Gets current session information.
         /// </summary>
-        public IAbpSession CurrentSession { protected get; set; }
-
+        public IAbpSession AbpSession { get; set; }
+        
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>
         public IPermissionManager PermissionManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the setting manager.
+        /// Reference to the permission checker.
         /// </summary>
-        public ISettingManager SettingManager { protected get; set; }
+        public IPermissionChecker PermissionChecker { protected get; set; }
 
         /// <summary>
-        /// Reference to the logger to write logs.
+        /// Gets current session information.
         /// </summary>
-        public ILogger Logger { protected get; set; }
-
-        /// <summary>
-        /// Gets/sets name of the localization source that is used in this controller.
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
-        /// </summary>
-        protected string LocalizationSourceName
-        {
-            get { return _localizationSource.Name; }
-            set { _localizationSource = LocalizationHelper.GetSource(value); }
-        }
-
-        private ILocalizationSource _localizationSource;
+        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected ApplicationService()
         {
-            CurrentSession = NullAbpSession.Instance;
-            Logger = NullLogger.Instance;
-            _localizationSource = NullLocalizationSource.Instance;
+            AbpSession = NullAbpSession.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language.
+        /// Checks if current user is granted for a permission.
         /// </summary>
-        /// <param name="name">Key name</param>
-        /// <returns>Localized string</returns>
-        protected virtual string L(string name)
+        /// <param name="permissionName">Name of the permission</param>
+        protected Task<bool> IsGrantedAsync(string permissionName)
         {
-            return _localizationSource.GetString(name);
+            return PermissionChecker.IsGrantedAsync(permissionName);
         }
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
+        /// Checks if current user is granted for a permission.
         /// </summary>
-        /// <param name="name">Key name</param>
-        /// <param name="culture">culture information</param>
-        /// <returns>Localized string</returns>
-        protected virtual string L(string name, CultureInfo culture)
+        /// <param name="permissionName">Name of the permission</param>
+        protected bool IsGranted(string permissionName)
         {
-            return _localizationSource.GetString(name, culture);
+            return PermissionChecker.IsGranted(permissionName);
         }
     }
 }

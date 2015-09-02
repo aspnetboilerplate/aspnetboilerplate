@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
 using System.Web;
+using Abp.Localization.Sources;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
+using Abp.Web.Configuration;
+using Abp.Web.Localization;
 
 namespace Abp.Web
 {
@@ -10,18 +13,28 @@ namespace Abp.Web
     /// </summary>
     public class AbpWebModule : AbpModule
     {
+        /// <inheritdoc/>
         public override void PreInitialize()
         {
             if (HttpContext.Current != null)
             {
-                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");                
+                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
             }
+
+            IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
         }
 
+        /// <inheritdoc/>
         public override void Initialize()
-        { 
+        {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            Configuration.Localization.Sources.Add(new XmlLocalizationSource("AbpWeb", "Localization\\AbpWeb"));
+            
+            Configuration.Localization.Sources.Add(
+                new DictionaryBasedLocalizationSource(
+                    AbpWebLocalizedMessages.SourceName,
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
+                        )));
         }
     }
 }

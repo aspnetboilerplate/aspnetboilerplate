@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Configuration;
 using NSubstitute;
 using Shouldly;
@@ -11,148 +12,172 @@ namespace Abp.Tests.Configuration
     {
         private const string MyAppLevelSetting = "MyAppLevelSetting";
         private const string MyAllLevelsSetting = "MyAllLevelsSetting";
+        private const string MyNotInheritedSetting = "MyNotInheritedSetting";
 
         [Fact]
-        public void Should_Get_Default_Values_With_No_Store_And_No_Session()
+        public async Task Should_Get_Default_Values_With_No_Store_And_No_Session()
         {
             var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
 
-            settingManager.GetSettingValue<int>(MyAppLevelSetting).ShouldBe(42);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level default value");
+            (await settingManager.GetSettingValueAsync<int>(MyAppLevelSetting)).ShouldBe(42);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level default value");
         }
 
         [Fact]
-        public void Should_Get_Stored_Application_Value_With_No_Session()
+        public async Task Should_Get_Stored_Application_Value_With_No_Session()
         {
-            var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
-            settingManager.SettingStore = new MemorySettingStore();
+            var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
+            {
+                SettingStore = new MemorySettingStore()
+            };
 
-            settingManager.GetSettingValue<int>(MyAppLevelSetting).ShouldBe(48);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level stored value");
+            (await settingManager.GetSettingValueAsync<int>(MyAppLevelSetting)).ShouldBe(48);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level stored value");
         }
 
         [Fact]
-        public void Should_Get_Correct_Values()
+        public async Task Should_Get_Correct_Values()
         {
             var session = new MyChangableSession();
 
             var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
             settingManager.SettingStore = new MemorySettingStore();
-            settingManager.Session = session;
+            settingManager.AbpSession = session;
 
             session.TenantId = 1;
 
+            //Inherited setting
+
             session.UserId = 1;
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("user 1 stored value");
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 stored value");
 
             session.UserId = 2;
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("user 2 stored value");
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 2 stored value");
 
             session.UserId = 3;
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("tenant 1 stored value"); //Because no user value in the store
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("tenant 1 stored value"); //Because no user value in the store
 
             session.TenantId = 3;
             session.UserId = 3;
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level stored value"); //Because no user and tenant value in the store
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level stored value"); //Because no user and tenant value in the store
+
+            //Not inherited setting
+
+            session.TenantId = 1;
+            session.UserId = 1;
+
+            (await settingManager.GetSettingValueForApplicationAsync(MyNotInheritedSetting)).ShouldBe("application value");
+            (await settingManager.GetSettingValueForTenantAsync(MyNotInheritedSetting, session.TenantId.Value)).ShouldBe("default-value");
+            (await settingManager.GetSettingValueAsync(MyNotInheritedSetting)).ShouldBe("default-value");
         }
 
         [Fact]
-        public void Should_Get_All_Values()
+        public async Task Should_Get_All_Values()
         {
-            var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
-            settingManager.SettingStore = new MemorySettingStore();
+            var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
+            {
+                SettingStore = new MemorySettingStore()
+            };
 
-            settingManager.GetAllSettingValues().Count.ShouldBe(2);
+            (await settingManager.GetAllSettingValuesAsync()).Count.ShouldBe(3);
 
-            settingManager.GetAllSettingValuesForApplication().Count.ShouldBe(2);
+            (await settingManager.GetAllSettingValuesForApplicationAsync()).Count.ShouldBe(3);
 
-            settingManager.GetAllSettingValuesForTenant(1).Count.ShouldBe(1);
-            settingManager.GetAllSettingValuesForTenant(2).Count.ShouldBe(0);
-            settingManager.GetAllSettingValuesForTenant(3).Count.ShouldBe(0);
+            (await settingManager.GetAllSettingValuesForTenantAsync(1)).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForTenantAsync(2)).Count.ShouldBe(0);
+            (await settingManager.GetAllSettingValuesForTenantAsync(3)).Count.ShouldBe(0);
 
-            settingManager.GetAllSettingValuesForUser(1).Count.ShouldBe(1);
-            settingManager.GetAllSettingValuesForUser(2).Count.ShouldBe(1);
-            settingManager.GetAllSettingValuesForUser(3).Count.ShouldBe(0);
+            (await settingManager.GetAllSettingValuesForUserAsync(1)).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(2)).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(3)).Count.ShouldBe(0);
         }
 
         [Fact]
-        public void Should_Change_Setting_Values()
+        public async Task Should_Change_Setting_Values()
         {
             var session = new MyChangableSession();
 
-            var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
-            settingManager.SettingStore = new MemorySettingStore();
-            settingManager.Session = session;
+            var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
+            {
+                SettingStore = new MemorySettingStore(),
+                AbpSession = session
+            };
 
             //Application level changes
 
-            settingManager.ChangeSettingForApplication(MyAppLevelSetting, "53");
-            settingManager.ChangeSettingForApplication(MyAllLevelsSetting, "application level changed value");
+            await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "53");
+            await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "54");
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "application level changed value");
 
-            settingManager.GetSettingValue<int>(MyAppLevelSetting).ShouldBe(53);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level changed value");
+            (await settingManager.SettingStore.GetSettingOrNullAsync(null, null, MyAppLevelSetting)).Value.ShouldBe("54");
+
+            (await settingManager.GetSettingValueAsync<int>(MyAppLevelSetting)).ShouldBe(54);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level changed value");
 
             //Tenant level changes
 
             session.TenantId = 1;
-            settingManager.ChangeSettingForTenant(1, MyAllLevelsSetting, "tenant 1 changed value");
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("tenant 1 changed value");
+            await settingManager.ChangeSettingForTenantAsync(1, MyAllLevelsSetting, "tenant 1 changed value");
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("tenant 1 changed value");
 
             //User level changes
 
             session.UserId = 1;
-            settingManager.ChangeSettingForUser(1, MyAllLevelsSetting, "user 1 changed value");
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("user 1 changed value");
+            await settingManager.ChangeSettingForUserAsync(1, MyAllLevelsSetting, "user 1 changed value");
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 changed value");
         }
 
         [Fact]
-        public void Should_Delete_Setting_Values_On_Default_Value()
+        public async Task Should_Delete_Setting_Values_On_Default_Value()
         {
             var session = new MyChangableSession();
             var store = new MemorySettingStore();
 
-            var settingManager = new SettingManager(CreateMockSettingDefinitionManager());
-            settingManager.SettingStore = store;
-            settingManager.Session = session;
+            var settingManager = new SettingManager(CreateMockSettingDefinitionManager())
+            {
+                SettingStore = store,
+                AbpSession = session
+            };
 
             session.TenantId = 1;
             session.UserId = 1;
 
             //We can get user's personal stored value
-            store.GetSettingOrNull(null, 1, MyAllLevelsSetting).ShouldNotBe(null);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("user 1 stored value");
+            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 stored value");
 
             //This will delete setting for the user since it's same as tenant's setting value
-            settingManager.ChangeSettingForUser(1, MyAllLevelsSetting, "tenant 1 stored value");
-            store.GetSettingOrNull(null, 1, MyAllLevelsSetting).ShouldBe(null);
+            await settingManager.ChangeSettingForUserAsync(1, MyAllLevelsSetting, "tenant 1 stored value");
+            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldBe(null);
 
             //We can get tenant's setting value
-            store.GetSettingOrNull(1, null, MyAllLevelsSetting).ShouldNotBe(null);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("tenant 1 stored value");
+            (await store.GetSettingOrNullAsync(1, null, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("tenant 1 stored value");
 
             //This will delete setting for tenant since it's same as application's setting value
-            settingManager.ChangeSettingForTenant(1, MyAllLevelsSetting, "application level stored value");
-            store.GetSettingOrNull(null, 1, MyAllLevelsSetting).ShouldBe(null);
+            await settingManager.ChangeSettingForTenantAsync(1, MyAllLevelsSetting, "application level stored value");
+            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldBe(null);
 
             //We can get application's value
-            store.GetSettingOrNull(null, null, MyAllLevelsSetting).ShouldNotBe(null);
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level stored value");
+            (await store.GetSettingOrNullAsync(null, null, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level stored value");
 
             //This will delete setting for application since it's same as the default value of the setting
-            settingManager.ChangeSettingForApplication(MyAllLevelsSetting, "application level default value");
-            store.GetSettingOrNull(null, null, MyAllLevelsSetting).ShouldBe(null);
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "application level default value");
+            (await store.GetSettingOrNullAsync(null, null, MyAllLevelsSetting)).ShouldBe(null);
 
             //Now, there is no setting value, default value should return
-            settingManager.GetSettingValue(MyAllLevelsSetting).ShouldBe("application level default value");
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level default value");
         }
 
         private static ISettingDefinitionManager CreateMockSettingDefinitionManager()
         {
             var settings = new Dictionary<string, SettingDefinition>
-                           {
-                               {MyAppLevelSetting, new SettingDefinition(MyAppLevelSetting, "42")},
-                               {MyAllLevelsSetting, new SettingDefinition(MyAllLevelsSetting, "application level default value", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)},
-                           };
+            {
+                {MyAppLevelSetting, new SettingDefinition(MyAppLevelSetting, "42")},
+                {MyAllLevelsSetting, new SettingDefinition(MyAllLevelsSetting, "application level default value", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)},
+                {MyNotInheritedSetting, new SettingDefinition(MyNotInheritedSetting, "default-value", scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false)},
+            };
 
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
 
@@ -170,42 +195,44 @@ namespace Abp.Tests.Configuration
             public MemorySettingStore()
             {
                 _settings = new List<SettingInfo>
-                            {
-                                new SettingInfo(null, null, MyAppLevelSetting, "48"),
-                                new SettingInfo(null, null, MyAllLevelsSetting, "application level stored value"),
-                                new SettingInfo(1, null, MyAllLevelsSetting, "tenant 1 stored value"),
-                                new SettingInfo(null, 1, MyAllLevelsSetting, "user 1 stored value"),
-                                new SettingInfo(null, 2, MyAllLevelsSetting, "user 2 stored value")
-                            };
+                {
+                    new SettingInfo(null, null, MyAppLevelSetting, "48"),
+                    new SettingInfo(null, null, MyAllLevelsSetting, "application level stored value"),
+                    new SettingInfo(1, null, MyAllLevelsSetting, "tenant 1 stored value"),
+                    new SettingInfo(null, 1, MyAllLevelsSetting, "user 1 stored value"),
+                    new SettingInfo(null, 2, MyAllLevelsSetting, "user 2 stored value"),
+                    new SettingInfo(null, null, MyNotInheritedSetting, "application value"),
+                };
             }
 
-            public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+
+            public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
             {
-                return _settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
+                return Task.FromResult(_settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name));
             }
 
-            public void Delete(SettingInfo setting)
+            public async Task DeleteAsync(SettingInfo setting)
             {
                 _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
 
-            public void Create(SettingInfo setting)
+            public async Task CreateAsync(SettingInfo setting)
             {
                 _settings.Add(setting);
             }
 
-            public void Update(SettingInfo setting)
+            public async Task UpdateAsync(SettingInfo setting)
             {
-                var s = GetSettingOrNull(setting.TenantId, setting.UserId, setting.Name);
+                var s = await GetSettingOrNullAsync(setting.TenantId, setting.UserId, setting.Name);
                 if (s != null)
                 {
                     s.Value = setting.Value;
                 }
             }
 
-            public List<SettingInfo> GetAll(int? tenantId, long? userId)
+            public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
             {
-                return _settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList();
+                return Task.FromResult(_settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList());
             }
         }
     }

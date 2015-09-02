@@ -40,11 +40,6 @@ namespace Abp.EntityFramework.Dependency
                 }
             }
 
-            if (ConfigurationManager.ConnectionStrings.Count == 1)
-            {
-                return ConfigurationManager.ConnectionStrings[0].Name;
-            }
-
             if (ConfigurationManager.ConnectionStrings["Default"] != null)
             {
                 return "Default";

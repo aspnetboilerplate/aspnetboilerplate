@@ -1,4 +1,5 @@
-using Abp.Dependency;
+using System.Threading.Tasks;
+using Abp.Threading;
 using Castle.DynamicProxy;
 
 namespace Abp.Domain.Uow
@@ -8,11 +9,11 @@ namespace Abp.Domain.Uow
     /// </summary>
     internal class UnitOfWorkInterceptor : IInterceptor
     {
-        private readonly IIocResolver _iocResolver;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public UnitOfWorkInterceptor(IIocResolver iocResolver)
+        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager)
         {
-            _iocResolver = iocResolver;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <summary>
@@ -21,7 +22,14 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrDefault(invocation.MethodInvocationTarget);
+            if (_unitOfWorkManager.Current != null)
+            {
+                //Continue with current uow
+                invocation.Proceed();
+                return;
+            }
+
+            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow
@@ -29,43 +37,53 @@ namespace Abp.Domain.Uow
                 return;
             }
 
-            if (UnitOfWorkScope.Current == null)
+            //No current uow, run a new one
+            PerformUow(invocation, unitOfWorkAttr.CreateOptions());
+        }
+
+        private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
+        {
+            if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {
-                //No current uow, run a new one
-                PerformUow(invocation, unitOfWorkAttr.IsTransactional != false);
+                PerformAsyncUow(invocation, options);
             }
             else
             {
-                //Continue with current uow
-                invocation.Proceed();
+                PerformSyncUow(invocation, options);
             }
         }
 
-        private void PerformUow(IInvocation invocation, bool isTransactional)
+        private void PerformSyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            using (var unitOfWork = _iocResolver.ResolveAsDisposable<IUnitOfWork>())
+            using (var uow = _unitOfWorkManager.Begin(options))
             {
-                try
-                {
-                    UnitOfWorkScope.Current = unitOfWork.Object;
-                    UnitOfWorkScope.Current.Initialize(isTransactional);
-                    UnitOfWorkScope.Current.Begin();
+                invocation.Proceed();
+                uow.Complete();
+            }
+        }
 
-                    try
-                    {
-                        invocation.Proceed();
-                        UnitOfWorkScope.Current.End();
-                    }
-                    catch
-                    {
-                        try { UnitOfWorkScope.Current.Cancel(); } catch { } //Hide exceptions on cancelling
-                        throw;
-                    }
-                }
-                finally
-                {
-                    UnitOfWorkScope.Current = null;
-                }
+        private void PerformAsyncUow(IInvocation invocation, UnitOfWorkOptions options)
+        {
+            var uow = _unitOfWorkManager.Begin(options);
+
+            invocation.Proceed();
+
+            if (invocation.Method.ReturnType == typeof(Task))
+            {
+                invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
+                    (Task)invocation.ReturnValue,
+                    async () => await uow.CompleteAsync(),
+                    exception => uow.Dispose()
+                    );
+            }
+            else //Task<TResult>
+            {
+                invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithPostActionAndFinallyAndGetResult(
+                    invocation.Method.ReturnType.GenericTypeArguments[0],
+                    invocation.ReturnValue,
+                    async () => await uow.CompleteAsync(),
+                    (exception) => uow.Dispose()
+                    );
             }
         }
     }

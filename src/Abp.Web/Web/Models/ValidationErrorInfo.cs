@@ -23,7 +23,7 @@ namespace Abp.Web.Models
         /// </summary>
         public ValidationErrorInfo()
         {
-            
+
         }
 
         /// <summary>
@@ -34,16 +34,27 @@ namespace Abp.Web.Models
         {
             Message = message;
         }
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="ValidationErrorInfo"/>.
         /// </summary>
         /// <param name="message">Validation error message</param>
         /// <param name="members">Related invalid members</param>
         public ValidationErrorInfo(string message, string[] members)
-            :this(message)
+            : this(message)
         {
             Members = members;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ValidationErrorInfo"/>.
+        /// </summary>
+        /// <param name="message">Validation error message</param>
+        /// <param name="member">Related invalid member</param>
+        public ValidationErrorInfo(string message, string member)
+            : this(message, new[] { member })
+        {
+
         }
     }
 }

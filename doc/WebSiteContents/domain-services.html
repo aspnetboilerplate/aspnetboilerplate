@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocIntro">Introduction</a></li>
+	<li><a href="#DocBases">IDomainService interface and DomainService class</a></li>
+	<li><a href="#DocExample">Example</a><ul>
+		<li><a href="#DocInterface">Creating an interface</a></li>
+		<li><a href="#DocImpl">Service implementation</a></li>
+		<li><a href="#DocUsingFromAppService">Using from application service</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocDiscussions">Some discussions</a><ul>
+		<li><a href="#DocWhyNotOnlyAppServices">Why not only application services?</a></li>
+		<li><a href="#DocHowToForceDomainService">How to force to use the domain service?</a></li>
+	</ul>
+	</li>
+</ul>
+
+<h3 id="DocIntro">Introduction</h3>
+<p>Domain Services (or just Service, in DDD) is used to perform domain 
+operations and business rules. Eric Evans describes a good Service in three 
+characteristics (in his DDD book):</p>
+<ol>
+	<li>The <strong>operation</strong> relates to a <strong>domain concept</strong> 
+	that is not a natural part of an Entity or Value Object.</li>
+	<li>The <strong>interface</strong> is defined in terms of other elements of
+	<strong>domain model</strong>.</li>
+	<li>The operation is <strong>stateless</strong>.</li>
+</ol>
+<p>Unlike <a href="/Pages/Documents/Application-Services">Application Services</a> 
+which gets/returns <a href="/Pages/Documents/Data-Transfer-Objects">Data 
+Transfer Objects</a>, a Domain Service gets/returns <strong>domain objects</strong> 
+(like <a href="/Pages/Documents/Entities">entities</a> or value types). </p>
+<p>A Domain Service can be used by Application Services and other Domain 
+Services, but not directly used by presentation layer (application service is 
+for that).</p>
+
+<h3 id="DocBases">IDomainService interface and DomainService class</h3>
+<p>ASP.NET Boilerplate defines <strong>IDomainService interface</strong> that is 
+implemented by all domain services conventionally. When it's implemented, the 
+domain service is <strong>automatically registered</strong> to
+<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> system 
+as <strong>transient</strong>.</p>
+
+<p>Also, a domain service (optionally) can inherit from <strong>DomainService 
+class</strong>. Thus, it can use power of some inherited properties for logging, 
+localization and so on... Surely, even if it does not inherit, it can inject 
+they if needs.</p>
+
+<h3 id="DocExample">Example</h3>
+<p>Assume that we have a task management system and we have business rules while 
+assigning a task to a person.</p>
+
+<h4 id="DocInterface">Creating an interface</h4>
+<p>First, we define an interface for the service (not required, but as a good 
+practice):</p>
+<pre lang="cs">public interface ITaskManager : IDomainService
+{
+    void AssignTaskToPerson(Task task, Person person);
+}</pre>
+<p>As you can see, <strong>TaskManager</strong> service works with domain objects: a
+<strong>Task</strong> and a <strong>Person</strong>. There are some conventions 
+of naming domain services. It can be TaskManager, TaskService or 
+TaskDomainService...</p>
+
+<h4 id="DocImpl">Service implementation</h4>
+<p>Let's see the implementation:</p>
+<pre lang="cs">public class TaskManager : DomainService, ITaskManager
+{
+    public const int MaxActiveTaskCountForAPerson = 3;
+
+    private readonly ITaskRepository _taskRepository;
+
+    public TaskManager(ITaskRepository taskRepository)
+    {
+        _taskRepository = taskRepository;
+    }
+
+    public void AssignTaskToPerson(Task task, Person person)
+    {
+        if (task.AssignedPersonId == person.Id)
+        {
+            return;
+        }
+
+        if (task.State != TaskState.Active)
+        {
+            throw new ApplicationException(&quot;Can not assign a task to a person when task is not active!&quot;);
+        }
+
+        if (HasPersonMaximumAssignedTask(person))
+        {
+            throw new UserFriendlyException(L(&quot;MaxPersonTaskLimitMessage&quot;, person.Name));
+        }
+
+        task.AssignedPersonId = person.Id;
+    }
+
+    private bool HasPersonMaximumAssignedTask(Person person)
+    {
+        var assignedTaskCount = _taskRepository.Count(t =&gt; t.State == TaskState.Active &amp;&amp; t.AssignedPersonId == person.Id);
+        return assignedTaskCount &gt;= MaxActiveTaskCountForAPerson;
+    }
+}</pre>
+<p>We have two business rules here:</p>
+<ul>
+	<li>A task should be in <strong>Active state</strong> in order to assign it to a new Person.</li>
+	<li>A person can have a <strong>maximum of 3</strong> active tasks.</li>
+</ul>
+
+<p>You can wonder why I throwed an <strong>ApplicationException</strong> for 
+first check and <strong>UserFriendlyException</strong> for second check (see
+<a href="/Pages/Documents/Handling-Exceptions">exception handling</a>). This is 
+not related to domain services at all. I did this for just an example, it 
+completely up to you. I thought that user interface must check a task's state 
+and should not allow us to assign it to a person. I think this is an application 
+error and we may hide it from user. Second one is harder to check by UI and we 
+can show a readable error message to the user. Just for an example.</p>
+
+<h4 id="DocUsingFromAppService">Using from application service</h4>
+<p>Now, let's see how to use TaskManager from an application service:</p>
+
+<pre lang="cs">public class TaskAppService : ApplicationService, ITaskAppService
+{
+    private readonly IRepository&lt;Task, long&gt; _taskRepository;
+    private readonly IRepository&lt;Person&gt; _personRepository;
+    private readonly ITaskManager _taskManager;
+
+    public TaskAppService(IRepository&lt;Task, long&gt; taskRepository, IRepository&lt;Person&gt; personRepository , ITaskManager taskManager)
+    {
+        _taskRepository = taskRepository;
+        _personRepository = personRepository;
+        _taskManager = taskManager;
+    }
+
+    public void AssignTaskToPerson(AssignTaskToPersonInput input)
+    {
+        var task = _taskRepository.Get(input.TaskId);
+        var person = _personRepository.Get(input.PersonId);
+
+        _taskManager.AssignTaskToPerson(task, person);
+    }
+}</pre>
+<p>Task <strong>Application Service</strong> uses given <strong>DTO</strong> (input) and 
+<strong>repositories</strong> to retrieve 
+related <strong>task</strong> and <strong>person</strong> and passes them to the 
+<strong>Task Manager</strong> (the domain 
+service).</p>
+
+<h3 id="DocDiscussions">Some discussions</h3>
+<p>Based on the example above, you may have some questions.</p>
+
+<h4 id="DocWhyNotOnlyAppServices">Why not only application services?</h4>
+<p>You can say that why application service does not implement the logic in the 
+domain service?</p>
+<p>We can simply say that it's not application service task. Because it's not a
+<strong>use-case</strong>, instead, it's a <strong>business operation</strong>. 
+We may use same 'assign a task to a user' logic in a different use-case. Say 
+that we may have <strong>another screen</strong> to somehow update the task and 
+this updating can include assigning the task to another person. So, we can use 
+same domain logic there. Also, we may have<strong> 2 different UI</strong> (one 
+mobile application and one web application) that shares same domain.</p>
+<p>If your domain is simple, will have only one UI and assigning a task to a 
+person will be done in just a single point, then you may consider to skip domain 
+services and implement the logic in your application service. This will not be a 
+best practice for DDD, but ASP.NET 
+Boilerplate does not force you for such a design.</p>
+
+<h4 id="DocHowToForceDomainService">How to force to use the domain service?</h4>
+<p>You can see that, application service simply could do that:</p>
+<pre lang="cs">public void AssignTaskToPerson(AssignTaskToPersonInput input)
+{
+    var task = _taskRepository.Get(input.TaskId);
+
+    task.AssignedPersonId = input.PersonId;
+}</pre>
+<p>The developer who write the application service may not know there is a 
+<strong>TaskManager</strong> and can directly set given <strong>PersonId</strong> to task's 
+<strong>AssignedPersonId</strong>. So, 
+how to <strong>prevent</strong> it? There are many discussions in DDD area based on these and there are some used 
+patterns. We will not go very deep. But, we 
+will provide a simple way of doing it.</p>
+<p>We can change <strong>Task</strong> entity as shown below:</p>
+<pre lang="cs">public class Task : Entity&lt;long&gt;
+{
+    public virtual int? AssignedPersonId { get; protected set; }
+
+    //...other members and codes of Task entity
+
+    public void AssignToPerson(Person person, ITaskPolicy taskPolicy)
+    {
+        taskPolicy.CheckIfCanAssignTaskToPerson(this, person);
+
+        AssignedPersonId = person.Id;
+    }
+}</pre>
+<p>We changed setter of <strong>AssignedPersonId</strong> as <strong>protected</strong>. 
+So, it can not be changed out of this Task entity class. Added an <strong>
+AssignToPerson</strong> method that takes a person and a task policy. <strong>
+CheckIfCanAssignTaskToPerson</strong> method checks if it's a valid assignment 
+and throws a proper exception if not. Then application service method will be like that:</p>
+<pre lang="cs">public void AssignTaskToPerson(AssignTaskToPersonInput input)
+{
+    var task = _taskRepository.Get(input.TaskId);
+    var person = _personRepository.Get(input.PersonId);
+
+    task.AssignToPerson(person, _taskPolicy);
+}</pre>
+<p>Now, there is no second way of assigning a task to a person. We should always 
+use AssignToPerson and can not skip business rules.</p>
+
+</body>
+
+</html>

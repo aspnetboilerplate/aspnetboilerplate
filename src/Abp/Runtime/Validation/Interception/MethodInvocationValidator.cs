@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Reflection;
 
 namespace Abp.Runtime.Validation.Interception
 {
@@ -13,7 +15,8 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     internal class MethodInvocationValidator
     {
-        private readonly object[] _arguments;
+        private readonly MethodInfo _method;
+        private readonly object[] _parameterValues;
         private readonly ParameterInfo[] _parameters;
         private readonly List<ValidationResult> _validationErrors;
 
@@ -21,10 +24,11 @@ namespace Abp.Runtime.Validation.Interception
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
         /// <param name="method">Method to be validated</param>
-        /// <param name="arguments">List of arguments those are used to call the <see cref="method"/>.</param>
-        public MethodInvocationValidator(MethodInfo method, object[] arguments)
+        /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
+        public MethodInvocationValidator(MethodInfo method, object[] parameterValues)
         {
-            _arguments = arguments;
+            _method = method;
+            _parameterValues = parameterValues;
             _parameters = method.GetParameters();
             _validationErrors = new List<ValidationResult>();
         }
@@ -34,84 +38,104 @@ namespace Abp.Runtime.Validation.Interception
         /// </summary>
         public void Validate()
         {
+            if (!_method.IsPublic)
+            {
+                //Validate only public methods!
+                return;
+            }
+
+            if (_method.IsDefined(typeof (DisableValidationAttribute)))
+            {
+                //Don't validate if explicitly requested!
+                return;                
+            }
+
             if (_parameters.IsNullOrEmpty())
             {
                 //Object has no parameter, no need to validate.
                 return;
             }
 
-            if (_parameters.Length != _arguments.Length)
+            if (_parameters.Length != _parameterValues.Length)
             {
+                //This is not possible actually
                 throw new Exception("Method parameter count does not match with argument count!");
             }
 
             for (var i = 0; i < _parameters.Length; i++)
             {
-                Validate(_parameters[i], _arguments[i]);
+                ValidateMethodParameter(_parameters[i], _parameterValues[i]);
             }
 
             if (_validationErrors.Any())
             {
-                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.") { ValidationErrors = _validationErrors };
+                throw new AbpValidationException(
+                    "Method arguments are not valid! See ValidationErrors for details.",
+                    _validationErrors
+                    );
             }
 
-            foreach (var argument in _arguments)
+            foreach (var parameterValue in _parameterValues)
             {
-                Normalize(argument); //TODO@Halil: Why not normalize recursively as we did in validation.
+                NormalizeParameter(parameterValue);
             }
         }
 
         /// <summary>
-        /// Validates given parameter for given argument.
+        /// Validates given parameter for given value.
         /// </summary>
-        /// <param name="parameter">Parameter of the method to validate</param>
-        /// <param name="argument">Argument to validate</param>
-        private void Validate(ParameterInfo parameter, object argument)
+        /// <param name="parameterInfo">Parameter of the method to validate</param>
+        /// <param name="parameterValue">Value to validate</param>
+        private void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
-            if (argument == null)
+            if (parameterValue == null)
             {
-                //TODO@Halil: What if null value is acceptable?
-                //TODO@Halil: What if has default value?
-
-                if (!parameter.IsOptional && !parameter.IsOut)
+                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveIncludingNullable(parameterInfo.ParameterType))
                 {
-                    _validationErrors.Add(new ValidationResult(parameter.Name + " is null!", new[] { parameter.Name }));
+                    _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
 
                 return;
             }
 
-            ValidateArgumentRecursively(argument);
+            ValidateObjectRecursively(parameterValue);
         }
 
-        private void ValidateArgumentRecursively(object argument)
+        private void ValidateObjectRecursively(object validatingObject)
         {
-            if (!(argument is IValidate))
+            if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
+            {
+                foreach (var item in (validatingObject as IEnumerable))
+                {
+                    ValidateObjectRecursively(item);
+                }
+            }
+
+            if (!(validatingObject is IValidate))
             {
                 return;
             }
 
-            SetValidationAttributeErrors(argument);
+            SetValidationAttributeErrors(validatingObject);
 
-            if (argument is ICustomValidate)
+            if (validatingObject is ICustomValidate)
             {
-                (argument as ICustomValidate).AddValidationErrors(_validationErrors);
+                (validatingObject as ICustomValidate).AddValidationErrors(_validationErrors);
             }
 
-            var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
+            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                var propertyValue = property.GetValue(argument);
-                ValidateArgumentRecursively(propertyValue);
+                ValidateObjectRecursively(property.GetValue(validatingObject));
             }
         }
 
         /// <summary>
         /// Checks all properties for DataAnnotations attributes.
         /// </summary>
-        private void SetValidationAttributeErrors(object argument)
+        private void SetValidationAttributeErrors(object validatingObject)
         {
-            var properties = TypeDescriptor.GetProperties(argument).Cast<PropertyDescriptor>();
+            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
                 var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
@@ -120,10 +144,15 @@ namespace Abp.Runtime.Validation.Interception
                     continue;
                 }
 
-                var validationContext = new ValidationContext(argument) { DisplayName = property.Name };
+                var validationContext = new ValidationContext(validatingObject)
+                {
+                    DisplayName = property.Name,
+                    MemberName = property.Name
+                };
+
                 foreach (var attribute in validationAttributes)
                 {
-                    var result = attribute.GetValidationResult(property.GetValue(argument), validationContext);
+                    var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
                     if (result != null)
                     {
                         _validationErrors.Add(result);
@@ -132,13 +161,11 @@ namespace Abp.Runtime.Validation.Interception
             }
         }
 
-        private static void Normalize(object argument)
+        private static void NormalizeParameter(object parameterValue)
         {
-            //TODO: Maybe we should move Normalization to a specific interceptor and use not just for DTOs?
-
-            if (argument is IShouldNormalize)
+            if (parameterValue is IShouldNormalize)
             {
-                (argument as IShouldNormalize).Normalize();
+                (parameterValue as IShouldNormalize).Normalize();
             }
         }
     }

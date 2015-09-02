@@ -1,12 +1,14 @@
-﻿namespace Abp.Runtime.Session
+﻿using Abp.MultiTenancy;
+
+namespace Abp.Runtime.Session
 {
     /// <summary>
-    /// Defines some session informations that can be useful for applications.
+    /// Defines some session information that can be useful for applications.
     /// </summary>
     public interface IAbpSession
     {
         /// <summary>
-        /// Gets current UserId of null.
+        /// Gets current UserId or null.
         /// </summary>
         long? UserId { get; }
 
@@ -14,5 +16,10 @@
         /// Gets current TenantId or null.
         /// </summary>
         int? TenantId { get; }
+
+        /// <summary>
+        /// Gets current multi-tenancy side.
+        /// </summary>
+        MultiTenancySides MultiTenancySide { get; }
     }
 }

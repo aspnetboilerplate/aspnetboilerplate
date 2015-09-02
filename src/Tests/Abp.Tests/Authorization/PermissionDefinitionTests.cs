@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.Localization;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Authorization
 {
-    public class PermissionManagerTester
+    public class PermissionManagerTester : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Test_PermissionManager()
@@ -18,11 +15,10 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider1>();
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
-            var permissionManager = new PermissionManager(IocManager.Instance, authorizationConfiguration);
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
             permissionManager.Initialize();
 
-            permissionManager.GetAllRootGroups().Count.ShouldBe(1);
-            permissionManager.GetAllPermissions().Count.ShouldBe(4);
+            permissionManager.GetAllPermissions().Count.ShouldBe(5);
 
             var userManagement = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement");
             userManagement.ShouldNotBe(null);
@@ -41,10 +37,10 @@ namespace Abp.Tests.Authorization
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
-            var administration = context.CreateRootGroup("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
+            var administration = context.CreatePermission("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
 
             //Create 'User management' permission under 'Administration' group
-            var userManagement = administration.CreatePermission("Abp.Zero.Administration.UserManagement", new FixedLocalizableString("User management"));
+            var userManagement = administration.CreateChildPermission("Abp.Zero.Administration.UserManagement", new FixedLocalizableString("User management"));
 
             //Create 'Change permissions' (to be able to change permissions of a user) permission as child of 'User management' permission.
             userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions", new FixedLocalizableString("Change permissions"));
@@ -56,10 +52,11 @@ namespace Abp.Tests.Authorization
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Get existing root permission group 'Administration'
-            var administration = context.GetRootGroupOrNull("Abp.Zero.Administration");
+            var administration = context.GetPermissionOrNull("Abp.Zero.Administration");
+            administration.ShouldNotBe(null);
 
             //Create 'Role management' permission under 'Administration' group
-            var roleManegement = administration.CreatePermission("Abp.Zero.Administration.RoleManagement", new FixedLocalizableString("Role management"));
+            var roleManegement = administration.CreateChildPermission("Abp.Zero.Administration.RoleManagement", new FixedLocalizableString("Role management"));
 
             //Create 'Create role' (to be able to create a new role) permission  as child of 'Role management' permission.
             roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new FixedLocalizableString("Create role"));

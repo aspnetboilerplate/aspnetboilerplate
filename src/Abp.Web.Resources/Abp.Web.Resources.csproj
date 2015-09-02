@@ -47,7 +47,9 @@
     <Content Include="Abp\Framework\scripts\abp.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jtable.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.sweet-alert.js" />
     <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
     <Content Include="Abp\Framework\scripts\libs\angularjs\abp.ng.js" />
     <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
@@ -58,9 +60,13 @@
     <Content Include="Abp\Framework\styles\abp.min.css">
       <DependentUpon>abp.css</DependentUpon>
     </Content>
+    <Content Include="Abp\Framework\styles\abp.mixings.css">
+      <DependentUpon>abp.mixings.less</DependentUpon>
+    </Content>
+    <Content Include="Abp\Framework\styles\abp.mixings.min.css">
+      <DependentUpon>abp.mixings.css</DependentUpon>
+    </Content>
     <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
-    <Content Include="Localization\AbpWeb\AbpWeb.tr.xml" />
-    <Content Include="Localization\AbpWeb\AbpWeb.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Abp\Framework\styles\abp.less" />
@@ -72,6 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Resources.nuspec" />
+    <Content Include="Abp\Framework\styles\abp.mixings.less" />
+    <None Include="Abp\Framework\styles\abp.mixings.css.map">
+      <DependentUpon>abp.mixings.css</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">

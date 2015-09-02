@@ -1,24 +1,28 @@
-﻿using System.Data.Entity.Infrastructure.Interception;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
+using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
-using Abp.EntityFramework.SoftDeleting;
+using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Reflection;
+using Castle.Core.Logging;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
 {
     /// <summary>
-    /// This module is used to implement "Data Access Layer" in NHibernate.
+    /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     public class AbpEntityFrameworkModule : AbpModule
     {
-        public IAssemblyFinder AssemblyFinder { private get; set; }
+        public ILogger Logger { get; set; }
 
-        public AbpEntityFrameworkModule()
+        private readonly ITypeFinder _typeFinder;
+
+        public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
-            AssemblyFinder = DefaultAssemblyFinder.Instance;
+            _typeFinder = typeFinder;
+            Logger = NullLogger.Instance;
         }
 
         public override void PreInitialize()
@@ -29,22 +33,35 @@ namespace Abp.EntityFramework
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            DbInterception.Add(new SoftDeleteInterceptor());
+
+            IocManager.IocContainer.Register(
+                Component.For(typeof (IDbContextProvider<>))
+                    .ImplementedBy(typeof (UnitOfWorkDbContextProvider<>))
+                    .LifestyleTransient()
+                );
+            
             RegisterGenericRepositories();
         }
 
         private void RegisterGenericRepositories()
         {
-            var dbContextTypes = (
-                from assembly in AssemblyFinder.GetAllAssemblies()
-                from type in assembly.GetTypes()
-                where type.IsPublic && !type.IsAbstract && type.IsClass && typeof(AbpDbContext).IsAssignableFrom(type)
-                select type
-                ).ToList();
+            var dbContextTypes =
+                _typeFinder.Find(type =>
+                    type.IsPublic &&
+                    !type.IsAbstract &&
+                    type.IsClass &&
+                    typeof(AbpDbContext).IsAssignableFrom(type)
+                    );
+
+            if (dbContextTypes.IsNullOrEmpty())
+            {
+                Logger.Warn("No class found derived from AbpDbContext.");
+                return;
+            }
 
             foreach (var dbContextType in dbContextTypes)
             {
-                EntityFrameworkGenericRepositoryRegistrar.RegisterDbContext(dbContextType, IocManager);
+                EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(dbContextType, IocManager);
             }
         }
     }

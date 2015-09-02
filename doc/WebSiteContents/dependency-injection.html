@@ -33,7 +33,12 @@
 			<li><a href="#DocIocHelper">IIocResolver and IIocManager</a></li>
 		</ul>
 		</li>
+		<li><a href="#DocExtras">Extras</a><ul>
+			<li><a href="#DocIShouldInitialize">IShouldInitialize interface</a></li>
+		</ul>
+		</li>
 		<li><a href="#DocMvcAndWebApiIntegration">ASP.NET MVC &amp; ASP.NET Web API integration</a></li>
+		<li><a href="#DocLastNotes">Last notes</a></li>
 	</ul>
 	</li>
 </ul>
@@ -312,8 +317,8 @@ public class MyPersonManager : IPersonManager, ISingletonDependency
 {
     <span lang="tr">//...</span>
 }</pre>
-<p>In that way, you can easily register MyPersonManager as transient. When need 
-to inject a IPersonManager, MyPersonManager is used. Notice that dependency is 
+<p>In that way, you can easily register MyPersonManager. When need 
+to inject a IPersonManager, MyPersonManager class is used. Notice that dependency is 
 declared as <strong>Singleton</strong>. Thus, a single instance of 
 MyPersonManager is created and same object is passed to all needed classes. It's 
 just created in first usage, then same instance is used in whole life of the 
@@ -333,7 +338,7 @@ interface in your application:</p>
         container.Register(Classes.FromThisAssembly().BasedOn&lt;IMySpecialInterface&gt;().LifestylePerThread().WithServiceSelf());
     }
 }</pre>ASP.NET Boilerplate automatically finds and executes this class. Lastly, you 
-can reach to the WindsorContainer using <strong>IocManager.IocContainer</strong> 
+can reach to the WindsorContainer using <strong>IIocManager.IocContainer</strong> 
 property. For more information, read
 <a href="http://docs.castleproject.org/Default.aspx?Page=MainPage">Windsor's 
 documentation</a>&nbsp;<h4 id="DocResolvingDependencies">Resolving</h4>
@@ -372,7 +377,7 @@ system at all. This is the most proper way of using DI system.</p>
 <p>Sometime you may have to directly resolve your dependency instead of 
 constructor &amp; property injection. This should be avoided when possible, but it 
 may be impossible. ASP.NET Boilerplate provides some services those can be injected 
-ans used easily. Example:</p>
+and used easily. Example:</p>
 <pre lang="cs">public class MySampleClass : ITransientDependency
 {
     private readonly IIocResolver _iocResolver;
@@ -404,21 +409,34 @@ to call Release if you're manually resolving an object. Otherwise, your
 application has some memory leak problem. To be sure of releasing the object, 
 use <strong>ResolveAsDisposable</strong> (as shown in the example above) 
 wherever it's possible. It automatically calls Release at the end of the using block.</p>
-<p>If you want to directly reach to IOC Container to resolve dependencies, you 
+<p>If you want to directly reach to IOC Container (Castle Windsor) to resolve dependencies, you 
 can consturctor-inject <strong>IIocManager</strong> and use <strong>IIocManager.IocContainer</strong> 
 property. If you are in a static context or can not inject IIocManager, as a 
 last chance, you can use singleton object <strong>IocManager.Instance</strong> 
-everywhere.</p>
+everywhere. But, in that case your codes will not be easy to test.</p>
+<h4>Extras</h4>
+<h5>IShouldInitialize interface</h5>
+<p>Some classes need to be initialized before first usage. IShouldInitialize has 
+an Initialize() method. If you implement it, then your Initialize() method is 
+automatically called just after creating your object (before used). Surely, you 
+should inject/resolve the object in order to work this feature.</p>
 
 <h4 id="DocMvcAndWebApiIntegration">ASP.NET MVC &amp; ASP.NET Web API integration</h4>
 <p>Surely, we must call dependency injection system to resolve the root object 
 in dependency graph. In an <strong>ASP.NET MVC </strong>application, it's 
-generally a <strong>Controller </strong>class. We can use contructor injection 
-pattern in also controllers. When a request come to our application, the 
+generally a <strong>Controller </strong>class. We can use contructor injection and property injection
+patterns also in controllers. When a request come to our application, the 
 controller is created using IOC container and all dependencies are resolved 
 recursively. So, who does that? It's done automatically by ASP.NET Boilerplate 
 by extending ASP.NET MVC's default controller factory. As similar, it's true for 
 ASP.NET Web API also. You don't care about creating and disposing objects.</p>
+
+<h4>Last notes</h4>
+<p>ASP.NET Boilerplate simplifies and automates using dependency injection as 
+long as you follow the rules and use the structures above. Most of times you 
+will not need more. But if you need, you can directly use all power of Castle 
+Windsor to perform any task (like custom registrations, injection hooks, 
+interceptors and so on).</p>
 
 </body>
 

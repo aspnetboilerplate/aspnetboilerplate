@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Castle.Core.3.3.1\lib\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -44,19 +44,20 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.DynamicFilters.1.4.1\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\packages\System.Linq.Dynamic.1.0.3\lib\net40\System.Linq.Dynamic.dll</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,14 +67,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFramework\AbpDbContext.cs" />
-    <Compile Include="EntityFramework\AbpEfConsts.cs" />
     <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegisterer.cs" />
+    <Compile Include="EntityFramework\Extensions\QueryableExtensions.cs" />
+    <Compile Include="EntityFramework\Repositories\AutoRepositoryTypesAttribute.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
-    <Compile Include="EntityFramework\EntityFrameworkHelper.cs" />
-    <Compile Include="EntityFramework\Repositories\EfRepositoryBase.cs" />
+    <Compile Include="EntityFramework\Extensions\DbContextExtensions.cs" />
+    <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntity.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
-    <Compile Include="EntityFramework\SoftDeleting\SoftDeleteInterceptor.cs" />
-    <Compile Include="EntityFramework\SoftDeleting\SoftDeleteQueryVisitor.cs" />
+    <Compile Include="EntityFramework\IDbContextProvider.cs" />
+    <Compile Include="EntityFramework\SimpleDbContextProvider.cs" />
+    <Compile Include="EntityFramework\Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="EntityFramework\Uow\EfUnitOfWork.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,7 +91,9 @@
   <ItemGroup>
     <None Include="Abp.EntityFramework.nuspec" />
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

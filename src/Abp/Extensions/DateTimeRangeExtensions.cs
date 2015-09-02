@@ -1,4 +1,6 @@
-﻿namespace Abp.Extensions
+﻿using Abp.Timing;
+
+namespace Abp.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IDateTimeRange"/>.

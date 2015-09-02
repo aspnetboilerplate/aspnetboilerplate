@@ -37,7 +37,7 @@
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Castle.Core.3.3.1\lib\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Facilities.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -47,6 +47,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,22 +68,22 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
+    <Compile Include="AbpServiceBase.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
     <Compile Include="Application\Navigation\INavigationManager.cs" />
     <Compile Include="Application\Navigation\IUserNavigationManager.cs" />
     <Compile Include="Application\Navigation\MenuDefinition.cs" />
     <Compile Include="Application\Navigation\MenuItemDefinition.cs" />
+    <Compile Include="Application\Navigation\MenuItemDefinitionExtensions.cs" />
     <Compile Include="Application\Navigation\UserNavigationManager.cs" />
     <Compile Include="Application\Navigation\NavigationManager.cs" />
     <Compile Include="Application\Navigation\NavigationProviderContext.cs" />
@@ -81,18 +94,65 @@
     <Compile Include="Application\Services\Dto\EntityRequestInputOfTPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutput.cs" />
     <Compile Include="Application\Services\Dto\EntityResultOutputOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDto.cs" />
+    <Compile Include="Application\Services\Dto\FullAuditedEntityDtoOfTPrimaryKey.cs" />
+    <Compile Include="Application\Services\Dto\IdInput.cs" />
     <Compile Include="Application\Services\Dto\IEntityDto.cs" />
     <Compile Include="Application\Services\Dto\IEntityDtoOfPrimaryKey.cs" />
     <Compile Include="Application\Services\Dto\IListResult.cs" />
     <Compile Include="Application\Services\Dto\IPagedResult.cs" />
     <Compile Include="Application\Services\Dto\ListResultDto.cs" />
     <Compile Include="Application\Services\Dto\ListResultOutput.cs" />
+    <Compile Include="Auditing\AuditingHelper.cs" />
+    <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Json\JsonHelper.cs" />
+    <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
+    <Compile Include="Application\Services\Dto\NullableIdInput.cs" />
     <Compile Include="Application\Services\Dto\PagedResultDto.cs" />
     <Compile Include="Application\Services\Dto\PagedResultOutput.cs" />
-    <Compile Include="Application\Services\Interceptors\ApplicationServiceInterceptorRegistrar.cs" />
+    <Compile Include="Auditing\AuditingStoreExtensions.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptorRegistrar.cs" />
+    <Compile Include="Aspects\AspectAttribute.cs" />
+    <Compile Include="Auditing\AuditedAttribute.cs" />
+    <Compile Include="Auditing\AuditInfo.cs" />
+    <Compile Include="Auditing\AuditingConfiguration.cs" />
+    <Compile Include="Auditing\AuditingInterceptor.cs" />
+    <Compile Include="Auditing\AuditingInterceptorRegistrar.cs" />
+    <Compile Include="Auditing\AuditingSelectorList.cs" />
+    <Compile Include="Auditing\DisableAuditingAttribute.cs" />
+    <Compile Include="Auditing\IAuditInfoProvider.cs" />
+    <Compile Include="Auditing\IAuditingConfiguration.cs" />
+    <Compile Include="Auditing\IAuditingSelectorList.cs" />
+    <Compile Include="Auditing\IAuditingStore.cs" />
+    <Compile Include="Auditing\NullAuditInfoProvider.cs" />
+    <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Runtime\Caching\CacheProviderBase.cs" />
+    <Compile Include="Runtime\Caching\CacheStoreBase.cs" />
+    <Compile Include="Runtime\Caching\ICacheProvider.cs" />
+    <Compile Include="Runtime\Caching\ICacheStore.cs" />
+    <Compile Include="Runtime\Caching\ICacheStoreCommon.cs" />
+    <Compile Include="Runtime\Caching\Memory\MemoryCacheStore.cs" />
+    <Compile Include="Runtime\Caching\Memory\MemoryCacheProvider.cs" />
+    <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
+    <Compile Include="Text\Formatting\FormatStringToken.cs" />
+    <Compile Include="Text\Formatting\FormatStringTokenType.cs" />
+    <Compile Include="Text\Formatting\FormatStringTokenizer.cs" />
+    <Compile Include="Text\FormattedStringValueExtracter.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceExtensionInfo.cs" />
+    <Compile Include="DisposeAction.cs" />
+    <Compile Include="Domain\Uow\AbpDataFilters.cs" />
+    <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Localization\Sources\IDictionaryBasedLocalizationSource.cs" />
+    <Compile Include="Timing\Clock.cs" />
+    <Compile Include="Timing\IClockProvider.cs" />
+    <Compile Include="MultiTenancy\MultiTenancyExtensions.cs" />
+    <Compile Include="NamedTypeSelector.cs" />
     <Compile Include="Authorization\AbpAuthorizeAttribute.cs" />
-    <Compile Include="Authorization\AuthorizationInterceptor.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
     <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
     <Compile Include="Authorization\IAbpAuthorizeAttribute.cs" />
     <Compile Include="Application\Services\ApplicationService.cs" />
@@ -113,21 +173,33 @@
     <Compile Include="Application\Services\Dto\ISortedResultRequest.cs" />
     <Compile Include="Application\Services\IApplicationService.cs" />
     <Compile Include="Authorization\AbpAuthorizationException.cs" />
-    <Compile Include="Authorization\IPermissionGrantStore.cs" />
-    <Compile Include="Authorization\NullPermissionGrantStore.cs" />
+    <Compile Include="Authorization\IAuthorizeAttributeHelper.cs" />
+    <Compile Include="Authorization\IPermissionChecker.cs" />
+    <Compile Include="Authorization\PermissionDefinitionContextBase.cs" />
+    <Compile Include="Authorization\PermissionFinder.cs" />
+    <Compile Include="Configuration\Startup\IMultiTenancyConfig.cs" />
+    <Compile Include="Configuration\Startup\MultiTenancyConfig.cs" />
+    <Compile Include="Collections\Extensions\ListExtensions.cs" />
+    <Compile Include="Dependency\IocRegistrarExtensions.cs" />
+    <Compile Include="MultiTenancy\MultiTenancySides.cs" />
+    <Compile Include="Authorization\NullPermissionChecker.cs" />
+    <Compile Include="Authorization\PermissionCheckerExtensions.cs" />
     <Compile Include="Authorization\PermissionDictionary.cs" />
     <Compile Include="Authorization\IPermissionDefinitionContext.cs" />
     <Compile Include="Authorization\AuthorizationProvider.cs" />
     <Compile Include="Authorization\IPermissionManager.cs" />
     <Compile Include="Authorization\Permission.cs" />
-    <Compile Include="Authorization\PermissionGroup.cs" />
     <Compile Include="Authorization\PermissionManager.cs" />
+    <Compile Include="Authorization\StaticPermissionChecker.cs" />
     <Compile Include="Collections\ITypeList.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
     <Compile Include="Configuration\SettingInfo.cs" />
     <Compile Include="Collections\TypeList.cs" />
+    <Compile Include="Configuration\SettingManagerExtensions.cs" />
     <Compile Include="Configuration\Startup\AuthorizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\EventBusConfiguration.cs" />
     <Compile Include="Configuration\Startup\IAuthorizationConfiguration.cs" />
+    <Compile Include="Configuration\Startup\IEventBusConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationSourceList.cs" />
     <Compile Include="Configuration\Startup\INavigationConfiguration.cs" />
     <Compile Include="Application\Navigation\NavigationProvider.cs" />
@@ -137,7 +209,7 @@
     <Compile Include="Configuration\Startup\ModuleConfigurations.cs" />
     <Compile Include="Configuration\Startup\NavigationConfiguration.cs" />
     <Compile Include="Configuration\Startup\SettingsConfiguration.cs" />
-    <Compile Include="DateTimeRange.cs" />
+    <Compile Include="Timing\DateTimeRange.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\CreationAuditedEntity.cs" />
     <Compile Include="Domain\Entities\Auditing\FullAuditedEntity.cs" />
@@ -146,8 +218,47 @@
     <Compile Include="Domain\Entities\Auditing\IDeletionAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IFullAudited.cs" />
     <Compile Include="Domain\Entities\Auditing\IModificationAudited.cs" />
+    <Compile Include="Domain\Entities\IPassivable.cs" />
+    <Compile Include="Domain\Repositories\AbpRepositoryBase.cs" />
+    <Compile Include="Domain\Uow\IActiveUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />
+    <Compile Include="Domain\Uow\ICurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkDefaultOptions.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkManager.cs" />
+    <Compile Include="Domain\Uow\CallContextCurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\InnerUnitOfWorkCompleteHandle.cs" />
+    <Compile Include="Domain\Uow\NullUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkDefaultOptions.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkFailedEventArgs.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangedEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\IEntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
+    <Compile Include="IShouldInitialize.cs" />
+    <Compile Include="Localization\Sources\LocalizationDictionaryInfo.cs" />
+    <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
+    <Compile Include="Localization\Sources\ILocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Sources\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Sources\Xml\XmlFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Net\Mail\EmailSettingNames.cs" />
+    <Compile Include="Net\Mail\EmailSettingProvider.cs" />
+    <Compile Include="Net\Mail\EmailSenderConfiguration.cs" />
+    <Compile Include="Net\Mail\IEmailSenderConfiguration.cs" />
+    <Compile Include="Net\Mail\EmailSenderBase.cs" />
+    <Compile Include="Net\Mail\NullEmailSender.cs" />
+    <Compile Include="Net\Mail\Smtp\ISmtpEmailSender.cs" />
+    <Compile Include="Net\Mail\Smtp\ISmtpEmailSenderConfiguration.cs" />
+    <Compile Include="Net\Mail\Smtp\SmtpEmailSender.cs" />
+    <Compile Include="Net\Mail\Smtp\SmtpEmailSenderConfiguration.cs" />
+    <Compile Include="Net\Mail\IEmailSender.cs" />
+    <Compile Include="RandomHelper.cs" />
+    <Compile Include="Runtime\Caching\Memory\AsyncThreadSafeObjectCache.cs" />
+    <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
+    <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
-    <Compile Include="Dependency\DisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
     <Compile Include="Dependency\IIocManager.cs" />
@@ -167,20 +278,24 @@
     <Compile Include="Extensions\ComparableExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions.cs" />
+    <Compile Include="Collections\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventHandlerExtensions.cs" />
-    <Compile Include="IDateTimeRange.cs" />
+    <Compile Include="Timing\IDateTimeRange.cs" />
     <Compile Include="Linq\Extensions\QueryableExtensions.cs" />
     <Compile Include="Localization\FixedLocalizableString.cs" />
     <Compile Include="Localization\ILocalizableString.cs" />
     <Compile Include="Localization\LanguageInfo.cs" />
+    <Compile Include="Localization\NullLocalizationManager.cs" />
     <Compile Include="Localization\Sources\NullLocalizationSource.cs" />
     <Compile Include="Modules\DependsOnAttribute.cs" />
-    <Compile Include="Reflection\DefaultAssemblyFinder.cs" />
+    <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
     <Compile Include="Modules\DefaultModuleFinder.cs" />
     <Compile Include="Modules\IAbpModuleManager.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />
     <Compile Include="Modules\IModuleFinder.cs" />
+    <Compile Include="Reflection\ITypeFinder.cs" />
     <Compile Include="Reflection\ReflectionHelper.cs" />
+    <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceInfo.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourceManager.cs" />
     <Compile Include="Resources\Embedded\EmbeddedResourcePathInfo.cs" />
@@ -191,8 +306,7 @@
     <Compile Include="Configuration\SettingProvider.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\ISettingStore.cs" />
-    <Compile Include="Configuration\NullSettingStore.cs" />
-    <Compile Include="Configuration\Setting.cs" />
+    <Compile Include="Configuration\DefaultConfigSettingStore.cs" />
     <Compile Include="Configuration\SettingDefinition.cs" />
     <Compile Include="Configuration\SettingDefinitionGroup.cs" />
     <Compile Include="Configuration\SettingHelper.cs" />
@@ -217,11 +331,10 @@
     <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkInterceptor.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkRegistrar.cs" />
-    <Compile Include="Domain\Uow\UowEventBusExtensions.cs" />
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
-    <Compile Include="AbpCoreModule.cs" />
-    <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
+    <Compile Include="AbpKernelModule.cs" />
+    <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />
@@ -236,7 +349,6 @@
     <Compile Include="Domain\Repositories\IRepository.cs" />
     <Compile Include="Domain\Repositories\IRepositoryOfTEntity.cs" />
     <Compile Include="Domain\Uow\IUnitOfWork.cs" />
-    <Compile Include="Domain\Uow\UnitOfWorkScope.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkAttribute.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />
     <Compile Include="Domain\Entities\Entity.cs" />
@@ -272,6 +384,11 @@
     <Compile Include="Configuration\Startup\IAbpStartupConfiguration.cs" />
     <Compile Include="Configuration\Startup\ILocalizationConfiguration.cs" />
     <Compile Include="Configuration\Startup\IModuleConfigurations.cs" />
+    <Compile Include="Threading\AsyncHelper.cs" />
+    <Compile Include="Threading\Extensions\LockExtensions.cs" />
+    <Compile Include="Timing\LocalClockProvider.cs" />
+    <Compile Include="Timing\UtcClockProvider.cs" />
+    <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
@@ -310,7 +427,13 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-zh-CN.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

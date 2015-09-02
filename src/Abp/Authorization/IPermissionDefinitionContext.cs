@@ -1,4 +1,5 @@
 using Abp.Localization;
+using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
@@ -8,17 +9,21 @@ namespace Abp.Authorization
     public interface IPermissionDefinitionContext
     {
         /// <summary>
-        /// Creates a root permission group.
+        /// Creates a new permission under this group.
         /// </summary>
-        /// <param name="name">Unique name of the group</param>
-        /// <param name="displayName">Display name of the group</param>
-        /// <returns>Created permission group object</returns>
-        PermissionGroup CreateRootGroup(string name, ILocalizableString displayName);
-        
+        /// <param name="name">Unique name of the permission</param>
+        /// <param name="displayName">Display name of the permission</param>
+        /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
+        /// <param name="description">A brief description for this permission</param>
+        /// <param name="multiTenancySides">Which side can use this permission</param>
+        /// <returns>New created permission</returns>
+        Permission CreatePermission(string name, ILocalizableString displayName, bool isGrantedByDefault = false, ILocalizableString description = null, MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant);
+
         /// <summary>
-        /// Gets an existing root permission group or null if it does not exists.
+        /// Gets a permission with given name or null if can not find.
         /// </summary>
-        /// <param name="name">Unique name of the group</param>
-        PermissionGroup GetRootGroupOrNull(string name);
+        /// <param name="name">Unique name of the permission</param>
+        /// <returns>Permission object or null</returns>
+        Permission GetPermissionOrNull(string name);
     }
 }

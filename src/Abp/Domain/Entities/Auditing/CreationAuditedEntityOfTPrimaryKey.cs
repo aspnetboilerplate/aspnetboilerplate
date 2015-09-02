@@ -1,4 +1,5 @@
 using System;
+using Abp.Timing;
 
 namespace Abp.Domain.Entities.Auditing
 {
@@ -6,6 +7,7 @@ namespace Abp.Domain.Entities.Auditing
     /// This class can be used to simplify implementing <see cref="ICreationAudited"/>.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+    [Serializable]
     public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, ICreationAudited
     {
         /// <summary>
@@ -23,7 +25,7 @@ namespace Abp.Domain.Entities.Auditing
         /// </summary>
         protected CreationAuditedEntity()
         {
-            CreationTime = DateTime.Now; //TODO: UtcNow?
+            CreationTime = Clock.Now;
         }
     }
 }

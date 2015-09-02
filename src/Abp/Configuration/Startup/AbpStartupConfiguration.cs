@@ -1,4 +1,7 @@
-﻿using Abp.Dependency;
+﻿using Abp.Auditing;
+using Abp.Dependency;
+using Abp.Domain.Uow;
+using Abp.Events.Bus;
 
 namespace Abp.Configuration.Startup
 {
@@ -37,9 +40,29 @@ namespace Abp.Configuration.Startup
         public IModuleConfigurations Modules { get; private set; }
 
         /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        public IUnitOfWorkDefaultOptions UnitOfWork { get; private set; }
+
+        /// <summary>
         /// Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
+
+        /// <summary>
+        /// Used to configure <see cref="IEventBus"/>.
+        /// </summary>
+        public IEventBusConfiguration EventBus { get; private set; }
+
+        /// <summary>
+        /// Used to configure auditing.
+        /// </summary>
+        public IAuditingConfiguration Auditing { get; private set; }
+
+        /// <summary>
+        /// Used to configure multi-tenancy.
+        /// </summary>
+        public IMultiTenancyConfig MultiTenancy { get; private set; }
 
         /// <summary>
         /// Private constructor for singleton pattern.
@@ -56,6 +79,10 @@ namespace Abp.Configuration.Startup
             Navigation = IocManager.Resolve<INavigationConfiguration>();
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
             Settings = IocManager.Resolve<ISettingsConfiguration>();
+            UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
+            EventBus = IocManager.Resolve<IEventBusConfiguration>();
+            MultiTenancy = IocManager.Resolve<IMultiTenancyConfig>();
+            Auditing = IocManager.Resolve<IAuditingConfiguration>();
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using Abp.Xml;
+using Abp.Collections.Extensions;
+using Abp.Extensions;
 using Abp.Xml.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
@@ -15,8 +17,6 @@ namespace Abp.Localization.Dictionaries.Xml
     /// </remarks>
     public class XmlLocalizationDictionary : LocalizationDictionary
     {
-        #region Constructor
-
         /// <summary>
         /// Private constructor.
         /// </summary>
@@ -24,12 +24,8 @@ namespace Abp.Localization.Dictionaries.Xml
         private XmlLocalizationDictionary(CultureInfo cultureInfo)
             : base(cultureInfo)
         {
-            
+
         }
-
-        #endregion
-
-        #region Public static methods
 
         /// <summary>
         /// Builds an <see cref="XmlLocalizationDictionary"/> from given file.
@@ -43,7 +39,7 @@ namespace Abp.Localization.Dictionaries.Xml
             }
             catch (Exception ex)
             {
-                throw new AbpException("Invalid localization file format!", ex);
+                throw new AbpException("Invalid localization file format! " + filePath, ex);
             }
         }
 
@@ -51,7 +47,7 @@ namespace Abp.Localization.Dictionaries.Xml
         /// Builds an <see cref="XmlLocalizationDictionary"/> from given xml string.
         /// </summary>
         /// <param name="xmlString">XML string</param>
-        internal static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
+        public static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
         {
             var settingsXmlDoc = new XmlDocument();
             settingsXmlDoc.LoadXml(xmlString);
@@ -70,6 +66,8 @@ namespace Abp.Localization.Dictionaries.Xml
 
             var dictionary = new XmlLocalizationDictionary(new CultureInfo(cultureName));
 
+            var dublicateNames = new List<string>();
+
             var textNodes = settingsXmlDoc.SelectNodes("/localizationDictionary/texts/text");
             if (textNodes != null)
             {
@@ -81,15 +79,21 @@ namespace Abp.Localization.Dictionaries.Xml
                         throw new AbpException("name attribute of a text is empty in given xml string.");
                     }
 
-                    var value = node.GetAttributeValueOrNull("value") ?? node.InnerText;
+                    if (dictionary.Contains(name))
+                    {
+                        dublicateNames.Add(name);
+                    }
 
-                    dictionary[name] = value;
+                    dictionary[name] = (node.GetAttributeValueOrNull("value") ?? node.InnerText).NormalizeLineEndings();
                 }
+            }
+
+            if (dublicateNames.Count > 0)
+            {
+                throw new AbpException("A dictionary can not contain same key twice. There are some duplicated names: " + dublicateNames.JoinAsString(", "));
             }
 
             return dictionary;
         }
-
-        #endregion
     }
 }

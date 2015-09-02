@@ -10,8 +10,10 @@ namespace Abp.Localization.Dictionaries
     /// </summary>
     public class LocalizationDictionary : ILocalizationDictionary, IEnumerable<LocalizedString>
     {
+        /// <inheritdoc/>
         public CultureInfo CultureInfo { get; private set; }
 
+        /// <inheritdoc/>
         public virtual string this[string name]
         {
             get
@@ -19,7 +21,7 @@ namespace Abp.Localization.Dictionaries
                 var localizedString = GetOrNull(name);
                 return localizedString == null ? null : localizedString.Value;
             }
-            protected set
+            set
             {
                 _dictionary[name] = new LocalizedString(name, value, CultureInfo);
             }
@@ -37,17 +39,20 @@ namespace Abp.Localization.Dictionaries
             _dictionary = new Dictionary<string, LocalizedString>();
         }
 
+        /// <inheritdoc/>
         public virtual LocalizedString GetOrNull(string name)
         {
             LocalizedString localizedString;
             return _dictionary.TryGetValue(name, out localizedString) ? localizedString : null;
         }
 
+        /// <inheritdoc/>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return _dictionary.Values.ToImmutableList();
         }
 
+        /// <inheritdoc/>
         public virtual IEnumerator<LocalizedString> GetEnumerator()
         {
             return GetAllStrings().GetEnumerator();
@@ -56,6 +61,11 @@ namespace Abp.Localization.Dictionaries
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetAllStrings().GetEnumerator();
+        }
+
+        protected bool Contains(string name)
+        {
+            return _dictionary.ContainsKey(name);
         }
     }
 }

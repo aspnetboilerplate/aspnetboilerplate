@@ -13,6 +13,6 @@ namespace Abp.Modules
         /// Finds all modules.
         /// </summary>
         /// <returns>List of modules</returns>
-        List<Type> FindAll();
+        ICollection<Type> FindAll();
     }
 }

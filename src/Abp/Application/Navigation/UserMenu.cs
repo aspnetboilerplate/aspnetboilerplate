@@ -18,6 +18,11 @@ namespace Abp.Application.Navigation
         public string DisplayName { get; set; }
 
         /// <summary>
+        /// A custom object related to this menu item.
+        /// </summary>
+        public object CustomData { get; set; }
+
+        /// <summary>
         /// Menu items (first level).
         /// </summary>
         public IList<UserMenuItem> Items { get; set; }
@@ -33,10 +38,11 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="UserMenu"/> object from given <see cref="MenuDefinition"/>.
         /// </summary>
-        public UserMenu(MenuDefinition menuDefinition)
+        internal UserMenu(MenuDefinition menuDefinition)
         {
             Name = menuDefinition.Name;
             DisplayName = menuDefinition.DisplayName.Localize();
+            CustomData = menuDefinition.CustomData;
             Items = new List<UserMenuItem>();
         }
     }

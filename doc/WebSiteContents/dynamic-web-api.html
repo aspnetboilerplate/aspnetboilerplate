@@ -10,7 +10,10 @@
 <body>
 
 <ul>
-	<li><a href="#DocDynamicApi">Building dynamic Web API Controllers</a></li>
+	<li><a href="#DocDynamicApi">Building dynamic Web API Controllers</a><ul>
+		<li><a href="#DocForAll">ForAll method</a></li>
+	</ul>
+	</li>
 	<li><a href="#DocDynamicProxy">Using dynamic javascript proxi<span class="text-primary">es</span></a><ul>
 		<li><a href="#DocAjaxParams">AJAX parameters</a></li>
 		<li><a href="#DocSingleService">Single service script</a></li>
@@ -54,13 +57,30 @@ controller will be like '/api/services/tasksystem/task' and GetTasks method's
 address will be '/api/services/tasksystem/task/getTasks'. Method names are 
 converted to <strong>camelCase</strong> since it's traditional in javascript 
 world.</p>
-<p>You can <strong>exclude</strong> some methods or <strong>change name</strong> of 
+<p>You can <strong>exclude</strong> some methods of 
 an api method. An example definition could be:</p>
 <pre lang="cs">DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task<span lang="tr">Service</span>")
-    .ForMethod("GetTasks").WithActionName("SelectTasks")
     .ForMethod("CreateTask").DontCreateAction()
     .Build();</pre>
+<h4>ForAll method</h4>
+<p>We may have many application services in an application and building api 
+controllers one by one may be a tedious and forgettable work. 
+DynamicApiControllerBuilper provides a method to build web api controllers for 
+all application services in one call. Example:</p>
+<pre lang="cs">DynamicApiControllerBuilder
+    .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
+    .Build();</pre>
+<p>ForAll method is generic and accepts an interface. First parameter is an 
+assembly that has classes derived from given interface. The last one is 
+namespace prefix of services. Say that we have ITaskAppService and 
+IPersonAppService in given assembly. For this configuration, services will be 
+'/api/services/<strong>tasksystem/task</strong>' and '/api/services/<strong>tasksystem/person</strong>'. 
+To canculate service name: Service and AppService postfixes and I prefix is 
+removed (for interfaces). Also, service name is converted to camel case. If you 
+don't like this convention, there is a 'WithServiceName' method that you can 
+determine names. Also, There is a Where method to filter services. This can be 
+useful if you will build for all application services except a few one.</p>
 <h3 id="DocDynamicProxy">
     Using dynamic javascript proxies</h3>
 <p>
