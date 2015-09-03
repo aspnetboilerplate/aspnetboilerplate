@@ -16,7 +16,7 @@ namespace Abp.AutoMapper
 
         private static bool _createdMappingsBefore;
         private static readonly object _syncObj = new object();
-        
+
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -39,14 +39,18 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                FindAndAutoMapTypes();
-                CreateOtherMappings();
+                AutoMapperHelper.Initialize(configuration =>
+                {
+
+                    FindAndAutoMapTypes(configuration);
+                    CreateOtherMappings(configuration);
+                });
 
                 _createdMappingsBefore = true;
             }
         }
 
-        private void FindAndAutoMapTypes()
+        private void FindAndAutoMapTypes(IConfiguration configuration)
         {
             var types = _typeFinder.Find(type =>
                 type.IsDefined(typeof(AutoMapAttribute)) ||
@@ -58,13 +62,13 @@ namespace Abp.AutoMapper
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
-                AutoMapperHelper.CreateMap(type);
+                AutoMapperHelper.CreateMap(configuration, type);
             }
         }
 
-        private void CreateOtherMappings()
+        private void CreateOtherMappings(IConfiguration configuration)
         {
-            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => LocalizationManager.GetString(ls.SourceName, ls.Name));
+            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => LocalizationManager.GetString(ls.SourceName, ls.Name));
         }
     }
 }

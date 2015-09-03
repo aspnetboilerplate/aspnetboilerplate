@@ -10,7 +10,7 @@ using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
-    public class DyanamicHttpActionDescriptor : ReflectedHttpActionDescriptor
+    public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {
         /// <summary>
         /// The Action filters for the Action Descriptor.
@@ -25,7 +25,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
         }
 
-        public DyanamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
+        public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
             : base(controllerDescriptor, methodInfo)
         {
             _filters = filters;
