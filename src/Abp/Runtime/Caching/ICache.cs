@@ -15,6 +15,7 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Default sliding expire time of cache items.
+        /// Default value: 60 minutes. Can be changed by configuration.
         /// </summary>
         TimeSpan DefaultSlidingExpireTime { get; set; }
 

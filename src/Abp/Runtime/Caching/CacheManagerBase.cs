@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching
 {
@@ -15,15 +14,19 @@ namespace Abp.Runtime.Caching
     {
         protected readonly IIocManager IocManager;
 
+        protected readonly ICachingConfiguration Configuration;
+
         protected readonly ConcurrentDictionary<string, ICache> Caches;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="iocManager"></param>
-        protected CacheManagerBase(IIocManager iocManager)
+        /// <param name="configuration"></param>
+        protected CacheManagerBase(IIocManager iocManager, ICachingConfiguration configuration)
         {
             IocManager = iocManager;
+            Configuration = configuration;
             Caches = new ConcurrentDictionary<string, ICache>();
         }
 
@@ -34,8 +37,22 @@ namespace Abp.Runtime.Caching
         
         public virtual ICache GetCache(string name)
         {
-            //TODO: Get expire time from some configuration!
-            return Caches.GetOrAdd(name, CreateCacheImplementation);
+            return Caches.GetOrAdd(name, (cacheName) =>
+            {
+                var cache = CreateCacheImplementation(cacheName);
+
+                var configurators = Configuration.Configurators.Where(c => c.CacheName == null || c.CacheName == cacheName);
+
+                foreach (var configurator in configurators)
+                {
+                    if (configurator.InitAction != null)
+                    {
+                        configurator.InitAction(cache);
+                    }
+                }
+
+                return cache;
+            });
         }
 
         public virtual void Dispose()

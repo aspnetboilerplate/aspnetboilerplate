@@ -1,18 +1,20 @@
 ﻿using System;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Runtime.Caching.Memory
 {
-    public class MemoryCacheProvider_Tests : TestBaseWithLocalIocManager
+    public class MemoryCacheManager_Tests : TestBaseWithLocalIocManager
     {
         private readonly ICacheManager _cacheManager;
         private readonly ITypedCache<string, MyCacheItem> _cache;
 
-        public MemoryCacheProvider_Tests()
+        public MemoryCacheManager_Tests()
         {
+            LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
             _cache = _cacheManager.GetCache("MyCacheItems").AsTyped<string, MyCacheItem>();

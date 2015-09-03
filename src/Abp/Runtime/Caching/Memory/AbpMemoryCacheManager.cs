@@ -1,19 +1,20 @@
 ﻿using System.Runtime.Caching;
 using Abp.Dependency;
+using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching.Memory
 {
     /// <summary>
     /// Implements <see cref="ICacheManager"/> to work with <see cref="MemoryCache"/>.
     /// </summary>
+    //TODO: Make CacheManager non-abstract and extract CreateCacheImplementation to a cache factory...?
     public class AbpMemoryCacheManager : CacheManagerBase
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="iocManager"></param>
-        public AbpMemoryCacheManager(IIocManager iocManager)
-            : base(iocManager)
+        public AbpMemoryCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
+            : base(iocManager, configuration)
         {
             IocManager.RegisterIfNot<AbpMemoryCache>(DependencyLifeStyle.Transient);
         }

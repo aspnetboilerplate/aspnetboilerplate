@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
 {
@@ -59,6 +60,8 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public IAuditingConfiguration Auditing { get; private set; }
 
+        public ICachingConfiguration Caching { get; private set; }
+
         /// <summary>
         /// Used to configure multi-tenancy.
         /// </summary>
@@ -83,6 +86,7 @@ namespace Abp.Configuration.Startup
             EventBus = IocManager.Resolve<IEventBusConfiguration>();
             MultiTenancy = IocManager.Resolve<IMultiTenancyConfig>();
             Auditing = IocManager.Resolve<IAuditingConfiguration>();
+            Caching = IocManager.Resolve<ICachingConfiguration>();
         }
     }
 }

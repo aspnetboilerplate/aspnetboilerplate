@@ -121,7 +121,7 @@
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
-    <Compile Include="Runtime\Caching\Memory\MemoryCacheProvider_Tests.cs" />
+    <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
