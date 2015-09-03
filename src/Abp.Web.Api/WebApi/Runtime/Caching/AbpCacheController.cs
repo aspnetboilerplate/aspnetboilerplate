@@ -11,11 +11,11 @@ namespace Abp.WebApi.Runtime.Caching
 {
     public class AbpCacheController : AbpApiController
     {
-        private readonly ICacheProvider _cacheProvider;
+        private readonly ICacheManager _cacheManager;
 
-        public AbpCacheController(ICacheProvider cacheProvider)
+        public AbpCacheController(ICacheManager cacheManager)
         {
-            _cacheProvider = cacheProvider;
+            _cacheManager = cacheManager;
         }
 
         [HttpPost]
@@ -33,7 +33,7 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var cacheStores = _cacheProvider.GetAllCacheStores().Where(c => model.Caches.Contains(c.Name));
+            var cacheStores = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
             foreach (var cacheStore in cacheStores)
             {
                 await cacheStore.ClearAsync();
@@ -50,7 +50,7 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var cacheStores = _cacheProvider.GetAllCacheStores();
+            var cacheStores = _cacheManager.GetAllCaches();
             foreach (var cacheStore in cacheStores)
             {
                 await cacheStore.ClearAsync();

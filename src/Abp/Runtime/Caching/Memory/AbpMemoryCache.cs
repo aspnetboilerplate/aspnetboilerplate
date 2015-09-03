@@ -3,33 +3,29 @@ using System.Runtime.Caching;
 
 namespace Abp.Runtime.Caching.Memory
 {
-    public class MemoryCacheStore<TKey, TValue> : CacheStoreBase<TKey, TValue>
+    /// <summary>
+    /// Implements <see cref="ICache"/> to work with <see cref="MemoryCache"/>.
+    /// </summary>
+    public class AbpMemoryCache : CacheBase
     {
         private MemoryCache _memoryCache;
 
-        public MemoryCacheStore(string name)
-            : base(name, null)
+        public AbpMemoryCache(string name)
+            : base(name)
         {
             _memoryCache = new MemoryCache(Name);
         }
 
-
-        public MemoryCacheStore(string name, TimeSpan defaultSlidingExpireTime)
-            : base(name, defaultSlidingExpireTime)
+        public override object GetOrDefault(string key)
         {
-            _memoryCache = new MemoryCache(Name);
+            return _memoryCache.Get(key);
         }
-
-        public override TValue GetOrDefault(TKey key)
-        {
-            return (TValue)_memoryCache.Get(key.ToString());
-        }
-
-        public override void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null)
+        
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
         {
             //TODO: Optimize by using a default CacheItemPolicy?
             _memoryCache.Set(
-                key.ToString(),
+                key,
                 value,
                 new CacheItemPolicy
                 {
@@ -37,9 +33,9 @@ namespace Abp.Runtime.Caching.Memory
                 });
         }
 
-        public override void Remove(TKey key)
+        public override void Remove(string key)
         {
-            _memoryCache.Remove(key.ToString());
+            _memoryCache.Remove(key);
         }
 
         public override void Clear()

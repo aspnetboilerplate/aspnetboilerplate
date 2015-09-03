@@ -8,25 +8,25 @@ namespace Abp.Tests.Runtime.Caching.Memory
 {
     public class MemoryCacheProvider_Tests : TestBaseWithLocalIocManager
     {
-        private readonly ICacheProvider _cacheProvider;
-        private ICacheStore<string, MyCacheItem> _cacheStore;
+        private readonly ICacheManager _cacheManager;
+        private readonly ITypedCache<string, MyCacheItem> _cache;
 
         public MemoryCacheProvider_Tests()
         {
-            LocalIocManager.Register<ICacheProvider, MemoryCacheProvider>();
-            _cacheProvider = LocalIocManager.Resolve<ICacheProvider>();
-            _cacheStore = _cacheProvider.GetOrCreateCacheStore<string, MyCacheItem>("MyCacheItems");
+            LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
+            _cacheManager = LocalIocManager.Resolve<ICacheManager>();
+            _cache = _cacheManager.GetCache("MyCacheItems").AsTyped<string, MyCacheItem>();
         }
 
         [Fact]
         public void Simple_Get_Set_Test()
         {
-            _cacheStore.GetOrDefault("A").ShouldBe(null);
+            _cache.GetOrDefault("A").ShouldBe(null);
             
-            _cacheStore.Set("A", new MyCacheItem { Value = 42 });
+            _cache.Set("A", new MyCacheItem { Value = 42 });
             
-            _cacheStore.GetOrDefault("A").ShouldNotBe(null);
-            _cacheStore.GetOrDefault("A").Value.ShouldBe(42);
+            _cache.GetOrDefault("A").ShouldNotBe(null);
+            _cache.GetOrDefault("A").Value.ShouldBe(42);
         }
 
         [Serializable]

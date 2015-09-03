@@ -4,7 +4,11 @@ using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching
 {
-    public abstract class CacheStoreBase<TKey, TValue> : ICacheStore<TKey, TValue>
+    /// <summary>
+    /// Base class for caches.
+    /// It's used to simplify implementing <see cref="ICache"/>.
+    /// </summary>
+    public abstract class CacheBase : ICache
     {
         public string Name { get; private set; }
 
@@ -14,20 +18,17 @@ namespace Abp.Runtime.Caching
 
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        protected CacheStoreBase(string name, TimeSpan? defaultSlidingExpireTime)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name"></param>
+        protected CacheBase(string name)
         {
             Name = name;
-            DefaultSlidingExpireTime = defaultSlidingExpireTime ?? TimeSpan.FromHours(1);
+            DefaultSlidingExpireTime = TimeSpan.FromHours(1);
         }
 
-        public abstract TValue GetOrDefault(TKey key);
-
-        public virtual Task<TValue> GetOrDefaultAsync(TKey key)
-        {
-            return Task.FromResult(GetOrDefault(key));
-        }
-
-        public virtual TValue GetOrCreate(TKey key, Func<TValue> factory)
+        public virtual object Get(string key, Func<object> factory)
         {
             var cacheKey = key;
             var item = GetOrDefault(key);
@@ -47,7 +48,7 @@ namespace Abp.Runtime.Caching
             return item;
         }
 
-        public virtual async Task<TValue> GetOrCreateAsync(TKey key, Func<Task<TValue>> factory)
+        public virtual async Task<object> GetAsync(string key, Func<Task<object>> factory)
         {
             var cacheKey = key;
             var item = await GetOrDefaultAsync(key);
@@ -67,17 +68,24 @@ namespace Abp.Runtime.Caching
             return item;
         }
 
-        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null);
+        public abstract object GetOrDefault(string key);
 
-        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null)
+        public virtual Task<object> GetOrDefaultAsync(string key)
+        {
+            return Task.FromResult(GetOrDefault(key));
+        }
+
+        public abstract void Set(string key, object value, TimeSpan? slidingExpireTime = null);
+
+        public virtual Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null)
         {
             Set(key, value, slidingExpireTime);
             return Task.FromResult(0);
         }
 
-        public abstract void Remove(TKey key);
+        public abstract void Remove(string key);
 
-        public virtual Task RemoveAsync(TKey key)
+        public virtual Task RemoveAsync(string key)
         {
             Remove(key);
             return Task.FromResult(0);
@@ -85,7 +93,7 @@ namespace Abp.Runtime.Caching
 
         public abstract void Clear();
 
-        public Task ClearAsync()
+        public virtual Task ClearAsync()
         {
             Clear();
             return Task.FromResult(0);
@@ -93,7 +101,7 @@ namespace Abp.Runtime.Caching
 
         public virtual void Dispose()
         {
-            
+
         }
     }
 }
