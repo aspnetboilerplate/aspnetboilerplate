@@ -33,10 +33,10 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var cacheStores = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
-            foreach (var cacheStore in cacheStores)
+            var caches = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
+            foreach (var cache in caches)
             {
-                await cacheStore.ClearAsync();
+                await cache.ClearAsync();
             }
         }
 
@@ -50,10 +50,10 @@ namespace Abp.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var cacheStores = _cacheManager.GetAllCaches();
-            foreach (var cacheStore in cacheStores)
+            var caches = _cacheManager.GetAllCaches();
+            foreach (var cache in caches)
             {
-                await cacheStore.ClearAsync();
+                await cache.ClearAsync();
             }
         }
 
