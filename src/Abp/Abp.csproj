@@ -106,6 +106,7 @@
     <Compile Include="Auditing\AuditingHelper.cs" />
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
     <Compile Include="Runtime\Caching\Configuration\CacheConfigurator.cs" />
     <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICacheConfigurator.cs" />

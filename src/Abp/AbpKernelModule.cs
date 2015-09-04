@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
@@ -35,13 +36,13 @@ namespace Abp
             _auditingInterceptorRegistrar.Initialize();
 
             UnitOfWorkRegistrar.Initialize(IocManager);
-            
+
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
                 new NamedTypeSelector(
                     "Abp.ApplicationServices",
-                    type => typeof (IApplicationService).IsAssignableFrom(type)
+                    type => typeof(IApplicationService).IsAssignableFrom(type)
                     )
                 );
 
@@ -57,6 +58,8 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+
+            ConfigureCaches();
         }
 
         public override void Initialize()
@@ -80,6 +83,24 @@ namespace Abp
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
+        }
+
+        private void ConfigureCaches()
+        {
+            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
+            });
+
+            Configuration.Caching.Configure(SettingManager.TenantSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
+            });
+
+            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
+            });
         }
 
         private void RegisterMissingComponents()
