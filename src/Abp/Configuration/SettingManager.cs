@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.Runtime.Caching.Memory;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Threading;
 
@@ -33,21 +31,27 @@ namespace Abp.Configuration
 
         private readonly Lazy<Dictionary<string, SettingInfo>> _applicationSettings;
 
-        private readonly AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>> _tenantSettingCache;
+        private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
 
-        private readonly AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>> _userSettingCache;
+        private readonly ITypedCache<long, Dictionary<string, SettingInfo>> _userSettingCache;
 
         /// <inheritdoc/>
-        public SettingManager(ISettingDefinitionManager settingDefinitionManager)
+        public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
         {
             _settingDefinitionManager = settingDefinitionManager;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
 
-            _applicationSettings = new Lazy<Dictionary<string, SettingInfo>>(() => AsyncHelper.RunSync(GetApplicationSettingsFromDatabase), true); //TODO: Run async
-            _tenantSettingCache = new AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>>(new MemoryCache(GetType().FullName + ".TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
-            _userSettingCache = new AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>>(new MemoryCache(GetType().FullName + ".UserSettings"), TimeSpan.FromMinutes(20)); //TODO: Get constant from somewhere else.
+            _applicationSettings = new Lazy<Dictionary<string, SettingInfo>>(() => AsyncHelper.RunSync(GetApplicationSettingsFromDatabase), true);
+
+            _tenantSettingCache = cacheManager
+                .GetCache("AbpTenantSettingsCache")
+                .AsTyped<int, Dictionary<string, SettingInfo>>();
+
+            _userSettingCache = cacheManager
+                .GetCache("AbpUserSettingsCache")
+                .AsTyped<long, Dictionary<string, SettingInfo>>();
         }
 
         #region Public methods
@@ -416,7 +420,7 @@ namespace Abp.Configuration
         private async Task<Dictionary<string, SettingInfo>> GetTenantSettingsFromCache(int tenantId)
         {
             return await _tenantSettingCache.GetAsync(
-                tenantId.ToString(CultureInfo.InvariantCulture),
+                tenantId,
                 async () =>
                 {
                     var dictionary = new Dictionary<string, SettingInfo>();
@@ -434,7 +438,7 @@ namespace Abp.Configuration
         private async Task<Dictionary<string, SettingInfo>> GetUserSettingsFromCache(long userId)
         {
             return await _userSettingCache.GetAsync(
-                userId.ToString(CultureInfo.InvariantCulture),
+                userId,
                 async () =>
                 {
                     var dictionary = new Dictionary<string, SettingInfo>();
