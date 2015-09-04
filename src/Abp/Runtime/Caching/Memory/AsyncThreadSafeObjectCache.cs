@@ -10,6 +10,7 @@ namespace Abp.Runtime.Caching.Memory
     /// It uses async pattern.
     /// </summary>
     /// <typeparam name="TValue">Value type</typeparam>
+    [Obsolete("Inject and use ICacheManager caching.")]
     public class AsyncThreadSafeObjectCache<TValue> where TValue : class
     {
         /// <summary>

@@ -7,6 +7,7 @@ namespace Abp.Runtime.Caching.Memory
     /// This class is used to store items to a thread safe and generic cache in a simple manner.
     /// </summary>
     /// <typeparam name="TValue">Value type</typeparam>
+    [Obsolete("Inject and use ICacheManager caching.")]
     public class ThreadSafeObjectCache<TValue> where TValue : class
     {
         /// <summary>
