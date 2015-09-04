@@ -87,7 +87,7 @@
 
                     'request': function (config) {
                         if (endsWith(config.url, '.cshtml')) {
-                            config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url;
+                            config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url + '&_t=' + abp.pageLoadTime.getTime();
                         }
 
                         return config;
