@@ -7,7 +7,6 @@ namespace Abp.Runtime.Caching.Memory
     /// <summary>
     /// Implements <see cref="ICacheManager"/> to work with <see cref="MemoryCache"/>.
     /// </summary>
-    //TODO: Make CacheManager non-abstract and extract CreateCacheImplementation to a cache factory...?
     public class AbpMemoryCacheManager : CacheManagerBase
     {
         /// <summary>

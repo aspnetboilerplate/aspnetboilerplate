@@ -23,9 +23,13 @@ namespace Abp.Runtime.Caching
 
         public ICache InternalCache { get; private set; }
 
-        public TypedCacheWrapper(ICache cache)
+        /// <summary>
+        /// Creates a new <see cref="TypedCacheWrapper{TKey,TValue}"/> object.
+        /// </summary>
+        /// <param name="internalCache">The actual internal cache</param>
+        public TypedCacheWrapper(ICache internalCache)
         {
-            InternalCache = cache;
+            InternalCache = internalCache;
         }
 
         public void Dispose()

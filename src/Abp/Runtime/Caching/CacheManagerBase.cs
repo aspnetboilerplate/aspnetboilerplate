@@ -57,9 +57,9 @@ namespace Abp.Runtime.Caching
 
         public virtual void Dispose()
         {
-            foreach (var cacheStore in Caches)
+            foreach (var cache in Caches)
             {
-                IocManager.Release(cacheStore.Value);
+                IocManager.Release(cache.Value);
             }
 
             Caches.Clear();

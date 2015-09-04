@@ -10,6 +10,10 @@ namespace Abp.Runtime.Caching.Memory
     {
         private MemoryCache _memoryCache;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name">Unique name of the cache</param>
         public AbpMemoryCache(string name)
             : base(name)
         {

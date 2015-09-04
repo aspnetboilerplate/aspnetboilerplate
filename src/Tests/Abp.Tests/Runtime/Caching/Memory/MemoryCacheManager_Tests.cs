@@ -17,7 +17,15 @@ namespace Abp.Tests.Runtime.Caching.Memory
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
+
+            var defaultSlidingExpireTime = TimeSpan.FromHours(24);
+            LocalIocManager.Resolve<ICachingConfiguration>().ConfigureAll(cache =>
+            {
+                cache.DefaultSlidingExpireTime = defaultSlidingExpireTime;
+            });
+
             _cache = _cacheManager.GetCache("MyCacheItems").AsTyped<string, MyCacheItem>();
+            _cache.DefaultSlidingExpireTime.ShouldBe(defaultSlidingExpireTime);
         }
 
         [Fact]
