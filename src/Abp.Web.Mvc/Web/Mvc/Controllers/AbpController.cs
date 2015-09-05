@@ -220,31 +220,6 @@ namespace Abp.Web.Mvc.Controllers
             HandleAuditingAfterAction(filterContext);                
         }
 
-        protected virtual bool ShouldSaveAudit(ActionExecutingContext filterContext)
-        {
-            if (AuditingConfiguration == null)
-            {
-                return false;
-            }
-
-            if (!AuditingConfiguration.MvcControllers.IsEnabled)
-            {
-                return false;
-            }
-
-            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
-            {
-                return false;                
-            }
-
-            return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext.ActionDescriptor),
-                AuditingConfiguration,
-                AbpSession,
-                true
-                );
-        }
-
         private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
         {
             if (actionDescriptor is ReflectedActionDescriptor)
@@ -307,6 +282,31 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             AuditingStore.Save(_auditInfo);
+        }
+
+        private bool ShouldSaveAudit(ActionExecutingContext filterContext)
+        {
+            if (AuditingConfiguration == null)
+            {
+                return false;
+            }
+
+            if (!AuditingConfiguration.MvcControllers.IsEnabled)
+            {
+                return false;
+            }
+
+            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
+            {
+                return false;
+            }
+
+            return AuditingHelper.ShouldSaveAudit(
+                GetMethodInfo(filterContext.ActionDescriptor),
+                AuditingConfiguration,
+                AbpSession,
+                true
+                );
         }
 
         private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
