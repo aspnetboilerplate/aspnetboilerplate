@@ -102,7 +102,9 @@ namespace Abp.Web.Mvc.Controllers
         private AuditInfo _auditInfo;
 
         public IAuditingConfiguration AuditingConfiguration { get; set; }
+
         public IAuditInfoProvider AuditInfoProvider { get; set; }
+
         public IAuditingStore AuditingStore { get; set; }
 
         /// <summary>
@@ -212,13 +214,15 @@ namespace Abp.Web.Mvc.Controllers
 
             base.OnActionExecuting(filterContext);
         }
-        
+
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
 
-            HandleAuditingAfterAction(filterContext);                
+            HandleAuditingAfterAction(filterContext);
         }
+
+        #region Auditing
 
         private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
         {
@@ -237,7 +241,7 @@ namespace Abp.Web.Mvc.Controllers
                 return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
             }
 
-            return null;
+            throw new AbpException("Could not get MethodInfo for the action '" + actionDescriptor.ActionName + "' of controller '" + actionDescriptor.ControllerDescriptor.ControllerName + "'.");
         }
 
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
@@ -278,7 +282,7 @@ namespace Abp.Web.Mvc.Controllers
 
             if (AuditInfoProvider != null)
             {
-                AuditInfoProvider.Fill(_auditInfo);                
+                AuditInfoProvider.Fill(_auditInfo);
             }
 
             AuditingStore.Save(_auditInfo);
@@ -339,5 +343,7 @@ namespace Abp.Web.Mvc.Controllers
                 return "{}";
             }
         }
+
+        #endregion
     }
 }
