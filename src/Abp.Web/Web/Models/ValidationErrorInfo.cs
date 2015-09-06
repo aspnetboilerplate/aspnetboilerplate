@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Abp.Extensions;
 
 namespace Abp.Web.Models
 {
@@ -53,6 +55,22 @@ namespace Abp.Web.Models
         /// <param name="member">Related invalid member</param>
         public ValidationErrorInfo(string message, string member)
             : this(message, new[] { member })
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ValidationErrorInfo"/>.
+        /// </summary>
+        /// <param name="instanceToClone">Instance to clone</param>
+        /// <param name="forAjax">Indicates whether the resultant instance is to be returned in AJAX response</param>
+        public ValidationErrorInfo(ValidationErrorInfo instanceToClone, bool forAjax = false)
+            : this(
+                instanceToClone.Message,
+                (instanceToClone.Members != null)
+                    ? instanceToClone.Members.Select(m => (!forAjax) ? m : m.ToCamelCase()).ToArray()
+                    : null
+            )
         {
 
         }
