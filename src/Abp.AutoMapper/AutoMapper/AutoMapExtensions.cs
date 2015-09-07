@@ -12,7 +12,7 @@ namespace Abp.AutoMapper
         /// <param name="source">Source object</param>
         public static TDestination MapTo<TDestination>(this object source)
         {
-            return Mapper.Map<TDestination>(source);
+            return Mapper.Map<TDestination>(source, opts => opts.CreateMissingTypeMaps = true);
         }
 
         /// <summary>
