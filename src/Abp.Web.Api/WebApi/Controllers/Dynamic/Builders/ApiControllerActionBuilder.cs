@@ -4,6 +4,7 @@ using System.Web.Http.Filters;
 using System.Linq;
 using Abp.Reflection;
 using System;
+using System.Web.Http;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -122,23 +123,43 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return Verb.Value;
             }
 
-            if (!conventionalVerbs)
+            if(_methodInfo.IsDefined(typeof (HttpGetAttribute)))
             {
-                return DynamicApiVerbHelper.GetDefaultHttpVerb();
+                return HttpVerb.Get;
             }
             
-            var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);
-            if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+            if (_methodInfo.IsDefined(typeof (HttpPostAttribute)))
             {
-                conventionalVerb = DynamicApiVerbHelper.GetDefaultHttpVerb();
+                return HttpVerb.Post;                
             }
 
-            return conventionalVerb;
+            if (_methodInfo.IsDefined(typeof(HttpPutAttribute)))
+            {
+                return HttpVerb.Put;
+            }
+            
+            if (_methodInfo.IsDefined(typeof(HttpDeleteAttribute)))
+            {
+                return HttpVerb.Delete;
+            }
+
+            if (conventionalVerbs)
+            {
+                var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);
+                if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+                {
+                    conventionalVerb = DynamicApiVerbHelper.GetDefaultHttpVerb();
+                }
+
+                return conventionalVerb;
+            }
+
+            return DynamicApiVerbHelper.GetDefaultHttpVerb();
         }
 
         private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
         {
-            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType));
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
         }
     }
 }
