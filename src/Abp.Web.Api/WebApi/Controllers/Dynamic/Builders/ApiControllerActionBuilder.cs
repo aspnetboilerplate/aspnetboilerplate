@@ -108,26 +108,37 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Builds <see cref="DynamicApiActionInfo"/> object for this configuration.
         /// </summary>
+        /// <param name="conventionalVerbs"></param>
         /// <returns></returns>
-        public DynamicApiActionInfo BuildActionInfo()
+        internal DynamicApiActionInfo BuildActionInfo(bool conventionalVerbs)
         {
-            if (
-                Verb == null ||
-                (Verb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
-                )
-            {
-                Verb = DynamicApiVerbHelper.GetDefaultHttpVerb();
-            }
-
-            return new DynamicApiActionInfo(ActionName, Verb.Value, _methodInfo, _filters);
+            return new DynamicApiActionInfo(ActionName, GetNormalizedVerb(conventionalVerbs), _methodInfo, _filters);
         }
 
-        public static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
+        private HttpVerb GetNormalizedVerb(bool conventionalVerbs)
         {
-            return !methodInfo
-            .GetParameters()
-            .Where(p => !TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
-            .Any();
+            if (Verb != null)
+            {
+                return Verb.Value;
+            }
+
+            if (!conventionalVerbs)
+            {
+                return DynamicApiVerbHelper.GetDefaultHttpVerb();
+            }
+            
+            var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);
+            if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+            {
+                conventionalVerb = DynamicApiVerbHelper.GetDefaultHttpVerb();
+            }
+
+            return conventionalVerb;
+        }
+
+        private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
+        {
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType));
         }
     }
 }

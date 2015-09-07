@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
-using Abp.WebApi.Controllers.Dynamic.Selectors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -107,12 +106,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     continue;
                 }
 
-                if (_conventionalVerbs && !actionBuilder.Verb.HasValue)
-                {
-                    actionBuilder.WithVerb(DynamicApiVerbHelper.GetConventionalVerbForMethodName(actionBuilder.ActionName));
-                }
-
-                controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo();
+                controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(_conventionalVerbs);
             }
             
             DynamicApiControllerManager.Register(controllerInfo);
