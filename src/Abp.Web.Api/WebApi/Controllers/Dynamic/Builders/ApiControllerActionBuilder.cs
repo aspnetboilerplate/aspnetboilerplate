@@ -159,7 +159,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
         {
-            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
         }
     }
 }

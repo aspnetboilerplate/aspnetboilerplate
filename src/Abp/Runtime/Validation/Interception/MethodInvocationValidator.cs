@@ -90,7 +90,7 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveIncludingNullable(parameterInfo.ParameterType))
+                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
                     _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }

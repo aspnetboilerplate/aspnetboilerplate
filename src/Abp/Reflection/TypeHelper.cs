@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Configuration;
 
 namespace Abp.Reflection
 {
@@ -20,7 +21,7 @@ namespace Abp.Reflection
                 return false;
             }
 
-            return type.GetGenericTypeDefinition() == typeof (Func<>);
+            return type.GetGenericTypeDefinition() == typeof(Func<>);
         }
 
         public static bool IsFunc<TReturn>(object obj)
@@ -28,19 +29,34 @@ namespace Abp.Reflection
             return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
 
-        public static bool IsPrimitiveIncludingNullable(Type type)
+        public static bool IsPrimitiveExtendedIncludingNullable(Type type)
         {
-            if (type.IsPrimitive)
+            if (IsPrimitiveExtended(type))
             {
                 return true;
             }
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                return type.GenericTypeArguments[0].IsPrimitive;
+                return IsPrimitiveExtended(type.GenericTypeArguments[0]);
             }
 
             return false;
+        }
+
+        private static bool IsPrimitiveExtended(Type type)
+        {
+            if (type.IsPrimitive)
+            {
+                return true;
+            }
+
+            return type == typeof (string) ||
+                   type == typeof (decimal) ||
+                   type == typeof (DateTime) ||
+                   type == typeof (DateTimeOffset) ||
+                   type == typeof (TimeSpan) ||
+                   type == typeof (Guid);
         }
     }
 }
