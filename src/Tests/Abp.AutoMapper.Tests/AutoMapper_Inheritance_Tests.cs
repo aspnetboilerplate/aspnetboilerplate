@@ -1,4 +1,4 @@
-using Shouldly;
+﻿using Shouldly;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests
@@ -8,7 +8,8 @@ namespace Abp.AutoMapper.Tests
         public AutoMapper_Inheritance_Tests()
         {
             AutoMapperHelper.CreateMap(typeof(MyTargetClassToMap));
-            AutoMapperHelper.CreateMap(typeof(MyTargetDerivedClassToMap));
+            AutoMapperHelper.CreateMap(typeof(EntityDto));
+            AutoMapperHelper.CreateMap(typeof(DerivedEntityDto));
         }
 
         [Fact]
@@ -17,16 +18,6 @@ namespace Abp.AutoMapper.Tests
             var derived = new MyDerivedClass { Value = "fortytwo" };
             var target = derived.MapTo<MyTargetClassToMap>();
             target.Value.ShouldBe("fortytwo");
-        }
-
-        [Fact]
-        public void Should_Map_SubDerived_To_Base_And_To_Drived()
-        {
-            var subDerived = new MySubDerivedClass { Value = "fortytwo" };
-            var target = subDerived.MapTo<MyTargetClassToMap>();
-            var target2 = subDerived.MapTo<MyTargetDerivedClassToMap>();
-            target.Value.ShouldBe("fortytwo");
-            target2.Value.ShouldBe("fortytwo");
         }
 
         public class MyBaseClass
@@ -39,21 +30,36 @@ namespace Abp.AutoMapper.Tests
 
         }
 
-        public class MySubDerivedClass : MyDerivedClass
-        {
-            
-        }
-
         [AutoMapFrom(typeof(MyBaseClass))]
         public class MyTargetClassToMap
         {
             public string Value { get; set; }
         }
 
-        [AutoMapFrom(typeof(MyDerivedClass))]
-        public class MyTargetDerivedClassToMap : MyTargetClassToMap
+        [Fact]
+        public void Should_Map_EntityProxy_To_EntityDto_And_To_DrivedEntityDto()
         {
-            
+            var proxy = new EntityProxy() { Value = "42"};
+            var target = proxy.MapTo<EntityDto>();
+            var target2 = proxy.MapTo<DerivedEntityDto>();
+            target.Value.ShouldBe("42");
+            target2.Value.ShouldBe("42");
         }
+
+        public class Entity
+        {
+            public string Value { get; set; }
+        }
+        public class DerivedEntity : Entity { }
+        public class EntityProxy : DerivedEntity { }
+
+        [AutoMapFrom(typeof(Entity))]
+        public class EntityDto
+        {
+            public string Value { get; set; }
+        }
+
+        [AutoMapFrom(typeof(DerivedEntity))]
+        public class DerivedEntityDto : EntityDto { }
     }
 }
