@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using Shouldly;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Abp.AutoMapper.Tests
         static AutoMapping_Tests()
         {
             //ABP will automatically find and create these mappings!
-            AutoMapperHelper.Initialize(cfg =>
+            Mapper.Initialize(cfg =>
             {
                 AutoMapperHelper.CreateMap(cfg, typeof(MyClass1));
                 AutoMapperHelper.CreateMap(cfg, typeof(MyClass2));

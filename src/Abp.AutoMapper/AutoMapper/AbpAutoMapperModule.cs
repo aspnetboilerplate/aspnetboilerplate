@@ -40,9 +40,8 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                AutoMapperHelper.Initialize(configuration =>
+                Mapper.Initialize(configuration =>
                 {
-
                     FindAndAutoMapTypes(configuration);
                     CreateOtherMappings(configuration);
                 });

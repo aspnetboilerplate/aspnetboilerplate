@@ -43,10 +43,5 @@ namespace Abp.AutoMapper
                 }
             }
         }
-
-        internal static void Initialize(Action<IConfiguration> action)
-        {
-            Mapper.Initialize(action);
-        }
     }
 }
