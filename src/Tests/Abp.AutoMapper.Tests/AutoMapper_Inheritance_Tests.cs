@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Shouldly;
+﻿using Shouldly;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests
@@ -8,10 +7,7 @@ namespace Abp.AutoMapper.Tests
     {
         public AutoMapper_Inheritance_Tests()
         {
-            Mapper.Initialize(cfg =>
-            {
-                AutoMapperHelper.CreateMap(cfg, typeof(MyTargetClassToMap));
-            });
+            AutoMapperHelper.CreateMap(typeof(MyTargetClassToMap));
         }
 
         [Fact]

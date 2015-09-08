@@ -20,7 +20,7 @@ namespace Abp.Reflection
 
         public static bool IsFunc<TReturn>(object obj)
         {
-            return obj.GetType() == typeof(Func<TReturn>);
+            return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
 
         public static bool IsPrimitiveIncludingNullable(Type type)
