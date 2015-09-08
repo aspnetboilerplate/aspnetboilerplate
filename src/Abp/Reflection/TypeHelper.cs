@@ -9,6 +9,11 @@ namespace Abp.Reflection
     {
         public static bool IsFunc(object obj)
         {
+            if (obj == null)
+            {
+                return false;
+            }
+
             var type = obj.GetType();
             if (!type.IsGenericType)
             {
