@@ -1,4 +1,5 @@
-﻿using Abp.Configuration.Startup;
+﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
@@ -9,6 +10,8 @@ namespace Abp.TestBase.Runtime.Session
     {
         public long? UserId { get; set; }
 
+        public long? HostUserId { get; set; }
+
         public int? TenantId
         {
             get
@@ -17,7 +20,7 @@ namespace Abp.TestBase.Runtime.Session
                 {
                     return 1;
                 }
-                
+
                 return _tenantId;
             }
             set
@@ -32,6 +35,8 @@ namespace Abp.TestBase.Runtime.Session
         }
 
         public MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
+
+
 
         private readonly IMultiTenancyConfig _multiTenancy;
         private int? _tenantId;

@@ -18,6 +18,11 @@ namespace Abp.Auditing
         public long? UserId { get; set; }
 
         /// <summary>
+        /// HostUserId.
+        /// </summary>
+        public long? HostUserId { get; set; }
+
+        /// <summary>
         /// Service (class/interface) name.
         /// </summary>
         public string ServiceName { get; set; }

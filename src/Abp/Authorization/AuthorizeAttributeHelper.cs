@@ -3,11 +3,14 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Abp.Threading;
+using Abp.Configuration.Startup;
 
 namespace Abp.Authorization
 {
     internal class AuthorizeAttributeHelper : IAuthorizeAttributeHelper, ITransientDependency
     {
+        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
+
         public IAbpSession AbpSession { get; set; }
 
         public IPermissionChecker PermissionChecker { get; set; }
@@ -16,11 +19,13 @@ namespace Abp.Authorization
         {
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
+            MultiTenancyConfig = new MultiTenancyConfig();
         }
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
-            if (!AbpSession.UserId.HasValue)
+            if (!AbpSession.UserId.HasValue && 
+                !(MultiTenancyConfig.GrantTenantAccessToHostUsers ? AbpSession.HostUserId.HasValue : false))
             {
                 throw new AbpAuthorizationException("No user logged in!");
             }
