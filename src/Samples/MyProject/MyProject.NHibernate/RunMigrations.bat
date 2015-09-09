@@ -1,0 +1,2 @@
+..\packages\FluentMigrator.1.5.1.0\tools\Migrate.exe /connection "server=211.149.215.109;UID=root;Password=reation_109;database=MyProject;Connect Timeout=1200;" /db mysql /target "bin\Debug\MyProject.NHibernate.dll"
+pause
