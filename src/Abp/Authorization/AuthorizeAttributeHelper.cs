@@ -9,23 +9,23 @@ namespace Abp.Authorization
 {
     internal class AuthorizeAttributeHelper : IAuthorizeAttributeHelper, ITransientDependency
     {
-        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
         public IAbpSession AbpSession { get; set; }
 
         public IPermissionChecker PermissionChecker { get; set; }
 
-        public AuthorizeAttributeHelper()
+        public AuthorizeAttributeHelper(IMultiTenancyConfig multiTenancyConfig)
         {
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
-            MultiTenancyConfig = new MultiTenancyConfig();
+            _multiTenancyConfig = multiTenancyConfig;
         }
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
             if (!AbpSession.UserId.HasValue && 
-                !(MultiTenancyConfig.GrantTenantAccessToHostUsers ? AbpSession.HostUserId.HasValue : false))
+                !(_multiTenancyConfig.GrantTenantAccessToHostUsers ? AbpSession.HostUserId.HasValue : false))
             {
                 throw new AbpAuthorizationException("No user logged in!");
             }

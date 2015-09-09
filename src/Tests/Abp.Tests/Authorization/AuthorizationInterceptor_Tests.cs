@@ -7,6 +7,7 @@ using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
+using Abp.Configuration.Startup;
 
 namespace Abp.Tests.Authorization
 {
@@ -23,7 +24,7 @@ namespace Abp.Tests.Authorization
             LocalIocManager.IocContainer.Register(
                 Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
                 Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
-                );
+            );
 
             //Mock session
             var session = Substitute.For<IAbpSession>();
@@ -38,6 +39,13 @@ namespace Abp.Tests.Authorization
             permissionChecker.IsGrantedAsync("Permission3").Returns(Task.FromResult(false)); //Permission3 is not granted
             LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker));
 
+            // Mock MultiTenancyConfig
+            var multiTenancyConfig = Substitute.For<IMultiTenancyConfig>();
+            multiTenancyConfig.GrantTenantAccessToHostUsers = true;
+            multiTenancyConfig.IsEnabled = true;
+            LocalIocManager.IocContainer.Register(Component.For<IMultiTenancyConfig>().UsingFactoryMethod(() => multiTenancyConfig));
+
+
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();
             _asyncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Async>();
         }
@@ -46,7 +54,7 @@ namespace Abp.Tests.Authorization
         public void Test_Authorization_Sync()
         {
             //Authorized methods
-            
+
             _syncObj.MethodWithoutPermission();
             _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
 
@@ -58,7 +66,7 @@ namespace Abp.Tests.Authorization
 
             _syncObj.MethodWithPermission1AndPermission3();
             _syncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
-            
+
             //Non authorized methods
 
             Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
@@ -152,15 +160,15 @@ namespace Abp.Tests.Authorization
         public class MyTestClassToBeAuthorized_Async
         {
             public bool Called_MethodWithoutPermission { get; private set; }
-            
+
             public bool Called_MethodWithPermission1 { get; private set; }
-            
+
             public bool Called_MethodWithPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission2 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3WithRequireAll { get; private set; }
 
             public virtual async Task MethodWithoutPermission()
