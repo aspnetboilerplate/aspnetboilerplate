@@ -13,6 +13,11 @@ namespace Abp.Runtime.Caching
             return new TypedCacheWrapper<TKey, TValue>(cache);
         }
 
+        public static ITypedCache<TKey, TValue> GetCache<TKey, TValue>(this ICacheManager cacheManager, string name)
+        {
+            return cacheManager.GetCache(name).AsTyped<TKey, TValue>();
+        }
+
         public static TValue Get<TKey, TValue>(this ICache cache, TKey key, Func<TValue> factory)
         {
             return (TValue)cache.Get(key.ToString(), () => (object)factory());
