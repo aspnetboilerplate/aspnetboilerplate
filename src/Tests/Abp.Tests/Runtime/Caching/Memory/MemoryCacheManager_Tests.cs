@@ -24,7 +24,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
                 cache.DefaultSlidingExpireTime = defaultSlidingExpireTime;
             });
 
-            _cache = _cacheManager.GetCache("MyCacheItems").AsTyped<string, MyCacheItem>();
+            _cache = _cacheManager.GetCache<string, MyCacheItem>("MyCacheItems");
             _cache.DefaultSlidingExpireTime.ShouldBe(defaultSlidingExpireTime);
         }
 
@@ -32,9 +32,9 @@ namespace Abp.Tests.Runtime.Caching.Memory
         public void Simple_Get_Set_Test()
         {
             _cache.GetOrDefault("A").ShouldBe(null);
-            
+
             _cache.Set("A", new MyCacheItem { Value = 42 });
-            
+
             _cache.GetOrDefault("A").ShouldNotBe(null);
             _cache.GetOrDefault("A").Value.ShouldBe(42);
         }
