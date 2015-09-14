@@ -37,6 +37,9 @@ namespace Abp.Tests.Runtime.Caching.Memory
 
             _cache.GetOrDefault("A").ShouldNotBe(null);
             _cache.GetOrDefault("A").Value.ShouldBe(42);
+
+            _cache.Get("B", () => new MyCacheItem { Value = 43 }).Value.ShouldBe(43);
+            _cache.Get("B", () => new MyCacheItem { Value = 44 }).Value.ShouldBe(43); //Does not call factory, so value is not changed
         }
 
         [Serializable]

@@ -47,12 +47,12 @@ namespace Abp.Runtime.Caching
             return InternalCache.ClearAsync();
         }
 
-        public TValue Get(TKey key, Func<TValue> factory)
+        public TValue Get(TKey key, Func<TKey, TValue> factory)
         {
             return InternalCache.Get(key, factory);
         }
 
-        public Task<TValue> GetAsync(TKey key, Func<Task<TValue>> factory)
+        public Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
         {
             return InternalCache.GetAsync(key, factory);
         }
