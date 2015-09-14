@@ -7,7 +7,7 @@
     <ProjectGuid>{F4A8466E-4E68-4D6F-81D4-7F0892B9B5E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.RedisCache</RootNamespace>
+    <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.RedisCache</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -71,7 +71,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

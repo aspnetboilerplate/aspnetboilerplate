@@ -1,26 +1,17 @@
 ﻿using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Abp.RedisCache.Configuration
 {
     public class AbpRedisConnectionProvider : IAbpRedisConnectionProvider
     {
-        private static ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> _connectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
-      
-
+        private static readonly ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> ConnectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
 
         public string GetConnectionString(string service)
         {
-           
-            var _defaultSettingsKey = service;
-
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings[_defaultSettingsKey];
+            var connectionStringSettings = ConfigurationManager.ConnectionStrings[service];
 
             if (connectionStringSettings == null)
             {
@@ -32,8 +23,7 @@ namespace Abp.RedisCache.Configuration
 
         public ConnectionMultiplexer GetConnection(string connectionString)
         {
-
-            if (String.IsNullOrWhiteSpace(connectionString))
+            if (string.IsNullOrWhiteSpace(connectionString))
             {
                 throw new ArgumentNullException("connectionString");
             }
@@ -43,12 +33,10 @@ namespace Abp.RedisCache.Configuration
             // the object which is added that will create a ConnectionMultiplexer,
             // even when a delegate is passed
 
-            return _connectionMultiplexers.GetOrAdd(connectionString,
-                new Lazy<ConnectionMultiplexer>(() =>
-                {
-                  
-                    return ConnectionMultiplexer.Connect(connectionString);
-                })).Value;
+            return ConnectionMultiplexers.GetOrAdd(
+                connectionString,
+                new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString))
+                ).Value;
         }
     }
 }
