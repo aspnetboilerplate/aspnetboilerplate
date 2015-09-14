@@ -36,10 +36,10 @@ provider.</p>
     public Item GetItem(int id)
     {
         //Try to get from cache
-        return _myCache.Get(id.ToString(), GetFromDatabase) as Item;
+        return _myCache.Get(id.ToString(), () =&gt; GetFromDatabase(id)) as Item;
     }
 
-    public Item GetFromDatabase()
+    public Item GetFromDatabase(int id)
     {
         //... retrieve item from database
     }
