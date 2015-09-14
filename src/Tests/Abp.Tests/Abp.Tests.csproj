@@ -123,6 +123,7 @@
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
+    <Compile Include="Runtime\Caching\Redis\RedisCacheManager_Test.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
@@ -155,6 +156,10 @@
     <EmbeddedResource Include="Resources\Embedded\MyResources\js\MyScriptFile1.js" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Abp.RedisCache\Abp.RedisCache.csproj">
+      <Project>{f4a8466e-4e68-4d6f-81d4-7f0892b9b5e0}</Project>
+      <Name>Abp.RedisCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Abp\Abp.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
       <Name>Abp</Name>
