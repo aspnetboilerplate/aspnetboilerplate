@@ -27,6 +27,11 @@ namespace Abp.Runtime.Caching.Memory
         
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
         {
+            if (value == null)
+            {
+                throw new AbpException("Can not insert null values to the cache!");
+            }
+
             //TODO: Optimize by using a default CacheItemPolicy?
             _memoryCache.Set(
                 key,

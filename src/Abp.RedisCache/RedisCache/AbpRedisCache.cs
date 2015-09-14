@@ -39,8 +39,16 @@ namespace Abp.RedisCache
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
         {
-            var obj = SerializeUtil.Serialize(value);
-            Database.StringSet(GetLocalizedKey(key), obj, slidingExpireTime);
+            if (value == null)
+            {
+                throw new AbpException("Can not insert null values to the cache!");
+            }
+
+            Database.StringSet(
+                GetLocalizedKey(key),
+                SerializeUtil.Serialize(value),
+                slidingExpireTime
+                );
         }
 
         public override void Remove(string key)
