@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="RedisCacheManager_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestBaseWithLocalIocManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp.RedisCache\Abp.RedisCache.csproj">
@@ -75,6 +74,10 @@
     <ProjectReference Include="..\..\TestBase\Abp.TestBase\Abp.TestBase.csproj">
       <Project>{f554b0ef-acf4-4f72-b711-ef36559dce43}</Project>
       <Name>Abp.TestBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj">
+      <Project>{D1E31E85-0F7E-43BC-91E2-F9E544ECEBD5}</Project>
+      <Name>Abp.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
