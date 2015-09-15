@@ -1,4 +1,5 @@
-﻿using Abp.MultiTenancy;
+﻿using System;
+using Abp.MultiTenancy;
 
 namespace Abp.Runtime.Session
 {
@@ -17,9 +18,13 @@ namespace Abp.Runtime.Session
         public long? UserId { get { return null; } }
 
         /// <inheritdoc/>
+        public long? HostUserId { get { return null; } }
+
+        /// <inheritdoc/>
         public int? TenantId { get { return null; } }
 
         public MultiTenancySides MultiTenancySide { get { return MultiTenancySides.Tenant; } }
+
 
         private NullAbpSession()
         {

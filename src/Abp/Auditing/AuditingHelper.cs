@@ -13,7 +13,7 @@ namespace Abp.Auditing
                 return false;
             }
 
-            if (!configuration.IsEnabledForAnonymousUsers && (abpSession == null || !abpSession.UserId.HasValue))
+            if (!configuration.IsEnabledForAnonymousUsers && (abpSession == null || (!abpSession.UserId.HasValue && !abpSession.HostUserId.HasValue) ))
             {
                 return false;
             }

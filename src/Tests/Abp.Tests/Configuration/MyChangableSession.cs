@@ -7,6 +7,8 @@ namespace Abp.Tests.Configuration
     {
         public long? UserId { get; set; }
 
+        public long? HostUserId { get; set; }
+
         public int? TenantId { get; set; }
 
         public MultiTenancySides MultiTenancySide

@@ -283,6 +283,7 @@ namespace Abp.Web.Mvc.Controllers
             {
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
+                HostUserId = AbpSession.HostUserId,
                 ServiceName = methodInfo.DeclaringType != null
                                 ? methodInfo.DeclaringType.FullName
                                 : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,

@@ -21,5 +21,10 @@ namespace Abp.Runtime.Session
         /// Gets current multi-tenancy side.
         /// </summary>
         MultiTenancySides MultiTenancySide { get; }
+
+        /// <summary>
+        /// Gets the current HostUserId or null.
+        /// </summary>
+        long? HostUserId { get; }
     }
 }
