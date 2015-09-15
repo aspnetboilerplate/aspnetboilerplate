@@ -4,8 +4,8 @@
     <id>Abp.RedisCache</id>
     <version>$version$</version>
     <title>Abp.RedisCache</title>
-    <authors>yuzukwok</authors>
-    <owners>yuzukwok</owners>
+    <authors>yuzukwok,Halil İbrahim Kalkan</authors>
+    <owners>Halil İbrahim Kalkan</owners>
     <description>Redis Cache integration package for ASP.NET Boilerplate</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>

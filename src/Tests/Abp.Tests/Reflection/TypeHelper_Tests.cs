@@ -26,5 +26,19 @@ namespace Abp.Tests.Reflection
 
             TypeHelper.IsFunc("42").ShouldBe(false);
         }
+
+        [Fact]
+        public void Test_IsPrimitiveExtendedIncludingNullable()
+        {
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(int)).ShouldBe(true);
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(int?)).ShouldBe(true);
+
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(Guid)).ShouldBe(true);
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(Guid?)).ShouldBe(true);
+
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(string)).ShouldBe(true);
+
+            TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(TypeHelper_Tests)).ShouldBe(false);
+        }
     }
 }

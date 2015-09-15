@@ -10,7 +10,7 @@ namespace Abp.Runtime.Caching
     /// </summary>
     /// <typeparam name="TKey">Key type for cache items</typeparam>
     /// <typeparam name="TValue">Value type for cache items</typeparam>
-    public interface ITypedCache<in TKey, TValue> : IDisposable
+    public interface ITypedCache<TKey, TValue> : IDisposable
     {
         /// <summary>
         /// Unique name of the cache.
@@ -33,7 +33,7 @@ namespace Abp.Runtime.Caching
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
         /// <returns>Cached item</returns>
-        TValue Get(TKey key, Func<TValue> factory);
+        TValue Get(TKey key, Func<TKey, TValue> factory);
 
         /// <summary>
         /// Gets an item from the cache.
@@ -41,7 +41,7 @@ namespace Abp.Runtime.Caching
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
         /// <returns>Cached item</returns>
-        Task<TValue> GetAsync(TKey key, Func<Task<TValue>> factory);
+        Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory);
 
         /// <summary>
         /// Gets an item from the cache or null if not found.

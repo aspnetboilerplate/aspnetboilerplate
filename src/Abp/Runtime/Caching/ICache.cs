@@ -25,7 +25,7 @@ namespace Abp.Runtime.Caching
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
         /// <returns>Cached item</returns>
-        object Get(string key, Func<object> factory);
+        object Get(string key, Func<string, object> factory);
 
         /// <summary>
         /// Gets an item from the cache.
@@ -33,7 +33,7 @@ namespace Abp.Runtime.Caching
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
         /// <returns>Cached item</returns>
-        Task<object> GetAsync(string key, Func<Task<object>> factory);
+        Task<object> GetAsync(string key, Func<string, Task<object>> factory);
 
         /// <summary>
         /// Gets an item from the cache or null if not found.

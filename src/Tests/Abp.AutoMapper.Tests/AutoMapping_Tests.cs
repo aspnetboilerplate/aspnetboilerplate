@@ -8,12 +8,9 @@ namespace Abp.AutoMapper.Tests
     {
         static AutoMapping_Tests()
         {
-            //ABP will automatically find and create these mappings!
-            AutoMapperHelper.Initialize(cfg =>
-            {
-                AutoMapperHelper.CreateMap(cfg, typeof(MyClass1));
-                AutoMapperHelper.CreateMap(cfg, typeof(MyClass2));
-            });
+            //ABP will automatically find and create these mappings normally. This is just for test purposes.
+            AutoMapperHelper.CreateMap(typeof(MyClass1));
+            AutoMapperHelper.CreateMap(typeof(MyClass2));
         }
 
         [Fact]
