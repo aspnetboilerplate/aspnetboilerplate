@@ -91,6 +91,7 @@
   <ItemGroup>
     <None Include="Abp.EntityFramework.nuspec" />
     <None Include="App.config" />
+    <None Include="EntityFramework\Repositories\RepositoryClassDiagram.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

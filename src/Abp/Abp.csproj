@@ -437,6 +437,7 @@
     <None Include="Abp.nuspec" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Runtime\Caching\CacheClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />

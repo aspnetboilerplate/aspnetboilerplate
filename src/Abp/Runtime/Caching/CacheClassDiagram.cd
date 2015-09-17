@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Abp.Runtime.Caching.CacheBase" BaseTypeListCollapsed="true">
+    <Position X="0.75" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACACBABADAggBAYAAAAAAAAAQAAAIABCAAA=</HashCode>
+      <FileName>Runtime\Caching\CacheBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.Runtime.Caching.CacheExtensions">
+    <Position X="4.25" Y="9.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAgAAAAgCAAAAAAQAAAIAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\CacheExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Abp.Runtime.Caching.CacheManagerBase" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgACAAAAAAAAABAAAAACAAAAgAgAAEAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\CacheManagerBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.Runtime.Caching.TypedCacheWrapper&lt;TKey, TValue&gt;" BaseTypeListCollapsed="true">
+    <Position X="4.25" Y="4.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACACBABAAAggBAYAAAQAAAAAQAAAIABCAAA=</HashCode>
+      <FileName>Runtime\Caching\TypedCacheWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.Runtime.Caching.Memory.AbpMemoryCache">
+    <Position X="1" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAABAAAAAAgBAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Runtime\Caching\Memory\AbpMemoryCache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Abp.Runtime.Caching.Memory.AbpMemoryCacheManager">
+    <Position X="8.25" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\Memory\AbpMemoryCacheManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Abp.Runtime.Caching.Configuration.CacheConfigurator" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\Configuration\CacheConfigurator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.Runtime.Caching.Configuration.CachingConfiguration" BaseTypeListCollapsed="true">
+    <Position X="12" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAABAAAAAAAAAAAAAAAAABQAAAAA=</HashCode>
+      <FileName>Runtime\Caching\Configuration\CachingConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Abp.Runtime.Caching.ICache">
+    <Position X="0.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBABAAAggBAYAAAAAAAAAQAAAIABCAAA=</HashCode>
+      <FileName>Runtime\Caching\ICache.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Abp.Runtime.Caching.ICacheManager">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\ICacheManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Abp.Runtime.Caching.ITypedCache&lt;TKey, TValue&gt;">
+    <Position X="4.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBABAAAggBAYAAAQAAAAAQAAAIABCAAA=</HashCode>
+      <FileName>Runtime\Caching\ITypedCache.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Abp.Runtime.Caching.Configuration.ICachingConfiguration">
+    <Position X="12" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAABAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Runtime\Caching\Configuration\ICachingConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Abp.Runtime.Caching.Configuration.ICacheConfigurator">
+    <Position X="12" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\Configuration\ICacheConfigurator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
