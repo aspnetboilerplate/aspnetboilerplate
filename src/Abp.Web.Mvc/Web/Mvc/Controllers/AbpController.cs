@@ -11,6 +11,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Reflection;
@@ -95,17 +96,40 @@ namespace Abp.Web.Mvc.Controllers
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
-        /// This object i used to measure an action execute duration.
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
-        private Stopwatch _actionStopwatch;
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
 
-        private AuditInfo _auditInfo;
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
         public IAuditingConfiguration AuditingConfiguration { get; set; }
 
         public IAuditInfoProvider AuditInfoProvider { get; set; }
 
         public IAuditingStore AuditingStore { get; set; }
+
+        /// <summary>
+        /// This object is used to measure an action execute duration.
+        /// </summary>
+        private Stopwatch _actionStopwatch;
+
+        private AuditInfo _auditInfo;
 
         /// <summary>
         /// Constructor.

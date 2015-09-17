@@ -54,9 +54,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     catch (AggregateException ex)
                     {
                         ex.InnerException.ReThrow();
-                        throw; // The previous line will throw, but we need this to makes compiler happy
+                        throw; // The previous line will throw, but we need this to make compiler happy
                     }
-                });
+                }, cancellationToken);
         }
 
         /// <summary>

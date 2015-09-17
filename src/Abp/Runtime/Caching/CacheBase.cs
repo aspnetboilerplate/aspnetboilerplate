@@ -28,7 +28,7 @@ namespace Abp.Runtime.Caching
             DefaultSlidingExpireTime = TimeSpan.FromHours(1);
         }
 
-        public virtual object Get(string key, Func<object> factory)
+        public virtual object Get(string key, Func<string, object> factory)
         {
             var cacheKey = key;
             var item = GetOrDefault(key);
@@ -39,7 +39,12 @@ namespace Abp.Runtime.Caching
                     item = GetOrDefault(key);
                     if (item == null)
                     {
-                        item = factory();
+                        item = factory(key);
+                        if (item == null)
+                        {
+                            throw new AbpException("Can not insert null values to the cache!");
+                        }
+
                         Set(cacheKey, item);
                     }
                 }
@@ -48,7 +53,7 @@ namespace Abp.Runtime.Caching
             return item;
         }
 
-        public virtual async Task<object> GetAsync(string key, Func<Task<object>> factory)
+        public virtual async Task<object> GetAsync(string key, Func<string, Task<object>> factory)
         {
             var cacheKey = key;
             var item = await GetOrDefaultAsync(key);
@@ -59,7 +64,12 @@ namespace Abp.Runtime.Caching
                     item = await GetOrDefaultAsync(key);
                     if (item == null)
                     {
-                        item = await factory();
+                        item = await factory(key);
+                        if (item == null)
+                        {
+                            throw new AbpException("Can not insert null values to the cache!");
+                        }
+
                         await SetAsync(cacheKey, item);
                     }
                 }

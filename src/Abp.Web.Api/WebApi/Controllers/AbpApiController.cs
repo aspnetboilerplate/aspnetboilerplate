@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Session;
@@ -80,6 +81,29 @@ namespace Abp.WebApi.Controllers
         /// </summary>
         [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
         protected IAbpSession CurrentSession { get { return AbpSession; } }
+
+        /// <summary>
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
+
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
         /// <summary>
         /// Constructor.

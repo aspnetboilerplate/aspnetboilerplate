@@ -36,10 +36,10 @@ provider.</p>
     public Item GetItem(int id)
     {
         //Try to get from cache
-        return _myCache.Get(id.ToString(), GetFromDatabase) as Item;
+        return _myCache.Get(id.ToString(), () =&gt; GetFromDatabase(id)) as Item;
     }
 
-    public Item GetFromDatabase()
+    public Item GetFromDatabase(int id)
     {
         //... retrieve item from database
     }
@@ -92,7 +92,7 @@ Configuration.Caching.Configure(&quot;MyCache&quot;, cache =&gt;
     cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
 });</pre>
 <p>This code should be placed
-<a href="/Pages/Documents/Module-System#DocModulePreInit">PreInitialize</a> 
+<a href="/Pages/Documents/Module-System#DocModulePreInit"><strong>PreInitialize</strong></a> 
 method of your module. With such a code, MyCache will have 8 hours expire time 
 while all other caches will have 2 hours.</p>
 <p>Your configuration action is called once cache is first created (on 

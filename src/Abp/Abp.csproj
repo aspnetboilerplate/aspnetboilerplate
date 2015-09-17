@@ -110,6 +110,7 @@
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
+    <Compile Include="Runtime\Caching\CacheManagerExtensions.cs" />
     <Compile Include="Runtime\Caching\Configuration\CacheConfigurator.cs" />
     <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICacheConfigurator.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Runtime\Caching\ITypedCache.cs" />
     <Compile Include="Runtime\Caching\Memory\AbpMemoryCache.cs" />
     <Compile Include="Runtime\Caching\Memory\AbpMemoryCacheManager.cs" />
+    <Compile Include="Runtime\Caching\TypedCacheExtensions.cs" />
     <Compile Include="Runtime\Caching\TypedCacheWrapper.cs" />
     <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptorRegistrar.cs" />
