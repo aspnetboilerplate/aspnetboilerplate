@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="RedisCache\RedisCacheClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.RedisCache.nuspec" />
