@@ -7,6 +7,8 @@ using System.Threading;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Runtime.Caching.Memory;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Localization
 {
@@ -91,23 +93,13 @@ namespace Abp.Web.Localization
 
             foreach (var source in _localizationManager.GetAllSources().OrderBy(s => s.Name))
             {
-                script.AppendLine("    abp.localization.values['" + source.Name + "'] = {");
+                script.Append("    abp.localization.values['" + source.Name + "'] = ");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
-                for (var i = 0; i < stringValues.Count; i++)
-                {
-                    script.AppendLine(
-                        string.Format(
-                            "        '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
-                                stringValues[i].Name,
-                                stringValues[i].Value
-                                    .Replace(@"\", @"\\")
-                                    .Replace("'", @"\'")
-                                    .Replace(Environment.NewLine, string.Empty)
-                                ));
-                }
+                var stringJson = JsonConvert.SerializeObject(stringValues.ToDictionary(_ => _.Name, _ => _.Value), MakeJsonSerializerSettings());
+                script.Append(stringJson);
 
-                script.AppendLine("    };");
+                script.AppendLine(";");
                 script.AppendLine();
             }
 
@@ -115,6 +107,15 @@ namespace Abp.Web.Localization
             script.Append("})();");
 
             return script.ToString();
+        }
+
+        private JsonSerializerSettings MakeJsonSerializerSettings()
+        {
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            return settings;
         }
     }
 }
