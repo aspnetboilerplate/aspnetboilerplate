@@ -35,21 +35,20 @@ namespace Abp.Web.Localization
         /// <inheritdoc/>
         public string GetScript(CultureInfo cultureInfo)
         {
-            return _cache.Get(cultureInfo.Name, BuildAll);
+            return _cache.Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 
-        private string BuildAll()
+        private string BuildAll(CultureInfo cultureInfo)
         {
             var script = new StringBuilder();
-            var currentCulture = Thread.CurrentThread.CurrentUICulture;
 
             script.AppendLine("(function(){");
             script.AppendLine();
             script.AppendLine("    abp.localization = abp.localization || {};");
             script.AppendLine();
             script.AppendLine("    abp.localization.currentCulture = {");
-            script.AppendLine("        name: '" + currentCulture.Name + "',");
-            script.AppendLine("        displayName: '" + currentCulture.DisplayName + "'");
+            script.AppendLine("        name: '" + cultureInfo.Name + "',");
+            script.AppendLine("        displayName: '" + cultureInfo.DisplayName + "'");
             script.AppendLine("    };");
             script.AppendLine();
             script.Append("    abp.localization.languages = [");
