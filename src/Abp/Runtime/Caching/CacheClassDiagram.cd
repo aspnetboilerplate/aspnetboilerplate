@@ -11,7 +11,7 @@
   <Class Name="Abp.Runtime.Caching.CacheExtensions">
     <Position X="4.25" Y="9.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABAAAAgAAAAgCAAAAAAQAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAABAAAAgAAAAgAAAAAAAQAAAIAAAAAA=</HashCode>
       <FileName>Runtime\Caching\CacheExtensions.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -60,6 +60,13 @@
       <FileName>Runtime\Caching\Configuration\CachingConfiguration.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.Runtime.Caching.CacheManagerExtensions">
+    <Position X="8.25" Y="9.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\Caching\CacheManagerExtensions.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="Abp.Runtime.Caching.ICache">
     <Position X="0.75" Y="0.5" Width="2.25" />
