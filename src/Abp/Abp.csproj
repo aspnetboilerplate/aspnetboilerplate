@@ -110,6 +110,10 @@
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
+    <Compile Include="Localization\DefaultLanguageProvider.cs" />
+    <Compile Include="Localization\ILanguageManager.cs" />
+    <Compile Include="Localization\ILanguageProvider.cs" />
+    <Compile Include="Localization\LanguageManager.cs" />
     <Compile Include="Runtime\Caching\CacheManagerExtensions.cs" />
     <Compile Include="Runtime\Caching\Configuration\CacheConfigurator.cs" />
     <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
