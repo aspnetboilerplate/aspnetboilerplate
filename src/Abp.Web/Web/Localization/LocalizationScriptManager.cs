@@ -5,10 +5,9 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.Localization;
 using Abp.Runtime.Caching.Memory;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Localization
 {
@@ -96,7 +95,7 @@ namespace Abp.Web.Localization
                 script.Append("    abp.localization.values['" + source.Name + "'] = ");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
-                var stringJson = JsonConvert.SerializeObject(stringValues.ToDictionary(_ => _.Name, _ => _.Value), MakeJsonSerializerSettings());
+                var stringJson = JsonHelper.ConvertToJson(stringValues.ToDictionary(_ => _.Name, _ => _.Value), indented: true);
                 script.Append(stringJson);
 
                 script.AppendLine(";");
@@ -107,15 +106,6 @@ namespace Abp.Web.Localization
             script.Append("})();");
 
             return script.ToString();
-        }
-
-        private JsonSerializerSettings MakeJsonSerializerSettings()
-        {
-            var settings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            };
-            return settings;
         }
     }
 }
