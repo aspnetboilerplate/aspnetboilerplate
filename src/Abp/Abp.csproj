@@ -110,6 +110,8 @@
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
+    <Compile Include="Domain\Repositories\IFromDBOfTEntity.cs" />
+    <Compile Include="Domain\Repositories\IFromDBOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Localization\DefaultLanguageProvider.cs" />
     <Compile Include="Localization\Dictionaries\Xml\LocalizationDictionaryProviderBase.cs" />
     <Compile Include="Localization\ILanguageManager.cs" />
