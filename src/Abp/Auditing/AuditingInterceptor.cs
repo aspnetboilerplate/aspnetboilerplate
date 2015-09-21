@@ -64,6 +64,8 @@ namespace Abp.Auditing
             {
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ServiceName = invocation.MethodInvocationTarget.DeclaringType != null
                     ? invocation.MethodInvocationTarget.DeclaringType.FullName
                     : "",
