@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Abp.Localization.Dictionaries;
 
-namespace Abp.Localization.Sources
+namespace Abp.Localization.Dictionaries
 {
     /// <summary>
     /// Used to get localization dictionaries (<see cref="ILocalizationDictionary"/>)

@@ -1,6 +1,4 @@
-﻿using Abp.Localization.Dictionaries;
-
-namespace Abp.Localization.Sources
+﻿namespace Abp.Localization.Dictionaries
 {
     /// <summary>
     /// Used to hold a <see cref="ILocalizationDictionary"/> with additional information.

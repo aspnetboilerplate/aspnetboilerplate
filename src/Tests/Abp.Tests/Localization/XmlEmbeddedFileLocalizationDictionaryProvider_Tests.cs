@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources.Xml;
 using Shouldly;
 using Xunit;

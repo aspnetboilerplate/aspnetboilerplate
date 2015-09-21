@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Localization.Dictionaries;
 using Abp.Logging;
-using Castle.Core.Logging;
 
-namespace Abp.Localization.Sources
+namespace Abp.Localization.Dictionaries
 {
     /// <summary>
     /// This class is used to build a localization source

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Abp.IO.Extensions;
-using Abp.Localization.Dictionaries.Xml;
 
-namespace Abp.Localization.Sources.Xml
+namespace Abp.Localization.Dictionaries.Xml
 {
     /// <summary>
     /// Provides localization dictionaries from XML files embedded into an <see cref="Assembly"/>.

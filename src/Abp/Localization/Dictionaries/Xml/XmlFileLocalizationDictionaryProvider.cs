@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Abp.Localization.Dictionaries.Xml;
+using Abp.Localization.Sources.Xml;
 
-namespace Abp.Localization.Sources.Xml
+namespace Abp.Localization.Dictionaries.Xml
 {
     /// <summary>
     /// Provides localization dictionaries from XML files in a directory.

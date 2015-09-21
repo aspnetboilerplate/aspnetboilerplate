@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Localization.Dictionaries;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
 

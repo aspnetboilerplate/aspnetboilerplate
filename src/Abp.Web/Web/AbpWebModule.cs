@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using System.Web;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;

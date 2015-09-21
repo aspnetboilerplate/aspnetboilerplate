@@ -2,6 +2,7 @@
 using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Localization.Dictionaries;
 using Abp.Localization.Sources;
 using NSubstitute;
 using Shouldly;
