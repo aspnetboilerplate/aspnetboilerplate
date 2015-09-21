@@ -10,6 +10,8 @@ namespace Abp.Runtime.Caching.Memory
     {
         private MemoryCache _memoryCache;
 
+        public bool IsDisposed;//20150921Andrew
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -18,10 +20,16 @@ namespace Abp.Runtime.Caching.Memory
             : base(name)
         {
             _memoryCache = new MemoryCache(Name);
+            IsDisposed = false;//20150921Andrew
         }
 
         public override object GetOrDefault(string key)
         {
+            if(IsDisposed)
+            {
+                _memoryCache = new MemoryCache(Name);
+                IsDisposed = false;//20150921Andrew
+            }
             return _memoryCache.Get(key);
         }
         
@@ -30,6 +38,11 @@ namespace Abp.Runtime.Caching.Memory
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
+            }
+            if (IsDisposed)
+            {
+                _memoryCache = new MemoryCache(Name);
+                IsDisposed = false;//20150921Andrew
             }
 
             //TODO: Optimize by using a default CacheItemPolicy?
@@ -57,6 +70,7 @@ namespace Abp.Runtime.Caching.Memory
         {
             _memoryCache.Dispose();
             base.Dispose();
+            IsDisposed = true;//20150921Andrew
         }
     }
 }
