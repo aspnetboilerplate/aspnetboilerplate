@@ -4,15 +4,14 @@ namespace Abp.Localization.Dictionaries
 {
     /// <summary>
     /// Used to get localization dictionaries (<see cref="ILocalizationDictionary"/>)
-    /// for a <see cref="DictionaryBasedLocalizationSource"/>.
+    /// for a <see cref="IDictionaryBasedLocalizationSource"/>.
     /// </summary>
     public interface ILocalizationDictionaryProvider
     {
-        /// <summary>
-        /// Gets all dictionaries for given source name.
-        /// </summary>
-        /// <param name="sourceName">Localization source name</param>
-        /// <returns>Dictionaries for given source name</returns>
-        IEnumerable<LocalizationDictionaryInfo> GetDictionaries(string sourceName);
+        ILocalizationDictionary DefaultDictionary { get; }
+
+        IDictionary<string, ILocalizationDictionary> Dictionaries { get; }
+
+        void Initialize(string sourceName);
     }
 }

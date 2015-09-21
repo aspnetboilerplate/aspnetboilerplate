@@ -78,9 +78,10 @@ namespace Abp.Localization
                     var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
                     foreach (var extension in extensions)
                     {
-                        foreach (var dictionaryInfo in extension.DictionaryProvider.GetDictionaries(source.Name))
+                        extension.DictionaryProvider.Initialize(source.Name);
+                        foreach (var extensionDictionary in extension.DictionaryProvider.Dictionaries.Values)
                         {
-                            dictionaryBasedSource.Extend(dictionaryInfo.Dictionary);
+                            dictionaryBasedSource.Extend(extensionDictionary);
                         }
                     }
                 }

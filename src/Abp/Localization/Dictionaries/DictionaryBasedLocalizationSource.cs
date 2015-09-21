@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Logging;
 
 namespace Abp.Localization.Dictionaries
@@ -19,18 +21,6 @@ namespace Abp.Localization.Dictionaries
         /// </summary>
         public string Name { get; private set; }
 
-        /// <summary>
-        /// List of all dictionaries in this source.
-        /// Key: Culture-name
-        /// Value: Dictionary.
-        /// </summary>
-        private readonly Dictionary<string, ILocalizationDictionary> _dictionaries;
-
-        /// <summary>
-        /// Default directory is used when requested string can not found in specified culture.
-        /// </summary>
-        private ILocalizationDictionary _defaultDictionary;
-
         private ILocalizationConfiguration _configuration;
 
         private readonly ILocalizationDictionaryProvider _dictionaryProvider;
@@ -42,8 +32,18 @@ namespace Abp.Localization.Dictionaries
         /// <param name="dictionaryProvider"></param>
         public DictionaryBasedLocalizationSource(string name, ILocalizationDictionaryProvider dictionaryProvider)
         {
+            if (name.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("name");                
+            }
+
             Name = name;
-            _dictionaries = new Dictionary<string, ILocalizationDictionary>();
+
+            if (dictionaryProvider == null)
+            {
+                throw new ArgumentNullException("dictionaryProvider");
+            }
+
             _dictionaryProvider = dictionaryProvider;
         }
 
@@ -51,32 +51,7 @@ namespace Abp.Localization.Dictionaries
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             _configuration = configuration;
-
-            if (_dictionaryProvider == null)
-            {
-                return;
-            }
-
-            var defaultProvided = false;
-            foreach (var dictionaryInfo in _dictionaryProvider.GetDictionaries(Name))
-            {
-                _dictionaries[dictionaryInfo.Dictionary.CultureInfo.Name] = dictionaryInfo.Dictionary;
-                if (dictionaryInfo.IsDefault)
-                {
-                    if (defaultProvided)
-                    {
-                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + Name);
-                    }
-
-                    _defaultDictionary = dictionaryInfo.Dictionary;
-                    defaultProvided = true;
-                }
-            }
-
-            if (!defaultProvided)
-            {
-                throw new AbpInitializationException("There should be a default localization dictionary for source: " + Name);
-            }
+            _dictionaryProvider.Initialize(Name);
         }
 
         /// <inheritdoc/>
@@ -93,7 +68,7 @@ namespace Abp.Localization.Dictionaries
             //Try to get from original dictionary (with country code)
             
             ILocalizationDictionary originalDictionary;
-            if (_dictionaries.TryGetValue(cultureCode, out originalDictionary))
+            if (_dictionaryProvider.Dictionaries.TryGetValue(cultureCode, out originalDictionary))
             {
                 var strOriginal = originalDictionary.GetOrNull(name);
                 if (strOriginal != null)
@@ -108,7 +83,7 @@ namespace Abp.Localization.Dictionaries
             {
                 var langCode = cultureCode.Substring(0, 2);
                 ILocalizationDictionary langDictionary;
-                if (_dictionaries.TryGetValue(langCode, out langDictionary))
+                if (_dictionaryProvider.Dictionaries.TryGetValue(langCode, out langDictionary))
                 {
                     var strLang = langDictionary.GetOrNull(name);
                     if (strLang != null)
@@ -119,8 +94,8 @@ namespace Abp.Localization.Dictionaries
             }
 
             //Try to get from default language
-            
-            if (_defaultDictionary == null)
+
+            if (_dictionaryProvider.DefaultDictionary == null)
             {
                 var exceptionMessage = string.Format(
                     "Can not find '{0}' in localization source '{1}'! No default language is defined!",
@@ -138,7 +113,7 @@ namespace Abp.Localization.Dictionaries
                 throw new AbpException(exceptionMessage);
             }
 
-            var strDefault = _defaultDictionary.GetOrNull(name);
+            var strDefault = _dictionaryProvider.DefaultDictionary.GetOrNull(name);
             if (strDefault == null)
             {
                 var exceptionMessage = string.Format(
@@ -169,44 +144,42 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
         {
-            if (_defaultDictionary == null)
-            {
-                throw new AbpException("No default dictionary is defined!");
-            }
-
             //Create a temp dictionary to build
-            var dict = new Dictionary<string, LocalizedString>();
+            var dictionary = new Dictionary<string, LocalizedString>();
 
             //Fill all strings from default dictionary
-            foreach (var defaultDictString in _defaultDictionary.GetAllStrings())
+            if (_dictionaryProvider.DefaultDictionary != null)
             {
-                dict[defaultDictString.Name] = defaultDictString;
+                foreach (var defaultDictString in _dictionaryProvider.DefaultDictionary.GetAllStrings())
+                {
+                    dictionary[defaultDictString.Name] = defaultDictString;
+                }
             }
 
             //Overwrite all strings from the language based on country culture
             if (culture.Name.Length == 5)
             {
                 ILocalizationDictionary langDictionary;
-                if (_dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
+                if (_dictionaryProvider.Dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
                 {
                     foreach (var langString in langDictionary.GetAllStrings())
                     {
-                        dict[langString.Name] = langString;
+                        dictionary[langString.Name] = langString;
                     }
                 }
             }
 
             //Overwrite all strings from the original dictionary
             ILocalizationDictionary originalDictionary;
-            if (_dictionaries.TryGetValue(culture.Name, out originalDictionary))
+            if (_dictionaryProvider.Dictionaries.TryGetValue(culture.Name, out originalDictionary))
             {
                 foreach (var originalLangString in originalDictionary.GetAllStrings())
                 {
-                    dict[originalLangString.Name] = originalLangString;
+                    dictionary[originalLangString.Name] = originalLangString;
                 }
             }
 
-            return dict.Values.ToImmutableList();
+            return dictionary.Values.ToImmutableList();
         }
 
         /// <summary>
@@ -217,9 +190,9 @@ namespace Abp.Localization.Dictionaries
         {
             //Add
             ILocalizationDictionary existingDictionary;
-            if (!_dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            if (!_dictionaryProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
             {
-                _dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                _dictionaryProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
                 return;
             }
 

@@ -111,6 +111,7 @@
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
     <Compile Include="Localization\DefaultLanguageProvider.cs" />
+    <Compile Include="Localization\Dictionaries\Xml\LocalizationDictionaryProviderBase.cs" />
     <Compile Include="Localization\ILanguageManager.cs" />
     <Compile Include="Localization\ILanguageProvider.cs" />
     <Compile Include="Localization\LanguageManager.cs" />
@@ -446,7 +447,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />
-    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp.xml" />
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-zh-CN.xml" />

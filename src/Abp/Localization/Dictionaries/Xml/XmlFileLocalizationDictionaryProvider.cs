@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Abp.Localization.Sources.Xml;
 
 namespace Abp.Localization.Dictionaries.Xml
@@ -7,7 +6,7 @@ namespace Abp.Localization.Dictionaries.Xml
     /// <summary>
     /// Provides localization dictionaries from XML files in a directory.
     /// </summary>
-    public class XmlFileLocalizationDictionaryProvider : ILocalizationDictionaryProvider
+    public class XmlFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
         private readonly string _directoryPath;
 
@@ -25,23 +24,35 @@ namespace Abp.Localization.Dictionaries.Xml
             _directoryPath = directoryPath;
         }
 
-        public IEnumerable<LocalizationDictionaryInfo> GetDictionaries(string sourceName)
+        public override void Initialize(string sourceName)
         {
             var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
 
-            var dictionaries = new List<LocalizationDictionaryInfo>();
-
             foreach (var fileName in fileNames)
             {
-                dictionaries.Add(
-                    new LocalizationDictionaryInfo(
-                        XmlLocalizationDictionary.BuildFomFile(fileName),
-                        isDefault: fileName.EndsWith(sourceName + ".xml")
-                        )
-                    );
-            }
+                var dictionary = CreateXmlLocalizationDictionary(fileName);
+                if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
+                {
+                    throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+                }
 
-            return dictionaries;
+                Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+
+                if (fileName.EndsWith(sourceName + ".xml"))
+                {
+                    if (DefaultDictionary != null)
+                    {
+                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);                        
+                    }
+
+                    DefaultDictionary = dictionary;
+                }
+            }
+        }
+
+        protected virtual XmlLocalizationDictionary CreateXmlLocalizationDictionary(string fileName)
+        {
+            return XmlLocalizationDictionary.BuildFomFile(fileName);
         }
     }
 }
