@@ -256,7 +256,6 @@
     <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
     <Compile Include="IShouldInitialize.cs" />
-    <Compile Include="Localization\Dictionaries\LocalizationDictionaryInfo.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
     <Compile Include="Localization\Dictionaries\ILocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Dictionaries\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
