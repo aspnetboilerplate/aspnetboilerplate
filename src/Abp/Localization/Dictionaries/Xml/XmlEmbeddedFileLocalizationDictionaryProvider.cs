@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Abp.IO.Extensions;
-using Abp.Localization.Dictionaries.Xml;
 
-namespace Abp.Localization.Sources.Xml
+namespace Abp.Localization.Dictionaries.Xml
 {
     /// <summary>
     /// Provides localization dictionaries from XML files embedded into an <see cref="Assembly"/>.
     /// </summary>
-    public class XmlEmbeddedFileLocalizationDictionaryProvider : ILocalizationDictionaryProvider
+    public class XmlEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
         private readonly Assembly _assembly;
         private readonly string _rootNamespace;
-
+        
         /// <summary>
         /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
         /// </summary>
@@ -26,10 +23,8 @@ namespace Abp.Localization.Sources.Xml
             _rootNamespace = rootNamespace;
         }
 
-        public IEnumerable<LocalizationDictionaryInfo> GetDictionaries(string sourceName)
+        public override void Initialize(string sourceName)
         {
-            var dictionaries = new List<LocalizationDictionaryInfo>();
-
             var resourceNames = _assembly.GetManifestResourceNames();
             foreach (var resourceName in resourceNames)
             {
@@ -39,17 +34,32 @@ namespace Abp.Localization.Sources.Xml
                     {
                         var bytes = stream.GetAllBytes();
                         var xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
-                        dictionaries.Add(
-                            new LocalizationDictionaryInfo(
-                                XmlLocalizationDictionary.BuildFomXmlString(xmlString),
-                                isDefault: resourceName.EndsWith(sourceName + ".xml")
-                                )
-                            );
+
+                        var dictionary = CreateXmlLocalizationDictionary(xmlString);
+                        if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
+                        {
+                            throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+                        }
+
+                        Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+
+                        if (resourceName.EndsWith(sourceName + ".xml"))
+                        {
+                            if (DefaultDictionary != null)
+                            {
+                                throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
+                            }
+
+                            DefaultDictionary = dictionary;
+                        }
                     }
                 }
             }
+        }
 
-            return dictionaries;
+        protected virtual XmlLocalizationDictionary CreateXmlLocalizationDictionary(string xmlString)
+        {
+            return XmlLocalizationDictionary.BuildFomXmlString(xmlString);
         }
     }
 }

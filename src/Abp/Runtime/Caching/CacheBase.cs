@@ -42,7 +42,7 @@ namespace Abp.Runtime.Caching
                         item = factory(key);
                         if (item == null)
                         {
-                            throw new AbpException("Can not insert null values to the cache!");
+                            return null;
                         }
 
                         Set(cacheKey, item);
@@ -67,7 +67,7 @@ namespace Abp.Runtime.Caching
                         item = await factory(key);
                         if (item == null)
                         {
-                            throw new AbpException("Can not insert null values to the cache!");
+                            return null;
                         }
 
                         await SetAsync(cacheKey, item);

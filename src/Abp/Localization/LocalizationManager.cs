@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
-using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Localization.Dictionaries;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
 
@@ -19,8 +18,10 @@ namespace Abp.Localization
         /// <summary>
         /// Gets current language for the application.
         /// </summary>
-        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
+        [Obsolete("Inject ILanguageManager and use ILanguageManager.CurrentLanguage.")]
+        public LanguageInfo CurrentLanguage { get { return _languageManager.CurrentLanguage; } }
 
+        private readonly ILanguageManager _languageManager;
         private readonly ILocalizationConfiguration _configuration;
         private readonly IIocResolver _iocResolver;
         private readonly IDictionary<string, ILocalizationSource> _sources;
@@ -28,9 +29,13 @@ namespace Abp.Localization
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocalizationManager(ILocalizationConfiguration configuration, IIocResolver iocResolver)
+        public LocalizationManager(
+            ILanguageManager languageManager,
+            ILocalizationConfiguration configuration, 
+            IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
+            _languageManager = languageManager;
             _configuration = configuration;
             _iocResolver = iocResolver;
             _sources = new Dictionary<string, ILocalizationSource>();
@@ -41,9 +46,10 @@ namespace Abp.Localization
             InitializeSources();
         }
 
+        [Obsolete("Inject ILanguageManager and use ILanguageManager.GetLanguages().")]
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
         {
-            return _configuration.Languages.ToImmutableList();
+            return _languageManager.GetLanguages();
         }
 
         private void InitializeSources()
@@ -72,9 +78,10 @@ namespace Abp.Localization
                     var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
                     foreach (var extension in extensions)
                     {
-                        foreach (var dictionaryInfo in extension.DictionaryProvider.GetDictionaries(source.Name))
+                        extension.DictionaryProvider.Initialize(source.Name);
+                        foreach (var extensionDictionary in extension.DictionaryProvider.Dictionaries.Values)
                         {
-                            dictionaryBasedSource.Extend(dictionaryInfo.Dictionary);
+                            dictionaryBasedSource.Extend(extensionDictionary);
                         }
                     }
                 }
@@ -126,40 +133,6 @@ namespace Abp.Localization
         public string GetString(string sourceName, string name, CultureInfo culture)
         {
             return GetSource(sourceName).GetString(name, culture);
-        }
-
-        private LanguageInfo GetCurrentLanguage()
-        {
-            if (_configuration.Languages.IsNullOrEmpty())
-            {
-                throw new AbpException("No language defined in this application. Define languages on startup configuration.");
-            }
-
-            var currentCultureName = Thread.CurrentThread.CurrentUICulture.Name;
-
-            //Try to find exact match
-            var currentLanguage = _configuration.Languages.FirstOrDefault(l => l.Name == currentCultureName);
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
-
-            //Try to find best match
-            currentLanguage = _configuration.Languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Name));
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
-
-            //Try to find default language
-            currentLanguage = _configuration.Languages.FirstOrDefault(l => l.IsDefault);
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
-
-            //Get first one
-            return _configuration.Languages[0];
         }
     }
 }
