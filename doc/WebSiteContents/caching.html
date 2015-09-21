@@ -49,13 +49,19 @@ provider.</p>
 <p>In this sample, we're injecting <strong>ICacheManager</strong> and getting a 
 cache named <strong>MyCache</strong>.</p>
 
+<div class="bs-callout bs-callout-warning">
+	<h4><strong>WARNING: </strong>GetCache Method</h4>
+	<p>Do not use GetCache method in your constructor. This may dispose the 
+	Cache if your class is transient.</p>
+</div>
+
 <h3>ICache</h3>
 
 <p>ICacheManager.<strong>GetCache</strong> method returns an <strong>ICache</strong>. 
 A cache is singleton (per cache name). It is created first time it's 
 requested, then returns always the same cache object. So, we can share same 
 cache with same name in different classes (clients).</p>
-<p>In the sample code, we see simple usage of ICache.<strong>Get</strong> 
+	<p>In the sample code, we see simple usage of ICache.<strong>Get</strong> 
 method. It has two arguments:</p>
 <ul>
 	<li><strong>key</strong>: A string unique key of an item in the cache.</li>
