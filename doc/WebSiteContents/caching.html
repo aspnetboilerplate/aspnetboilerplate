@@ -26,17 +26,19 @@ provider.</p>
 
 <pre lang="cs">public class TestAppService : ApplicationService
 {
-    private readonly ICache _myCache;
+    private readonly ICacheManager _cacheManager;
 
     public TestAppService(ICacheManager cacheManager)
     {
-        _myCache = cacheManager.GetCache(&quot;MyCache&quot;);
+        _cacheManager = cacheManager;
     }
 
     public Item GetItem(int id)
     {
         //Try to get from cache
-        return _myCache.Get(id.ToString(), () =&gt; GetFromDatabase(id)) as Item;
+        return _cacheManager
+                .GetCache(&quot;MyCache&quot;)
+                .Get(id.ToString(), () =&gt; GetFromDatabase(id)) as Item;
     }
 
     public Item GetFromDatabase(int id)
@@ -72,7 +74,7 @@ and <strong>object</strong> as value. <strong>ITypedCache</strong> is a
 wrapper to ICache to provide <strong>type safe</strong>, generic cache. To 
 convert ICache to ITypedCache, we can use <strong>AsTyped</strong> extension method as shown 
 below:</p>
-<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = cacheManager.GetCache(&quot;MyCache&quot;)<strong>.AsTyped&lt;int, Item&gt;()</strong>;</pre>
+<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache(&quot;MyCache&quot;)<strong>.AsTyped&lt;int, Item&gt;()</strong>;</pre>
 <p>Then we can use Get method without converting and casting code.</p>
 
 <h3>Configuration</h3>
