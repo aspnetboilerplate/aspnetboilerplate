@@ -32,6 +32,10 @@ namespace Abp.TestBase.Runtime.Session
         }
 
         public MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
+        
+        public long? ImpersonatorUserId { get; set; }
+        
+        public int? ImpersonatorTenantId { get; set; }
 
         private readonly IMultiTenancyConfig _multiTenancy;
         private int? _tenantId;
