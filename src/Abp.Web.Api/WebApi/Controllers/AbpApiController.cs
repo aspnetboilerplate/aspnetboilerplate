@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Session;
@@ -82,6 +83,29 @@ namespace Abp.WebApi.Controllers
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
+
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpApiController()
@@ -108,7 +132,7 @@ namespace Abp.WebApi.Controllers
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        public string L(string name, params object[] args)
+        protected string L(string name, params object[] args)
         {
             return LocalizationSource.GetString(name, args);
         }
@@ -131,7 +155,7 @@ namespace Abp.WebApi.Controllers
         /// <param name="culture">culture information</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        public string L(string name, CultureInfo culture, params object[] args)
+        protected string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
         }

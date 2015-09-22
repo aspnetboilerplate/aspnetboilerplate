@@ -56,6 +56,11 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
+        /// Can be used to store a custom object related to this menu item. Optional.
+        /// </summary>
+        public object CustomData { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
         public virtual IList<MenuItemDefinition> Items { get; private set; }
@@ -63,7 +68,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null, int order = 0)
+        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null, int order = 0, object customData = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -82,6 +87,7 @@ namespace Abp.Application.Navigation
             RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
             Order = order;
+            CustomData = customData;
 
             Items = new List<MenuItemDefinition>();
         }

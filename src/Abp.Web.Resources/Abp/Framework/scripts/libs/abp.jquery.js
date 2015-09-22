@@ -9,70 +9,100 @@
 
     // abp.ajax -> uses $.ajax ------------------------------------------------
 
-    //TODO: Think to implement success, error and complete callbacks
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
+
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
         options.success = undefined;
         options.error = undefined;
+
         return $.Deferred(function ($dfd) {
             $.ajax(options)
                 .done(function (data) {
-                    abpAjaxHelper.handleData(data, userOptions, $dfd);
+                    abp.ajax.handleResponse(data, userOptions, $dfd);
                 }).fail(function () {
                     $dfd.reject.apply(this, arguments);
                 });
         });
     };
 
-    abp.ajax.defaultOpts = {
-        dataType: 'json',
-        type: 'POST',
-        contentType: 'application/json'
-    };
+    $.extend(abp.ajax, {
+        defaultOpts: {
+            dataType: 'json',
+            type: 'POST',
+            contentType: 'application/json'
+        },
 
-    /* JQUERY PLUGIN ENHANCEMENTS ********************************************/
+        defaultError: {
+            message: 'Ajax request did not succeed!',
+            details: 'Error detail not sent by server.'
+        },
 
-    /* jQuery Form Plugin 
-     * http://www.malsup.com/jquery/form/
-     */
+        logError: function (error) {
+            abp.log.error(error);
+        },
 
-    // abpAjaxForm -> uses ajaxForm ------------------------------------------
+        showError: function (error) {
+            if (error.details) {
+                return abp.message.error(error.details, error.message);
+            } else {
+                return abp.message.error(error.message);
+            }
+        },
 
-    $.fn.abpAjaxForm = function (userOptions) {
-        userOptions = userOptions || {};
+        handleTargetUrl: function (targetUrl) {
+            if (!targetUrl) {
+                location.reload();
+            } else {
+                location.href = targetUrl;
+            }
+        },
 
-        var options = $.extend({}, $.fn.abpAjaxForm.defaults, userOptions);
+        handleUnAuthorizedRequest: function (messagePromise, targetUrl) {
+            if (messagePromise) {
+                messagePromise.done(function () {
+                    abp.ajax.handleTargetUrl(targetUrl);
+                });
+            } else {
+                abp.ajax.handleTargetUrl(targetUrl);
+            }
+        },
 
-        options.beforeSubmit = function () {
-            abpAjaxHelper.blockUI(options);
-            userOptions.beforeSubmit && userOptions.beforeSubmit.apply(this, arguments);
-        };
+        handleResponse: function (data, userOptions, $dfd) {
+            if (data) {
+                if (data.success === true) {
+                    $dfd && $dfd.resolve(data.result, data);
+                    userOptions.success && userOptions.success(data.result, data);
 
-        options.success = function (data) {
-            abpAjaxHelper.handleData(data, userOptions);
-        };
+                    if (data.targetUrl) {
+                        abp.ajax.handleTargetUrl(data.targetUrl);
+                    }
+                } else if (data.success === false) {
+                    var messagePromise = null;
 
-        //TODO: Error?
+                    if (data.error) {
+                        messagePromise = abp.ajax.showError(data.error);
+                    } else {
+                        data.error = abp.ajax.defaultError;
+                    }
 
-        options.complete = function () {
-            abpAjaxHelper.unblockUI(options);
-            userOptions.complete && userOptions.complete.apply(this, arguments);
-        };
+                    abp.ajax.logError(data.error);
 
-        return this.ajaxForm(options);
-    };
+                    $dfd && $dfd.reject(data.error);
+                    userOptions.error && userOptions.error(data.error);
 
-    $.fn.abpAjaxForm.defaults = {
-        method: 'POST'
-    };
-
-    /* PRIVATE METHODS *******************************************************/
-
-    //TODO: Extract block/spin options
-
-    //Used on ajax request
-    var abpAjaxHelper = {
+                    if (data.unAuthorizedRequest) {
+                        abp.ajax.handleUnAuthorizedRequest(messagePromise, data.targetUrl);
+                    }
+                } else { //not abp-related data!
+                    $dfd && $dfd.resolve(data);
+                    userOptions.success && userOptions.success(data);
+                }
+            } else { //no data sent to back
+                $dfd && $dfd.resolve();
+                userOptions.success && userOptions.success();
+            }
+        },
 
         blockUI: function (options) {
             if (options.blockUI) {
@@ -92,51 +122,45 @@
                     abp.ui.clearBusy(options.blockUI);
                 }
             }
-        },
-
-        handleData: function (data, userOptions, $dfd) {
-            if (data) {
-                if (data.success === true) {
-                    $dfd && $dfd.resolve(data.result, data);
-                    userOptions.success && userOptions.success(data.result, data);
-                } else { //data.success === false
-                    var messagePromise = null;
-                    if (data.error) {
-                        if (data.error.details) {
-                            messagePromise = abp.message.error(data.error.details, data.error.message);
-                        } else {
-                            messagePromise = abp.message.error(data.error.message);
-                        }
-
-                        $dfd && $dfd.reject(data.error);
-                        userOptions.error && userOptions.error(data.error);
-                    }
-
-                    if (data.unAuthorizedRequest && !data.targetUrl) {
-                        if (messagePromise) {
-                            messagePromise.done(function () {
-                                location.reload();
-                            });
-                        } else {
-                            location.reload();
-                        }
-                    }
-                }
-
-                if (data.targetUrl) {
-                    if (messagePromise) {
-                        messagePromise.done(function () {
-                            location.href = data.targetUrl;
-                        });
-                    } else {
-                        location.href = data.targetUrl;
-                    }
-                }
-            } else { //no data sent to back
-                $dfd && $dfd.resolve();
-                userOptions.success && userOptions.success();
-            }
         }
-    };
+    });
+
+    /* JQUERY PLUGIN ENHANCEMENTS ********************************************/
+
+    /* jQuery Form Plugin 
+     * http://www.malsup.com/jquery/form/
+     */
+
+    // abpAjaxForm -> uses ajaxForm ------------------------------------------
+
+    if ($.fn.ajaxForm) {
+        $.fn.abpAjaxForm = function (userOptions) {
+            userOptions = userOptions || {};
+
+            var options = $.extend({}, $.fn.abpAjaxForm.defaults, userOptions);
+
+            options.beforeSubmit = function () {
+                abp.ajax.blockUI(options);
+                userOptions.beforeSubmit && userOptions.beforeSubmit.apply(this, arguments);
+            };
+
+            options.success = function (data) {
+                abp.ajax.handleResponse(data, userOptions);
+            };
+
+            //TODO: Error?
+
+            options.complete = function () {
+                abp.ajax.unblockUI(options);
+                userOptions.complete && userOptions.complete.apply(this, arguments);
+            };
+
+            return this.ajaxForm(options);
+        };
+
+        $.fn.abpAjaxForm.defaults = {
+            method: 'POST'
+        };
+    }
 
 })(jQuery);

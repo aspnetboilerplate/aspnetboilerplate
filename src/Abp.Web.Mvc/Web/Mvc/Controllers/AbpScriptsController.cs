@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Abp.Auditing;
+using Abp.Extensions;
 using Abp.Web.Authorization;
 using Abp.Web.Localization;
 using Abp.Web.MultiTenancy;
@@ -47,8 +50,13 @@ namespace Abp.Web.Mvc.Controllers
         /// Gets all needed scripts.
         /// </summary>
         [DisableAuditing]
-        public async Task<ActionResult> GetScripts()
+        public async Task<ActionResult> GetScripts(string culture = "")
         {
+            if (!culture.IsNullOrEmpty())
+            {
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);                
+            }
+
             var sb = new StringBuilder();
 
             sb.AppendLine(_multiTenancyScriptManager.GetScript());

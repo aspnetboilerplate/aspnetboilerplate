@@ -47,15 +47,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -80,6 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Startup\AbpWebApiConfigurationExtensions.cs" />
+    <Compile Include="WebApi\Configuration\AbpWebApiModuleConfiguration.cs" />
+    <Compile Include="WebApi\Configuration\IAbpWebApiModuleConfiguration.cs" />
     <Compile Include="WebApi\Authorization\AbpApiAuthorizeAttribute.cs" />
     <Compile Include="WebApi\Client\AbpRemoteCallException.cs" />
     <Compile Include="WebApi\Client\AbpWebApiClient.cs" />
@@ -97,28 +101,22 @@
     <Compile Include="WebApi\Controllers\Dynamic\Clients\IDynamicApiClient.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\IDynamicApiController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\AbpServiceProxiesController.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\ActionScriptWriter.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\DeleteActionScriptWriter.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\GetActionScriptWriter.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\Actions\PostActionScriptWriter.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\ActionScriptingHelper.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\AngularActionScriptWriter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\IScriptProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\Angular\AngularProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ProxyScriptType.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpActionDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpControllerDescriptor.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Selectors\DyanamicHttpActionDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiMethodInfo.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\ActionScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\JQueryActionScriptGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\JQueryProxyGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpDeleteActionScriptProxyGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpGetActionScriptProxyGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPostActionScriptProxyGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpPutActionScriptProxyGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\jQuery\Actions\HttpVerbExtensions.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\IApiControllerActionBuilder.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Formatters\PlainTextFormatter.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ServiceProxiesController.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Selectors\HttpVerbExtensions.cs" />
     <Compile Include="WebApi\Controllers\Filters\AbpExceptionFilterAttribute.cs" />
     <Compile Include="WebApi\AbpWebApiModule.cs" />
     <Compile Include="WebApi\Controllers\AbpApiController.cs" />
@@ -130,10 +128,14 @@
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiControllerManager.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\DynamicApiControllerBuilder.cs" />
     <Compile Include="WebApi\Controllers\ApiControllerConventionalRegistrar.cs" />
-    <Compile Include="WebApi\Controllers\AbpControllerActivator.cs" />
+    <Compile Include="WebApi\Controllers\AbpApiControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\DynamicApiRouteConfig.cs" />
     <Compile Include="WebApi\Controllers\Filters\AuditLoggingFilterAttribute.cs" />
+    <Compile Include="WebApi\Runtime\Caching\AbpCacheController.cs" />
+    <Compile Include="WebApi\Runtime\Caching\ClearAllCacheModel.cs" />
+    <Compile Include="WebApi\Runtime\Caching\ClearCacheModel.cs" />
+    <Compile Include="WebApi\Runtime\Caching\ClearCacheSettingProvider.cs" />
+    <Compile Include="WebApi\Runtime\Caching\ClearCacheSettingNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Web.Api.nuspec" />

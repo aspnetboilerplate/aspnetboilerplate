@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
 
@@ -44,7 +45,7 @@ namespace Abp.EntityFramework.Uow
                 }
 
                 _transaction = new TransactionScope(
-                    TransactionScopeOption.Required,
+                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                     transactionOptions,
                     Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
                     );
@@ -102,7 +103,14 @@ namespace Abp.EntityFramework.Uow
         {
             foreach (var activeDbContext in _activeDbContexts.Values)
             {
-                activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
+                if (TypeHelper.IsFunc<object>(value))
+                {
+                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
+                }
+                else
+                {
+                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
+                }
             }
         }
 
@@ -127,8 +135,14 @@ namespace Abp.EntityFramework.Uow
 
                     foreach (var filterParameter in filter.FilterParameters)
                     {
-                        //TODO: Implement if filterParameter.Value is Func<object>!
-                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
+                        if (TypeHelper.IsFunc<object>(filterParameter.Value))
+                        {
+                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
+                        }
+                        else
+                        {
+                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
+                        }
                     }
                 }
 

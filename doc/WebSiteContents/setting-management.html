@@ -36,7 +36,9 @@ converting to string.</p>
 <p><strong>ISettingStore</strong> 
 interface must be implemented in order to use setting system. While you can 
 implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
-project.</p>
+project. If it's not implemented, settings are read from application's <strong>
+configuration file</strong> (web.config or app.config) but can not change any 
+setting. Also, scoping will not work.</p>
 </div>
 
 <h3 id="DocDefiningSettings">Defining settings</h3>

@@ -1,4 +1,5 @@
 using System.Web.Http.Filters;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -9,7 +10,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     public interface IApiControllerBuilder<T>
     {
         /// <summary>
-        /// The adds Action filters for the Dynamic Controller.
+        /// To add Action filters for the Dynamic Controller.
         /// </summary>
         /// <param name="filters"> The filters. </param>
         /// <returns>The current Controller Builder </returns>
@@ -21,6 +22,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
         IApiControllerActionBuilder<T> ForMethod(string methodName);
+
+        /// <summary>
+        /// Use conventional Http Verbs by method names.
+        /// By default, it uses <see cref="HttpVerb.Post"/> for all actions.
+        /// </summary>
+        /// <returns>The current Controller Builder</returns>
+        IApiControllerBuilder<T> WithConventionalVerbs();
 
         /// <summary>
         /// Builds the controller.

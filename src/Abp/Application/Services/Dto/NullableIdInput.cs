@@ -15,7 +15,7 @@ namespace Abp.Application.Services.Dto
 
         }
 
-        public NullableIdInput(TId id)
+        public NullableIdInput(TId? id)
         {
             Id = id;
         }
@@ -31,7 +31,7 @@ namespace Abp.Application.Services.Dto
 
         }
 
-        public NullableIdInput(int id)
+        public NullableIdInput(int? id)
             : base(id)
         {
 

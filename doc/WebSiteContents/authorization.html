@@ -14,15 +14,8 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntroduction">Introduction</a></li>
-	<li><a href="#DocDefinePermission">Defining permissions</a></li>
-	<li><a href="#DocCheckPermission">Checking permissions</a><ul>
-		<li><a href="#DocUsingAbpAuthorize">Using AbpAuthorize attribute</a></li>
-		<li><a href="#DocUsingPermissionChecker">Using IPermissionChecker</a></li>
-	</ul>
-	</li>
-</ul>
+<div class="document-contents">
+
 <h3 id="DocIntroduction">Introduction</h3>
 <p>Almost all enterprise applications use authorization in some level. 
 Authorization is used to check if a user is allowed to perform some specific 
@@ -33,7 +26,7 @@ based</strong> infrastructure to implement authorization.</p>
 <p>Authorization system uses <strong>IPermissionChecker</strong> to check 
 permissions. While you can 
 implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
-project. If it's not implemented, NullPermissionChecker is used that grants all 
+project. If it's not implemented, NullPermissionChecker is used which grants all 
 permissions to everyone.</p>
 </div>
 
@@ -161,6 +154,32 @@ Authorize</strong> method:</p>
 ApplicationService</strong> base class injects and defines PermissionChecker 
 property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
+	<h4>In Razor Views</h4>
+	<p>Base view class defines IsGranted method to check if current user has a 
+	permission. Thus, we can conditionally render the view. Example:</p>
+<pre lang="xml">@if (IsGranted("Administration.UserManagement.CreateUser"))
+{
+    &lt;button id=&quot;CreateNewUserButton&quot; class=&quot;btn btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; @L(&quot;CreateNewUser&quot;)&lt;/button&gt;
+}</pre>
+
+<h4>Client Side (Javascript)</h4>
+
+<p>In the client side, we can use API defined in <strong>abp.auth</strong> 
+namespace. In most case, we need to check if current user has a specific 
+permission (with permission name). Example:</p>
+<pre lang="js">abp.auth.hasPermission('Administration.UserManagement.CreateUser');</pre>
+
+<p>You can also use <strong>abp.auth.grantedPermissions</strong> to get all 
+granted permissions or <strong>abp.auth.allPermissions</strong> to get all 
+available permission names in the application. Check <strong>abp.auth</strong> 
+namespace on runtime for others.</p>
+
+<h3>Permission Manager</h3>
+<p>We may need to definitions of permission. <strong>IPermissionManager</strong> 
+can be <a href="/Pages/Documents/Dependency-Injection">injected</a> and used in 
+that case. </p>
+
+</div>
 
 </body>
 

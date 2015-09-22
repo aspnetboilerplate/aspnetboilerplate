@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
 {
@@ -34,6 +35,11 @@ namespace Abp.Configuration.Startup
         /// Used to configure auditing.
         /// </summary>
         IAuditingConfiguration Auditing { get; }
+
+        /// <summary>
+        /// Used to configure caching.
+        /// </summary>
+        ICachingConfiguration Caching { get; }
 
         /// <summary>
         /// Used to configure multi-tenancy.

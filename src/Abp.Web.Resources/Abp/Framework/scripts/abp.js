@@ -6,6 +6,8 @@
     //Current application root path (including virtual directory if exists).
     abp.appPath = abp.appPath || '/';
 
+    abp.pageLoadTime = new Date();
+
     //Converts given path to absolute path using abp.appPath variable.
     abp.toAbsAppPath = function (path) {
         if (path.indexOf('/') == 0) {

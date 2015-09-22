@@ -46,9 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.DynamicFilters, Version=1.3.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.DynamicFilters.1.3.15\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.DynamicFilters.1.4.1\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -69,6 +69,7 @@
     <Compile Include="EntityFramework\AbpDbContext.cs" />
     <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegisterer.cs" />
     <Compile Include="EntityFramework\Extensions\QueryableExtensions.cs" />
+    <Compile Include="EntityFramework\Repositories\AutoRepositoryTypesAttribute.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
     <Compile Include="EntityFramework\Extensions\DbContextExtensions.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntity.cs" />
