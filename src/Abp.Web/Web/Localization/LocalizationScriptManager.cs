@@ -1,29 +1,23 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Abp.Dependency;
 using Abp.Localization;
-using Abp.Runtime.Caching.Memory;
+using Abp.Runtime.Caching;
 
 namespace Abp.Web.Localization
 {
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
         private readonly ILocalizationManager _localizationManager;
+        private readonly ICacheManager _cacheManager;
 
-        private readonly ThreadSafeObjectCache<string> _cache;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Abp.Web.Localization.LocalizationScriptManager"/> class.
-        /// </summary>
-        /// <param name="localizationManager">Localization manager.</param>
-        public LocalizationScriptManager(ILocalizationManager localizationManager)
+        public LocalizationScriptManager(ILocalizationManager localizationManager, ICacheManager cacheManager)
         {
             _localizationManager = localizationManager;
-            _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
+            _cacheManager = cacheManager;
         }
 
         /// <inheritdoc/>
@@ -35,7 +29,9 @@ namespace Abp.Web.Localization
         /// <inheritdoc/>
         public string GetScript(CultureInfo cultureInfo)
         {
-            return _cache.Get(cultureInfo.Name, () => BuildAll(cultureInfo));
+            return _cacheManager
+                .GetCache<string, string>("AbpLocalizationScripts")
+                .Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 
         private string BuildAll(CultureInfo cultureInfo)
