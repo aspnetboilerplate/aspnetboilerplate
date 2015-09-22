@@ -68,7 +68,15 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null, int order = 0, object customData = null)
+        public MenuItemDefinition(
+            string name, 
+            ILocalizableString displayName, 
+            string icon = null, 
+            string url = null, 
+            bool requiresAuthentication = false, 
+            string requiredPermissionName = null, 
+            int order = 0, 
+            object customData = null)
         {
             if (string.IsNullOrEmpty(name))
             {
