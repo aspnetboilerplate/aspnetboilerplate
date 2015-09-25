@@ -41,8 +41,8 @@ namespace Abp.Tests.Authorization
 
             // Mock MultiTenancyConfig
             var multiTenancyConfig = Substitute.For<IMultiTenancyConfig>();
-            multiTenancyConfig.GrantTenantAccessToHostUsers = true;
-            multiTenancyConfig.IsEnabled = true;
+            multiTenancyConfig.GrantTenantAccessToHostUsers.Returns(true);
+            multiTenancyConfig.IsEnabled.Returns(true);
             LocalIocManager.IocContainer.Register(Component.For<IMultiTenancyConfig>().UsingFactoryMethod(() => multiTenancyConfig));
 
 
