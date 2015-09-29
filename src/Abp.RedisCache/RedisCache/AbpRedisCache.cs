@@ -8,9 +8,9 @@ namespace Abp.RedisCache
 {
     public class AbpRedisCache : CacheBase
     {
-        public const string ConnectionStringKey = "Abp.Redis.Cache";
 
         private readonly ConnectionMultiplexer _connectionMultiplexer;
+        private readonly AbpRedisCacheConfig _config;
 
         public IDatabase Database
         {
@@ -23,10 +23,11 @@ namespace Abp.RedisCache
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpRedisCache(string name, IAbpRedisConnectionProvider redisConnectionProvider)
+        public AbpRedisCache(string name, IAbpRedisConnectionProvider redisConnectionProvider, AbpRedisCacheConfig config)
             : base(name)
         {
-            var connectionString = redisConnectionProvider.GetConnectionString(ConnectionStringKey);
+            _config = config;
+            var connectionString = redisConnectionProvider.GetConnectionString(_config.ConnectionStringKey);
             _connectionMultiplexer = redisConnectionProvider.GetConnection(connectionString);
         }
         public override object GetOrDefault(string key)
