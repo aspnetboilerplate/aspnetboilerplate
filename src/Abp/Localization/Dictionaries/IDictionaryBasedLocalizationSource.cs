@@ -1,6 +1,6 @@
-using Abp.Localization.Dictionaries;
+using Abp.Localization.Sources;
 
-namespace Abp.Localization.Sources
+namespace Abp.Localization.Dictionaries
 {
     /// <summary>
     /// Interface for a dictionary based localization source.
