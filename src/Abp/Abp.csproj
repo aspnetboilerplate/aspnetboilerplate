@@ -93,6 +93,7 @@
     <Compile Include="Application\Features\IFeatureChecker.cs" />
     <Compile Include="Application\Features\IFeatureConfiguration.cs" />
     <Compile Include="Application\Features\IFeatureDefinitionContext.cs" />
+    <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\NullFeatureChecker.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
@@ -125,6 +126,8 @@
     <Compile Include="Auditing\AuditingHelper.cs" />
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Application\Features\IFeatureDependency.cs" />
+    <Compile Include="Application\Features\SimpleFeatureDependency.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
     <Compile Include="Localization\DefaultLanguageProvider.cs" />
     <Compile Include="Localization\Dictionaries\Xml\LocalizationDictionaryProviderBase.cs" />

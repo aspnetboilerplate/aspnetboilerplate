@@ -66,10 +66,48 @@ namespace Abp.Application.Features
                     );
             }
         }
-
+        
         public static void CheckEnabled(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
             AsyncHelper.RunSync(() => featureChecker.CheckEnabledAsync(requiresAll, featureNames));
+        }
+
+        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
+        {
+            if (featureNames.IsNullOrEmpty())
+            {
+                return true;
+            }
+
+            if (requiresAll)
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (!(await featureChecker.IsEnabledAsync(featureName)))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (await featureChecker.IsEnabledAsync(featureName))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        public static bool IsEnabled(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
+        {
+            return AsyncHelper.RunSync(() => featureChecker.IsEnabledAsync(requiresAll, featureNames));
         }
     }
 }
