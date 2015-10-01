@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
@@ -80,6 +81,7 @@ namespace Abp
             RegisterMissingComponents();
 
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<FeatureManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();

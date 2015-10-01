@@ -8,13 +8,13 @@ namespace Abp.Application.Features
     /// <summary>
     /// Defines a feature of the application.
     /// </summary>
-    public class ApplicationFeature
+    public class Feature
     {
         /// <summary>
         /// Parent of this feature, if one exists.
         /// If set, this feature can be enabled only if parent is enabled.
         /// </summary>
-        public ApplicationFeature Parent { get; private set; }
+        public Feature Parent { get; private set; }
 
         /// <summary>
         /// Unique name of the feature.
@@ -40,18 +40,18 @@ namespace Abp.Application.Features
         public bool IsDisabled { get; set; }
 
         /// <summary>
-        /// Feature scope
+        /// Feature scope.
         /// </summary>
-        public ApplicationFeatureScopes Scope { get; set; }
+        public FeatureScopes Scope { get; set; }
 
         /// <summary>
         /// List of child features. A child feature can be enabled only if parent is enabled.
         /// </summary>
-        public IReadOnlyList<ApplicationFeature> Children
+        public IReadOnlyList<Feature> Children
         {
             get { return _children.ToImmutableList(); }
         }
-        private readonly List<ApplicationFeature> _children;
+        private readonly List<Feature> _children;
 
         /// <summary>
         /// Creates a new feature.
@@ -60,7 +60,8 @@ namespace Abp.Application.Features
         /// <param name="isDisabled">This property can be used to disable this feature completely.</param>
         /// <param name="displayName">Display name of the feature</param>
         /// <param name="description">A brief description for this feature</param>
-        public ApplicationFeature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, ApplicationFeatureScopes scope = ApplicationFeatureScopes.All)
+        /// <param name="scope">Feature scope</param>
+        public Feature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All)
         {
             if (name == null)
             {
@@ -73,7 +74,7 @@ namespace Abp.Application.Features
             Description = description;
             Scope = scope;
 
-            _children = new List<ApplicationFeature>();
+            _children = new List<Feature>();
         }
 
         /// <summary>
@@ -81,9 +82,9 @@ namespace Abp.Application.Features
         /// A child feature can be enabled only if parent is enabled.
         /// </summary>
         /// <returns>Returns newly created child feature</returns>
-        public ApplicationFeature CreateChildFeature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, ApplicationFeatureScopes scope = ApplicationFeatureScopes.All)
+        public Feature CreateChildFeature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All)
         {
-            var feature = new ApplicationFeature(name, displayName, isDisabled, description, scope) { Parent = this };
+            var feature = new Feature(name, displayName, isDisabled, description, scope) { Parent = this };
             _children.Add(feature);
             return feature;
         }

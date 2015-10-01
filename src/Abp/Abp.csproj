@@ -80,8 +80,17 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
-    <Compile Include="Application\Features\ApplicationFeature.cs" />
-    <Compile Include="Application\Features\ApplicationFeatureScopes.cs" />
+    <Compile Include="Application\Features\Feature.cs" />
+    <Compile Include="Application\Features\FeatureConfiguration.cs" />
+    <Compile Include="Application\Features\FeatureDefinitionContextBase.cs" />
+    <Compile Include="Application\Features\FeatureDictionary.cs" />
+    <Compile Include="Application\Features\FeatureProvider.cs" />
+    <Compile Include="Application\Features\FeatureScopes.cs" />
+    <Compile Include="Application\Features\FeatureManager.cs" />
+    <Compile Include="Application\Features\IFeatureConfiguration.cs" />
+    <Compile Include="Application\Features\IFeatureDefinitionContext.cs" />
+    <Compile Include="Application\Features\IFeatureManager.cs" />
+    <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
     <Compile Include="Application\Navigation\INavigationManager.cs" />
