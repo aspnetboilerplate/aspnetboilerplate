@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpRedisCacheConfig.cs" />
     <Compile Include="RedisCache\AbpRedisCacheModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisCache\AbpRedisCache.cs" />
