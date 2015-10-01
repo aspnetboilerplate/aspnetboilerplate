@@ -25,16 +25,14 @@ namespace Abp
     /// </summary>
     public sealed class AbpKernelModule : AbpModule
     {
-        private AuditingInterceptorRegistrar _auditingInterceptorRegistrar;
-
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager);
-            _auditingInterceptorRegistrar.Initialize();
+            FeatureInterceptorRegistrar.Initialize(IocManager);
+            AuditingInterceptorRegistrar.Initialize(IocManager);
 
             UnitOfWorkRegistrar.Initialize(IocManager);
 
@@ -108,7 +106,7 @@ namespace Abp
         private void RegisterMissingComponents()
         {
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
         }
     }

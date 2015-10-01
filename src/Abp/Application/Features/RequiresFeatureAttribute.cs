@@ -15,7 +15,7 @@ namespace Abp.Application.Features
         /// If it's false, at least one of the <see cref="Features"/> must be enabled.
         /// Default: false.
         /// </summary>
-        public bool RequireAllPermissions { get; set; }
+        public bool RequiresAll { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="RequiresFeatureAttribute"/> class.

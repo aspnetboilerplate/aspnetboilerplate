@@ -7,7 +7,7 @@ namespace Abp.TestBase.SampleApplication.ContacLists
         [RequiresFeature(SampleFeatureProvider.Names.Contacts)]
         public void Test()
         {
-            
+            //This method is called only if SampleFeatureProvider.Names.Contacts feature is enabled
         }
     }
 }

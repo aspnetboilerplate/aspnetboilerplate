@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Authorization;
 using Abp.Dependency;
 
 namespace Abp.Application.Features
