@@ -84,6 +84,7 @@
     <Compile Include="Application\Features\FeatureCheckerExtensions.cs" />
     <Compile Include="Application\Features\FeatureConfiguration.cs" />
     <Compile Include="Application\Features\FeatureDefinitionContextBase.cs" />
+    <Compile Include="Application\Features\FeatureDependencyContext.cs" />
     <Compile Include="Application\Features\FeatureDictionary.cs" />
     <Compile Include="Application\Features\FeatureInterceptor.cs" />
     <Compile Include="Application\Features\FeatureInterceptorRegistrar.cs" />

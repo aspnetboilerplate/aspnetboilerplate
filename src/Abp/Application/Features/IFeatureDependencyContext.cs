@@ -8,17 +8,4 @@ namespace Abp.Application.Features
 
         IFeatureChecker FeatureChecker { get; }
     }
-
-    public class FeatureDependencyContext : IFeatureDependencyContext
-    {
-        public IIocResolver IocResolver { get; private set; }
-
-        public IFeatureChecker FeatureChecker { get; private set; }
-
-        public FeatureDependencyContext(IIocResolver iocResolver, IFeatureChecker featureChecker)
-        {
-            IocResolver = iocResolver;
-            FeatureChecker = featureChecker;
-        }
-    }
 }
