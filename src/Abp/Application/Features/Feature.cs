@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Collections.Extensions;
 using Abp.Localization;
 
 namespace Abp.Application.Features
@@ -10,6 +11,22 @@ namespace Abp.Application.Features
     /// </summary>
     public class Feature
     {
+        /// <summary>
+        /// Gets/sets arbitrary objects related to this object.
+        /// Gets null if given key does not exists.
+        /// </summary>
+        /// <param name="key">Key</param>
+        public object this[string key]
+        {
+            get { return Attributes.GetOrDefault(key); }
+            set { Attributes[key] = value; }
+        }
+
+        /// <summary>
+        /// Arbitrary objects related to this object.
+        /// </summary>
+        public IDictionary<string, object> Attributes { get; set; }
+
         /// <summary>
         /// Parent of this feature, if one exists.
         /// If set, this feature can be enabled only if parent is enabled.
