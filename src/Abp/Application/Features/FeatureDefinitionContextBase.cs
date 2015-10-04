@@ -1,5 +1,6 @@
 using Abp.Collections.Extensions;
 using Abp.Localization;
+using Abp.UI.Inputs;
 
 namespace Abp.Application.Features
 {
@@ -12,15 +13,15 @@ namespace Abp.Application.Features
             Features = new FeatureDictionary();
         }
 
-        public Feature Create(string name, ILocalizableString displayName = null, bool isDisabled = false,
-            ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All)
+        public Feature Create(string name, string defaultValue, ILocalizableString displayName = null,
+            ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
             if (Features.ContainsKey(name))
             {
                 throw new AbpException("There is already a feature with name: " + name);
             }
 
-            var feature = new Feature(name, displayName, isDisabled, description, scope);
+            var feature = new Feature(name, defaultValue, displayName, description, scope, inputType);
             Features[feature.Name] = feature;
             return feature;
 

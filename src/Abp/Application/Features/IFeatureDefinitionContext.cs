@@ -1,4 +1,5 @@
 using Abp.Localization;
+using Abp.UI.Inputs;
 
 namespace Abp.Application.Features
 {
@@ -8,11 +9,12 @@ namespace Abp.Application.Features
         /// Creates a new feature.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
-        /// <param name="isDisabled">This property can be used to disable this feature completely.</param>
+        /// <param name="defaultValue">Default value</param>
         /// <param name="displayName">Display name of the feature</param>
         /// <param name="description">A brief description for this feature</param>
         /// <param name="scope">Feature scope</param>
-        Feature Create(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All);
+        /// <param name="inputType">Input type</param>
+        Feature Create(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null);
 
         /// <summary>
         /// Gets a feature with given name or null if can not find.

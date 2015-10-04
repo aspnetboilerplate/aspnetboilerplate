@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -108,6 +109,16 @@ namespace Abp.Application.Features
         public static bool IsEnabled(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
             return AsyncHelper.RunSync(() => featureChecker.IsEnabledAsync(requiresAll, featureNames));
+        }
+
+        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, string name)
+        {
+            return string.Equals(await featureChecker.GetValueAsync(name), "true", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, int tenantId, string name)
+        {
+            return string.Equals(await featureChecker.GetValueAsync(tenantId, name), "true", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

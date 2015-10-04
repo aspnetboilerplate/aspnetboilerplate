@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Extensions;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
@@ -22,7 +23,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         public void Should_Get_Defined_Features()
         {
             _featureManager.Get(SampleFeatureProvider.Names.Contacts).ShouldNotBe(null);
-            _featureManager.GetAll().Count.ShouldBe(1);
+            _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount).ShouldNotBe(null);
+            _featureManager.GetAll().Count.ShouldBe(2);
         }
 
         [Fact]
@@ -33,9 +35,32 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         }
 
         [Fact]
+        public virtual void Should_Get_Feature_Values()
+        {
+            var featureValueStore = Substitute.For<IFeatureValueStore>();
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
+                );
+
+            var featureChecker = Resolve<IFeatureChecker>();
+            featureChecker.GetValue(SampleFeatureProvider.Names.Contacts).To<bool>().ShouldBeTrue();
+            featureChecker.IsEnabled(SampleFeatureProvider.Names.Contacts).ShouldBeTrue();
+            featureChecker.GetValue(SampleFeatureProvider.Names.MaxContactCount).To<int>().ShouldBe(20);
+        }
+
+        [Fact]
         public void Should_Call_Method_With_Feature_If_Enabled()
         {
-            //Note: NullFeatureChecker is used as default, and it always returns true
+            var featureValueStore = Substitute.For<IFeatureValueStore>();
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
+                );
+
             var contactListAppService = Resolve<IContactListAppService>();
             contactListAppService.Test(); //Should not throw exception
         }
@@ -43,11 +68,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         [Fact]
         public void Should_Not_Call_Method_With_Feature_If_Not_Enabled()
         {
-            var featureChecker = Substitute.For<IFeatureChecker>();
-            featureChecker.IsEnabledAsync(SampleFeatureProvider.Names.Contacts).Returns(Task.FromResult(false));
+            var featureValueStore = Substitute.For<IFeatureValueStore>();
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("false"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureChecker>().UsingFactoryMethod(() => featureChecker).LifestyleSingleton()
+                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
                 );
 
             var contactListAppService = Resolve<IContactListAppService>();

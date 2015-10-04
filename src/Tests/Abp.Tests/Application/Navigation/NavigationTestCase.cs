@@ -44,7 +44,7 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager, new FeatureDependencyContext(_iocManager, new NullFeatureChecker()))
+            UserNavigationManager = new UserNavigationManager(NavigationManager, new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                                     {
                                         PermissionChecker = CreateMockPermissionChecker()
                                     };

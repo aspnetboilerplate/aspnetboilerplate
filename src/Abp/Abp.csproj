@@ -81,6 +81,7 @@
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
     <Compile Include="Application\Features\Feature.cs" />
+    <Compile Include="Application\Features\FeatureChecker.cs" />
     <Compile Include="Application\Features\FeatureCheckerExtensions.cs" />
     <Compile Include="Application\Features\FeatureConfiguration.cs" />
     <Compile Include="Application\Features\FeatureDefinitionContextBase.cs" />
@@ -96,6 +97,16 @@
     <Compile Include="Application\Features\IFeatureDefinitionContext.cs" />
     <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
+    <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
+    <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
+    <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
+    <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
+    <Compile Include="UI\Inputs\ComboboxInputType.cs" />
+    <Compile Include="UI\Inputs\CheckboxInputType.cs" />
+    <Compile Include="UI\Inputs\IInputType.cs" />
+    <Compile Include="Runtime\Validation\NullValueValidator.cs" />
+    <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
     <Compile Include="Application\Features\NullFeatureChecker.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
@@ -175,6 +186,12 @@
     <Compile Include="Runtime\Caching\TypedCacheWrapper.cs" />
     <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptorRegistrar.cs" />
+    <Compile Include="Runtime\Validation\IValueValidator.cs" />
+    <Compile Include="UI\Inputs\SingleLineStringInputType.cs" />
+    <Compile Include="Runtime\Validation\StringValueValidator.cs" />
+    <Compile Include="UI\Inputs\InputTypeAttribute.cs" />
+    <Compile Include="UI\Inputs\InputTypeBase.cs" />
+    <Compile Include="Runtime\Validation\ValidatorAttribute.cs" />
     <Compile Include="Text\Formatting\FormatStringToken.cs" />
     <Compile Include="Text\Formatting\FormatStringTokenType.cs" />
     <Compile Include="Text\Formatting\FormatStringTokenizer.cs" />
@@ -426,6 +443,7 @@
     <Compile Include="Timing\LocalClockProvider.cs" />
     <Compile Include="Timing\UtcClockProvider.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
+    <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

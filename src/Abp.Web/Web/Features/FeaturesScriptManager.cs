@@ -12,17 +12,15 @@ namespace Abp.Web.Features
     {
         public IAbpSession AbpSession { get; set; }
 
-        public IFeatureChecker FeatureChecker { get; set; }
-
-
         private readonly IFeatureManager _featureManager;
+        private readonly IFeatureChecker _featureChecker;
 
-        public FeaturesScriptManager(IFeatureManager featureManager)
+        public FeaturesScriptManager(IFeatureManager featureManager, IFeatureChecker featureChecker)
         {
             _featureManager = featureManager;
+            _featureChecker = featureChecker;
 
             AbpSession = NullAbpSession.Instance;
-            FeatureChecker = NullFeatureChecker.Instance;
         }
 
         public async Task<string> GetScriptAsync()
@@ -35,7 +33,7 @@ namespace Abp.Web.Features
                 currentTenantValues = new Dictionary<string, string>();
                 foreach (var feature in allFeatures)
                 {
-                    currentTenantValues[feature.Name] = await FeatureChecker.GetValueAsync(AbpSession.GetTenantId(), feature.Name);
+                    currentTenantValues[feature.Name] = await _featureChecker.GetValueAsync(AbpSession.GetTenantId(), feature.Name);
                 }
             }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Collections.Extensions;
 using Abp.Localization;
+using Abp.UI.Inputs;
 
 namespace Abp.Application.Features
 {
@@ -25,7 +26,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Arbitrary objects related to this object.
         /// </summary>
-        public IDictionary<string, object> Attributes { get; set; }
+        public IDictionary<string, object> Attributes { get; private set; }
 
         /// <summary>
         /// Parent of this feature, if one exists.
@@ -49,12 +50,13 @@ namespace Abp.Application.Features
         /// This can be used to show feature description on UI. 
         /// </summary>
         public ILocalizableString Description { get; set; }
-
+        
         /// <summary>
-        /// This property can be used to disable this feature completely.
-        /// Default value: false.
+        /// Input type.
         /// </summary>
-        public bool IsDisabled { get; set; }
+        public IInputType InputType { get; set; }
+
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Feature scope.
@@ -74,11 +76,12 @@ namespace Abp.Application.Features
         /// Creates a new feature.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
-        /// <param name="isDisabled">This property can be used to disable this feature completely.</param>
+        /// <param name="defaultValue">Default value</param>
         /// <param name="displayName">Display name of the feature</param>
         /// <param name="description">A brief description for this feature</param>
         /// <param name="scope">Feature scope</param>
-        public Feature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All)
+        /// <param name="inputType">Input type</param>
+        public Feature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
             if (name == null)
             {
@@ -87,11 +90,13 @@ namespace Abp.Application.Features
 
             Name = name;
             DisplayName = displayName;
-            IsDisabled = isDisabled;
             Description = description;
             Scope = scope;
+            DefaultValue = defaultValue;
+            InputType = inputType ?? new CheckboxInputType();
 
             _children = new List<Feature>();
+            Attributes = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -99,9 +104,9 @@ namespace Abp.Application.Features
         /// A child feature can be enabled only if parent is enabled.
         /// </summary>
         /// <returns>Returns newly created child feature</returns>
-        public Feature CreateChildFeature(string name, ILocalizableString displayName = null, bool isDisabled = false, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All)
+        public Feature CreateChildFeature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
-            var feature = new Feature(name, displayName, isDisabled, description, scope) { Parent = this };
+            var feature = new Feature(name, defaultValue, displayName, description, scope, inputType) { Parent = this };
             _children.Add(feature);
             return feature;
         }

@@ -34,23 +34,13 @@ namespace Abp.Application.Features
 
         private void CheckFeatures(List<RequiresFeatureAttribute> featureAttributes)
         {
-            if (_iocResolver.IsRegistered<IFeatureChecker>())
-            {
-                _iocResolver.Using<IFeatureChecker>(featureChecker =>
-                {
-                    foreach (var featureAttribute in featureAttributes)
-                    {
-                        featureChecker.CheckEnabled(featureAttribute.RequiresAll, featureAttribute.Features);
-                    }
-                });
-            }
-            else
+            _iocResolver.Using<IFeatureChecker>(featureChecker =>
             {
                 foreach (var featureAttribute in featureAttributes)
                 {
-                    NullFeatureChecker.Instance.CheckEnabled(featureAttribute.RequiresAll, featureAttribute.Features);
+                    featureChecker.CheckEnabled(featureAttribute.RequiresAll, featureAttribute.Features);
                 }
-            }
+            });
         }
     }
 }

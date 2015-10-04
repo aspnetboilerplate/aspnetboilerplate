@@ -2,29 +2,14 @@
 
 namespace Abp.Application.Features
 {
-    public class NullFeatureChecker : IFeatureChecker
+    public class NullFeatureValueStore : IFeatureValueStore
     {
-        public static NullFeatureChecker Instance { get { return SingletonInstance; } }
-        private static readonly NullFeatureChecker SingletonInstance = new NullFeatureChecker();
+        public static NullFeatureValueStore Instance { get { return SingletonInstance; } }
+        private static readonly NullFeatureValueStore SingletonInstance = new NullFeatureValueStore();
 
-        public Task<bool> IsEnabledAsync(string name)
+        public Task<string> GetValueOrNullAsync(int tenantId, Feature feature)
         {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> IsEnabledAsync(int tenantId, string name)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<string> GetValueAsync(string name)
-        {
-            return Task.FromResult(string.Empty);
-        }
-
-        public Task<string> GetValueAsync(int tenantId, string name)
-        {
-            return Task.FromResult(string.Empty);
+            return Task.FromResult((string) null);
         }
     }
 }
