@@ -20,6 +20,10 @@ namespace Abp.Runtime.Session
         public int? TenantId { get { return null; } }
 
         public MultiTenancySides MultiTenancySide { get { return MultiTenancySides.Tenant; } }
+        
+        public long? ImpersonatorUserId { get { return null; } }
+        
+        public int? ImpersonatorTenantId { get { return null; } }
 
         private NullAbpSession()
         {

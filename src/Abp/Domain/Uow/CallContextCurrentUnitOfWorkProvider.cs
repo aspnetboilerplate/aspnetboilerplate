@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Runtime.Remoting.Messaging;
 using Abp.Dependency;
 using Castle.Core;
+using Castle.Core.Logging;
 
 namespace Abp.Domain.Uow
 {
@@ -12,82 +12,123 @@ namespace Abp.Domain.Uow
     /// </summary>
     public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ITransientDependency
     {
+        public ILogger Logger { get; set; }
+
         private const string ContextKey = "Abp.UnitOfWork.Current";
 
         //TODO: Clear periodically..?
-        private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary
-            = new ConcurrentDictionary<string, IUnitOfWork>();
+        private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary = new ConcurrentDictionary<string, IUnitOfWork>();
 
-        internal static IUnitOfWork StaticUow
+        public CallContextCurrentUnitOfWorkProvider()
         {
-            get
+            Logger = NullLogger.Instance;
+        }
+
+        private static IUnitOfWork GetCurrentUow(ILogger logger)
+        {
+            var unitOfWorkKey = CallContext.LogicalGetData(ContextKey) as string;
+            if (unitOfWorkKey == null)
             {
-                var unitOfWorkKey = CallContext.LogicalGetData(ContextKey) as string;
-                if (unitOfWorkKey == null)
-                {
-                    return null;
-                }
-
-                IUnitOfWork unitOfWork;
-                if (!UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
-                {
-                    CallContext.LogicalSetData(ContextKey, null);
-                    return null;
-                }
-
-                if (unitOfWork.IsDisposed)
-                {
-                    CallContext.LogicalSetData(ContextKey, null);
-                    UnitOfWorkDictionary.TryRemove(unitOfWorkKey, out unitOfWork);
-                    return null;
-                }
-
-                return unitOfWork;
+                return null;
             }
 
-            set
+            IUnitOfWork unitOfWork;
+            if (!UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
             {
-                var unitOfWorkKey = CallContext.LogicalGetData(ContextKey) as string;
-                if (unitOfWorkKey != null)
-                {
-                    IUnitOfWork unitOfWork;
-                    if (UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
-                    {
-                        if (unitOfWork == value)
-                        {
-                            //Setting same object, no need to set again
-                            return;
-                        }
+                logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary!");
+                CallContext.FreeNamedDataSlot(ContextKey);
+                return null;
+            }
 
-                        UnitOfWorkDictionary.TryRemove(unitOfWorkKey, out unitOfWork);
+            if (unitOfWork.IsDisposed)
+            {
+                logger.Warn("There is a unitOfWorkKey in CallContext but the UOW was disposed!");
+                UnitOfWorkDictionary.TryRemove(unitOfWorkKey, out unitOfWork);
+                CallContext.FreeNamedDataSlot(ContextKey);
+                return null;
+            }
+
+            return unitOfWork;
+        }
+
+        private static void SetCurrentUow(IUnitOfWork value, ILogger logger)
+        {
+            if (value == null)
+            {
+                ExitFromCurrentUowScope(logger);
+                return;
+            }
+
+            var unitOfWorkKey = CallContext.LogicalGetData(ContextKey) as string;
+            if (unitOfWorkKey != null)
+            {
+                IUnitOfWork outer;
+                if (UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out outer))
+                {
+                    if (outer == value)
+                    {
+                        logger.Warn("Setting the same UOW to the CallContext, no need to set again!");
+                        return;
                     }
 
-                    CallContext.LogicalSetData(ContextKey, null);
+                    value.Outer = outer;
                 }
-
-                if (value == null)
-                {
-                    //It's already null (because of the logic above), no need to set
-                    return;
-                }
-
-                unitOfWorkKey = Guid.NewGuid().ToString();
-                if (!UnitOfWorkDictionary.TryAdd(unitOfWorkKey, value))
-                {
-                    //This is almost impossible, but we're checking.
-                    throw new AbpException("Can not set unit of work!");
-                }
-
-                CallContext.LogicalSetData(ContextKey, unitOfWorkKey);
             }
+
+            unitOfWorkKey = value.Id;
+            if (!UnitOfWorkDictionary.TryAdd(unitOfWorkKey, value))
+            {
+                throw new AbpException("Can not set unit of work! UnitOfWorkDictionary.TryAdd returns false!");
+            }
+
+            CallContext.LogicalSetData(ContextKey, unitOfWorkKey);
+        }
+
+        private static void ExitFromCurrentUowScope(ILogger logger)
+        {
+            var unitOfWorkKey = CallContext.LogicalGetData(ContextKey) as string;
+
+            if (unitOfWorkKey == null)
+            {
+                logger.Warn("There is no current UOW to exit!");
+                return;
+            }
+
+            IUnitOfWork unitOfWork;
+            if (!UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
+            {
+                logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary!");
+                CallContext.FreeNamedDataSlot(ContextKey);
+                return;
+            }
+
+            UnitOfWorkDictionary.TryRemove(unitOfWorkKey, out unitOfWork);
+            if (unitOfWork.Outer == null)
+            {
+                CallContext.FreeNamedDataSlot(ContextKey);
+                return;
+            }
+
+            //Restore outer UOW
+
+            var outerUnitOfWorkKey = unitOfWork.Outer.Id;
+            if (!UnitOfWorkDictionary.TryGetValue(outerUnitOfWorkKey, out unitOfWork))
+            {
+                //No outer UOW
+                logger.Warn("Outer UOW key could not found in UnitOfWorkDictionary!");
+                CallContext.FreeNamedDataSlot(ContextKey);
+                return;
+            }
+
+            CallContext.LogicalSetData(ContextKey, outerUnitOfWorkKey);
         }
 
         /// <inheritdoc />
         [DoNotWire]
         public IUnitOfWork Current
         {
-            get { return StaticUow; }
-            set { StaticUow = value; }
+            get { return GetCurrentUow(Logger); }
+            set { SetCurrentUow(value, Logger); }
         }
     }
 }

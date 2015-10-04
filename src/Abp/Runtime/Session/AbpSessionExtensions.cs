@@ -32,7 +32,7 @@
         {
             if (!session.TenantId.HasValue)
             {
-                throw new AbpException("Session.TenantId is null! Possible problems: User is not logged in, current user in not tenant user or this is not a multi-tenant application.");
+                throw new AbpException("Session.TenantId is null! Possible problems: No user logged in or current logged in user in a host user (TenantId is always null for host users).");
             }
 
             return session.TenantId.Value;

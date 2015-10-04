@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 
 namespace Abp.Localization.Sources
 {
@@ -23,7 +25,7 @@ namespace Abp.Localization.Sources
             
         }
 
-        public void Initialize()
+        public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             
         }

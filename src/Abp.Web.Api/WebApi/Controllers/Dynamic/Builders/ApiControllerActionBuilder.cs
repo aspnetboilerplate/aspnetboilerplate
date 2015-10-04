@@ -1,6 +1,10 @@
 using System.Reflection;
 using Abp.Web;
 using System.Web.Http.Filters;
+using System.Linq;
+using Abp.Reflection;
+using System;
+using System.Web.Http;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -14,6 +18,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Selected action name.
         /// </summary>
         public string ActionName { get; private set; }
+
+        /// <summary>
+        /// Selected Http verb.
+        /// </summary>
+        public HttpVerb? Verb { get; private set; }
 
         /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
@@ -31,19 +40,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private IFilter[] _filters;
 
         /// <summary>
-        /// Selected Http verb.
-        /// </summary>
-        private HttpVerb? _verb;
-
-        /// <summary>
         /// A flag to set if no action will be created for this method.
         /// </summary>
         public bool DontCreate { get; private set; }
-
-        /// <summary>
-        /// Default HTTP verb if not set.
-        /// </summary>
-        private const HttpVerb DefaultVerb = HttpVerb.Post;
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
@@ -64,7 +63,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> WithVerb(HttpVerb verb)
         {
-            _verb = verb;
+            Verb = verb;
             return this;
         }
 
@@ -87,7 +86,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _filters = filters;
             return this;
         }
-        
+
         /// <summary>
         /// Tells builder to not create action for this method.
         /// </summary>
@@ -110,15 +109,57 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Builds <see cref="DynamicApiActionInfo"/> object for this configuration.
         /// </summary>
+        /// <param name="conventionalVerbs"></param>
         /// <returns></returns>
-        public DynamicApiActionInfo BuildActionInfo()
+        internal DynamicApiActionInfo BuildActionInfo(bool conventionalVerbs)
         {
-            if (_verb == null)
+            return new DynamicApiActionInfo(ActionName, GetNormalizedVerb(conventionalVerbs), _methodInfo, _filters);
+        }
+
+        private HttpVerb GetNormalizedVerb(bool conventionalVerbs)
+        {
+            if (Verb != null)
             {
-                _verb = DefaultVerb;
+                return Verb.Value;
             }
 
-            return new DynamicApiActionInfo(ActionName, _verb.Value, _methodInfo, _filters);
+            if(_methodInfo.IsDefined(typeof (HttpGetAttribute)))
+            {
+                return HttpVerb.Get;
+            }
+            
+            if (_methodInfo.IsDefined(typeof (HttpPostAttribute)))
+            {
+                return HttpVerb.Post;                
+            }
+
+            if (_methodInfo.IsDefined(typeof(HttpPutAttribute)))
+            {
+                return HttpVerb.Put;
+            }
+            
+            if (_methodInfo.IsDefined(typeof(HttpDeleteAttribute)))
+            {
+                return HttpVerb.Delete;
+            }
+
+            if (conventionalVerbs)
+            {
+                var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);
+                if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+                {
+                    conventionalVerb = DynamicApiVerbHelper.GetDefaultHttpVerb();
+                }
+
+                return conventionalVerb;
+            }
+
+            return DynamicApiVerbHelper.GetDefaultHttpVerb();
+        }
+
+        private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
+        {
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
         }
     }
 }

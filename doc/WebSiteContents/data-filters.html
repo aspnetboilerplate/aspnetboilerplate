@@ -3,7 +3,6 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 <style type="text/css">
 .auto-style1 {
@@ -14,20 +13,7 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntro">Introduction</a></li>
-	<li><a href="#DocPredefinedFilters">Pre-defined filters</a><ul>
-		<li><a href="#DocSoftDelete">ISoftDelete</a></li>
-		<li><a href="#DocMustHaveTenant">IMustHaveTenant</a></li>
-		<li><a href="#DocMayHaveTenant">IMayHaveTenant</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocDisableFilters">Disable filters</a></li>
-	<li><a href="#DocEnableFilters">Enable filters</a></li>
-	<li><a href="#DocSetFilterParams">Setting filter parameters</a></li>
-	<li><a href="#DocDefineCustomFilters">Defining custom filters</a></li>
-	<li><a href="#DicOtherORMs">Other ORMs</a></li>
-</ul>
+<div class="document-contents">
 
 <h3 id="DocIntro">Introduction</h3>
 <p>It's common to use the <a href="/Pages/Documents/Entities#DocSoftDelete">
@@ -40,13 +26,6 @@ forgettable task. So, there should be an automatic way of it.</p>
 <p>ASP.NET Boilerplate provides <strong>data filters </strong>those can be used 
 to automatically filter queries based on some rules. There are some pre-defined 
 filters, but also you can create your own filters.</p>
-
-<div class="bs-callout bs-callout-warning">
-	<h4>Only for EntityFramework</h4>
-	<p>ASP.NET Boilerplate data filtering is implemented just for 
-	EntityFramework. Not available for other ORM tools yet. See other ORMs 
-	section at the end of the document.</p>
-</div>
 
 <h3 id="DocPredefinedFilters">Pre-defined filters</h3>
 
@@ -197,6 +176,10 @@ runtime. For such filters, we can change filter value if needed. Example:</p>
 <p>Another example: To set the tenantId value for the IMayHaveTenant filter:</p>
 <pre lang="cs">CurrentUnitOfWork.SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 42);</pre>
 
+<p>SetFilterParameter method also returns an IDisposable. So, we can use it in a
+<strong>using</strong> statement to automatically <strong>restore the old value</strong> 
+after using statement.</p>
+
 <h3 id="DocDefineCustomFilters">Defining custom filters</h3>
 <p>To create a custom filter and integrate to ASP.NET Boilerplate, first we 
 should define an interface that will be implemented by entities which use this 
@@ -219,6 +202,7 @@ Example interface:</p>
 <a href="https://github.com/jcachat/EntityFramework.DynamicFilters" target="_blank">EntityFramework.DynamicFilters</a></strong>, we use it's 
 rules to define the filter. In our <strong>DbContext </strong>class, we override 
 <strong>OnModelCreating </strong>and define filter as shown below:</p>
+
 <pre lang="cs">protected override void OnModelCreating(DbModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);
@@ -254,15 +238,17 @@ disable it).</p>
 	</p>
 </div>
 
-<p>We can create custom filters for security, active/passive entities, 
-multi-tenancy and so on.</p>
+<p>We can create custom filters for security, active/passive entities and so on.</p>
 
 <h3 id="DicOtherORMs">Other ORMs</h3>
-<p>ASP.NET Boilerplate data filtering is implemented just for <strong>EntityFramework</strong>. 
-Not available for other ORMs yet.&nbsp; But, actually, you can mimic it for 
+<p>ASP.NET Boilerplate data filtering is implemented for EntityFramework and 
+NHibernate. 
+Not available for other ORMs yet. But, actually, you can mimic it for 
 most cases as long as you're using <strong>repositories</strong> to get data. In this case, you 
 can create a custom <a href="/Pages/Documents/Repositories">repository</a> and 
 override <strong>GetAll</strong> and other data retrieve methods if needed.</p>
+
+</div>
 
 </body>
 

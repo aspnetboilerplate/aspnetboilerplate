@@ -8,8 +8,8 @@
 
     abp.ng.http = {
         defaultError: {
-            message: 'Ajax request is not succeed!',
-            details: 'Error detail is not sent by server.'
+            message: 'Ajax request did not succeed!',
+            details: 'Error detail not sent by server.'
         },
 
         logError: function (error) {
@@ -56,7 +56,7 @@
                 if (originalData.targetUrl) {
                     abp.ng.http.handleTargetUrl(originalData.targetUrl);
                 }
-            } else { //data.success === false
+            } else if(originalData.success === false) {
                 var messagePromise = null;
 
                 if (originalData.error) {
@@ -87,7 +87,7 @@
 
                     'request': function (config) {
                         if (endsWith(config.url, '.cshtml')) {
-                            config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url;
+                            config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url + '&_t=' + abp.pageLoadTime.getTime();
                         }
 
                         return config;
@@ -116,7 +116,7 @@
 
                         abp.ng.http.logError(error);
 
-                        return $q.reject(error);
+                        return $q.reject(ngError);
                     }
 
                 };

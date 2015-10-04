@@ -21,65 +21,77 @@ namespace Abp.Authorization.Interceptors
 
         public void Intercept(IInvocation invocation)
         {
-            var authorizeAttrList =
+            var authorizeAttributes =
                 ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpAuthorizeAttribute>(
                     invocation.MethodInvocationTarget
                     );
 
-            if (authorizeAttrList.Count <= 0)
+            if (authorizeAttributes.Count <= 0)
             {
-                //No AbpAuthorizeAttribute to be checked
                 invocation.Proceed();
                 return;
             }
 
-            if (AsyncHelper.IsAsyncMethod(invocation.Method))
-            {
-                InterceptAsync(invocation, authorizeAttrList);
-            }
-            else
-            {
-                InterceptSync(invocation, authorizeAttrList);
-            }
+            //TODO: Async pre-action does not works with Castle Windsor. So, it's cancelled until another solution is found (issue #381).
+
+            //if (AsyncHelper.IsAsyncMethod(invocation.Method))
+            //{
+            //    InterceptAsync(invocation, authorizeAttributes);
+            //}
+            //else
+            //{
+                InterceptSync(invocation, authorizeAttributes);
+            //}
         }
 
         private void InterceptAsync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
         {
-            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>()) //TODO: Inject?
+            if (invocation.Method.ReturnType == typeof(Task))
             {
-                authorizationAttributeHelper.Object.Authorize(authorizeAttributes);
-                invocation.Proceed();
+                invocation.ReturnValue = InternalAsyncHelper
+                    .AwaitTaskWithPreActionAndPostActionAndFinally(
+                        () =>
+                        {
+                            invocation.Proceed();
+                            return (Task)invocation.ReturnValue;
+                        },
+                        preAction: () => AuthorizeAsync(authorizeAttributes)
+                    );
             }
-
-            //TODO: Async is not worked here, we will check it later. For now, using sync authorization.
-
-            //var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>();
-
-            //if (invocation.Method.ReturnType == typeof (Task))
-            //{
-            //    invocation.ReturnValue = InternalAsyncHelper.InvokeWithPreAndFinalActionAsync(
-            //        invocation,
-            //        async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
-            //        () => _iocResolver.Release(authorizationAttributeHelper)
-            //        );
-            //}
-            //else
-            //{
-            //    invocation.ReturnValue = InternalAsyncHelper.CallInvokeWithPreAndFinalActionAsync(
-            //        invocation.Method.ReturnType.GenericTypeArguments[0],
-            //        invocation,
-            //        async () => await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes),
-            //        () => _iocResolver.Release(authorizationAttributeHelper)
-            //        );
-            //}
+            else //Task<TResult>
+            {
+                invocation.ReturnValue = InternalAsyncHelper
+                    .CallAwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult(
+                        invocation.Method.ReturnType.GenericTypeArguments[0],
+                        () =>
+                        {
+                            invocation.Proceed();
+                            return invocation.ReturnValue;
+                        },
+                        preAction: async () => await AuthorizeAsync(authorizeAttributes)
+                    );
+            }
         }
 
         private void InterceptSync(IInvocation invocation, IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
         {
+            Authorize(authorizeAttributes);
+            invocation.Proceed();
+        }
+
+        private void Authorize(IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
+        {
             using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
             {
                 authorizationAttributeHelper.Object.Authorize(authorizeAttributes);
-                invocation.Proceed();
+            }
+        }
+
+        private async Task AuthorizeAsync(IEnumerable<AbpAuthorizeAttribute> authorizeAttributes)
+        {
+            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
+            {
+                await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes);
             }
         }
     }

@@ -3,28 +3,15 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 </head>
 
 <body>
 
-<ul>
-	<li><a href="#DocDynamicApi">Building dynamic Web API Controllers</a><ul>
-		<li><a href="#DocForAll">ForAll method</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocDynamicProxy">Using dynamic javascript proxi<span class="text-primary">es</span></a><ul>
-		<li><a href="#DocAjaxParams">AJAX parameters</a></li>
-		<li><a href="#DocSingleService">Single service script</a></li>
-		<li><a href="#DocAngularSupport">Angular support</a></li>
-		<li><a href="#DocDurandalSupport">Durandal support</a></li>
-	</ul>
-	</li>
-</ul>
+<div class="document-contents">
 
 <h3 id="DocDynamicApi">
-    Building dynamic Web API Controllers</h3>
+    Building Dynamic Web API Controllers</h3>
 <p>
     ASP.NET Boilerplate can automatically generate <strong>web api layer</strong> 
 	for your <strong>application layer</strong>. Say that we have an 
@@ -44,7 +31,7 @@
 <p>
     Thats 
 	all! An api controller is created in the address '<strong>/api/services/tasksystem/task</strong>' and all methods are now usable by clients.
-    This configuration is generally made in the
+    This configuration should be made in the
 	<a href="/Pages/Documents/Module-System">module initialization</a>. </p>
 <p><strong>ITaskAppService</strong> is the application service that we want to 
 wrap with an api controller. It is not restricted to application services but 
@@ -55,15 +42,9 @@ namespace but you can define more deep namespaces like
 is a prefix for all dynamic web api controllers. So, address of the api 
 controller will be like '/api/services/tasksystem/task' and GetTasks method's 
 address will be '/api/services/tasksystem/task/getTasks'. Method names are 
-converted to <strong>camelCase</strong> since it's traditional in javascript 
+converted to <strong>camelCase</strong> since it's conventional in javascript 
 world.</p>
-<p>You can <strong>exclude</strong> some methods of 
-an api method. An example definition could be:</p>
-<pre lang="cs">DynamicApiControllerBuilder
-    .For&lt;ITaskAppService&gt;("tasksystem/task<span lang="tr">Service</span>")
-    .ForMethod("CreateTask").DontCreateAction()
-    .Build();</pre>
-<h4>ForAll method</h4>
+<h4>ForAll Method</h4>
 <p>We may have many application services in an application and building api 
 controllers one by one may be a tedious and forgettable work. 
 DynamicApiControllerBuilper provides a method to build web api controllers for 
@@ -81,8 +62,70 @@ removed (for interfaces). Also, service name is converted to camel case. If you
 don't like this convention, there is a 'WithServiceName' method that you can 
 determine names. Also, There is a Where method to filter services. This can be 
 useful if you will build for all application services except a few one.</p>
+<h4>Overriding ForAll</h4>
+<p>We can override configuration after ForAll method. Example:</p>
+<pre lang="cs">DynamicApiControllerBuilder
+    .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
+    .Build();
+
+DynamicApiControllerBuilder
+    .For&lt;ITaskAppService&gt;("tasksystem/task")
+    .ForMethod("CreateTask")<strong>.DontCreateAction()
+</strong>    .Build();</pre>
+<p>In this code, we created dynamic web api controllers for all application 
+services in an assembly. Then overrided configuration for a single application 
+service (ITaskAppService) to ignore CreateTask method.</p>
+<h4>Http Verbs</h4>
+<p>By default, all methods are created as <strong>POST</strong>. So, a client should send post 
+requests in order to use created web api actions. We can change this behaviour 
+in different ways.</p>
+<h5>WithVerb Method</h5>
+<p>We can use WithVerb for a method like that:</p>
+<pre lang="cs">DynamicApiControllerBuilder
+    .For&lt;ITaskAppService&gt;("tasksystem/task")
+    .ForMethod("GetTasks")<strong>.WithVerb(HttpVerb.Get)</strong>
+    .Build();</pre>
+
+<h5>HTTP Attributes</h5>
+<p>We can add HttpGet, HttpPost... attributes to methods in the service 
+interface:</p>
+<pre lang="cs">public interface ITaskAppService : IApplicationService
+{
+    <strong>[HttpGet]</strong>
+    GetTasksOutput GetTasks(GetTasksInput input);
+
+    <strong>[HttpPut]</strong>
+    void UpdateTask(UpdateTaskInput input);
+
+    <strong>[HttpPost]</strong>
+    void CreateTask(CreateTaskInput input);
+}</pre>
+
+<p>In order to use these attributes, we should add reference to 
+<a href="https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Core" target="_blank">Microsoft.AspNet.WebApi.Core</a> 
+nuget package from your project.</p>
+<h5>Naming Convention</h5>
+<p>Instead of declaring HTTP very for every method, you can use <strong>
+WithConventionalVerbs</strong> method as shown below:</p>
+<pre lang="cs">DynamicApiControllerBuilder
+    .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
+    <strong>.WithConventionalVerbs()</strong>
+    .Build();</pre>
+<p>In this case, HTTP verbs are determined by method name prefixes:</p>
+<ul>
+	<li><strong>Get</strong>: Used if method name starts with 'Get'.</li>
+	<li><strong>Put</strong>: Used if method name starts with 'Put' or 'Update'.</li>
+	<li><strong>Delete</strong>: Used if method name starts with 'Delete' or 
+	'Remove'.</li>
+	<li><strong>Post</strong>: Used if method name starts with 'Post' or 
+	'Create'.</li>
+	<li>Otherwise, <strong>Post</strong> is used <strong>as default</strong> 
+	HTTP verb.</li>
+</ul>
+<p>We can override it for a specific method using WithVerb method or HTTP 
+attributes.</p>
 <h3 id="DocDynamicProxy">
-    Using dynamic javascript proxies</h3>
+    Dynamic Javascript Proxies</h3>
 <p>
     You can use the dynamically created web api controller via ajax 
 	in javascript. ASP.NET 
@@ -92,8 +135,8 @@ useful if you will build for all application services except a few one.</p>
 	call:</p>
 <pre lang="js">abp.services.tasksystem.task.getTasks({
     state: 1
-}).done(function (data) {
-    //use data.tasks here...
+}).done(function (result) {
+    //use result.tasks here...
 });</pre>
 <p>
     Javascript proxies are created dynamically. You should include the dynamic script 
@@ -105,7 +148,7 @@ jQuery.Deferred</a>). You can register to done, fail, then... callbacks.
 Service methods use
 <a href="/Pages/Documents/Javascript-API/AJAX">abp.ajax</a> inside. They 
 handle errors and show error messages if needed.</p>
-<h4 id="DocAjaxParams">AJAX parameters</h4>
+<h4 id="DocAjaxParams">AJAX Parameters</h4>
 <p>You may want to pass custom ajax parameters to the proxy method. You can pass 
 them as second argument as sown below:</p>
 <pre lang="js">abp.services.tasksystem.task.createTask({
@@ -120,7 +163,7 @@ them as second argument as sown below:</p>
 <p>All parameters of
 <a href="http://api.jquery.com/jQuery.ajax/" target="_blank">jQuery.ajax</a> are 
 valid here.</p>
-<h4 id="DocSingleService">Single service script</h4>
+<h4 id="DocSingleService">Single Service Script</h4>
 <p>'/api/AbpServiceProxies/GetAll' generates all service proxies in one file. 
 You can also generate a sinle service proxy using 
 '/api/AbpServiceProxies/Get?name=<em>serviceName</em>' and include the script to the 
@@ -138,8 +181,8 @@ Consider the sample below:</p>
             vm.tasks = [];
             taskService.getTasks({
                 state: 0
-            }).success(function(data) {
-                vm.tasks = data.tasks;
+            }).success(function(result) {
+                vm.tasks = result.tasks;
             });
         }
     ]);
@@ -156,7 +199,7 @@ to your page:</p>
 <pre lang="xml">&lt;script src=&quot;~/Abp/Framework/scripts/libs/angularjs/abp.ng.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;~/api/AbpServiceProxies/GetAll?type=angular&quot;&gt;&lt;/script&gt;</pre>
 
-<h4 id="DocDurandalSupport">Durandal support</h4>
+<h4 id="DocDurandalSupport">Durandal Support</h4>
 
 <p>ASP.NET Boilerplate makes it possible to inject service proxies in modules in 
 a <a href="http://durandaljs.com/" target="_blank">Durandal</a> application. See 
@@ -168,6 +211,26 @@ the sample viewmodel:</p>
 
 <p>ASP.NET Boilerplate configures Durandal (Require.js actually) to understand 
 the 'service!' prefix and inject appropriate javascript service proxy.</p>
+
+<h3>About Parameter Binding</h3>
+<p>ASP.NET Boilerplate creates Api Controllers on runtime. So, ASP.NET Web API's
+<a href="http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api" target="_blank">
+model and parameter binding</a> is used to bind model and parameters. You can 
+read it's
+<a href="http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api" target="_blank">
+documentation</a> for more information.<strong> </strong></p>
+<h4>FormUri and FormBody Attributes</h4>
+<p><strong>FromUri</strong> and <strong>FromBody</strong> attributes can be used 
+in service interface to advanced control on binding. </p>
+<h4>DTOs vs Primitive Types</h4>
+<p>We strongly advice to use
+<a href="http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects">
+DTO</a>s as method parameters for application services and web api controllers. 
+But you can also use primitive types (like string, int, bool... or nullable 
+types like int?, bool?...) as service arguments. More than one parameters can 
+be used but only one complex-type parameter is allowed in these parameters.</p>
+
+</div>
 
 </body>
 

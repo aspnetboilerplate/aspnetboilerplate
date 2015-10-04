@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -12,9 +13,12 @@ namespace Abp.Application.Navigation
 
         private readonly INavigationManager _navigationManager;
 
-        public UserNavigationManager(INavigationManager navigationManager)
+        private readonly IFeatureDependencyContext _featureDependencyContext;
+
+        public UserNavigationManager(INavigationManager navigationManager, IFeatureDependencyContext featureDependencyContext)
         {
             _navigationManager = navigationManager;
+            _featureDependencyContext = featureDependencyContext;
             PermissionChecker = NullPermissionChecker.Instance;
         }
 
@@ -55,6 +59,11 @@ namespace Abp.Application.Navigation
                 }
 
                 if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !(await PermissionChecker.IsGrantedAsync(userId.Value, menuItemDefinition.RequiredPermissionName))))
+                {
+                    continue;
+                }
+
+                if (menuItemDefinition.FeatureDependency != null && !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(_featureDependencyContext)))
                 {
                     continue;
                 }
