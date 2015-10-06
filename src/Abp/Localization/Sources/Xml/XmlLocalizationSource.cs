@@ -2,6 +2,8 @@
 using System.IO;
 using System.Reflection;
 using Abp.Dependency;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Sources.Xml
 {

@@ -10,13 +10,14 @@ namespace Abp.AutoMapper
     public class AbpAutoMapperModule : AbpModule
     {
         public ILogger Logger { get; set; }
+
         public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly ITypeFinder _typeFinder;
 
         private static bool _createdMappingsBefore;
         private static readonly object _syncObj = new object();
-        
+
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -24,7 +25,7 @@ namespace Abp.AutoMapper
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
-        public override void PreInitialize()
+        public override void PostInitialize()
         {
             CreateMappings();
         }

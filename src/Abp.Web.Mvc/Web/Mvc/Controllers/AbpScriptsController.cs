@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Extensions;
 using Abp.Web.Authorization;
+using Abp.Web.Features;
 using Abp.Web.Localization;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
@@ -25,6 +26,7 @@ namespace Abp.Web.Mvc.Controllers
         private readonly INavigationScriptManager _navigationScriptManager;
         private readonly ILocalizationScriptManager _localizationScriptManager;
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
+        private readonly IFeaturesScriptManager _featuresScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace Abp.Web.Mvc.Controllers
             INavigationScriptManager navigationScriptManager, 
             ILocalizationScriptManager localizationScriptManager, 
             IAuthorizationScriptManager authorizationScriptManager, 
+            IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
@@ -43,6 +46,7 @@ namespace Abp.Web.Mvc.Controllers
             _navigationScriptManager = navigationScriptManager;
             _localizationScriptManager = localizationScriptManager;
             _authorizationScriptManager = authorizationScriptManager;
+            _featuresScriptManager = featuresScriptManager;
             _sessionScriptManager = sessionScriptManager;
         }
 
@@ -67,10 +71,13 @@ namespace Abp.Web.Mvc.Controllers
             
             sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
-            
+
+            sb.AppendLine(await _featuresScriptManager.GetScriptAsync());
+            sb.AppendLine();
+
             sb.AppendLine(await _authorizationScriptManager.GetScriptAsync());
             sb.AppendLine();
-            
+
             sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
             

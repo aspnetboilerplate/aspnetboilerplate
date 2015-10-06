@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using Abp.Extensions;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
 {
@@ -22,7 +23,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
             script.AppendLine("                        abp: true,");
             script.AppendLine("                        url: abp.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
             script.AppendLine("                        method: '" + _actionInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
-            script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");
+
+            if (_actionInfo.Verb == HttpVerb.Get)
+            {
+                script.AppendLine("                        params: " + ActionScriptingHelper.GenerateBody(_actionInfo));
+            }
+            else
+            {
+                script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");
+            }
+
             script.AppendLine("                    }, httpParams));");
             script.AppendLine("                };");
             script.AppendLine("                ");

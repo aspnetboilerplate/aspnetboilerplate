@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Text;
 using Abp.Extensions;
@@ -15,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
             var primitiveParameters = actionInfo.Method
                 .GetParameters()
-                .Where(p => TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
+                .Where(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType))
                 .ToArray();
 
             if (!primitiveParameters.Any())
@@ -55,7 +54,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             var parameters = actionInfo.Method
                 .GetParameters()
-                .Where(p => !TypeHelper.IsPrimitiveIncludingNullable(p.ParameterType))
+                .Where(p => !TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType))
                 .ToArray();
 
             if (parameters.Length <= 0)

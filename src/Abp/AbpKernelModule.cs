@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
@@ -9,8 +11,8 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
-using Abp.Localization.Sources;
-using Abp.Localization.Sources.Xml;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Runtime.Validation.Interception;
@@ -23,25 +25,23 @@ namespace Abp
     /// </summary>
     public sealed class AbpKernelModule : AbpModule
     {
-        private AuditingInterceptorRegistrar _auditingInterceptorRegistrar;
-
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager);
-            _auditingInterceptorRegistrar.Initialize();
+            FeatureInterceptorRegistrar.Initialize(IocManager);
+            AuditingInterceptorRegistrar.Initialize(IocManager);
 
             UnitOfWorkRegistrar.Initialize(IocManager);
-            
+
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
                 new NamedTypeSelector(
                     "Abp.ApplicationServices",
-                    type => typeof (IApplicationService).IsAssignableFrom(type)
+                    type => typeof(IApplicationService).IsAssignableFrom(type)
                     )
                 );
 
@@ -57,6 +57,8 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+
+            ConfigureCaches();
         }
 
         public override void Initialize()
@@ -77,15 +79,34 @@ namespace Abp
             RegisterMissingComponents();
 
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<FeatureManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
         }
 
+        private void ConfigureCaches()
+        {
+            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
+            });
+
+            Configuration.Caching.Configure(SettingManager.TenantSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
+            });
+
+            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
+            });
+        }
+
         private void RegisterMissingComponents()
         {
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
         }
     }

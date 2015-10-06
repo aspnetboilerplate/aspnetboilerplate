@@ -16,5 +16,9 @@ namespace Abp.Tests.Configuration
                 return !TenantId.HasValue ? MultiTenancySides.Host : MultiTenancySides.Tenant;
             }
         }
+
+        public long? ImpersonatorUserId { get; set; }
+
+        public int? ImpersonatorTenantId { get; set; }
     }
 }

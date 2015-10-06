@@ -11,6 +11,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Reflection;
@@ -95,15 +96,40 @@ namespace Abp.Web.Mvc.Controllers
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
-        /// This object i used to measure an action execute duration.
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
+
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+
+        public IAuditingConfiguration AuditingConfiguration { get; set; }
+
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
+
+        public IAuditingStore AuditingStore { get; set; }
+
+        /// <summary>
+        /// This object is used to measure an action execute duration.
         /// </summary>
         private Stopwatch _actionStopwatch;
 
         private AuditInfo _auditInfo;
-
-        public IAuditingConfiguration AuditingConfiguration { get; set; }
-        public IAuditInfoProvider AuditInfoProvider { get; set; }
-        public IAuditingStore AuditingStore { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -212,38 +238,15 @@ namespace Abp.Web.Mvc.Controllers
 
             base.OnActionExecuting(filterContext);
         }
-        
+
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
 
-            HandleAuditingAfterAction(filterContext);                
+            HandleAuditingAfterAction(filterContext);
         }
 
-        protected virtual bool ShouldSaveAudit(ActionExecutingContext filterContext)
-        {
-            if (AuditingConfiguration == null)
-            {
-                return false;
-            }
-
-            if (!AuditingConfiguration.MvcControllers.IsEnabled)
-            {
-                return false;
-            }
-
-            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
-            {
-                return false;                
-            }
-
-            return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext.ActionDescriptor),
-                AuditingConfiguration,
-                AbpSession,
-                true
-                );
-        }
+        #region Auditing
 
         private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
         {
@@ -262,7 +265,7 @@ namespace Abp.Web.Mvc.Controllers
                 return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
             }
 
-            return null;
+            throw new AbpException("Could not get MethodInfo for the action '" + actionDescriptor.ActionName + "' of controller '" + actionDescriptor.ControllerDescriptor.ControllerName + "'.");
         }
 
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
@@ -280,6 +283,8 @@ namespace Abp.Web.Mvc.Controllers
             {
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ServiceName = methodInfo.DeclaringType != null
                                 ? methodInfo.DeclaringType.FullName
                                 : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
@@ -303,10 +308,35 @@ namespace Abp.Web.Mvc.Controllers
 
             if (AuditInfoProvider != null)
             {
-                AuditInfoProvider.Fill(_auditInfo);                
+                AuditInfoProvider.Fill(_auditInfo);
             }
 
             AuditingStore.Save(_auditInfo);
+        }
+
+        private bool ShouldSaveAudit(ActionExecutingContext filterContext)
+        {
+            if (AuditingConfiguration == null)
+            {
+                return false;
+            }
+
+            if (!AuditingConfiguration.MvcControllers.IsEnabled)
+            {
+                return false;
+            }
+
+            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
+            {
+                return false;
+            }
+
+            return AuditingHelper.ShouldSaveAudit(
+                GetMethodInfo(filterContext.ActionDescriptor),
+                AuditingConfiguration,
+                AbpSession,
+                true
+                );
         }
 
         private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
@@ -339,5 +369,7 @@ namespace Abp.Web.Mvc.Controllers
                 return "{}";
             }
         }
+
+        #endregion
     }
 }

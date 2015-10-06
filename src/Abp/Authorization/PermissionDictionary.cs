@@ -10,7 +10,6 @@ namespace Abp.Authorization
     {
         /// <summary>
         /// Adds all child permissions of current permissions recursively.
-        /// This is needed, because, 
         /// </summary>
         public void AddAllPermissions()
         {

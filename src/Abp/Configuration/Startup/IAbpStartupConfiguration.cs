@@ -1,7 +1,9 @@
-﻿using Abp.Auditing;
+﻿using Abp.Application.Features;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
 {
@@ -36,6 +38,11 @@ namespace Abp.Configuration.Startup
         IAuditingConfiguration Auditing { get; }
 
         /// <summary>
+        /// Used to configure caching.
+        /// </summary>
+        ICachingConfiguration Caching { get; }
+
+        /// <summary>
         /// Used to configure multi-tenancy.
         /// </summary>
         IMultiTenancyConfig MultiTenancy { get; }
@@ -66,5 +73,10 @@ namespace Abp.Configuration.Startup
         /// Used to configure unit of work defaults.
         /// </summary>
         IUnitOfWorkDefaultOptions UnitOfWork { get; }
+
+        /// <summary>
+        /// Used to configure features.
+        /// </summary>
+        IFeatureConfiguration Features { get; }
     }
 }
