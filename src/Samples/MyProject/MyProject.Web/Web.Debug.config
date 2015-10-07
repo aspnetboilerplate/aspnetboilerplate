@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 有关使用 web.config 转换的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkId=125889 -->
+
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <!--
+    在下例中，“SetAttributes”转换将更改 
+    “connectionString”的值，以仅在“Match”定位器 
+    找到值为“MyDB”的特性“name”时使用“ReleaseSQLServer”。
+    
+    <connectionStrings>
+      <add name="MyDB" 
+        connectionString="Data Source=ReleaseSQLServer;Initial Catalog=MyReleaseDB;Integrated Security=True" 
+        xdt:Transform="SetAttributes" xdt:Locator="Match(name)"/>
+    </connectionStrings>
+  -->
+  <system.web>
+    <!--
+      
+      在下例中，“Replace”转换将替换 
+      web.config 文件的整个 <customErrors> 节。
+      请注意，由于 
+      在 <system.web> 节点下仅有一个 customErrors 节，因此不需要使用“xdt:Locator”特性。
+      
+      <customErrors defaultRedirect="GenericError.htm"
+        mode="RemoteOnly" xdt:Transform="Replace">
+        <error statusCode="500" redirect="InternalError.htm"/>
+      </customErrors>
+    -->
+  </system.web>
+</configuration>
