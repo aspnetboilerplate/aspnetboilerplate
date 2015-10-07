@@ -63,7 +63,7 @@ namespace Abp.Web.Features
                     script.AppendLine("             value: " + "''");
                 }
 
-                script.Append("        ");
+                script.Append("        }");
 
                 if (i < allFeatures.Count - 1)
                 {
