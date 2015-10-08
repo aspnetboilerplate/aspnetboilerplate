@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="DbMigrations\V20150811\_01_CreatePersonTable.cs" />
     <Compile Include="DbMigrations\V20150811\_02_CreateTasksTable.cs" />
+    <Compile Include="DbMigrations\V20151008\_01_CreateNewsTable.cs" />
     <Compile Include="DbMigrations\VersionTable.cs" />
     <Compile Include="MyProjectDataModule.cs" />
     <Compile Include="NHibernate\EntityMappings\PersonMap.cs" />

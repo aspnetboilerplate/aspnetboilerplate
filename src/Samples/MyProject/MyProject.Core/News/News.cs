@@ -11,7 +11,7 @@ namespace MyProject.News
         public virtual string Title { get; set; }
 
         /// <summary>
-        /// 简历
+        /// 简介
         /// </summary>
         public virtual string Intro { get; set; }
 
