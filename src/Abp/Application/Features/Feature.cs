@@ -14,6 +14,7 @@ namespace Abp.Application.Features
     {
         /// <summary>
         /// Gets/sets arbitrary objects related to this object.
+        /// These objects must be serializable.
         /// Gets null if given key does not exists.
         /// </summary>
         /// <param name="key">Key</param>
@@ -25,6 +26,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Arbitrary objects related to this object.
+        /// These objects must be serializable.
         /// </summary>
         public IDictionary<string, object> Attributes { get; private set; }
 
@@ -56,6 +58,9 @@ namespace Abp.Application.Features
         /// </summary>
         public IInputType InputType { get; set; }
 
+        /// <summary>
+        /// Default value.
+        /// </summary>
         public string DefaultValue { get; set; }
 
         /// <summary>

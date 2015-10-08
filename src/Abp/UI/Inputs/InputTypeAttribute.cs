@@ -5,11 +5,11 @@ namespace Abp.UI.Inputs
     [AttributeUsage(AttributeTargets.Class)]
     public class InputTypeAttribute : Attribute
     {
-        public string TypeName { get; set; }
+        public string Name { get; set; }
 
-        public InputTypeAttribute(string typeName)
+        public InputTypeAttribute(string name)
         {
-            TypeName = typeName;
+            Name = name;
         }
     }
 }

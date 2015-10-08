@@ -1,20 +1,37 @@
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
-using Castle.Core.Internal;
+using Abp.Extensions;
 
 namespace Abp.Runtime.Validation
 {
     [Serializable]
     [Validator("STRING")]
-    public class StringValueValidator : IValueValidator
+    public class StringValueValidator : ValueValidatorBase
     {
-        public bool AllowNull { get; set; }
+        public bool AllowNull
+        {
+            get { return (this["AllowNull"] ?? "false").To<bool>(); }
+            set { this["AllowNull"] = value.ToString().ToLower(CultureInfo.InvariantCulture); }
+        }
 
-        public int MinLength { get; set; }
+        public int MinLength
+        {
+            get { return (this["MinLength"] ?? "0").To<int>(); }
+            set { this["MinLength"] = value; }
+        }
 
-        public int MaxLength { get; set; }
+        public int MaxLength
+        {
+            get { return (this["MaxLength"] ?? "0").To<int>(); }
+            set { this["MaxLength"] = value; }
+        }
 
-        public string RegularExpression { get; set; }
+        public string RegularExpression
+        {
+            get { return this["RegularExpression"] as string; }
+            set { this["RegularExpression"] = value; }
+        }
 
         public StringValueValidator()
         {
@@ -29,7 +46,7 @@ namespace Abp.Runtime.Validation
             AllowNull = allowNull;
         }
 
-        public virtual bool IsValid(object value)
+        public override bool IsValid(object value)
         {
             if (value == null)
             {

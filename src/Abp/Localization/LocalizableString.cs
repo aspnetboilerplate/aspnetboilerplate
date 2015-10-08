@@ -54,5 +54,10 @@ namespace Abp.Localization
         {
             return LocalizationHelper.GetString(SourceName, Name, culture);
         }
+
+        //public override string ToString()
+        //{
+        //    return Localize();
+        //}
     }
 }

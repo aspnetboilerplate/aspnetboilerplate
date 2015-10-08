@@ -40,5 +40,10 @@ namespace Abp.Localization
         {
             return FixedString;
         }
+
+        public override string ToString()
+        {
+            return FixedString;
+        }
     }
 }

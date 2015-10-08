@@ -98,14 +98,16 @@
     <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Localization\LocalizationManagerExtensions.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
+    <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
     <Compile Include="UI\Inputs\ComboboxInputType.cs" />
     <Compile Include="UI\Inputs\CheckboxInputType.cs" />
     <Compile Include="UI\Inputs\IInputType.cs" />
-    <Compile Include="Runtime\Validation\NullValueValidator.cs" />
+    <Compile Include="Runtime\Validation\AlwaysValidValueValidator.cs" />
     <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
     <Compile Include="Application\Features\NullFeatureChecker.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
     <Compile Include="Runtime\Validation\Interception\ValidationInterceptorRegistrar.cs" />
     <Compile Include="Runtime\Validation\IValueValidator.cs" />
+    <Compile Include="Localization\LocalizableStringToStringJsonConverter.cs" />
     <Compile Include="UI\Inputs\SingleLineStringInputType.cs" />
     <Compile Include="Runtime\Validation\StringValueValidator.cs" />
     <Compile Include="UI\Inputs\InputTypeAttribute.cs" />
