@@ -12,11 +12,20 @@ namespace MyProject.News
 {
     public class NewsAppService : ApplicationService, INewsAppService
     {
-        private readonly INewsRepository _newsRepository;
-        public NewsAppService(INewsRepository newsRepository)
+        private readonly IRepository<News,long> _newsRepository;
+      
+
+        public NewsAppService(IRepository<News,long> newsRepository)
         {
             _newsRepository = newsRepository;
+            
         }
+
+        //private readonly INewsRepository _newsRepository;
+        //public NewsAppService(INewsRepository newsRepository)
+        //{
+        //    _newsRepository = newsRepository;
+        //}
 
         #region Select/Get/Query
 

@@ -91,6 +91,7 @@
     <Compile Include="DbMigrations\V20151008\_01_CreateNewsTable.cs" />
     <Compile Include="DbMigrations\VersionTable.cs" />
     <Compile Include="MyProjectDataModule.cs" />
+    <Compile Include="NHibernate\EntityMappings\NewsMap.cs" />
     <Compile Include="NHibernate\EntityMappings\PersonMap.cs" />
     <Compile Include="NHibernate\EntityMappings\TaskMap.cs" />
     <Compile Include="NHibernate\Repositories\TaskRepository.cs" />
