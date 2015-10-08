@@ -4,9 +4,9 @@ namespace Abp.Runtime.Validation
 {
     [Serializable]
     [Validator("BOOLEAN")]
-    public class BooleanValueValidator : IValueValidator
+    public class BooleanValueValidator : ValueValidatorBase
     {
-        public virtual bool IsValid(object value)
+        public override bool IsValid(object value)
         {
             if (value == null)
             {

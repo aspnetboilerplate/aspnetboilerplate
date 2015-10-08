@@ -5,7 +5,7 @@ namespace Abp.UI.Inputs
 {
     public class StaticLocalizableComboboxItemSource : ILocalizableComboboxItemSource
     {
-        public ILocalizableComboboxItem[] Items { get; set; }
+        public ICollection<ILocalizableComboboxItem> Items { get; private set; }
 
         public StaticLocalizableComboboxItemSource(params ILocalizableComboboxItem[] items)
         {
@@ -16,15 +16,10 @@ namespace Abp.UI.Inputs
 
             if (items.Length <= 0)
             {
-                throw new ArgumentException("Items can not me empty!");
+                throw new ArgumentException("Items can not be empty!");
             }
 
             Items = items;
-        }
-
-        public IEnumerable<ILocalizableComboboxItem> GetItems()
-        {
-            return Items;
         }
     }
 }

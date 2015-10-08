@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
-using Abp.Runtime.Validation;
 
-namespace Abp.UI.Inputs
+namespace Abp.Runtime.Validation
 {
     [Serializable]
-    public abstract class InputTypeBase : IInputType
+    public abstract class ValueValidatorBase : IValueValidator
     {
         public virtual string Name
         {
             get
             {
                 var type = GetType();
-                if (type.IsDefined(typeof(InputTypeAttribute)))
+                if (type.IsDefined(typeof(ValidatorAttribute)))
                 {
-                    return type.GetCustomAttributes(typeof(InputTypeAttribute)).Cast<InputTypeAttribute>().First().Name;
+                    return type.GetCustomAttributes(typeof(ValidatorAttribute)).Cast<ValidatorAttribute>().First().Name;
                 }
 
                 return type.Name;
@@ -40,18 +39,11 @@ namespace Abp.UI.Inputs
         /// </summary>
         public IDictionary<string, object> Attributes { get; private set; }
 
-        public IValueValidator Validator { get; set; }
+        public abstract bool IsValid(object value);
 
-        protected InputTypeBase()
-            :this(new AlwaysValidValueValidator())
-        {
-
-        }
-
-        protected InputTypeBase(IValueValidator validator)
+        protected ValueValidatorBase()
         {
             Attributes = new Dictionary<string, object>();
-            Validator = validator;
         }
     }
 }

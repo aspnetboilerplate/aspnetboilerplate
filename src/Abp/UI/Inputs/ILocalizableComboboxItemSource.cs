@@ -4,6 +4,6 @@ namespace Abp.UI.Inputs
 {
     public interface ILocalizableComboboxItemSource
     {
-        IEnumerable<ILocalizableComboboxItem> GetItems();
+        ICollection<ILocalizableComboboxItem> Items { get; }
     }
 }

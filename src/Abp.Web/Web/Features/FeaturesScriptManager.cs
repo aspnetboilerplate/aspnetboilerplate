@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.Runtime.Session;
 
 namespace Abp.Web.Features
@@ -56,13 +57,18 @@ namespace Abp.Web.Features
 
                 if (currentTenantValues != null)
                 {
-                    script.AppendLine("             value: '" + currentTenantValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "'");
+                    script.AppendLine("             value: '" + currentTenantValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "',");
                 }
                 else
                 {
-                    script.AppendLine("             value: " + "''");
+                    script.AppendLine("             value: " + "'',");
                 }
 
+                //TODO: Other feature properties and custom attributes
+
+                //TODO: Consider to remove inputType since it's only needed while editing!
+                script.AppendLine("            inputType: " + JsonHelper.ConvertToJson(feature.InputType, true, true));
+                
                 script.Append("        }");
 
                 if (i < allFeatures.Count - 1)

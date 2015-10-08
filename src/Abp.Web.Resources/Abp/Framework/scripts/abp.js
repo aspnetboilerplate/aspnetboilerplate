@@ -107,7 +107,7 @@
 
     abp.features = abp.features || {};
 
-    abp.features.allFeatures = abp.features.enabledFeatures || {};
+    abp.features.allFeatures = abp.features.allFeatures || {};
     
     abp.features.get = function(name) {
         return abp.features.allFeatures[name];

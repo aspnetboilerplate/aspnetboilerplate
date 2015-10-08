@@ -10,22 +10,22 @@ namespace Abp.UI.Inputs
     [InputType("COMBOBOX")]
     public class ComboboxInputType : InputTypeBase
     {
-        public ILocalizableComboboxItemSource Source { get; set; }
+        public ILocalizableComboboxItemSource ItemSource { get; set; }
 
         public ComboboxInputType()
         {
 
         }
 
-        public ComboboxInputType(ILocalizableComboboxItemSource source)
+        public ComboboxInputType(ILocalizableComboboxItemSource itemSource)
         {
-            Source = source;
+            ItemSource = itemSource;
         }
 
-        public ComboboxInputType(ILocalizableComboboxItemSource source, IValueValidator validator)
+        public ComboboxInputType(ILocalizableComboboxItemSource itemSource, IValueValidator validator)
             : base(validator)
         {
-            Source = source;
+            ItemSource = itemSource;
         }
     }
 }
