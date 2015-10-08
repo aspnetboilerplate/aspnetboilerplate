@@ -78,6 +78,9 @@
     <Compile Include="DtoMappings.cs" />
     <Compile Include="MyProjectApplicationModule.cs" />
     <Compile Include="MyProjectAppServiceBase.cs" />
+    <Compile Include="News\Dtos\NewsDto.cs" />
+    <Compile Include="News\INewsAppService.cs" />
+    <Compile Include="News\NewsAppService.cs" />
     <Compile Include="People\Dtos\GetAllPeopleOutput.cs" />
     <Compile Include="People\Dtos\PersonDto.cs" />
     <Compile Include="People\IPersonAppService.cs" />
