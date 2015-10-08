@@ -11,8 +11,6 @@ namespace Abp.AutoMapper
     {
         public ILogger Logger { get; set; }
 
-        public ILocalizationManager LocalizationManager { get; set; }
-
         private readonly ITypeFinder _typeFinder;
 
         private static bool _createdMappingsBefore;
@@ -22,7 +20,6 @@ namespace Abp.AutoMapper
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
-            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         public override void PostInitialize()
@@ -65,7 +62,8 @@ namespace Abp.AutoMapper
 
         private void CreateOtherMappings()
         {
-            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => LocalizationManager.GetString(ls.SourceName, ls.Name));
+            var localizationManager = IocManager.Resolve<ILocalizationManager>();
+            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => localizationManager.GetString(ls));
         }
     }
 }
