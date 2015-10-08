@@ -18,6 +18,7 @@ namespace MyProject.Web.Controllers
         public ActionResult Index()
         {
             _newsAppService.Count();
+            _newsAppService.Single(p => p.Id == 1);
             return View();
         }
     }
