@@ -73,7 +73,6 @@
   <ItemGroup>
     <Compile Include="MyProjectConsts.cs" />
     <Compile Include="MyProjectCoreModule.cs" />
-    <Compile Include="News\INewsRepository.cs" />
     <Compile Include="News\News.cs" />
     <Compile Include="People\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
