@@ -24,7 +24,8 @@ namespace MyProject.Web.Controllers
         {
 
             // var output = _taskAppService.GetTasks(input);
-            var output = _taskAppService.GetAll();            
+            var output = _taskAppService.GetAll();   
+                 
             return View();
         }
 
