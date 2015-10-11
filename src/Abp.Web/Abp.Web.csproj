@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auditing\WebAuditInfoProvider.cs" />
+    <Compile Include="Web\Features\FeaturesScriptManager.cs" />
+    <Compile Include="Web\Features\IFeaturesScriptManager.cs" />
     <Compile Include="Web\Models\AjaxResponse.cs" />
     <Compile Include="Web\Models\ErrorInfoBuilder.cs" />
     <Compile Include="Web\Models\IErrorInfoBuilder.cs" />
