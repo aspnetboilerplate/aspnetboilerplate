@@ -54,7 +54,7 @@ namespace Abp.RedisCache
 
         public override void Remove(string key)
         {
-            Database.KeyDelete(key);
+            Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public override void Clear()

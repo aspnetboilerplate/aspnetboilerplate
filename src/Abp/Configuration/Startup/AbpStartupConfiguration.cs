@@ -1,4 +1,5 @@
-﻿using Abp.Auditing;
+﻿using Abp.Application.Features;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -46,6 +47,11 @@ namespace Abp.Configuration.Startup
         public IUnitOfWorkDefaultOptions UnitOfWork { get; private set; }
 
         /// <summary>
+        /// Used to configure features.
+        /// </summary>
+        public IFeatureConfiguration Features { get; private set; }
+
+        /// <summary>
         /// Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
@@ -79,6 +85,7 @@ namespace Abp.Configuration.Startup
         {
             Localization = IocManager.Resolve<ILocalizationConfiguration>();
             Modules = IocManager.Resolve<IModuleConfigurations>();
+            Features = IocManager.Resolve<IFeatureConfiguration>();
             Navigation = IocManager.Resolve<INavigationConfiguration>();
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
             Settings = IocManager.Resolve<ISettingsConfiguration>();

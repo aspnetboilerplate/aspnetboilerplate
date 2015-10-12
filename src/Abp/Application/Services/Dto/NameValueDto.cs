@@ -24,5 +24,15 @@ namespace Abp.Application.Services.Dto
         {
 
         }
+
+        /// <summary>
+        /// Creates a new <see cref="NameValueDto"/>.
+        /// </summary>
+        /// <param name="nameValue">A <see cref="NameValue"/> object to get it's name and value</param>
+        public NameValueDto(NameValue nameValue)
+            : this(nameValue.Name, nameValue.Value)
+        {
+
+        }
     }
 }

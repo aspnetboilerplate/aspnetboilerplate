@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
@@ -24,16 +25,14 @@ namespace Abp
     /// </summary>
     public sealed class AbpKernelModule : AbpModule
     {
-        private AuditingInterceptorRegistrar _auditingInterceptorRegistrar;
-
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            _auditingInterceptorRegistrar = new AuditingInterceptorRegistrar(IocManager);
-            _auditingInterceptorRegistrar.Initialize();
+            FeatureInterceptorRegistrar.Initialize(IocManager);
+            AuditingInterceptorRegistrar.Initialize(IocManager);
 
             UnitOfWorkRegistrar.Initialize(IocManager);
 
@@ -80,6 +79,7 @@ namespace Abp
             RegisterMissingComponents();
 
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<FeatureManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
@@ -106,7 +106,7 @@ namespace Abp
         private void RegisterMissingComponents()
         {
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
         }
     }

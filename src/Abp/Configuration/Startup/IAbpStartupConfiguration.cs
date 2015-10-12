@@ -1,4 +1,5 @@
-﻿using Abp.Auditing;
+﻿using Abp.Application.Features;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -72,5 +73,10 @@ namespace Abp.Configuration.Startup
         /// Used to configure unit of work defaults.
         /// </summary>
         IUnitOfWorkDefaultOptions UnitOfWork { get; }
+
+        /// <summary>
+        /// Used to configure features.
+        /// </summary>
+        IFeatureConfiguration Features { get; }
     }
 }
