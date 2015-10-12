@@ -11,7 +11,14 @@
     <title>Detail</title>
 </head>
 <body>
-    <div> 
+    <div>
+        @if (Model != null)
+        {
+            <h1>@Model.Title</h1>
+            <hr />
+            <h2>@Model.Intro</h2>
+            <div>@Model.Content</div>
+        }
     </div>
 </body>
 </html>

@@ -28,4 +28,19 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>
+    <button onclick="Test()">测试动态代理webapi</button>
 </div>
+<script src="~/Scripts/jquery-1.6.4.js"></script>
+<script>
+   function Test()
+    {
+        $.post("/api/services/app/news/GetAllList",
+        function (data) {            
+            if (data == "") {
+                return;
+            }
+            debugger;
+            alert(data);
+        });
+    }
+</script>

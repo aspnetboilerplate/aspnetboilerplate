@@ -3,6 +3,8 @@ using Abp.Application.Services;
 using Abp.Modules;
 using Abp.WebApi;
 using Abp.WebApi.Controllers.Dynamic.Builders;
+using MyProject.News;
+using MyProject.Tasks;
 
 namespace MyProject
 {
@@ -16,6 +18,11 @@ namespace MyProject
             DynamicApiControllerBuilder
                 .ForAll<IApplicationService>(typeof(MyProjectApplicationModule).Assembly, "app")
                 .Build();
+
+            //DynamicApiControllerBuilder
+            //   .ForAll<ITaskAppService>(typeof(MyProjectApplicationModule).Assembly, "app")
+            //   .Build();
+
         }
     }
 }

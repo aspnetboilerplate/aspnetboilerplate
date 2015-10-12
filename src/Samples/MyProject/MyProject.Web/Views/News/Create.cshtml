@@ -2,6 +2,7 @@
     Layout = null;
 }
 
+@model MyProject.News.Dtos.CreateNewsInput
 <!DOCTYPE html>
 
 <html>
@@ -10,7 +11,44 @@
     <title>Create</title>
 </head>
 <body>
-    <div> 
+    <div>
+       @using (Html.BeginForm())
+       {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal" role="form">
+            <h4>添加文章</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, new { @class = "control-label col-sm-2" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Title)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Intro, new { @class = "control-label col-sm-2" })
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Intro)
+                    @Html.ValidationMessageFor(model => model.Intro)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Content, new { @class = "control-label col-sm-2" })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.Content, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Content)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" value="添加" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+       }
     </div>
+
 </body>
 </html>

@@ -144,6 +144,7 @@
     <Content Include="Localization\MyProject\MyProject-zh-CN.xml" />
     <Content Include="Localization\MyProject\MyProject.tr.xml" />
     <Content Include="Localization\MyProject\MyProject.xml" />
+    <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

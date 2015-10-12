@@ -29,6 +29,8 @@ namespace MyProject.Web
 
             //Configure navigation/menu
             Configuration.Navigation.Providers.Add<MyProjectNavigationProvider>();
+
+            Configuration.MultiTenancy.IsEnabled = false;
         }
 
         public override void Initialize()

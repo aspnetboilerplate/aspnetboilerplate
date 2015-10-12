@@ -16,6 +16,9 @@ namespace MyProject
             Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .Database(MySQLConfiguration.Standard.ConnectionString(Configuration.DefaultNameOrConnectionString))
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
+
+         
+            
         }
 
         public override void Initialize()

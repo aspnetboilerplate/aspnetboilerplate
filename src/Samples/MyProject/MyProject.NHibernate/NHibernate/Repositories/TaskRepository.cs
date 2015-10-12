@@ -24,6 +24,7 @@ namespace MyProject.NHibernate.Repositories
 
         public List<Task> GetAllWithPeople(int? assignedPersonId, TaskState? state)
         {
+            
             //In repository methods, we do not deal with create/dispose DB connections (Session) and transactions. ABP handles it.
 
             var query = GetAll(); //GetAll() returns IQueryable<T>, so we can query over it.

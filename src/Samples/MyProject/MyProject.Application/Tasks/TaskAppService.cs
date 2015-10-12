@@ -84,6 +84,7 @@ namespace MyProject.Tasks
             _taskRepository.Insert(task);
         }
 
+
         public IList<Task> GetAll() {
             return _taskRepository.GetAllList();
         }

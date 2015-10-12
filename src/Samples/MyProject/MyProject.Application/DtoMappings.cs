@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MyProject.News.Dtos;
 using MyProject.People;
 using MyProject.People.Dtos;
 using MyProject.Tasks;
@@ -17,6 +18,8 @@ namespace MyProject
             Mapper.CreateMap<Task, TaskDto>().ForMember(t => t.AssignedPersonId, opts => opts.MapFrom(d => d.AssignedPerson.Id));
             
             Mapper.CreateMap<Person, PersonDto>();
+
+            Mapper.CreateMap<News.News, NewsDto>();
         }
     }
 }
