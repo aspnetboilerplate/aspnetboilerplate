@@ -140,7 +140,7 @@ namespace Abp.Auditing
                     dictionary[parameter.Name] = argument;
                 }
 
-                return JsonHelper.ConvertToJson(dictionary, true);
+                return dictionary.ToJsonString(true);
             }
             catch (Exception ex)
             {

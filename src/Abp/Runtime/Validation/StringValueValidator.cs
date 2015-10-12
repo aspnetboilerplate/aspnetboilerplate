@@ -60,7 +60,7 @@ namespace Abp.Runtime.Validation
 
             var strValue = value as string;
             
-            if (MinLength > 0 && strValue.Length <= 0)
+            if (MinLength > 0 && strValue.Length < MinLength)
             {
                 return false;
             }
