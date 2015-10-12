@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434FA4-ED3F-4A7B-A0D3-8CBB900B1609}"
 	ProjectSection(SolutionItems) = preProject
@@ -64,6 +64,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.RedisCache", "Abp.RedisCache\Abp.RedisCache.csproj", "{F4A8466E-4E68-4D6F-81D4-7F0892B9B5E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.RedisCache.Tests", "Tests\Abp.RedisCache.Tests\Abp.RedisCache.Tests.csproj", "{BE5D25B4-66A7-4A29-BA64-3D00A952BE9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.Swagger", "Abp.Web.Api.Swagger\Abp.Web.Api.Swagger.csproj", "{E55982CC-A18B-4BC6-9B86-59112D5B1CE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yishe.Abp", "Yishe.Abp\Yishe.Abp.csproj", "{AFCEC564-7325-4FAD-A35D-9818C03E8905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +171,14 @@ Global
 		{BE5D25B4-66A7-4A29-BA64-3D00A952BE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE5D25B4-66A7-4A29-BA64-3D00A952BE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE5D25B4-66A7-4A29-BA64-3D00A952BE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E55982CC-A18B-4BC6-9B86-59112D5B1CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E55982CC-A18B-4BC6-9B86-59112D5B1CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E55982CC-A18B-4BC6-9B86-59112D5B1CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E55982CC-A18B-4BC6-9B86-59112D5B1CE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFCEC564-7325-4FAD-A35D-9818C03E8905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFCEC564-7325-4FAD-A35D-9818C03E8905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFCEC564-7325-4FAD-A35D-9818C03E8905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFCEC564-7325-4FAD-A35D-9818C03E8905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
