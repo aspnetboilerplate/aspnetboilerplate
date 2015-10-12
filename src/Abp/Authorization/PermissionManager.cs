@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -19,14 +20,20 @@ namespace Abp.Authorization
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
+        private readonly FeatureDependencyContext _featureDependencyContext;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PermissionManager(IIocManager iocManager, IAuthorizationConfiguration authorizationConfiguration)
+        public PermissionManager(
+            IIocManager iocManager, 
+            IAuthorizationConfiguration authorizationConfiguration,
+            FeatureDependencyContext featureDependencyContext
+            )
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
+            _featureDependencyContext = featureDependencyContext;
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -56,16 +63,24 @@ namespace Abp.Authorization
         {
             return Permissions.Values
                 .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
-                .ToImmutableList();
+                .Where(p =>
+                    p.DependedFeature == null ||
+                    AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
+                ).ToImmutableList();
         }
 
         public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
             return Permissions.Values
                 .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
-                .ToImmutableList();
+                .Where(p =>
+                    p.DependedFeature == null ||
+                    (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
+                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
+                ).ToImmutableList();
         }
-
+        
         private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
         {
             if (!_iocManager.IsRegistered(providerType))
