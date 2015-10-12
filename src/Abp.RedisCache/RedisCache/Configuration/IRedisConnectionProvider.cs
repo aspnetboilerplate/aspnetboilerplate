@@ -1,8 +1,9 @@
-﻿using StackExchange.Redis;
+﻿using Abp.Dependency;
+using StackExchange.Redis;
 
 namespace Abp.RedisCache.Configuration
 {
-    public interface IAbpRedisConnectionProvider 
+    public interface IAbpRedisConnectionProvider:ISingletonDependency
     {
         ConnectionMultiplexer GetConnection(string connectionString);
 
