@@ -154,7 +154,7 @@
     <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICacheConfigurator.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICachingConfiguration.cs" />
-    <Compile Include="Json\JsonHelper.cs" />
+    <Compile Include="Json\JsonExtensions.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\NullableIdInput.cs" />

@@ -67,7 +67,7 @@ namespace Abp.Web.Features
                 //TODO: Other feature properties and custom attributes
 
                 //TODO: Consider to remove inputType since it's only needed while editing!
-                script.AppendLine("            inputType: " + JsonHelper.ConvertToJson(feature.InputType, true, true));
+                script.AppendLine("            inputType: " + feature.InputType.ToJsonString(true, true));
                 
                 script.Append("        }");
 

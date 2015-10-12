@@ -58,7 +58,7 @@ namespace Abp.Web.Navigation
 
             if (menu.CustomData != null)
             {
-                sb.AppendLine("            customData: " + JsonHelper.ConvertToJson(menu.CustomData, true) + ",");
+                sb.AppendLine("            customData: " + menu.CustomData.ToJsonString(true) + ",");
             }
 
             sb.Append("            items: ");
@@ -108,7 +108,7 @@ namespace Abp.Web.Navigation
 
             if (menuItem.CustomData != null)
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + JsonHelper.ConvertToJson(menuItem.CustomData, true) + ",");
+                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + menuItem.CustomData.ToJsonString(true) + ",");
             }
 
             sb.Append(new string(' ', indentLength + 4) + "items: [");
