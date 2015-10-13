@@ -16,9 +16,11 @@ namespace Abp.EntityFramework.Uow
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        private readonly IDictionary<Type, DbContext> _activeDbContexts;
-        private readonly IIocResolver _iocResolver;
-        private TransactionScope _transaction;
+        protected readonly IDictionary<Type, DbContext> ActiveDbContexts;
+
+        protected IIocResolver IocResolver { get; private set; }
+        
+        protected TransactionScope CurrentTransaction;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
@@ -26,8 +28,8 @@ namespace Abp.EntityFramework.Uow
         public EfUnitOfWork(IIocResolver iocResolver, IUnitOfWorkDefaultOptions defaultOptions)
             : base(defaultOptions)
         {
-            _iocResolver = iocResolver;
-            _activeDbContexts = new Dictionary<Type, DbContext>();
+            IocResolver = iocResolver;
+            ActiveDbContexts = new Dictionary<Type, DbContext>();
         }
 
         protected override void BeginUow()
@@ -44,7 +46,7 @@ namespace Abp.EntityFramework.Uow
                     transactionOptions.Timeout = Options.Timeout.Value;
                 }
 
-                _transaction = new TransactionScope(
+                CurrentTransaction = new TransactionScope(
                     Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                     transactionOptions,
                     Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
@@ -54,12 +56,12 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            _activeDbContexts.Values.ForEach(SaveChangesInDbContext);
+            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in _activeDbContexts.Values)
+            foreach (var dbContext in ActiveDbContexts.Values)
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -68,24 +70,24 @@ namespace Abp.EntityFramework.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (_transaction != null)
+            if (CurrentTransaction != null)
             {
-                _transaction.Complete();
+                CurrentTransaction.Complete();
             }
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            if (_transaction != null)
+            if (CurrentTransaction != null)
             {
-                _transaction.Complete();
+                CurrentTransaction.Complete();
             }
         }
 
         protected override void ApplyDisableFilter(string filterName)
         {
-            foreach (var activeDbContext in _activeDbContexts.Values)
+            foreach (var activeDbContext in ActiveDbContexts.Values)
             {
                 activeDbContext.DisableFilter(filterName);
             }
@@ -93,7 +95,7 @@ namespace Abp.EntityFramework.Uow
 
         protected override void ApplyEnableFilter(string filterName)
         {
-            foreach (var activeDbContext in _activeDbContexts.Values)
+            foreach (var activeDbContext in ActiveDbContexts.Values)
             {
                 activeDbContext.EnableFilter(filterName);
             }
@@ -101,7 +103,7 @@ namespace Abp.EntityFramework.Uow
 
         protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            foreach (var activeDbContext in _activeDbContexts.Values)
+            foreach (var activeDbContext in ActiveDbContexts.Values)
             {
                 if (TypeHelper.IsFunc<object>(value))
                 {
@@ -118,9 +120,9 @@ namespace Abp.EntityFramework.Uow
             where TDbContext : DbContext
         {
             DbContext dbContext;
-            if (!_activeDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
+            if (!ActiveDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                dbContext = _iocResolver.Resolve<TDbContext>();
+                dbContext = IocResolver.Resolve<TDbContext>();
 
                 foreach (var filter in Filters)
                 {
@@ -146,7 +148,7 @@ namespace Abp.EntityFramework.Uow
                     }
                 }
 
-                _activeDbContexts[typeof(TDbContext)] = dbContext;
+                ActiveDbContexts[typeof(TDbContext)] = dbContext;
             }
 
             return (TDbContext)dbContext;
@@ -154,15 +156,15 @@ namespace Abp.EntityFramework.Uow
 
         protected override void DisposeUow()
         {
-            _activeDbContexts.Values.ForEach(dbContext =>
+            ActiveDbContexts.Values.ForEach(dbContext =>
             {
                 dbContext.Dispose();
-                _iocResolver.Release(dbContext);
+                IocResolver.Release(dbContext);
             });
 
-            if (_transaction != null)
+            if (CurrentTransaction != null)
             {
-                _transaction.Dispose();
+                CurrentTransaction.Dispose();
             }
         }
 
