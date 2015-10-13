@@ -116,13 +116,13 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        internal TDbContext GetOrCreateDbContext<TDbContext>()
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>()
             where TDbContext : DbContext
         {
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
             {
-                dbContext = IocResolver.Resolve<TDbContext>();
+                dbContext = Resolve<TDbContext>();
 
                 foreach (var filter in Filters)
                 {
@@ -156,11 +156,7 @@ namespace Abp.EntityFramework.Uow
 
         protected override void DisposeUow()
         {
-            ActiveDbContexts.Values.ForEach(dbContext =>
-            {
-                dbContext.Dispose();
-                IocResolver.Release(dbContext);
-            });
+            ActiveDbContexts.Values.ForEach(Release);
 
             if (CurrentTransaction != null)
             {
@@ -176,6 +172,17 @@ namespace Abp.EntityFramework.Uow
         protected virtual async Task SaveChangesInDbContextAsync(DbContext dbContext)
         {
             await dbContext.SaveChangesAsync();
+        }
+
+        protected virtual TDbContext Resolve<TDbContext>()
+        {
+            return IocResolver.Resolve<TDbContext>();
+        }
+
+        protected virtual void Release(DbContext dbContext)
+        {
+            dbContext.Dispose();
+            IocResolver.Release(dbContext);
         }
     }
 }
