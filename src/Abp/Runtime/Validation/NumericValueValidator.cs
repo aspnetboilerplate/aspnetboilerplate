@@ -5,11 +5,19 @@ namespace Abp.Runtime.Validation
 {
     [Serializable]
     [Validator("NUMERIC")]
-    public class NumericValueValidator : IValueValidator
+    public class NumericValueValidator : ValueValidatorBase
     {
-        public int MinValue { get; set; }
+        public int MinValue
+        {
+            get { return (this["MinValue"] ?? "0").To<int>(); }
+            set { this["MinValue"] = value; }
+        }
 
-        public int MaxValue { get; set; }
+        public int MaxValue
+        {
+            get { return (this["MaxValue"] ?? "0").To<int>(); }
+            set { this["MaxValue"] = value; }
+        }
 
         public NumericValueValidator()
         {
@@ -22,7 +30,7 @@ namespace Abp.Runtime.Validation
             MaxValue = maxValue;
         }
 
-        public bool IsValid(object value)
+        public override bool IsValid(object value)
         {
             if (value == null)
             {

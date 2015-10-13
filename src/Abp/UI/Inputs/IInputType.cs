@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
@@ -7,6 +8,8 @@ namespace Abp.UI.Inputs
         string Name { get; }
 
         object this[string key] { get; set; }
+
+        IDictionary<string, object> Attributes { get; }
 
         IValueValidator Validator { get; set; }
     }

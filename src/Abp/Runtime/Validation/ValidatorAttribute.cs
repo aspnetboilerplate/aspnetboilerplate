@@ -5,11 +5,11 @@ namespace Abp.Runtime.Validation
     [AttributeUsage(AttributeTargets.Class)]
     public class ValidatorAttribute : Attribute
     {
-        public string TypeName { get; set; }
+        public string Name { get; set; }
 
-        public ValidatorAttribute(string typeName)
+        public ValidatorAttribute(string name)
         {
-            TypeName = typeName;
+            Name = name;
         }
     }
 }
