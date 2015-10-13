@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using System.Web.Http.Routing;
 using Abp.Logging;
 using Abp.Modules;
 using Abp.Web;
@@ -85,10 +86,25 @@ namespace Abp.WebApi
 
         private static void InitializeRoutes(HttpConfiguration httpConfiguration)
         {
-            //Dynamic Web APIs (with area name)
+            //Dynamic Web APIs
+
             httpConfiguration.Routes.MapHttpRoute(
                 name: "AbpDynamicWebApi",
                 routeTemplate: "api/services/{*serviceNameWithAction}"
+                );
+
+            //Other routes
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_Clear",
+                routeTemplate: "api/AbpCache/Clear",
+                defaults: new { controller = "AbpCache", action = "Clear" }
+                );
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_ClearAll",
+                routeTemplate: "api/AbpCache/ClearAll",
+                defaults: new { controller = "AbpCache", action = "ClearAll" }
                 );
         }
     }
