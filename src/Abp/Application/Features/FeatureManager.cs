@@ -5,6 +5,9 @@ using Abp.Dependency;
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// Implements <see cref="IFeatureManager"/>.
+    /// </summary>
     internal class FeatureManager : FeatureDefinitionContextBase, IFeatureManager, ISingletonDependency
     {
         private readonly IIocManager _iocManager;

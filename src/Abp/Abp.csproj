@@ -110,7 +110,7 @@
     <Compile Include="UI\Inputs\IInputType.cs" />
     <Compile Include="Runtime\Validation\AlwaysValidValueValidator.cs" />
     <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
-    <Compile Include="Application\Features\NullFeatureChecker.cs" />
+    <Compile Include="Application\Features\NullFeatureValueStore.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
