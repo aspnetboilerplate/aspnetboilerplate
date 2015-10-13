@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Mvc.Async;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -49,6 +50,16 @@ namespace Abp.Web.Mvc.Controllers
         /// Reference to the permission checker.
         /// </summary>
         public IPermissionChecker PermissionChecker { protected get; set; }
+
+        /// <summary>
+        /// Reference to the feature manager.
+        /// </summary>
+        public IFeatureManager FeatureManager { protected get; set; }
+
+        /// <summary>
+        /// Reference to the permission checker.
+        /// </summary>
+        public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
         /// Reference to the localization manager.
@@ -203,6 +214,27 @@ namespace Abp.Web.Mvc.Controllers
         protected bool IsGranted(string permissionName)
         {
             return PermissionChecker.IsGranted(permissionName);
+        }
+
+
+        /// <summary>
+        /// Checks if given feature is enabled for current tenant.
+        /// </summary>
+        /// <param name="featureName">Name of the feature</param>
+        /// <returns></returns>
+        protected virtual Task<bool> IsEnabledAsync(string featureName)
+        {
+            return FeatureChecker.IsEnabledAsync(featureName);
+        }
+
+        /// <summary>
+        /// Checks if given feature is enabled for current tenant.
+        /// </summary>
+        /// <param name="featureName">Name of the feature</param>
+        /// <returns></returns>
+        protected virtual bool IsEnabled(string featureName)
+        {
+            return FeatureChecker.IsEnabled(featureName);
         }
 
         /// <summary>

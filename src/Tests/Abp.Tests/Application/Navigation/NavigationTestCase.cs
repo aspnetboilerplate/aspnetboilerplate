@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -43,7 +44,7 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager)
+            UserNavigationManager = new UserNavigationManager(NavigationManager, new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                                     {
                                         PermissionChecker = CreateMockPermissionChecker()
                                     };
