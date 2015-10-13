@@ -17,6 +17,7 @@ namespace MyProject
 
             DynamicApiControllerBuilder
                 .ForAll<IApplicationService>(typeof(MyProjectApplicationModule).Assembly, "app")
+                .WithConventionalVerbs()
                 .Build();
 
             //DynamicApiControllerBuilder
