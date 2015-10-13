@@ -19,8 +19,7 @@ namespace Abp.Application.Features
         /// Default: false.
         /// </summary>
         public bool RequiresAll { get; set; }
-
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleFeatureDependency"/> class.
         /// </summary>
