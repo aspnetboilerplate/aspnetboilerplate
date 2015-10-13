@@ -35,7 +35,7 @@ namespace Abp.Domain.Uow
             IUnitOfWork unitOfWork;
             if (!UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
             {
-                logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on GetCurrentUow)!");
+                //logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on GetCurrentUow)! UnitOfWork key: " + unitOfWorkKey);
                 CallContext.FreeNamedDataSlot(ContextKey);
                 return null;
             }
@@ -73,6 +73,10 @@ namespace Abp.Domain.Uow
 
                     value.Outer = outer;
                 }
+                else
+                {
+                    //logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on SetCurrentUow)! UnitOfWork key: " + unitOfWorkKey);
+                }
             }
 
             unitOfWorkKey = value.Id;
@@ -96,7 +100,7 @@ namespace Abp.Domain.Uow
             IUnitOfWork unitOfWork;
             if (!UnitOfWorkDictionary.TryGetValue(unitOfWorkKey, out unitOfWork))
             {
-                logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on ExitFromCurrentUowScope)!");
+                //logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on ExitFromCurrentUowScope)! UnitOfWork key: " + unitOfWorkKey);
                 CallContext.FreeNamedDataSlot(ContextKey);
                 return;
             }
