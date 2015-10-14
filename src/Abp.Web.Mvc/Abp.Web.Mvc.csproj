@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Services\Dto\ComboboxItemDtoExtensions.cs" />
     <Compile Include="Web\Mvc\Authorization\AbpMvcAuthorizeAttribute.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpController.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpHandleErrorAttribute.cs" />

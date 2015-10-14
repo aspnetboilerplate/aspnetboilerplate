@@ -50,7 +50,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Depended feature(s) of this permission.
         /// </summary>
-        public IFeatureDependency DependedFeature { get; }
+        public IFeatureDependency DependedFeature { get; set; }
 
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.

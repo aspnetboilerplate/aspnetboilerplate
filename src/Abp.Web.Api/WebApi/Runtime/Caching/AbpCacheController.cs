@@ -5,6 +5,7 @@ using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Runtime.Caching;
 using Abp.UI;
+using Abp.Web.Models;
 using Abp.WebApi.Controllers;
 
 namespace Abp.WebApi.Runtime.Caching
@@ -19,7 +20,7 @@ namespace Abp.WebApi.Runtime.Caching
         }
 
         [HttpPost]
-        public async Task Clear(ClearCacheModel model)
+        public async Task<AjaxResponse> Clear(ClearCacheModel model)
         {
             if (model.Password.IsNullOrEmpty())
             {
@@ -38,10 +39,13 @@ namespace Abp.WebApi.Runtime.Caching
             {
                 await cache.ClearAsync();
             }
+
+            return new AjaxResponse();
         }
 
         [HttpPost]
-        public async Task ClearAll(ClearAllCacheModel model)
+        [Route("api/AbpCache/ClearAll")]
+        public async Task<AjaxResponse> ClearAll(ClearAllCacheModel model)
         {
             if (model.Password.IsNullOrEmpty())
             {
@@ -55,6 +59,8 @@ namespace Abp.WebApi.Runtime.Caching
             {
                 await cache.ClearAsync();
             }
+
+            return new AjaxResponse();
         }
 
         private async Task CheckPassword(string password)

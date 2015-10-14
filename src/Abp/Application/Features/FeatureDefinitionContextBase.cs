@@ -4,15 +4,30 @@ using Abp.UI.Inputs;
 
 namespace Abp.Application.Features
 {
-    public class FeatureDefinitionContextBase : IFeatureDefinitionContext
+    /// <summary>
+    /// Base for implementing <see cref="IFeatureDefinitionContext"/>.
+    /// </summary>
+    public abstract class FeatureDefinitionContextBase : IFeatureDefinitionContext
     {
         protected readonly FeatureDictionary Features;
 
-        public FeatureDefinitionContextBase()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatureDefinitionContextBase"/> class.
+        /// </summary>
+        protected FeatureDefinitionContextBase()
         {
             Features = new FeatureDictionary();
         }
 
+        /// <summary>
+        /// Creates a new feature.
+        /// </summary>
+        /// <param name="name">Unique name of the feature</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <param name="displayName">Display name of the feature</param>
+        /// <param name="description">A brief description for this feature</param>
+        /// <param name="scope">Feature scope</param>
+        /// <param name="inputType">Input type</param>
         public Feature Create(string name, string defaultValue, ILocalizableString displayName = null,
             ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
@@ -27,6 +42,13 @@ namespace Abp.Application.Features
 
         }
 
+        /// <summary>
+        /// Gets a feature with given name or null if can not find.
+        /// </summary>
+        /// <param name="name">Unique name of the feature</param>
+        /// <returns>
+        ///   <see cref="Feature" /> object or null
+        /// </returns>
         public Feature GetOrNull(string name)
         {
             return Features.GetOrDefault(name);

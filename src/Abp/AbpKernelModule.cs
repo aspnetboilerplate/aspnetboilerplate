@@ -15,6 +15,7 @@ using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.Net.Mail;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Validation.Interception;
 
 namespace Abp
@@ -87,17 +88,17 @@ namespace Abp
 
         private void ConfigureCaches()
         {
-            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.ApplicationSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
             });
 
-            Configuration.Caching.Configure(SettingManager.TenantSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.TenantSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
             });
 
-            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.UserSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
             });

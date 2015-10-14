@@ -3,9 +3,13 @@ using Newtonsoft.Json.Serialization;
 
 namespace Abp.Json
 {
-    internal static class JsonHelper
+    public static class JsonExtensions
     {
-        public static string ConvertToJson(object obj, bool camelCase = false, bool indented = false)
+        /// <summary>
+        /// Converts given object to JSON string.
+        /// </summary>
+        /// <returns></returns>
+        public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
             var options = new JsonSerializerSettings();
 

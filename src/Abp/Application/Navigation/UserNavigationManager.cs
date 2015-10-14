@@ -4,12 +4,16 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 
 namespace Abp.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
         public IPermissionChecker PermissionChecker { get; set; }
+
+        public IAbpSession AbpSession { get; set; }
 
         private readonly INavigationManager _navigationManager;
 
@@ -20,6 +24,7 @@ namespace Abp.Application.Navigation
             _navigationManager = navigationManager;
             _featureDependencyContext = featureDependencyContext;
             PermissionChecker = NullPermissionChecker.Instance;
+            AbpSession = NullAbpSession.Instance;
         }
 
         public async Task<UserMenu> GetMenuAsync(string menuName, long? userId)
@@ -63,7 +68,9 @@ namespace Abp.Application.Navigation
                     continue;
                 }
 
-                if (menuItemDefinition.FeatureDependency != null && !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(_featureDependencyContext)))
+                if (menuItemDefinition.FeatureDependency != null &&
+                    AbpSession.MultiTenancySide == MultiTenancySides.Tenant &&
+                    !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(_featureDependencyContext)))
                 {
                     continue;
                 }

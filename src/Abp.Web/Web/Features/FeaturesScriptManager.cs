@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Dependency;
-using Abp.Json;
 using Abp.Runtime.Session;
 
 namespace Abp.Web.Features
@@ -27,14 +26,21 @@ namespace Abp.Web.Features
         public async Task<string> GetScriptAsync()
         {
             var allFeatures = _featureManager.GetAll().ToList();
-            Dictionary<string, string> currentTenantValues = null;
+            var currentValues = new Dictionary<string, string>();
 
-            if (AbpSession.TenantId.HasValue) //TODO: Get TenantId independent from the session.
+            if (AbpSession.TenantId.HasValue)
             {
-                currentTenantValues = new Dictionary<string, string>();
+                var currentTenantId = AbpSession.GetTenantId();
                 foreach (var feature in allFeatures)
                 {
-                    currentTenantValues[feature.Name] = await _featureChecker.GetValueAsync(AbpSession.GetTenantId(), feature.Name);
+                    currentValues[feature.Name] = await _featureChecker.GetValueAsync(currentTenantId, feature.Name);
+                }
+            }
+            else
+            {
+                foreach (var feature in allFeatures)
+                {
+                    currentValues[feature.Name] = feature.DefaultValue;
                 }
             }
 
@@ -54,21 +60,7 @@ namespace Abp.Web.Features
             {
                 var feature = allFeatures[i];
                 script.AppendLine("        '" + feature.Name.Replace("'", @"\'") + "': {");
-
-                if (currentTenantValues != null)
-                {
-                    script.AppendLine("             value: '" + currentTenantValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "',");
-                }
-                else
-                {
-                    script.AppendLine("             value: " + "'',");
-                }
-
-                //TODO: Other feature properties and custom attributes
-
-                //TODO: Consider to remove inputType since it's only needed while editing!
-                script.AppendLine("            inputType: " + JsonHelper.ConvertToJson(feature.InputType, true, true));
-                
+                script.AppendLine("             value: '" + currentValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "'");
                 script.Append("        }");
 
                 if (i < allFeatures.Count - 1)
