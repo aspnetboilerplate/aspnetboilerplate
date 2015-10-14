@@ -89,6 +89,12 @@
     <Compile Include="DbMigrations\V20150811\_01_CreatePersonTable.cs" />
     <Compile Include="DbMigrations\V20150811\_02_CreateTasksTable.cs" />
     <Compile Include="DbMigrations\V20151008\_01_CreateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_01_UpdateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_02_UpdateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_03_UpdateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_04_UpdateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_05_UpdateNewsTable.cs" />
+    <Compile Include="DbMigrations\V20151014\_06_UpdateNewsTable.cs" />
     <Compile Include="DbMigrations\VersionTable.cs" />
     <Compile Include="MyProjectDataModule.cs" />
     <Compile Include="NHibernate\EntityMappings\NewsMap.cs" />

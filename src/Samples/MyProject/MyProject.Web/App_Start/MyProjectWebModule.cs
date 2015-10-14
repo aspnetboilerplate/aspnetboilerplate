@@ -30,7 +30,7 @@ namespace MyProject.Web
             //Configure navigation/menu
             Configuration.Navigation.Providers.Add<MyProjectNavigationProvider>();
 
-            Configuration.MultiTenancy.IsEnabled = false;
+            // Configuration.MultiTenancy.IsEnabled = true;//是否启用多租户
         }
 
         public override void Initialize()

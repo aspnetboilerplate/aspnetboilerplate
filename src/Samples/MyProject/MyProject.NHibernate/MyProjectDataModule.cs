@@ -17,8 +17,8 @@ namespace MyProject
                 .Database(MySQLConfiguration.Standard.ConnectionString(Configuration.DefaultNameOrConnectionString))
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
 
-         
-            
+         //   Configuration.MultiTenancy.IsEnabled = true;//是否启用多租户
+
         }
 
         public override void Initialize()
