@@ -103,6 +103,7 @@
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
     <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
+    <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
