@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+	<h3>Introduction</h3>
+	<p>Most <strong>SaaS</strong> (multi-tenant) applications have <strong>editions
+	</strong>(packages) those have different <strong>features</strong>. Thus, they 
+	can provide different <strong>price and feature options</strong> to thier 
+	tenants (customers).</p>
+	<p>ASP.NET Boilerplate provides a <strong>feature system</strong> to make 
+	this easier. We can <strong>define</strong> features, <strong>check </strong>
+	if a feature is <strong>enabled</strong> for a tenant and <strong>integrate
+	</strong>features to other ASP.NET Boilerplate concepts (like permissions 
+	and menus).</p>
+
+	<div class="bs-callout bs-callout-warning">
+		<h4>About IFeatureValueStore</h4>
+		<p>Feature system uses <strong>IFeatureValueStore</strong> to 
+		get values of features. While you can 
+		implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
+		project. If it's not implemented, NullFeatureValueStore is used which 
+		returns null for all features.</p>
+	</div>
+	
+	<h3>Feature Types</h3>
+	<p>There are two fundamental feature type.</p>
+	<h4>Boolean Feature</h4>
+	<p>Can be "true" or "false". Thus, a feature can be <strong>enabled</strong> 
+	or <strong>disabled</strong> (for an edition or for a tenant).</p>
+	<h4>Value Feature</h4>
+	<p>Can be an <strong>arbitrary value</strong>. While it's stored and 
+	retrieved a string, numbers also can easily stored as strings. For example, 
+	our application may be a task application and we may have a limit for 
+	creating tasks in a month. Say that we have 2 edition/package; one allows 
+	creating 1,000 tasks per month, while other edition allows creating 5,000 
+	tasks per month. So, this feature should be stored as value, not simply 
+	true/false.</p>
+	<h3>Defining Features</h3>
+	<p>A feature should be defined before checking. A
+	<a href="/Pages/Documents/Module-System">module</a> can define it's own 
+	features by deriving from <strong>FeatureProvider</strong> class. Here, a 
+	very simple feature provider that defines 3 features:</p>
+	<pre lang="cs">public class AppFeatureProvider : FeatureProvider
+{
+    public override void SetFeatures(IFeatureDefinitionContext context)
+    {
+        var sampleBooleanFeature = context.Create(&#x22;SampleBooleanFeature&#x22;, defaultValue: &#x22;false&#x22;);
+        sampleBooleanFeature.CreateChildFeature(&#x22;SampleNumericFeature&#x22;, defaultValue: &#x22;10&#x22;);
+        context.Create(&#x22;SampleSelectionFeature&#x22;, defaultValue: &#x22;B&#x22;);
+    }
+}</pre>
+	<h4>Basic Feature Properties</h4>
+	<p>A feature definition requires two properties at minimum:</p>
+	<ul>
+		<li><strong>Name</strong>: A unique name (as string) to identify the 
+		feature.</li>
+		<li><strong>Default value</strong>: A default value. This is used when 
+		we need the value of the feature and it's not available for current 
+		tenant.</li>
+		<li>Scope:</li>
+	</ul>
+	<p>Here, we defined a boolean feature named "SampleBooleanFeature" which's 
+	default value is "false" (not enabled). We also defined two value features 
+	(SampleNumericFeature is defined as child of SampleBooleanFeature).</p>
+	<h4>Other Feature Properties</h4>
+	<p>While unique name and default value properties are enough for ASP.NET 
+	Boilerplate, there are somre other feature properties thos are especially 
+	important if we want to create an automatic feature screen.</p>
+	<ul>
+		<li><strong>DisplayName</strong>: A localizable string to show the 
+		feature's name to users.</li>
+		<li><strong>Description</strong>: A localizable string to show the 
+		feature's detailed description to users.</li>
+		<li><strong>InputType</strong>: A UI input type for the feature. This 
+		can be defined, then can be used while creating an automatic feature 
+		screen.</li>
+		<li><strong>Attributes</strong>: An arbitrary custom dictionary of 
+		key-value pairs those can be related to the feature.</li>
+	</ul>
+	<p>Let's see more detailed definitions for the features above:</p>
+	<pre lang="cs">public class AppFeatureProvider : FeatureProvider
+{
+    public override void SetFeatures(IFeatureDefinitionContext context)
+    {
+        var sampleBooleanFeature = context.Create(
+            AppFeatures.SampleBooleanFeature,
+            defaultValue: &#x22;false&#x22;,
+            displayName: L(&#x22;Sample boolean feature&#x22;),
+            inputType: new CheckboxInputType()
+            );
+
+        sampleBooleanFeature.CreateChildFeature(
+            AppFeatures.SampleNumericFeature,
+            defaultValue: &#x22;10&#x22;,
+            displayName: L(&#x22;Sample numeric feature&#x22;),
+            inputType: new SingleLineStringInputType(new NumericValueValidator(1, 1000000))
+            );
+
+        context.Create(
+            AppFeatures.SampleSelectionFeature,
+            defaultValue: &#x22;B&#x22;,
+            displayName: L(&#x22;Sample selection feature&#x22;),
+            inputType: new ComboboxInputType(
+                new StaticLocalizableComboboxItemSource(
+                    new LocalizableComboboxItem(&#x22;A&#x22;, L(&#x22;Selection A&#x22;)),
+                    new LocalizableComboboxItem(&#x22;B&#x22;, L(&#x22;Selection B&#x22;)),
+                    new LocalizableComboboxItem(&#x22;C&#x22;, L(&#x22;Selection C&#x22;))
+                    )
+                )
+            );
+    }
+
+    private static ILocalizableString L(string name)
+    {
+        return new LocalizableString(name, AbpZeroTemplateConsts.LocalizationSourceName);
+    }
+}</pre>
+	<p>Note that; This input type definitions are not used by ASP.NET 
+	Boilerplate. They can be used by application while creating inputs for 
+	features. ASP.NET Boilerplate just provides these options to make it easier.</p>
+	<h4>Feature Hierarchy</h4>
+	<p>As shown in the sample feature providers, a feature can have <strong>
+	child features</strong>. A Parent feature is generally defined as <strong>
+	boolean</strong> feature. Child features will be available only if the 
+	parent enabled. ASP.NET Boilerplate <strong>does not</strong> enforces but suggests this. Applications should 
+	take care of it.</p>
+	<h3>A Note For Edition System</h3>
+	<p>ASP.NET Boilerplate framework has no built-in edition system because such 
+	a system requires a database (to store editions, edition features, 
+	tenant-edition mappings and so on...). Therefore, edition system is 
+	implemented in <a href="/Pages/Documents/Zero/Edition-Management">module 
+	zero</a>. You can use this module to easily have an edition system.</p>
+
+</div>
+
+</body>
+
+</html>
