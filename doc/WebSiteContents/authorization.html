@@ -70,6 +70,9 @@ permissions.</p>
 	<li><strong>MultiTenancySides</strong>: For multi-tenant application, a 
 	permission can be used by tenants or the host. This is a <strong>Flags
 	</strong>enumeration and thus a permission can be used in both sides.</li>
+	<li><strong>dependedFeature</strong>: Can be used to declare a dependency to
+	<a href="/Pages/Documents/Feature-Management">features</a>. So, this 
+	permission can be granted only if feature dependency is satisfied.</li>
 </ul>
 <p>A permission can have a parent and child permissions. While this does not 
 effect permission checking, it may help to group permissions in UI.</p>
