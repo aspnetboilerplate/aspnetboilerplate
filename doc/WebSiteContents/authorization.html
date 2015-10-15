@@ -73,7 +73,7 @@ permissions.</p>
 </ul>
 <p>A permission can have a parent and child permissions. While this does not 
 effect permission checking, it may help to group permissions in UI.</p>
-<p>After creating an authorization provider, we should register it in PreIntialize 
+<p>After creating an authorization provider, we should register it in PreInitialize 
 method of our module:</p>
 <pre lang="cs">Configuration.Authorization.Providers.Add&lt;MyAuthorizationProvider&gt;();</pre>
 <p>Authorization providers are registered to <a href="/Pages/Documents/Dependency-Injection">dependency injection</a> 

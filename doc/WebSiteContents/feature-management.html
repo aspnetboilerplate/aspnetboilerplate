@@ -17,9 +17,9 @@
 	can provide different <strong>price and feature options</strong> to thier 
 	tenants (customers).</p>
 	<p>ASP.NET Boilerplate provides a <strong>feature system</strong> to make 
-	this easier. We can <strong>define</strong> features, <strong>check </strong>
+	it easier. We can <strong>define</strong> features, <strong>check </strong>
 	if a feature is <strong>enabled</strong> for a tenant and <strong>integrate
-	</strong>features to other ASP.NET Boilerplate concepts (like permissions 
+	</strong>feature system to other ASP.NET Boilerplate concepts (like permissions 
 	and menus).</p>
 
 	<div class="bs-callout bs-callout-warning">
@@ -28,20 +28,22 @@
 		get values of features. While you can 
 		implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
 		project. If it's not implemented, NullFeatureValueStore is used which 
-		returns null for all features.</p>
+		returns null for all features (Default feature values are used in this 
+		case).</p>
 	</div>
 	
 	<h3>Feature Types</h3>
-	<p>There are two fundamental feature type.</p>
+	<p>There are two fundamental feature types.</p>
 	<h4>Boolean Feature</h4>
-	<p>Can be "true" or "false". Thus, a feature can be <strong>enabled</strong> 
+	<p>Can be "true" or "false". This type of a feature can be <strong>enabled</strong> 
 	or <strong>disabled</strong> (for an edition or for a tenant).</p>
 	<h4>Value Feature</h4>
 	<p>Can be an <strong>arbitrary value</strong>. While it's stored and 
-	retrieved a string, numbers also can easily stored as strings. For example, 
-	our application may be a task application and we may have a limit for 
-	creating tasks in a month. Say that we have 2 edition/package; one allows 
-	creating 1,000 tasks per month, while other edition allows creating 5,000 
+	retrieved a string, numbers also can be easily stored as strings.</p>
+	<p>For example, 
+	our application may be a task management application and we may have a limit for 
+	creating tasks in a month. Say that we have two different edition/package; one allows 
+	creating 1,000 tasks per month, while other allows creating 5,000 
 	tasks per month. So, this feature should be stored as value, not simply 
 	true/false.</p>
 	<h3>Defining Features</h3>
@@ -58,6 +60,10 @@
         context.Create(&#x22;SampleSelectionFeature&#x22;, defaultValue: &#x22;B&#x22;);
     }
 }</pre>
+	<p>After creating a feature provider, we should register it in our module's
+	<a href="/Pages/Documents/Module-System#DocModulePreInit">PreInitialize</a> 
+	method as shown below:</p>
+	<pre lang="cs">Configuration.Features.Providers.Add&#x3C;AppFeatureProvider&#x3E;();</pre>
 	<h4>Basic Feature Properties</h4>
 	<p>A feature definition requires two properties at minimum:</p>
 	<ul>
@@ -66,16 +72,23 @@
 		<li><strong>Default value</strong>: A default value. This is used when 
 		we need the value of the feature and it's not available for current 
 		tenant.</li>
-		<li>Scope:</li>
 	</ul>
 	<p>Here, we defined a boolean feature named "SampleBooleanFeature" which's 
 	default value is "false" (not enabled). We also defined two value features 
 	(SampleNumericFeature is defined as child of SampleBooleanFeature).</p>
+	<p>Tip: Create a const string for a feature name and use it everywhere to 
+	prevent typing errors.</p>
 	<h4>Other Feature Properties</h4>
 	<p>While unique name and default value properties are enough for ASP.NET 
-	Boilerplate, there are somre other feature properties thos are especially 
-	important if we want to create an automatic feature screen.</p>
+	Boilerplate, there are somre other feature properties for a detailed 
+	control.</p>
 	<ul>
+		<li><strong>Scope</strong>: A value in FeatureScopes enum. It can be
+		<strong>Edition</strong> (if this feature can be set only for edition 
+		level), <strong>Tenant</strong> (if this feature can be set only for 
+		tenant level) or <strong>All</strong> (if this feature can be set for 
+		editions and tenants, where tenant setting overrides it's edition's 
+		setting). Default value is <strong>All</strong>.</li>
 		<li><strong>DisplayName</strong>: A localizable string to show the 
 		feature's name to users.</li>
 		<li><strong>Description</strong>: A localizable string to show the 
@@ -125,7 +138,7 @@
     }
 }</pre>
 	<p>Note that; This input type definitions are not used by ASP.NET 
-	Boilerplate. They can be used by application while creating inputs for 
+	Boilerplate. They can be used by applications while creating inputs for 
 	features. ASP.NET Boilerplate just provides these options to make it easier.</p>
 	<h4>Feature Hierarchy</h4>
 	<p>As shown in the sample feature providers, a feature can have <strong>
@@ -133,12 +146,93 @@
 	boolean</strong> feature. Child features will be available only if the 
 	parent enabled. ASP.NET Boilerplate <strong>does not</strong> enforces but suggests this. Applications should 
 	take care of it.</p>
-	<h3>A Note For Edition System</h3>
-	<p>ASP.NET Boilerplate framework has no built-in edition system because such 
+	<h3>Checking Features</h3>
+	<p>We define a feature to check it's value in the application to allow or 
+	block some application features per tenant. There are different ways of 
+	checking it.</p>
+	<h4>Using RequiresFeature Attribute</h4>
+	<p>We can use <strong>RequiredFeature</strong> attribute for a method or a 
+	class as shown below:</p>
+	<pre>[RequiresFeature(&#x22;ExportToExcel&#x22;)]
+public async Task&#x3C;FileDto&#x3E; GetReportToExcel(...)
+{
+    ...
+}</pre>
+	<p>This method is executed only if "ExportToExcel" feature is enabled for 
+	the <strong>current tenant</strong> (current tenant is obtained from
+	<a href="/Pages/Documents/Abp-Session">IAbpSession</a>). If it's not enabled, an 
+	<strong>AbpAuthorizationException</strong> is thrown 
+	automatically.</p>
+	<p>Surely, RequiresFeature attribute should be used for <strong>boolean type 
+	features</strong>. Otherwise, you may get exceptions.</p>
+	
+	<h5>RequiresFeature attribute notes</h5>
+	<p>ASP.NET Boilerplate uses power of dynamic method interception for 
+	feature checking. So, there is some restrictions for the methods use 
+	RequiresFeature 
+	attribute.</p>
+	<ul>
+		<li>Can not use it for private methods.</li>
+		<li>Can not use it for static methods.</li>
+		<li>Can not use it for methods of a non-injected class (We must use
+		<a href="/Pages/Documents/Dependency-Injection">dependency injection</a>).</li>
+	</ul>
+	<p>Also,</p>
+	<ul>
+		<li>Can use it for any <strong>public</strong> method if the method is called over an 
+		<strong>interface </strong>(like Application Services used over interface).</li>
+		<li>A method should be <strong>virtual</strong> if it's called directly 
+		from class reference (like ASP.NET MVC or Web API Controllers).</li>
+		<li>A method should be <strong>virtual</strong> if it's <strong>protected</strong>.</li>
+	</ul>
+
+	<h4>Using IFeatureChecker</h4>
+	<p>We can inject and use IFeatureChecker to check a feature manually (it's 
+	automatically injected and directly usable for application services, MVC and 
+	Web API controllers).</p>
+	<h5>IsEnabled</h5>
+	<p>Used to simply check if given feature is enabled or not. Example:</p>
+	<pre lang="cs">public async Task&#x3C;FileDto&#x3E; GetReportToExcel(...)
+{
+    if (await FeatureChecker.IsEnabledAsync(&#x22;ExportToExcel&#x22;))
+    {
+        throw new AbpAuthorizationException(&#x22;You don&#x27;t have this feature: ExportToExcel&#x22;);
+    }
+    
+    ...
+}</pre>
+	<p>IsEnabledAsync and other methods have sync versions.</p>
+	<p>Surely, IsEnabled 
+	method should be used for <strong>boolean type 
+	features</strong>. Otherwise, you may get exceptions.</p>
+	<p>If you just want to check a feature and throw exception as shown in the 
+	example, you can just use <strong>CheckEnabled</strong> method.</p>
+	<h5>GetValue</h5>
+	<p>Used to get current value of a feature for value type features. Example:</p>
+	<pre lang="cs">var createdTaskCountInThisMonth = GetCreatedTaskCountInThisMonth();
+if (createdTaskCountInThisMonth &#x3E;= <strong>FeatureChecker.GetValue(&#x22;MaxTaskCreationLimitPerMonth&#x22;).To&#x3C;int&#x3E;()</strong>)
+{
+    throw new AbpAuthorizationException(&#x22;You exceed task creation limit for this month, sorry :(&#x22;);
+}</pre>
+	<p>FeatureChecker methods has also overrides to work features for a 
+	specified tenantId, not only current tenantId.</p>
+	<h4>Client Side</h4>
+	<p>In the client side, we can use <strong>abp.features</strong> namespace to 
+	get current values of the features.</p>
+	<h5>isEnabled</h5>
+	<pre lang="js">var isEnabled = abp.features.isEnabled('SampleBooleanFeature');</pre>
+	<h5>getValue</h5>
+	<pre lang="js">var value = abp.features.getValue('SampleNumericFeature');</pre>
+	<h3>Feature Manager</h3>
+	<p>If you need to definitions of features, you can inject and use <strong>
+	IFeatureManager</strong>.</p>
+	<h3>A Note For Editions</h3>
+	<p>ASP.NET Boilerplate framework has not a built-in edition system because such 
 	a system requires a database (to store editions, edition features, 
 	tenant-edition mappings and so on...). Therefore, edition system is 
 	implemented in <a href="/Pages/Documents/Zero/Edition-Management">module 
-	zero</a>. You can use this module to easily have an edition system.</p>
+	zero</a>. You can use it to easily have an edition system, or you can 
+	implement all yourself.</p>
 
 </div>
 
