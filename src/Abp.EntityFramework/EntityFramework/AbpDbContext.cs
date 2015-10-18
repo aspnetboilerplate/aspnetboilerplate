@@ -119,6 +119,7 @@ namespace Abp.EntityFramework
         public virtual void Initialize()
         {
             Database.Initialize(false);
+            this.SetFilterScopedParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false);//20150915HW为了过滤出已删除的记录而加入此行
             this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
             this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
         }
@@ -126,7 +127,8 @@ namespace Abp.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
+            //modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
+            modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d, bool isDeleted) => d.IsDeleted == isDeleted, false);//20150915HW为了过滤出已删除的记录而加入此行
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId, 0);
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }

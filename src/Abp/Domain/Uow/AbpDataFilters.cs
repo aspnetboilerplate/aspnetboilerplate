@@ -38,6 +38,7 @@ namespace Abp.Domain.Uow
             /// "tenantId".
             /// </summary>
             public const string TenantId = "tenantId";
+            public const string IsDeleted = "isDeleted";//20150915HW为了过滤出已删除的记录而加入此行
         }
     }
 }

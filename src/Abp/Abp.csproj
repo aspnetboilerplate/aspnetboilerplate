@@ -148,6 +148,8 @@
     <Compile Include="Application\Features\IFeatureDependency.cs" />
     <Compile Include="Application\Features\SimpleFeatureDependency.cs" />
     <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
+    <Compile Include="Domain\Repositories\IFromDBOfTEntity.cs" />
+    <Compile Include="Domain\Repositories\IFromDBOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="Localization\DefaultLanguageProvider.cs" />
     <Compile Include="Localization\Dictionaries\Xml\LocalizationDictionaryProviderBase.cs" />
     <Compile Include="Localization\ILanguageManager.cs" />
@@ -489,6 +491,7 @@
     <None Include="Abp.nuspec" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Runtime\Caching\CacheClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />

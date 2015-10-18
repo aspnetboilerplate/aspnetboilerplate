@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Abp.EntityFramework.Repositories.EfRepositoryBase&lt;TDbContext, TEntity&gt;">
+    <Position X="10.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EntityFramework\Repositories\EfRepositoryBaseOfTEntity.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Abp.EntityFramework.Repositories.EfRepositoryBase&lt;TDbContext, TEntity, TPrimaryKey&gt;">
+    <Position X="10" Y="2" Width="4" />
+    <TypeIdentifier>
+      <HashCode>SAQQAEAACgCAAAAAAIAASAAAAIEAAAggAhAAAABAAAE=</HashCode>
+      <FileName>EntityFramework\Repositories\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Abp.Domain.Repositories.AbpRepositoryBase&lt;TEntity, TPrimaryKey&gt;">
+    <Position X="6.25" Y="2" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Abp.Domain.Repositories.IRepository&lt;TEntity, TPrimaryKey&gt;">
+    <Position X="2.75" Y="2" Width="2.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Abp.Domain.Repositories.IRepository">
+    <Position X="3.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Abp.Domain.Repositories.IRepository&lt;TEntity&gt;">
+    <Position X="0.5" Y="3.5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Abp.Dependency.ITransientDependency">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
