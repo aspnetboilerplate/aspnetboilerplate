@@ -8,7 +8,8 @@ using Abp.UI.Inputs;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Defines a feature of the application.
+    /// Defines a feature of the application. A <see cref="Feature"/> can be used in a multi-tenant application
+    /// to enable disable some application features depending on editions and tenants.
     /// </summary>
     public class Feature
     {
@@ -16,6 +17,7 @@ namespace Abp.Application.Features
         /// Gets/sets arbitrary objects related to this object.
         /// These objects must be serializable.
         /// Gets null if given key does not exists.
+        /// This is a shortcut for <see cref="Attributes"/> dictionary.
         /// </summary>
         /// <param name="key">Key</param>
         public object this[string key]
@@ -55,21 +57,25 @@ namespace Abp.Application.Features
         
         /// <summary>
         /// Input type.
+        /// This can be used to prepare an input for changing this feature's value.
+        /// Default: <see cref="CheckboxInputType"/>.
         /// </summary>
         public IInputType InputType { get; set; }
 
         /// <summary>
-        /// Default value.
+        /// Default value of the feature.
+        /// This value is used if feature's value is not defined for current edition or tenant.
         /// </summary>
         public string DefaultValue { get; set; }
 
         /// <summary>
-        /// Feature scope.
+        /// Feature's scope.
+        /// 
         /// </summary>
         public FeatureScopes Scope { get; set; }
 
         /// <summary>
-        /// List of child features. A child feature can be enabled only if parent is enabled.
+        /// List of child features.
         /// </summary>
         public IReadOnlyList<Feature> Children
         {
@@ -106,7 +112,6 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Adds a child feature.
-        /// A child feature can be enabled only if parent is enabled.
         /// </summary>
         /// <returns>Returns newly created child feature</returns>
         public Feature CreateChildFeature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)

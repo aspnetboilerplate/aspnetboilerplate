@@ -2,6 +2,10 @@
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// This attribute can be used on a class/method to declare that given class/method is available
+    /// only if required feature(s) are enabled.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class RequiresFeatureAttribute : Attribute
     {

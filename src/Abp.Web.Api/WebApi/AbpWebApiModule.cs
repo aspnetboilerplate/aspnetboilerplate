@@ -85,10 +85,25 @@ namespace Abp.WebApi
 
         private static void InitializeRoutes(HttpConfiguration httpConfiguration)
         {
-            //Dynamic Web APIs (with area name)
+            //Dynamic Web APIs
+
             httpConfiguration.Routes.MapHttpRoute(
                 name: "AbpDynamicWebApi",
                 routeTemplate: "api/services/{*serviceNameWithAction}"
+                );
+
+            //Other routes
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_Clear",
+                routeTemplate: "api/AbpCache/Clear",
+                defaults: new { controller = "AbpCache", action = "Clear" }
+                );
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_ClearAll",
+                routeTemplate: "api/AbpCache/ClearAll",
+                defaults: new { controller = "AbpCache", action = "ClearAll" }
                 );
         }
     }

@@ -38,6 +38,11 @@ namespace Abp.Domain.Uow
         private readonly List<DataFilterConfiguration> _filters;
 
         /// <summary>
+        /// Gets default UOW options.
+        /// </summary>
+        protected IUnitOfWorkDefaultOptions DefaultOptions { get; private set; }
+
+        /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
         /// </summary>
         public bool IsDisposed { get; private set; }
@@ -72,6 +77,8 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
         {
+            DefaultOptions = defaultOptions;
+
             Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
             AbpSession = NullAbpSession.Instance;
@@ -86,7 +93,7 @@ namespace Abp.Domain.Uow
             }
 
             PreventMultipleBegin();
-            Options = options; //TODO: Do not set options like that!
+            Options = options; //TODO: Do not set options like that, instead make a copy?
 
             SetFilters(options.FilterOverrides);
 

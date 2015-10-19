@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate - Module Zero</title>
+<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+	<h3>Introduction</h3>
+	<p>Most <strong>SaaS</strong> (multi-tenant) applications have <strong>editions
+	</strong>(packages) those have different <strong>features</strong>. Thus, they can provide different 
+	<strong>price and feature options </strong>to thier tenants (customers).</p>
+	
+	<div class="bs-callout bs-callout-warning">
+		<h4>About Features</h4>
+		<p>See <a href="/Pages/Documents/Feature-Management">feature management 
+		documentation</a> to understand features.</p>
+	</div>
+
+	<h3>Edition Entity</h3>
+	<p><strong>Edition</strong> is a simple entity represents an edition (or 
+	package) of the application. It has just <strong>Name</strong> and <strong>
+	DisplayName</strong> 
+	properties.</p>
+	
+	<h3>Edition Manager</h3>
+	<p><strong>EditionManager</strong> is the <strong>domain service</strong> to manage editions:</p>
+	<pre lang="cs">public class EditionManager : AbpEditionManager
+{
+}</pre>
+	<p>It's derived from <strong>AbpEditionManager</strong> class. You can inject 
+	and use EditionManager to create, delete, update editions. Also, EditionManager 
+	is used to <strong>manage features</strong> of editions. It internally <strong>
+	caches</strong> edition features for better performance.</p>
+
+</div>
+
+</body>
+
+</html>

@@ -100,6 +100,10 @@
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
+    <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
+    <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
+    <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
+    <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
@@ -110,7 +114,7 @@
     <Compile Include="UI\Inputs\IInputType.cs" />
     <Compile Include="Runtime\Validation\AlwaysValidValueValidator.cs" />
     <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
-    <Compile Include="Application\Features\NullFeatureChecker.cs" />
+    <Compile Include="Application\Features\NullFeatureValueStore.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
