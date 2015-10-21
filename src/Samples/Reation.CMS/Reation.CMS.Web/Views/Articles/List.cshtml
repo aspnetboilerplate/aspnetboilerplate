@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Reation.CMS.Articles.Article>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List</title>
+</head>
+<body>
+    <div>@Html.ActionLink("添加", "Create") 
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Title</td>
+                    <td>Intro</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                    <td>@item.Intro</td>
+                    <td>
+                    @Html.ActionLink("查看", "Detail", new { Id = item.Id }) 
+                    @Html.ActionLink("编辑", "Edit", new { Id = item.Id })
+                    @Html.ActionLink("删除", "Delete", new {  Id=item.Id})
+                     </td>
+            </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">暂无数据</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

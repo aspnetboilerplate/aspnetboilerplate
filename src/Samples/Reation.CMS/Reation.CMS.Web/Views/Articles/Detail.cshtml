@@ -1,0 +1,24 @@
+﻿@model Reation.CMS.Articles.Article
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detail</title>
+</head>
+<body>
+    <div>
+        @if (Model != null)
+        {
+            <h1>@Model.Title</h1>
+            <hr />
+            <h2>@Model.Intro</h2>
+            <div>@Model.Content</div>
+        }
+    </div>
+</body>
+</html>
