@@ -55,8 +55,9 @@ namespace Abp
                         Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
                         )));
 
+            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
-
+            
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);

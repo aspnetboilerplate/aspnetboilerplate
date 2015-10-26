@@ -10,5 +10,6 @@
     <text name="UseDefaultCredentials">Varsayılan yetkilendirmeleri kullan</text>
     <text name="DefaultFromSenderEmailAddress">Varsayılan gönderici e-posta adresi</text>
     <text name="DefaultFromSenderDisplayName">Varsayılan gönderici görünen ismi</text>
+    <text name="DefaultLanguage">Varsayılan dil</text>
   </texts>
 </localizationDictionary>
