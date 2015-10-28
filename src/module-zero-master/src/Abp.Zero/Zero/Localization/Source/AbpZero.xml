@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="User already in role." />
+    <text name="Identity.UserNotInRole" value="User is not in role." />
+    <text name="Identity.RoleNotFound" value="Role {0} does not exist." />
+    <text name="Identity.PasswordMismatch" value="Incorrect password." />
+    <text name="Identity.InvalidUserName" value="User name {0} is invalid, can only contain letters or digits." />
+    <text name="Identity.PasswordTooShort" value="Passwords must be at least {0} characters." />
+    <text name="Identity.PropertyTooShort" value="{0} cannot be null or empty." />
+    <text name="Identity.DuplicateName" value="Name {0} is already taken." />
+    <text name="Identity.UserAlreadyHasPassword" value="User already has a password set." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Passwords must have at least one non letter or digit character." />
+    <text name="Identity.UserIdNotFound" value="UserId not found." />
+    <text name="Identity.InvalidToken" value="Invalid token." />
+    <text name="Identity.InvalidEmail" value="Email '{0}' is invalid." />
+    <text name="Identity.UserNameNotFound" value="User {0} does not exist." />
+    <text name="Identity.LockoutNotEnabled" value="Lockout is not enabled for this user." />
+    <text name="Identity.PasswordRequireUpper" value="Passwords must have at least one uppercase ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Passwords must have at least one digit ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Passwords must have at least one lowercase ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email '{0}' is already taken." />
+    <text name="Identity.ExternalLoginExists" value="A user with that external login already exists." />
+    <text name="Identity.DefaultError" value="An unknown failure has occured." />
+    <text name="InvalidTenancyName" value="Tenancy name is not valid!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Tenancy name {0} is already taken." />
+    <text name="RoleNameIsAlreadyTaken" value="Role name {0} is already taken." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Role display name {0} is already taken." />
+    <text name="CanNotDeleteStaticRole" value="Can not delete a static role: {0}" />
+    <text name="CanNotRenameAdminUser" value="Can not rename user name of the {0} since this is the default admin user!" />
+    <text name="CanNotDeleteAdminUser" value="Can not delete user {0} since this is the default admin user!" />
+  </texts>
+</localizationDictionary>

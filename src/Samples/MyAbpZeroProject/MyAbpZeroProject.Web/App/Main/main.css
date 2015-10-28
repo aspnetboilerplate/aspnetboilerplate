@@ -1,0 +1,36 @@
+﻿/* Application specific styles */
+body {
+  padding-top: 80px;
+}
+/* Styles for angular ui transition animations */
+.angular-animation-container {
+  position: relative;
+}
+.shuffle-animation.ng-enter,
+.shuffle-animation.ng-leave {
+  position: absolute;
+}
+.shuffle-animation.ng-enter {
+  -moz-transition: ease-out all 0.3s 0.4s;
+  -o-transition: ease-out all 0.3s 0.4s;
+  -webkit-transition: ease-out all 0.3s 0.4s;
+  transition: ease-out all 0.3s 0.4s;
+  left: 2em;
+  opacity: 0;
+}
+.shuffle-animation.ng-enter.ng-enter-active {
+  left: 0;
+  opacity: 1;
+}
+.shuffle-animation.ng-leave {
+  -moz-transition: 0.3s ease-out all;
+  -o-transition: 0.3s ease-out all;
+  -webkit-transition: 0.3s ease-out all;
+  transition: 0.3s ease-out all;
+  left: 0;
+  opacity: 1;
+}
+.shuffle-animation.ng-leave.ng-leave-active {
+  left: 2em;
+  opacity: 0;
+}

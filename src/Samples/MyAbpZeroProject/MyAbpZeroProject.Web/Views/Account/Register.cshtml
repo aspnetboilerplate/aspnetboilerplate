@@ -1,0 +1,73 @@
+﻿@using Abp.Extensions
+@model MyAbpZeroProject.Web.Models.Account.RegisterViewModel
+@section Styles
+{
+    <link href="~/Views/Account/Login.css" rel="stylesheet" />
+}
+<div class="container">
+    <div id="LoginArea" class="row">
+        <div class="col-lg-12">
+            <div class="well bs-component">
+                <form class="form-horizontal" action="@(Url.Action("Register","Account"))" method="POST">
+                    <fieldset>
+                        <legend>Register</legend>
+
+                        @if (@ViewBag.ErrorMessage != null)
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fa fa-warning"></i> @ViewBag.ErrorMessage
+                            </div>
+                        }
+
+                        @if (ViewBag.IsMultiTenancyEnabled)
+                        {
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <input type="text" class="form-control" name="TenancyName" placeholder="@L("TenancyName")" value="@Model.TenancyName" required maxlength="@MyAbpZeroProject.MultiTenancy.Tenant.MaxTenancyNameLength">
+                                </div>
+                            </div>
+                        }
+
+                        <input type="hidden" name="IsExternalLogin" value="@Model.IsExternalLogin.ToString()" />
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control" name="Name" value="@Model.Name" placeholder="@L("Name")" required maxlength="@MyAbpZeroProject.Users.User.MaxNameLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control" name="Surname" value="@Model.Surname" placeholder="@L("Surname")" required maxlength="@MyAbpZeroProject.Users.User.MaxSurnameLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="email" class="form-control" name="EmailAddress" value="@Model.EmailAddress" placeholder="@L("EmailAddress")" required maxlength="@MyAbpZeroProject.Users.User.MaxEmailAddressLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control" name="UserName" value="@Model.UserName" placeholder="@L("UserName")" required maxlength="@MyAbpZeroProject.Users.User.MaxUserNameLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="password" class="form-control" name="Password" placeholder="@L("Password")" required maxlength="@MyAbpZeroProject.Users.User.MaxPlainPasswordLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button type="submit" id="RegisterButton" class="btn btn-primary"><i class="fa fa-sign-in"></i> Register</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

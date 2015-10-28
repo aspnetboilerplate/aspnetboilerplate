@@ -1,0 +1,75 @@
+﻿@using Abp.Web.Mvc.Extensions
+@*
+    IMPORTANT NOTES FROM ASP.NET BOILERPLATE:
+
+    This _Layout.cshtml is not used actually. It's left here if you want to add some classic style (MPA)
+    pages to your application.
+
+    See App/Main/views/layout/layout.cshtml for Angular application's layout page.
+*@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MyAbpZeroProject</title>
+
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    @Html.IncludeStyle("~/Content/themes/base/all.css")
+    @Html.IncludeStyle("~/Content/bootstrap-cosmo.min.css")
+    @Html.IncludeStyle("~/Content/font-awesome.min.css")
+    @Html.IncludeStyle("~/Content/toastr.min.css")
+    @Html.IncludeStyle("~/Content/flags/famfamfam-flags.css")
+    @Html.IncludeStyle("~/Scripts/sweetalert/sweet-alert.css")
+
+    @RenderSection("Styles", false)
+
+    <script type="text/javascript">
+        //This is used to get the application's root path from javascript. It's useful if you're running application in a virtual directory under IIS.
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        @Html.IncludeScript("~/Scripts/others/html5shiv.js")
+        @Html.IncludeScript("~/Scripts/others/respond.min.js")
+    <![endif]-->
+
+
+    @Html.IncludeScript("~/Abp/Framework/scripts/utils/ie10fix.js")
+    @Html.IncludeScript("~/Scripts/modernizr-2.8.3.js")
+
+    @Html.IncludeScript("~/Scripts/json2.min.js")
+    @Html.IncludeScript("~/Scripts/jquery-2.1.4.min.js")
+    @Html.IncludeScript("~/Scripts/jquery-ui-1.11.4.min.js")
+    @Html.IncludeScript("~/Scripts/bootstrap.min.js")
+
+    @Html.IncludeScript("~/Scripts/jquery.blockUI.js")
+    @Html.IncludeScript("~/Scripts/toastr.min.js")
+    @Html.IncludeScript("~/Scripts/others/spinjs/spin.js")
+    @Html.IncludeScript("~/Scripts/others/spinjs/jquery.spin.js")
+    @Html.IncludeScript("~/Scripts/sweetalert/sweet-alert.min.js")
+
+    @Html.IncludeScript("~/Abp/Framework/scripts/abp.js")
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.jquery.js")
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.toastr.js")
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.blockUI.js")
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.spin.js")
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.sweet-alert.js")
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/api/AbpServiceProxies/GetAll"></script>
+    <script src="~/AbpScripts/GetScripts" type="text/javascript"></script>
+
+    @RenderSection("Scripts", false)
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

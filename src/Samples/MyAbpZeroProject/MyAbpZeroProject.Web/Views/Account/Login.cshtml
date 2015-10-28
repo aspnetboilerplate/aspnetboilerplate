@@ -1,0 +1,91 @@
+﻿@using Abp.Web.Mvc.Extensions
+@using Microsoft.Owin.Security
+@model MyAbpZeroProject.Web.Models.Account.LoginFormViewModel
+@section Styles
+{
+    @Html.IncludeStyle("~/Views/Account/Login.css")
+}
+@section Scripts
+{
+    @Html.IncludeScript("~/Views/Account/Login.js")
+}
+<div class="container">
+    <div id="LoginArea" class="row">
+        <div class="col-lg-12">
+            <div class="well bs-component">
+                <form id="LoginForm" class="form-horizontal" action="@(Url.Action("Login", "Account"))?returnUrl=@(Model.ReturnUrl)" method="POST">
+                    <fieldset>
+                        <legend>Login</legend>
+
+                        @if (Model.IsMultiTenancyEnabled)
+                        {
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <input type="text" class="form-control" id="TenancyName" placeholder="Tenancy name" required maxlength="@MyAbpZeroProject.MultiTenancy.Tenant.MaxTenancyNameLength">
+                                    <span class="text-muted">Can be empty to login as host.</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" id="TenancyName" value="">
+                        }
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control" id="EmailAddressInput" placeholder="User name or email" required maxlength="@MyAbpZeroProject.Users.User.MaxEmailAddressLength">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="password" class="form-control" id="PasswordInput" placeholder="Password" required maxlength="@MyAbpZeroProject.Users.User.MaxPlainPasswordLength">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="RememberMeInput">
+                                        <span class="ripple"></span>
+                                        <span class="check"></span> Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button id="LoginButton" type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Login</button>
+                                <a class="btn btn-success" href="@Url.Action("Register")"><i class="fa fa-sign-in"></i> Register</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+                @{
+                    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().ToList();
+                }
+
+                @if (loginProviders.Count > 0)
+                {
+                    <p>Or login with:</p>
+
+                    using (Html.BeginForm("ExternalLogin", "Account", method: FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                        <input type="hidden" name="provider" value="" />
+
+                        foreach (var provider in loginProviders)
+                        {
+                            <a class="btn btn-default btn-sm social-login-link" title="@provider.AuthenticationType"
+                               data-provider="@provider.AuthenticationType"
+                               href="javascript:;">
+                                <i class="fa fa-@(provider.AuthenticationType.ToLower())"></i> @provider.AuthenticationType
+                            </a>
+                        }
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

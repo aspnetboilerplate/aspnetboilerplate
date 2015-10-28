@@ -10,9 +10,11 @@ namespace Reation.CMS.Migrations
         {
             AutomaticMigrationsEnabled = false;
             ContextKey = "CMS";
+           // if (EF6MySQL.DataAccess.CustomConnectionFactory.ServerName == "MySQL") { }
             SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
             SetHistoryContextFactory("MySql.Data.MySqlClient", (conn, schema) => new MySqlHistoryContext(conn, schema));
             CodeGenerator = new MySql.Data.Entity.MySqlMigrationCodeGenerator();
+        
         }
 
         protected override void Seed(CMS.EntityFramework.CMSDbContext context)

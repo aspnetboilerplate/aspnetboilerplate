@@ -1,0 +1,26 @@
+﻿@model MyAbpZeroProject.Web.Models.Account.RegisterResultViewModel
+@{
+    ViewBag.Title = "Successfully registered";
+}
+<h4>Successfully registered</h4>
+<ul>
+    <li><span class="text-muted">@L("NameSurname"):</span> @Model.NameAndSurname</li>
+    <li><span class="text-muted">@L("TenancyName"):</span> @Model.TenancyName</li>
+    <li><span class="text-muted">@L("UserName"):</span> @Model.UserName</li>
+    <li><span class="text-muted">@L("EmailAddress"):</span> @Model.EmailAddress</li>
+</ul>
+<div>
+    @if (Model.IsEmailConfirmationRequired)
+    {
+        <div class="alert alert-warning" role="alert">
+            A confirmation mail sent to @Model.EmailAddress. Please click link in the email in order to confirm your mail address.
+        </div>
+    }
+    
+    @if (!Model.IsActive)
+    {
+        <div class="alert alert-warning" role="alert">
+            Your account is waiting to be activated by system admin.
+        </div>
+    }
+</div>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-CN">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="用户已拥有此角色." />
+    <text name="Identity.UserNotInRole" value="用户不包含此角色." />
+    <text name="Identity.RoleNotFound" value="角色{0}不存在." />
+    <text name="Identity.PasswordMismatch" value="密码错误." />
+    <text name="Identity.InvalidUserName" value="用户名{0}不符合要求, 只能包含字母和数字." />
+    <text name="Identity.PasswordTooShort" value="密码至少要{0}位." />
+    <text name="Identity.PropertyTooShort" value="{0}不能为空." />
+    <text name="Identity.DuplicateName" value="名字{0}已被占用." />
+    <text name="Identity.UserAlreadyHasPassword" value="用户已设置密码." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="密码必须包含一位非字母特殊符号或数字." />
+    <text name="Identity.UserIdNotFound" value="用户不存在." />
+    <text name="Identity.InvalidToken" value="无效的token." />
+    <text name="Identity.InvalidEmail" value="邮箱地址 '{0}' 不符合要求." />
+    <text name="Identity.UserNameNotFound" value="用户 {0} 不存在." />
+    <text name="Identity.LockoutNotEnabled" value="对此用户，不能启用锁定." />
+    <text name="Identity.PasswordRequireUpper" value="密码至少要包含一位大写字母 ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="密码至少要包含一位数字 ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="密码至少要包含一位小写字母 ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="邮箱地址 '{0}' 已被占用." />
+    <text name="Identity.ExternalLoginExists" value="已存在此外部登陆用户." />
+    <text name="Identity.DefaultError" value="发生了一个未知的异常错误." />
+    <text name="InvalidTenancyName" value="租户名无效!" />
+    <text name="TenancyNameIsAlreadyTaken" value="租户名{0} 已被占用." />
+    <text name="RoleNameIsAlreadyTaken" value="角色名{0}已被占用." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="角色显示名称 {0}已被占用." />
+    <text name="CanNotDeleteStaticRole" value="不能删除系统预定义角色: {0}" />
+    <text name="CanNotRenameAdminUser" value="不能重命名默认管理员的用户名 {0}" />
+    <text name="CanNotDeleteAdminUser" value="不能删除默认管理员{0}!" />
+  </texts>
+</localizationDictionary>
