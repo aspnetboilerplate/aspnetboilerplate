@@ -100,6 +100,7 @@
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
+    <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
