@@ -22,6 +22,7 @@ namespace Abp.Localization.Sources
 
         /// <summary>
         /// Gets localized string for given name in current language.
+        /// Fallbacks to default language if not found in current culture.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
@@ -29,11 +30,31 @@ namespace Abp.Localization.Sources
 
         /// <summary>
         /// Gets localized string for given name and specified culture.
+        /// Fallbacks to default language if not found in given culture.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
         /// <returns>Localized string</returns>
         string GetString(string name, CultureInfo culture);
+
+        /// <summary>
+        /// Gets localized string for given name in current language.
+        /// Fallbacks to default language if not found in given culture.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <returns>Localized string</returns>
+        string GetStringOrNull(string name);
+        
+        /// <summary>
+        /// Gets localized string for given name and specified culture.
+        /// Fallbacks to default language if not found in given culture.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <returns>Localized string</returns>
+        string GetStringOrNull(string name, CultureInfo culture);
 
         /// <summary>
         /// Gets all strings in current language.

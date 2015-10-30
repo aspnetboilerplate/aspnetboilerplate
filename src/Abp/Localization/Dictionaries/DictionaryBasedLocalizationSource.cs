@@ -63,6 +63,37 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public string GetString(string name, CultureInfo culture)
         {
+            var value = GetStringOrNull(name, culture);
+
+            if (value == null)
+            {
+                var exceptionMessage = string.Format(
+                    "Can not find '{0}' in localization source '{1}'!",
+                    name, Name
+                    );
+
+                if (!_configuration.ReturnGivenTextIfNotFound)
+                {
+                    throw new AbpException(exceptionMessage);
+                }
+
+                LogHelper.Logger.Warn(exceptionMessage);
+
+                return _configuration.WrapGivenTextIfNotFound
+                    ? string.Format("[{0}]", name)
+                    : name;
+            }
+
+            return value;
+        }
+
+        public string GetStringOrNull(string name)
+        {
+            return GetStringOrNull(name, Thread.CurrentThread.CurrentUICulture);
+        }
+
+        public string GetStringOrNull(string name, CultureInfo culture)
+        {
             var cultureCode = culture.Name;
             var dictionaries = _dictionaryProvider.Dictionaries;
 
@@ -93,43 +124,16 @@ namespace Abp.Localization.Dictionaries
             }
 
             //Try to get from default language
-
             var defaultDictionary = _dictionaryProvider.DefaultDictionary;
             if (defaultDictionary == null)
             {
-                var exceptionMessage = string.Format(
-                    "Can not find '{0}' in localization source '{1}'! No default language is defined!",
-                    name, Name
-                    );
-
-                if (_configuration.ReturnGivenTextIfNotFound)
-                {
-                    LogHelper.Logger.Warn(exceptionMessage);
-                    return _configuration.WrapGivenTextIfNotFound
-                        ? string.Format("[{0}]", name)
-                        : name;
-                }
-
-                throw new AbpException(exceptionMessage);
+                return null;
             }
 
             var strDefault = defaultDictionary.GetOrNull(name);
             if (strDefault == null)
             {
-                var exceptionMessage = string.Format(
-                    "Can not find '{0}' in localization source '{1}'!",
-                    name, Name
-                    );
-
-                if (_configuration.ReturnGivenTextIfNotFound)
-                {
-                    LogHelper.Logger.Warn(exceptionMessage);
-                    return _configuration.WrapGivenTextIfNotFound
-                        ? string.Format("[{0}]", name)
-                        : name;
-                }
-
-                throw new AbpException(exceptionMessage);
+                return null;
             }
 
             return strDefault.Value;

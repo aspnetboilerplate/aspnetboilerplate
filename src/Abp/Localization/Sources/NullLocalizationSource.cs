@@ -40,6 +40,16 @@ namespace Abp.Localization.Sources
             return name;
         }
 
+        public string GetStringOrNull(string name)
+        {
+            return null;
+        }
+
+        public string GetStringOrNull(string name, CultureInfo culture)
+        {
+            return null;
+        }
+
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return _emptyStringArray;
