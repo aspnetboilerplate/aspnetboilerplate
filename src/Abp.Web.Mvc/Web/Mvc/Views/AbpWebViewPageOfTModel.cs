@@ -69,7 +69,7 @@ namespace Abp.Web.Mvc.Views
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, params object[] args)
+        protected virtual string L(string name, params object[] args)
         {
             return _localizationSource.GetString(name, args);
         }
@@ -115,7 +115,7 @@ namespace Abp.Web.Mvc.Views
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string Ls(string sourceName, string name, params object[] args)
+        protected virtual string Ls(string sourceName, string name, params object[] args)
         {
             return LocalizationHelper.GetSource(sourceName).GetString(name, args);
         }
@@ -140,7 +140,7 @@ namespace Abp.Web.Mvc.Views
         /// <param name="culture">culture information</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string Ls(string sourceName, string name, CultureInfo culture, params object[] args)
+        protected virtual string Ls(string sourceName, string name, CultureInfo culture, params object[] args)
         {
             return LocalizationHelper.GetSource(sourceName).GetString(name, culture, args);
         }
@@ -149,7 +149,7 @@ namespace Abp.Web.Mvc.Views
         /// Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
-        protected bool IsGranted(string permissionName)
+        protected virtual bool IsGranted(string permissionName)
         {
             return StaticPermissionChecker.Instance.IsGranted(permissionName);
         }
