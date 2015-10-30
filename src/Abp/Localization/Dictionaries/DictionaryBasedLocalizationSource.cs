@@ -189,7 +189,7 @@ namespace Abp.Localization.Dictionaries
         /// Extends the source with given dictionary.
         /// </summary>
         /// <param name="dictionary">Dictionary to extend the source</param>
-        public void Extend(ILocalizationDictionary dictionary)
+        public virtual void Extend(ILocalizationDictionary dictionary)
         {
             //Add
             ILocalizationDictionary existingDictionary;
