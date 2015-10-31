@@ -67,31 +67,33 @@ namespace Abp.Localization.Sources.Resource
             return value;
         }
 
-        public string GetStringOrNull(string name)
+        public string GetStringOrNull(string name, bool tryDefaults = true)
         {
+            //WARN: tryDefaults is not implemented!
             return ResourceManager.GetString(name);
         }
 
-        public string GetStringOrNull(string name, CultureInfo culture)
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
         {
+            //WARN: tryDefaults is not implemented!
             return ResourceManager.GetString(name, culture);
         }
 
         /// <summary>
         /// Gets all strings in current language.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings()
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
         /// <summary>
         /// Gets all strings in specified culture.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             return ResourceManager
-                .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
+                .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();

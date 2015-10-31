@@ -40,22 +40,22 @@ namespace Abp.Localization.Sources
             return name;
         }
 
-        public string GetStringOrNull(string name)
+        public string GetStringOrNull(string name, bool tryDefaults = true)
         {
             return null;
         }
 
-        public string GetStringOrNull(string name, CultureInfo culture)
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
         {
             return null;
         }
 
-        public IReadOnlyList<LocalizedString> GetAllStrings()
+        public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
             return _emptyStringArray;
         }
 
-        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             return _emptyStringArray;
         }

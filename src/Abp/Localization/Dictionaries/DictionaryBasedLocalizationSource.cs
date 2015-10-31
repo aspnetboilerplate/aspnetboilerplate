@@ -87,12 +87,12 @@ namespace Abp.Localization.Dictionaries
             return value;
         }
 
-        public string GetStringOrNull(string name)
+        public string GetStringOrNull(string name, bool tryDefaults = true)
         {
-            return GetStringOrNull(name, Thread.CurrentThread.CurrentUICulture);
+            return GetStringOrNull(name, Thread.CurrentThread.CurrentUICulture, tryDefaults);
         }
 
-        public string GetStringOrNull(string name, CultureInfo culture)
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
         {
             var cultureCode = culture.Name;
             var dictionaries = _dictionaryProvider.Dictionaries;
@@ -140,38 +140,41 @@ namespace Abp.Localization.Dictionaries
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<LocalizedString> GetAllStrings()
+        public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             var dictionaries = _dictionaryProvider.Dictionaries;
 
             //Create a temp dictionary to build
             var allStrings = new Dictionary<string, LocalizedString>();
 
-            //Fill all strings from default dictionary
-            var defaultDictionary = _dictionaryProvider.DefaultDictionary;
-            if (defaultDictionary != null)
+            if (includeDefaults)
             {
-                foreach (var defaultDictString in defaultDictionary.GetAllStrings())
+                //Fill all strings from default dictionary
+                var defaultDictionary = _dictionaryProvider.DefaultDictionary;
+                if (defaultDictionary != null)
                 {
-                    allStrings[defaultDictString.Name] = defaultDictString;
-                }
-            }
-
-            //Overwrite all strings from the language based on country culture
-            if (culture.Name.Length == 5)
-            {
-                ILocalizationDictionary langDictionary;
-                if (dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
-                {
-                    foreach (var langString in langDictionary.GetAllStrings())
+                    foreach (var defaultDictString in defaultDictionary.GetAllStrings())
                     {
-                        allStrings[langString.Name] = langString;
+                        allStrings[defaultDictString.Name] = defaultDictString;
+                    }
+                }
+
+                //Overwrite all strings from the language based on country culture
+                if (culture.Name.Length == 5)
+                {
+                    ILocalizationDictionary langDictionary;
+                    if (dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
+                    {
+                        foreach (var langString in langDictionary.GetAllStrings())
+                        {
+                            allStrings[langString.Name] = langString;
+                        }
                     }
                 }
             }
