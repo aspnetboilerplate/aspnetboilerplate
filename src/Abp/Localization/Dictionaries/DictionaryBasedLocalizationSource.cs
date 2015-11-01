@@ -6,7 +6,6 @@ using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
-using Abp.Logging;
 
 namespace Abp.Localization.Dictionaries
 {
@@ -21,7 +20,9 @@ namespace Abp.Localization.Dictionaries
         /// </summary>
         public string Name { get; private set; }
 
-        private ILocalizationConfiguration _configuration;
+        public ILocalizationDictionaryProvider DictionaryProvider { get { return _dictionaryProvider; } }
+
+        protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
 
         private readonly ILocalizationDictionaryProvider _dictionaryProvider;
 
@@ -34,7 +35,7 @@ namespace Abp.Localization.Dictionaries
         {
             if (name.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("name");                
+                throw new ArgumentNullException("name");
             }
 
             Name = name;
@@ -50,8 +51,8 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            _configuration = configuration;
-            _dictionaryProvider.Initialize(Name);
+            LocalizationConfiguration = configuration;
+            DictionaryProvider.Initialize(Name);
         }
 
         /// <inheritdoc/>
@@ -67,21 +68,7 @@ namespace Abp.Localization.Dictionaries
 
             if (value == null)
             {
-                var exceptionMessage = string.Format(
-                    "Can not find '{0}' in localization source '{1}'!",
-                    name, Name
-                    );
-
-                if (!_configuration.ReturnGivenTextIfNotFound)
-                {
-                    throw new AbpException(exceptionMessage);
-                }
-
-                LogHelper.Logger.Warn(exceptionMessage);
-
-                return _configuration.WrapGivenTextIfNotFound
-                    ? string.Format("[{0}]", name)
-                    : name;
+                return ReturnGivenNameOrThrowException(name);
             }
 
             return value;
@@ -95,7 +82,7 @@ namespace Abp.Localization.Dictionaries
         public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
         {
             var cultureCode = culture.Name;
-            var dictionaries = _dictionaryProvider.Dictionaries;
+            var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
             ILocalizationDictionary originalDictionary;
@@ -106,6 +93,11 @@ namespace Abp.Localization.Dictionaries
                 {
                     return strOriginal.Value;
                 }
+            }
+
+            if (!tryDefaults)
+            {
+                return null;
             }
 
             //Try to get from same language dictionary (without country code)
@@ -124,7 +116,7 @@ namespace Abp.Localization.Dictionaries
             }
 
             //Try to get from default language
-            var defaultDictionary = _dictionaryProvider.DefaultDictionary;
+            var defaultDictionary = DictionaryProvider.DefaultDictionary;
             if (defaultDictionary == null)
             {
                 return null;
@@ -148,7 +140,9 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
-            var dictionaries = _dictionaryProvider.Dictionaries;
+            //TODO: Can be optimized (example: if it's already default dictionary, skip overriding)
+            
+            var dictionaries = DictionaryProvider.Dictionaries;
 
             //Create a temp dictionary to build
             var allStrings = new Dictionary<string, LocalizedString>();
@@ -156,7 +150,7 @@ namespace Abp.Localization.Dictionaries
             if (includeDefaults)
             {
                 //Fill all strings from default dictionary
-                var defaultDictionary = _dictionaryProvider.DefaultDictionary;
+                var defaultDictionary = DictionaryProvider.DefaultDictionary;
                 if (defaultDictionary != null)
                 {
                     foreach (var defaultDictString in defaultDictionary.GetAllStrings())
@@ -200,9 +194,9 @@ namespace Abp.Localization.Dictionaries
         {
             //Add
             ILocalizationDictionary existingDictionary;
-            if (!_dictionaryProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            if (!DictionaryProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
             {
-                _dictionaryProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                DictionaryProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
                 return;
             }
 
@@ -212,6 +206,11 @@ namespace Abp.Localization.Dictionaries
             {
                 existingDictionary[localizedString.Name] = localizedString.Value;
             }
+        }
+
+        protected virtual string ReturnGivenNameOrThrowException(string name)
+        {
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name);
         }
     }
 }

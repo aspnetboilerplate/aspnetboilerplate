@@ -8,6 +8,11 @@ namespace Abp.Localization.Dictionaries
     public interface IDictionaryBasedLocalizationSource : ILocalizationSource
     {
         /// <summary>
+        /// Gets the dictionary provider.
+        /// </summary>
+        ILocalizationDictionaryProvider DictionaryProvider { get; }
+
+        /// <summary>
         /// Extends the source with given dictionary.
         /// </summary>
         /// <param name="dictionary">Dictionary to extend the source</param>

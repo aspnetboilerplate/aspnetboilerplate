@@ -50,7 +50,6 @@ namespace Abp.Localization.Sources
 
         /// <summary>
         /// Gets localized string for given name and specified culture.
-        /// Fallbacks to default language if not found in given culture.
         /// Returns null if not found.
         /// </summary>
         /// <param name="name">Key name</param>

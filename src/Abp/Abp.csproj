@@ -102,6 +102,7 @@
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
+    <Compile Include="Localization\LocalizationSourceHelper.cs" />
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
     <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />

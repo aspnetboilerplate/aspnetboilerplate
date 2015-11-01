@@ -7,7 +7,6 @@ using System.Resources;
 using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.Localization.Sources.Resource
 {
@@ -99,22 +98,9 @@ namespace Abp.Localization.Sources.Resource
                 .ToImmutableList();
         }
 
-        private string ReturnGivenNameOrThrowException(string name)
+        protected virtual string ReturnGivenNameOrThrowException(string name)
         {
-            var exceptionMessage = string.Format(
-                "Can not find '{0}' in localization source '{1}'!",
-                name, Name
-                );
-
-            if (_configuration.ReturnGivenTextIfNotFound)
-            {
-                LogHelper.Logger.Warn(exceptionMessage);
-                return _configuration.WrapGivenTextIfNotFound
-                    ? string.Format("[{0}]", name)
-                    : name;
-            }
-
-            throw new AbpException(exceptionMessage);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name);
         }
     }
 }
