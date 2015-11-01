@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Reflection;
 
 namespace Abp.Runtime.Validation.Interception
 {
@@ -68,7 +69,10 @@ namespace Abp.Runtime.Validation.Interception
 
             if (_validationErrors.Any())
             {
-                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.") { ValidationErrors = _validationErrors };
+                throw new AbpValidationException(
+                    "Method arguments are not valid! See ValidationErrors for details.",
+                    _validationErrors
+                    );
             }
 
             foreach (var parameterValue in _parameterValues)
@@ -86,7 +90,7 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut)
+                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
                     _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
@@ -145,6 +149,7 @@ namespace Abp.Runtime.Validation.Interception
                     DisplayName = property.Name,
                     MemberName = property.Name
                 };
+
                 foreach (var attribute in validationAttributes)
                 {
                     var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);

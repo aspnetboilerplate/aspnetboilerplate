@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Abp.Dependency;
@@ -13,17 +12,12 @@ namespace Abp.Web.Localization
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
         private readonly ILocalizationManager _localizationManager;
+        private readonly ICacheManager _cacheManager;
 
-        private readonly ThreadSafeObjectCache<string> _cache;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Abp.Web.Localization.LocalizationScriptManager"/> class.
-        /// </summary>
-        /// <param name="localizationManager">Localization manager.</param>
-        public LocalizationScriptManager(ILocalizationManager localizationManager)
+        public LocalizationScriptManager(ILocalizationManager localizationManager, ICacheManager cacheManager)
         {
             _localizationManager = localizationManager;
-            _cache = new ThreadSafeObjectCache<string>(new MemoryCache("__LocalizationScriptManager"), TimeSpan.FromDays(1));
+            _cacheManager = cacheManager;
         }
 
         /// <inheritdoc/>
@@ -35,21 +29,22 @@ namespace Abp.Web.Localization
         /// <inheritdoc/>
         public string GetScript(CultureInfo cultureInfo)
         {
-            return _cache.Get(cultureInfo.Name, BuildAll);
+            return _cacheManager
+                .GetCache(AbpCacheNames.LocalizationScripts)
+                .Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 
-        private string BuildAll()
+        private string BuildAll(CultureInfo cultureInfo)
         {
             var script = new StringBuilder();
-            var currentCulture = Thread.CurrentThread.CurrentUICulture;
 
             script.AppendLine("(function(){");
             script.AppendLine();
             script.AppendLine("    abp.localization = abp.localization || {};");
             script.AppendLine();
             script.AppendLine("    abp.localization.currentCulture = {");
-            script.AppendLine("        name: '" + currentCulture.Name + "',");
-            script.AppendLine("        displayName: '" + currentCulture.DisplayName + "'");
+            script.AppendLine("        name: '" + cultureInfo.Name + "',");
+            script.AppendLine("        displayName: '" + cultureInfo.DisplayName + "'");
             script.AppendLine("    };");
             script.AppendLine();
             script.Append("    abp.localization.languages = [");

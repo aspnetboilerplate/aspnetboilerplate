@@ -5,9 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 
-namespace Abp.Localization.Sources.Resource 
+namespace Abp.Localization.Sources.Resource
 {
     /// <summary>
     /// This class is used to simplify to create a localization source that
@@ -25,6 +26,8 @@ namespace Abp.Localization.Sources.Resource
         /// </summary>
         public ResourceManager ResourceManager { get; private set; }
 
+        private ILocalizationConfiguration _configuration;
+
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
         public ResourceFileLocalizationSource(string name, ResourceManager resourceManager)
@@ -36,50 +39,68 @@ namespace Abp.Localization.Sources.Resource
         /// <summary>
         /// This method is called by ABP before first usage.
         /// </summary>
-        public virtual void Initialize()
+        public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            
+            _configuration = configuration;
         }
 
-        /// <summary>
-        /// Gets localized string for given name in current language.
-        /// </summary>
-        /// <param name="name">Name</param>
-        /// <returns>Localized string</returns>
         public virtual string GetString(string name)
         {
+            var value = GetStringOrNull(name);
+            if (value == null)
+            {
+                return ReturnGivenNameOrThrowException(name);
+            }
+
+            return value;
+        }
+
+        public virtual string GetString(string name, CultureInfo culture)
+        {
+            var value = GetStringOrNull(name, culture);
+            if (value == null)
+            {
+                return ReturnGivenNameOrThrowException(name);
+            }
+
+            return value;
+        }
+
+        public string GetStringOrNull(string name, bool tryDefaults = true)
+        {
+            //WARN: tryDefaults is not implemented!
             return ResourceManager.GetString(name);
         }
 
-        /// <summary>
-        /// Gets localized string for given name and specified culture.
-        /// </summary>
-        /// <param name="name">Key name</param>
-        /// <param name="culture">culture information</param>
-        /// <returns>Localized string</returns>
-        public virtual string GetString(string name, CultureInfo culture)
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
         {
+            //WARN: tryDefaults is not implemented!
             return ResourceManager.GetString(name, culture);
         }
 
         /// <summary>
         /// Gets all strings in current language.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings()
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
         /// <summary>
         /// Gets all strings in specified culture.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             return ResourceManager
-                .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
+                .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
+        }
+
+        protected virtual string ReturnGivenNameOrThrowException(string name)
+        {
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using Abp.Logging;
 using Abp.Modules;
 using Abp.Web;
 using Abp.WebApi.Configuration;
@@ -11,6 +12,8 @@ using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Controllers.Filters;
+using Abp.WebApi.Runtime.Caching;
+using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 
 namespace Abp.WebApi
@@ -26,6 +29,8 @@ namespace Abp.WebApi
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
             IocManager.Register<IAbpWebApiModuleConfiguration, AbpWebApiModuleConfiguration>();
+
+            Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
         }
 
         /// <inheritdoc/>
@@ -41,6 +46,22 @@ namespace Abp.WebApi
             InitializeRoutes(httpConfiguration);
         }
 
+        public override void PostInitialize()
+        {
+            foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
+            {
+                IocManager.IocContainer.Register(
+                    Component.For(controllerInfo.InterceptorType).LifestyleTransient(),
+                    Component.For(controllerInfo.ApiControllerType)
+                        .Proxy.AdditionalInterfaces(controllerInfo.ServiceInterfaceType)
+                        .Interceptors(controllerInfo.InterceptorType)
+                        .LifestyleTransient()
+                    );
+
+                LogHelper.Logger.DebugFormat("Dynamic web api controller is created for type '{0}' with service name '{1}'.", controllerInfo.ServiceInterfaceType.FullName, controllerInfo.ServiceName);
+            }
+        }
+
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
@@ -53,7 +74,7 @@ namespace Abp.WebApi
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
-        private void InitializeFormatters(HttpConfiguration httpConfiguration)
+        private static void InitializeFormatters(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Formatters.Clear();
             var formatter = new JsonMediaTypeFormatter();
@@ -62,9 +83,28 @@ namespace Abp.WebApi
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
         }
 
-        private void InitializeRoutes(HttpConfiguration httpConfiguration)
+        private static void InitializeRoutes(HttpConfiguration httpConfiguration)
         {
-            DynamicApiRouteConfig.Register(httpConfiguration);
+            //Dynamic Web APIs
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpDynamicWebApi",
+                routeTemplate: "api/services/{*serviceNameWithAction}"
+                );
+
+            //Other routes
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_Clear",
+                routeTemplate: "api/AbpCache/Clear",
+                defaults: new { controller = "AbpCache", action = "Clear" }
+                );
+
+            httpConfiguration.Routes.MapHttpRoute(
+                name: "AbpCacheController_ClearAll",
+                routeTemplate: "api/AbpCache/ClearAll",
+                defaults: new { controller = "AbpCache", action = "ClearAll" }
+                );
         }
     }
 }

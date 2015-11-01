@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic
@@ -15,9 +16,19 @@ namespace Abp.WebApi.Controllers.Dynamic
         public string ServiceName { get; private set; }
 
         /// <summary>
-        /// Controller type.
+        /// Service interface type.
         /// </summary>
-        public Type Type { get; private set; }
+        public Type ServiceInterfaceType { get; private set; }
+
+        /// <summary>
+        /// Api Controller type.
+        /// </summary>
+        public Type ApiControllerType { get; private set; }
+
+        /// <summary>
+        /// Interceptor type.
+        /// </summary>
+        public Type InterceptorType { get; private set; }
 
         /// <summary>
         /// Dynamic Action Filters for this controller.
@@ -33,12 +44,16 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
         /// <param name="serviceName">Name of the service</param>
-        /// <param name="type">Controller type</param>
+        /// <param name="serviceInterfaceType">Service interface type</param>
+        /// <param name="apiControllerType">Api Controller type</param>
+        /// <param name="interceptorType">Interceptor type</param>
         /// <param name="filters">Filters</param>
-        public DynamicApiControllerInfo(string serviceName, Type type, IFilter[] filters = null)
+        public DynamicApiControllerInfo(string serviceName, Type serviceInterfaceType, Type apiControllerType, Type interceptorType, IFilter[] filters = null)
         {
             ServiceName = serviceName;
-            Type = type;
+            ServiceInterfaceType = serviceInterfaceType;
+            ApiControllerType = apiControllerType;
+            InterceptorType = interceptorType;
             Filters = filters ?? new IFilter[] { }; //Assigning or initialzing the action filters.
 
             Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase);
