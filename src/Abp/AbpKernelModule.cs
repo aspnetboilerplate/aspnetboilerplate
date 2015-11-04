@@ -82,11 +82,11 @@ namespace Abp
         {
             RegisterMissingComponents();
 
-            IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<SettingDefinitionManager>().Initialize();
             IocManager.Resolve<FeatureManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
-            IocManager.Resolve<SettingDefinitionManager>().Initialize();
+            IocManager.Resolve<LocalizationManager>().Initialize();
         }
 
         private void ConfigureCaches()

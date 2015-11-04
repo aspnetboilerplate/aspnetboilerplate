@@ -35,9 +35,4 @@ namespace Abp.Localization
             CultureInfo = cultureInfo;
         }
     }
-
-    public static class LocalizationSettingNames
-    {
-        public const string DefaultLanguage = "Abp.Localization.DefaultLanguage";
-    }
 }
