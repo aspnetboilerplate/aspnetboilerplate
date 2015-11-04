@@ -30,7 +30,7 @@ namespace Abp.Web.Localization
         public string GetScript(CultureInfo cultureInfo)
         {
             return _cacheManager
-                .GetCache<string, string>("AbpLocalizationScripts")
+                .GetCache(AbpCacheNames.LocalizationScripts)
                 .Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 

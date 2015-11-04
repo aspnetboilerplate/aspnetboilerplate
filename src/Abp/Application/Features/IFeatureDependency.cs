@@ -2,10 +2,13 @@ using System.Threading.Tasks;
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// Defines a feature dependency.
+    /// </summary>
     public interface IFeatureDependency
     {
         /// <summary>
-        /// Implementation should check depended features and returns true if dependencies are satisfied.
+        /// Checks depended features and returns true if dependencies are satisfied.
         /// </summary>
         Task<bool> IsSatisfiedAsync(IFeatureDependencyContext context);
     }

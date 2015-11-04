@@ -5,10 +5,17 @@ using Castle.DynamicProxy;
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// Intercepts methods to apply <see cref="RequiresFeatureAttribute"/>.
+    /// </summary>
     public class FeatureInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatureInterceptor"/> class.
+        /// </summary>
+        /// <param name="iocResolver">The ioc resolver.</param>
         public FeatureInterceptor(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
@@ -32,7 +39,7 @@ namespace Abp.Application.Features
             invocation.Proceed();
         }
 
-        private void CheckFeatures(List<RequiresFeatureAttribute> featureAttributes)
+        private void CheckFeatures(IEnumerable<RequiresFeatureAttribute> featureAttributes)
         {
             _iocResolver.Using<IFeatureChecker>(featureChecker =>
             {

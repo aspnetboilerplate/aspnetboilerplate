@@ -74,7 +74,7 @@ namespace Abp.Runtime.Caching
         Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null);
 
         /// <summary>
-        /// Removes a cache item by it's key.
+        /// Removes a cache item by it's key (does nothing if given key does not exists in the cache).
         /// </summary>
         /// <param name="key">Key</param>
         void Remove(TKey key);

@@ -14,7 +14,10 @@ using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
+using Abp.MultiTenancy;
 using Abp.Net.Mail;
+using Abp.Runtime.Caching;
+using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 
 namespace Abp
@@ -52,8 +55,9 @@ namespace Abp
                         Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
                         )));
 
+            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
-
+            
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
@@ -78,26 +82,26 @@ namespace Abp
         {
             RegisterMissingComponents();
 
-            IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<SettingDefinitionManager>().Initialize();
             IocManager.Resolve<FeatureManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
-            IocManager.Resolve<SettingDefinitionManager>().Initialize();
+            IocManager.Resolve<LocalizationManager>().Initialize();
         }
 
         private void ConfigureCaches()
         {
-            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.ApplicationSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
             });
 
-            Configuration.Caching.Configure(SettingManager.TenantSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.TenantSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
             });
 
-            Configuration.Caching.Configure(SettingManager.ApplicationSettingsCacheName, cache =>
+            Configuration.Caching.Configure(AbpCacheNames.UserSettings, cache =>
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
             });
@@ -108,6 +112,8 @@ namespace Abp
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
         }
     }
 }
