@@ -23,19 +23,19 @@ namespace Abp.Web
             }
 
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
-        }
 
-        /// <inheritdoc/>
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource(
                     AbpWebLocalizedMessages.SourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
                         )));
+        }
+
+        /// <inheritdoc/>
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());            
         }
     }
 }
