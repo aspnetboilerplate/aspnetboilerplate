@@ -55,7 +55,8 @@
                             $dfd.resolve({
                                 "Result": "OK",
                                 "Records": result.items || result[originalListAction.recordsField],
-                                "TotalRecordCount": result.totalCount
+                                "TotalRecordCount": result.totalCount,
+                                originalResult: result
                             });
                         })
                         .fail(function (error) {
@@ -78,7 +79,8 @@
                         .done(function (result) {
                             $dfd.resolve({
                                 "Result": "OK",
-                                "Record": originalCreateAction.recordField ? result[originalCreateAction.recordField] : result
+                                "Record": originalCreateAction.recordField ? result[originalCreateAction.recordField] : result,
+                                originalResult: result
                             });
                         })
                         .fail(function (error) {
@@ -99,7 +101,11 @@
 
                     originalUpdateAction.method(input)
                         .done(function (result) {
-                            var jtableResult = { "Result": "OK" };
+                            var jtableResult = {
+                                "Result": "OK",
+                                originalResult: result
+                            };
+
                             if (originalUpdateAction.returnsRecord) {
                                 if (originalUpdateAction.recordField) {
                                     jtableResult.Record = result[originalUpdateAction.recordField];
@@ -127,9 +133,10 @@
                     var input = $.extend({}, postData);
 
                     originalDeleteAction.method(input)
-                        .done(function () {
+                        .done(function (result) {
                             $dfd.resolve({
-                                "Result": "OK"
+                                "Result": "OK",
+                                originalResult: result
                             });
                         })
                         .fail(function (error) {
