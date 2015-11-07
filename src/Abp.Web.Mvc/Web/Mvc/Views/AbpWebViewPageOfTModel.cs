@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
@@ -152,6 +154,26 @@ namespace Abp.Web.Mvc.Views
         protected virtual bool IsGranted(string permissionName)
         {
             return StaticPermissionChecker.Instance.IsGranted(permissionName);
+        }
+
+        /// <summary>
+        /// Determines whether is given feature enabled.
+        /// </summary>
+        /// <param name="featureName">Name of the feature.</param>
+        /// <returns>True, if enabled; False if not.</returns>
+        protected virtual bool IsFeatureEnabled(string featureName)
+        {
+            return SingletonDependency<IFeatureChecker>.Instance.IsEnabled(featureName);
+        }
+
+        /// <summary>
+        /// Gets current value of a feature.
+        /// </summary>
+        /// <param name="featureName">Feature name</param>
+        /// <returns>Value of the feature</returns>
+        protected virtual string GetFeatureValue(string featureName)
+        {
+            return SingletonDependency<IFeatureChecker>.Instance.GetValue(featureName);
         }
     }
 }
