@@ -64,9 +64,9 @@ namespace Abp.Authorization
             return Permissions.Values
                 .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
                 .Where(p =>
-                    p.DependedFeature == null ||
+                    p.FeatureDependency == null ||
                     AbpSession.MultiTenancySide == MultiTenancySides.Host ||
-                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
+                    p.FeatureDependency.IsSatisfied(_featureDependencyContext)
                 ).ToImmutableList();
         }
 
@@ -75,9 +75,9 @@ namespace Abp.Authorization
             return Permissions.Values
                 .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                 .Where(p =>
-                    p.DependedFeature == null ||
+                    p.FeatureDependency == null ||
                     (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
-                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
+                    p.FeatureDependency.IsSatisfied(_featureDependencyContext)
                 ).ToImmutableList();
         }
         
