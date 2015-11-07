@@ -84,9 +84,9 @@ choice in this situation.</p>
 entities from database when it's needed. Say User class has a reference to Role 
 class. When you get a User from database, Role property is not filled. When you 
 first read the Role property, it's loaded from database. So, if you return such 
-an Entity to presentation layer, it can easily cause to retrive additonal 
+an Entity to presentation layer, it can easily cause to retrieve additonal 
 entities from database. If a serialization tool reads the entity, it reads all 
-properties recursively and again your complete database can be retrived (if 
+properties recursively and again your complete database can be retrieved (if 
 there are suitable relations between entities).</p>
 <p>We can say some more problems about using Entities in presentation layer. 
 It's best to do not reference the assembly containing domain (business) layer to 
