@@ -119,14 +119,14 @@ namespace Abp.Domain.Repositories
 
         public virtual TEntity InsertOrUpdate(TEntity entity)
         {
-            return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
+            return entity.IsTransient()
                 ? Insert(entity)
                 : Update(entity);
         }
         
         public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            return EqualityComparer<TPrimaryKey>.Default.Equals(entity.Id, default(TPrimaryKey))
+            return entity.IsTransient()
                 ? await InsertAsync(entity)
                 : await UpdateAsync(entity);
         }
