@@ -7,6 +7,7 @@ using Castle.Core.Logging;
 
 namespace Abp.AutoMapper
 {
+    [DependsOn(typeof (AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule
     {
         public ILogger Logger { get; set; }

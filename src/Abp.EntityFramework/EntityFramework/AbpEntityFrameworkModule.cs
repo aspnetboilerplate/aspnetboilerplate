@@ -13,6 +13,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
         public ILogger Logger { get; set; }

@@ -12,6 +12,7 @@ namespace Abp.Web
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]    
     public class AbpWebModule : AbpModule
     {
         /// <inheritdoc/>

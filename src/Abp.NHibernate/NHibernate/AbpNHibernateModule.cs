@@ -13,6 +13,7 @@ namespace Abp.NHibernate
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpNHibernateModule : AbpModule
     {
         /// <summary>
