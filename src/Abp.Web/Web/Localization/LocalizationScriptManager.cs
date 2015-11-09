@@ -29,9 +29,9 @@ namespace Abp.Web.Localization
         /// <inheritdoc/>
         public string GetScript(CultureInfo cultureInfo)
         {
-            return _cacheManager
-                .GetCache(AbpCacheNames.LocalizationScripts)
-                .Get(cultureInfo.Name, () => BuildAll(cultureInfo));
+            //NOTE: Disabled caching since it's not true (localization script is changed per user, per tenant, per culture...)
+            return BuildAll(cultureInfo);
+            //return _cacheManager.GetCache(AbpCacheNames.LocalizationScripts).Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 
         private string BuildAll(CultureInfo cultureInfo)
