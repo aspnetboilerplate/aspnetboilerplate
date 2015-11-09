@@ -164,16 +164,18 @@ namespace Abp.Domain.Repositories
 
         public abstract void Delete(TEntity entity);
         
-        public virtual async Task DeleteAsync(TEntity entity)
+        public virtual Task DeleteAsync(TEntity entity)
         {
             Delete(entity);
+            return Task.FromResult(0);
         }
 
         public abstract void Delete(TPrimaryKey id);
         
-        public virtual async Task DeleteAsync(TPrimaryKey id)
+        public virtual Task DeleteAsync(TPrimaryKey id)
         {
             Delete(id);
+            return Task.FromResult(0);
         }
 
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
