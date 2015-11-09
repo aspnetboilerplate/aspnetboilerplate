@@ -192,20 +192,7 @@ namespace Abp.Localization.Dictionaries
         /// <param name="dictionary">Dictionary to extend the source</param>
         public virtual void Extend(ILocalizationDictionary dictionary)
         {
-            //Add
-            ILocalizationDictionary existingDictionary;
-            if (!DictionaryProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
-            {
-                DictionaryProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-                return;
-            }
-
-            //Override
-            var localizedStrings = dictionary.GetAllStrings();
-            foreach (var localizedString in localizedStrings)
-            {
-                existingDictionary[localizedString.Name] = localizedString.Value;
-            }
+            DictionaryProvider.Extend(dictionary);
         }
 
         protected virtual string ReturnGivenNameOrThrowException(string name)
