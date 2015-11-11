@@ -12,11 +12,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
     internal class TypeScriptProxyGenerator : ITransientDependency
     {
         private DynamicApiControllerInfo _controllerInfo;
-        readonly HashSet<Type> _typesToBeDone = new HashSet<Type>();
-        private readonly HashSet<Type> _doneTypes = new HashSet<Type>();
+        private HashSet<Type> _typesToBeDone = new HashSet<Type>();
+        private HashSet<Type> _doneTypes = new HashSet<Type>();
+        private string _servicePrefix = "";
 
-        public string Generate(DynamicApiControllerInfo controllerInfo)
+        public string Generate(DynamicApiControllerInfo controllerInfo,string servicePrefix)
         {
+            if (_servicePrefix != servicePrefix)
+            {
+                //if there is a change in servicePrefix, we need to generate the types again
+                _servicePrefix = servicePrefix;
+                _typesToBeDone = new HashSet<Type>();
+                _doneTypes = new HashSet<Type>();
+            }
             _controllerInfo = controllerInfo;
 
             var script = new StringBuilder();
