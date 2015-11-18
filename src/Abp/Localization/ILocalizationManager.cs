@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using Abp.Localization.Sources;
 
 namespace Abp.Localization
@@ -32,22 +31,5 @@ namespace Abp.Localization
         /// </summary>
         /// <returns>List of sources</returns>
         IReadOnlyList<ILocalizationSource> GetAllSources();
-
-        /// <summary>
-        /// Gets a localized string in current language.
-        /// </summary>
-        /// <param name="sourceName">Name of the localization source</param>
-        /// <param name="name">Key name to get localized string</param>
-        /// <returns>Localized string</returns>
-        string GetString(string sourceName, string name);
-
-        /// <summary>
-        /// Gets a localized string in specified language.
-        /// </summary>
-        /// <param name="sourceName">Name of the localization source</param>
-        /// <param name="name">Key name to get localized string</param>
-        /// <param name="culture">culture</param>
-        /// <returns>Localized string</returns>
-        string GetString(string sourceName, string name, CultureInfo culture);
     }
 }

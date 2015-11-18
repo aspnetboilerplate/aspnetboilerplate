@@ -50,7 +50,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Depended feature(s) of this permission.
         /// </summary>
-        public IFeatureDependency DependedFeature { get; set; }
+        public IFeatureDependency FeatureDependency { get; set; }
 
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
@@ -69,14 +69,14 @@ namespace Abp.Authorization
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
-        /// <param name="dependedFeature">Depended feature(s) of this permission</param>
+        /// <param name="featureDependency">Depended feature(s) of this permission</param>
         public Permission(
             string name,
             ILocalizableString displayName = null,
             bool isGrantedByDefault = false,
             ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency dependedFeature = null)
+            IFeatureDependency featureDependency = null)
         {
             if (name == null)
             {
@@ -88,7 +88,7 @@ namespace Abp.Authorization
             IsGrantedByDefault = isGrantedByDefault;
             Description = description;
             MultiTenancySides = multiTenancySides;
-            DependedFeature = dependedFeature;
+            FeatureDependency = featureDependency;
 
             _children = new List<Permission>();
         }
@@ -104,9 +104,9 @@ namespace Abp.Authorization
             bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency dependedFeature = null)
+            IFeatureDependency featureDependency = null)
         {
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, dependedFeature) { Parent = this };
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, featureDependency) { Parent = this };
             _children.Add(permission);
             return permission;
         }

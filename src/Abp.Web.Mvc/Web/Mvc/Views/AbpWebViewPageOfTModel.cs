@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
@@ -69,7 +71,7 @@ namespace Abp.Web.Mvc.Views
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, params object[] args)
+        protected virtual string L(string name, params object[] args)
         {
             return _localizationSource.GetString(name, args);
         }
@@ -98,12 +100,80 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
+        /// Gets localized string from given source for given key name and current language.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="name">Key name</param>
+        /// <returns>Localized string</returns>
+        protected virtual string Ls(string sourceName, string name)
+        {
+            return LocalizationHelper.GetSource(sourceName).GetString(name);
+        }
+
+        /// <summary>
+        /// Gets localized string from given source  for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="name">Key name</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        protected virtual string Ls(string sourceName, string name, params object[] args)
+        {
+            return LocalizationHelper.GetSource(sourceName).GetString(name, args);
+        }
+
+        /// <summary>
+        /// Gets localized string from given source  for given key name and specified culture information.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <returns>Localized string</returns>
+        protected virtual string Ls(string sourceName, string name, CultureInfo culture)
+        {
+            return LocalizationHelper.GetSource(sourceName).GetString(name, culture);
+        }
+
+        /// <summary>
+        /// Gets localized string from given source  for given key name and current language with formatting strings.
+        /// </summary>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="name">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="args">Format arguments</param>
+        /// <returns>Localized string</returns>
+        protected virtual string Ls(string sourceName, string name, CultureInfo culture, params object[] args)
+        {
+            return LocalizationHelper.GetSource(sourceName).GetString(name, culture, args);
+        }
+
+        /// <summary>
         /// Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
-        protected bool IsGranted(string permissionName)
+        protected virtual bool IsGranted(string permissionName)
         {
             return StaticPermissionChecker.Instance.IsGranted(permissionName);
+        }
+
+        /// <summary>
+        /// Determines whether is given feature enabled.
+        /// </summary>
+        /// <param name="featureName">Name of the feature.</param>
+        /// <returns>True, if enabled; False if not.</returns>
+        protected virtual bool IsFeatureEnabled(string featureName)
+        {
+            return SingletonDependency<IFeatureChecker>.Instance.IsEnabled(featureName);
+        }
+
+        /// <summary>
+        /// Gets current value of a feature.
+        /// </summary>
+        /// <param name="featureName">Feature name</param>
+        /// <returns>Value of the feature</returns>
+        protected virtual string GetFeatureValue(string featureName)
+        {
+            return SingletonDependency<IFeatureChecker>.Instance.GetValue(featureName);
         }
     }
 }

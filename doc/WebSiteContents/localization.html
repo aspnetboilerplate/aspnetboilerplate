@@ -20,7 +20,8 @@
 applications have more than one language. ASP.NET Boilerplate provides a 
 flexible localization system for an application.</p>
 <p>The first thing is to declare which languages are supported. This is done
-<strong>PreInitialize</strong> event of your
+in
+<strong>PreInitialize</strong> method of your
 <a href="/Pages/Documents/Module-System">module</a> as shown below:</p>
 <pre lang="cs">Configuration.Localization.Languages.Add(new LanguageInfo(&quot;en&quot;, &quot;English&quot;, &quot;famfamfam-flag-england&quot;, true));
 Configuration.Localization.Languages.Add(new LanguageInfo(&quot;tr&quot;, &quot;T&#252;rk&#231;e&quot;, &quot;famfamfam-flag-tr&quot;));</pre>
@@ -152,9 +153,10 @@ it's <strong>GetString</strong> method.</p>
 <p>GetString method gets the string from the localization source based on
 <strong>current thread's UI culture</strong>. If not found, it fallbacks to
 <strong>default language</strong>. If it's not defined anywhere then it returns 
-the <strong>given string</strong> by wrapping with [ and ] by default (instead 
+the <strong>given string</strong> by wrapping with <strong>[</strong> and 
+<strong>]</strong> by default (instead 
 of throwing Exception). This behavior is configurable (you can use 
-Configuration.Localization property in PreInitialize of your
+Configuration.Localization.ReturnGivenTextIfNotFound property in PreInitialize of your
 <a href="/Pages/Documents/Module-System">module</a>).</p>
 	<p>To do not repeat source name always, you can first <strong>get the source</strong>, 
 then get a string from the source:</p>
@@ -305,8 +307,10 @@ suggested to do not sort texts by name. Sort them by creation date. Thus, when
 someone translates it to another language, he/she can easily see which texts are 
 added newly.</p>
 <p>You can also create your own localization source and integrate it with 
-ASP.NET Boilerplate. by implementing <strong>ILocalizationSource</strong> 
-interface.</p>
+ASP.NET Boilerplate, by implementing <strong>ILocalizationSource</strong> 
+interface. <strong>Module-zero</strong> implements it to create a <strong>
+database based</strong> and <strong>per-tenant</strong> localization source. See
+<a href="/Pages/Documents/Zero/Language-Management">documentation</a>.</p>
 
 </div>
 

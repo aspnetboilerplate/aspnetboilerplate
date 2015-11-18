@@ -8,10 +8,10 @@ using Castle.Core.Logging;
 namespace Abp.Logging
 {
     /// <summary>
-    /// This class can be used to write logs from somewhere where it's a little hard to get a reference to the <see cref="ILogger"/>.
-    /// Normally, get <see cref="ILogger"/> using property injection.
+    /// This class can be used to write logs from somewhere where it's a hard to get a reference to the <see cref="ILogger"/>.
+    /// Normally, use <see cref="ILogger"/> with property injection wherever it's possible.
     /// </summary>
-    internal class LogHelper
+    public static class LogHelper
     {
         /// <summary>
         /// A reference to the logger.
@@ -20,8 +20,8 @@ namespace Abp.Logging
 
         static LogHelper()
         {
-            Logger = IocManager.Instance.IsRegistered(typeof (ILogger))
-                ? IocManager.Instance.Resolve<ILogger>()
+            Logger = IocManager.Instance.IsRegistered(typeof (ILoggerFactory))
+                ? IocManager.Instance.Resolve<ILoggerFactory>().Create(typeof(LogHelper))
                 : NullLogger.Instance;
         }
 

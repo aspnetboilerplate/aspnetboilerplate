@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Dependency\SingletonDependency.cs" />
     <Compile Include="Application\Features\Feature.cs" />
     <Compile Include="Application\Features\FeatureChecker.cs" />
     <Compile Include="Application\Features\FeatureCheckerExtensions.cs" />
@@ -100,9 +101,13 @@
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
+    <Compile Include="Localization\LocalizationSettingNames.cs" />
+    <Compile Include="Localization\LocalizationSettingProvider.cs" />
+    <Compile Include="Localization\LocalizationSourceHelper.cs" />
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
     <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
+    <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />

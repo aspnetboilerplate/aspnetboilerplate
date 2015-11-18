@@ -172,23 +172,89 @@ below:</p>
     {
     }
 }</pre>
-<p>Finally, we should enable LDAP authentication in
-<a href="/Pages/Documents/Module-System">PreInitialize</a> of our module:</p>
-<pre lang="cs">Configuration.Modules.ZeroLdap().Enable(typeof(MyLdapAuthenticationSource));</pre>
-<p>If you don't define any settings, LDAP authentication works for current 
-domain if your application runs in a domain with appropriate privileges.</p>
+<p>Lastly, we should set a module dependency to <strong>AbpZeroLdapModule</strong> 
+and <strong>enable</strong> LDAP with the auth source created above:</p>
+	<pre lang="cs"><strong>[DependsOn(typeof(AbpZeroLdapModule))]
+</strong>public class MyApplicationCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+<strong>        Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+</strong>    }
 
-<p>As you can see in the MyLdapAuthenticationSource constructor, LdapAuthenticationSource expects
-<strong>ILdapSettings</strong> as a constructor argument. This interface is used 
-to get LDAP settings like domain, user name and password to connect to Active 
-Directory. Default implementation (LdapSettings class) gets these settings from 
-the <a href="/Pages/Documents/Setting-Management">setting manager</a>.</p>
-<p>LdapSettingNames class defines constants for setting names. You can use these 
-constant strings while changing settings (or getting if you need). LDAP settings 
-are per tenant (for multi-tenant applications). So, different tenants have 
+    ...
+}</pre>
+	<p>After these steps, LDAP module will be enabled for your application. But 
+	LDAP auth is not enabled by default. We can enable it using settings.</p>
+
+<h5>Settings</h5>
+	<p><strong>LdapSettingNames</strong> class defines constants for setting names. You can use these 
+constant names while changing settings (or getting settings). LDAP settings 
+are <strong>per tenant</strong> (for multi-tenant applications). So, different tenants have 
 different settings (see setting definitions on
 <a href="https://github.com/aspnetboilerplate/module-zero/blob/master/src/Abp.Zero.Ldap/Ldap/Configuration/LdapSettingProvider.cs" target="_blank">
-github</a>).</p>
+github</a>).&nbsp;</p>
+	<p>As you can see in the MyLdapAuthenticationSource<strong> constructor</strong>, LdapAuthenticationSource expects
+<strong>ILdapSettings</strong> as a constructor argument. This interface is used 
+to get LDAP settings like domain, user name and password to connect to Active 
+Directory. Default implementation (<strong>LdapSettings</strong> class) gets these settings from 
+the <a href="/Pages/Documents/Setting-Management">setting manager</a>.</p>
+	<p>If you work with Setting manager, then no problem. You can change LDAP 
+	settings using <a href="/Pages/Documents/Setting-Management">setting manager 
+	API</a>. If you want, you can add an initial/seed data to database to enable 
+	LDAP auth by default.</p>
+	<p>Note: If you don't define domain, username and password, LDAP authentication works for current 
+domain if your application runs in a domain with appropriate privileges.</p>
+	<h5>Custom Settings</h5>
+	<p>If you want to define 
+	another setting source, you can implement a custom ILdapSettings class as 
+	shown below:</p>
+	<pre lang="cs">public class MyLdapSettings : <strong>ILdapSettings</strong>
+{
+    public async Task&lt;bool&gt; GetIsEnabled(int? tenantId)
+    {
+        return true;
+    }
+
+    public async Task&lt;ContextType&gt; GetContextType(int? tenantId)
+    {
+        return ContextType.Domain;
+    }
+
+    public async Task&lt;string&gt; GetContainer(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetDomain(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetUserName(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetPassword(int? tenantId)
+    {
+        return null;
+    }
+}</pre>
+	<p>And register it to IOC in PreInitialize of your module:</p>
+	<pre lang="cs">[DependsOn(typeof(AbpZeroLdapModule))]
+public class MyApplicationCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+<strong>        IocManager.Register&lt;ILdapSettings, MyLdapSettings&gt;(); //change default setting source</strong>
+        Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+    }
+
+    ...
+}</pre>
+
+<p>Then you can get LDAP settings from any other source.</p>
 
 </div>
 

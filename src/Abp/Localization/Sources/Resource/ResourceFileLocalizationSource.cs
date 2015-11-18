@@ -7,7 +7,6 @@ using System.Resources;
 using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.Localization.Sources.Resource
 {
@@ -45,14 +44,9 @@ namespace Abp.Localization.Sources.Resource
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Gets localized string for given name in current language.
-        /// </summary>
-        /// <param name="name">Name</param>
-        /// <returns>Localized string</returns>
         public virtual string GetString(string name)
         {
-            var value = ResourceManager.GetString(name);
+            var value = GetStringOrNull(name);
             if (value == null)
             {
                 return ReturnGivenNameOrThrowException(name);
@@ -61,59 +55,52 @@ namespace Abp.Localization.Sources.Resource
             return value;
         }
 
-        /// <summary>
-        /// Gets localized string for given name and specified culture.
-        /// </summary>
-        /// <param name="name">Key name</param>
-        /// <param name="culture">culture information</param>
-        /// <returns>Localized string</returns>
         public virtual string GetString(string name, CultureInfo culture)
         {
-            var value = ResourceManager.GetString(name, culture);
+            var value = GetStringOrNull(name, culture);
             if (value == null)
             {
                 return ReturnGivenNameOrThrowException(name);
             }
 
             return value;
+        }
+
+        public string GetStringOrNull(string name, bool tryDefaults = true)
+        {
+            //WARN: tryDefaults is not implemented!
+            return ResourceManager.GetString(name);
+        }
+
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
+        {
+            //WARN: tryDefaults is not implemented!
+            return ResourceManager.GetString(name, culture);
         }
 
         /// <summary>
         /// Gets all strings in current language.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings()
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
         /// <summary>
         /// Gets all strings in specified culture.
         /// </summary>
-        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             return ResourceManager
-                .GetResourceSet(culture, true, true) //TODO: true or false for createIfNotExists? Test it's effect.
+                .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
         }
 
-        private string ReturnGivenNameOrThrowException(string name)
+        protected virtual string ReturnGivenNameOrThrowException(string name)
         {
-            var exceptionMessage = string.Format(
-                "Can not find '{0}' in localization source '{1}'!",
-                name, Name
-                );
-
-            if (_configuration.ReturnGivenTextIfNotFound)
-            {
-                LogHelper.Logger.Warn(exceptionMessage);
-                return _configuration.WrapGivenTextIfNotFound
-                    ? string.Format("[{0}]", name)
-                    : name;
-            }
-
-            throw new AbpException(exceptionMessage);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name);
         }
     }
 }

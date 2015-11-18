@@ -33,7 +33,20 @@ namespace Abp.Modules
         /// <returns>Sorted list</returns>
         public List<AbpModuleInfo> GetSortedModuleListByDependency()
         {
-            return this.SortByDependencies(x => x.Dependencies).ToList();
+            var sortedModules = this.SortByDependencies(x => x.Dependencies);
+            EnsureKernelModuleToBeFirst(sortedModules);
+            return sortedModules;
+        }
+
+        private static void EnsureKernelModuleToBeFirst(List<AbpModuleInfo> sortedModules)
+        {
+            var kernelModuleIndex = sortedModules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            if (kernelModuleIndex > 0)
+            {
+                var kernelModule = sortedModules[kernelModuleIndex];
+                sortedModules.RemoveAt(kernelModuleIndex);
+                sortedModules.Insert(0, kernelModule);
+            }
         }
     }
 }
