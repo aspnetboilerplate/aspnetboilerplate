@@ -44,7 +44,11 @@ namespace Abp.Web.Settings
                     script.AppendLine();
                 }
 
-                script.Append("        '" + settingDefinition.Name.Replace("'", @"\'") + "': '" + (await _settingManager.GetSettingValueAsync(settingDefinition.Name)).Replace(@"\", @"\\").Replace("'", @"\'") + "'");
+                var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
+
+                script.Append("        '" +
+                              settingDefinition.Name .Replace("'", @"\'") + "': " +
+                              (settingValue == null ? "null" : "'" + settingValue.Replace(@"\", @"\\").Replace("'", @"\'") + "'"));
 
                 ++added;
             }

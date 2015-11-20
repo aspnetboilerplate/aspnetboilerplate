@@ -19,5 +19,23 @@ namespace Abp.Localization.Dictionaries.Xml
         {
             SourceName = sourceName;
         }
+
+        public void Extend(ILocalizationDictionary dictionary)
+        {
+            //Add
+            ILocalizationDictionary existingDictionary;
+            if (!Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            {
+                Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                return;
+            }
+
+            //Override
+            var localizedStrings = dictionary.GetAllStrings();
+            foreach (var localizedString in localizedStrings)
+            {
+                existingDictionary[localizedString.Name] = localizedString.Value;
+            }
+        }
     }
 }

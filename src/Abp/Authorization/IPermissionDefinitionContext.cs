@@ -17,7 +17,7 @@ namespace Abp.Authorization
         /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
-        /// <param name="dependedFeature">Depended feature(s) of this permission</param>
+        /// <param name="featureDependency">Depended feature(s) of this permission</param>
         /// <returns>New created permission</returns>
         Permission CreatePermission(
             string name, 
@@ -25,7 +25,7 @@ namespace Abp.Authorization
             bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency dependedFeature = null
+            IFeatureDependency featureDependency = null
             );
 
         /// <summary>

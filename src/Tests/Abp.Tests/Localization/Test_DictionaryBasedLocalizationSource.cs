@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization.Dictionaries;
-using Abp.Localization.Sources;
-using NSubstitute;
+using Abp.Localization.Dictionaries.Xml;
 using Shouldly;
 using Xunit;
 
@@ -17,31 +15,7 @@ namespace Abp.Tests.Localization
 
         public Test_DictionaryBasedLocalizationSource()
         {
-            var dictionaryProvider = Substitute.For<ILocalizationDictionaryProvider>();
-
-            var dictionaries = new Dictionary<string, ILocalizationDictionary>();
-            dictionaries["en"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("en"))
-            {
-                {"hello", "Hello"},
-                {"world", "World"},
-                {"fourtyTwo", "Fourty Two (42)"}
-            };
-
-            dictionaries["tr"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
-            {
-                {"hello", "Merhaba"},
-                {"world", "Dünya"}
-            };
-
-            dictionaries["tr-TR"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr-TR"))
-            {
-                {"world", "Yeryüzü"}
-            };
-
-            dictionaryProvider.Dictionaries.Returns(dictionaries);
-            dictionaryProvider.DefaultDictionary.Returns(dictionaries["en"]);
-
-            _localizationSource = new DictionaryBasedLocalizationSource("Test", dictionaryProvider);
+            _localizationSource = new DictionaryBasedLocalizationSource("Test", new FakeLocalizationDictionary());
             _localizationSource.Initialize(new LocalizationConfiguration(), new IocManager());
         }
 
@@ -103,6 +77,33 @@ namespace Abp.Tests.Localization
         public void Should_Return_Given_Text_If_Not_Found()
         {
             _localizationSource.GetString("An undefined text").ShouldBe("[An undefined text]");
+        }
+
+        private class FakeLocalizationDictionary : LocalizationDictionaryProviderBase
+        {
+            public FakeLocalizationDictionary()
+            {
+                Dictionaries["en"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("en"))
+            {
+                {"hello", "Hello"},
+                {"world", "World"},
+                {"fourtyTwo", "Fourty Two (42)"}
+            };
+
+                Dictionaries["tr"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
+            {
+                {"hello", "Merhaba"},
+                {"world", "Dünya"}
+            };
+
+                Dictionaries["tr-TR"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr-TR"))
+            {
+                {"world", "Yeryüzü"}
+            };
+
+
+                DefaultDictionary = Dictionaries["en"];
+            }
         }
     }
 }
