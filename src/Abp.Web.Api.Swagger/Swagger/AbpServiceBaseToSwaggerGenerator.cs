@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Abp.Web.Api.Swagger.Swagger;
 
 namespace Abp.Web.Api.Swagger
 {
@@ -25,7 +26,7 @@ namespace Abp.Web.Api.Swagger
         }
 
       
-        public SwaggerService Generate(Type type, InterfaceMapping map, string excludedMethodName = "Swagger")
+        public SwaggerService Generate(Type type, InterfaceMapping map, string excludedMethodName = "Swagger",string controllernameused=null)
         {
             _service = new SwaggerService();
             _serviceType = type;
@@ -54,7 +55,7 @@ namespace Abp.Web.Api.Swagger
                 var operation = new SwaggerOperation();
                 operation.OperationId = methodName;
 
-                var httpPath = GetHttpPath(operation, method, parameters, schemaResolver);
+                var httpPath = GetHttpPath(operation, method, parameters, schemaResolver, controllernameused);
 
                 LoadParameters(operation, parameters, schemaResolver);
                 LoadReturnType(operation, method, schemaResolver);
@@ -87,7 +88,7 @@ namespace Abp.Web.Api.Swagger
                 operation.Description = descriptionAttribute.Description;
         }
 
-        private string GetHttpPath(SwaggerOperation operation, MethodInfo method, List<ParameterInfo> parameters, ISchemaResolver schemaResolver)
+        private string GetHttpPath(SwaggerOperation operation, MethodInfo method, List<ParameterInfo> parameters, ISchemaResolver schemaResolver,string controllernameused)
         {
             var httpPath = string.Empty;
 
@@ -106,8 +107,16 @@ namespace Abp.Web.Api.Swagger
             }
             else
             {
+                //Abp 约定
+                var controllername = _serviceType.Name.Replace("AppService", string.Empty);
+                controllername = controllername.Replace("Service", string.Empty);
+                if (!string.IsNullOrEmpty(controllernameused))
+                {
+                    controllername = controllernameused;
+                }
+
                 httpPath = _defaultRouteTemplate
-                    .Replace("{controller}", _serviceType.Name.Replace("AppService", string.Empty))
+                    .Replace("{controller}",controllername )
                     .Replace("{action}", method.Name);
             }
 

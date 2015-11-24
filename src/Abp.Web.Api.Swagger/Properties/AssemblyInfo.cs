@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Abp;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -20,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("3ff75ee5-f62a-4347-81ec-bd48e8f610d3")]
+[assembly: Guid("11826d21-9a81-4fc0-8918-38d15a77fbf9")]
 
 // 程序集的版本信息由下面四个值组成: 
 //
@@ -32,5 +33,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion(AbpConsts.CurrentVersion)]
+[assembly: AssemblyFileVersion(AbpConsts.CurrentVersion)]

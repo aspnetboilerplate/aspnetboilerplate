@@ -33,21 +33,57 @@ namespace Abp.Swagger
                 .ToArray();
         }
 
-    
+        public string GetAbpServiceBaseClassByInterface(string  interfacename)
+        {
+            var assembly = Assembly.LoadFrom(_assemblyPath);
+            return assembly.ExportedTypes
+                .Where(t => t.BaseType != null && t.BaseType.Name == "AppServiceBase" && t.GetInterface(interfacename) != null)
+                .Select(p=>p.FullName)
+                .FirstOrDefault();
+                
+               
+        }
+
+        /// <summary>Gets the available controller classes from the given assembly.</summary>
+        /// <returns>The controller classes.</returns>
+        public string[] GetClasses()
+        {
+            if (File.Exists(_assemblyPath))
+            {
+                using (var isolated = new AppDomainIsolation<NSwagServiceLoader>())
+                    return isolated.Object.GetClasses(_assemblyPath);
+            }
+            return new string[] { };
+        }
 
 
-        public SwaggerService FromAbpApplicationMoudleAssembly( string controllerClassName, string urlTemplate)
+        public SwaggerService FromAbpApplicationMoudleAssembly( string controllerClassName, string urlTemplate,string controllernameused)
         {
             var assembly = Assembly.LoadFrom(_assemblyPath);
             var type = assembly.GetType(controllerClassName);
             var interfacetype = type.GetInterface("I" + type.Name);
+            if (interfacetype==null)
+            {
+                return null;
+            }
             var map = type.GetInterfaceMap(interfacetype);
+            if (map.InterfaceMethods.Length==0)
+            {
+                return null;
+            }
             var generator = new AbpServiceBaseToSwaggerGenerator(urlTemplate);
-            return generator.Generate(type,map);
+            return generator.Generate(type, map, controllernameused:controllernameused);
             
         }
 
-       
+        /// <summary>Generates the Swagger definition for the given classes without operations (used for class generation).</summary>
+        /// <param name="className">The class name.</param>
+        /// <returns>The Swagger definition.</returns>
+        public SwaggerService FromAssemblyType(string className)
+        {
+            using (var isolated = new AppDomainIsolation<NSwagServiceLoader>())
+                return SwaggerService.FromJson(isolated.Object.FromAssemblyType(_assemblyPath, className));
+        }
 
         private class NSwagServiceLoader : MarshalByRefObject
         {

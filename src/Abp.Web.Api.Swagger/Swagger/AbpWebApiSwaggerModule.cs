@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Net.Http.Formatting;
+using System.Reflection;
+using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Web.Http.Dispatcher;
 using Abp.Logging;
 using Abp.Modules;
 using Abp.Web;
@@ -22,7 +26,10 @@ namespace Abp.WebApi
     {
 
 
-       
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        }
      
     }
 }

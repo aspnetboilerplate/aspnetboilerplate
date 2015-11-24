@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Abp.Web.Api.Swagger
+namespace Abp.Web.Api.Swagger.Swagger
 {
     /// <summary>A <see cref="JsonSchemaGenerator"/> which only generate the schema for the root type. 
     /// Referenced types are added to the service's Definitions collection. </summary>

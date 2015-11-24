@@ -35,6 +35,8 @@ namespace NJsonSchema
 
             if (type == typeof(string))
                 return new JsonObjectTypeDescription(JsonObjectType.String, false);
+            if (type == typeof(Guid))
+                return new JsonObjectTypeDescription(JsonObjectType.String, false);
 
             if (type == typeof(DateTime))
                 return new JsonObjectTypeDescription(JsonObjectType.String, true, false, JsonFormatStrings.DateTime);

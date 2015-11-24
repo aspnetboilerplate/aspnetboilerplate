@@ -38,7 +38,20 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +59,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\HttpConfigurationExtensions.cs" />
+    <Compile Include="Application\RedirectHandler.cs" />
+    <Compile Include="Application\SwaggerDocsConfig.cs" />
+    <Compile Include="Application\SwaggerDocsHandler.cs" />
+    <Compile Include="Application\SwaggerDocument.cs" />
+    <Compile Include="Application\SwaggerUiConfig.cs" />
+    <Compile Include="Application\SwaggerUiHandler.cs" />
+    <Compile Include="Controller\SwaggerInfoController.cs" />
     <Compile Include="NJsonSchema\Collections\ObservableDictionary.cs" />
     <Compile Include="NJsonSchema\ISchemaResolver.cs" />
     <Compile Include="NJsonSchema\JsonFormatStrings.cs" />
@@ -82,8 +103,13 @@
     <Compile Include="NSwag\SwaggerSecuritySchemeType.cs" />
     <Compile Include="NSwag\SwaggerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwaggerUi\EmbeddedAssetDescriptor.cs" />
+    <Compile Include="SwaggerUi\EmbeddedAssetProvider.cs" />
+    <Compile Include="SwaggerUi\IAssetProvider.cs" />
+    <Compile Include="SwaggerUi\StreamExtensions.cs" />
     <Compile Include="Swagger\AbpServiceBaseToSwaggerGenerator.cs" />
     <Compile Include="Swagger\AbpWebApiSwaggerModule.cs" />
+    <Compile Include="Swagger\AppDomainIsolation.cs" />
     <Compile Include="Swagger\AssemblyTypeToSwaggerGenerator.cs" />
     <Compile Include="Swagger\RootTypeJsonSchemaGenerator.cs" />
     <Compile Include="Swagger\SwaggerBuilder.cs" />
@@ -92,16 +118,65 @@
     <None Include="Abp.Web.Api.Swagger.nuspec" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-700.eot" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-700.ttf" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-700.woff" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-700.woff2" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-regular.eot" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-regular.ttf" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-regular.woff" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-regular.woff2" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\underscore-min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp.Web.Api\Abp.Web.Api.csproj">
-      <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
+      <Project>{798a8c16-542b-474b-b35c-b27e2baab0d8}</Project>
       <Name>Abp.Web.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abp\Abp.csproj">
       <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\discoveryUrlSelector.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\index.html" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\screen.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\swagger-oauth.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\typography.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\css\print.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\css\reset.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\css\screen.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\css\style.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\css\typography.css" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-700.svg" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\fonts\droid-sans-v6-latin-regular.svg" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\explorer_icons.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\favicon-16x16.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\favicon-32x32.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\favicon.ico" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\logo_small.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\pet_store_api.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\throbber.gif" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\images\wordnik_api.png" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lang\en.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lang\es.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lang\pt.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lang\ru.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lang\translator.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\backbone-min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\handlebars-2.0.0.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\highlight.7.3.pack.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\jquery-1.8.0.min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\jquery.ba-bbq.min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\jquery-slideto.min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\jquery.wiggle.min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\marked.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\swagger-oauth.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\lib\underscore-min.js" />
+    <EmbeddedResource Include="SwaggerUi\CustomAssets\swagger-ui.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

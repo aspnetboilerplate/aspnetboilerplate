@@ -176,7 +176,7 @@ namespace NJsonSchema.Collections
 
         public void Add(TKey key, TValue value)
         {
-            Insert(key, value, true);
+            Insert(key, value, false);
         }
 
         public bool ContainsKey(TKey key)
