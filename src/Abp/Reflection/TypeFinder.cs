@@ -13,6 +13,8 @@ namespace Abp.Reflection
 
         public IAssemblyFinder AssemblyFinder { get; set; }
 
+        private static Dictionary<TypeFinder, List<Type>> _typeCache = new Dictionary<TypeFinder, List<Type>>();
+
         public TypeFinder()
         {
             AssemblyFinder = CurrentDomainAssemblyFinder.Instance;
@@ -31,7 +33,14 @@ namespace Abp.Reflection
 
         private List<Type> GetAllTypes()
         {
-            var allTypes = new List<Type>();
+            List<Type> allTypes;
+
+            if (_typeCache.TryGetValue(this, out allTypes))
+            {
+                return allTypes;
+            }
+
+            allTypes = new List<Type>();
 
             foreach (var assembly in AssemblyFinder.GetAllAssemblies().Distinct())
             {
@@ -61,6 +70,7 @@ namespace Abp.Reflection
                 }
             }
 
+            _typeCache[this] = allTypes;
             return allTypes;
         }
     }
