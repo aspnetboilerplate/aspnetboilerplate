@@ -107,7 +107,9 @@ namespace Abp.Web.Localization
                 script.Append("    abp.localization.values['" + source.Name + "'] = ");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
-                var stringJson = JsonHelper.ConvertToJson(stringValues.ToDictionary(_ => _.Name, _ => _.Value), indented: true);
+                var stringJson = stringValues
+                    .ToDictionary(_ => _.Name, _ => _.Value)
+                    .ToJsonString(indented: true);
                 script.Append(stringJson);
 
                 script.AppendLine(";");
