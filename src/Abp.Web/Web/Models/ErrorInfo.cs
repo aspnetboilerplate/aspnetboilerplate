@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Abp.Web.Models
 {
@@ -86,6 +87,20 @@ namespace Abp.Web.Models
             : this(message, details)
         {
             Code = code;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ErrorInfo"/>.
+        /// </summary>
+        /// <param name="instanceToClone">Instance to clone</param>
+        /// <param name="forAjax">Indicates whether the resultant instance is to be returned in AJAX response</param>
+        public ErrorInfo(ErrorInfo instanceToClone, bool forAjax = false)
+            : this(instanceToClone.Code, instanceToClone.Message, instanceToClone.Details)
+        {
+            ValidationErrors =
+                (instanceToClone.ValidationErrors != null)
+                ? instanceToClone.ValidationErrors.Select(ve => new ValidationErrorInfo(ve, forAjax: forAjax)).ToArray()
+                : null;
         }
     }
 }
