@@ -88,6 +88,15 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
         }
 
+
+        [Fact]
+        public void Should_Not_Write_Audits_If_Disabled()
+        {
+            Resolve<IAuditingConfiguration>().IsEnabled = false;
+            Resolve<MyServiceWithMethodAudited>().Test1();
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
+        }
+
         #endregion
 
         [Audited]

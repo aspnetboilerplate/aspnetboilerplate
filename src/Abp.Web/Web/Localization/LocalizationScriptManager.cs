@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.Localization;
 using Abp.Runtime.Caching;
 
@@ -103,23 +104,15 @@ namespace Abp.Web.Localization
 
             foreach (var source in sources)
             {
-                script.AppendLine("    abp.localization.values['" + source.Name + "'] = {");
+                script.Append("    abp.localization.values['" + source.Name + "'] = ");
 
                 var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
-                for (var i = 0; i < stringValues.Count; i++)
-                {
-                    script.AppendLine(
-                        string.Format(
-                            "        '{0}' : '{1}'" + (i < stringValues.Count - 1 ? "," : ""),
-                                stringValues[i].Name,
-                                stringValues[i].Value
-                                    .Replace(@"\", @"\\")
-                                    .Replace("'", @"\'")
-                                    .Replace(Environment.NewLine, string.Empty)
-                                ));
-                }
+                var stringJson = stringValues
+                    .ToDictionary(_ => _.Name, _ => _.Value)
+                    .ToJsonString(indented: true);
+                script.Append(stringJson);
 
-                script.AppendLine("    };");
+                script.AppendLine(";");
                 script.AppendLine();
             }
 
