@@ -17,12 +17,13 @@ namespace Abp.Web.Api.Swagger
         private readonly string _defaultRouteTemplate;
         private Type _serviceType;
         private JsonSchema4 _exceptionType;
-
+        public JsonSchemaGeneratorSettings JsonSchemaGeneratorSettings { get; set; }
         /// <summary>Initializes a new instance of the <see cref="AbpServiceBaseToSwaggerGenerator"/> class.</summary>
         /// <param name="defaultRouteTemplate">The default route template.</param>
-        public AbpServiceBaseToSwaggerGenerator(string defaultRouteTemplate)
+        public AbpServiceBaseToSwaggerGenerator(string defaultRouteTemplate, JsonSchemaGeneratorSettings jsonSchemaGeneratorSettings)
         {
             _defaultRouteTemplate = defaultRouteTemplate;
+            JsonSchemaGeneratorSettings = jsonSchemaGeneratorSettings;
         }
 
       
@@ -126,7 +127,7 @@ namespace Abp.Web.Api.Swagger
                 if (parameter != null)
                 {
                     var operationParameter = CreatePrimitiveParameter(parameter, schemaResolver);
-                    operationParameter.Kind = SwaggerParameterKind.path;
+                    operationParameter.Kind = SwaggerParameterKind.Path;
 
                     //var queryParameter = operation.Parameters.SingleOrDefault(p => p.Name == operationParameter.Name);
                     //if (queryParameter != null)
@@ -152,19 +153,19 @@ namespace Abp.Web.Api.Swagger
         {
             var methodName = method.Name;
             if (method.GetCustomAttributes().Any(a => a.GetType().Name == "HttpPostAttribute"))
-                return SwaggerOperationMethod.post;
+                return SwaggerOperationMethod.Post;
             else if (method.GetCustomAttributes().Any(a => a.GetType().Name == "HttpGetAttribute"))
-                return SwaggerOperationMethod.get;
+                return SwaggerOperationMethod.Get;
             else if (methodName == "Get")
-                return SwaggerOperationMethod.get;
+                return SwaggerOperationMethod.Get;
             else if (methodName == "Post")
-                return SwaggerOperationMethod.post;
+                return SwaggerOperationMethod.Post;
             else if (methodName == "Put")
-                return SwaggerOperationMethod.put;
+                return SwaggerOperationMethod.Put;
             else if (methodName == "Delete")
-                return SwaggerOperationMethod.delete;
+                return SwaggerOperationMethod.Delete;
             else
-                return SwaggerOperationMethod.post;
+                return SwaggerOperationMethod.Post;
         }
 
         /// <exception cref="InvalidOperationException">The parameter cannot be an object or array. </exception>
@@ -185,7 +186,7 @@ namespace Abp.Web.Api.Swagger
                     var info = JsonObjectTypeDescription.FromType(parameter.ParameterType);
                     if (info.Type.HasFlag(JsonObjectType.Object) || info.Type.HasFlag(JsonObjectType.Array))
                     {
-                        if (operation.Parameters.Any(p => p.Kind == SwaggerParameterKind.body))
+                        if (operation.Parameters.Any(p => p.Kind == SwaggerParameterKind.Body))
                             throw new InvalidOperationException("The parameter '" + parameter.Name + "' cannot be an object or array. ");
 
                         var operationParameter = CreateBodyParameter(parameter, schemaResolver);
@@ -194,7 +195,7 @@ namespace Abp.Web.Api.Swagger
                     else
                     {
                         var operationParameter = CreatePrimitiveParameter(parameter, schemaResolver);
-                        operationParameter.Kind = SwaggerParameterKind.query;
+                        operationParameter.Kind = SwaggerParameterKind.Query;
 
                         operation.Parameters.Add(operationParameter);
                     }
@@ -207,7 +208,7 @@ namespace Abp.Web.Api.Swagger
             var operationParameter = new SwaggerParameter();
             operationParameter.Schema = CreateAndAddSchema<SwaggerParameter>(parameter.ParameterType, schemaResolver);
             operationParameter.Name = "request";
-            operationParameter.Kind = SwaggerParameterKind.body;
+            operationParameter.Kind = SwaggerParameterKind.Body;
             return operationParameter;
         }
 
@@ -239,7 +240,7 @@ namespace Abp.Web.Api.Swagger
             {
                 if (!schemaResolver.HasSchema(type))
                 {
-                    var schemaGenerator = new RootTypeJsonSchemaGenerator(_service);
+                    var schemaGenerator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
                     schemaGenerator.Generate<JsonSchema4>(type, schemaResolver);
                 }
 
@@ -272,7 +273,7 @@ namespace Abp.Web.Api.Swagger
                 };
             }
 
-            var generator = new RootTypeJsonSchemaGenerator(_service);
+            var generator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
             return generator.Generate<TSchemaType>(type, schemaResolver);
         }
 
@@ -291,7 +292,7 @@ namespace Abp.Web.Api.Swagger
             if (info.Type.HasFlag(JsonObjectType.Object) || info.Type.HasFlag(JsonObjectType.Array))
                 throw new InvalidOperationException("The parameter '" + parameter.Name + "' cannot be an object or array.");
 
-            var parameterGenerator = new RootTypeJsonSchemaGenerator(_service);
+            var parameterGenerator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
 
             var segmentParameter = parameterGenerator.Generate<SwaggerParameter>(parameter.ParameterType, schemaResolver);
             segmentParameter.Name = parameter.Name;

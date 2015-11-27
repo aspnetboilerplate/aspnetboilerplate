@@ -67,11 +67,11 @@ namespace Abp.Swagger
                 return null;
             }
             var map = type.GetInterfaceMap(interfacetype);
-            if (map.InterfaceMethods.Length==0)
+            if (map.InterfaceMethods!=null&&map.InterfaceMethods.Length==0)
             {
                 return null;
             }
-            var generator = new AbpServiceBaseToSwaggerGenerator(urlTemplate);
+            var generator = new AbpServiceBaseToSwaggerGenerator(urlTemplate, new JsonSchemaGeneratorSettings());
             return generator.Generate(type, map, controllernameused:controllernameused);
             
         }

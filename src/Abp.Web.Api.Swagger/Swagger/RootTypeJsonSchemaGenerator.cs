@@ -14,9 +14,10 @@ namespace Abp.Web.Api.Swagger.Swagger
         private bool _isRootType = true;
         private readonly SwaggerService _service;
 
+       
         /// <summary>Initializes a new instance of the <see cref="RootTypeJsonSchemaGenerator" /> class.</summary>
         /// <param name="service">The service.</param>
-        public RootTypeJsonSchemaGenerator(SwaggerService service)
+        public RootTypeJsonSchemaGenerator(SwaggerService service, JsonSchemaGeneratorSettings settings):base(settings)
         {
             _service = service;
         }
@@ -37,7 +38,7 @@ namespace Abp.Web.Api.Swagger.Swagger
             {
                 if (!schemaResolver.HasSchema(type))
                 {
-                    var schemaGenerator = new RootTypeJsonSchemaGenerator(_service);
+                    var schemaGenerator = new RootTypeJsonSchemaGenerator(_service, Settings);
                     schemaGenerator.Generate<JsonSchema4>(type, schemaResolver);
                 }
 
