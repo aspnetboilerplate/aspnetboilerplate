@@ -1,0 +1,19 @@
+﻿<div ng-controller="app.views.users.index as vm">
+    <div class="bs-component">
+        <div class="list-group">
+            <div ng-repeat="user in vm.users">
+                <div class="list-group-item">
+                    <div class="row-action-primary">
+                        <i class="mdi-social-person"></i>
+                    </div>
+                    <div class="row-content">
+                        <div class="least-content"></div>
+                        <h4 class="list-group-item-heading">{{user.userName}}</h4>
+                        <p class="list-group-item-text">{{user.name}} {{user.surname}} <span class="text-muted">{{user.emailAddress}}</span></p>
+                    </div>
+                </div>
+                <div ng-if="!$last" class="list-group-separator"></div>
+            </div>
+        </div>
+    </div>
+</div>

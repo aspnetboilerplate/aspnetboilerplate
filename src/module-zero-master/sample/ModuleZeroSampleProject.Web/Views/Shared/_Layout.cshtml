@@ -1,0 +1,57 @@
+﻿@using System.Threading
+@using System.Web.Optimization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <title>ModuleZeroSampleProject</title>
+
+    @Styles.Render("~/Bundles/vendor/css")
+    @Styles.Render("~/Bundles/css")
+
+    <!-- View specific styles -->
+    @RenderSection("styles", required: false)
+
+    <script type="text/javascript">
+        //This is used to get the application's root path from javascript. It's useful if you're running application in a virtual directory under IIS.
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="@Url.Content("~/bower_components/html5shiv/dist/html5shiv.min.js")"></script>
+        <script src="@Url.Content("~/bower_components/respond/dest/respond.matchmedia.addListener.min.js")"></script>
+        <script src="@Url.Content("~/bower_components/respond/dest/respond.min.js")"></script>
+    <![endif]-->
+
+    @Scripts.Render("~/Bundles/vendor/js/top")
+
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/Bundles/vendor/js/bottom")
+    @Scripts.Render("~/Bundles/js")
+
+    <script>
+        //Localizing momentjs
+        moment.locale('@Thread.CurrentThread.CurrentUICulture.Name');
+    </script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/api/AbpServiceProxies/GetAll"></script>
+    <script src="~/AbpScripts/GetScripts" type="text/javascript"></script>
+
+    <!-- View specific scripts -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>

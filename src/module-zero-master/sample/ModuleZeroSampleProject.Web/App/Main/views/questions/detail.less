@@ -1,0 +1,24 @@
+﻿@import (reference) "../../../../Abp/Framework/styles/abp.less";
+
+.question-detail-panel {
+    .vote-change-icon {
+        .abp-opacity(0.5);
+        cursor: pointer;
+
+        &:hover {
+            .abp-opacity(1.0);
+        }
+    }
+}
+
+.answer-detail-panel {
+    .panel-body {
+        position: relative;
+
+        .accepted-icon {
+            .abp-dock(top-right, 10px);
+            color: green;
+            font-size: 2em;
+        }
+    }
+}

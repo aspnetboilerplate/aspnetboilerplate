@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="Questions" value="Sorular" />
+    <text name="Users" value="Kullanıcılar" />
+  </texts>
+</localizationDictionary>

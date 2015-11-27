@@ -1,0 +1,33 @@
+{
+  /* Additional globals */
+  "predef": [
+    "define",
+    "module"
+  ],
+
+  /* Enforcing Options */
+
+  "immed"         : true,   // Switches on warnings for immediately invoked functions which are not wrapped in parenthesis
+  "latedef"       : true,   // Switches on warnings for using variables or functions prior of their definition
+  "newcap"        : true,   // Switches on warnings if uncapitalised constructor function names are being used
+  "noarg"         : true,   // Switches on warnings when arguments.caller and arguments.callee are being used
+  "nonew"         : true,   // Switches on warnings when no "new" keyword is being used for constructor functions
+  "regexp"        : true,   // Switches on warnings for unsafe usage of '.' in regular expressions
+  "undef"         : true,   // Switches on warnings when using undeclared variables
+  "trailing"      : true,   // Switches on warnings for using trailing whitespace at the end of lines
+
+  /* Relaxing Options */
+
+  "asi"           : true,   // Switches off warnings about missing semi-colons
+  "boss"          : true,   // Switches off warnings about assignments in places where conditions are expected
+  "evil"          : true,   // Switches off warnings about the use of eval
+  "expr"          : true,   // Switches off warnings when using expressions in places where assignments are expected
+  "laxbreak"      : true,   // Switches off warnings about improper line breaks
+  "laxcomma"      : true,   // Switches off warnings about leading commas in multi-line var declarations
+  "loopfunc"      : true,   // Switches off warnings about functions inside of loops
+  "proto"         : true,   // Switches off warnings when using the __proto__ property
+
+  /* Environments */
+
+  "browser"       : true    // Allows the use of undefined globals exposed by modern browsers, i.e. window
+}

@@ -64,7 +64,7 @@ namespace MyAbpZeroProject.Web.Controllers
 
         public ActionResult Login(string returnUrl = "")
         {
-            _userAppService.GetAllUsers();
+          //  _userAppService.GetAllUsers();
             if (string.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = Request.ApplicationPath;

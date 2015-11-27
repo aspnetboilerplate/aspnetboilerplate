@@ -9,6 +9,7 @@ namespace MyAbpZeroProject.Web
     {
         protected override void Application_Start(object sender, EventArgs e)
         {
+            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
             IocManager.Instance.IocContainer.AddFacility<LoggingFacility>(f => f.UseLog4Net().WithConfig("log4net.config"));
             base.Application_Start(sender, e);
         }

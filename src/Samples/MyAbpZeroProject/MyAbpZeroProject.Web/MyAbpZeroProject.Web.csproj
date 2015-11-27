@@ -70,6 +70,9 @@
       <HintPath>..\..\..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender">
+      <HintPath>bin\NHibernate.Profiler-v3.0-Build-3079\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -1228,10 +1231,6 @@
     <ProjectReference Include="..\..\..\Abp\Abp.csproj">
       <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
       <Name>Abp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\module-zero-master\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj">
-      <Project>{c43a88ee-1537-40bb-8154-4271e6aad919}</Project>
-      <Name>Abp.Zero.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\module-zero-master\src\Abp.Zero\Abp.Zero.csproj">
       <Project>{70d916f2-9bff-43da-b3f7-3e0655114d48}</Project>

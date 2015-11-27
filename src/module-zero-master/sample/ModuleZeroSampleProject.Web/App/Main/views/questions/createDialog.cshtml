@@ -1,0 +1,28 @@
+﻿<div>
+    <div class="modal-header">
+        <h3 class="modal-title">Create new question!</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <fieldset>
+                <div class="form-group">
+                    <label for="TitleInput" class="col-lg-2 control-label">Title:</label>
+                    <div class="col-lg-10">
+                        <input ng-model="vm.question.title" type="text" class="form-control" name="TitleInput" placeholder="Enter title here">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="TextInput" class="col-lg-2 control-label">Text:</label>
+                    <div class="col-lg-10">
+                        <textarea ng-model="vm.question.text" class="form-control" rows="5" name="TextInput" placeholder="Describe your question here"></textarea>
+                        <span class="help-block">Please search your question before creating new one. You can add code snippets and images to describe your problem cleaner.</span>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="vm.save()">Submit question</button>
+    </div>
+</div>

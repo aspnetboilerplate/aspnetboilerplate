@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-CN">
+  <texts>
+    <text name="HomePage" value="主页" />
+    <text name="About" value="关于我们" />
+    <text name="WellcomeMessage" value="欢迎使用 CMS!" />
+    <text name="Home_ThisIsATemplate" value="CMS项目模板是Web应用开发的起点,它采用..." />
+    <text name="Home_AspNetDescription" value="ASP.NET MVC提供了强大的、基于模式的途径，来搭建动态Web应用。它使您做到清晰的关注点分离，享受完全可控的、有趣的、敏捷的开发." />
+    <text name="Home_AspNetBoilerplateDescription" value="ASP.NET Boilerplate是一个Web开发框架，它吸纳和提供了Web开发的一些最佳实践，以及流行的框架工具集." />
+    <text name="Others" value="其它" />
+    <text name="LearnMore" value="了解更多" />
+    <text name="Home_OtherTools" value="许多其它流行的框架/库，如ASP.NET Web API, EntityFramework/NHibernate, Castle Windsor, Log4Net, Twitter Bootstrap, jQuery..." />
+    <text name="AboutFormat" value="关于 {0}" />
+    <text name="About_AspNetBoilerplateDescription" value="ASP.NET Boilerplate是开发新Web应用的起点,，它吸纳和提供了Web开发的一些最佳实践，以及流行的框架工具集! ASP.NET Boilerplat基础框架能支撑一系列流行的框架实践，如 &lt;strong&gt;NLayer architecture&lt;/strong&gt; and &lt;strong&gt;Domain Driven Design&lt;/strong&gt;." />
+    <text name="ForMoreInformation" value="更多信息" />
+  </texts>
+</localizationDictionary>

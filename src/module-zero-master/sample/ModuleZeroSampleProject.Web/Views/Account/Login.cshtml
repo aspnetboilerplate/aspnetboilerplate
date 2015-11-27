@@ -1,0 +1,45 @@
+﻿<div class="container">
+    <div id="LoginArea" class="row">
+        <div class="col-lg-12">
+            <div class="well bs-component">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <legend>Login</legend>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control floating-label" id="EmailAddressInput" placeholder="User name or email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <input type="password" class="form-control" id="PasswordInput" placeholder="Password">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="RememberMeInput">
+                                        <span class="ripple"></span>
+                                        <span class="check"></span> Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button id="LoginButton" class="btn btn-primary"><i class="fa fa-sign-out"></i> Login</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles
+{
+    <link href="~/css/Account/login.min.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <script src="~/js/Account/login.js"></script>
+}

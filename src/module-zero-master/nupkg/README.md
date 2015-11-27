@@ -1,0 +1,1 @@
+There are bat files here to create nuget packages for projects.

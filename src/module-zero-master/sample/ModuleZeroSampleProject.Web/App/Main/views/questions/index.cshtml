@@ -1,0 +1,44 @@
+﻿<div ng-controller="app.views.questions.index as vm">
+    <div class="command-list row">
+        <div class="col-lg-12 text-right">
+            <div class="btn-group">
+                <a href="javascript:void(0)" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Sorted by {{vm.sorting}}
+                    <span class="caret"></span>
+                    <div class="ripple-wrapper"></div>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="sortingDirection in vm.sortingDirections" ng-show="sortingDirection != vm.sorting"><a href="javascript:void(0)" class=" withripple" ng-click="vm.sort(sortingDirection)">Sort by {{sortingDirection}}<div class="ripple-wrapper"></div></a></li>
+                </ul>
+            </div>
+            <button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="btn btn-primary btn-raised"><i class="fa fa-asterisk"></i> New question</button>
+        </div>
+    </div>
+    <div class="question-list">
+        <div class="row question" ng-repeat="question in vm.questions">
+            <div class="vote-count col-sm-1 hidden-xs">
+                <div>{{question.voteCount}}</div>
+                <div>votes</div>
+            </div>
+            <div class="answer-count col-sm-1 hidden-xs" ng-class="{'answered':question.answerCount>0}">
+                <div>{{question.answerCount}}</div>
+                <div>answers</div>
+            </div>
+            <div class="view-count col-sm-1 hidden-xs">
+                <div>{{question.viewCount}}</div>
+                <div>views</div>
+            </div>
+            <div class="summary col-xs-12 col-sm-9">
+                <h3><a ng-href="#/questions/{{question.id}}"><span class="question-id">#{{question.id}}</span> {{question.title}}</a></h3>
+                <div>
+                    <span>{{question.creatorUserName}}</span>,
+                    <span class="text-muted">{{question.creationTime | fromNow}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="text-right">Showing {{vm.questions.length}} of total {{vm.totalQuestionCount}} questions</div>
+    </div>
+    <a ng-show="vm.totalQuestionCount>vm.questions.length" href="javascript:void(0)" ng-click="vm.showMore()" class="btn btn-default btn-lg btn-block withripple">SHOW MORE<div class="ripple-wrapper"></div></a>
+</div>

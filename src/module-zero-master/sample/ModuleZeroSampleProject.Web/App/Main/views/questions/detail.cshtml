@@ -1,0 +1,48 @@
+﻿<div ng-controller="app.views.questions.detail as vm">
+    <div class="panel panel-primary question-detail-panel">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-10">
+                    <h3 class="panel-title">{{vm.question.title}}</h3>
+                </div>
+                <div class="col-xs-2 text-right">
+                    <span>{{vm.question.voteCount}} votes</span>
+                    <i class="fa fa-chevron-up vote-change-icon" ng-click="vm.voteUp()"></i>
+                    <i class="fa fa-chevron-down vote-change-icon" ng-click="vm.voteDown()"></i>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            {{vm.question.text}}
+        </div>
+        <div class="panel-footer">
+            <span>{{vm.question.creatorUserName}}</span>,
+            <span class="text-muted">{{vm.question.creationTime | fromNow}}</span>
+        </div>
+    </div>
+    <div class="panel panel-default answer-detail-panel" ng-repeat="answer in vm.question.answers">
+        <div class="panel-body">
+            {{answer.text}}
+            <div ng-if="!answer.isAccepted && vm.ownQuestion">
+                <br />
+                <button ng-click="vm.acceptAnswer(answer)" class="btn btn-success"><i class="fa fa-check"></i> Set as accepted answer</button>
+            </div>
+            <i ng-if="answer.isAccepted" class="fa fa-check-circle accepted-icon" title="This answer is accepted by question owner"></i>
+        </div>
+        <div class="panel-footer">
+            <span ng-if="answer.creatorUserName">{{answer.creatorUserName}}, </span>
+            <span class="text-muted">{{answer.creationTime | fromNow}}</span>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Answer to the question</h3>
+        </div>
+        <div class="panel-body">
+            <textarea ng-model="vm.answerText" rows="10" class="col-xs-12"></textarea>
+        </div>
+        <div class="panel-footer">
+            <button ng-disabled="!vm.answerText" ng-click="vm.submitAnswer()" class="btn btn-primary"><i class="fa fa-check"></i> Submit answer</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿.question-detail-panel .vote-change-icon {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: pointer;
+}
+.question-detail-panel .vote-change-icon:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.answer-detail-panel .panel-body {
+  position: relative;
+}
+.answer-detail-panel .panel-body .accepted-icon {
+  top: 0px;
+  right: 0px;
+  position: absolute;
+  margin: 10px;
+  color: green;
+  font-size: 2em;
+}

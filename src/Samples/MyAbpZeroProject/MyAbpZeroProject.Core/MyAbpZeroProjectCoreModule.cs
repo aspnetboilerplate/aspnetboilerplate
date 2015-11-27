@@ -5,6 +5,7 @@ using Abp.Localization.Sources;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Zero;
+using Abp.Domain.Uow;
 
 namespace MyAbpZeroProject
 {
@@ -15,6 +16,11 @@ namespace MyAbpZeroProject
         {
             //Remove the following line to disable multi-tenancy.
             Configuration.MultiTenancy.IsEnabled = true;
+
+            Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MustHaveTenant, false);
+            Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MayHaveTenant, false);
+
+            
 
             //Add/remove localization sources here
             Configuration.Localization.Sources.Add(

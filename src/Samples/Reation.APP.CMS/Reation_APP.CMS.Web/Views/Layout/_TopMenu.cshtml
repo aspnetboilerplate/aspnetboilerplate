@@ -1,0 +1,41 @@
+﻿@using Abp.Collections.Extensions
+@model Reation_APP.CMS.Web.Models.Layout.TopMenuViewModel
+@foreach (var menuItem in Model.MainMenu.Items)
+{
+    <li class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "")">
+        @if (menuItem.Items.IsNullOrEmpty())
+        {
+            <a href="@menuItem.Url">
+                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+                {
+                    <i class="@menuItem.Icon"></i>
+                }
+                @menuItem.DisplayName
+            </a>
+        }
+        else
+        {
+            <a href="" data-toggle="dropdown">
+                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+                {
+                    <i class="@menuItem.Icon"></i>
+                }
+                @menuItem.DisplayName
+            </a>
+            <ul class="dropdown-menu">
+                @foreach (var subMenuItem in menuItem.Items)
+                {
+                    <li>
+                        <a href="@subMenuItem.Url">
+                            @if (!string.IsNullOrWhiteSpace(subMenuItem.Icon))
+                            {
+                                <i class="@subMenuItem.Icon"></i>
+                            }
+                            @subMenuItem.DisplayName
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </li>
+}

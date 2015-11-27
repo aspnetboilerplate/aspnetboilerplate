@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="HomePage" value="Home page" />
+    <text name="About" value="About" />
+    <text name="WellcomeMessage" value="Welcome to CMS!" />
+    <text name="Home_ThisIsATemplate" value="This project template is a starting point to develop web applicatins using..." />
+    <text name="Home_AspNetDescription" value="ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup for enjoyable, agile development." />
+    <text name="Home_AspNetBoilerplateDescription" value="ASP.NET Boilerplate is a framework to build web based applications with best practices and most popular tools." />
+    <text name="Others" value="Others" />
+    <text name="LearnMore" value="Learn more" />
+    <text name="Home_OtherTools" value="Many other frameworks/libraries such as ASP.NET Web API, EntityFramework/NHibernate, Castle Windsor, Log4Net, Twitter Bootstrap, jQuery..." />
+    <text name="AboutFormat" value="About {0}" />
+    <text name="About_AspNetBoilerplateDescription" value="ASP.NET Boilerplate is a starting point for new web applications with best practices and most popular tools! ASP.NET Boilerplate provides an infrastructure for &lt;strong&gt;NLayer architecture&lt;/strong&gt; and &lt;strong&gt;Domain Driven Design&lt;/strong&gt;." />
+    <text name="ForMoreInformation" value="For more information" />
+  </texts>
+</localizationDictionary>

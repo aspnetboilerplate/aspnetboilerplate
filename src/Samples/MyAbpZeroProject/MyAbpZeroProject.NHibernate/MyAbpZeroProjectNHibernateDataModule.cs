@@ -1,15 +1,16 @@
-﻿using System.Reflection;
-using Abp.Modules;
-using Abp.Zero.NHibernate;
-using FluentNHibernate.Cfg.Db;
+﻿using System.Configuration;
+using System.Reflection;
 using Abp.Configuration.Startup;
-using System.Configuration;
+using Abp.Modules;
 using Abp.NHibernate;
+using FluentNHibernate.Cfg.Db;
 using NHibernate.Dialect;
+using Abp.Zero;
+using Abp.Domain.Uow;
 
 namespace MyAbpZeroProject
 {
-    [DependsOn(typeof(AbpZeroNHibernateModule), typeof(MyAbpZeroProjectCoreModule), typeof(AbpNHibernateModule))]
+    [DependsOn(typeof(AbpNHibernateModule), typeof(AbpZeroCoreModule))]
     public class MyAbpZeroProjectNHibernateDataModule : AbpModule
     {
         public override void PreInitialize()
@@ -24,13 +25,15 @@ namespace MyAbpZeroProject
             //MySQL
             var connStr = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
             Configuration.Modules.AbpNHibernate().FluentConfiguration
-               .Database(MySQLConfiguration.Standard
-    .Dialect<MySQL5Dialect>()
-    .ConnectionString(connStr))
+               .Database(MySQLConfiguration.Standard.Dialect<MySQL5Dialect>().ConnectionString(connStr).ShowSql())
+               //.Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
                
-               .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
+               ;
 
             Configuration.MultiTenancy.IsEnabled = true;//是否启用多租户
+
+            Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MustHaveTenant, false);
+            Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MayHaveTenant, false);
         }
 
         public override void Initialize()
