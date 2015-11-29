@@ -107,7 +107,7 @@
     <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\AbpWeb-zh-CN.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web\Localization\AbpWebXmlSource\AbpWeb-de-DE.xml" />
+    <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\AbpWeb-de.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
