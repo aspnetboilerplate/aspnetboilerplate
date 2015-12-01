@@ -18,6 +18,16 @@ namespace Abp.Auditing
         public long? UserId { get; set; }
 
         /// <summary>
+        /// ImpersonatorUserId.
+        /// </summary>
+        public long? ImpersonatorUserId { get; set; }
+
+        /// <summary>
+        /// ImpersonatorTenantId.
+        /// </summary>
+        public int? ImpersonatorTenantId { get; set; }
+
+        /// <summary>
         /// Service (class/interface) name.
         /// </summary>
         public string ServiceName { get; set; }
@@ -56,6 +66,11 @@ namespace Abp.Auditing
         /// Browser information if this method is called in a web request.
         /// </summary>
         public string BrowserInfo { get; set; }
+
+        /// <summary>
+        /// Optional custom data that can be filled and used.
+        /// </summary>
+        public string CustomData { get; set; }
         
         /// <summary>
         /// Exception object, if an exception occured during execution of the method.

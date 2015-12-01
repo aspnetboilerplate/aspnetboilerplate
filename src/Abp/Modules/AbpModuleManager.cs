@@ -80,18 +80,22 @@ namespace Abp.Modules
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
 
-            //AbpKernelModule must be the first module
-            var startupModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
-            if (startupModuleIndex > 0)
-            {
-                var startupModule = _modules[startupModuleIndex];
-                _modules.RemoveAt(startupModuleIndex);
-                _modules.Insert(0, startupModule);
-            }
+            EnsureKernelModuleToBeFirst();
 
             SetDependencies();
 
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
+        }
+
+        private void EnsureKernelModuleToBeFirst()
+        {
+            var kernelModuleIndex = _modules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            if (kernelModuleIndex > 0)
+            {
+                var kernelModule = _modules[kernelModuleIndex];
+                _modules.RemoveAt(kernelModuleIndex);
+                _modules.Insert(0, kernelModule);
+            }
         }
 
         private void SetDependencies()

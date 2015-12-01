@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
-using Abp.Threading;
 
 namespace Abp.Configuration
 {
@@ -19,6 +16,8 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingManager : ISettingManager, ISingletonDependency
     {
+        public const string ApplicationSettingsCacheKey = "ApplicationSettings";
+
         /// <summary>
         /// Reference to the current Session.
         /// </summary>
@@ -30,24 +29,21 @@ namespace Abp.Configuration
         public ISettingStore SettingStore { get; set; }
 
         private readonly ISettingDefinitionManager _settingDefinitionManager;
-
-        private readonly Lazy<Dictionary<string, SettingInfo>> _applicationSettings;
-
-        private readonly AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>> _tenantSettingCache;
-
-        private readonly AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>> _userSettingCache;
-
+        private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _applicationSettingCache;
+        private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
+        private readonly ITypedCache<long, Dictionary<string, SettingInfo>> _userSettingCache;
+        
         /// <inheritdoc/>
-        public SettingManager(ISettingDefinitionManager settingDefinitionManager)
+        public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
         {
             _settingDefinitionManager = settingDefinitionManager;
 
             AbpSession = NullAbpSession.Instance;
-            SettingStore = NullSettingStore.Instance; //Should be constructor injection? For that, ISettingStore must be registered!
+            SettingStore = DefaultConfigSettingStore.Instance;
 
-            _applicationSettings = new Lazy<Dictionary<string, SettingInfo>>(() => AsyncHelper.RunSync(GetApplicationSettingsFromDatabase), true); //TODO: Run async
-            _tenantSettingCache = new AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>>(new MemoryCache(GetType().FullName + ".TenantSettings"), TimeSpan.FromMinutes(60)); //TODO: Get constant from somewhere else.
-            _userSettingCache = new AsyncThreadSafeObjectCache<Dictionary<string, SettingInfo>>(new MemoryCache(GetType().FullName + ".UserSettings"), TimeSpan.FromMinutes(20)); //TODO: Get constant from somewhere else.
+            _applicationSettingCache = cacheManager.GetApplicationSettingsCache();
+            _tenantSettingCache = cacheManager.GetTenantSettingsCache();
+            _userSettingCache = cacheManager.GetUserSettingsCache();
         }
 
         #region Public methods
@@ -72,7 +68,7 @@ namespace Abp.Configuration
         {
             return GetSettingValueInternalAsync(name, tenantId, userId);
         }
-        
+
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
         {
             return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User);
@@ -97,10 +93,20 @@ namespace Abp.Configuration
                 foreach (var settingValue in await GetAllSettingValuesForApplicationAsync())
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Application))
+
+                    //TODO: Conditions get complicated, try to simplify it
+                    if (setting == null || !setting.Scopes.HasFlag(SettingScopes.Application))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        continue;
                     }
+
+                    if (!setting.IsInherited &&
+                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) || (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
+                    {
+                        continue;
+                    }
+
+                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                 }
             }
 
@@ -110,10 +116,20 @@ namespace Abp.Configuration
                 foreach (var settingValue in await GetAllSettingValuesForTenantAsync(AbpSession.TenantId.Value))
                 {
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
-                    if (setting != null && setting.Scopes.HasFlag(SettingScopes.Tenant))
+
+                    //TODO: Conditions get complicated, try to simplify it
+                    if (setting == null || !setting.Scopes.HasFlag(SettingScopes.Tenant))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        continue;
                     }
+
+                    if (!setting.IsInherited &&
+                        (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue))
+                    {
+                        continue;
+                    }
+
+                    settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
                 }
             }
 
@@ -134,15 +150,11 @@ namespace Abp.Configuration
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
+        public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
         {
-            //TODO: Make async by removing lazy, replacing caching
-            lock (_applicationSettings.Value)
-            {
-                return Task.FromResult<IReadOnlyList<ISettingValue>>(_applicationSettings.Value.Values
-                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
-                    .ToImmutableList());
-            }
+            return (await GetApplicationSettingsAsync()).Values
+                .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                .ToImmutableList();
         }
 
         /// <inheritdoc/>
@@ -165,56 +177,24 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            var settingValue = await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
-            lock (_applicationSettings.Value)
-            {
-                if (settingValue == null)
-                {
-                    _applicationSettings.Value.Remove(name);
-                }
-                else
-                {
-                    _applicationSettings.Value[name] = settingValue;
-                }
-            }
+            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+            await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
         }
 
         /// <inheritdoc/>
         [UnitOfWork]
         public virtual async Task ChangeSettingForTenantAsync(int tenantId, string name, string value)
         {
-            var settingValue = await InsertOrUpdateOrDeleteSettingValueAsync(name, value, tenantId, null);
-            var cachedDictionary = await GetTenantSettingsFromCache(tenantId);
-            lock (cachedDictionary)
-            {
-                if (settingValue == null)
-                {
-                    cachedDictionary.Remove(name);
-                }
-                else
-                {
-                    cachedDictionary[name] = settingValue;
-                }
-            }
+            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, tenantId, null);
+            await _tenantSettingCache.RemoveAsync(tenantId);
         }
 
         /// <inheritdoc/>
         [UnitOfWork]
         public virtual async Task ChangeSettingForUserAsync(long userId, string name, string value)
         {
-            var settingValue = await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, userId);
-            var cachedDictionary = await GetUserSettingsFromCache(userId);
-            lock (cachedDictionary)
-            {
-                if (settingValue == null)
-                {
-                    cachedDictionary.Remove(name);
-                }
-                else
-                {
-                    cachedDictionary[name] = settingValue;
-                }
-            }
+            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, userId);
+            await _userSettingCache.RemoveAsync(userId);
         }
 
         #endregion
@@ -228,27 +208,37 @@ namespace Abp.Configuration
             //Get for user if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && userId.HasValue)
             {
-                var settingValue = await GetSettingValueForUserOrNull(userId.Value, name);
+                var settingValue = await GetSettingValueForUserOrNullAsync(userId.Value, name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
+                }
+
+                if (!settingDefinition.IsInherited)
+                {
+                    return settingDefinition.DefaultValue;
                 }
             }
 
             //Get for tenant if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && tenantId.HasValue)
             {
-                var settingValue = await GetSettingValueForTenantOrNull(tenantId.Value, name);
+                var settingValue = await GetSettingValueForTenantOrNullAsync(tenantId.Value, name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
+                }
+
+                if (!settingDefinition.IsInherited)
+                {
+                    return settingDefinition.DefaultValue;
                 }
             }
 
             //Get for application if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.Application))
             {
-                var settingValue = GetSettingValueForApplicationOrNull(name);
+                var settingValue = await GetSettingValueForApplicationOrNullAsync(name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
@@ -272,23 +262,22 @@ namespace Abp.Configuration
             //Determine defaultValue
             var defaultValue = settingDefinition.DefaultValue;
 
-            //For Tenant and User, Application's value overrides Setting Definition's default value.
-            if (tenantId.HasValue || userId.HasValue)
+            if (settingDefinition.IsInherited)
             {
-                var applicationValue = GetSettingValueForApplicationOrNull(name);
-                if (applicationValue != null)
+                //For Tenant and User, Application's value overrides Setting Definition's default value.
+                if (tenantId.HasValue || userId.HasValue)
                 {
-                    defaultValue = applicationValue.Value;
+                    var applicationValue = await GetSettingValueForApplicationOrNullAsync(name);
+                    if (applicationValue != null)
+                    {
+                        defaultValue = applicationValue.Value;
+                    }
                 }
-            }
 
-            //For User, Tenants's value overrides Application's default value.
-            if (userId.HasValue)
-            {
-                var currentTenantId = AbpSession.TenantId;
-                if (currentTenantId.HasValue)
+                //For User, Tenants's value overrides Application's default value.
+                if (userId.HasValue && AbpSession.TenantId.HasValue)
                 {
-                    var tenantValue = await GetSettingValueForTenantOrNull(currentTenantId.Value, name);
+                    var tenantValue = await GetSettingValueForTenantOrNullAsync(AbpSession.TenantId.Value, name);
                     if (tenantValue != null)
                     {
                         defaultValue = tenantValue.Value;
@@ -301,14 +290,13 @@ namespace Abp.Configuration
             {
                 if (settingValue != null)
                 {
-                    //_settingRepository.Delete(settingValue);
                     await SettingStore.DeleteAsync(settingValue);
                 }
 
                 return null;
             }
 
-            //It's not default value and not stored on database, so insert it
+            //If it's not default value and not stored on database, then insert it
             if (settingValue == null)
             {
                 settingValue = new SettingInfo
@@ -323,7 +311,7 @@ namespace Abp.Configuration
                 return settingValue;
             }
 
-            //It's same value as it's, no need to update
+            //It's same value in database, no need to update
             if (settingValue.Value == value)
             {
                 return settingValue;
@@ -336,37 +324,36 @@ namespace Abp.Configuration
             return settingValue;
         }
 
-        private SettingInfo GetSettingValueForApplicationOrNull(string name)
+        private async Task<SettingInfo> GetSettingValueForApplicationOrNullAsync(string name)
         {
-            lock (_applicationSettings.Value)
-            {
-                return _applicationSettings.Value.GetOrDefault(name);
-            }
+            return (await GetApplicationSettingsAsync()).GetOrDefault(name);
         }
 
-        private async Task<SettingInfo> GetSettingValueForTenantOrNull(int tenantId, string name)
+        private async Task<SettingInfo> GetSettingValueForTenantOrNullAsync(int tenantId, string name)
         {
             return (await GetReadOnlyTenantSettings(tenantId)).GetOrDefault(name);
         }
 
-        private async Task<SettingInfo> GetSettingValueForUserOrNull(long userId, string name)
+        private async Task<SettingInfo> GetSettingValueForUserOrNullAsync(long userId, string name)
         {
             return (await GetReadOnlyUserSettings(userId)).GetOrDefault(name);
         }
 
-        private async Task<Dictionary<string, SettingInfo>> GetApplicationSettingsFromDatabase()
+        private async Task<Dictionary<string, SettingInfo>> GetApplicationSettingsAsync()
         {
-            var dictionary = new Dictionary<string, SettingInfo>();
-
-            var settingValues = await SettingStore.GetAllListAsync(null, null);
-            foreach (var settingValue in settingValues)
+            return await _applicationSettingCache.GetAsync(ApplicationSettingsCacheKey, async () =>
             {
-                dictionary[settingValue.Name] = settingValue;
-            }
+                var dictionary = new Dictionary<string, SettingInfo>();
 
-            return dictionary;
+                var settingValues = await SettingStore.GetAllListAsync(null, null);
+                foreach (var settingValue in settingValues)
+                {
+                    dictionary[settingValue.Name] = settingValue;
+                }
+
+                return dictionary;
+            });
         }
-
 
         private async Task<ImmutableDictionary<string, SettingInfo>> GetReadOnlyTenantSettings(int tenantId)
         {
@@ -376,6 +363,7 @@ namespace Abp.Configuration
                 return cachedDictionary.ToImmutableDictionary();
             }
         }
+
         private async Task<ImmutableDictionary<string, SettingInfo>> GetReadOnlyUserSettings(long userId)
         {
             var cachedDictionary = await GetUserSettingsFromCache(userId);
@@ -388,7 +376,7 @@ namespace Abp.Configuration
         private async Task<Dictionary<string, SettingInfo>> GetTenantSettingsFromCache(int tenantId)
         {
             return await _tenantSettingCache.GetAsync(
-                tenantId.ToString(CultureInfo.InvariantCulture),
+                tenantId,
                 async () =>
                 {
                     var dictionary = new Dictionary<string, SettingInfo>();
@@ -406,7 +394,7 @@ namespace Abp.Configuration
         private async Task<Dictionary<string, SettingInfo>> GetUserSettingsFromCache(long userId)
         {
             return await _userSettingCache.GetAsync(
-                userId.ToString(CultureInfo.InvariantCulture),
+                userId,
                 async () =>
                 {
                     var dictionary = new Dictionary<string, SettingInfo>();

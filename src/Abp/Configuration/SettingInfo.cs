@@ -1,8 +1,11 @@
-﻿namespace Abp.Configuration
+﻿using System;
+
+namespace Abp.Configuration
 {
     /// <summary>
     /// Represents a setting information.
     /// </summary>
+    [Serializable]
     public class SettingInfo
     {
         /// <summary>

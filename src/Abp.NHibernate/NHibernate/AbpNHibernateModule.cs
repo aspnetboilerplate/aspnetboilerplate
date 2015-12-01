@@ -2,8 +2,10 @@
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.NHibernate.Filters;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
+using Castle.Components.DictionaryAdapter.Xml;
 using NHibernate;
 
 namespace Abp.NHibernate
@@ -11,6 +13,7 @@ namespace Abp.NHibernate
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpNHibernateModule : AbpModule
     {
         /// <summary>
@@ -24,6 +27,8 @@ namespace Abp.NHibernate
             IocManager.Register<AbpNHibernateInterceptor>(DependencyLifeStyle.Transient);
 
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
+                .Mappings(m => m.FluentMappings.Add(typeof(MayHaveTenantFilter)))
+                .Mappings(m => m.FluentMappings.Add(typeof(MustHaveTenantFilter)))
                 .ExposeConfiguration(config => config.SetInterceptor(IocManager.Resolve<AbpNHibernateInterceptor>()))
                 .BuildSessionFactory();
 

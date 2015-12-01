@@ -14,6 +14,10 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+        public string Id { get; private set; }
+
+        public IUnitOfWork Outer { get; set; }
+
         /// <inheritdoc/>
         public event EventHandler Completed;
 
@@ -32,6 +36,11 @@ namespace Abp.Domain.Uow
             get { return _filters.ToImmutableList(); }
         }
         private readonly List<DataFilterConfiguration> _filters;
+
+        /// <summary>
+        /// Gets default UOW options.
+        /// </summary>
+        protected IUnitOfWorkDefaultOptions DefaultOptions { get; private set; }
 
         /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
@@ -68,6 +77,9 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
         {
+            DefaultOptions = defaultOptions;
+
+            Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
             AbpSession = NullAbpSession.Instance;
         }
@@ -81,7 +93,7 @@ namespace Abp.Domain.Uow
             }
 
             PreventMultipleBegin();
-            Options = options; //TODO: Do not set options like that!
+            Options = options; //TODO: Do not set options like that, instead make a copy?
 
             SetFilters(options.FilterOverrides);
 
@@ -145,16 +157,34 @@ namespace Abp.Domain.Uow
         }
 
         /// <inheritdoc/>
-        public void SetFilterParameter(string filterName, string parameterName, object value)
+        public IDisposable SetFilterParameter(string filterName, string parameterName, object value)
         {
             var filterIndex = GetFilterIndex(filterName);
 
             var newfilter = new DataFilterConfiguration(_filters[filterIndex]);
+
+            //Store old value
+            object oldValue = null;
+            var hasOldValue = newfilter.FilterParameters.ContainsKey(filterName);
+            if (hasOldValue)
+            {
+                oldValue = newfilter.FilterParameters[filterName];
+            }
+
             newfilter.FilterParameters[parameterName] = value;
 
             _filters[filterIndex] = newfilter;
 
             ApplyFilterParameterValue(filterName, parameterName, value);
+
+            return new DisposeAction(() =>
+            {
+                //Restore old value
+                if (hasOldValue)
+                {
+                    SetFilterParameter(filterName, parameterName, oldValue);
+                }
+            });
         }
 
         /// <inheritdoc/>

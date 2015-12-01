@@ -9,20 +9,8 @@
 
 <body>
 
-<!-- START OF THE DOCUMENT -->
+<div class="document-contents">
 
-<ul>
-	<li><a href="#DocIntro">Introduction</a></li>
-	<li><a href="#DocEnableErrorHandling">Enabling error handling</a></li>
-	<li><a href="#DocNonAjax">Non-AJAX requests</a><ul>
-		<li><a href="#DocShowExceptions">Showing exceptions</a></li>
-		<li><a href="#DocShowUserFriendlyExceptions">User friendly exceptions</a></li>
-		<li><a href="#DocErrorModel">Error model</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocAjax">AJAX requests</a></li>
-	<li><a href="#DocExceptionEvent">Exception event</a></li>
-</ul>
 <h3 id="DocIntro">Introduction</h3>
 <p>In a web application, exceptions are usually handled in MVC Controller 
 actions and Web API Controller actions. When an exception occurs, application 
@@ -111,12 +99,23 @@ See <a href="/Pages/Documents/Javascript-API/AJAX">AJAX API</a> and
 <a href="/Pages/Documents/Dynamic-Web-API">dynamic web api layer</a> for more 
 information.</p>
 <h3 id="DocExceptionEvent">Exception event</h3>
-<p>When ASP.NET Boilerplare handle any exception on web requests, it triggers <strong>AbpHandledExceptionData</strong> 
-event that can be registered to be informed. See
+<p>When ASP.NET Boilerplare handle any exception, it triggers <strong>AbpHandledExceptionData</strong> 
+event that can be registered to be informed (See
 <a href="/Pages/Documents/EventBus-Domain-Events">eventbus documentation</a> for 
-more.</p>
+more information about Event Bus). Example:</p>
+<pre lang="cs">public class MyExceptionHandler : IEventHandler&lt;AbpHandledExceptionData&gt;, ITransientDependency
+{
+    public void HandleEvent(AbpHandledExceptionData eventData)
+    {
+        //TODO: Check eventData.Exception!
+    }
+}</pre>
+<p>If you put this example class into your application (generally into your Web 
+project), <strong>HandleEvent</strong> method will be called for all exceptions 
+handled by ASP.NET Boilerplate. So, you can investigate the Exception object in 
+detail.</p>
 
-<!-- END OF THE DOCUMENT -->
+</div>
 
 </body>
 

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -47,18 +47,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Concurrent">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Enlightenment">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -66,16 +69,59 @@
       <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Dependency\SingletonDependency.cs" />
+    <Compile Include="Application\Features\Feature.cs" />
+    <Compile Include="Application\Features\FeatureChecker.cs" />
+    <Compile Include="Application\Features\FeatureCheckerExtensions.cs" />
+    <Compile Include="Application\Features\FeatureConfiguration.cs" />
+    <Compile Include="Application\Features\FeatureDefinitionContextBase.cs" />
+    <Compile Include="Application\Features\FeatureDependencyContext.cs" />
+    <Compile Include="Application\Features\FeatureDependencyExtensions.cs" />
+    <Compile Include="Application\Features\FeatureDictionary.cs" />
+    <Compile Include="Application\Features\FeatureInterceptor.cs" />
+    <Compile Include="Application\Features\FeatureInterceptorRegistrar.cs" />
+    <Compile Include="Application\Features\FeatureProvider.cs" />
+    <Compile Include="Application\Features\FeatureScopes.cs" />
+    <Compile Include="Application\Features\FeatureManager.cs" />
+    <Compile Include="Application\Features\IFeatureChecker.cs" />
+    <Compile Include="Application\Features\IFeatureConfiguration.cs" />
+    <Compile Include="Application\Features\IFeatureDefinitionContext.cs" />
+    <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
+    <Compile Include="Application\Features\IFeatureManager.cs" />
+    <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Localization\LocalizationManagerExtensions.cs" />
+    <Compile Include="Localization\LocalizationSettingNames.cs" />
+    <Compile Include="Localization\LocalizationSettingProvider.cs" />
+    <Compile Include="Localization\LocalizationSourceHelper.cs" />
+    <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
+    <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
+    <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
+    <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
+    <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
+    <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
+    <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
+    <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
+    <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
+    <Compile Include="UI\Inputs\ComboboxInputType.cs" />
+    <Compile Include="UI\Inputs\CheckboxInputType.cs" />
+    <Compile Include="UI\Inputs\IInputType.cs" />
+    <Compile Include="Runtime\Validation\AlwaysValidValueValidator.cs" />
+    <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
+    <Compile Include="Application\Features\NullFeatureValueStore.cs" />
+    <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
     <Compile Include="Application\Navigation\INavigationManager.cs" />
@@ -105,6 +151,20 @@
     <Compile Include="Auditing\AuditingHelper.cs" />
     <Compile Include="Auditing\IMvcControllersAuditingConfiguration.cs" />
     <Compile Include="Auditing\MvcControllersAuditingConfiguration.cs" />
+    <Compile Include="Application\Features\IFeatureDependency.cs" />
+    <Compile Include="Application\Features\SimpleFeatureDependency.cs" />
+    <Compile Include="Configuration\CacheManagerSettingExtensions.cs" />
+    <Compile Include="Localization\DefaultLanguageProvider.cs" />
+    <Compile Include="Localization\Dictionaries\Xml\LocalizationDictionaryProviderBase.cs" />
+    <Compile Include="Localization\ILanguageManager.cs" />
+    <Compile Include="Localization\ILanguageProvider.cs" />
+    <Compile Include="Localization\LanguageManager.cs" />
+    <Compile Include="Runtime\Caching\CacheManagerExtensions.cs" />
+    <Compile Include="Runtime\Caching\Configuration\CacheConfigurator.cs" />
+    <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
+    <Compile Include="Runtime\Caching\Configuration\ICacheConfigurator.cs" />
+    <Compile Include="Runtime\Caching\Configuration\ICachingConfiguration.cs" />
+    <Compile Include="Json\JsonExtensions.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\NullableIdInput.cs" />
@@ -126,6 +186,26 @@
     <Compile Include="Auditing\IAuditingStore.cs" />
     <Compile Include="Auditing\NullAuditInfoProvider.cs" />
     <Compile Include="Auditing\SimpleLogAuditingStore.cs" />
+    <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Runtime\Caching\CacheExtensions.cs" />
+    <Compile Include="Runtime\Caching\CacheManagerBase.cs" />
+    <Compile Include="Runtime\Caching\CacheBase.cs" />
+    <Compile Include="Runtime\Caching\ICacheManager.cs" />
+    <Compile Include="Runtime\Caching\ICache.cs" />
+    <Compile Include="Runtime\Caching\ITypedCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\AbpMemoryCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\AbpMemoryCacheManager.cs" />
+    <Compile Include="Runtime\Caching\TypedCacheExtensions.cs" />
+    <Compile Include="Runtime\Caching\TypedCacheWrapper.cs" />
+    <Compile Include="Runtime\Validation\DisableValidationAttribute.cs" />
+    <Compile Include="Runtime\Validation\Interception\ValidationInterceptorRegistrar.cs" />
+    <Compile Include="Runtime\Validation\IValueValidator.cs" />
+    <Compile Include="Localization\LocalizableStringToStringJsonConverter.cs" />
+    <Compile Include="UI\Inputs\SingleLineStringInputType.cs" />
+    <Compile Include="Runtime\Validation\StringValueValidator.cs" />
+    <Compile Include="UI\Inputs\InputTypeAttribute.cs" />
+    <Compile Include="UI\Inputs\InputTypeBase.cs" />
+    <Compile Include="Runtime\Validation\ValidatorAttribute.cs" />
     <Compile Include="Text\Formatting\FormatStringToken.cs" />
     <Compile Include="Text\Formatting\FormatStringTokenType.cs" />
     <Compile Include="Text\Formatting\FormatStringTokenizer.cs" />
@@ -135,7 +215,7 @@
     <Compile Include="Domain\Uow\AbpDataFilters.cs" />
     <Compile Include="Domain\Uow\DataFilterConfiguration.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
-    <Compile Include="Localization\Sources\IDictionaryBasedLocalizationSource.cs" />
+    <Compile Include="Localization\Dictionaries\IDictionaryBasedLocalizationSource.cs" />
     <Compile Include="Timing\Clock.cs" />
     <Compile Include="Timing\IClockProvider.cs" />
     <Compile Include="MultiTenancy\MultiTenancyExtensions.cs" />
@@ -227,11 +307,10 @@
     <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
     <Compile Include="IShouldInitialize.cs" />
-    <Compile Include="Localization\Sources\LocalizationDictionaryInfo.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
-    <Compile Include="Localization\Sources\ILocalizationDictionaryProvider.cs" />
-    <Compile Include="Localization\Sources\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
-    <Compile Include="Localization\Sources\Xml\XmlFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Dictionaries\ILocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Dictionaries\Xml\XmlEmbeddedFileLocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\Dictionaries\Xml\XmlFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Net\Mail\EmailSettingNames.cs" />
     <Compile Include="Net\Mail\EmailSettingProvider.cs" />
     <Compile Include="Net\Mail\EmailSenderConfiguration.cs" />
@@ -244,7 +323,7 @@
     <Compile Include="Net\Mail\Smtp\SmtpEmailSenderConfiguration.cs" />
     <Compile Include="Net\Mail\IEmailSender.cs" />
     <Compile Include="RandomHelper.cs" />
-    <Compile Include="Runtime\Caching\AsyncThreadSafeObjectCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\AsyncThreadSafeObjectCache.cs" />
     <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Threading\InternalAsyncHelper.cs" />
     <Compile Include="Extensions\DateTimeRangeExtensions.cs" />
@@ -295,7 +374,7 @@
     <Compile Include="Configuration\SettingProvider.cs" />
     <Compile Include="Configuration\ISettingManager.cs" />
     <Compile Include="Configuration\ISettingStore.cs" />
-    <Compile Include="Configuration\NullSettingStore.cs" />
+    <Compile Include="Configuration\DefaultConfigSettingStore.cs" />
     <Compile Include="Configuration\SettingDefinition.cs" />
     <Compile Include="Configuration\SettingDefinitionGroup.cs" />
     <Compile Include="Configuration\SettingHelper.cs" />
@@ -323,7 +402,7 @@
     <Compile Include="Localization\LocalizableString.cs" />
     <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="AbpKernelModule.cs" />
-    <Compile Include="Runtime\Caching\ThreadSafeObjectCache.cs" />
+    <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\ITransientDependency.cs" />
@@ -378,6 +457,7 @@
     <Compile Include="Timing\LocalClockProvider.cs" />
     <Compile Include="Timing\UtcClockProvider.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
+    <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
@@ -390,7 +470,7 @@
     <Compile Include="Localization\LocalizationHelper.cs" />
     <Compile Include="Localization\LocalizationManager.cs" />
     <Compile Include="Localization\Dictionaries\ILocalizationDictionary.cs" />
-    <Compile Include="Localization\Sources\DictionaryBasedLocalizationSource.cs" />
+    <Compile Include="Localization\Dictionaries\DictionaryBasedLocalizationSource.cs" />
     <Compile Include="Localization\Sources\Xml\XmlLocalizationSource.cs" />
     <Compile Include="Modules\AbpModule.cs" />
     <Compile Include="Modules\AbpModuleManager.cs" />
@@ -418,7 +498,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />
-    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp.xml" />
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-zh-CN.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-de.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -12,5 +12,7 @@ namespace Abp.TestBase.SampleApplication.People
         Task CreatePersonAsync(CreatePersonInput input);
 
         Task DeletePerson(EntityRequestInput input);
+
+        string TestPrimitiveMethod(int a, string b, EntityRequestInput c);
     }
 }

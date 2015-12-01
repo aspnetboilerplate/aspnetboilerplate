@@ -3,7 +3,7 @@
 namespace Abp.Web.Authorization
 {
     /// <summary>
-    /// This class is used to build and cache authorization script.
+    /// This class is used to build authorization script.
     /// </summary>
     public interface IAuthorizationScriptManager
     {

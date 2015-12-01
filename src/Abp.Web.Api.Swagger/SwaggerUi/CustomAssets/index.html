@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Swagger UI</title>
+  <link rel="icon" type="image/png" href="images/favicon-32x32-png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="images/favicon-16x16-png" sizes="16x16" />
+  <link href='css/typography-css' media='screen' rel='stylesheet' type='text/css' />
+  <link href='css/reset-css' media='screen' rel='stylesheet' type='text/css' />
+  <link href='css/screen-css' media='screen' rel='stylesheet' type='text/css' />
+  <link href='css/reset-css' media='print' rel='stylesheet' type='text/css' />
+  <link href='css/print-css' media='print' rel='stylesheet' type='text/css' />
+  <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  %(StylesheetIncludes)
+  <script src='lib/jquery-1-8-0-min-js' type='text/javascript'></script>
+  <script src='lib/jquery-slideto-min-js' type='text/javascript'></script>
+  <script src='lib/jquery-wiggle-min-js' type='text/javascript'></script>
+  <script src='lib/jquery-ba-bbq-min-js' type='text/javascript'></script>
+  <script src='lib/handlebars-2-0-0-js' type='text/javascript'></script>
+  <script src='lib/underscore-min-js' type='text/javascript'></script>
+  <script src='lib/backbone-min-js' type='text/javascript'></script>
+  <script src='swagger-ui-min-js' type='text/javascript'></script>
+  <script src='lib/highlight-7-3-pack-js' type='text/javascript'></script>
+  <script src='lib/marked-js' type='text/javascript'></script>
+  <script src='lib/swagger-oauth-js' type='text/javascript'></script>
+  
+  <!-- Some basic translations -->
+  <!-- <script src='lang/translator.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/ru.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/en.js' type='text/javascript'></script> -->
+
+  <script type="text/javascript">
+    $(function () {
+      var url = window.location.search.match(/url=([^&]+)/);
+      if (url && url.length > 1) {
+        url = decodeURIComponent(url[1]);
+      } else {
+        url = "http://petstore.swagger.io/v2/swagger.json";
+      }
+
+      // Get Swashbuckle config into JavaScript
+      function arrayFrom(configString) {
+        return (configString !== "") ? configString.split('|') : [];
+      }
+
+      function stringOrNullFrom(configString) {
+        return (configString !== "null") ? configString : null;
+      }
+
+      window.swashbuckleConfig = {
+        rootUrl: '%(RootUrl)',
+        discoveryPaths: arrayFrom('%(DiscoveryPaths)'),
+        booleanValues: arrayFrom('%(BooleanValues)'),
+        validatorUrl: stringOrNullFrom('%(ValidatorUrl)'),
+        customScripts: arrayFrom('%(CustomScripts)'),
+        docExpansion: '%(DocExpansion)',
+        oAuth2Enabled: ('%(OAuth2Enabled)' == 'true'),
+        oAuth2ClientId: '%(OAuth2ClientId)',
+        oAuth2ClientSecret: '%(OAuth2ClientSecret)',
+        oAuth2Realm: '%(OAuth2Realm)',
+        oAuth2AppName: '%(OAuth2AppName)'
+      };
+	  
+	  // Pre load translate...
+      if(window.SwaggerTranslator) {
+        window.SwaggerTranslator.translate();
+      }
+
+      window.swaggerUi = new SwaggerUi({
+        url: swashbuckleConfig.rootUrl + "/" + swashbuckleConfig.discoveryPaths[0],
+        dom_id: "swagger-ui-container",
+        booleanValues: swashbuckleConfig.booleanValues,
+        onComplete: function (swaggerApi, swaggerUi) {
+          if (typeof initOAuth == "function" && swashbuckleConfig.oAuth2Enabled) {
+            initOAuth({
+              clientId: swashbuckleConfig.oAuth2ClientId,
+              clientSecret: swashbuckleConfig.oAuth2ClientSecret,
+              realm: swashbuckleConfig.oAuth2Realm,
+              appName: swashbuckleConfig.oAuth2AppName,
+			        scopeSeperator: ","
+            });
+          }
+		  
+          if(window.SwaggerTranslator) {
+            window.SwaggerTranslator.translate();
+          }
+
+          $('pre code').each(function(i, e) {
+            hljs.highlightBlock(e)
+          });
+
+          addApiKeyAuthorization();
+
+          window.swaggerApi = swaggerApi;
+          _.each(swashbuckleConfig.customScripts, function (script) {
+            $.getScript(script);
+          });
+        },
+        onFailure: function(data) {
+          log("Unable to Load SwaggerUI");
+        },
+        docExpansion: "list",
+        apisSorter: "alpha",
+        showRequestHeaders: false
+      });
+
+      if (window.swashbuckleConfig.validatorUrl !== '')
+        window.swaggerUi.options.validatorUrl = window.swashbuckleConfig.validatorUrl;
+
+      function addApiKeyAuthorization(){
+        var key = encodeURIComponent($('#input_apiKey')[0].value);
+        if(key && key.trim() != "") {
+            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
+            window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
+            log("added key " + key);
+        }
+      }
+
+      $('#input_apiKey').change(addApiKeyAuthorization);
+
+      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
+      /*
+        var apiKey = "myApiKeyXXXX123456789";
+        $('#input_apiKey').val(apiKey);
+      */
+
+      window.swaggerUi.load();
+
+      function log() {
+        if ('console' in window) {
+          console.log.apply(console, arguments);
+        }
+      }
+  });
+  </script>
+</head>
+
+<body class="swagger-section">
+    <nav class="navbar navbar-default navbar-static-top" id='header'>
+        <div class="container swagger-ui-wrap">
+            <div class="navbar-header">
+                <a id="logo" class="navbar-brand"  >Api</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <div class="nav navbar-nav" style="margin: 7.5px 35px;">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-lg btn-success" name="moduleName">Module</button>
+                                <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control input-lg">
+                                <option value="">-Choose-</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <div class='input-group input-group-lg'>
+                                <input placeholder="api_key" id="input_apiKey" name="apiKey" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <div class="input-group input-group-lg">
+                                <input type="text" id="input_baseurl" value="http://petstore.swagger.io/v2/swagger.json" class="form-control" placeholder="Search for...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger" id="genswapper" type="button">gen</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <div class="input-group input-group-lg">
+                                <input type="text" id="input_Authorization" value="" class="form-control" placeholder="">
+                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!--<div id='header'>
+        <div class="swagger-ui-wrap">
+            <a id="logo" href="http://swagger.io">swagger</a>
+            <form id='api_selector'>
+                <div class='input'>
+                    <input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text" />
+                </div>
+                <div class='input'>
+                    <input placeholder="api_key" id="input_apiKey" name="apiKey" type="text" />
+                </div>
+                <div class='input'><a id="explore" href="#" data-sw-translate>Explore</a></div>
+            </form>
+        </div>
+    </div>-->
+    <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+    <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+         
+            
+            $.get("/api/SwaggerInfo/GetMoudles", function (result) {
+                var json = result;
+                var i = 0;
+                var _module = null;
+                var _module_class = null;
+                for (var o in json) {
+                    $("ul.dropdown-menu").append("<li data-value=\"" + o + "\"><a href=\"javascript:void(0);\">" + o + "</a></li>");
+                    if (_module_class == null) {
+                        _module = o;
+                        _module_class = json[o];
+                    }
+                }
+                for (var i = 0; i < _module_class.length; i++) {
+                    $("select").append('<option value="' + _module_class[i] + '">' + _module_class[i] + '</option>');
+                }
+                $("ul.dropdown-menu > li").on("click", function (event) {
+                    if (_module != $(this).attr("data-value")) {
+                        _module = $(this).attr("data-value");
+                        _module_class = json[_module];
+                        $("button[name='moduleName']").text(_module);
+                        $("select").empty();
+                        $("select").append('<option value="">-Choose-</option>');
+                        for (var i = 0; i < _module_class.length; i++) {
+                            $("select").append('<option value="' + _module_class[i] + '">' + _module_class[i] + '</option>');
+                        }
+                    }
+                });
+                $("select").on("change", function (event) {
+                    if ($(this).val()) {
+                        var url = window.location.origin;
+                        $('#input_baseurl').val(url + "/swag/" + _module + "/" + $(this).val() + ".js");
+                        if ($('#input_Authorization').val()) {
+                            var authkey = "Bearer " + $('#input_Authorization').val();
+                            var Auth = new SwaggerClient.ApiKeyAuthorization("Authorization", authkey, "header");
+                            window.swaggerUi.api.clientAuthorizations.add("Bearer", Auth);
+                        } 
+                       
+                        window.swaggerUi.options.url = $('#input_baseurl').val();
+                        window.swaggerUi.load();
+                       
+                       
+                      
+                       
+                    }
+                });
+
+            });
+
+            $("#genswapper").on("click", function () {
+                window.swaggerUi.options.url = $('#input_baseurl').val();
+                window.swaggerUi.load();
+            })
+           
+        });
+    </script>
+</body>
+</html>

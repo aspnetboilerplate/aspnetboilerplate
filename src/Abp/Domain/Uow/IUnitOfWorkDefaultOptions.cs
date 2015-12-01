@@ -10,6 +10,11 @@ namespace Abp.Domain.Uow
     public interface IUnitOfWorkDefaultOptions
     {
         /// <summary>
+        /// Scope option.
+        /// </summary>
+        TransactionScopeOption Scope { get; set; }
+
+        /// <summary>
         /// Should unit of works be transactional.
         /// Default: true.
         /// </summary>

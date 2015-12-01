@@ -14,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic
 
         static DynamicApiControllerManager()
         {
-            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase); //TODO@Halil: Test ignoring case
+            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>

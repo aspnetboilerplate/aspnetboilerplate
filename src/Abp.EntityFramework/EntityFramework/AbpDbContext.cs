@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
@@ -13,6 +14,7 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
+using Castle.Core.Logging;
 using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework
@@ -33,11 +35,17 @@ namespace Abp.EntityFramework
         public IEntityChangedEventHelper EntityChangedEventHelper { get; set; }
 
         /// <summary>
+        /// Reference to the logger.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
         protected AbpDbContext()
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -48,6 +56,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -58,6 +67,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbCompiledModel model)
             : base(model)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -68,6 +78,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -78,6 +89,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(string nameOrConnectionString, DbCompiledModel model)
             : base(nameOrConnectionString, model)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -88,6 +100,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
             : base(objectContext, dbContextOwnsObjectContext)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -98,6 +111,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
+            Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangedEventHelper = NullEntityChangedEventHelper.Instance;
         }
@@ -119,17 +133,33 @@ namespace Abp.EntityFramework
 
         public override int SaveChanges()
         {
-            ApplyAbpConcepts();
-            return base.SaveChanges();
+            try
+            {
+                ApplyAbpConcepts();
+                return base.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                LogDbEntityValidationException(ex);
+                throw;
+            }
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            ApplyAbpConcepts();
-            return base.SaveChangesAsync(cancellationToken);
+            try
+            {
+                ApplyAbpConcepts();
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                LogDbEntityValidationException(ex);
+                throw;
+            }
         }
 
-        private void ApplyAbpConcepts()
+        protected virtual void ApplyAbpConcepts()
         {
             foreach (var entry in ChangeTracker.Entries())
             {
@@ -169,7 +199,7 @@ namespace Abp.EntityFramework
             }
         }
 
-        private void CheckAndSetTenantIdProperty(DbEntityEntry entry)
+        protected virtual void CheckAndSetTenantIdProperty(DbEntityEntry entry)
         {
             if (entry.Entity is IMustHaveTenant)
             {
@@ -181,49 +211,55 @@ namespace Abp.EntityFramework
             }
         }
 
-        private void CheckAndSetMustHaveTenant(DbEntityEntry entry)
+        protected virtual void CheckAndSetMustHaveTenant(DbEntityEntry entry)
         {
-            var tenantEntity = entry.Cast<IMustHaveTenant>().Entity;
+            var entity = entry.Cast<IMustHaveTenant>().Entity;
 
             if (!this.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
             {
-                if (AbpSession.TenantId != null && tenantEntity.TenantId == 0)
+                if (AbpSession.TenantId != null && entity.TenantId == 0)
                 {
-                    tenantEntity.TenantId = AbpSession.GetTenantId();
+                    entity.TenantId = AbpSession.GetTenantId();
                 }
 
                 return;
             }
 
-            if (AbpSession.TenantId == null)
+            var currentTenantId = (int)this.GetFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId);
+
+            if (currentTenantId == 0)
             {
-                throw new DbEntityValidationException("Can not save a IMustHaveTenant entity while MustHaveTenant filter is enabled and there is no tenant logged in!");
+                throw new DbEntityValidationException("Can not save a IMustHaveTenant entity while MustHaveTenant filter is enabled and current filter parameter value is not set (Probably, no tenant user logged in)!");
             }
 
-            if (tenantEntity.TenantId == 0)
+            if (entity.TenantId == 0)
             {
-                tenantEntity.TenantId = AbpSession.GetTenantId();
+                entity.TenantId = currentTenantId;
             }
-            else if (tenantEntity.TenantId != AbpSession.GetTenantId())
+            else if (entity.TenantId != currentTenantId && entity.TenantId != AbpSession.TenantId)
             {
-                throw new DbEntityValidationException("Can not set IMustHaveTenant.TenantId to a different value than current tenant's Id while MustHaveTenant filter is enabled!");
+                throw new DbEntityValidationException("Can not set IMustHaveTenant.TenantId to a different value than the current filter parameter value or IAbpSession.TenantId while MustHaveTenant filter is enabled!");
             }
         }
 
-        private void CheckMayHaveTenant(DbEntityEntry entry)
+        protected virtual void CheckMayHaveTenant(DbEntityEntry entry)
         {
             if (!this.IsFilterEnabled(AbpDataFilters.MayHaveTenant))
             {
                 return;
             }
 
-            if (entry.Cast<IMayHaveTenant>().Entity.TenantId != AbpSession.TenantId)
+            var currentTenantId = (int?)this.GetFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId);
+
+            var entity = entry.Cast<IMayHaveTenant>().Entity;
+
+            if (entity.TenantId != currentTenantId && entity.TenantId != AbpSession.TenantId)
             {
-                throw new DbEntityValidationException("Can not set TenantId to a different value from current session (IAbpSession.TenantId) while MayHaveTenant filter is enabled!");
+                throw new DbEntityValidationException("Can not set TenantId to a different value than the current filter parameter value or IAbpSession.TenantId while MayHaveTenant filter is enabled!");
             }
         }
 
-        private void SetCreationAuditProperties(DbEntityEntry entry)
+        protected virtual void SetCreationAuditProperties(DbEntityEntry entry)
         {
             if (entry.Entity is IHasCreationTime)
             {
@@ -236,7 +272,7 @@ namespace Abp.EntityFramework
             }
         }
 
-        private void PreventSettingCreationAuditProperties(DbEntityEntry entry)
+        protected virtual void PreventSettingCreationAuditProperties(DbEntityEntry entry)
         {
             //TODO@Halil: Implement this when tested well (Issue #49)
             //if (entry.Entity is IHasCreationTime && entry.Cast<IHasCreationTime>().Property(e => e.CreationTime).IsModified)
@@ -250,7 +286,7 @@ namespace Abp.EntityFramework
             //}
         }
 
-        private void SetModificationAuditProperties(DbEntityEntry entry)
+        protected virtual void SetModificationAuditProperties(DbEntityEntry entry)
         {
             if (entry.Entity is IModificationAudited)
             {
@@ -261,7 +297,7 @@ namespace Abp.EntityFramework
             }
         }
 
-        private void HandleSoftDelete(DbEntityEntry entry)
+        protected virtual void HandleSoftDelete(DbEntityEntry entry)
         {
             if (!(entry.Entity is ISoftDelete))
             {
@@ -279,10 +315,19 @@ namespace Abp.EntityFramework
             }
         }
 
-        private void SetDeletionAuditProperties(IDeletionAudited entity)
+        protected virtual void SetDeletionAuditProperties(IDeletionAudited entity)
         {
             entity.DeletionTime = Clock.Now;
             entity.DeleterUserId = AbpSession.UserId;
+        }
+
+        private void LogDbEntityValidationException(DbEntityValidationException exception)
+        {
+            Logger.Error("There are some validation errors while saving changes in EntityFramework:");
+            foreach (var ve in exception.EntityValidationErrors.SelectMany(eve => eve.ValidationErrors))
+            {
+                Logger.Error(" - " + ve.PropertyName + ": " + ve.ErrorMessage);
+            }
         }
     }
 }
