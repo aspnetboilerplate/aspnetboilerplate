@@ -8,7 +8,7 @@ namespace Abp.EntityFramework.Dependency
     /// <summary>
     /// Registers classes derived from AbpDbContext with configurations.
     /// </summary>
-    public class EntityFrameworkConventionalRegisterer : IConventionalDependencyRegistrar
+    public class EntityFrameworkConventionalRegistrar : IConventionalDependencyRegistrar
     {
         public void RegisterAssembly(IConventionalRegistrationContext context)
         {

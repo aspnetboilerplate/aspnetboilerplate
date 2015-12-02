@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFramework\AbpDbContext.cs" />
-    <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegisterer.cs" />
+    <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegistrar.cs" />
     <Compile Include="EntityFramework\Extensions\QueryableExtensions.cs" />
     <Compile Include="EntityFramework\Repositories\AutoRepositoryTypesAttribute.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
