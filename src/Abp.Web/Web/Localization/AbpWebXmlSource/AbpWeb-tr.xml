@@ -6,5 +6,6 @@
     <text name="AreYouSure" value="Emin misiniz?" />
     <text name="Cancel" value="İptal" />
     <text name="Yes" value="Evet" />
+    <text name="ValidationNarrativeTitle" value="Aşağıdaki hatalar doğrulama sırasında tespit edilmiştir." />
   </texts>
 </localizationDictionary>

@@ -76,6 +76,7 @@ namespace Abp.Authorization
                 .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                 .Where(p =>
                     p.FeatureDependency == null ||
+                    AbpSession.MultiTenancySide == MultiTenancySides.Host ||
                     (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
                     p.FeatureDependency.IsSatisfied(_featureDependencyContext)
                 ).ToImmutableList();
