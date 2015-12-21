@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="pt-BR">
   <texts>
     <text name="SmtpHost">SMTP host</text>
