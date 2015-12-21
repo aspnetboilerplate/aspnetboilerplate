@@ -10,5 +10,6 @@
     <text name="UseDefaultCredentials">使用默认验证</text>
     <text name="DefaultFromSenderEmailAddress">默认发件人邮箱地址</text>
     <text name="DefaultFromSenderDisplayName">默认发件人名字</text>
+    <text name="DefaultLanguage">预设语言</text>
   </texts>
 </localizationDictionary>

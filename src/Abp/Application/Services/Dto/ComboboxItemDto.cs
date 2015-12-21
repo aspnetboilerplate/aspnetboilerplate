@@ -19,6 +19,11 @@ namespace Abp.Application.Services.Dto
         public string DisplayText { get; set; }
 
         /// <summary>
+        /// Is selected?
+        /// </summary>
+        public bool IsSelected { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="ComboboxItemDto"/>.
         /// </summary>
         public ComboboxItemDto()

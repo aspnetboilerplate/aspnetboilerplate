@@ -13,6 +13,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
         public ILogger Logger { get; set; }
@@ -27,7 +28,7 @@ namespace Abp.EntityFramework
 
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegistrar(new EntityFrameworkConventionalRegisterer());
+            IocManager.AddConventionalRegistrar(new EntityFrameworkConventionalRegistrar());
         }
 
         public override void Initialize()

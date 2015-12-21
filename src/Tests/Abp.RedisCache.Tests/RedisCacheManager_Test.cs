@@ -29,7 +29,7 @@ namespace Abp.RedisCache.Tests
             _cache.DefaultSlidingExpireTime.ShouldBe(defaultSlidingExpireTime);
         }
 
-        [Fact]
+        //[Fact]
         public void Simple_Get_Set_Test()
         {
             _cache.GetOrDefault("A").ShouldBe(null);

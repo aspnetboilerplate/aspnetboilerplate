@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -73,19 +73,23 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Dependency\SingletonDependency.cs" />
     <Compile Include="Application\Features\Feature.cs" />
     <Compile Include="Application\Features\FeatureChecker.cs" />
     <Compile Include="Application\Features\FeatureCheckerExtensions.cs" />
     <Compile Include="Application\Features\FeatureConfiguration.cs" />
     <Compile Include="Application\Features\FeatureDefinitionContextBase.cs" />
     <Compile Include="Application\Features\FeatureDependencyContext.cs" />
+    <Compile Include="Application\Features\FeatureDependencyExtensions.cs" />
     <Compile Include="Application\Features\FeatureDictionary.cs" />
     <Compile Include="Application\Features\FeatureInterceptor.cs" />
     <Compile Include="Application\Features\FeatureInterceptorRegistrar.cs" />
@@ -99,6 +103,13 @@
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
+    <Compile Include="Localization\LocalizationSettingNames.cs" />
+    <Compile Include="Localization\LocalizationSettingProvider.cs" />
+    <Compile Include="Localization\LocalizationSourceHelper.cs" />
+    <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
+    <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
+    <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
+    <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
@@ -109,7 +120,7 @@
     <Compile Include="UI\Inputs\IInputType.cs" />
     <Compile Include="Runtime\Validation\AlwaysValidValueValidator.cs" />
     <Compile Include="Runtime\Validation\NumericValueValidator.cs" />
-    <Compile Include="Application\Features\NullFeatureChecker.cs" />
+    <Compile Include="Application\Features\NullFeatureValueStore.cs" />
     <Compile Include="Application\Features\RequiresFeatureAttribute.cs" />
     <Compile Include="Application\Navigation\HasMenuItemDefinitionsExtensions.cs" />
     <Compile Include="Application\Navigation\IHasMenuItemDefinitions.cs" />
@@ -153,7 +164,7 @@
     <Compile Include="Runtime\Caching\Configuration\CachingConfiguration.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICacheConfigurator.cs" />
     <Compile Include="Runtime\Caching\Configuration\ICachingConfiguration.cs" />
-    <Compile Include="Json\JsonHelper.cs" />
+    <Compile Include="Json\JsonExtensions.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="Application\Services\Dto\NameValueDto.cs" />
     <Compile Include="Application\Services\Dto\NullableIdInput.cs" />
@@ -493,6 +504,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-zh-CN.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-de.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-pt-BR.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

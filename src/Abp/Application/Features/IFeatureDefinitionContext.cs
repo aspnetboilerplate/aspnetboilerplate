@@ -3,6 +3,9 @@ using Abp.UI.Inputs;
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// Used in <see cref="FeatureProvider.SetFeatures"/> method as context.
+    /// </summary>
     public interface IFeatureDefinitionContext
     {
         /// <summary>

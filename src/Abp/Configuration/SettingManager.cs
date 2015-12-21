@@ -16,25 +16,7 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingManager : ISettingManager, ISingletonDependency
     {
-        /// <summary>
-        /// Cache key for application settings.
-        /// </summary>
         public const string ApplicationSettingsCacheKey = "ApplicationSettings";
-
-        /// <summary>
-        ///  Unique name of the application settings cache: AbpApplicationSettingsCache.
-        /// </summary>
-        public const string ApplicationSettingsCacheName = "AbpApplicationSettingsCache";
-
-        /// <summary>
-        ///  Unique name of the tenant settings cache: AbpApplicationSettingsCache.
-        /// </summary>
-        public const string TenantSettingsCacheName = "AbpTenantSettingsCache";
-
-        /// <summary>
-        ///  Unique name of the user settings cache: AbpApplicationSettingsCache.
-        /// </summary>
-        public const string UsersSettingsCacheName = "AbpUserSettingsCache";
 
         /// <summary>
         /// Reference to the current Session.

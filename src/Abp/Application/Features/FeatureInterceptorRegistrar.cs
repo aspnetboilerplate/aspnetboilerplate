@@ -7,6 +7,9 @@ using Castle.MicroKernel;
 
 namespace Abp.Application.Features
 {
+    /// <summary>
+    /// Used to register <see cref="FeatureInterceptor"/> for needed classes.
+    /// </summary>
     internal static class FeatureInterceptorRegistrar
     {
         public static void Initialize(IIocManager iocManager)

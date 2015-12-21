@@ -6,7 +6,6 @@ using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
-using Abp.Logging;
 
 namespace Abp.Localization.Dictionaries
 {
@@ -21,7 +20,9 @@ namespace Abp.Localization.Dictionaries
         /// </summary>
         public string Name { get; private set; }
 
-        private ILocalizationConfiguration _configuration;
+        public ILocalizationDictionaryProvider DictionaryProvider { get { return _dictionaryProvider; } }
+
+        protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
 
         private readonly ILocalizationDictionaryProvider _dictionaryProvider;
 
@@ -34,7 +35,7 @@ namespace Abp.Localization.Dictionaries
         {
             if (name.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("name");                
+                throw new ArgumentNullException("name");
             }
 
             Name = name;
@@ -50,8 +51,8 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            _configuration = configuration;
-            _dictionaryProvider.Initialize(Name);
+            LocalizationConfiguration = configuration;
+            DictionaryProvider.Initialize(Name);
         }
 
         /// <inheritdoc/>
@@ -63,12 +64,29 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public string GetString(string name, CultureInfo culture)
         {
-            var cultureCode = culture.Name;
+            var value = GetStringOrNull(name, culture);
+
+            if (value == null)
+            {
+                return ReturnGivenNameOrThrowException(name);
+            }
+
+            return value;
+        }
+
+        public string GetStringOrNull(string name, bool tryDefaults = true)
+        {
+            return GetStringOrNull(name, Thread.CurrentThread.CurrentUICulture, tryDefaults);
+        }
+
+        public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
+        {
+            var cultureName = culture.Name;
+            var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
-            
             ILocalizationDictionary originalDictionary;
-            if (_dictionaryProvider.Dictionaries.TryGetValue(cultureCode, out originalDictionary))
+            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
             {
                 var strOriginal = originalDictionary.GetOrNull(name);
                 if (strOriginal != null)
@@ -77,13 +95,16 @@ namespace Abp.Localization.Dictionaries
                 }
             }
 
-            //Try to get from same language dictionary (without country code)
-            
-            if (cultureCode.Length == 5) //Example: "tr-TR" (length=5)
+            if (!tryDefaults)
             {
-                var langCode = cultureCode.Substring(0, 2);
+                return null;
+            }
+
+            //Try to get from same language dictionary (without country code)
+            if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
+            {
                 ILocalizationDictionary langDictionary;
-                if (_dictionaryProvider.Dictionaries.TryGetValue(langCode, out langDictionary))
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
                 {
                     var strLang = langDictionary.GetOrNull(name);
                     if (strLang != null)
@@ -94,114 +115,95 @@ namespace Abp.Localization.Dictionaries
             }
 
             //Try to get from default language
-
-            if (_dictionaryProvider.DefaultDictionary == null)
+            var defaultDictionary = DictionaryProvider.DefaultDictionary;
+            if (defaultDictionary == null)
             {
-                var exceptionMessage = string.Format(
-                    "Can not find '{0}' in localization source '{1}'! No default language is defined!",
-                    name, Name
-                    );
-
-                if (_configuration.ReturnGivenTextIfNotFound)
-                {
-                    LogHelper.Logger.Warn(exceptionMessage);
-                    return _configuration.WrapGivenTextIfNotFound
-                        ? string.Format("[{0}]", name)
-                        : name;
-                }
-
-                throw new AbpException(exceptionMessage);
+                return null;
             }
 
-            var strDefault = _dictionaryProvider.DefaultDictionary.GetOrNull(name);
+            var strDefault = defaultDictionary.GetOrNull(name);
             if (strDefault == null)
             {
-                var exceptionMessage = string.Format(
-                    "Can not find '{0}' in localization source '{1}'!",
-                    name, Name
-                    );
-
-                if (_configuration.ReturnGivenTextIfNotFound)
-                {
-                    LogHelper.Logger.Warn(exceptionMessage);
-                    return _configuration.WrapGivenTextIfNotFound
-                        ? string.Format("[{0}]", name)
-                        : name;
-                }
-
-                throw new AbpException(exceptionMessage);
+                return null;
             }
 
             return strDefault.Value;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<LocalizedString> GetAllStrings()
+        public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture);
+            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture)
+        public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
+            //TODO: Can be optimized (example: if it's already default dictionary, skip overriding)
+
+            var dictionaries = DictionaryProvider.Dictionaries;
+
             //Create a temp dictionary to build
-            var dictionary = new Dictionary<string, LocalizedString>();
+            var allStrings = new Dictionary<string, LocalizedString>();
 
-            //Fill all strings from default dictionary
-            if (_dictionaryProvider.DefaultDictionary != null)
+            if (includeDefaults)
             {
-                foreach (var defaultDictString in _dictionaryProvider.DefaultDictionary.GetAllStrings())
+                //Fill all strings from default dictionary
+                var defaultDictionary = DictionaryProvider.DefaultDictionary;
+                if (defaultDictionary != null)
                 {
-                    dictionary[defaultDictString.Name] = defaultDictString;
-                }
-            }
-
-            //Overwrite all strings from the language based on country culture
-            if (culture.Name.Length == 5)
-            {
-                ILocalizationDictionary langDictionary;
-                if (_dictionaryProvider.Dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
-                {
-                    foreach (var langString in langDictionary.GetAllStrings())
+                    foreach (var defaultDictString in defaultDictionary.GetAllStrings())
                     {
-                        dictionary[langString.Name] = langString;
+                        allStrings[defaultDictString.Name] = defaultDictString;
+                    }
+                }
+
+                //Overwrite all strings from the language based on country culture
+                if (culture.Name.Contains("-"))
+                {
+                    ILocalizationDictionary langDictionary;
+                    if (dictionaries.TryGetValue(GetBaseCultureName(culture.Name), out langDictionary))
+                    {
+                        foreach (var langString in langDictionary.GetAllStrings())
+                        {
+                            allStrings[langString.Name] = langString;
+                        }
                     }
                 }
             }
 
             //Overwrite all strings from the original dictionary
             ILocalizationDictionary originalDictionary;
-            if (_dictionaryProvider.Dictionaries.TryGetValue(culture.Name, out originalDictionary))
+            if (dictionaries.TryGetValue(culture.Name, out originalDictionary))
             {
                 foreach (var originalLangString in originalDictionary.GetAllStrings())
                 {
-                    dictionary[originalLangString.Name] = originalLangString;
+                    allStrings[originalLangString.Name] = originalLangString;
                 }
             }
 
-            return dictionary.Values.ToImmutableList();
+            return allStrings.Values.ToImmutableList();
         }
 
         /// <summary>
         /// Extends the source with given dictionary.
         /// </summary>
         /// <param name="dictionary">Dictionary to extend the source</param>
-        public void Extend(ILocalizationDictionary dictionary)
+        public virtual void Extend(ILocalizationDictionary dictionary)
         {
-            //Add
-            ILocalizationDictionary existingDictionary;
-            if (!_dictionaryProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
-            {
-                _dictionaryProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-                return;
-            }
+            DictionaryProvider.Extend(dictionary);
+        }
 
-            //Override
-            var localizedStrings = dictionary.GetAllStrings();
-            foreach (var localizedString in localizedStrings)
-            {
-                existingDictionary[localizedString.Name] = localizedString.Value;
-            }
+        protected virtual string ReturnGivenNameOrThrowException(string name)
+        {
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name);
+        }
+
+        private static string GetBaseCultureName(string cultureName)
+        {
+            return cultureName.Contains("-")
+                ? cultureName.Left(cultureName.IndexOf("-", StringComparison.InvariantCulture))
+                : cultureName;
         }
     }
 }

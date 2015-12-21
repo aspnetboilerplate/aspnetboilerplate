@@ -72,7 +72,7 @@ namespace Abp.Runtime.Caching
         void Remove(string key);
 
         /// <summary>
-        /// Removes a cache item by it's key.
+        /// Removes a cache item by it's key (does nothing if given key does not exists in the cache).
         /// </summary>
         /// <param name="key">Key</param>
         Task RemoveAsync(string key);
