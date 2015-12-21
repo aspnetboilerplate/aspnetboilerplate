@@ -1,11 +1,11 @@
+using Abp.Extensions;
+using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Extensions;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
 
 namespace Abp.Domain.Uow
 {
@@ -35,6 +35,7 @@ namespace Abp.Domain.Uow
         {
             get { return _filters.ToImmutableList(); }
         }
+
         private readonly List<DataFilterConfiguration> _filters;
 
         /// <summary>
@@ -97,7 +98,7 @@ namespace Abp.Domain.Uow
 
             SetFilters(options.FilterOverrides);
 
-            BeginUow();
+            BeginTransactional(options);
         }
 
         /// <inheritdoc/>
@@ -243,7 +244,13 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Should be implemented by derived classes to start UOW.
         /// </summary>
+        [Obsolete("If you want to open the transaction, please use the BeginTransactional(UnitOfWorkOptions options)", false)]
         protected abstract void BeginUow();
+
+        /// <summary>
+        /// Should be implemented by derived classes to UOW begin transactional.
+        /// </summary>
+        public abstract void BeginTransactional(UnitOfWorkOptions options);
 
         /// <summary>
         /// Should be implemented by derived classes to complete UOW.
@@ -281,7 +288,6 @@ namespace Abp.Domain.Uow
         {
             throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
         }
-
 
         /// <summary>
         /// Concrete Unit of work classes should implement this

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Dependency;
+using System;
 using System.Transactions;
-using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
@@ -69,6 +69,15 @@ namespace Abp.Domain.Uow
             _currentUnitOfWorkProvider.Current = uow;
 
             return uow;
+        }
+
+        /// <summary>
+        /// Current unit of work begin transactional
+        /// </summary>
+        public void BeginTransactional(UnitOfWorkOptions options)
+        {
+            var uow = _iocResolver.Resolve<IUnitOfWork>();
+            uow.BeginTransactional(options);
         }
     }
 }

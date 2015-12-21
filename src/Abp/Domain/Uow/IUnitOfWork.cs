@@ -18,11 +18,16 @@ namespace Abp.Domain.Uow
         /// Reference to the outer UOW if exists.
         /// </summary>
         IUnitOfWork Outer { get; set; }
-        
+
         /// <summary>
         /// Begins the unit of work with given options.
         /// </summary>
         /// <param name="options">Unit of work options</param>
         void Begin(UnitOfWorkOptions options);
+
+        /// <summary>
+        /// Current unit of work begin transactional
+        /// </summary>
+        void BeginTransactional(UnitOfWorkOptions options);
     }
 }

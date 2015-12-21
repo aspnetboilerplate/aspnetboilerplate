@@ -30,5 +30,10 @@ namespace Abp.Domain.Uow
         /// </summary>
         /// <returns>A handle to be able to complete the unit of work</returns>
         IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options);
+
+        /// <summary>
+        /// Current unit of work begin transactional
+        /// </summary>
+        void BeginTransactional(UnitOfWorkOptions options);
     }
 }

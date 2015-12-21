@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
+using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {
@@ -24,21 +24,35 @@ namespace Abp.Domain.Uow
         {
             if (_unitOfWorkManager.Current != null)
             {
+                //If you specify the open transaction, will the current uow affairs open
+                if (!_unitOfWorkManager.Current.Options.IsTransactional.Value)
+                {
+                    var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+                    if (unitOfWorkAttr != null && !unitOfWorkAttr.IsDisabled && unitOfWorkAttr.IsTransactional.HasValue && unitOfWorkAttr.IsTransactional.Value)
+                    {
+                        _unitOfWorkManager.Current.Options.IsTransactional = unitOfWorkAttr.IsTransactional;
+                        _unitOfWorkManager.Current.Options.IsolationLevel = unitOfWorkAttr.IsolationLevel;
+                        _unitOfWorkManager.Current.Options.Scope = unitOfWorkAttr.Scope;
+                        _unitOfWorkManager.BeginTransactional(_unitOfWorkManager.Current.Options);
+                    }
+                }
                 //Continue with current uow
                 invocation.Proceed();
-                return;
             }
-
-            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
-            if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
+            else
             {
-                //No need to a uow
-                invocation.Proceed();
-                return;
+                var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+                if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
+                {
+                    //No need to a uow
+                    invocation.Proceed();
+                }
+                else
+                {
+                    //No current uow, run a new one
+                    PerformUow(invocation, unitOfWorkAttr.CreateOptions());
+                }
             }
-
-            //No current uow, run a new one
-            PerformUow(invocation, unitOfWorkAttr.CreateOptions());
         }
 
         private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)

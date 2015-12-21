@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -19,7 +19,7 @@ namespace Abp.EntityFramework.Uow
         protected readonly IDictionary<Type, DbContext> ActiveDbContexts;
 
         protected IIocResolver IocResolver { get; private set; }
-        
+
         protected TransactionScope CurrentTransaction;
 
         /// <summary>
@@ -32,6 +32,7 @@ namespace Abp.EntityFramework.Uow
             ActiveDbContexts = new Dictionary<Type, DbContext>();
         }
 
+        [Obsolete("If you want to open the transaction, please use the BeginTransactional(UnitOfWorkOptions options)", false)]
         protected override void BeginUow()
         {
             if (Options.IsTransactional == true)
@@ -50,6 +51,28 @@ namespace Abp.EntityFramework.Uow
                     Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                     transactionOptions,
                     Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
+                    );
+            }
+        }
+
+        public override void BeginTransactional(UnitOfWorkOptions options)
+        {
+            if (options.IsTransactional == true)
+            {
+                var transactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+                };
+
+                if (options.Timeout.HasValue)
+                {
+                    transactionOptions.Timeout = options.Timeout.Value;
+                }
+
+                CurrentTransaction = new TransactionScope(
+                    options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
+                    transactionOptions,
+                    options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
                     );
             }
         }

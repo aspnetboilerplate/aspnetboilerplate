@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -70,16 +71,19 @@ namespace Abp.EntityFramework.Repositories
             return await GetAll().FirstOrDefaultAsync(predicate);
         }
 
+        [UnitOfWork(true)]
         public override TEntity Insert(TEntity entity)
         {
             return Table.Add(entity);
         }
 
+        [UnitOfWork(true)]
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
             return Task.FromResult(Table.Add(entity));
         }
 
+        [UnitOfWork(true)]
         public override TPrimaryKey InsertAndGetId(TEntity entity)
         {
             entity = Insert(entity);
@@ -92,6 +96,7 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
+        [UnitOfWork(true)]
         public override async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
             entity = await InsertAsync(entity);
@@ -104,6 +109,7 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
+        [UnitOfWork(true)]
         public override TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
         {
             entity = InsertOrUpdate(entity);
@@ -116,6 +122,7 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
+        [UnitOfWork(true)]
         public override async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
             entity = await InsertOrUpdateAsync(entity);
@@ -128,6 +135,7 @@ namespace Abp.EntityFramework.Repositories
             return entity.Id;
         }
 
+        [UnitOfWork(true)]
         public override TEntity Update(TEntity entity)
         {
             AttachIfNot(entity);
@@ -135,6 +143,7 @@ namespace Abp.EntityFramework.Repositories
             return entity;
         }
 
+        [UnitOfWork(true)]
         public override Task<TEntity> UpdateAsync(TEntity entity)
         {
             AttachIfNot(entity);
@@ -142,6 +151,7 @@ namespace Abp.EntityFramework.Repositories
             return Task.FromResult(entity);
         }
 
+        [UnitOfWork(true)]
         public override void Delete(TEntity entity)
         {
             AttachIfNot(entity);
@@ -156,6 +166,7 @@ namespace Abp.EntityFramework.Repositories
             }
         }
 
+        [UnitOfWork(true)]
         public override void Delete(TPrimaryKey id)
         {
             var entity = Table.Local.FirstOrDefault(ent => EqualityComparer<TPrimaryKey>.Default.Equals(ent.Id, id));
