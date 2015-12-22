@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Repositories;
+﻿using System;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.TestBase.SampleApplication.People;
@@ -85,7 +87,6 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             triggerCount.ShouldBe(1);
         }
 
-
         [Fact]
         public void Should_Trigger_Event_On_Delete()
         {
@@ -102,6 +103,57 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             _personRepository.Delete(person.Id);
 
             triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_Rollback_UOW_In_Updating_Event()
+        {
+            //Arrange
+            var updatingTriggerCount = 0;
+            var updatedTriggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityUpdatingEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil2");
+                    updatingTriggerCount++;
+
+                    throw new ApplicationException("A sample exception to rollback the UOW.");
+                });
+
+            Resolve<IEventBus>().Register<EntityUpdatedEventData<Person>>(
+                eventData =>
+                {
+                    //Should not come here, since UOW is failed
+                    updatedTriggerCount++;
+                });
+
+            //Act
+            try
+            {
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var person = _personRepository.Single(p => p.Name == "halil");
+                    person.Name = "halil2";
+                    _personRepository.Update(person);
+
+                    uow.Complete();
+                }
+
+                Assert.True(false, "Should not come here since ApplicationException is thrown!");
+            }
+            catch (ApplicationException)
+            {
+                //hiding exception
+            }
+
+            //Assert
+            updatingTriggerCount.ShouldBe(1);
+            updatedTriggerCount.ShouldBe(0);
+
+            _personRepository
+                .FirstOrDefault(p => p.Name == "halil")
+                .ShouldNotBeNull(); //should not be changed since we throw exception to rollback the transaction
         }
     }
 }
