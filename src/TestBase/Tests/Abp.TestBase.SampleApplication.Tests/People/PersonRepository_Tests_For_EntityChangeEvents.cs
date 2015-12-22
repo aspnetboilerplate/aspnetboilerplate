@@ -17,21 +17,53 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
-        public void Should_Trigger_Event_On_Create()
+        public void Should_Trigger_All_Events_On_Create()
         {
-            var triggerCount = 0;
+            var changingTriggerCount = 0;
+            var creatingTriggerCount = 0;
+
+            var changedTriggerCount = 0;
+            var createdTriggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityChangingEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(true);
+                    changingTriggerCount++;
+                });
+
+            Resolve<IEventBus>().Register<EntityCreatingEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(true);
+                    creatingTriggerCount++;
+                });
+
+            Resolve<IEventBus>().Register<EntityChangedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    changedTriggerCount++;
+                });
 
             Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
-                    triggerCount++;
+                    createdTriggerCount++;
                 });
 
             _personRepository.Insert(new Person { ContactListId = 1, Name = "halil" });
 
-            triggerCount.ShouldBe(1);
+            changingTriggerCount.ShouldBe(1);
+            creatingTriggerCount.ShouldBe(1);
+
+            changedTriggerCount.ShouldBe(1);
+            createdTriggerCount.ShouldBe(1);
         }
 
         [Fact]

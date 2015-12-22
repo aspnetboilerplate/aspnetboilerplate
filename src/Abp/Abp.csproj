@@ -102,6 +102,10 @@
     <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityCreatingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityDeletingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityUpdatingEventData.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
@@ -302,9 +306,9 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Events\Bus\Entities\EntityChangedEventData.cs" />
-    <Compile Include="Events\Bus\Entities\EntityChangedEventHelper.cs" />
-    <Compile Include="Events\Bus\Entities\IEntityChangedEventHelper.cs" />
-    <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangeEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\IEntityChangeEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\NullEntityChangeEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
     <Compile Include="IShouldInitialize.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />

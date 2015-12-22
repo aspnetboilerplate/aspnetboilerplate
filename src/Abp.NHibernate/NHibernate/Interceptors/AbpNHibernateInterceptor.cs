@@ -13,7 +13,7 @@ namespace Abp.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {
-        public IEntityChangedEventHelper EntityChangedEventHelper { get; set; }
+        public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
 
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
@@ -55,7 +55,8 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
-            EntityChangedEventHelper.TriggerEntityCreatedEvent(entity);
+            EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
+            EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
 
             return base.OnSave(entity, id, state, propertyNames, types);
         }
@@ -135,11 +136,13 @@ namespace Abp.NHibernate.Interceptors
 
             if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
             {
-                EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+                EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
+                EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
             }
             else
             {
-                EntityChangedEventHelper.TriggerEntityUpdatedEvent(entity);
+                EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
+                EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
             }
 
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types);
@@ -147,7 +150,8 @@ namespace Abp.NHibernate.Interceptors
 
         public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
-            EntityChangedEventHelper.TriggerEntityDeletedEvent(entity);
+            EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
+            EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
 
             base.OnDelete(entity, id, state, propertyNames, types);
         }
