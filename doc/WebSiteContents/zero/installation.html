@@ -69,72 +69,79 @@ user, role and tenant classes upon our needs.</p>
 <p>We should implement base <strong>manager</strong> and <strong>store</strong> 
 classes since they are also abstract.</p>
 <p>Start from <strong>user store</strong> and <strong>user manager</strong>:</p>
-<pre lang="cs">public class UserStore : AbpUserStore&#x3C;Tenant, Role, User&#x3E;
+<pre lang="cs">public class UserStore : AbpUserStore&lt;Tenant, Role, User&gt;
 {
     public UserStore(
-        IRepository&#x3C;User, long&#x3E; userRepository,
-        IRepository&#x3C;UserLogin, long&#x3E; userLoginRepository,
-        IRepository&#x3C;UserRole, long&#x3E; userRoleRepository,
-        IRepository&#x3C;Role&#x3E; roleRepository,
-        IRepository&#x3C;UserPermissionSetting, long&#x3E; userPermissionSettingRepository,
-        IUnitOfWorkManager unitOfWorkManager,
-        ICacheManager cacheManager)
+        IRepository&lt;User, long&gt; userRepository,
+        IRepository&lt;UserLogin, long&gt; userLoginRepository,
+        IRepository&lt;UserRole, long&gt; userRoleRepository,
+        IRepository&lt;Role&gt; roleRepository,
+        IRepository&lt;UserPermissionSetting, long&gt; userPermissionSettingRepository,
+        IUnitOfWorkManager unitOfWorkManager
+        )
         : base(
             userRepository,
             userLoginRepository,
             userRoleRepository,
             roleRepository,
             userPermissionSettingRepository,
-            unitOfWorkManager,
-            cacheManager)
+            unitOfWorkManager
+        )
     {
-
     }
 }
 
-public class UserManager : AbpUserManager&#x3C;Tenant, Role, User&#x3E;
+public class UserManager : AbpUserManager&lt;Tenant, Role, User&gt;
 {
     public UserManager(
         UserStore userStore,
         RoleManager roleManager,
-        IRepository&#x3C;Tenant&#x3E; tenantRepository,
+        IRepository&lt;Tenant&gt; tenantRepository,
         IMultiTenancyConfig multiTenancyConfig,
         IPermissionManager permissionManager,
         IUnitOfWorkManager unitOfWorkManager,
         ISettingManager settingManager,
         IUserManagementConfig userManagementConfig,
         IIocResolver iocResolver,
-        ICacheManager cacheManager
-        )
+        ICacheManager cacheManager,
+        IRepository&lt;OrganizationUnit, long&gt; organizationUnitRepository,
+        IRepository&lt;UserOrganizationUnit, long&gt; userOrganizationUnitRepository,
+        IOrganizationUnitSettings organizationUnitSettings)
         : base(
-        userStore,
-        roleManager,
-        tenantRepository,
-        multiTenancyConfig,
-        permissionManager,
-        unitOfWorkManager,
-        settingManager,
-        userManagementConfig,
-        iocResolver,
-        cacheManager)
+            userStore,
+            roleManager,
+            tenantRepository,
+            multiTenancyConfig,
+            permissionManager,
+            unitOfWorkManager,
+            settingManager,
+            userManagementConfig,
+            iocResolver,
+            cacheManager,
+            organizationUnitRepository,
+            userOrganizationUnitRepository,
+            organizationUnitSettings)
     {
+
     }
 }</pre>
 <p>Don't worry dependency list. They may change in next versions. Just arrange 
-constructors if needed. It's similar for <strong>role store</strong> and <strong>role manager</strong>:</p>
-<pre lang="cs">public class RoleStore : AbpRoleStore&#x3C;Tenant, Role, User&#x3E;
+constructors if needed (or you can copy from
+<a href="https://github.com/aspnetboilerplate/module-zero/tree/master/src/Tests/Abp.Zero.SampleApp" target="_blank">
+this project</a>). It's similar for <strong>role store</strong> and <strong>role manager</strong>:</p>
+<pre lang="cs">public class RoleStore : AbpRoleStore&lt;Tenant, Role, User&gt;
 {
     public RoleStore(
-        IRepository&#x3C;Role&#x3E; roleRepository,
-        IRepository&#x3C;UserRole, long&#x3E; userRoleRepository,
-        IRepository&#x3C;RolePermissionSetting, long&#x3E; rolePermissionSettingRepository,
-        ICacheManager cacheManager)
+        IRepository&lt;Role&gt; roleRepository,
+        IRepository&lt;UserRole, long&gt; userRoleRepository,
+        IRepository&lt;RolePermissionSetting, long&gt; rolePermissionSettingRepository)
         : base(
             roleRepository,
             userRoleRepository,
-            rolePermissionSettingRepository,
-            cacheManager)
+            rolePermissionSettingRepository
+        )
     {
+
     }
 }
 
@@ -146,19 +153,26 @@ public class RoleManager : AbpRoleManager&#x3C;Tenant, Role, User&#x3E;
         IRoleManagementConfig roleManagementConfig, 
         ICacheManager cacheManager)
         : base(
-        store, 
-        permissionManager, 
-        roleManagementConfig, 
-        cacheManager)
+            store, 
+            permissionManager, 
+            roleManagementConfig, 
+            cacheManager)
     {
     }
 }</pre>
 <p>Here, the <strong>tenant manager</strong> (no tenant 
 store here):</p>
-<pre lang="cs">public class TenantManager : AbpTenantManager&#x3C;Tenant, Role, User&#x3E;
+<pre lang="cs">public class TenantManager : AbpTenantManager&lt;Tenant, Role, User&gt;
 {
-    public TenantManager(EditionManager editionManager) : 
-        base(editionManager)
+    public TenantManager(
+        IRepository&lt;Tenant&gt; tenantRepository, 
+        IRepository&lt;TenantFeatureSetting, long&gt; tenantFeatureRepository, 
+        EditionManager editionManager) : 
+        base(
+            tenantRepository, 
+            tenantFeatureRepository, 
+            editionManager
+        )
     {
     }
 }</pre>
@@ -175,6 +189,18 @@ store here):</p>
 
 public class EditionManager : AbpEditionManager
 {
+    public const string DefaultEditionName = &quot;Standard&quot;;
+
+    public EditionManager(
+        IRepository&lt;Edition&gt; editionRepository, 
+        IRepository&lt;EditionFeatureSetting, long&gt; editionFeatureRepository) 
+        : base(
+            editionRepository, 
+            editionFeatureRepository
+        )
+    {
+
+    }
 }</pre>
 
 <h5 id="DocPermissionChecker">Permission checker</h5>
