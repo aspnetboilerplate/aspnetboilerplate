@@ -78,5 +78,14 @@ namespace Abp.NHibernate.EntityMappings
         {
             mapping.Map(x => x.IsDeleted);
         }
+
+        /// <summary>
+        /// Maps MapIsActive column (defined by <see cref="IPassivable"/>).
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapIsActive<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IPassivable
+        {
+            mapping.Map(x => x.IsActive);
+        }
     }
 }
