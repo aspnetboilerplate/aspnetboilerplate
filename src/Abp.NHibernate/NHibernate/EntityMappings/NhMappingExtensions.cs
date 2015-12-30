@@ -50,12 +50,21 @@ namespace Abp.NHibernate.EntityMappings
         }
 
         /// <summary>
-        /// Maps modification audit columns. See <see cref="ICreationAudited"/>.
+        /// Maps LastModificationTime column. See <see cref="IHasModificationTime"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapLastModificationTime<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IHasModificationTime
+        {
+            mapping.Map(x => x.LastModificationTime);
+        }
+
+        /// <summary>
+        /// Maps modification audit columns. See <see cref="IModificationAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         public static void MapModificationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IModificationAudited
         {
-            mapping.Map(x => x.LastModificationTime);
+            mapping.MapLastModificationTime();
             mapping.Map(x => x.LastModifierUserId);
         }
 

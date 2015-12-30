@@ -292,12 +292,14 @@ namespace Abp.EntityFramework
 
         protected virtual void SetModificationAuditProperties(DbEntityEntry entry)
         {
+            if (entry.Entity is IHasModificationTime)
+            {
+                entry.Cast<IHasModificationTime>().Entity.LastModificationTime = Clock.Now;
+            }
+
             if (entry.Entity is IModificationAudited)
             {
-                var auditedEntry = entry.Cast<IModificationAudited>();
-
-                auditedEntry.Entity.LastModificationTime = Clock.Now;
-                auditedEntry.Entity.LastModifierUserId = AbpSession.UserId;
+                entry.Cast<IModificationAudited>().Entity.LastModifierUserId = AbpSession.UserId;
             }
         }
 

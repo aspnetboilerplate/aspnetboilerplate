@@ -89,15 +89,22 @@ namespace Abp.NHibernate.Interceptors
             //}
 
             //Set modification audits
-            if (entity is IModificationAudited)
+            if (entity is IHasModificationTime)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
                     if (propertyNames[i] == "LastModificationTime")
                     {
-                        currentState[i] = (entity as IModificationAudited).LastModificationTime = Clock.Now;
+                        currentState[i] = (entity as IHasModificationTime).LastModificationTime = Clock.Now;
                     }
-                    else if (propertyNames[i] == "LastModifierUserId")
+                }
+            }
+
+            if (entity is IModificationAudited)
+            {
+                for (var i = 0; i < propertyNames.Length; i++)
+                {
+                    if (propertyNames[i] == "LastModifierUserId")
                     {
                         currentState[i] = (entity as IModificationAudited).LastModifierUserId = _abpSession.Value.UserId;
                     }
