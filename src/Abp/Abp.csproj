@@ -101,6 +101,7 @@
     <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasDeletionTime.cs" />
     <Compile Include="Domain\Entities\Auditing\IHasModificationTime.cs" />
     <Compile Include="Events\Bus\Entities\EntityChangingEventData.cs" />
     <Compile Include="Events\Bus\Entities\EntityCreatingEventData.cs" />
