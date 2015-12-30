@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Extensions;
+using Castle.Core.Logging;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -15,8 +16,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private HashSet<Type> _typesToBeDone = new HashSet<Type>();
         private HashSet<Type> _doneTypes = new HashSet<Type>();
         private string _servicePrefix = "";
-
-        public string Generate(DynamicApiControllerInfo controllerInfo,string servicePrefix)
+        public string Generate(DynamicApiControllerInfo controllerInfo, string servicePrefix)
         {
             if (_servicePrefix != servicePrefix)
             {
@@ -40,7 +40,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 if (returnType == "void")
                     script.AppendLine(string.Format("            {0} ({1}): abp.IPromise; ", methodInfo.ActionName.ToCamelCase(), GetMethodInputParameter(methodInfo.Method)));
                 else
-                    script.AppendLine(string.Format("            {0} ({1}): abp.IGenericPromise<{2}>; ", methodInfo.ActionName.ToCamelCase(), GetMethodInputParameter(methodInfo.Method),returnType));
+                    script.AppendLine(string.Format("            {0} ({1}): abp.IGenericPromise<{2}>; ", methodInfo.ActionName.ToCamelCase(), GetMethodInputParameter(methodInfo.Method), returnType));
 
             }
 
@@ -48,6 +48,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             while (_typesToBeDone != null && _typesToBeDone.Count > 0)
             {
                 Type type = _typesToBeDone.First();
+
                 script.AppendLine(GenerateTypeScript(type));
                 _doneTypes.Add(type);
                 _typesToBeDone.RemoveWhere(x => x == type);
@@ -59,14 +60,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             var script = new StringBuilder();
             foreach (var parameter in methodInfo.GetParameters())
             {
-                script.Append(string.Format("{0} : {1}", parameter.Name.ToCamelCase(), GetTypeContractName(parameter.ParameterType)));
+                script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), GetTypeContractName(parameter.ParameterType)));
             }
+            if (!string.IsNullOrEmpty(script.ToString()))
+                script.Remove(script.Length - 1, 1);
             return script.ToString();
 
         }
         protected void PrepareOutputParameterTypes(MethodInfo methodInfo)
         {
-            if (!_typesToBeDone.Contains(methodInfo.ReturnType) && !IsBasicType(methodInfo.ReturnType) && !_doneTypes.Contains(methodInfo.ReturnType))
+            if (this.CanAddToBeDone(methodInfo.ReturnType))
             {
                 _typesToBeDone.Add(methodInfo.ReturnType);
             }
@@ -75,7 +78,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         {
             foreach (var parameter in methodInfo.GetParameters())
             {
-                if (!_typesToBeDone.Contains(parameter.ParameterType) && !IsBasicType(parameter.ParameterType) && !_doneTypes.Contains(methodInfo.ReturnType))
+                if (this.CanAddToBeDone(parameter.ParameterType))
                 {
                     _typesToBeDone.Add(parameter.ParameterType);
                 }
@@ -84,6 +87,27 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
         protected string GenerateTypeScript(Type type)
         {
+            if (type.IsArray ||
+                (type.IsGenericType && (typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
+                ))
+                )
+            {
+                if (type.GetElementType() != null && this.CanAddToBeDone(type.GetElementType()))
+                {
+                    _typesToBeDone.Add(type.GetElementType());
+                }
+                return "";
+            }
+
+            if (type.IsGenericType && typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+            {
+                return "";
+            }
+
+
+
             var myscript = new StringBuilder();
 
             myscript.AppendLine("     interface " + GetTypeContractName(type));
@@ -104,7 +128,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         protected bool IsBasicType(Type type)
         {
             string[] input = { "guid", "string","bool",
-                           "datetime","int16","int32", "int64","single","double","boolean","void","task"};// Task doesn't require code generation, we consider it basic type
+                           "datetime","int16","int32", "int64","single","double","boolean","void"};// Task doesn't require code generation, we consider it basic type
 
             List<string> basicTypes = new List<string>(input);
             if (basicTypes.Contains(type.Name.ToLowerInvariant()))
@@ -112,7 +136,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             else
                 return false;
         }
-            
+
         private string GetTypeContractName(Type type)
         {
             if (type == typeof(Task))
@@ -167,7 +191,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 case "string":
                     return type.Name.ToLowerInvariant();
             }
-            if (!_typesToBeDone.Contains(type) && !_doneTypes.Contains(type))
+            if (this.CanAddToBeDone(type))
             {
                 _typesToBeDone.Add(type);
             }
@@ -187,5 +211,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             return name;
         }
 
+        private bool CanAddToBeDone(Type type)
+        {
+            if (type == typeof(Task))
+                return false;
+            if (_typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !IsBasicType(type) && _doneTypes.Count(z => z.FullName == type.FullName) == 0)
+                return true;
+            return false;
+        }
     }
 }
