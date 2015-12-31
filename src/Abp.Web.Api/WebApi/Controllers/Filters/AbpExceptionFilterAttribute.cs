@@ -2,6 +2,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
@@ -55,24 +56,24 @@ namespace Abp.WebApi.Controllers.Filters
         private static WrapResultAttribute GetWrapAttributeOrNull(HttpActionExecutedContext context)
         {
             //Try to get for dynamic APIs
-            var dontWrapAttr = context.ActionContext.ActionDescriptor.Properties["__AbpDynamicApiDontWrapResultAttribute"] as WrapResultAttribute;
-            if (dontWrapAttr != null)
+            var wrapAttr = context.ActionContext.ActionDescriptor.Properties.GetOrDefault("__AbpDynamicApiDontWrapResultAttribute") as WrapResultAttribute;
+            if (wrapAttr != null)
             {
-                return dontWrapAttr;
+                return wrapAttr;
             }
 
             //Get for the action
-            dontWrapAttr = context.ActionContext.ActionDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
-            if (dontWrapAttr != null)
+            wrapAttr = context.ActionContext.ActionDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
+            if (wrapAttr != null)
             {
-                return dontWrapAttr;
+                return wrapAttr;
             }
 
             //Get for the controller
-            dontWrapAttr = context.ActionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
-            if (dontWrapAttr != null)
+            wrapAttr = context.ActionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
+            if (wrapAttr != null)
             {
-                return dontWrapAttr;
+                return wrapAttr;
             }
 
             //Not found
