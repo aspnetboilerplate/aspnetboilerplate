@@ -246,6 +246,11 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
+            if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
+            {
+                return base.Json(data, contentType, contentEncoding, behavior);
+            }
+
             if (data == null)
             {
                 data = new AjaxResponse();
@@ -254,7 +259,7 @@ namespace Abp.Web.Mvc.Controllers
             {
                 data = new AjaxResponse(data);
             }
-
+            
             return new AbpJsonResult
             {
                 Data = data,
@@ -264,11 +269,20 @@ namespace Abp.Web.Mvc.Controllers
             };
         }
 
+        private WrapResultAttribute _wrapResultAttribute;
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            FindWrapResultAttribute(filterContext);
             HandleAuditingBeforeAction(filterContext);
 
             base.OnActionExecuting(filterContext);
+        }
+
+        private void FindWrapResultAttribute(ActionExecutingContext filterContext)
+        {
+            var methodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
+            _wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo) ?? WrapResultAttribute.Default;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -280,26 +294,6 @@ namespace Abp.Web.Mvc.Controllers
 
         #region Auditing
 
-        private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
-        {
-            if (actionDescriptor is ReflectedActionDescriptor)
-            {
-                return ((ReflectedActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is ReflectedAsyncActionDescriptor)
-            {
-                return ((ReflectedAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is TaskAsyncActionDescriptor)
-            {
-                return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            throw new AbpException("Could not get MethodInfo for the action '" + actionDescriptor.ActionName + "' of controller '" + actionDescriptor.ControllerDescriptor.ControllerName + "'.");
-        }
-
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
         {
             if (!ShouldSaveAudit(filterContext))
@@ -308,7 +302,7 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            var methodInfo = GetMethodInfo(filterContext.ActionDescriptor);
+            var methodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
 
             _actionStopwatch = Stopwatch.StartNew();
             _auditInfo = new AuditInfo
@@ -364,7 +358,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext.ActionDescriptor),
+                ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor),
                 AuditingConfiguration,
                 AbpSession,
                 true

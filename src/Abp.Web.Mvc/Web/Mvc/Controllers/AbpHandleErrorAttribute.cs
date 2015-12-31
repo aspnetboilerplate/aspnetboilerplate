@@ -12,11 +12,13 @@ using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
 {
+    /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
+
     /// <summary>
     /// Used internally by ABP to handle exceptions on MVC actions.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class AbpHandleErrorAttribute : HandleErrorAttribute, ITransientDependency /* This class is written by looking at the source codes of System.Web.Mvc.HandleErrorAttribute class */
+    public class AbpHandleErrorAttribute : HandleErrorAttribute, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
