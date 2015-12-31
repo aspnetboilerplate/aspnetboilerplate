@@ -32,7 +32,7 @@ namespace Abp.WebApi.Controllers.Filters
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapAttr = GetWrapAttributeOrNull(context) ?? new WrapResultAttribute();
+            var wrapAttr = GetWrapAttributeOrNull(context) ?? WrapResultAttribute.Default;
             
             if (wrapAttr.LogError)
             {

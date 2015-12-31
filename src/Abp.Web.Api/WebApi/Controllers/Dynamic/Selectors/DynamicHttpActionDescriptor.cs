@@ -31,7 +31,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             _filters = filters;
 
             _wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo)
-                                   ?? new WrapResultAttribute();
+                                   ?? WrapResultAttribute.Default;
             
             _returnType = _wrapResultAttribute.OnSuccess
                     ? typeof (AjaxResponse)
