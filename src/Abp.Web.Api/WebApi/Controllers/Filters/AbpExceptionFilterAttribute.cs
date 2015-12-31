@@ -1,8 +1,6 @@
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
-using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
@@ -33,14 +31,14 @@ namespace Abp.WebApi.Controllers.Filters
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapAttr = GetWrapAttributeOrNull(context) ?? WrapResultAttribute.Default;
+            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ?? WrapResultAttribute.Default;
             
-            if (wrapAttr.LogError)
+            if (wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);                
             }
 
-            if (wrapAttr.OnError)
+            if (wrapResultAttribute.WrapOnError)
             {
                 context.Response = context.Request.CreateResponse(
                     HttpStatusCode.OK,
@@ -51,33 +49,6 @@ namespace Abp.WebApi.Controllers.Filters
 
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
             }
-        }
-
-        private static WrapResultAttribute GetWrapAttributeOrNull(HttpActionExecutedContext context)
-        {
-            //Try to get for dynamic APIs
-            var wrapAttr = context.ActionContext.ActionDescriptor.Properties.GetOrDefault("__AbpDynamicApiDontWrapResultAttribute") as WrapResultAttribute;
-            if (wrapAttr != null)
-            {
-                return wrapAttr;
-            }
-
-            //Get for the action
-            wrapAttr = context.ActionContext.ActionDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
-            if (wrapAttr != null)
-            {
-                return wrapAttr;
-            }
-
-            //Get for the controller
-            wrapAttr = context.ActionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
-            if (wrapAttr != null)
-            {
-                return wrapAttr;
-            }
-
-            //Not found
-            return null;
         }
     }
 }

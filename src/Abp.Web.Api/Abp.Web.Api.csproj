@@ -134,6 +134,8 @@
     <Compile Include="WebApi\Controllers\AbpApiControllerActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Controllers\Filters\AuditLoggingFilterAttribute.cs" />
+    <Compile Include="WebApi\Controllers\HttpActionDescriptorHelper.cs" />
+    <Compile Include="WebApi\Controllers\ResultWrapperHandler.cs" />
     <Compile Include="WebApi\Runtime\Caching\AbpCacheController.cs" />
     <Compile Include="WebApi\Runtime\Caching\ClearAllCacheModel.cs" />
     <Compile Include="WebApi\Runtime\Caching\ClearCacheModel.cs" />

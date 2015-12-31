@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// A shortcut for <see cref="WrapResultAttribute"/> to disable wrapping by default.
-    /// It sets false to <see cref="WrapResultAttribute.OnSuccess"/> and <see cref="WrapResultAttribute.OnError"/>  properties.
+    /// It sets false to <see cref="WrapResultAttribute.WrapOnSuccess"/> and <see cref="WrapResultAttribute.WrapOnError"/>  properties.
     /// </summary>
     public class DontWrapResultAttribute : WrapResultAttribute
     {

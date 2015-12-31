@@ -17,13 +17,13 @@ namespace Abp.Web.Models
         /// Wrap result on success.
         /// Default: true.
         /// </summary>
-        public bool OnSuccess { get; set; }
+        public bool WrapOnSuccess { get; set; }
 
         /// <summary>
         /// Wrap result on error.
         /// Default: true.
         /// </summary>
-        public bool OnError { get; set; }
+        public bool WrapOnError { get; set; }
 
         /// <summary>
         /// Log errors.
@@ -34,12 +34,12 @@ namespace Abp.Web.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="WrapResultAttribute"/> class.
         /// </summary>
-        /// <param name="onSuccess">Wrap result on success.</param>
-        /// <param name="onError">Wrap result on error.</param>
-        public WrapResultAttribute(bool onSuccess = true, bool onError = true)
+        /// <param name="wrapOnSuccess">Wrap result on success.</param>
+        /// <param name="wrapOnError">Wrap result on error.</param>
+        public WrapResultAttribute(bool wrapOnSuccess = true, bool wrapOnError = true)
         {
-            OnSuccess = onSuccess;
-            OnError = onError;
+            WrapOnSuccess = wrapOnSuccess;
+            WrapOnError = wrapOnError;
 
             LogError = true;
         }

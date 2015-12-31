@@ -71,6 +71,7 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
+            httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
