@@ -10,6 +10,7 @@ using Abp.WebApi.Controllers;
 
 namespace Abp.WebApi.Runtime.Caching
 {
+    [DontWrapResult]
     public class AbpCacheController : AbpApiController
     {
         private readonly ICacheManager _cacheManager;
