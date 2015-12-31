@@ -18,13 +18,12 @@ namespace Abp.WebApi.Controllers
                 task =>
                 {
                     WrapResultIfNeeded(request, task.Result);
-
                     return task.Result;
 
                 }, cancellationToken);
         }
 
-        private void WrapResultIfNeeded(HttpRequestMessage request, HttpResponseMessage response)
+        protected virtual void WrapResultIfNeeded(HttpRequestMessage request, HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

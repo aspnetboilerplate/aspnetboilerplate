@@ -15,10 +15,19 @@ namespace Abp.WebApi.Controllers.Filters
     /// </summary>
     public class AbpExceptionFilterAttribute : ExceptionFilterAttribute, ITransientDependency
     {
+        /// <summary>
+        /// Reference to the <see cref="ILogger"/>.
+        /// </summary>
         public ILogger Logger { get; set; }
 
+        /// <summary>
+        /// Reference to the <see cref="IEventBus"/>.
+        /// </summary>
         public IEventBus EventBus { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbpExceptionFilterAttribute"/> class.
+        /// </summary>
         public AbpExceptionFilterAttribute()
         {
             Logger = NullLogger.Instance;
