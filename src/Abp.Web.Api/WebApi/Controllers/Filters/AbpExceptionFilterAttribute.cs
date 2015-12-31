@@ -50,7 +50,7 @@ namespace Abp.WebApi.Controllers.Filters
             if (wrapResultAttribute.WrapOnError)
             {
                 context.Response = context.Request.CreateResponse(
-                    HttpStatusCode.OK,
+                    HttpStatusCode.OK, //TODO: Consider to return 500
                     new AjaxResponse(
                         ErrorInfoBuilder.Instance.BuildForException(context.Exception),
                         context.Exception is Abp.Authorization.AbpAuthorizationException)

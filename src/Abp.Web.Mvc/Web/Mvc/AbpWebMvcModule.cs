@@ -23,7 +23,6 @@ namespace Abp.Web.Mvc
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager.IocContainer.Kernel));
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpHandleErrorAttribute>());
         }
     }
 }
