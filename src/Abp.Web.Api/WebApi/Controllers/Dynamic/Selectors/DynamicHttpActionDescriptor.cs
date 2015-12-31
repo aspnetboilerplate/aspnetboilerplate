@@ -1,62 +1,78 @@
 using System;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
+using Abp.Reflection;
 using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {
+        public override Type ReturnType
+        {
+            get { return _returnType; }
+        }
+        private readonly Type _returnType;
+
         /// <summary>
         /// The Action filters for the Action Descriptor.
         /// </summary>
         private readonly IFilter[] _filters;
 
-        public override Type ReturnType
-        {
-            get
-            {
-                return typeof(AjaxResponse);
-            }
-        }
+        private readonly WrapResultAttribute _wrapResultAttribute;
 
         public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
             : base(controllerDescriptor, methodInfo)
         {
             _filters = filters;
+
+            _wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo)
+                                   ?? new WrapResultAttribute();
+            
+            _returnType = _wrapResultAttribute.OnSuccess
+                    ? typeof (AjaxResponse)
+                    : methodInfo.ReturnType;
+
+            Properties["__AbpDynamicApiDontWrapResultAttribute"] = _wrapResultAttribute;
         }
 
         public override System.Threading.Tasks.Task<object> ExecuteAsync(HttpControllerContext controllerContext, System.Collections.Generic.IDictionary<string, object> arguments, System.Threading.CancellationToken cancellationToken)
         {
-            return base
-                .ExecuteAsync(controllerContext, arguments, cancellationToken)
-                .ContinueWith(task =>
-                {
-                    try
+            if (_wrapResultAttribute.OnSuccess)
+            {
+                return base
+                    .ExecuteAsync(controllerContext, arguments, cancellationToken)
+                    .ContinueWith(task =>
                     {
-                        if (task.Result == null)
+                        try
                         {
-                            return new AjaxResponse();
-                        }
+                            if (task.Result == null)
+                            {
+                                return new AjaxResponse();
+                            }
 
-                        if (task.Result is AjaxResponse)
-                        {
-                            return task.Result;
+                            if (task.Result is AjaxResponse)
+                            {
+                                return task.Result;
+                            }
+
+                            return new AjaxResponse(task.Result);
                         }
-                        
-                        return new AjaxResponse(task.Result);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        ex.InnerException.ReThrow();
-                        throw; // The previous line will throw, but we need this to make compiler happy
-                    }
-                }, cancellationToken);
+                        catch (AggregateException ex)
+                        {
+                            ex.InnerException.ReThrow();
+                            throw; // The previous line will throw, but we need this to make compiler happy
+                        }
+                    }, cancellationToken);
+            }
+            else
+            {
+                return base.ExecuteAsync(controllerContext, arguments, cancellationToken);
+            }
         }
 
         /// <summary>

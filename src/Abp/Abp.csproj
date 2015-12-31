@@ -490,6 +490,8 @@
     <Compile Include="IO\Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Reflection\Extensions\MemberInfoExtensions.cs" />
+    <Compile Include="Web\Models\DontWrapResultAttribute.cs" />
+    <Compile Include="Web\Models\WrapResultAttribute.cs" />
     <Compile Include="Xml\Extensions\XmlExtensions.cs" />
     <Compile Include="Localization\GlobalizationHelper.cs" />
     <Compile Include="IO\DirectoryHelper.cs" />
