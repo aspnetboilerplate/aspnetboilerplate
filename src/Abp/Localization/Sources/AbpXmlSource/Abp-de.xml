@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="de">
+  <texts>
+    <text name="SmtpHost">SMTP Host</text>
+    <text name="SmtpPort">SMTP Port</text>
+    <text name="Username">User Name</text>
+    <text name="Password">Passwort</text>
+    <text name="DomainName">Domäne</text>
+    <text name="UseSSL">SSL nutzen</text>
+    <text name="UseDefaultCredentials">Standard Anmeldedaten verwenden</text>
+    <text name="DefaultFromSenderEmailAddress">Standard (Absender) Email Adresse</text>
+    <text name="DefaultFromSenderDisplayName">Standard (Absender) Benutzername</text>
+    <text name="DefaultLanguage">Standard Sprache</text>
+  </texts>
+</localizationDictionary>

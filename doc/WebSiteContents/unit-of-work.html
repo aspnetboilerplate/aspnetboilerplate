@@ -50,7 +50,8 @@ everywhere.</p>
 <h4 id="DocRepositoryClasses">Repository classes</h4>
 <p><a href="/Pages/Documents/Repositories">Repositories</a> are main classes 
 where database operations are performed. ASP.NET Boilerplate <strong>opens
-</strong>a database connection and begins a <strong>transaction </strong>when
+</strong>a database connection (it may not be opened immediately, but opened in 
+first database usage, based on ORM provider implementation) and begins a <strong>transaction </strong>when
 <strong>entering </strong>a repository method. So, you can use connection safely 
 in a repository method. At the end of the method, the transaction is <strong>
 commited</strong> and the connection is <strong>disposed</strong>. If the 
