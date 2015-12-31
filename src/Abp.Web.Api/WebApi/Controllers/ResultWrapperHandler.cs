@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Abp.Dependency;
 using Abp.Web.Models;
+using Abp.WebApi.Configuration;
 
 namespace Abp.WebApi.Controllers
 {
@@ -12,6 +13,13 @@ namespace Abp.WebApi.Controllers
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
+        private readonly IAbpWebApiModuleConfiguration _webApiModuleConfiguration;
+
+        public ResultWrapperHandler(IAbpWebApiModuleConfiguration webApiModuleConfiguration)
+        {
+            _webApiModuleConfiguration = webApiModuleConfiguration;
+        }
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return base.SendAsync(request, cancellationToken).ContinueWith(
@@ -47,8 +55,8 @@ namespace Abp.WebApi.Controllers
             {
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
-                    GlobalConfiguration.Configuration.Formatters[0]
-                    ); //TODO: change GlobalConfiguration.Configuration.Formatters[0] !!!
+                    _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                    );
             }
 
             if (resultObject is AjaxResponse)
@@ -58,8 +66,8 @@ namespace Abp.WebApi.Controllers
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
-                GlobalConfiguration.Configuration.Formatters[0]
-                ); //TODO: change GlobalConfiguration.Configuration.Formatters[0] !!!
+                _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                );
         }
     }
 }
