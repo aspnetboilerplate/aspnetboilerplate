@@ -48,6 +48,24 @@ namespace Abp.FluentMigrator.Extensions
         }
 
         /// <summary>
+        /// Adds DeletionTime column to a table. See <see cref="IDeletionAudited"/>.
+        /// </summary>
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithDeletionTimeColumn(this ICreateTableWithColumnSyntax table)
+        {
+            return table
+                .WithColumn("DeletionTime").AsDateTime().Nullable();
+        }
+
+        /// <summary>
+        /// Adds DeletionTime column to a table. See <see cref="IDeletionAudited"/>.
+        /// </summary>
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("DeletionTime").AsDateTime().Nullable();
+        }
+
+        /// <summary>
         /// Ads CreationTime field to the table for <see cref="IHasCreationTime"/> interface.
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithCreationTimeColumn(this ICreateTableWithColumnSyntax table)
@@ -57,12 +75,30 @@ namespace Abp.FluentMigrator.Extensions
         }
 
         /// <summary>
-        /// Adds creation auditing columns to a table. See <see cref="ICreationAudited"/>.
+        /// Adds CreationTime field to a table. See <see cref="IHasCreationTime"/>.
         /// </summary>
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+        }
+
+        /// <summary>
+        /// Adds LastModificationTime field to a table. See <see cref="IModificationAudited"/>.
+        /// </summary>
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModificationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("LastModificationTime").AsDateTime().Nullable();
+        }
+
+        /// <summary>
+        /// Adds LastModificationTime field to a table. See <see cref="IModificationAudited"/>.
+        /// </summary>
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithLastModificationTimeColumn(this ICreateTableWithColumnSyntax table, bool defaultValue = true)
+        {
+            return table
+                .WithColumn("LastModificationTime").AsDateTime().Nullable();
         }
 
         /// <summary>
