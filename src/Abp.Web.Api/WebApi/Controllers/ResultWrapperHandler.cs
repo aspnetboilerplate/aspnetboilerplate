@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Abp.Dependency;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
@@ -38,7 +37,8 @@ namespace Abp.WebApi.Controllers
                 return;
             }
 
-            var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor()) ?? WrapResultAttribute.Default;
+            var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
+                           ?? DontWrapResultAttribute.Default;
 
             if (!wrapAttr.WrapOnSuccess)
             {

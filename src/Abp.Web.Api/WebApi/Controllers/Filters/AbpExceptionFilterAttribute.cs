@@ -40,7 +40,8 @@ namespace Abp.WebApi.Controllers.Filters
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ?? WrapResultAttribute.Default;
+            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor)
+                                      ?? DontWrapResultAttribute.Default;
             
             if (wrapResultAttribute.LogError)
             {

@@ -9,7 +9,7 @@ namespace Abp.WebApi.Controllers
     {
         public static WrapResultAttribute GetWrapResultAttributeOrNull(HttpActionDescriptor actionDescriptor)
         {
-            //Try to get for dynamic APIs
+            //Try to get for dynamic APIs (dynamic web api actions always define __AbpDynamicApiDontWrapResultAttribute)
             var wrapAttr = actionDescriptor.Properties.GetOrDefault("__AbpDynamicApiDontWrapResultAttribute") as WrapResultAttribute;
             if (wrapAttr != null)
             {

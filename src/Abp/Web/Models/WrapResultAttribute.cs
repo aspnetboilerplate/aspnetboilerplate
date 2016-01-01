@@ -5,6 +5,7 @@ namespace Abp.Web.Models
     /// <summary>
     /// Used to determine how ABP should wrap response on the web layer.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method)]
     public class WrapResultAttribute : Attribute
     {
         /// <summary>
@@ -15,13 +16,11 @@ namespace Abp.Web.Models
 
         /// <summary>
         /// Wrap result on success.
-        /// Default: true.
         /// </summary>
         public bool WrapOnSuccess { get; set; }
 
         /// <summary>
         /// Wrap result on error.
-        /// Default: true.
         /// </summary>
         public bool WrapOnError { get; set; }
 
