@@ -22,7 +22,7 @@ namespace Abp.Web.Mvc
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager.IocContainer.Kernel));
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager));
         }
     }
 }
