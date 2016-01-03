@@ -50,12 +50,21 @@ namespace Abp.NHibernate.EntityMappings
         }
 
         /// <summary>
-        /// Maps modification audit columns. See <see cref="ICreationAudited"/>.
+        /// Maps LastModificationTime column. See <see cref="IHasModificationTime"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapLastModificationTime<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IHasModificationTime
+        {
+            mapping.Map(x => x.LastModificationTime);
+        }
+
+        /// <summary>
+        /// Maps modification audit columns. See <see cref="IModificationAudited"/>.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         public static void MapModificationAudited<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IModificationAudited
         {
-            mapping.Map(x => x.LastModificationTime);
+            mapping.MapLastModificationTime();
             mapping.Map(x => x.LastModifierUserId);
         }
 
@@ -77,6 +86,15 @@ namespace Abp.NHibernate.EntityMappings
         public static void MapIsDeleted<TEntity>(this ClassMap<TEntity> mapping) where TEntity : ISoftDelete
         {
             mapping.Map(x => x.IsDeleted);
+        }
+
+        /// <summary>
+        /// Maps MapIsActive column (defined by <see cref="IPassivable"/>).
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public static void MapIsActive<TEntity>(this ClassMap<TEntity> mapping) where TEntity : IPassivable
+        {
+            mapping.Map(x => x.IsActive);
         }
     }
 }

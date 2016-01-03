@@ -92,9 +92,9 @@
     <Compile Include="Application\Services\Dto\ComboboxItemDtoExtensions.cs" />
     <Compile Include="Web\Mvc\Authorization\AbpMvcAuthorizeAttribute.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpController.cs" />
-    <Compile Include="Web\Mvc\Controllers\AbpHandleErrorAttribute.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpAppViewController.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpScriptsController.cs" />
+    <Compile Include="Web\Mvc\Controllers\ActionDescriptorHelper.cs" />
     <Compile Include="Web\Mvc\Controllers\Localization\AbpLocalizationController.cs" />
     <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />

@@ -178,10 +178,7 @@ namespace Abp.EntityFramework
 
                         if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
                         {
-                            if (entry.Entity is IDeletionAudited)
-                            {
-                                SetDeletionAuditProperties(entry.Entity.As<IDeletionAudited>());
-                            }
+                            SetDeletionAuditProperties(entry);
 
                             EntityChangeEventHelper.TriggerEntityDeletingEvent(entry.Entity);
                             EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
@@ -292,12 +289,14 @@ namespace Abp.EntityFramework
 
         protected virtual void SetModificationAuditProperties(DbEntityEntry entry)
         {
+            if (entry.Entity is IHasModificationTime)
+            {
+                entry.Cast<IHasModificationTime>().Entity.LastModificationTime = Clock.Now;
+            }
+
             if (entry.Entity is IModificationAudited)
             {
-                var auditedEntry = entry.Cast<IModificationAudited>();
-
-                auditedEntry.Entity.LastModificationTime = Clock.Now;
-                auditedEntry.Entity.LastModifierUserId = AbpSession.UserId;
+                entry.Cast<IModificationAudited>().Entity.LastModifierUserId = AbpSession.UserId;
             }
         }
 
@@ -313,16 +312,20 @@ namespace Abp.EntityFramework
             softDeleteEntry.State = EntityState.Unchanged;
             softDeleteEntry.Entity.IsDeleted = true;
 
-            if (entry.Entity is IDeletionAudited)
-            {
-                SetDeletionAuditProperties(entry.Cast<IDeletionAudited>().Entity);
-            }
+            SetDeletionAuditProperties(entry);
         }
 
-        protected virtual void SetDeletionAuditProperties(IDeletionAudited entity)
+        protected virtual void SetDeletionAuditProperties(DbEntityEntry entry)
         {
-            entity.DeletionTime = Clock.Now;
-            entity.DeleterUserId = AbpSession.UserId;
+            if (entry.Entity is IHasDeletionTime)
+            {
+                entry.Cast<IHasDeletionTime>().Entity.DeletionTime = Clock.Now;
+            }
+
+            if (entry.Entity is IDeletionAudited)
+            {
+                entry.Cast<IDeletionAudited>().Entity.DeleterUserId = AbpSession.UserId;
+            }
         }
 
         private void LogDbEntityValidationException(DbEntityValidationException exception)

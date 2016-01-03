@@ -5,21 +5,25 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
-using System.Web.Mvc.Async;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.Logging;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
+using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -35,6 +39,11 @@ namespace Abp.Web.Mvc.Controllers
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
+
+        /// <summary>
+        /// Gets the event bus.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
 
         /// <summary>
         /// Reference to the permission manager.
@@ -103,7 +112,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
@@ -143,6 +152,16 @@ namespace Abp.Web.Mvc.Controllers
         private AuditInfo _auditInfo;
 
         /// <summary>
+        /// MethodInfo for currently executing action.
+        /// </summary>
+        private MethodInfo _currentMethodInfo;
+
+        /// <summary>
+        /// WrapResultAttribute for currently executing action.
+        /// </summary>
+        private WrapResultAttribute _wrapResultAttribute;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpController()
@@ -152,6 +171,7 @@ namespace Abp.Web.Mvc.Controllers
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             AuditingStore = SimpleLogAuditingStore.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         /// <summary>
@@ -246,6 +266,11 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
+            if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
+            {
+                return base.Json(data, contentType, contentEncoding, behavior);
+            }
+
             if (data == null)
             {
                 data = new AjaxResponse();
@@ -254,7 +279,7 @@ namespace Abp.Web.Mvc.Controllers
             {
                 data = new AjaxResponse(data);
             }
-
+            
             return new AbpJsonResult
             {
                 Data = data,
@@ -264,8 +289,11 @@ namespace Abp.Web.Mvc.Controllers
             };
         }
 
+        #region OnActionExecuting / OnActionExecuted
+        
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
             HandleAuditingBeforeAction(filterContext);
 
             base.OnActionExecuting(filterContext);
@@ -278,27 +306,111 @@ namespace Abp.Web.Mvc.Controllers
             HandleAuditingAfterAction(filterContext);
         }
 
-        #region Auditing
-
-        private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
+        private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
-            if (actionDescriptor is ReflectedActionDescriptor)
-            {
-                return ((ReflectedActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is ReflectedAsyncActionDescriptor)
-            {
-                return ((ReflectedAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is TaskAsyncActionDescriptor)
-            {
-                return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            throw new AbpException("Could not get MethodInfo for the action '" + actionDescriptor.ActionName + "' of controller '" + actionDescriptor.ControllerDescriptor.ControllerName + "'.");
+            _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
+            _wrapResultAttribute =
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(_currentMethodInfo) ??
+                WrapResultAttribute.Default;
         }
+
+        #endregion
+
+        #region Exception handling
+
+        protected override void OnException(ExceptionContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+
+            //If exception handled before, do nothing.
+            //If this is child action, exception should be handled by main action.
+            if (context.ExceptionHandled || context.IsChildAction)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            //Log exception
+            if (_wrapResultAttribute.LogError)
+            {
+                LogHelper.LogException(Logger, context.Exception);
+            }
+
+            // If custom errors are disabled, we need to let the normal ASP.NET exception handler
+            // execute so that the user can see useful debugging information.
+            if (!context.HttpContext.IsCustomErrorEnabled)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
+            // ignore it.
+            if (new HttpException(null, context.Exception).GetHttpCode() != 500)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            //Check WrapResultAttribute
+            if (!_wrapResultAttribute.WrapOnError)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            //We handled the exception!
+            context.ExceptionHandled = true;
+
+            //Return a special error response to the client.
+            context.HttpContext.Response.Clear();
+            context.Result = IsJsonResult()
+                ? GenerateJsonExceptionResult(context)
+                : GenerateNonJsonExceptionResult(context);
+
+            // Certain versions of IIS will sometimes use their own error page when
+            // they detect a server error. Setting this property indicates that we
+            // want it to try to render ASP.NET MVC's error page instead.
+            context.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+            //Trigger an event, so we can register it.
+            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+        }
+
+        private bool IsJsonResult()
+        {
+            return typeof (JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType);
+        }
+
+        protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
+        {
+            context.HttpContext.Response.StatusCode = 200; //TODO: Consider to return 500
+            return new AbpJsonResult(
+                new MvcAjaxResponse(
+                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    context.Exception is AbpAuthorizationException
+                    )
+                );
+        }
+
+        protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
+        {
+            context.HttpContext.Response.StatusCode = 500;
+            return new ViewResult
+            {
+                ViewName = "Error",
+                MasterName = string.Empty,
+                ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(context.Exception)),
+                TempData = context.Controller.TempData
+            };
+        }
+
+        #endregion
+        
+        #region Auditing
 
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
         {
@@ -308,8 +420,6 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            var methodInfo = GetMethodInfo(filterContext.ActionDescriptor);
-
             _actionStopwatch = Stopwatch.StartNew();
             _auditInfo = new AuditInfo
             {
@@ -317,10 +427,10 @@ namespace Abp.Web.Mvc.Controllers
                 UserId = AbpSession.UserId,
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = methodInfo.DeclaringType != null
-                                ? methodInfo.DeclaringType.FullName
+                ServiceName = _currentMethodInfo.DeclaringType != null
+                                ? _currentMethodInfo.DeclaringType.FullName
                                 : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                MethodName = methodInfo.Name,
+                MethodName = _currentMethodInfo.Name,
                 Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
                 ExecutionTime = Clock.Now
             };
@@ -364,7 +474,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext.ActionDescriptor),
+                _currentMethodInfo,
                 AuditingConfiguration,
                 AbpSession,
                 true

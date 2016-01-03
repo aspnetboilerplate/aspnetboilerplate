@@ -89,23 +89,29 @@ namespace Abp.NHibernate.Interceptors
             //}
 
             //Set modification audits
-            if (entity is IModificationAudited)
+            if (entity is IHasModificationTime)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
                     if (propertyNames[i] == "LastModificationTime")
                     {
-                        currentState[i] = (entity as IModificationAudited).LastModificationTime = Clock.Now;
+                        currentState[i] = (entity as IHasModificationTime).LastModificationTime = Clock.Now;
                     }
-                    else if (propertyNames[i] == "LastModifierUserId")
+                }
+            }
+
+            if (entity is IModificationAudited)
+            {
+                for (var i = 0; i < propertyNames.Length; i++)
+                {
+                    if (propertyNames[i] == "LastModifierUserId")
                     {
                         currentState[i] = (entity as IModificationAudited).LastModifierUserId = _abpSession.Value.UserId;
                     }
                 }
             }
 
-            //Set deletion audits
-            if (entity is IDeletionAudited && (entity as IDeletionAudited).IsDeleted)
+            if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
             {
                 //Is deleted before? Normally, a deleted entity should not be updated later but I preferred to check it.
                 var previousIsDeleted = false;
@@ -120,24 +126,38 @@ namespace Abp.NHibernate.Interceptors
 
                 if (!previousIsDeleted)
                 {
-                    for (var i = 0; i < propertyNames.Length; i++)
+                    //set DeletionTime
+                    if (entity is IHasDeletionTime)
                     {
-                        if (propertyNames[i] == "DeletionTime")
+                        for (var i = 0; i < propertyNames.Length; i++)
                         {
-                            currentState[i] = (entity as IDeletionAudited).DeletionTime = Clock.Now;
-                        }
-                        else if (propertyNames[i] == "DeleterUserId")
-                        {
-                            currentState[i] = (entity as IDeletionAudited).DeleterUserId = _abpSession.Value.UserId;
+                            if (propertyNames[i] == "DeletionTime")
+                            {
+                                currentState[i] = (entity as IHasDeletionTime).DeletionTime = Clock.Now;
+                            }
                         }
                     }
-                }
-            }
 
-            if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
-            {
-                EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
-                EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
+                    //set DeleterUserId
+                    if (entity is IDeletionAudited)
+                    {
+                        for (var i = 0; i < propertyNames.Length; i++)
+                        {
+                            if (propertyNames[i] == "DeleterUserId")
+                            {
+                                currentState[i] = (entity as IDeletionAudited).DeleterUserId = _abpSession.Value.UserId;
+                            }
+                        }
+                    }
+
+                    EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
+                    EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
+                }
+                else
+                {
+                    EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
+                    EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
+                }
             }
             else
             {
