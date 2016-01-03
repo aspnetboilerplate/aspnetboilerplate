@@ -16,6 +16,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private HashSet<Type> _typesToBeDone = new HashSet<Type>();
         private HashSet<Type> _doneTypes = new HashSet<Type>();
         private string _servicePrefix = "";
+        private readonly string[] _basicTypes =
+        {
+            "guid", "string", "bool",
+            "datetime", "int16", "int32", "int64", "single", "double", "boolean", "void"
+        };
         public string Generate(DynamicApiControllerInfo controllerInfo, string servicePrefix)
         {
             if (_servicePrefix != servicePrefix)
@@ -127,11 +132,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         }
         protected bool IsBasicType(Type type)
         {
-            string[] input = { "guid", "string","bool",
-                           "datetime","int16","int32", "int64","single","double","boolean","void"};// Task doesn't require code generation, we consider it basic type
-
-            List<string> basicTypes = new List<string>(input);
-            if (basicTypes.Contains(type.Name.ToLowerInvariant()))
+            if (_basicTypes.Contains(type.Name.ToLowerInvariant()))
                 return true;
             else
                 return false;
