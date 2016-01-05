@@ -380,9 +380,10 @@ namespace Abp.Web.Mvc.Controllers
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
-        private bool IsJsonResult()
+        protected virtual bool IsJsonResult()
         {
-            return typeof (JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType);
+            return typeof (JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
+                   typeof (Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
         }
 
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
