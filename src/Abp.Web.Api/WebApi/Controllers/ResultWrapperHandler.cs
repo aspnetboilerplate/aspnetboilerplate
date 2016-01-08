@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,17 +47,14 @@ namespace Abp.WebApi.Controllers
             }
 
             object resultObject;
-            if (!response.TryGetContentValue(out resultObject))
+            if (!response.TryGetContentValue(out resultObject) || resultObject == null)
             {
-                return;
-            }
-
-            if (resultObject == null)
-            {
+                response.StatusCode = HttpStatusCode.OK;
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
                     _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
                     );
+                return;
             }
 
             if (resultObject is AjaxResponse)
