@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="HowAreYou" value="How are you?" />
+    <text name="ThisIsATest">This is a test.</text>
+  </texts>
+</localizationDictionary>
