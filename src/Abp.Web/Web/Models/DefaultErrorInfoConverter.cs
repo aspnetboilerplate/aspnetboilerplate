@@ -57,7 +57,8 @@ namespace Abp.Web.Models
             {
                 return new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
                        {
-                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException)
+                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
+                           Details = GetValidationErrorNarrative(exception as AbpValidationException)
                        };
             }
 
@@ -98,6 +99,16 @@ namespace Abp.Web.Models
                 if (!string.IsNullOrEmpty(userFriendlyException.Details))
                 {
                     detailBuilder.AppendLine(userFriendlyException.Details);
+                }
+            }
+
+            //Additional info for AbpValidationException
+            if (exception is AbpValidationException)
+            {
+                var validationException = exception as AbpValidationException;
+                if (validationException.ValidationErrors.Count > 0)
+                {
+                    detailBuilder.AppendLine(GetValidationErrorNarrative(validationException));
                 }
             }
 
@@ -146,6 +157,20 @@ namespace Abp.Web.Models
             }
 
             return validationErrorInfos.ToArray();
+        }
+
+        private static string GetValidationErrorNarrative(AbpValidationException validationException)
+        {
+            var detailBuilder = new StringBuilder();
+            detailBuilder.AppendLine(AbpWebLocalizedMessages.ValidationNarrativeTitle);
+            
+            foreach (var validationResult in validationException.ValidationErrors)
+            {
+                detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);
+                detailBuilder.AppendLine();
+            }
+
+            return detailBuilder.ToString();
         }
     }
 }

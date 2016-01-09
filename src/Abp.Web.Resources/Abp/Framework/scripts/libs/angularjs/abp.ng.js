@@ -56,7 +56,7 @@
                 if (originalData.targetUrl) {
                     abp.ng.http.handleTargetUrl(originalData.targetUrl);
                 }
-            } else if(originalData.success === false) {
+            } else if (originalData.success === false) {
                 var messagePromise = null;
 
                 if (originalData.error) {
@@ -73,6 +73,8 @@
                 if (originalData.unAuthorizedRequest) {
                     abp.ng.http.handleUnAuthorizedRequest(messagePromise, originalData.targetUrl);
                 }
+            } else { //not wrapped result
+                defer.resolve(response);
             }
         }
     }

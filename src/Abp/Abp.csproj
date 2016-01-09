@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -47,8 +47,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -74,6 +74,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -100,6 +101,12 @@
     <Compile Include="Application\Features\IFeatureDependencyContext.cs" />
     <Compile Include="Application\Features\IFeatureManager.cs" />
     <Compile Include="Application\Features\IFeatureValueStore.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasDeletionTime.cs" />
+    <Compile Include="Domain\Entities\Auditing\IHasModificationTime.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityCreatingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityDeletingEventData.cs" />
+    <Compile Include="Events\Bus\Entities\EntityUpdatingEventData.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
@@ -300,9 +307,9 @@
     <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Events\Bus\Entities\EntityChangedEventData.cs" />
-    <Compile Include="Events\Bus\Entities\EntityChangedEventHelper.cs" />
-    <Compile Include="Events\Bus\Entities\IEntityChangedEventHelper.cs" />
-    <Compile Include="Events\Bus\Entities\NullEntityChangedEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\EntityChangeEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\IEntityChangeEventHelper.cs" />
+    <Compile Include="Events\Bus\Entities\NullEntityChangeEventHelper.cs" />
     <Compile Include="Events\Bus\IEventDataWithInheritableGenericArgument.cs" />
     <Compile Include="IShouldInitialize.cs" />
     <Compile Include="Localization\Sources\LocalizationSourceExtensions.cs" />
@@ -483,6 +490,8 @@
     <Compile Include="IO\Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Reflection\Extensions\MemberInfoExtensions.cs" />
+    <Compile Include="Web\Models\DontWrapResultAttribute.cs" />
+    <Compile Include="Web\Models\WrapResultAttribute.cs" />
     <Compile Include="Xml\Extensions\XmlExtensions.cs" />
     <Compile Include="Localization\GlobalizationHelper.cs" />
     <Compile Include="IO\DirectoryHelper.cs" />
@@ -502,6 +511,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-zh-CN.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-de.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-pt-BR.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

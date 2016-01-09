@@ -9,6 +9,8 @@
 
 <body>
 
+<div class="document-contents">
+
 <h3>Problems of AJAX operations</h3>
 <p>Performing an AJAX call is frequently used by modern applcations. Especially 
 in SPAs (Single-Page Applications), it's almost the only way of communicating 
@@ -17,16 +19,18 @@ with the server.</p>
 <p>In client side, basically, javascript code should supply a URL, optionally a 
 data and select a method (POST, GET...) to perfom an AJAX call. It must wait and 
 handle the return value. There may be an error (network error generally) while 
-performing call to the server. There may be some error in server side and server 
+performing call to the server. Or there may be some error in server side and server 
 may send an failed response with an error message. Client code should handle 
-this and optionally notify user (may show an error dialog). If no error and 
-server sent a return data, it must also handle it. Also, generally it blocks 
-some (or whole) area of the screen and shows a busy indicator until AJAX 
+these and optionally notify user (may show an error dialog). If there is no error and 
+server sent a return data, client must also handle it. Also, generally you want 
+to block 
+some (or whole) area of the screen and show a busy indicator until AJAX 
 operation complete.</p>
 <p>Server code should get the request, perform some server-side code, catch any 
 exceptions and return a valid response to the client. In an error situation, it 
-may optionally send an error message to the client. In success, it may send a 
-return data to the client.</p>
+may optionally send an error message to the client. If it's a validation error, 
+server may want to add validation problems. In success case, it may send a 
+return value to the client.</p>
 <h3>ASP.NET Boilerplate way</h3>
 <p>ASP.NET Boilerplate automates some of these steps by wrapping AJAX calls with
 <strong>abp.ajax</strong> function. An example ajax call:</p>
@@ -55,16 +59,16 @@ this example, we made a simple AJAX request to <strong>PeopleController</strong>
 <strong>SavePerson</strong> action. In the <strong>done </strong>handler, we got the database
 <strong>id</strong> for the new created person and showing a success notification (See
 <a href="/Pages/Documents/Javascript-API/Notification">notification API</a>). Let's see the <strong>MVC controller</strong> for this AJAX call:</p>
-<pre lang="cs">public class PeopleController : AbpController
+<pre lang="cs">public class PeopleController : <strong>AbpController</strong>
 {
-    [HttpPost]
-    public JsonResult SavePerson(SavePersonModel person)
+    <strong>[HttpPost]</strong>
+    public <strong>JsonResult</strong> SavePerson(SavePersonModel person)
     {
         //TODO: save new person to database and return new person's id
-        return Json(new {PersonId = 42});
+        <strong>return Json(new {PersonId = 42});</strong>
     }
 }</pre>
-<p><strong>SavePersonModel</strong> contains Name and Age properties as you guess. 
+<p><strong>SavePersonModel</strong> contains Name and Age properties as you can guess. 
 SavePerson is marked with <strong>HttpPost</strong> since abp.ajax's default 
 method is POST. I simplified method implemtation by returning an anonymous 
 object.</p>
@@ -132,6 +136,34 @@ function. If your server side code throws an exception type of
 Otherwise, it hides the actual error (writes error to logs) and shows a standard 
 ''An internal error occured..." message to the user. All these are automatically 
 done by ASP.NET Boilerplate.</p>
+<h4>WrapResult and DontWrapResult Attributes</h4>
+<p>You can control wrapping using <strong>WrapResult</strong> and <strong>
+DontWrapResult</strong> attributes for an action or all actions of a controller.</p>
+<h5>ASP.NET MVC Controllers</h5>
+<p>ASP.NET Boilerplate <strong>wraps</strong> (as described above) ASP.NET
+<strong>MVC</strong> action results <strong>by default</strong> if return type 
+is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async actions). You can 
+change this by using <strong>WrapResult</strong> attribute as shown below:</p>
+<pre>public class PeopleController : AbpController
+{
+    [HttpPost]
+    <strong>[WrapResult(WrapOnSuccess = false, WrapOnError = false)]</strong>
+    public JsonResult SavePerson(SavePersonModel person)
+    {
+        //TODO: save new person to database and return new person's id
+        return Json(new {PersonId = 42});
+    }
+}</pre>
+<p>As a shortcut, we can only use <strong>[DontWrapResult]</strong> which is 
+identical for this example.</p>
+<h5>ASP.NET Web API Controllers</h5>
+<p>ASP.NET Boilerplate <strong>does not wrap</strong> Web API actions <strong>by 
+default</strong>. You can add WrapResult to actions or controllers if you need.</p>
+<h5>Dynamic Web API Layer</h5>
+<p>ASP.NET Boilerplate <strong>wraps</strong> dynamic web api layer methods
+<strong>by default</strong>. You can change this behaviour using <strong>
+WrapResult </strong>and <strong>DontWrapResult </strong>attributes in the
+<strong>interface</strong> of your application service. See the next section.</p>
 
 <h4>Dynamic Web API Layer</h4>
 <p>While ASP.NET Boilerplate provides a mechanism to make easy AJAX calls, in a 
@@ -161,6 +193,8 @@ these type of functions for <a href="/Pages/Documents/Application-Services">
 application service</a> methods. Read the
 <a href="/Pages/Documents/Dynamic-Web-API">dynamic web api</a> layer 
 documentation.</p>
+
+</div>
 
 </body>
 

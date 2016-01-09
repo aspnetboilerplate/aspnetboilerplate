@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.Web.Mvc</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -51,8 +51,8 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -92,9 +92,9 @@
     <Compile Include="Application\Services\Dto\ComboboxItemDtoExtensions.cs" />
     <Compile Include="Web\Mvc\Authorization\AbpMvcAuthorizeAttribute.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpController.cs" />
-    <Compile Include="Web\Mvc\Controllers\AbpHandleErrorAttribute.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpAppViewController.cs" />
     <Compile Include="Web\Mvc\Controllers\AbpScriptsController.cs" />
+    <Compile Include="Web\Mvc\Controllers\ActionDescriptorHelper.cs" />
     <Compile Include="Web\Mvc\Controllers\Localization\AbpLocalizationController.cs" />
     <Compile Include="Web\Mvc\Controllers\Results\AbpJsonResult.cs" />
     <Compile Include="Web\Mvc\Controllers\WindsorControllerFactory.cs" />

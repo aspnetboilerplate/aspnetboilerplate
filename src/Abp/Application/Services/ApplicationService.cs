@@ -32,7 +32,7 @@ namespace Abp.Application.Services
         public IFeatureManager FeatureManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the permission checker.
+        /// Reference to the feature checker.
         /// </summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
 

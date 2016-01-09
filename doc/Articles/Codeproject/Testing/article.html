@@ -32,7 +32,7 @@
 
 <p><img alt="Solution structrure" height="191" src="solution-structure.png" width="272" /></p>
 
-<p>We will test Application services of the project. It includes SimpleTaskSystem.<strong>Core, </strong>SimpleTaskSystem.<strong>Application </strong>and SimpleTaskSystem.<strong>EntityFramework </strong>projects. You can read <a href="http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram">this article</a> to see how to build this application. Here, I&#39;ll focus on testing.&nbsp;</p>
+<p>We will test <strong>Application Services</strong> of the project. It includes SimpleTaskSystem.<strong>Core, </strong>SimpleTaskSystem.<strong>Application </strong>and SimpleTaskSystem.<strong>EntityFramework </strong>projects. You can read <a href="http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram">this article</a> to see how to build this application. Here, I&#39;ll focus on testing.&nbsp;</p>
 
 <h2 id="ArticleTestProject">Create a test project</h2>
 
@@ -50,12 +50,23 @@
 
 <h2 id="ArticlePrepareBase">Preparing a base test class</h2>
 
-<p>To create test classes easier, I&#39;ll create a base class that prepares a fake database connection and projects under test:</p>
+<p>To create test classes easier, I&#39;ll create a base class that prepares a fake database connection:</p>
 
-<pre>
+<pre>/// &lt;summary&gt;
+/// This is base class for all our test classes.
+/// It prepares ABP system, modules and a fake, in-memory database.
+/// Seeds database with initial data (&lt;see cref=&quot;SimpleTaskSystemInitialDataBuilder&quot;/&gt;).
+/// Provides methods to easily work with DbContext.
+/// &lt;/summary&gt;
 public abstract class SimpleTaskSystemTestBase : AbpIntegratedTestBase
 {
     protected SimpleTaskSystemTestBase()
+    {
+        //Seed initial data
+        UsingDbContext(context =&gt; new SimpleTaskSystemInitialDataBuilder().Build(context));
+    }
+
+    protected override void PreInitialize()
     {
         //Fake DbConnection using Effort!
         LocalIocManager.IocContainer.Register(
@@ -64,8 +75,7 @@ public abstract class SimpleTaskSystemTestBase : AbpIntegratedTestBase
                 .LifestyleSingleton()
             );
 
-        //Seed initial data
-        UsingDbContext(context =&gt; new SimpleTaskSystemInitialDataBuilder().Build(context));
+        base.PreInitialize();
     }
 
     protected override void AddModules(ITypeList&lt;AbpModule&gt; modules)
@@ -286,7 +296,7 @@ public class TaskAppService_Tests : SimpleTaskSystemTestBase
 <ol>
 	<li><strong>Arrange</strong>: We get the person (Thomas More) from database to obtain his Id and the current task count in database (Also, we created the TaskAppService in the constructor).</li>
 	<li><strong>Act</strong>: We&#39;re creating two tasks using TaskAppService.CreateTask method.</li>
-	<li><strong>Assert</strong>: We&#39;re checking if people count increased by 2. We&#39;re also trying to get created tasks from database to see if they are correctly inserted to the database.</li>
+	<li><strong>Assert</strong>: We&#39;re checking if task count increased by 2. We&#39;re also trying to get created tasks from database to see if they are correctly inserted to the database.</li>
 </ol>
 
 <p>Here, UsingDbContext method helps us while working directly with DbContext. If this test success, we understand that CreateTask method can create Tasks if we supply valid inputs. Also, repository is working since it inserted Tasks to the database.</p>
@@ -389,6 +399,11 @@ work. For such cases, I recommend using LocalDB.</p>
 
 <h2 id="ArticleHistory">Article History</h2>
 <ul>
+	<li>2016-01-07<ul>
+		<li>Upgraded solution to .Net Framework 4.5.2.</li>
+		<li>Upgraded Abp to v0.7.7.1.</li>
+	</ul>
+	</li>
 	<li>2015-06-15<ul>
 		<li>Updated sample project and article based on latest ABP version.</li>
 	</ul>

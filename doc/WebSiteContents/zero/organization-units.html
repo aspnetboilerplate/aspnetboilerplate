@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate - Module Zero</title>
+<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+<p>Organization units (OU) can be used to <strong>hierarchically group users and 
+entities</strong>.</p>
+	<h3>OrganizationUnit Entity</h3>
+	<p>An OU is represented by the <strong>OrganizationUnit</strong> 
+	entity. Fundamental properties of this entity are;</p>
+	<ul>
+		<li><strong>TenantId</strong>: Tenant's Id of this OU. Can be null for 
+		host OUs.</li>
+		<li><strong>ParentId</strong>: Parent OU's Id. Can be null if this is a 
+		root OU.</li>
+		<li><strong>Code</strong>: A hierarchical string code that is unique for 
+		a tenant.</li>
+		<li><strong>DisplayName</strong>: Shown name of the OU.</li>
+	</ul>
+	<p>OrganizationUnit entitiy's primary key (Id) is <strong>long</strong> and 
+	it derives from <a href="/Pages/Documents/Entities#DocAuditing"><strong>
+	FullAuditedEntity</strong></a> which provides audit information and 
+	implements <a href="/Pages/Documents/Data-Filters#DocSoftDelete"><strong>
+	ISoftDelete</strong></a> interface (so, OUs are not deleted from database, 
+	they are just marked as deleted).</p>
+	<h4>Organization Tree</h4>
+	<p>Since an OU can have a parent, all OUs of a tenant are in a <strong>tree</strong> 
+	structure. There are some rules for this tree;</p>
+	<ul>
+		<li>There can be more than one root (which have null ParentId).</li>
+		<li>Maximum deep of tree is defined as a constant as OrganizationUnit.<strong>MaxDepth</strong>, 
+		which is <strong>16</strong>.</li>
+		<li>There is a limit for first-level children count of an OU (because of 
+		fixed 
+		OU Code unit length explained below).</li>
+	</ul>
+	<h4>OU Code</h4>
+	<p>OU code is automatically generated and maintained by OrganizationUnit 
+	Manager. It's a string something like:</p>
+	<p>"<strong>00001.00042.00005</strong>"</p>
+	<p>This code can be used to easily query database for all children 
+	(recursively) of an OU. There are some rules for this code;</p>
+	<ul>
+		<li>It's <strong>unique</strong> for a
+		<a href="/Pages/Documents/Multi-Tenancy">tenant</a>.</li>
+		<li>All children of same OU have codes <strong>starts with parent OU's 
+		code</strong>.</li>
+		<li>It's <strong>fixed length</strong> based on level of OU in the tree, 
+		as shown in the sample.</li>
+		<li>While OU code is unique, it can be <strong>changable</strong> if you 
+		move an OU. So, we should reference an OU by Id, not Code.</li>
+	</ul>
+	<h3>OrganizationUnit Manager</h3>
+	<p><strong>OrganizationUnitManager</strong> class can be
+	<a href="/Pages/Documents/Dependency-Injection">injected</a> and used to 
+	manage OUs. Common use cases are:</p>
+	<ul>
+		<li>Create, Update or Delete an OU</li>
+		<li>Move an OU in OU tree.</li>
+		<li>Getting information about OU tree and items.</li>
+	</ul>
+	<h4>Multi Tenancy</h4>
+	<p>OrganizationUnitManager is designed to work for a <strong>single tenant</strong> in a 
+time. It works for the <strong>current tenant</strong> as default.</p>
+	<h3>Common Use Cases</h3>
+	<p>Here, we will see common use cases for OUs. You can find source code of 
+	the samples 	<a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/OrganizationUnitsDemo" target="_blank">
+	here</a>.</p>
+	<h4>Creating Entity Belongs To An Organization Unit</h4>
+	<p>Most obvious usage of OUs is to assign an entity to an OU. Let's see a 
+	sample entity:</p>
+	<pre lang="cs">public class Product : Entity, IMustHaveTenant, <strong>IMustHaveOrganizationUnit</strong>
+{
+    public virtual int TenantId { get; set; }
+
+<strong>    public virtual long OrganizationUnitId { get; set; }
+</strong>
+    public virtual string Name { get; set; }
+
+    public virtual float Price { get; set; }
+}</pre>
+	<p>We simple created <strong>OrganizationUnitId</strong> property to assign 
+	this entity to an OU. <strong>IMustHaveOrganizationUnit</strong> defines the OrganizationUnitId 
+	property. We don't have to implement it, but it's suggested to provide 
+	standardization. There is also an IMayHaveOrganizationId which has a <strong>
+	nullable</strong> OrganizationUnitId property.</p>
+	<p>Now, we can relate a Product to an OU and query products of a specific 
+	OU.</p>
+	<p><strong>Notice that</strong>; Product entity have a <strong>
+	TenantId</strong> (which is a property of IMustHaveTenant) to distinguish 
+	products of different tenants in a multi-tenant application (see
+	<a href="/Pages/Documents/Multi-Tenancy#data-filters">multi tenancy document</a>). 
+	If your application is not multi-tenant, you don't need this interface and 
+	property.</p>
+	<h4>Get Entities In An Organization Unit</h4>
+	<p>Getting Products of an OU is simple. Let's see this sample
+	<a href="/Pages/Documents/Domain-Services">domain service</a>:</p>
+	<pre lang="cs">public class ProductManager : IDomainService
+{
+    private readonly IRepository&lt;Product&gt; _productRepository;
+
+    public ProductManager(IRepository&lt;Product&gt; productRepository)
+    {
+        _productRepository = productRepository;
+    }
+
+<strong>    public List&lt;Product&gt; GetProductsInOu(long organizationUnitId)
+    {
+        return _productRepository.GetAllList(p =&gt; p.OrganizationUnitId == organizationUnitId);
+    }
+</strong>}</pre>
+	<p>We can simply write a predicate against Product.OrganizationUnitId as 
+	shown above.</p>
+	<h4>Get Entities In An Organization Unit Including It's Child Organization Units</h4>
+	<p>We may want to get Products of an organization unit including child 
+	organization units. In this case, OU <strong>Code</strong> can help us:</p>
+	<pre lang="cs">public class ProductManager : IDomainService
+{
+    private readonly IRepository&lt;Product&gt; _productRepository;
+    private readonly IRepository&lt;OrganizationUnit, long&gt; _organizationUnitRepository;
+
+    public ProductManager(
+        IRepository&lt;Product&gt; productRepository, 
+        IRepository&lt;OrganizationUnit, long&gt; organizationUnitRepository)
+    {
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
+    }
+
+<strong>    [UnitOfWork]
+    public virtual List&lt;Product&gt; GetProductsInOuIncludingChildren(long organizationUnitId)
+    {
+        var code = _organizationUnitRepository.Get(organizationUnitId).Code;
+
+        var query =
+            from product in _productRepository.GetAll()
+            join organizationUnit in _organizationUnitRepository.GetAll() on product.OrganizationUnitId equals organizationUnit.Id
+            where organizationUnit.Code.StartsWith(code)
+            select product;
+
+        return query.ToList();
+    }</strong>
+}</pre>
+	<p>First, we got <strong>code</strong> of the given OU. Then we created a 
+	LINQ with a <strong>join</strong> and <strong>StartsWith(code)</strong> condition (StartsWith 
+	creates a <strong>LIKE</strong> query in SQL). Thus, we can hierarchically 
+	get products of an OU.</p>
+	<h4>Filter Entities For A User</h4>
+	<p>We may want to get all products those are in OUs of a specific user. 
+	Example code:</p>
+	<pre lang="cs">public class ProductManager : IDomainService
+{
+    private readonly IRepository&lt;Product&gt; _productRepository;
+    private readonly UserManager _userManager;
+
+    public ProductManager(
+        IRepository&lt;Product&gt; productRepository, 
+        UserManager userManager)
+    {
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
+        _userManager = userManager;
+    }
+
+<strong>    public async Task&lt;List&lt;Product&gt;&gt; GetProductsForUserAsync(long userId)
+    {
+        var user = await _userManager.GetUserByIdAsync(userId);
+        var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
+        var organizationUnitIds = organizationUnits.Select(ou =&gt; ou.Id);
+
+        return await _productRepository.GetAllListAsync(p =&gt; organizationUnitIds.Contains(p.OrganizationUnitId));
+    }</strong>
+}</pre>
+	<p>We simply found Ids of OUs of the user. Then used <strong>Contains</strong> 
+	condition while getting products. Surely, we could create a LINQ query with join to 
+	get the same list.</p>
+	<p>We may want to get products in user's OUs including their child OUs:</p>
+	<pre lang="cs">public class ProductManager : IDomainService
+{
+    private readonly IRepository&lt;Product&gt; _productRepository;
+    private readonly IRepository&lt;OrganizationUnit, long&gt; _organizationUnitRepository;
+    private readonly UserManager _userManager;
+
+    public ProductManager(
+        IRepository&lt;Product&gt; productRepository, 
+        IRepository&lt;OrganizationUnit, long&gt; organizationUnitRepository, 
+        UserManager userManager)
+    {
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
+        _userManager = userManager;
+    }
+
+<strong>    [UnitOfWork]
+    public virtual async Task&lt;List&lt;Product&gt;&gt; GetProductsForUserIncludingChildOusAsync(long userId)
+    {
+        var user = await _userManager.GetUserByIdAsync(userId);
+        var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
+        var organizationUnitCodes = organizationUnits.Select(ou =&gt; ou.Code);
+
+        var query =
+            from product in _productRepository.GetAll()
+            join organizationUnit in _organizationUnitRepository.GetAll() on product.OrganizationUnitId equals organizationUnit.Id
+            where organizationUnitCodes.Any(code =&gt; organizationUnit.Code.StartsWith(code))
+            select product;
+
+        return query.ToList();
+    }</strong>
+}</pre>
+	<p>We combined <strong>Any</strong> with <strong>StartsWith</strong> 
+	condition in a LINQ join statement.</p>
+	<p>Surely, there may be much more complex requirements, but all can be done 
+	with LINQ or SQL.</p>
+	<h3>Settings</h3>
+	<p>You can inject and use <strong>IOrganizationUnitSettings</strong> interface to get 
+	Organization Units setting values. Currently, there is just a single setting 
+	that can be changed for your application needs:</p>
+	<ul>
+		<li><strong>MaxUserMembershipCount</strong>: Maximum allowed membership 
+		count for a user.<br />
+		Default value is <strong>int.MaxValue</strong> which 
+		allows a user to be member of unlimited OUs in same time.<br />
+		Setting name is a constant defined in <em>
+		AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount</em>.</li>
+	</ul>
+	<p>You can change setting values using
+	<a href="/Pages/Documents/Setting-Management">setting manager</a>.</p>
+
+</div>
+
+</body>
+
+</html>

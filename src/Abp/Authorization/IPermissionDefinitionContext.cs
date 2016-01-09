@@ -21,7 +21,7 @@ namespace Abp.Authorization
         /// <returns>New created permission</returns>
         Permission CreatePermission(
             string name, 
-            ILocalizableString displayName, 
+            ILocalizableString displayName = null, 
             bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
