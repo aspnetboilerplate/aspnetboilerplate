@@ -43,34 +43,37 @@ namespace Abp.WebApi.OData
         public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {
             _unitOfWorkCompleteHandler = UnitOfWorkManager.Begin();
+
             return base.ExecuteAsync(controllerContext, cancellationToken);
         }
 
         [EnableQuery]
-        public IQueryable<TEntity> Get()
+        public virtual IQueryable<TEntity> Get()
         {
             return Repository.GetAll();
         }
 
         [EnableQuery]
-        public SingleResult<TEntity> Get([FromODataUri] TPrimaryKey key)
+        public virtual SingleResult<TEntity> Get([FromODataUri] TPrimaryKey key)
         {
             var entity = Repository.GetAll().Where(e => e.Id.Equals(key));
+
             return SingleResult.Create(entity);
         }
 
-        public async Task<IHttpActionResult> Post(TEntity entity)
+        public virtual async Task<IHttpActionResult> Post(TEntity entity)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var created = await Repository.InsertAsync(entity);
-            return Created(created);
+            await Repository.InsertAndGetIdAsync(entity);
+
+            return Created(entity);
         }
 
-        public async Task<IHttpActionResult> Patch([FromODataUri] TPrimaryKey key, Delta<TEntity> entity)
+        public virtual async Task<IHttpActionResult> Patch([FromODataUri] TPrimaryKey key, Delta<TEntity> entity)
         {
             if (!ModelState.IsValid)
             {
@@ -84,10 +87,11 @@ namespace Abp.WebApi.OData
             }
             
             entity.Patch(dbLookup);
+
             return Updated(entity);
         }
 
-        public async Task<IHttpActionResult> Put([FromODataUri] TPrimaryKey key, TEntity update)
+        public virtual async Task<IHttpActionResult> Put([FromODataUri] TPrimaryKey key, TEntity update)
         {
             if (!ModelState.IsValid)
             {
@@ -100,10 +104,11 @@ namespace Abp.WebApi.OData
             }
             
             var updated = await Repository.UpdateAsync(update);
+
             return Updated(updated);
         }
 
-        public async Task<IHttpActionResult> Delete([FromODataUri] TPrimaryKey key)
+        public virtual async Task<IHttpActionResult> Delete([FromODataUri] TPrimaryKey key)
         {
             var product = await Repository.GetAsync(key);
             if (product == null)
@@ -112,6 +117,7 @@ namespace Abp.WebApi.OData
             }
             
             await Repository.DeleteAsync(key);
+
             return StatusCode(HttpStatusCode.NoContent);
         }
 
