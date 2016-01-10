@@ -8,7 +8,7 @@ using Abp.WebApi.OData.Configuration;
 
 namespace Abp.WebApi.OData
 {
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(typeof(AbpWebApiModule))]
     public class AbpWebApiODataModule : AbpModule
     {
         public override void PreInitialize()
