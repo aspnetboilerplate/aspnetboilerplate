@@ -11,7 +11,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 
-namespace Abp.WebApi.OData
+namespace Abp.WebApi.OData.Controllers
 {
     public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, int>
         where TEntity : class, IEntity<int>
