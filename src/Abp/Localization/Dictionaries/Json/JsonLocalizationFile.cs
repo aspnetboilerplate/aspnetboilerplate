@@ -5,12 +5,12 @@ namespace Abp.Localization.Dictionaries.Json
     /// <summary>
     /// Use it to serialize json file
     /// </summary>
-    public class JsonLocalized
+    public class JsonLocalizationFile
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public JsonLocalized()
+        public JsonLocalizationFile()
         {
             Texts = new Dictionary<string, string>();
         }

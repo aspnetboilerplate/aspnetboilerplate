@@ -24,7 +24,6 @@ namespace Abp.Localization.Dictionaries.Json
 
             _directoryPath = directoryPath;
         }
-
         
         public override void Initialize(string sourceName)
         {

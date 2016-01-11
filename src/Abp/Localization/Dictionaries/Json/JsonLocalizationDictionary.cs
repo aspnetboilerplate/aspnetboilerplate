@@ -48,10 +48,10 @@ namespace Abp.Localization.Dictionaries.Json
         /// <param name="jsonString">Json string</param>
         public static JsonLocalizationDictionary BuildFromJsonString(string jsonString)
         {
-            JsonLocalized deserialized;
+            JsonLocalizationFile jsonFile;
             try
             {
-                deserialized = JsonConvert.DeserializeObject<JsonLocalized>(
+                jsonFile = JsonConvert.DeserializeObject<JsonLocalizationFile>(
                     jsonString,
                     new JsonSerializerSettings
                     {
@@ -63,7 +63,7 @@ namespace Abp.Localization.Dictionaries.Json
                 throw new AbpException("Can not parse json string. " + ex.Message);
             }
 
-            var cultureCode = deserialized.Culture;
+            var cultureCode = jsonFile.Culture;
             if (string.IsNullOrEmpty(cultureCode))
             {
                 throw new AbpException("Culture is empty in language json file.");
@@ -71,7 +71,7 @@ namespace Abp.Localization.Dictionaries.Json
 
             var dictionary = new JsonLocalizationDictionary(new CultureInfo(cultureCode));
             var dublicateNames = new List<string>();
-            foreach (var item in deserialized.Texts)
+            foreach (var item in jsonFile.Texts)
             {
                 if (string.IsNullOrEmpty(item.Key))
                 {

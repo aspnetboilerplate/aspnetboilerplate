@@ -110,7 +110,7 @@
     <Compile Include="Localization\Dictionaries\Json\JsonEmbeddedFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Dictionaries\Json\JsonFileLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\Dictionaries\Json\JsonLocalizationDictionary.cs" />
-    <Compile Include="Localization\Dictionaries\Json\JsonLocalized.cs" />
+    <Compile Include="Localization\Dictionaries\Json\JsonLocalizationFile.cs" />
     <Compile Include="Localization\LocalizationManagerExtensions.cs" />
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
