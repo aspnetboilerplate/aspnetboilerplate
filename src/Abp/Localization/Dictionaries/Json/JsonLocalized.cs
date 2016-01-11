@@ -12,7 +12,7 @@ namespace Abp.Localization.Dictionaries.Json
         /// </summary>
         public JsonLocalized()
         {
-            KeyValuePairs = new Dictionary<string, string>();
+            Texts = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -23,6 +23,6 @@ namespace Abp.Localization.Dictionaries.Json
         /// <summary>
         ///  Key value pairs
         /// </summary>
-        public Dictionary<string, string> KeyValuePairs { get; private set; }
+        public Dictionary<string, string> Texts { get; private set; }
     }
 }

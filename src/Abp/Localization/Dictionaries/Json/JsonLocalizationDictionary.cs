@@ -5,6 +5,7 @@ using System.IO;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -50,7 +51,12 @@ namespace Abp.Localization.Dictionaries.Json
             JsonLocalized deserialized;
             try
             {
-                deserialized = JsonConvert.DeserializeObject<JsonLocalized>(jsonString);
+                deserialized = JsonConvert.DeserializeObject<JsonLocalized>(
+                    jsonString,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
             }
             catch (JsonException ex)
             {
@@ -65,7 +71,7 @@ namespace Abp.Localization.Dictionaries.Json
 
             var dictionary = new JsonLocalizationDictionary(new CultureInfo(cultureCode));
             var dublicateNames = new List<string>();
-            foreach (var item in deserialized.KeyValuePairs)
+            foreach (var item in deserialized.Texts)
             {
                 if (string.IsNullOrEmpty(item.Key))
                 {
