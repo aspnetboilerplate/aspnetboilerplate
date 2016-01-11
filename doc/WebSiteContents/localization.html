@@ -15,7 +15,7 @@
 
 <div class="document-contents">
 
-<h3 id="DocAppLangs">Application languages</h3>
+<h3 id="DocAppLangs">Application Languages</h3>
 <p>An application has at least one language for user interface. Many 
 applications have more than one language. ASP.NET Boilerplate provides a 
 flexible localization system for an application.</p>
@@ -35,7 +35,7 @@ on UI to show related flag.</p>
 show a <strong>language-switch</strong> combobox to the user. Try to create a 
 template and see source codes for more.</p>
 
-<h3 id="DocLocalizationSources">Localization sources</h3>
+<h3 id="DocLocalizationSources">Localization Sources</h3>
 <p>Localization 
 texts can be stored in different sources. 
 Even you can use more than one source in same application (If you have more than 
@@ -48,7 +48,7 @@ localization configuration. </p>
 There are pre-defined localization source types to use <strong>XML 
 files</strong> and <strong>resource</strong> files.</p>
 
-<h4 id="DocLocalizeXml">XML files</h4>
+<h4 id="DocLocalizeXml">XML Files</h4>
 <p>Localization texts can be stored in XML files. Content of an XML file is 
 something like that:</p>
 <pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
@@ -115,7 +115,7 @@ assembly name + folder hierarchy of XML files). </p>
 <p>Note that: When adding language postfix to embedded XML files, don't use dot 
 notation like 'MySource.tr.xml', instead use dash like '<strong>MySource-tr.xml</strong>' 
 since dot notation causes problems when finding resources.</p>
-<h4 id="DocLocalizeResources">Resource files</h4>
+<h4 id="DocLocalizeResources">Resource Files</h4>
 <p>Localization text can also be stored in .NET's resource files. We can create 
 a resource file for each language as shown below (Right click to the project, 
 choose add new item then find resources file).</p>
@@ -137,16 +137,16 @@ localization. You should configure a localization source for the resource:</p>
 <strong>MyTexts.ResourceManager</strong> is a 
 reference to the resource manager to be used to get localized texts.&nbsp;This is done in <strong>Initialize</strong> event of the module (See
 <a href="/Pages/Documents/Module-System">module system</a> for more info).</p>
-<h4 id="DocLocalizeCustom">Custom source</h4>
+<h4 id="DocLocalizeCustom">Custom Source</h4>
 <p>A custom localization source can be implemented to store texts in different 
 sources such as in a database. You can directly implement the <strong>
 ILocalizationSource</strong> interface or you can derive from <strong>
 DictionaryBasedLocalizationSource</strong> 
 class to make implementation easier.</p>
-<h3 id="DocGetText">Getting a localized text</h3>
+<h3 id="DocGetText">Getting A Localized Text</h3>
 <p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
-<h4 id="DocInServer">In server side</h4>
+<h4 id="DocInServer">In Server Side</h4>
 <p>In server side, we can <a href="/Pages/Documents/Dependency-Injection">inject</a> <strong>ILocalizationManager</strong> and use 
 it's <strong>GetString</strong> method.</p>
 <pre lang="cs">var s1 = _localizationManager.GetString("SimpleTaskSystem", "NewTask");</pre>
@@ -163,7 +163,7 @@ then get a string from the source:</p>
 <pre lang="cs">var source = _localizationManager.GetSource("SimpleTaskSystem");
 var s<span lang="tr">1</span> = source.GetString("NewTask");</pre>
 <p>This returns text in the current language. There are also overrides of 
-GetString to get text in different languages and formatted by arguments.</p>
+GetString to get text in <strong>different languages</strong> and <strong>formatted by arguments</strong>.</p>
 <p>If we can not inject ILocalizationManager (maybe in a static context that can 
 not reach to the dependency injection), we can simply use <strong>
 LocalizationHelper</strong> static class. But prefer injecting and using ILocalizationManager where 
@@ -175,7 +175,7 @@ writes unit tests).</p>
 service</strong></a>, in an <strong>MVC Controller</strong>, in a <strong>Razor 
 View</strong> or in another class derived from <strong>AbpServiceBase</strong>, there are shortcut <strong>L</strong> 
 methods.</p>
-<h5 id="DocInControllers">In MVC controllers</h5>
+<h5 id="DocInControllers">In MVC Controllers</h5>
 <p>Localization texts are generally needed in MVC Controller and Views. There is 
 a shortcut for that. See the sample controller below:</p>
 <pre lang="cs">public class HomeController : SimpleTaskSystemControllerBase
@@ -198,7 +198,7 @@ below:</p>
 }</pre>
 <p>Notice that it is derived from <strong>AbpController</strong>. Thus, you can 
 easily localize texts with <strong>L</strong> method. </p>
-<h5 id="DocInViews">In MVC views</h5>
+<h5 id="DocInViews">In MVC Views</h5>
 <p>Same <strong>L</strong> method also exists in 
 views:</p>
 <pre lang="cs">&lt;div&gt;
@@ -233,7 +233,7 @@ public abstract class SimpleTaskSystemWebViewPageBase&lt;TModel&gt; : AbpWebView
 <p>All these for controllers and views are ready when you create your solution 
 from one of the ASP.NET Boilerplate <a href="/Templates">templates</a>.</p>
 
-<h4 id="DocInJavascript">In javascript</h4>
+<h4 id="DocInJavascript">In Javascript</h4>
 <p>ASP.NET Boilerplate makes possible to use same localization texts in also 
 javascript code. First, you should be added dynamic ABP scripts to the page:</p>
 <pre lang="xml">&lt;script src=&quot;/Abp<span lang="tr">S<span class="auto-style1">cripts</span></span>/GetScripts&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
@@ -245,15 +245,24 @@ javascript as shown below:</p>
 not repeat source name, you can first get the source then get the text:</p>
 <pre lang="js">var source = abp.localization.getSource('SimpleTaskSystem');
 var s<span lang="tr">1</span> = source('NewTask');</pre>
-<p>Localization method can also get additional format arguments. Example:</p>
+<h5>Format Arguments</h5>
+	<p>Localization method can also get additional format arguments. Example:</p>
 <pre lang="js">abp.localization.localize('RoleDeleteWarningMessage', 'MySource', 'Admin');
 
 //shortcut if source is got using getSource as shown above
 source('RoleDeleteWarningMessage', 'Admin');</pre>
 <p>if RoleDeleteWarningMessage = 'Role {0} will be deleted', then localized text 
 will be 'Role Admin will be deleted'.</p>
+	<h5>Default Localization Source</h5>
+	<p>You can set a default localization source and use 
+	abp.localization.localize method without source name.</p>
 
-<h3 id="DocExtending">Extending localization sources</h3>
+<pre lang="js">abp.localization.defaultSourceName = 'SimpleTaskSystem';
+var s1 = abp.localization.localize('NewTask');</pre>
+
+<p>defaultSourceName is global and works for only one source at a time.</p>
+
+<h3 id="DocExtending">Extending Localization Sources</h3>
 <p>Assume that we use a module which defines it's own localization source. We 
 may need to change it's localized texts, add new texts or translate to other languages. 
 ASP.NET Boilerplate allows extending a localization source. It currently works 
