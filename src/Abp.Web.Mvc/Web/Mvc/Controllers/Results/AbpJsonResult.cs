@@ -54,7 +54,6 @@ namespace Abp.Web.Mvc.Controllers.Results
             if (Data != null)
             {
                 //TODO: Make this static for performance reason?
-                //TODO: Make this shared with ASP.NET WebAPI settings?
                 var jsonSerializerSettings = new JsonSerializerSettings
                                                  {
                                                      ContractResolver = new CamelCasePropertyNamesContractResolver()

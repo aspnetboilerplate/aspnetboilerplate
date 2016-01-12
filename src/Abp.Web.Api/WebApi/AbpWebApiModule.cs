@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Formatting;
+﻿using System.Linq;
+using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -71,16 +72,24 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
+            httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
         private static void InitializeFormatters(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.Formatters.Clear();
-            var formatter = new JsonMediaTypeFormatter();
-            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            httpConfiguration.Formatters.Add(formatter);
+            //Remove formatters except JsonFormatter.
+            foreach (var currentFormatter in httpConfiguration.Formatters.ToList())
+            {
+                if (!(currentFormatter is JsonMediaTypeFormatter))
+                {
+                    httpConfiguration.Formatters.Remove(currentFormatter);                    
+                }
+            }
+
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
+
         }
 
         private static void InitializeRoutes(HttpConfiguration httpConfiguration)

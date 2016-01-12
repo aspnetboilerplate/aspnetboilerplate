@@ -121,6 +121,8 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
+    <Compile Include="Localization\Json\JsonAndXmlSourceMixing_Tests.cs" />
+    <Compile Include="Localization\Json\JsonEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource_Tests.cs" />
     <Compile Include="Localization\TestResourceFiles\MyTestResource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -148,6 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Localization\Json\JsonSources\Lang-zh-CN.json" />
+    <EmbeddedResource Include="Localization\Json\JsonSources\Lang.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +175,12 @@
     <EmbeddedResource Include="Localization\TestXmlFiles\Test-tr.xml" />
     <EmbeddedResource Include="Localization\TestXmlFiles\Test.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Json\XmlSources\Lang-zh-CN.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Json\XmlSources\Lang.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

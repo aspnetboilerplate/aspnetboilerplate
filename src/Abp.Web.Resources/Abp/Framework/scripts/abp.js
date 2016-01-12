@@ -70,17 +70,32 @@
 
     abp.auth.grantedPermissions = abp.auth.grantedPermissions || {};
 
+    //Deprecated. Use abp.auth.isGranted instead.
     abp.auth.hasPermission = function (permissionName) {
+        return abp.auth.isGranted.apply(this, arguments);
+    };
+
+    //Deprecated. Use abp.auth.isAnyGranted instead.
+    abp.auth.hasAnyOfPermissions = function () {
+        return abp.auth.isAnyGranted.apply(this, arguments);
+    };
+
+    //Deprecated. Use abp.auth.areAllGranted instead.
+    abp.auth.hasAllOfPermissions = function () {
+        return abp.auth.areAllGranted.apply(this, arguments);
+    };
+
+    abp.auth.isGranted = function (permissionName) {
         return abp.auth.allPermissions[permissionName] != undefined && abp.auth.grantedPermissions[permissionName] != undefined;
     };
 
-    abp.auth.hasAnyOfPermissions = function () {
+    abp.auth.isAnyGranted = function () {
         if (!arguments || arguments.length <= 0) {
             return true;
         }
 
         for (var i = 0; i < arguments.length; i++) {
-            if (abp.auth.hasPermission(arguments[i])) {
+            if (abp.auth.isGranted(arguments[i])) {
                 return true;
             }
         }
@@ -88,13 +103,13 @@
         return false;
     };
 
-    abp.auth.hasAllOfPermissions = function () {
+    abp.auth.areAllGranted = function () {
         if (!arguments || arguments.length <= 0) {
             return true;
         }
 
         for (var i = 0; i < arguments.length; i++) {
-            if (!abp.auth.hasPermission(arguments[i])) {
+            if (!abp.auth.isGranted(arguments[i])) {
                 return false;
             }
         }

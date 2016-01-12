@@ -57,10 +57,10 @@ assembly that has classes derived from given interface. The last one is
 namespace prefix of services. Say that we have ITaskAppService and 
 IPersonAppService in given assembly. For this configuration, services will be 
 '/api/services/<strong>tasksystem/task</strong>' and '/api/services/<strong>tasksystem/person</strong>'. 
-To canculate service name: Service and AppService postfixes and I prefix is 
+To calculate service name: Service and AppService postfixes and I prefix is 
 removed (for interfaces). Also, service name is converted to camel case. If you 
-don't like this convention, there is a 'WithServiceName' method that you can 
-determine names. Also, There is a Where method to filter services. This can be 
+don't like this convention, there is a '<strong>WithServiceName</strong>' method that you can 
+determine names. Also, There is a <strong>Where</strong> method to filter services. This can be 
 useful if you will build for all application services except a few one.</p>
 <h4>Overriding ForAll</h4>
 <p>We can override configuration after ForAll method. Example:</p>
@@ -170,16 +170,16 @@ You can also generate a sinle service proxy using
 page as shown below:</p>
 <pre lang="xml">&lt;script src=&quot;/api/AbpServiceProxies/Get?name=tasksystem/task&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
 
-<h4 id="DocAngularSupport">Angular Support</h4>
-<p>ASP.NET Boilerplate can expose dynamic api controllers as angularjs services. 
+<h4 id="DocAngularSupport">Angular Integration</h4>
+<p>ASP.NET Boilerplate can expose dynamic api controllers as <strong>angularjs services</strong>. 
 Consider the sample below:</p>
 <pre lang="js">(function() {
     angular.module('app').controller('TaskListController', [
-        '$scope', 'abp.services.tasksystem.task',
-        function($scope, taskService) {
+        '$scope', '<strong>abp.services.tasksystem.task</strong>',
+        function($scope, <strong>taskService</strong>) {
             var vm = this;
             vm.tasks = [];
-            taskService.getTasks({
+            <strong>taskService.getTasks</strong>({
                 state: 0
             }).success(function(result) {
                 vm.tasks = result.tasks;
@@ -199,20 +199,28 @@ to your page:</p>
 <pre lang="xml">&lt;script src=&quot;~/Abp/Framework/scripts/libs/angularjs/abp.ng.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;~/api/AbpServiceProxies/GetAll?type=angular&quot;&gt;&lt;/script&gt;</pre>
 
-<h4 id="DocDurandalSupport">Durandal Support</h4>
-
-<p>ASP.NET Boilerplate makes it possible to inject service proxies in modules in 
-a <a href="http://durandaljs.com/" target="_blank">Durandal</a> application. See 
-the sample viewmodel:</p>
-<pre lang="cs">define(['service!tasksystem/task'],
-    function (taskService) {
-        //taskService can be used here
-    });</pre>
-
-<p>ASP.NET Boilerplate configures Durandal (Require.js actually) to understand 
-the 'service!' prefix and inject appropriate javascript service proxy.</p>
-
-<h3>About Parameter Binding</h3>
+	<h3>Wrapping Results</h3>
+	<p>ASP.NET Boilerplate <strong>wraps</strong> return values of dynamic Web 
+	API actions by <strong>AjaxResponse</strong> object. See
+	<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for 
+	more information on this wrapping. You can enable/disable wrapping <strong>per 
+	method</strong> or <strong>per application service</strong>. See this 
+	example application service:</p>
+	<pre lang="cs">public interface ITestAppService : IApplicationService
+{
+    <strong>[DontWrapResult]</strong>
+    DoItOutput DoIt(DoItInput input);
+}</pre>
+	<p>We disabled wrapping for DoIt method. This properties should be declared 
+	for <strong>interfaces</strong>, not implementation classes.</p>
+	<p>Unwrapping can be useful if you want to more control on exact return 
+	values to the client. Especially, disabling it may be needed while working 
+	<strong>3rd party client side libraries</strong> which can not work with ASP.NET 
+	Boilerplate's standard AjaxResponse. In this case, you should handle 
+	exceptions yourself.</p>
+	<p>Note: Dynamic javascript proxies can understand if result is unwrapped and 
+	run properly in either case.</p>
+	<h3>About Parameter Binding</h3>
 <p>ASP.NET Boilerplate creates Api Controllers on runtime. So, ASP.NET Web API's
 <a href="http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api" target="_blank">
 model and parameter binding</a> is used to bind model and parameters. You can 

@@ -3,12 +3,12 @@
 namespace Abp.Configuration.Startup
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP Web module.
+    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.Web.Api module.
     /// </summary>
     public static class AbpWebApiConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure ABP Web module.
+        /// Used to configure Abp.Web.Api module.
         /// </summary>
         public static IAbpWebApiModuleConfiguration AbpWebApi(this IModuleConfigurations configurations)
         {

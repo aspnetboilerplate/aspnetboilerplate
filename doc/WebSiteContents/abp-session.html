@@ -11,11 +11,8 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntroduction">Introduction</a></li>
-	<li><a href="#DocInjectingSession">Injecting session</a></li>
-	<li><a href="#DocUsingSession">Using session properties</a></li>
-</ul>
+<div class="document-contents">
+
 <h3 id="DocIntroduction">Introduction</h3>
 <p>If an application requires login, it also needs to know the current user 
 performing operations. While ASP.NET itself provides Session objects in the 
@@ -67,12 +64,22 @@ AbpSession property in an application service method for instance.</p>
 	is no current user. It can not be null if the calling code is authorized.</li>
 	<li><strong>TenantId</strong>: Id of the current tenant or null if there is 
 	no current tenant.</li>
+	<li><strong>ImpersonatorUserId</strong>: Id of the impersonator user if 
+	current session is impersonated by another user. It's null if this is not an 
+	impersonated login.</li>
+	<li><strong>ImpersonatorTenantId</strong>: Id of the impersonator user's 
+	tenant, if current session is impersonated by another user. It's null if 
+	this is not an impersonated login.</li>
 	<li><strong>MultiTenancySide</strong>: It may be Host or Tenant.</li>
 </ul>
 <p>UserId and TenantId is <strong>nullable</strong>. There is also non-nullable
 <strong>GetUserId()</strong> and <strong>GetTenantId()</strong> methods. If 
 you're sure there is a current user, you can call GetUserId(). If current user 
 is null, this method throws exception. GetTenantId() is also similar.</p>
+<p>Impersonator properties are not common as other properties and generally used 
+for <a href="/Pages/Documents/Audit-Logging">audit logging</a> purposes.</p>
+
+</div>
 
 </body>
 

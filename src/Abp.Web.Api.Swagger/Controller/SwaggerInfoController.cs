@@ -1,21 +1,16 @@
 ﻿using Abp.WebApi.Controllers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Abp.Web.Models;
 
 namespace Abp.Web.Api.Swagger.Controller
 {
+    [DontWrapResult]
     public class SwaggerInfoController : AbpApiController
     {
-       
-
-
-
        [HttpGet]
        public IDictionary<string,IList<string>> GetMoudles() 
        {

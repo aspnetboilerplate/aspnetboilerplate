@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+using Abp.Web.Models;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
+    [DontWrapResult]    
     public class TypeScriptController : AbpApiController
     {
         readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;

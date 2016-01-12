@@ -30,7 +30,7 @@ project. If it's not implemented, NullPermissionChecker is used which grants all
 permissions to everyone.</p>
 </div>
 
-<h3 id="DocDefinePermission">Defining permissions</h3>
+<h3 id="DocDefinePermission">Defining Permissions</h3>
 <p>A unique <strong>permission </strong>is defined for each operation needed to be authorized. We should define a permission before use it. ASP.NET Boilerplate is designed 
 to be 
 <a href="/Pages/Documents/Module-System">modular</a>. So, different modules can have different 
@@ -83,8 +83,8 @@ method of our module:</p>
 automatically. So, an authorization provider can inject any dependency (like a 
 repository) to build permission definitions using some other sources.</p>
 
-<h3 id="DocCheckPermission">Checking permissions</h3>
-<h4 id="DocUsingAbpAuthorize">Using AbpAuthorize attribute</h4>
+<h3 id="DocCheckPermission">Checking Permissions</h3>
+<h4 id="DocUsingAbpAuthorize">Using AbpAuthorize Attribute</h4>
 <p><strong>AbpAuthorize</strong> (AbpMvcAuthorize for MVC Controllers and 
 AbpApiAuthorize for Web API Controllers) attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
 <a href="/Pages/Documents/Application-Services">application service</a> method shown below:</p>
@@ -170,7 +170,7 @@ service classes.</p>
 <p>In the client side, we can use API defined in <strong>abp.auth</strong> 
 namespace. In most case, we need to check if current user has a specific 
 permission (with permission name). Example:</p>
-<pre lang="js">abp.auth.hasPermission('Administration.UserManagement.CreateUser');</pre>
+<pre lang="js">abp.auth.isGranted('Administration.UserManagement.CreateUser');</pre>
 
 <p>You can also use <strong>abp.auth.grantedPermissions</strong> to get all 
 granted permissions or <strong>abp.auth.allPermissions</strong> to get all 
