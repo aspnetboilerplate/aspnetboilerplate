@@ -6,6 +6,7 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Session;
@@ -22,7 +23,12 @@ namespace Abp.WebApi.Controllers
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
-        
+
+        /// <summary>
+        /// Gets the event bus.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
+
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>
@@ -125,6 +131,7 @@ namespace Abp.WebApi.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
+            EventBus = NullEventBus.Instance;
         }
         
         /// <summary>
