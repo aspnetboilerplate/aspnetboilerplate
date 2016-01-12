@@ -45,8 +45,7 @@ ILocalizationSource</strong> interface should be implemented for a localization
 source. Then it is <strong>register</strong>ed to ASP.NET Boilerplate's 
 localization configuration. </p>
 <p>Each localization source must have a <strong>unique source name</strong>. 
-There are pre-defined localization source types to use <strong>XML 
-files</strong> and <strong>resource</strong> files.</p>
+There are pre-defined localization source types as defined below.</p>
 
 <h4 id="DocLocalizeXml">XML Files</h4>
 <p>Localization texts can be stored in XML files. Content of an XML file is 
@@ -78,7 +77,7 @@ Boilerplate gets the text from current language's XML file (finds current
 language using 
 Thread.CurrentThread.<strong>CurrentUICulture</strong>). If it does not exists 
 in the current language, it gets the text from default language's XML file.</p>
-<h5>Registering XML localization sources</h5>
+<h5>Registering XML Localization Sources</h5>
 <p>XML files can be stored in <strong>file system</strong> or can be <strong>
 embedded</strong> into an assembly.</p>
 <p>For <strong>file system</strong> stored XMLs, we can register an XML 
@@ -96,7 +95,7 @@ localization source as shown below:</p>
 ASP.NET Boilerplate finds all XML files in given directory and registers the 
 localization source.</p>
 <p>For <strong>embedded XML files</strong>, we should mark all 
-localization XML files as embedded resource (Select XML files, open properties 
+localization XML files as <strong>embedded resource</strong> (Select XML files, open properties 
 window (F4) and change Build Action as Embedded Resource). Then we can register 
 the localization source as shown below:</p>
 <pre lang="cs">Configuration.Localization.Sources.Add(
@@ -115,6 +114,61 @@ assembly name + folder hierarchy of XML files). </p>
 <p>Note that: When adding language postfix to embedded XML files, don't use dot 
 notation like 'MySource.tr.xml', instead use dash like '<strong>MySource-tr.xml</strong>' 
 since dot notation causes problems when finding resources.</p>
+	<h4>JSON Files</h4>
+	<p>JSON files can be used to store texts for a localization source. A sample 
+	JSON localization file is shown below:</p>
+	<pre lang="js">{
+  <strong>&quot;culture&quot;: &quot;en&quot;</strong>,
+  &quot;texts&quot;: {
+    &quot;TaskSystem&quot;: &quot;Task system&quot;,
+    &quot;Xtasks&quot;: &quot;{0} tasks&quot;
+  }
+}</pre>
+	<p>JSON files should be unicode (<strong>utf-8</strong>). <strong>culture: 
+	"en"</strong> declares that this JSON file contains English texts. We create 
+	a seperated JSON file for <strong>each language</strong> as shown below:</p>
+	<p>
+<img alt="JSON localization files" height="64" src="/SiteFiles/Content/Documents/Resources/localization_files2.png" width="212" /></p>
+	<p><strong>MySourceName </strong>is the <strong>source name</strong> here, 
+	and MySourceName.json defines the <strong>default language</strong>. It's 
+	similar to XML files.</p>
+	<h5>Registering JSON Localization Sources</h5>
+	<p>JSON files can be stored in <strong>file system</strong> or can be
+	<strong>embedded</strong> into an assembly.</p>
+	<p>File file system stored JSONs, we can register a JSON localization source 
+	as shown below:</p>
+	<pre lang="cs">Configuration.Localization.Sources.Add(
+    new DictionaryBasedLocalizationSource(
+        &quot;MySourceName&quot;,
+        new <strong>JsonFileLocalizationDictionaryProvider</strong>(
+            HttpContext.Current.Server.MapPath(&quot;~/Localization/MySourceName&quot;)
+            )
+        )
+    );</pre>
+<p>This is done in <strong>PreInitialize</strong> event of a module (See
+<a href="/Pages/Documents/Module-System">module system</a> for more info). 
+ASP.NET Boilerplate finds all JSON files in given directory and registers the 
+localization source.</p>
+<p>For <strong>embedded JSON files</strong>, we should mark all 
+localization JSON files as <strong>embedded resource</strong> (Select JSON files, open properties 
+window (F4) and change Build Action as Embedded Resource). Then we can register 
+the localization source as shown below:</p>
+	<pre lang="cs">&nbsp;Configuration.Localization.Sources.Add(
+    new DictionaryBasedLocalizationSource(
+        &quot;MySourceName&quot;,
+        new <strong>JsonEmbeddedFileLocalizationDictionaryProvider</strong>(
+            Assembly.GetExecutingAssembly(),
+            &quot;MyCompany.MyProject.Localization.Sources&quot;
+            )
+        )
+    );</pre>
+<p><strong>JsonEmbeddedFileLocalizationDictionaryProvider</strong> gets an 
+assembly containing JSON files (GetExecutingAssembly simply refers to current 
+assembly) and a <strong>namespace</strong> of JSON files (namespace is calculated 
+assembly name + folder hierarchy of JSON files). </p>
+<p>Note that: When adding language postfix to embedded JSON files, don't use dot 
+notation like 'MySource.tr.xml', instead use dash like '<strong>MySource-tr.xml</strong>' 
+since dot notation causes problems when finding resources.&nbsp;</p>
 <h4 id="DocLocalizeResources">Resource Files</h4>
 <p>Localization text can also be stored in .NET's resource files. We can create 
 a resource file for each language as shown below (Right click to the project, 
@@ -135,14 +189,16 @@ localization. You should configure a localization source for the resource:</p>
         ));</pre>
 <p><strong>Uniqe name</strong> of the source is <strong>MySource</strong> here. And 
 <strong>MyTexts.ResourceManager</strong> is a 
-reference to the resource manager to be used to get localized texts.&nbsp;This is done in <strong>Initialize</strong> event of the module (See
+reference to the resource manager to be used to get localized texts.&nbsp;This is done in <strong>
+PreInitialize</strong> event of the module (See
 <a href="/Pages/Documents/Module-System">module system</a> for more info).</p>
 <h4 id="DocLocalizeCustom">Custom Source</h4>
 <p>A custom localization source can be implemented to store texts in different 
 sources such as in a database. You can directly implement the <strong>
-ILocalizationSource</strong> interface or you can derive from <strong>
+ILocalizationSource</strong> interface or you can use <strong>
 DictionaryBasedLocalizationSource</strong> 
-class to make implementation easier.</p>
+class to make implementation easier (json and xml localization sources also use 
+it).</p>
 <h3 id="DocGetText">Getting A Localized Text</h3>
 <p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
