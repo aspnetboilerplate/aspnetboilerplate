@@ -9,16 +9,15 @@ namespace Abp.RedisCache.Configuration
     {
         private static readonly ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> ConnectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
 
-        public string GetConnectionString(string service)
+        public string GetConnectionString(string name)
         {
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings[service];
-
-            if (connectionStringSettings == null)
+            var connStr = ConfigurationManager.ConnectionStrings[name];
+            if (connStr == null)
             {
-                throw new ConfigurationErrorsException("A connection string is expected for " + service);
+                return "localhost";
             }
 
-            return connectionStringSettings.ConnectionString;
+            return connStr.ConnectionString;
         }
 
         public ConnectionMultiplexer GetConnection(string connectionString)
