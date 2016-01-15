@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
+using Abp.Dependency;
 
 namespace Abp.RedisCache.Configuration
 {
-    public class AbpRedisConnectionProvider : IAbpRedisConnectionProvider
+    public class AbpRedisConnectionProvider : IAbpRedisConnectionProvider, ISingletonDependency
     {
         private static readonly ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> ConnectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
 

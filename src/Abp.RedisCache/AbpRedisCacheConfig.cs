@@ -1,6 +1,8 @@
-﻿namespace Abp
+﻿using Abp.Dependency;
+
+namespace Abp
 {
-    public class AbpRedisCacheConfig
+    public class AbpRedisCacheConfig : ISingletonDependency
     {
         private string connectionStringKey = "Abp.Redis.Cache";
 
