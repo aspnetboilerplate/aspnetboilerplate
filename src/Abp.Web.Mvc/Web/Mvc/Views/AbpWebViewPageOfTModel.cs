@@ -40,7 +40,6 @@ namespace Abp.Web.Mvc.Views
         /// Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
-
         
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
@@ -51,7 +50,6 @@ namespace Abp.Web.Mvc.Views
             get { return _localizationSource.Name; }
             set { _localizationSource = LocalizationHelper.GetSource(value); }
         }
-
         private ILocalizationSource _localizationSource;
 
         /// <summary>

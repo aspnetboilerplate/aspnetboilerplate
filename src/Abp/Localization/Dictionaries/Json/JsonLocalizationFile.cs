@@ -5,14 +5,14 @@ namespace Abp.Localization.Dictionaries.Json
     /// <summary>
     /// Use it to serialize json file
     /// </summary>
-    public class JsonLocalized
+    public class JsonLocalizationFile
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public JsonLocalized()
+        public JsonLocalizationFile()
         {
-            KeyValuePairs = new Dictionary<string, string>();
+            Texts = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -23,6 +23,6 @@ namespace Abp.Localization.Dictionaries.Json
         /// <summary>
         ///  Key value pairs
         /// </summary>
-        public Dictionary<string, string> KeyValuePairs { get; private set; }
+        public Dictionary<string, string> Texts { get; private set; }
     }
 }

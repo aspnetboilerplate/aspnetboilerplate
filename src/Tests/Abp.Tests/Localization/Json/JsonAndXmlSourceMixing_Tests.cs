@@ -12,7 +12,6 @@ using Abp.Modules;
 using Shouldly;
 using Xunit;
 
-
 namespace Abp.Tests.Localization.Json
 {
     public class JsonAndXmlSourceMixing_Tests : TestBaseWithLocalIocManager

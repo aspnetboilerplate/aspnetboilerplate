@@ -1,21 +1,19 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Abp;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
-
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API Layer")]
+[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API - OData")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API - OData")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Web.Api")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyProduct("Abp.Web.Api.OData")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -23,7 +21,7 @@ using Abp;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("879e21f8-d5ae-45c3-81ee-e68999dae914")]
+[assembly: Guid("58388edb-d219-4046-be8e-d5eadb3e2bf6")]
 
 // Version information for an assembly consists of the following four values:
 //

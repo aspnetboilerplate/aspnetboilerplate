@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -71,6 +72,18 @@ namespace Abp.Web
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
+            }
+            else if (!Request.UserLanguages.IsNullOrEmpty())
+            {
+                var firstValidLanguage = Request.UserLanguages
+                    .Where(GlobalizationHelper.IsValidCultureCode)
+                    .FirstOrDefault();
+
+                if (firstValidLanguage != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo(firstValidLanguage);
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(firstValidLanguage);
+                }
             }
         }
 
