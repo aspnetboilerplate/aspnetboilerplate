@@ -8,7 +8,7 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// <summary>
     /// Used to store a controller information.
     /// </summary>
-    internal class DynamicApiControllerInfo
+    public class DynamicApiControllerInfo
     {
         /// <summary>
         /// Name of the service.

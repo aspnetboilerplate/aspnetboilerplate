@@ -1,93 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Abp.WebApi.Controllers.Dynamic;
+using NJsonSchema;
+using System.Web.Http;
+using System.Net.Http;
+using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.IO;
-using System.Threading;
+using NSwag;
 
-namespace Abp.Swagger
+namespace Abp.Web.Api.Swagger
 {
-   public static  class SwaggerBuilder
+
+    public static class SwaggerBuilder
     {
-       static string UrlTemplate = "api/services/{servicePrefix}/{controller}/{action}/{idl}";
-
-     public  static IDictionary<string, string> ContentJson = new Dictionary<string, string>();
-       /// <summary>
-       /// 针对程序集获取Swagger信息
-       /// </summary>
-       /// <typeparam name="T"></typeparam>
-       /// <param name="assembly"></param>
-       /// <param name="servicePrefix"></param>
-        public static  void ForAll<T>(Assembly assembly, string servicePrefix)
-     {
-         var swagpath = HttpContext.Current != null ? HttpContext.Current.Server.MapPath("~/Swag/")+servicePrefix+"/" : "";
-            Task.Factory.StartNew(() =>
-             {
-            var generator = new AssemblyTypeToSwaggerGenerator(assembly.CodeBase);
-            var allClassNames = generator.GetAbpServiceBaseClasses();
-
-            Parallel.ForEach<string>(allClassNames, item => GenJsonForOneClass(item,UrlTemplate.Replace("{servicePrefix}",servicePrefix),swagpath,generator));
-
-                       
-            });
-              
-        }
-
-       /// <summary>
-       /// 针对当个接口获取Swagger信息
-       /// </summary>
-       /// <typeparam name="T"></typeparam>
-       /// <param name="assembly"></param>
-       /// <param name="servicePrefix"></param>
-       /// <param name="serviceName"></param>
-        public static void For<T>(Assembly assembly, string servicePrefix, string serviceName) 
+        static string UrlPrix = "api/services";
+        public static string Json = "";
+        public static void EnableSwaggerJson()
         {
-            var swagpath = HttpContext.Current != null ? HttpContext.Current.Server.MapPath("~/Swag/") + servicePrefix + "/" : "";   
-            var generator = new AssemblyTypeToSwaggerGenerator(assembly.CodeBase);
-            var typename = generator.GetAbpServiceBaseClassByInterface(typeof(T).FullName);
-            GenJsonForOneClass(typename, UrlTemplate.Replace("{servicePrefix}", servicePrefix), swagpath, generator,serviceName);
+           var dynamicapiinfos= DynamicApiControllerManager.GetAll();
+           var generator = new DynamicApiToSwaggerGenerator(UrlPrix, new JsonSchemaGeneratorSettings());
 
-        }
+            var swaggerservice = new SwaggerService();
 
+            //info
+            swaggerservice.Info = new SwaggerInfo() { Title = "Abp DynamicApi" };
 
+            //tag
+            swaggerservice.Tags = new List<SwaggerTag>();
 
-        static void GenJsonForOneClass(string classname, string url, string swagpath, AssemblyTypeToSwaggerGenerator generator, string controllernameused=null)
-        {
-            var swobj = generator.FromAbpApplicationMoudleAssembly(classname, url,controllernameused);
-            if (swobj != null)
-            {
-                //gen json file 
-                var jsontext = swobj.ToJson();
-                if (!string.IsNullOrEmpty(swagpath))
-                {
-                    System.IO.Directory.CreateDirectory(swagpath);
-                    //取得类名
-                    var clsplit=classname.Split('.');
-                    //去除AppSerivce
-                    if (clsplit!=null&&clsplit.Length>0)
-                    {
-                        classname = clsplit[clsplit.Length - 1];
-                        classname = classname.Replace("AppService", "");
-                        classname = classname.Replace("Service", "");
-                    }
-                    if (!string.IsNullOrEmpty(controllernameused))
-                    {
-                        classname = controllernameused;
-                    }
-                    var file = swagpath + "\\" + classname + ".js";
-                    if (File.Exists(file))
-                    {
-                        File.Delete(file);
-                    }
-                    var writer = File.CreateText(file);
-                    writer.Write(jsontext);
-                    writer.Close();
-
-                }
+            foreach (var dynamicapiinfo in dynamicapiinfos)
+            {             
+                generator.Generate(swaggerservice, dynamicapiinfo);              
             }
+
+            Json = swaggerservice.ToJson().ToLower();
+        }
+ 
+        public static void EnableSwaggerUI(this HttpConfiguration httpconfig)
+        {
+            var config = new SwaggerUiConfig(null, DefaultRootUrlResolver);           
+            httpconfig.Routes.MapHttpRoute(
+                name: "swagger_ui",
+                routeTemplate: "dynamicapi/ui/{*assetPath}",
+                defaults: null,
+                constraints: new { assetPath = @".+" },
+                handler: new SwaggerUiHandler(config)
+            );
+        }
+
+        private static string DefaultRootUrlResolver(HttpRequestMessage request)
+        {
+            var scheme = GetHeaderValue(request, "X-Forwarded-Proto") ?? request.RequestUri.Scheme;
+            var host = GetHeaderValue(request, "X-Forwarded-Host") ?? request.RequestUri.Host;
+            var port = GetHeaderValue(request, "X-Forwarded-Port") ?? request.RequestUri.Port.ToString(CultureInfo.InvariantCulture);
+
+            var httpConfiguration = request.GetConfiguration();
+            var virtualPathRoot = httpConfiguration.VirtualPathRoot.TrimEnd('/');
+
+            return string.Format("{0}://{1}:{2}{3}", scheme, host, port, virtualPathRoot);
+        }
+        private static string GetHeaderValue(HttpRequestMessage request, string headerName)
+        {
+            IEnumerable<string> list;
+            return request.Headers.TryGetValues(headerName, out list) ? list.FirstOrDefault() : null;
         }
     }
+
 }

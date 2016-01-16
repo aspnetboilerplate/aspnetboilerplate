@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Abp.Web.Api.Swagger.Swagger
+namespace Abp.Web.Api.Swagger
 {
     /// <summary>A <see cref="JsonSchemaGenerator"/> which only generate the schema for the root type. 
     /// Referenced types are added to the service's Definitions collection. </summary>
@@ -36,13 +36,13 @@ namespace Abp.Web.Api.Swagger.Swagger
             }
             else
             {
-                if (!schemaResolver.HasSchema(type))
+                if (!schemaResolver.HasSchema(type,false))
                 {
                     var schemaGenerator = new RootTypeJsonSchemaGenerator(_service, Settings);
                     schemaGenerator.Generate<JsonSchema4>(type, schemaResolver);
                 }
 
-                schema.SchemaReference = schemaResolver.GetSchema(type);
+                schema.SchemaReference = schemaResolver.GetSchema(type,false);
             }
         }
     }

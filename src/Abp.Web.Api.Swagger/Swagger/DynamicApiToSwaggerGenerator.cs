@@ -4,81 +4,77 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Abp.Web.Api.Swagger.Swagger;
+using Abp.WebApi.Controllers.Dynamic;
+using System.Xml.XPath;
+using System.IO;
 
 namespace Abp.Web.Api.Swagger
 {
-    public class AbpServiceBaseToSwaggerGenerator
+    public class DynamicApiToSwaggerGenerator
     {
-        private SwaggerService _service;
-        private readonly string _defaultRouteTemplate;
-        private Type _serviceType;
-        private JsonSchema4 _exceptionType;
+     
+        private readonly string _urlprix;
         public JsonSchemaGeneratorSettings JsonSchemaGeneratorSettings { get; set; }
-        /// <summary>Initializes a new instance of the <see cref="AbpServiceBaseToSwaggerGenerator"/> class.</summary>
-        /// <param name="defaultRouteTemplate">The default route template.</param>
-        public AbpServiceBaseToSwaggerGenerator(string defaultRouteTemplate, JsonSchemaGeneratorSettings jsonSchemaGeneratorSettings)
+    
+        public DynamicApiToSwaggerGenerator(string urlprix, JsonSchemaGeneratorSettings jsonSchemaGeneratorSettings)
         {
-            _defaultRouteTemplate = defaultRouteTemplate;
+            _urlprix = urlprix;
             JsonSchemaGeneratorSettings = jsonSchemaGeneratorSettings;
         }
 
       
-        public SwaggerService Generate(Type type, InterfaceMapping map, string excludedMethodName = "Swagger",string controllernameused=null)
+        public SwaggerService Generate(SwaggerService root,DynamicApiControllerInfo info)
         {
-            _service = new SwaggerService();
-            _serviceType = type;
-
-            _exceptionType = new JsonSchema4();
-            _exceptionType.TypeName = "SwaggerException";
-            _exceptionType.Properties.Add("ExceptionType", new JsonProperty { Type = JsonObjectType.String });
-            _exceptionType.Properties.Add("Message", new JsonProperty { Type = JsonObjectType.String });
-            _exceptionType.Properties.Add("StackTrace", new JsonProperty { Type = JsonObjectType.String });
-
-            _service.Definitions[_exceptionType.TypeName] = _exceptionType;
-
-            var schemaResolver = new SchemaResolver();
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            Dictionary<string, Type> find = new Dictionary<string, Type>();
+            //tag
+            root.Tags.Add(new SwaggerTag() { Name = info.ServiceName } );      
          
-            foreach (var method in methods.Where(m => m.Name != excludedMethodName))
+          
+            var schemaResolver = new SchemaResolver();          
+         
+            foreach (var action in info.Actions)
             {
-                if (Array.IndexOf(map.TargetMethods, method) == -1)
-                {
-                    continue;
-                }
-               
+
+                var method = action.Value.Method;
                 var parameters = method.GetParameters().ToList();
                 var methodName = method.Name;
 
                 var operation = new SwaggerOperation();
-                operation.OperationId = methodName;
+                operation.OperationId = methodName;              
+                operation.Summary = action.Key;
+                operation.Tags = new List<string>() { info.ServiceName };
+            
+                var httpPath = GetHttpPath(root,operation, method, parameters,info,action.Value, schemaResolver);
 
-                var httpPath = GetHttpPath(operation, method, parameters, schemaResolver, controllernameused);
-
-                LoadParameters(operation, parameters, schemaResolver);
-                LoadReturnType(operation, method, schemaResolver);
+                LoadParameters(root,operation, parameters, schemaResolver,find);
+                LoadReturnType(root,operation, method, schemaResolver,find);
                 LoadMetaData(operation, method);
 
-                var httpMethod = GetMethod(method);
+                var httpMethod = GetMethod(action.Value.Verb);
 
-                if (!_service.Paths.ContainsKey(httpPath))
+                if (!root.Paths.ContainsKey(httpPath))
                 {
                     var path = new SwaggerOperations();
-                    _service.Paths[httpPath] = path;
+                    root.Paths[httpPath] = path;
                 }
 
-                _service.Paths[httpPath][httpMethod] = operation;
+                root.Paths[httpPath][httpMethod] = operation;
+
+                //xml comment
+                XmlCommentHelper.ApplyXMLComment(info,action.Value,operation);
             }
 
             foreach (var schema in schemaResolver.Schemes)
-                _service.Definitions[schema.TypeName] = schema;
-
-            _service.GenerateOperationIds();
-            return _service;
+            {
+                root.Definitions[schema.TypeName] = schema;
+                //add model xml comment
+                XmlCommentHelper.ApplyXmlTypeComments(schema,find);
+            }
+            root.GenerateOperationIds();
+            return root;
         }
+
 
         private void LoadMetaData(SwaggerOperation operation, MethodInfo method)
         {
@@ -89,44 +85,19 @@ namespace Abp.Web.Api.Swagger
                 operation.Description = descriptionAttribute.Description;
         }
 
-        private string GetHttpPath(SwaggerOperation operation, MethodInfo method, List<ParameterInfo> parameters, ISchemaResolver schemaResolver,string controllernameused)
+        private string GetHttpPath(SwaggerService root,SwaggerOperation operation, MethodInfo method, List<ParameterInfo> parameters, DynamicApiControllerInfo info,DynamicApiActionInfo action, ISchemaResolver schemaResolver)
         {
             var httpPath = string.Empty;
-
-            dynamic routeAttribute = method.GetCustomAttributes()
-                .SingleOrDefault(a => a.GetType().Name == "RouteAttribute");
-
-            if (routeAttribute != null)
-            {
-                dynamic routePrefixAttribute = _serviceType.GetCustomAttributes()
-                    .SingleOrDefault(a => a.GetType().Name == "RoutePrefixAttribute");
-
-                if (routePrefixAttribute != null)
-                    httpPath = routePrefixAttribute.Prefix + "/" + routeAttribute.Template;
-                else
-                    httpPath = routeAttribute.Template;
-            }
-            else
-            {
-                //Abp 约定
-                var controllername = _serviceType.Name.Replace("AppService", string.Empty);
-                controllername = controllername.Replace("Service", string.Empty);
-                if (!string.IsNullOrEmpty(controllernameused))
-                {
-                    controllername = controllernameused;
-                }
-
-                httpPath = _defaultRouteTemplate
-                    .Replace("{controller}",controllername )
-                    .Replace("{action}", method.Name);
-            }
+            //start with dash
+            httpPath = "/"+_urlprix+"/"+ info.ServiceName + "/" + action.ActionName;                 
+            
 
             foreach (var match in Regex.Matches(httpPath, "\\{(.*?)\\}").OfType<Match>())
             {
                 var parameter = parameters.SingleOrDefault(p => p.Name == match.Groups[1].Value);
                 if (parameter != null)
                 {
-                    var operationParameter = CreatePrimitiveParameter(parameter, schemaResolver);
+                    var operationParameter = CreatePrimitiveParameter(root,parameter, schemaResolver);
                     operationParameter.Kind = SwaggerParameterKind.Path;
 
                     //var queryParameter = operation.Parameters.SingleOrDefault(p => p.Name == operationParameter.Name);
@@ -149,27 +120,22 @@ namespace Abp.Web.Api.Swagger
             return httpPath;
         }
 
-        private SwaggerOperationMethod GetMethod(MethodInfo method)
-        {
-            var methodName = method.Name;
-            if (method.GetCustomAttributes().Any(a => a.GetType().Name == "HttpPostAttribute"))
+        private SwaggerOperationMethod GetMethod(Abp.Web.HttpVerb verb)
+        {            
+            if (verb== HttpVerb.Post)
                 return SwaggerOperationMethod.Post;
-            else if (method.GetCustomAttributes().Any(a => a.GetType().Name == "HttpGetAttribute"))
+            else if (verb == HttpVerb.Get)
                 return SwaggerOperationMethod.Get;
-            else if (methodName == "Get")
-                return SwaggerOperationMethod.Get;
-            else if (methodName == "Post")
-                return SwaggerOperationMethod.Post;
-            else if (methodName == "Put")
-                return SwaggerOperationMethod.Put;
-            else if (methodName == "Delete")
+            else if (verb == HttpVerb.Delete)
                 return SwaggerOperationMethod.Delete;
+            else if (verb == HttpVerb.Put)
+                return SwaggerOperationMethod.Put;           
             else
                 return SwaggerOperationMethod.Post;
         }
 
         /// <exception cref="InvalidOperationException">The parameter cannot be an object or array. </exception>
-        private void LoadParameters(SwaggerOperation operation, List<ParameterInfo> parameters, ISchemaResolver schemaResolver)
+        private void LoadParameters(SwaggerService root,SwaggerOperation operation, List<ParameterInfo> parameters, ISchemaResolver schemaResolver, Dictionary<string, Type> find)
         {
             foreach (var parameter in parameters)
             {
@@ -178,7 +144,7 @@ namespace Abp.Web.Api.Swagger
 
                 if (fromBodyAttribute != null)
                 {
-                    var operationParameter = CreateBodyParameter(parameter, schemaResolver);
+                    var operationParameter = CreateBodyParameter(root,parameter, schemaResolver,find);
                     operation.Parameters.Add(operationParameter);
                 }
                 else
@@ -189,12 +155,12 @@ namespace Abp.Web.Api.Swagger
                         if (operation.Parameters.Any(p => p.Kind == SwaggerParameterKind.Body))
                             throw new InvalidOperationException("The parameter '" + parameter.Name + "' cannot be an object or array. ");
 
-                        var operationParameter = CreateBodyParameter(parameter, schemaResolver);
+                        var operationParameter = CreateBodyParameter(root,parameter, schemaResolver,find);
                         operation.Parameters.Add(operationParameter);
                     }
                     else
                     {
-                        var operationParameter = CreatePrimitiveParameter(parameter, schemaResolver);
+                        var operationParameter = CreatePrimitiveParameter(root,parameter, schemaResolver);
                         operationParameter.Kind = SwaggerParameterKind.Query;
 
                         operation.Parameters.Add(operationParameter);
@@ -203,29 +169,39 @@ namespace Abp.Web.Api.Swagger
             }
         }
 
-        private SwaggerParameter CreateBodyParameter(ParameterInfo parameter, ISchemaResolver schemaResolver)
+        private SwaggerParameter CreateBodyParameter(SwaggerService root,ParameterInfo parameter, ISchemaResolver schemaResolver, Dictionary<string, Type> find)
         {
             var operationParameter = new SwaggerParameter();
-            operationParameter.Schema = CreateAndAddSchema<SwaggerParameter>(parameter.ParameterType, schemaResolver);
+            operationParameter.Schema = CreateAndAddSchema<SwaggerParameter>(root,parameter.ParameterType, schemaResolver,find);
+            if (operationParameter.Schema.SchemaReference!=null&&!find.Keys.Contains(operationParameter.Schema.SchemaReference.TypeName))
+            {
+                find.Add(operationParameter.Schema.SchemaReference.TypeName, parameter.ParameterType);
+            }
             operationParameter.Name = "request";
             operationParameter.Kind = SwaggerParameterKind.Body;
             return operationParameter;
         }
 
-        private void LoadReturnType(SwaggerOperation operation, MethodInfo method, ISchemaResolver schemaResolver)
+        private void LoadReturnType(SwaggerService root,SwaggerOperation operation, MethodInfo method, ISchemaResolver schemaResolver, Dictionary<string, Type> find)
         {
             if (method.ReturnType.FullName != "System.Void" && method.ReturnType.FullName != "System.Threading.Tasks.Task")
             {
+                var schema = CreateAndAddSchema<JsonSchema4>(root, method.ReturnType, schemaResolver,find);
                 operation.Responses["200"] = new SwaggerResponse
                 {
-                    Schema = CreateAndAddSchema<JsonSchema4>(method.ReturnType, schemaResolver)
+                    Schema =schema
                 };
+                if (schema.SchemaReference!=null&&!find.Keys.Contains(schema.SchemaReference.TypeName))
+                {
+                    find.Add(schema.SchemaReference.TypeName, method.ReturnType);
+                }
+
             }
             else
                 operation.Responses["200"] = new SwaggerResponse();
         }
 
-        private TSchemaType CreateAndAddSchema<TSchemaType>(Type type, ISchemaResolver schemaResolver)
+        private TSchemaType CreateAndAddSchema<TSchemaType>(SwaggerService root,Type type, ISchemaResolver schemaResolver, Dictionary<string, Type> find)
             where TSchemaType : JsonSchema4, new()
         {
             if (type.Name == "Task`1")
@@ -238,9 +214,9 @@ namespace Abp.Web.Api.Swagger
 
             if (info.Type.HasFlag(JsonObjectType.Object))
             {
-                if (!schemaResolver.HasSchema(type))
+                if (!schemaResolver.HasSchema(type,false))
                 {
-                    var schemaGenerator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
+                    var schemaGenerator = new RootTypeJsonSchemaGenerator(root, JsonSchemaGeneratorSettings);
                     schemaGenerator.Generate<JsonSchema4>(type, schemaResolver);
                 }
 
@@ -250,7 +226,7 @@ namespace Abp.Web.Api.Swagger
                 JsonSchema4 t = null;
                 try
                 {
-                    t = schemaResolver.GetSchema(type);
+                    t = schemaResolver.GetSchema(type,false);
                 }
                 catch (Exception)
                 {
@@ -259,6 +235,7 @@ namespace Abp.Web.Api.Swagger
                 return new TSchemaType
                 {
                     Type = JsonObjectType.Object,
+                    //TypeName=t.TypeName,
                     SchemaReference = t
                 };
             }
@@ -266,19 +243,26 @@ namespace Abp.Web.Api.Swagger
             if (info.Type.HasFlag(JsonObjectType.Array))
             {
                 var itemType = type.GenericTypeArguments.Length == 0 ? type.GetElementType() : type.GenericTypeArguments[0];
+                var schema = CreateAndAddSchema<JsonSchema4>(root, itemType, schemaResolver, find);
+                if (schema.SchemaReference!=null&&!find.Keys.Contains(schema.SchemaReference.TypeName))
+                {
+                    find.Add(schema.SchemaReference.TypeName, itemType);
+                }
                 return new TSchemaType
                 {
                     Type = JsonObjectType.Array,
-                    Item = CreateAndAddSchema<JsonSchema4>(itemType, schemaResolver)
+                    Item =schema
                 };
+
+                
             }
 
-            var generator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
+            var generator = new RootTypeJsonSchemaGenerator(root, JsonSchemaGeneratorSettings);
             return generator.Generate<TSchemaType>(type, schemaResolver);
         }
 
         /// <exception cref="InvalidOperationException">The parameter cannot be an object or array. </exception>
-        private SwaggerParameter CreatePrimitiveParameter(ParameterInfo parameter, ISchemaResolver schemaResolver)
+        private SwaggerParameter CreatePrimitiveParameter(SwaggerService root,ParameterInfo parameter, ISchemaResolver schemaResolver)
         {
             var parameterType = parameter.ParameterType;
 
@@ -292,7 +276,7 @@ namespace Abp.Web.Api.Swagger
             if (info.Type.HasFlag(JsonObjectType.Object) || info.Type.HasFlag(JsonObjectType.Array))
                 throw new InvalidOperationException("The parameter '" + parameter.Name + "' cannot be an object or array.");
 
-            var parameterGenerator = new RootTypeJsonSchemaGenerator(_service, JsonSchemaGeneratorSettings);
+            var parameterGenerator = new RootTypeJsonSchemaGenerator(root, JsonSchemaGeneratorSettings);
 
             var segmentParameter = parameterGenerator.Generate<SwaggerParameter>(parameter.ParameterType, schemaResolver);
             segmentParameter.Name = parameter.Name;
