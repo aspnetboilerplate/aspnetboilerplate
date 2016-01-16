@@ -112,6 +112,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WebApi\Swagger\Ui\CustomAssets\index.html" />
+    <EmbeddedResource Include="WebApi\Swagger\Ui\CustomAssets\swagger-oauth.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="swagger-ui\dist\**\*.*">
+      <LogicalName>%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
+      <InProject>false</InProject>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Abp.Web.Api\Abp.Web.Api.csproj">
       <Project>{71962f97-5e4b-465c-9a21-2153d31992cf}</Project>
       <Name>Abp.Web.Api</Name>
