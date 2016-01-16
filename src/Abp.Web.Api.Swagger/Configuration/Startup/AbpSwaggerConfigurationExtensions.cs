@@ -10,7 +10,7 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure Abp.Web.Api.Swagger module.
         /// </summary>
-        public static IAbpSwaggerModuleConfiguration AbpWebApi(this IModuleConfigurations configurations)
+        public static IAbpSwaggerModuleConfiguration AbpSwagger(this IModuleConfigurations configurations)
         {
             return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.WebApi.Swagger", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpSwaggerModuleConfiguration>());
         }
