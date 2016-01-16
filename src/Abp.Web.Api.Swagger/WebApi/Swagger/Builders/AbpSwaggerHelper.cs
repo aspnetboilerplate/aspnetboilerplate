@@ -8,8 +8,14 @@ using System.Web;
 
 namespace Abp.WebApi.Swagger.Builders
 {
+    /// <summary>
+    /// Abp swagger helper
+    /// </summary>
     internal class AbpSwaggerHelper
     {
+        /// <summary>
+        /// Get and set your ApbWebApi module and application service information
+        /// </summary>
         public static AbpSwaggerModel AbpSwaggerModel { get; private set; }
 
         static AbpSwaggerHelper()
@@ -17,6 +23,10 @@ namespace Abp.WebApi.Swagger.Builders
             AbpSwaggerModel = new AbpSwaggerModel();
         }
 
+        /// <summary>
+        /// Get the path your application
+        /// </summary>
+        /// <returns></returns>
         public static string GetApplicationPath()
         {
             var path = HttpRuntime.AppDomainAppPath;

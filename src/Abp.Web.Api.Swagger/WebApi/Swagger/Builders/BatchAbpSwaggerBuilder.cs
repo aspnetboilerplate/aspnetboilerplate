@@ -7,7 +7,6 @@ using System.Threading;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.WebApi.Swagger.Configuration;
-using Newtonsoft.Json.Serialization;
 using NJsonSchema;
 
 namespace Abp.WebApi.Swagger.Builders

@@ -11,6 +11,9 @@ using NSwag;
 
 namespace Abp.WebApi.Swagger.Builders
 {
+    /// <summary>
+    /// Abp Swaggger Generator
+    /// </summary>
     internal class AbpSwaggerGenerator
     {
         private AbpSwaggerService _service;
@@ -31,7 +34,17 @@ namespace Abp.WebApi.Swagger.Builders
         /// <summary>Gets or sets the JSON Schema generator settings.</summary>
         public JsonSchemaGeneratorSettings JsonSchemaGeneratorSettings { get; set; }
 
-       
+        /// <summary>
+        /// Use Abp application service to structure abp swagger service
+        /// </summary>
+        /// <param name="serviceName">Application Service Name</param>
+        /// <param name="type">Interface Type of your Application Service</param>
+        /// <param name="checkOpenWebApi">
+        /// Retain parameters, if you don't want open some action, just don't add OpenWebApiAttribute to your action method.
+        /// But you must create this attribute.
+        /// </param>
+        /// <param name="excludedMethodName">Which method you don't want including to swagger document.</param>
+        /// <returns></returns>
         public AbpSwaggerService GenerateForAbpAppService(string serviceName, Type type, bool checkOpenWebApi = false,
             string excludedMethodName = "Swagger")
         {

@@ -87,7 +87,6 @@
     <Compile Include="WebApi\Swagger\Application\RedirectHandler.cs" />
     <Compile Include="WebApi\Swagger\Application\SwaggerUiConfig.cs" />
     <Compile Include="WebApi\Swagger\Application\SwaggerUiHandler.cs" />
-    <Compile Include="WebApi\Swagger\Attributes\WebApiDescriptionAttribute.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerBuilder.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerHelper.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerGenerator.cs" />
