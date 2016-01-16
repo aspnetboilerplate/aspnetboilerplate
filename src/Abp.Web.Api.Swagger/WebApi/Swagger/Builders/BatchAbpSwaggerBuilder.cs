@@ -22,11 +22,9 @@ namespace Abp.WebApi.Swagger.Builders
         private readonly Assembly _assembly;
         private Func<Type, string> _serviceNameSelector;
         private string _relativePath = "WebApiDoc";
-        private readonly AbpSwaggerModel _model;
 
-        public BatchAbpSwaggerBuilder(AbpSwaggerModel model, Assembly assembly, string servicePrefix)
+        public BatchAbpSwaggerBuilder(Assembly assembly, string servicePrefix)
         {
-            _model = model;
             _assembly = assembly;
             _servicePrefix = servicePrefix;
         }
@@ -51,7 +49,9 @@ namespace Abp.WebApi.Swagger.Builders
 
         public IAbpSwaggerEnabledConfiguration Build(string moduleName)
         {
-            _model.Modules.Add(moduleName);
+            var model = AbpSwaggerHelper.AbpSwaggerModel;
+
+            model.Modules.Add(moduleName);
 
             var types =
                 from
@@ -67,7 +67,7 @@ namespace Abp.WebApi.Swagger.Builders
             }
 
             var urlTemplate = UrlTemplate.Replace("{servicePrefix}", _servicePrefix);
-            var rootPath = AbpSwaggerBuilderHelper.GetApplicationPath() + "/" + _relativePath;
+            var rootPath = AbpSwaggerHelper.GetApplicationPath() + "/" + _relativePath;
             if (!Directory.Exists(rootPath))
             {
                 Directory.CreateDirectory(rootPath);
@@ -117,19 +117,15 @@ namespace Abp.WebApi.Swagger.Builders
                 serviceNames.Add(textInfo.ToTitleCase(serviceName));
             }
 
-            _model.Services.Add(moduleName, serviceNames);
+            model.Services.Add(moduleName, serviceNames);
 
             var configuration = IocManager.Instance.Resolve<IAbpSwaggerModuleConfiguration>();
 
             var abpSwagger = new AbpSwaggerEnabledConfiguration(
                 configuration.HttpConfiguration,
-                AbpSwaggerBuilderHelper.DefaultRootUrlResolver,
+                AbpSwaggerHelper.DefaultRootUrlResolver,
                 configuration.AbpSwaggerUiConfigure
-                )
-            {
-                AbpSwaggerModel = _model
-            };
-
+                );
 
             return abpSwagger;
         }

@@ -89,7 +89,7 @@
     <Compile Include="WebApi\Swagger\Application\SwaggerUiHandler.cs" />
     <Compile Include="WebApi\Swagger\Attributes\WebApiDescriptionAttribute.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerBuilder.cs" />
-    <Compile Include="WebApi\Swagger\Builders\AbpSwaggerBuilderHelper.cs" />
+    <Compile Include="WebApi\Swagger\Builders\AbpSwaggerHelper.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerGenerator.cs" />
     <Compile Include="WebApi\Swagger\Builders\AbpSwaggerModel.cs" />
     <Compile Include="WebApi\Swagger\Builders\BatchAbpSwaggerBuilder.cs" />

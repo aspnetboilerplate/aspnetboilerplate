@@ -15,9 +15,7 @@ namespace Abp.WebApi.Swagger.Configuration
         private readonly HttpConfiguration _httpConfig;
         private readonly Func<HttpRequestMessage, string> _rootUrlResolver;
         private readonly Action<AbpSwaggerUiConfig> _configure;
-
-        public AbpSwaggerModel AbpSwaggerModel { get; set; }
-
+       
         public AbpSwaggerEnabledConfiguration(
             HttpConfiguration httpConfig,
             Func<HttpRequestMessage, string> rootUrlResolver,
@@ -46,7 +44,7 @@ namespace Abp.WebApi.Swagger.Configuration
                 config.DocExpansion(DocExpansion.List);
             }
 
-            config.SetAbpSwaggerModel(AbpSwaggerModel);
+            config.SetAbpSwaggerModel(AbpSwaggerHelper.AbpSwaggerModel);
 
             var routes = _httpConfig.Routes;
 

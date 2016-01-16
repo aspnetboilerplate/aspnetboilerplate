@@ -8,8 +8,15 @@ using System.Web;
 
 namespace Abp.WebApi.Swagger.Builders
 {
-    internal class AbpSwaggerBuilderHelper
+    internal class AbpSwaggerHelper
     {
+        public static AbpSwaggerModel AbpSwaggerModel { get; private set; }
+
+        static AbpSwaggerHelper()
+        {
+            AbpSwaggerModel = new AbpSwaggerModel();
+        }
+
         public static string GetApplicationPath()
         {
             var path = HttpRuntime.AppDomainAppPath;
