@@ -52,7 +52,7 @@ namespace Abp.Web.Api.Description
                     ApiDescription api = new ApiDescription();
                     var httpaction = new HttpControllerDescriptor();
                     httpaction.Configuration = _config;
-                    httpaction.ControllerType = dynamicapiinfo.ApiControllerType;
+                    httpaction.ControllerType = dynamicapiinfo.ServiceInterfaceType;
                     httpaction.ControllerName = dynamicapiinfo.ServiceName;               
                     var action = new DynamicHttpActionDescriptor(httpaction, item.Value.Method, item.Value.Filters);
                     api.ActionDescriptor = action;
@@ -64,7 +64,7 @@ namespace Abp.Web.Api.Description
                     IList<ApiParameterDescription> parameterDescriptions = CreateParameterDescription(actionBinding,action);
                     //using refletions to internal set 
                     var prop=typeof(ApiDescription).GetProperties().Where(p => p.Name == "ParameterDescriptions").SingleOrDefault();
-                    prop.SetValue(api, new Collection<ApiParameterDescription>(parameterDescriptions));            
+                    prop.SetValue(api, new Collection<ApiParameterDescription>(parameterDescriptions));        
 
 
                     //resopnse
@@ -73,9 +73,7 @@ namespace Abp.Web.Api.Description
                     prop2.SetValue(api, responseDescription);
                     
                     api.RelativePath = "api/services/"+dynamicapiinfo.ServiceName + "/" + item.Value.ActionName;
-
-                    //xml comment
-                    XmlCommentHelper.ApplyXMLComment(dynamicapiinfo, item.Value, api);
+                    
                     apiDescriptions.Add(api);
                 }
             }
