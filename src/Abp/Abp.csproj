@@ -116,11 +116,17 @@
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
     <Compile Include="Localization\LocalizationSourceHelper.cs" />
     <Compile Include="Notifications\INotificationChannel.cs" />
+    <Compile Include="Notifications\INotificationConfiguration.cs" />
+    <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
     <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\INotificationProvider.cs" />
     <Compile Include="Notifications\INotificationStore.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Notifications\NotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationManagerExtensions.cs" />
     <Compile Include="Notifications\NotificationPublishOptions.cs" />
     <Compile Include="Notifications\NotificationSendOptions.cs" />

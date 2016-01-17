@@ -2,6 +2,6 @@
 {
     public class NotificationSendOptions
     {
-        //TODO: ...
+        public long[] UserIds { get; set; }
     }
 }

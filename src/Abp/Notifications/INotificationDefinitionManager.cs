@@ -7,7 +7,7 @@ namespace Abp.Notifications
     /// </summary>
     public interface INotificationDefinitionManager
     {
-        void Initialize();
+        void Add(NotificationDefinition notificationDefinition);
 
         IReadOnlyList<NotificationDefinition> Get(string name);
 

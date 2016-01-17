@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -7,11 +8,11 @@ namespace Abp.Notifications
     /// </summary>
     public interface INotificationManager
     {
-        Task SubscribeAsync(long userId, NotificationSubscriptionOptions options); //TODO: Move userId to NotificationSubscriptionOptions?
+        Task SubscribeAsync(NotificationSubscriptionOptions options);
 
         Task PublishAsync(NotificationPublishOptions options);
 
-        Task SendAsync(NotificationSendOptions options, long[] userIds);
+        Task SendAsync(NotificationSendOptions options);
 
         //TODO: ...
     }

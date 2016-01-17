@@ -10,6 +10,7 @@ namespace Abp.Notifications
         Task Insert(UserNotification userNotification);
 
         //TODO: ...
+        Task InsertSubscriptionAsync(NotificationSubscriptionOptions options);
     }
 
     public class UserNotification
