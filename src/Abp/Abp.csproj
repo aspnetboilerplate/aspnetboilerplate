@@ -115,6 +115,17 @@
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
     <Compile Include="Localization\LocalizationSourceHelper.cs" />
+    <Compile Include="Notifications\INotificationChannel.cs" />
+    <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\INotificationStore.cs" />
+    <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Notifications\NotificationManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationPublishOptions.cs" />
+    <Compile Include="Notifications\NotificationSendOptions.cs" />
+    <Compile Include="Notifications\NotificationSubscriptionOptions.cs" />
+    <Compile Include="Notifications\NotificationType.cs" />
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
     <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
