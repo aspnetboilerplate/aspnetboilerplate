@@ -1,17 +1,13 @@
 ﻿using Abp.WebApi.Controllers.Dynamic;
-using NJsonSchema;
-using NSwag;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web.Http.Description;
 using System.Xml.XPath;
-// from Swashbuckle.Core
 
-namespace Abp.Web.Api.Swagger
+namespace Abp.WebApi.Controllers.ApiExplorer
 {
     public static class XmlCommentHelper
     {
@@ -19,52 +15,10 @@ namespace Abp.Web.Api.Swagger
         private static Regex ConstPattern = new Regex(@"<c>(?<display>.+?)</c>");
 
 
-        public static void ApplyXmlTypeComments(JsonSchema4 schema, Dictionary<string, Type> find)
+
+        internal static void ApplyXMLComment(DynamicApiControllerInfo info, DynamicApiActionInfo actioninfo, ApiDescription api)
         {
-            if (!find.Keys.Contains(schema.TypeName)) return;
-
-            var path = AppDomain.CurrentDomain.BaseDirectory + "\\bin\\" + find[schema.TypeName].Assembly.FullName.Split(',')[0] + ".XML";
-            if (!File.Exists(path)) return;
-            XPathNavigator _navigator = new XPathDocument(path).CreateNavigator();
-            var typeNode = _navigator.SelectSingleNode(
-                String.Format("/doc/members/member[@name='T:{0}']", find[schema.TypeName].XmlLookupName()));
-
-            if (typeNode != null)
-            {
-                var summaryNode = typeNode.SelectSingleNode("summary");
-                if (summaryNode != null)
-                    schema.Description = summaryNode.ExtractContent();
-            }
-            var props = find[schema.TypeName].GetProperties();
-            foreach (var entry in schema.Properties)
-            {
-                var jsonProperty = props.Where(p => p.Name == entry.Key).FirstOrDefault();
-                if (jsonProperty == null) continue;
-
-                ApplyPropertyComments(entry.Value, jsonProperty);
-            }
-        }
-        private static void ApplyPropertyComments(JsonSchema4 propertySchema, PropertyInfo propertyInfo)
-        {
-            if (propertyInfo == null) return;
-
-            var path = AppDomain.CurrentDomain.BaseDirectory + "\\bin\\" + propertyInfo.DeclaringType.Assembly.FullName.Split(',')[0] + ".XML";
-            if (!File.Exists(path)) return;
-            XPathNavigator _navigator = new XPathDocument(path).CreateNavigator();
-            var propertyNode = _navigator.SelectSingleNode(
-                String.Format("/doc/members/member[@name='P:{0}.{1}']", propertyInfo.DeclaringType.XmlLookupName(), propertyInfo.Name));
-            if (propertyNode == null) return;
-
-            var propSummaryNode = propertyNode.SelectSingleNode("summary");
-            if (propSummaryNode != null)
-            {
-                propertySchema.Description = propSummaryNode.ExtractContent();
-            }
-        }
-
-        public static void ApplyXMLComment(DynamicApiControllerInfo info, DynamicApiActionInfo actioninfo, SwaggerOperation operation)
-        {
-
+            if (!string.IsNullOrEmpty(api.Documentation)) return;
             var path = AppDomain.CurrentDomain.BaseDirectory + "\\bin\\" + info.ServiceInterfaceType.Assembly.FullName.Split(',')[0] + ".XML";
             if (!File.Exists(path)) return;
             XPathNavigator _navigator = new XPathDocument(path).CreateNavigator();
@@ -73,52 +27,29 @@ namespace Abp.Web.Api.Swagger
 
             var summaryNode = methodNode.SelectSingleNode("summary");
             if (summaryNode != null)
-                operation.Summary = summaryNode.ExtractContent();
+                api.Documentation = summaryNode.ExtractContent();
 
             var remarksNode = methodNode.SelectSingleNode("remarks");
             if (remarksNode != null)
-                operation.Description = remarksNode.ExtractContent();
+                api.Documentation+= remarksNode.ExtractContent();
 
-            ApplyParamComments(operation, methodNode);
+            ApplyParamComments(api, methodNode);
 
-            ApplyResponseComments(operation, methodNode);
         }
 
-        static void ApplyResponseComments(SwaggerOperation operation, XPathNavigator methodNode)
+     
+
+        static void ApplyParamComments(ApiDescription api, XPathNavigator methodNode)
         {
-            var responseNodes = methodNode.Select("response");
-
-            if (responseNodes.Count > 0)
-            {
-                var successResponse = operation.Responses.First().Value;
-                operation.Responses.Clear();
-
-                while (responseNodes.MoveNext())
-                {
-                    var statusCode = responseNodes.Current.GetAttribute("code", "");
-                    var description = responseNodes.Current.ExtractContent();
-
-                    var response = new SwaggerResponse
-                    {
-                        Description = description,
-                        Schema = statusCode.StartsWith("2") ? successResponse.Schema : null
-                    };
-                    operation.Responses[statusCode] = response;
-                }
-            }
-        }
-
-        static void ApplyParamComments(SwaggerOperation operation, XPathNavigator methodNode)
-        {
-            if (operation.Parameters == null) return;
+            if (api.ParameterDescriptions == null) return;
 
             var paramNodes = methodNode.Select("param");
             while (paramNodes.MoveNext())
             {
                 var paramNode = paramNodes.Current;
-                var parameter = operation.Parameters.SingleOrDefault(param => param.Name == paramNode.GetAttribute("name", ""));
+                var parameter = api.ParameterDescriptions.Where(p => p.Name == paramNode.GetAttribute("name","") && string.IsNullOrEmpty(p.Documentation)).FirstOrDefault();
                 if (parameter != null)
-                    parameter.Description = paramNode.ExtractContent();
+                    parameter.Documentation = paramNode.ExtractContent();
             }
         }
 
@@ -144,9 +75,9 @@ namespace Abp.Web.Api.Swagger
 
             return "{" + match.Groups["display"].Value + "}";
         }
-        public static string XPathFor(DynamicApiControllerInfo info,DynamicApiActionInfo actioninfo)
+        internal static string XPathFor(DynamicApiControllerInfo info, DynamicApiActionInfo actioninfo)
         {
-            var controllerName = info.ServiceInterfaceType.XmlLookupName();            
+            var controllerName = info.ServiceInterfaceType.XmlLookupName();
             var actionName = actioninfo.ActionName;
 
             var paramTypeNames = actioninfo.Method.GetParameters()

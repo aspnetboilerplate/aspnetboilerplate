@@ -7,7 +7,7 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// <summary>
     /// Used to store an action information of a dynamic ApiController.
     /// </summary>
-    public class DynamicApiActionInfo
+    internal class DynamicApiActionInfo
     {
         /// <summary>
         /// Name of the action in the controller.
