@@ -16,6 +16,8 @@ using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
+using System.Web.Http.Description;
+using Abp.Web.Api.Description;
 
 namespace Abp.WebApi
 {
@@ -68,6 +70,8 @@ namespace Abp.WebApi
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
             httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
+            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(httpConfiguration));
+           
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
