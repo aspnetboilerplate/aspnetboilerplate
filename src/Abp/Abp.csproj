@@ -81,6 +81,17 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJob.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobExecuter.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobInfo.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobPriority.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobConfiguration.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobManager.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
+    <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
+    <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
@@ -557,9 +568,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-lt.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BackgroundJobs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
