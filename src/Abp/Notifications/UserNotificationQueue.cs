@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -33,22 +34,25 @@ namespace Abp.Notifications
             Logger = NullLogger.Instance;
         }
 
-        [UnitOfWork]
         public void Add(NotificationInfo notification)
         {
             _queue.Enqueue(new UserNotificationQueueItem(notification));
             //TODO: Trigger processing
         }
 
+        [UnitOfWork(TransactionScopeOption.RequiresNew)]
         protected virtual async Task ProcessQueueItemAsync(UserNotificationQueueItem queueItem)
         {
             try
             {
+
                 var notificationDefinition = _notificationDefinitionManager.Get(queueItem.Notification.NotificationName);
                 var userIds = queueItem.Notification.UserIds.IsNullOrEmpty() ?
                     await _store.GetSubscribedUserIds(queueItem.Notification.NotificationName)
                     : queueItem.Notification.UserIds;
                 await _store.InsertUserNotificationAsync(new UserNotificationInfo());
+
+                //TODO: Set notification as distributed.
 
                 await _realTimeNotifier.SendNotificationAsync(userIds, queueItem.Notification).ConfigureAwait(false);
             }
