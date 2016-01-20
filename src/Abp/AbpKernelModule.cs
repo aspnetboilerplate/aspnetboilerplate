@@ -19,6 +19,8 @@ using Abp.Net.Mail;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
+using Abp.Threading;
+using Abp.Threading.BackgroundWorkers;
 
 namespace Abp
 {
@@ -87,6 +89,12 @@ namespace Abp
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<IBackgroundWorkerManager>().Start();
+        }
+
+        public override void Shutdown()
+        {
+            IocManager.Resolve<IBackgroundWorkerManager>().StopAndWaitToStop();
         }
 
         private void ConfigureCaches()

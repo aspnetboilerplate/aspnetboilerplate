@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using Abp.Dependency;
 
-namespace Abp.Threading
+namespace Abp.Threading.Timers
 {
     /// <summary>
     /// A roboust timer implementation that ensures no overlapping occurs. It waits exactly specified <see cref="Period"/> between ticks.
