@@ -145,6 +145,10 @@
     <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
+    <Compile Include="Threading\IRunnable.cs" />
+    <Compile Include="Threading\RunnableBase.cs" />
+    <Compile Include="Threading\AbpTimer.cs" />
+    <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
