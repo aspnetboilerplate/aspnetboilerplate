@@ -83,7 +83,7 @@
     <Compile Include="AbpServiceBase.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
     <Compile Include="BackgroundJobs\IBackgroundJob.cs" />
-    <Compile Include="BackgroundJobs\BackgroundJobExecuter.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobManager.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobInfo.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobPriority.cs" />
     <Compile Include="BackgroundJobs\IBackgroundJobConfiguration.cs" />
@@ -160,6 +160,7 @@
     <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
+    <Compile Include="Threading\BackgroundWorkers\PeriodicBackgroundWorkerBase.cs" />
     <Compile Include="Threading\IRunnable.cs" />
     <Compile Include="Threading\RunnableBase.cs" />
     <Compile Include="Threading\Timers\AbpTimer.cs" />

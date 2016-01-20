@@ -7,6 +7,7 @@ namespace Abp.Threading.Timers
     /// <summary>
     /// A roboust timer implementation that ensures no overlapping occurs. It waits exactly specified <see cref="Period"/> between ticks.
     /// </summary>
+    //TODO: Extract interface or make all members virtual to make testing easier.
     public class AbpTimer : RunnableBase, ITransientDependency
     {
         /// <summary>
@@ -46,7 +47,7 @@ namespace Abp.Threading.Timers
         /// </summary>
         public AbpTimer()
         {
-            _taskTimer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);            
+            _taskTimer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Abp.Threading.Timers
         /// <param name="period">Task period of timer (as milliseconds)</param>
         /// <param name="runOnStart">Indicates whether timer raises Elapsed event on Start method of Timer for once</param>
         public AbpTimer(int period, bool runOnStart = false)
-            :this()
+            : this()
         {
             Period = period;
             RunOnStart = runOnStart;

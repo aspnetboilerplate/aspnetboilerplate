@@ -33,6 +33,24 @@ namespace Abp.BackgroundJobs
             _timer.Elapsed += Timer_Elapsed;
         }
 
+        public override void Start()
+        {
+            base.Start();
+            _timer.Start();
+        }
+
+        public override void Stop()
+        {
+            _timer.Stop();
+            base.Stop();
+        }
+
+        public override void WaitToStop()
+        {
+            _timer.WaitToStop();
+            base.WaitToStop();
+        }
+
         public async Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob
         {
