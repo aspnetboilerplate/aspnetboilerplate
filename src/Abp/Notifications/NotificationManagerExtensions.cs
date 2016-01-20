@@ -9,7 +9,7 @@ namespace Abp.Notifications
             return notificationManager.SubscribeAsync(new NotificationSubscriptionOptions(userId,notificationName));
         }
 
-        public static Task PublishAsync(this INotificationManager notificationManager,Notification notification)
+        public static Task PublishAsync(this INotificationManager notificationManager,NotificationInfo notification)
         {
             return notificationManager.PublishAsync(new NotificationPublishOptions(notification));
         }

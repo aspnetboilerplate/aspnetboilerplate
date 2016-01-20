@@ -31,12 +31,12 @@ namespace Abp.Notifications
             throw new System.NotImplementedException();
         }
 
-        public IReadOnlyList<NotificationDefinition> Get(string name)
+        public NotificationDefinition Get(string name)
         {
             throw new System.NotImplementedException();
         }
 
-        public IReadOnlyList<NotificationDefinition> GetOrNull(string name)
+        public NotificationDefinition GetOrNull(string name)
         {
             throw new System.NotImplementedException();
         }

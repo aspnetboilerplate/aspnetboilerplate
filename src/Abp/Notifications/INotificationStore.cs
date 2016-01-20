@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -7,20 +8,12 @@ namespace Abp.Notifications
     /// </summary>
     public interface INotificationStore
     {
-        Task Insert(UserNotification userNotification);
-
-        //TODO: ...
         Task InsertSubscriptionAsync(NotificationSubscriptionOptions options);
-    }
+        
+        Task InsertNotificationAsync(NotificationInfo notification);
 
-    public class UserNotification
-    {
-        public long UserId { get; set; }
-
-        public Notification Notification { get; set; }
-
-        public bool IsDelivered { get; set; }
-
-        //TODO: Channel...
+        Task InsertUserNotificationAsync(UserNotificationInfo userNotification);
+        
+        Task<long[]> GetSubscribedUserIds(string name);
     }
 }

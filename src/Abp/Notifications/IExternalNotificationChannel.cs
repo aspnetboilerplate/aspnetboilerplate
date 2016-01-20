@@ -5,8 +5,8 @@ namespace Abp.Notifications
     /// <summary>
     /// Additional notification channels, like SMS and EMAIL.
     /// </summary>
-    public interface INotificationChannel
+    public interface IExternalNotificationChannel
     {
-        Task Send(Notification notification);
+        Task Send(NotificationInfo notification);
     }
 }

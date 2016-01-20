@@ -1,30 +1,54 @@
 ﻿using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Uow;
+using Castle.Core.Logging;
 
 namespace Abp.Notifications
 {
     public class NotificationManager : INotificationManager, ISingletonDependency
     {
-        protected INotificationStore Store { get; private set; }
+        public ILogger Logger { get; set; }
 
-        public NotificationManager(INotificationStore store)
+        private readonly INotificationStore _store;
+        private readonly INotificationDefinitionManager _notificationDefinitionManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IUserNotificationQueue _userNotificationQueue;
+
+        public NotificationManager(
+            INotificationStore store, 
+            INotificationDefinitionManager notificationDefinitionManager,
+            IUnitOfWorkManager unitOfWorkManager,
+            IUserNotificationQueue userNotificationQueue)
         {
-            Store = store;
+            _store = store;
+            _notificationDefinitionManager = notificationDefinitionManager;
+            _unitOfWorkManager = unitOfWorkManager;
+            _userNotificationQueue = userNotificationQueue;
+
+            Logger = NullLogger.Instance;
         }
 
         public async Task SubscribeAsync(NotificationSubscriptionOptions options)
         {
-            await Store.InsertSubscriptionAsync(options);
+            CheckNotificationName(options.NotificationName);
+
+            await _store.InsertSubscriptionAsync(options);
         }
 
-        public Task PublishAsync(NotificationPublishOptions options)
+        public virtual async Task PublishAsync(NotificationPublishOptions options)
         {
-            throw new System.NotImplementedException();
+            CheckNotificationName(options.Notification.NotificationName);
+
+            await _store.InsertNotificationAsync(options.Notification);
+            _userNotificationQueue.Add(options.Notification);
         }
 
-        public Task SendAsync(NotificationSendOptions options)
+        private void CheckNotificationName(string notificationName)
         {
-            throw new System.NotImplementedException();
+            if (_notificationDefinitionManager.GetOrNull(notificationName) == null)
+            {
+                throw new AbpException(string.Format("There is no defined notificationName with {0}", notificationName));
+            }
         }
     }
 }

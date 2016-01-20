@@ -9,9 +9,9 @@ namespace Abp.Notifications
     {
         void Add(NotificationDefinition notificationDefinition);
 
-        IReadOnlyList<NotificationDefinition> Get(string name);
+        NotificationDefinition Get(string name);
 
-        IReadOnlyList<NotificationDefinition> GetOrNull(string name);
+        NotificationDefinition GetOrNull(string name);
 
         IReadOnlyList<NotificationDefinition> GetAll();
 

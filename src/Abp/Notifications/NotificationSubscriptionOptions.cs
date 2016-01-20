@@ -44,7 +44,5 @@ namespace Abp.Notifications
         public Type EntityType { get; set; }
         
         public object EntityId { get; set; }
-
-        //TODO: We may add generic static factory methods.
     }
 }

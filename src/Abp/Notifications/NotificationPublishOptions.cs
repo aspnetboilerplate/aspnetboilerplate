@@ -4,9 +4,9 @@ namespace Abp.Notifications
 {
     public class NotificationPublishOptions
     {
-        public Notification Notification { get; private set; }
+        public NotificationInfo Notification { get; private set; }
 
-        public NotificationPublishOptions(Notification notification)
+        public NotificationPublishOptions(NotificationInfo notification)
         {
             if (notification == null)
             {
