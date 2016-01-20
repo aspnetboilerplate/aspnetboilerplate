@@ -6,6 +6,7 @@ namespace Abp.Localization
     /// <summary>
     /// Represents a string that can be localized.
     /// </summary>
+    [Serializable]
     public class LocalizableString : ILocalizableString
     {
         /// <summary>
