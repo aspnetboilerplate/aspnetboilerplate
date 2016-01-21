@@ -6,6 +6,7 @@ using Abp.Hangfire.Configuration;
 using Abp.Threading.BackgroundWorkers;
 using Castle.Core.Logging;
 using Hangfire;
+using HangfireBackgroundJob = Hangfire.BackgroundJob;
 
 namespace Abp.Hangfire
 {
@@ -49,7 +50,7 @@ namespace Abp.Hangfire
         public Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
             TimeSpan? delay = null) where TJob : IBackgroundJob
         {
-            BackgroundJob.Enqueue<TJob>(job => job.Execute(state));
+            HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(state));
             return Task.FromResult(0);
         }
     }

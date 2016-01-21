@@ -82,7 +82,7 @@
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
-    <Compile Include="BackgroundJobs\BackgroundJobBase.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJob.cs" />
     <Compile Include="BackgroundJobs\IBackgroundJob.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobManager.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobInfo.cs" />
