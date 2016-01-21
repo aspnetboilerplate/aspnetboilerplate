@@ -47,8 +47,8 @@ namespace Abp.Hangfire
             base.WaitToStop();
         }
 
-        public Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
-            TimeSpan? delay = null) where TJob : IBackgroundJob
+        public Task EnqueueAsync<TJob, TArgs>(TArgs state, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
+            TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
         {
             HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(state));
             return Task.FromResult(0);

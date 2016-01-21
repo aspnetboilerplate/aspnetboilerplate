@@ -6,7 +6,7 @@ namespace Abp.BackgroundJobs
 {
     public interface IBackgroundJobManager : IBackgroundWorker
     {
-        Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
-            where TJob : IBackgroundJob;
+        Task EnqueueAsync<TJob, TArgs>(TArgs state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+            where TJob : IBackgroundJob<TArgs>;
     }
 }

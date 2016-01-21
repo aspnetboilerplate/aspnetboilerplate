@@ -1,49 +1,16 @@
-using System;
 using System.Globalization;
 using Abp.Configuration;
 using Abp.Domain.Uow;
-using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace Abp.BackgroundJobs
 {
     /// <summary>
-    /// Generic (type-safe) wrapper for <see cref="BackgroundJob"/>.
+    /// Base class that can be used to implement <see cref="IBackgroundJob{TArgs}"/>.
     /// </summary>
-    /// <typeparam name="TArgs">The type of the arguments.</typeparam>
-    public abstract class BackgroundJob<TArgs> : BackgroundJob
-    {
-        public override void Execute(object state)
-        {
-            if (state == null)
-            {
-                throw new ArgumentNullException("state");
-            }
-
-            if (state is JObject)
-            {
-                state = state.As<JObject>().ToObject<TArgs>();
-            }
-
-            var args = (TArgs)state;
-            if (args == null)
-            {
-                throw new ArgumentException(string.Format("state should be type of {0}", typeof(TArgs).FullName), "state");
-            }
-
-            ExecuteJob(args);
-        }
-
-        protected abstract void ExecuteJob(TArgs args);
-    }
-
-    /// <summary>
-    /// Base class that can be used to implement <see cref="IBackgroundJob"/>.
-    /// </summary>
-    public abstract class BackgroundJob : IBackgroundJob
+    public abstract class BackgroundJob<TArgs> : IBackgroundJob<TArgs>
     {
         /// <summary>
         /// Reference to the setting manager.
@@ -121,7 +88,7 @@ namespace Abp.BackgroundJobs
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
-        public abstract void Execute(object state);
+        public abstract void Execute(TArgs args);
 
         /// <summary>
         /// Gets localized string for given key name and current language.

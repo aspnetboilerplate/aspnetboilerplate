@@ -46,8 +46,8 @@ namespace Abp.BackgroundJobs
             base.WaitToStop();
         }
 
-        public async Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
-            where TJob : IBackgroundJob
+        public async Task EnqueueAsync<TJob, TArgs>(TArgs state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+            where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
             {
@@ -88,13 +88,13 @@ namespace Abp.BackgroundJobs
                 jobInfo.LastTryTime = DateTime.Now;
 
                 var jobType = Type.GetType(jobInfo.JobType);
-                using (var job = _iocResolver.ResolveAsDisposable<IBackgroundJob>(jobType))
+                using (var job = _iocResolver.ResolveAsDisposable(jobType))
                 {
                     var stateObj = BinarySerializationHelper.DeserializeExtended(jobInfo.State);
 
                     try
                     {
-                        job.Object.Execute(stateObj);
+                        job.Object.GetType().GetMethod("Execute").Invoke(job, new[] {stateObj});
                         AsyncHelper.RunSync(() => _store.DeleteAsync(jobInfo));
                     }
                     catch (Exception ex)
