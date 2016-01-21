@@ -50,7 +50,6 @@ namespace Abp.Hangfire
             TimeSpan? delay = null) where TJob : IBackgroundJob
         {
             BackgroundJob.Enqueue<TJob>(job => job.Execute(state));
-
             return Task.FromResult(0);
         }
     }

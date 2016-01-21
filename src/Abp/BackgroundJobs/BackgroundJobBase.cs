@@ -5,12 +5,12 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
 
-namespace Abp.Threading.BackgroundWorkers
+namespace Abp.BackgroundJobs
 {
     /// <summary>
-    /// Base class that can be used to implement <see cref="IBackgroundWorker"/>.
+    /// Base class that can be used to implement <see cref="IBackgroundJob"/>.
     /// </summary>
-    public abstract class BackgroundWorkerBase : RunnableBase, IBackgroundWorker
+    public abstract class BackgroundJobBase : IBackgroundJob
     {
         /// <summary>
         /// Reference to the setting manager.
@@ -82,29 +82,13 @@ namespace Abp.Threading.BackgroundWorkers
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected BackgroundWorkerBase()
+        protected BackgroundJobBase()
         {
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
-        public override void Start()
-        {
-            base.Start();
-            Logger.Debug("Start background worker: " + ToString());
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
-            Logger.Debug("Stop background worker: " + ToString());
-        }
-
-        public override void WaitToStop()
-        {
-            base.WaitToStop();
-            Logger.Debug("WaitToStop background worker: " + ToString());
-        }
+        public abstract void Execute(object state);
 
         /// <summary>
         /// Gets localized string for given key name and current language.
@@ -148,11 +132,6 @@ namespace Abp.Threading.BackgroundWorkers
         protected string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
-        }
-
-        public override string ToString()
-        {
-            return GetType().FullName;
         }
     }
 }

@@ -8,14 +8,11 @@ using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
-using Castle.Core.Logging;
 
 namespace Abp.BackgroundJobs
 {
     public class BackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
     {
-        public ILogger Logger { get; set; }
-
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
         private readonly AbpTimer _timer;
@@ -73,9 +70,12 @@ namespace Abp.BackgroundJobs
         {
             try
             {
-                foreach (var task in AsyncHelper.RunSync(GetWaitingTasksAsync))
+                var waitingJobs = AsyncHelper.RunSync(GetWaitingJobsAsync);
+                Logger.DebugFormat("Found {0} waiting jobs...", waitingJobs.Count);
+
+                foreach (var task in waitingJobs)
                 {
-                    TryProcessTask(task);
+                    TryProcessJob(task);
                 }
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace Abp.BackgroundJobs
             }
         }
 
-        private void TryProcessTask(BackgroundJobInfo jobInfo)
+        private void TryProcessJob(BackgroundJobInfo jobInfo)
         {
             try
             {
@@ -143,8 +143,7 @@ namespace Abp.BackgroundJobs
             }
         }
 
-        [UnitOfWork]
-        protected virtual Task<List<BackgroundJobInfo>> GetWaitingTasksAsync()
+        protected virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync()
         {
             return _store.GetWaitingJobsAsync(1000);
         }

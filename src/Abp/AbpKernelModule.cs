@@ -60,7 +60,7 @@ namespace Abp
 
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
-            
+
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
@@ -93,7 +93,9 @@ namespace Abp
 
             if (Configuration.BackgroundJobs.IsEnabled)
             {
-                IocManager.Resolve<IBackgroundWorkerManager>().Start();                
+                var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
+                workerManager.Start();
+                workerManager.Add(IocManager.Resolve<IBackgroundJobManager>());
             }
         }
 
@@ -139,7 +141,7 @@ namespace Abp
             }
             else
             {
-                IocManager.RegisterIfNot<IBackgroundJobStore, NullBackgroundJobStore>();                
+                IocManager.RegisterIfNot<IBackgroundJobStore, NullBackgroundJobStore>();
             }
         }
     }
