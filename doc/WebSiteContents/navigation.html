@@ -9,14 +9,12 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocCreateMenu">Creating menu</a></li>
-	<li><a href="#DocShowMenu">Showing menu</a></li>
-</ul>
+<div class="document-contents">
+
 <p>Every web application has some menu to navigate between pages/screens. ASP.NET Boilerplate provides a 
 common 
 ifrastructure to create and show menu to users.</p>
-<h3 id="DocCreateMenu">Creating menu</h3>
+<h3 id="DocCreateMenu">Creating Menus</h3>
 <p>An application may be consists of different
 <a href="/Pages/Documents/Module-System">modules</a> and each module can have 
 it's own menu items. To define menu items, we need to create a class derived 
@@ -77,22 +75,31 @@ provider class to create such a menu can be as below:</p>
             );
     }
 }</pre>
-<p>A MenuItemDefinition can have a unique <strong>name</strong>, a localizable
+<p>A MenuItemDefinition can basically have a unique <strong>name</strong>, a localizable
 <strong>display name</strong>, a <strong>url</strong> and an <strong>icon</strong>. 
-Also, a menu item may require a permission to show this menu to a particular 
-user (See <a href="/Pages/Documents/Authorization">authorization</a>).</p>
+Also,</p>
+<ul>
+	<li>A menu item may require a permission to show this menu to a particular 
+user (See <a href="/Pages/Documents/Authorization">authorization</a> document).
+	<strong>requiredPermissionName</strong> property can be used in this case.</li>
+	<li>A menu item can be depend on a
+	<a href="/Pages/Documents/Feature-Management">feature</a>. <strong>
+	featureDependency</strong> property can be used in this case.</li>
+	<li>A menu item can define a <strong>customData</strong> and <strong>order</strong>.</li>
+</ul>
 <p><strong>INavigationProviderContext</strong> has methods to get existing menu 
 items, add menus and menu items. Thus, different modules can add it's own items 
 to the menu.</p>
-<p>There may be one or mor menu in an application. <strong>context.Manager.MainMenu</strong> 
+<p>There may be one or more menus in an application. <strong>context.Manager.MainMenu</strong> 
 references the default, main menu. We can create and add more menus using
 <strong>context.Manager.Menus</strong> property.</p>
+<h4>Registering Navigation Provider</h4>
 <p>After creating the navigation provider, we should register it to ASP.NET 
 Boilerplate configuration on <strong>PreInitialize</strong> event of our
 <a href="/Pages/Documents/Module-System">module</a>:</p>
 <pre lang="cs">Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();&nbsp;</pre>
 
-<h3 id="DocShowMenu">Showing menu</h3>
+<h3 id="DocShowMenu">Showing Menu</h3>
 <p><strong>IUserNavigationManager</strong> can be
 <a href="/Pages/Documents/Dependency-Injection">injected</a> and used to get 
 menu items and show to the user. Thus, we can create menu in server side.</p>
@@ -104,6 +111,8 @@ Thus, we can create menu in client side.</p>
 <p>ASP.NET Boilerplate <a href="/Templates">templates</a> uses this system to 
 create and show menu to the user. Try to create a template and see source codes 
 for more.</p>
+
+</div>
 
 </body>
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Localization;
 
@@ -43,6 +44,12 @@ namespace Abp.Application.Navigation
         public string RequiredPermissionName { get; set; }
 
         /// <summary>
+        /// A permission name. Only users that has this permission can see this menu item.
+        /// Optional.
+        /// </summary>
+        public IFeatureDependency FeatureDependency { get; set; }
+
+        /// <summary>
         /// This can be set to true if only authenticated users should see this menu item.
         /// </summary>
         public bool RequiresAuthentication { get; set; }
@@ -56,6 +63,11 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
+        /// Can be used to store a custom object related to this menu item. Optional.
+        /// </summary>
+        public object CustomData { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
         public virtual IList<MenuItemDefinition> Items { get; private set; }
@@ -63,7 +75,16 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="MenuItemDefinition"/> object.
         /// </summary>
-        public MenuItemDefinition(string name, ILocalizableString displayName, string icon = null, string url = null, bool requiresAuthentication = false, string requiredPermissionName = null, int order = 0)
+        public MenuItemDefinition(
+            string name, 
+            ILocalizableString displayName, 
+            string icon = null, 
+            string url = null, 
+            bool requiresAuthentication = false, 
+            string requiredPermissionName = null, 
+            int order = 0, 
+            object customData = null,
+            IFeatureDependency featureDependency = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -82,6 +103,8 @@ namespace Abp.Application.Navigation
             RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
             Order = order;
+            CustomData = customData;
+            FeatureDependency = featureDependency;
 
             Items = new List<MenuItemDefinition>();
         }

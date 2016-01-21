@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-CN">
+  <texts>
+    <text name="SmtpHost">SMTP主机</text>
+    <text name="SmtpPort">SMTP端口</text>
+    <text name="Username">用户名</text>
+    <text name="Password">密码</text>
+    <text name="DomainName">域名</text>
+    <text name="UseSSL">使用SSL</text>
+    <text name="UseDefaultCredentials">使用默认验证</text>
+    <text name="DefaultFromSenderEmailAddress">默认发件人邮箱地址</text>
+    <text name="DefaultFromSenderDisplayName">默认发件人名字</text>
+    <text name="DefaultLanguage">预设语言</text>
+  </texts>
+</localizationDictionary>

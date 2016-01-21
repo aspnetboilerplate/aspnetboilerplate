@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -43,7 +44,7 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager)
+            UserNavigationManager = new UserNavigationManager(NavigationManager, new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                                     {
                                         PermissionChecker = CreateMockPermissionChecker()
                                     };
@@ -73,7 +74,8 @@ namespace Abp.Tests.Application.Navigation
                                 new FixedLocalizableString("User management"),
                                 "fa fa-users",
                                 "#/admin/users",
-                                requiredPermissionName: "Abp.Zero.UserManagement"
+                                requiredPermissionName: "Abp.Zero.UserManagement",
+                                customData: "A simple test data"
                                 )
                         ).AddItem(
                             new MenuItemDefinition(
@@ -98,10 +100,18 @@ namespace Abp.Tests.Application.Navigation
                         "Abp.Zero.Administration.Setting",
                         new FixedLocalizableString("Setting management"),
                         icon: "fa fa-cog",
-                        url: "#/admin/settings"
+                        url: "#/admin/settings",
+                        customData: new MyCustomDataClass { Data1 = 42, Data2 = "FortyTwo" }
                         )
                     );
             }
+        }
+
+        public class MyCustomDataClass
+        {
+            public int Data1 { get; set; }
+
+            public string Data2 { get; set; }
         }
     }
 }

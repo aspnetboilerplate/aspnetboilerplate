@@ -9,16 +9,8 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocEntityClasses">Entity classes</a></li>
-	<li><a href="#DocConventionalInterfaces">Conventional interfaces</a><ul>
-		<li><a href="#DocAuditing">Auditing</a></li>
-		<li><a href="#DocSoftDelete">Soft delete</a></li>
-		<li><a href="#DocActivePassive">Active/Passive</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocIEntityInterfaces">IEntity interfaces</a></li>
-</ul>
+<div class="document-contents">
+
 <p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". So, entities have Id's and stored in a database. 
 An entity is generally mapped to a table in the database.</p>
 <h3 id="DocEntityClasses">Entity classes</h3>
@@ -93,19 +85,21 @@ into database which implements this interface.</p>
 <strong>CreatorUserId</strong>:</p>
 <pre lang="cs">public interface ICreationAudited : IHasCreationTime
 {
-<span lang="tr">    long</span>? CreatorUserId { get; set; }
+    long? CreatorUserId { get; set; }
 }</pre>
 <p>ASP.NET Boilerplate automatically sets CreatorUserId to <strong>current 
-user's id</strong> when saving a new entity.</p>
-<p>You can also implement ICreationAudited easily by deriving your entity from
+user's id</strong> when saving a new entity. You can also implement ICreationAudited easily by deriving your entity from
 <strong>CreationAuditedEntity</strong> class. It has also a generic version for 
 different type of Id properties.</p>
-<p>There is also similar interface for modifications:</p>
-<pre lang="cs">public interface IModificationAudited
+<p>There is also similar interfaces for modifications:</p>
+<pre lang="cs">public interface IHasModificationTime
 {
     DateTime? LastModificationTime { get; set; }
+}
 
-    <span lang="tr">long</span>? LastModifierUserId { get; set; }
+public interface IModificationAudited : IHasModificationTime
+{
+    long? LastModifierUserId { get; set; }
 }</pre>
 <p>ASP.NET Boilerplate also automatically sets these properties when updating an 
 entity. You just define them for your entity.</p>
@@ -118,6 +112,8 @@ entity. You just define them for your entity.</p>
 <p>As a shortcut, you can derive from <strong>AuditedEntity </strong>class 
 instead of direcly implementing <strong>IAudited</strong>. AuditedEntity class has 
 also a generic version for different type of Id properties.</p>
+<p>Note: ASP.NET Boilerplate gets current user's Id from
+<a href="/Pages/Documents/Abp-Session">ABP Session</a>.</p>
 <h4 id="DocSoftDelete">Soft delete</h4>
 <p>Soft delete is a commonly used pattern to mark an Entity as deleted instead 
 of actually deleting it from database. For instace, you may not want to hard 
@@ -165,12 +161,20 @@ in the constructor.</p>
 <p>This is different than soft delete (IsDeleted). If an entity is soft deleted, 
 it can not be retrieved from database (ABP prevents it as default). But, for 
 active/passive entities, it's completely up to you to control getting entities.</p>
-<h3 id="DocIEntityInterfaces">IEntity interfaces</h3>
+<h3 id="DocIEntityInterfaces">Entity Change Events</h3>
+<p>ASP.NET Boilerplate automatically triggers certain events when an entity is 
+inserted, updated or deleted. Thus, you can register to these events and perform 
+any logic you need. See Predefined Events section in
+<a href="/Pages/Documents/EventBus-Domain-Events">event bus documentation</a> 
+for more information.</p>
+<h3>IEntity interfaces</h3>
 <p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (and <strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
 If you do not want to derive from Entity class, you can implement these 
 interfaces directly. There are also corresponding interfaces for other entity 
 classes. But this is not the suggested way, unless you have a good 
 reason to do not derive from Entity classes.</p>
+
+</div>
 
 </body>
 

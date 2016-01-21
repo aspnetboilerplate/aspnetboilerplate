@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp.TestBase.SampleApplication</RootNamespace>
     <AssemblyName>Abp.TestBase.SampleApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContacLists\ContactList.cs" />
+    <Compile Include="ContacLists\ContactListAppService.cs" />
+    <Compile Include="ContacLists\IContactListAppService.cs" />
+    <Compile Include="ContacLists\SampleFeatureProvider.cs" />
     <Compile Include="EntityFramework\Repositories\SampleApplicationEfRepositoryBase.cs" />
     <Compile Include="EntityFramework\SampleApplicationDbContext.cs" />
     <Compile Include="Message.cs" />

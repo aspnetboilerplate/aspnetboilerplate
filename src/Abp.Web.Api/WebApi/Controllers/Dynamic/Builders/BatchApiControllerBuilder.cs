@@ -18,6 +18,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private IFilter[] _filters;
         private Func<Type, string> _serviceNameSelector;
         private Func<Type, bool> _typePredicate;
+        private bool _conventionalVerbs;
 
         public BatchApiControllerBuilder(Assembly assembly, string servicePrefix)
         {
@@ -40,6 +41,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IBatchApiControllerBuilder<T> WithServiceName(Func<Type, string> serviceNameSelector)
         {
             _serviceNameSelector = serviceNameSelector;
+            return this;
+        }
+
+        public IBatchApiControllerBuilder<T> WithConventionalVerbs()
+        {
+            _conventionalVerbs = true;
             return this;
         }
 
@@ -79,6 +86,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     builder.GetType()
                         .GetMethod("WithFilters", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _filters });
+                }
+
+                if (_conventionalVerbs)
+                {
+                    builder.GetType()
+                       .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
+                       .Invoke(builder, new object[0]);
                 }
 
                 builder.GetType()

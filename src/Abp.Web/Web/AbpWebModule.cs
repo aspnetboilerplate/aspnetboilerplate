@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Web;
-using Abp.Localization.Sources;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Web.Configuration;
@@ -11,6 +12,7 @@ namespace Abp.Web
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]    
     public class AbpWebModule : AbpModule
     {
         /// <inheritdoc/>
@@ -22,19 +24,19 @@ namespace Abp.Web
             }
 
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
-        }
 
-        /// <inheritdoc/>
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource(
                     AbpWebLocalizedMessages.SourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
                         )));
+        }
+
+        /// <inheritdoc/>
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());            
         }
     }
 }

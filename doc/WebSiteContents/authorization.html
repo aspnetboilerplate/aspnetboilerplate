@@ -14,15 +14,8 @@
 
 <body>
 
-<ul>
-	<li><a href="#DocIntroduction">Introduction</a></li>
-	<li><a href="#DocDefinePermission">Defining permissions</a></li>
-	<li><a href="#DocCheckPermission">Checking permissions</a><ul>
-		<li><a href="#DocUsingAbpAuthorize">Using AbpAuthorize attribute</a></li>
-		<li><a href="#DocUsingPermissionChecker">Using IPermissionChecker</a></li>
-	</ul>
-	</li>
-</ul>
+<div class="document-contents">
+
 <h3 id="DocIntroduction">Introduction</h3>
 <p>Almost all enterprise applications use authorization in some level. 
 Authorization is used to check if a user is allowed to perform some specific 
@@ -33,11 +26,11 @@ based</strong> infrastructure to implement authorization.</p>
 <p>Authorization system uses <strong>IPermissionChecker</strong> to check 
 permissions. While you can 
 implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
-project. If it's not implemented, NullPermissionChecker is used that grants all 
+project. If it's not implemented, NullPermissionChecker is used which grants all 
 permissions to everyone.</p>
 </div>
 
-<h3 id="DocDefinePermission">Defining permissions</h3>
+<h3 id="DocDefinePermission">Defining Permissions</h3>
 <p>A unique <strong>permission </strong>is defined for each operation needed to be authorized. We should define a permission before use it. ASP.NET Boilerplate is designed 
 to be 
 <a href="/Pages/Documents/Module-System">modular</a>. So, different modules can have different 
@@ -77,18 +70,21 @@ permissions.</p>
 	<li><strong>MultiTenancySides</strong>: For multi-tenant application, a 
 	permission can be used by tenants or the host. This is a <strong>Flags
 	</strong>enumeration and thus a permission can be used in both sides.</li>
+	<li><strong>dependedFeature</strong>: Can be used to declare a dependency to
+	<a href="/Pages/Documents/Feature-Management">features</a>. So, this 
+	permission can be granted only if feature dependency is satisfied.</li>
 </ul>
 <p>A permission can have a parent and child permissions. While this does not 
 effect permission checking, it may help to group permissions in UI.</p>
-<p>After creating an authorization provider, we should register it in PreIntialize 
+<p>After creating an authorization provider, we should register it in PreInitialize 
 method of our module:</p>
 <pre lang="cs">Configuration.Authorization.Providers.Add&lt;MyAuthorizationProvider&gt;();</pre>
 <p>Authorization providers are registered to <a href="/Pages/Documents/Dependency-Injection">dependency injection</a> 
 automatically. So, an authorization provider can inject any dependency (like a 
 repository) to build permission definitions using some other sources.</p>
 
-<h3 id="DocCheckPermission">Checking permissions</h3>
-<h4 id="DocUsingAbpAuthorize">Using AbpAuthorize attribute</h4>
+<h3 id="DocCheckPermission">Checking Permissions</h3>
+<h4 id="DocUsingAbpAuthorize">Using AbpAuthorize Attribute</h4>
 <p><strong>AbpAuthorize</strong> (AbpMvcAuthorize for MVC Controllers and 
 AbpApiAuthorize for Web API Controllers) attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
 <a href="/Pages/Documents/Application-Services">application service</a> method shown below:</p>
@@ -161,6 +157,32 @@ Authorize</strong> method:</p>
 ApplicationService</strong> base class injects and defines PermissionChecker 
 property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
+	<h4>In Razor Views</h4>
+	<p>Base view class defines IsGranted method to check if current user has a 
+	permission. Thus, we can conditionally render the view. Example:</p>
+<pre lang="xml">@if (IsGranted("Administration.UserManagement.CreateUser"))
+{
+    &lt;button id=&quot;CreateNewUserButton&quot; class=&quot;btn btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; @L(&quot;CreateNewUser&quot;)&lt;/button&gt;
+}</pre>
+
+<h4>Client Side (Javascript)</h4>
+
+<p>In the client side, we can use API defined in <strong>abp.auth</strong> 
+namespace. In most case, we need to check if current user has a specific 
+permission (with permission name). Example:</p>
+<pre lang="js">abp.auth.isGranted('Administration.UserManagement.CreateUser');</pre>
+
+<p>You can also use <strong>abp.auth.grantedPermissions</strong> to get all 
+granted permissions or <strong>abp.auth.allPermissions</strong> to get all 
+available permission names in the application. Check <strong>abp.auth</strong> 
+namespace on runtime for others.</p>
+
+<h3>Permission Manager</h3>
+<p>We may need to definitions of permission. <strong>IPermissionManager</strong> 
+can be <a href="/Pages/Documents/Dependency-Injection">injected</a> and used in 
+that case. </p>
+
+</div>
 
 </body>
 

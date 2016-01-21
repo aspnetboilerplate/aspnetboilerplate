@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Introduction</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocIntro">Introduction</a></li>
+	<li><a href="#DocQuickSample">A Quick Sample</a></li>
+	<li><a href="#DocWhatElse">What Else</a></li>
+	<li><a href="#DocStartupTemplate">Startup Templates</a></li>
+	<li><a href="#DocHowToUse">How To Use</a></li>
+</ul>
+<h3 id="DocIntro">Introduction</h3>
+<p>We are creating different applications based on different needs. 
+But implementing common and similar structures over and over again, at 
+least in some level. <strong>Authorization</strong>, <strong>Validation</strong>, 
+<strong>Exception Handling</strong>, <strong>Logging</strong>, <strong>Localization</strong>, 
+<strong>Database Connection Management</strong>, <strong>Setting Management</strong>, 
+<strong>Audit Logging</strong> are some of these common structures. Also, we 
+are building <strong>architectural structures</strong> and <strong>best practices</strong> like
+<strong>Layered </strong>and <strong>Modular </strong>Architecture, <strong>Domain Driven Design</strong>, 
+<strong>Dependency Injection </strong>and so on. And trying to 
+develop applications based on some <strong>conventions</strong>.</p>
+<p>Since all of these are very time-consuming and hard to build seperately for 
+every project, many companies 
+create private <strong>frameworks</strong>. They're developing new applications 
+faster with less bugs using these frameworks. Surely, not all companies that 
+lucky. Most of them have no <strong>time</strong>, <strong>budget</strong> and
+<strong>team</strong> to develop such frameworks. Even they have possibility to 
+create a framework, it's hard to <strong>document</strong>, <strong>train 
+developers</strong> and <strong>maintain</strong> it.</p>
+
+<p>ASP.NET Boilerplate (ABP) is an <strong>open source and well documented 
+application framework </strong>started idea of "developing a <strong>common
+</strong>framework for all companies and all developers!" It's not just a 
+framework but also provides a strong <strong>architectural model</strong> based 
+on <strong>Domain Driven Design</strong> and <strong>best practices</strong> in 
+mind.</p>
+
+<h3 id="DocQuickSample">A Quick Sample</h3>
+<p>Let's investigate a simple class to see ABP's benefits:</p>
+<pre lang="cs">public class TaskAppService : ApplicationService, ITaskAppService
+{
+    private readonly IRepository&lt;Task&gt; _taskRepository;
+
+    public TaskAppService(IRepository&lt;Task&gt; taskRepository)
+    {
+        _taskRepository = taskRepository;
+    }
+
+    [AbpAuthorize(MyPermissions.UpdatingTasks)]
+    public async Task UpdateTask(UpdateTaskInput input)
+    {
+        Logger.Info(&quot;Updating a task for input: &quot; + input);
+
+        var task = await _taskRepository.FirstOrDefaultAsync(input.TaskId);
+        if (task == null)
+        {
+            throw new UserFriendlyException(L(&quot;CouldNotFoundTheTask<span lang="tr">Message</span>&quot;));
+        }
+
+        input.MapTo(task);
+    }
+}</pre>
+<p>Here, we see a sample <a href="/Pages/Documents/Application-Services">
+Application Service</a> method. An application service, in DDD, is directly used 
+by presentation layer to perform <strong>use cases</strong> of the application. 
+We can think that <strong>UpdateTask </strong>method is called by javascript via 
+AJAX. Let's see ABP's some benefits here:</p>
+<ul>
+	<li><strong><a href="/Pages/Documents/Dependency-Injection">Dependency 
+	Injection</a></strong>: ABP uses and provides a strong and conventional DI 
+	infrastructure. Since this class is an application service, it's 
+	conventionally registered to DI container as transient (created per 
+	request). It can simply inject all dependencies (as IRepository&lt;Task&gt; in 
+	this sample).</li>
+	<li><strong><a href="/Pages/Documents/Repositories">Repository</a></strong>: 
+	ABP can create a default repository for each entity (as IRepository&lt;Task&gt; in 
+	this example). Default repository has many useful methods as FirstOrDefault 
+	used in this example. We can easily extend default repository upon our 
+	needs. Repositories abstracts DBMS and ORMs and simplifies data access 
+	logic.</li>
+	<li><strong><a href="/Pages/Documents/Authorization">Authorization</a></strong>: 
+	ABP can check permissions. It prevents access to UpdateTask method if 
+	current user has no "updating task" permission or not logged in. It 
+	simplifies authorization using declarative attributes but also has 
+	additional ways of authorization.</li>
+	<li><strong><a href="/Pages/Documents/Validating-Data-Transfer-Objects">
+	Validation</a></strong>: ABP automatically checks if input is null. It also 
+	validates all properties of an input based on standard data annotation 
+	attributes and custom validation rules. If request is not valid, it throws a 
+	proper validation exception.</li>
+	<li><strong><a href="/Pages/Documents/Audit-Logging">Audit Logging</a></strong>: 
+	User, browser, IP address, calling service, method, parameters, calling 
+	time, execution duration and some other informations are automatically saved 
+	for each request based on conventions and configurations.</li>
+	<li><a href="/Pages/Documents/Unit-Of-Work"><strong>Unit Of Work</strong></a>: 
+	In ABP, each application service method is assumed as a unit of work as 
+	default. It automatically creates a connection and begins a transaction at 
+	the beggining of the method. If the method successfully completed without 
+	exception, then the transaction is commited and connection is disposed. Even 
+	this method uses different repositories or methods, all of them will be 
+	atomic (transactional). And all changes on entities are automatically saved 
+	when transaction is commited. Thus, we don't even need to call 
+	_repository.Update(task) method as shown here.</li>
+	<li><a href="/Pages/Documents/Handling-Exceptions"><strong>Exception 
+	Handling</strong></a>: We almost never handle exceptions in ABP in a web 
+	application. All exceptions are automatically handled by default. If an 
+	exception occurs, ABP automatically logs it and returns a proper result to 
+	the client. For example, if this is an AJAX request, the it returns a JSON 
+	to client indicates that an error occured. If hides actual exception from 
+	client unless the exception is a UserFriendlyException as used in this 
+	sample. It also understands and handles errors on client side and show 
+	appropriate messages to users.</li>
+	<li><strong><a href="/Pages/Documents/Logging">Logging</a></strong>: As you 
+	see, we can write logs using the Logger object defined in base class. 
+	Log4Net is used as default but it's changable or configurable.</li>
+	<li><strong><a href="/Pages/Documents/Localization">Localization</a></strong>: 
+	Notice that we used L method while throwing exception. Thus, it's 
+	automatically localized based on current user's culture. Surely, we're 
+	defining CouldNotFoundTheTask<span lang="tr">Message </span>in somewhere 
+	(see <a href="/Pages/Documents/Localization">localization</a> document for more).</li>
+	<li><strong><a href="/Pages/Documents/Data-Transfer-Objects">Auto Mapping</a></strong>: 
+	In the last line, we're using ABP's MapTo extension method to map input 
+	properties to entity properties. It uses AutoMapper library to perform 
+	mapping. Thus, we can easily map properties from one object to another based 
+	on naming conventions.</li>
+	<li><strong><a href="/Pages/Documents/Dynamic-Web-API">Dynamic Web API Layer</a></strong>: 
+	TaskAppService is a simple class actually (even no need to deliver from 
+	ApplicationService). We generally write a wrapper Web API Controller to 
+	expose methods to javascript clients. ABP automatically does that on 
+	runtime. Thus, we can use application service methods directly from clients.</li>
+	<li><strong><a href="/Pages/Documents/Dynamic-Web-API#DocDynamicProxy">
+	Dynamic Javascript AJAX Proxy</a></strong>: ABP creates javascript proxy 
+	methods those make calling application service methods just as simple as 
+	calling javascript methods on the client.</li>
+</ul>
+<p>We can see benefit of ABP in such a simple class. All these task are normally 
+takes significiant time, but all they are automatically handled by ABP.</p>
+
+<h3 id="DocWhatElse">What Else</h3>
+<p>Beside this simple example, ABP provides a strong infrastructure and 
+application model. Here, some other features of ABP:</p>
+<ul>
+	<li><strong><a href="/Pages/Documents/Module-System">Modularity</a></strong>: 
+	Provides a strong infrastructure to build reusable modules.</li>
+	<li><strong><a href="/Pages/Documents/Data-Filters">Data Filters</a></strong>: 
+	Provides automatic data filtering to implement some patterns like 
+	soft-delete and multi-tenancy.</li>
+	<li><strong>Multi Tenancy</strong>: It supports single-database 
+	multi-customer style multi-tenancy.</li>
+	<li><strong><a href="/Pages/Documents/Setting-Management">Setting Management</a></strong>: 
+	Provides a strong infrastructure to get/change application, tenant and user 
+	level settings.</li>
+	<li><strong>Unit &amp; Integration Testing</strong>: It's built testability in 
+	mind. Also provides base classes to simplify unit &amp; integration tests. See
+	<a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor">
+	this article</a> for more information.</li>
+</ul>
+<p>For all features, see <a href="/Pages/Documents">documentation</a>.</p>
+
+<h3 id="DocStartupTemplate">Startup Templates</h3>
+<p>Starting a new solution, creating layers, installing nuget packages, creating 
+a simple layout and a menu... all these are very time consuming stuff.</p>
+<p>ASP.NET Boilerplate provides pre-built
+<a href="http://www.aspnetboilerplate.com/Templates">startup templates</a> that 
+makes starting a new solution is much more easier. Templates support <strong>SPA</strong> 
+(Single-Page Application) and <strong>MPA</strong> (Multi-Page MVC Applications) 
+architectures. Also, allows us to use different ORMs.</p>
+
+<h3 id="DocHowToUse">How To Use</h3>
+<p>ASP.NET Boilerplate is developed on <strong>
+<a href="https://github.com/aspnetboilerplate">Github</a></strong> and 
+distributed on <strong><a href="/Pages/Documents/Nuget-Packages">Nuget</a></strong>. 
+Easiest way of starting with ABP is creating a
+<a href="http://www.aspnetboilerplate.com/Templates">startup template</a> and 
+following the <a href="/Pages/Documents">documentation</a>.</p>
+
+</body>
+
+</html>

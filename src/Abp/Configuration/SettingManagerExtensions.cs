@@ -218,7 +218,7 @@ namespace Abp.Configuration
         /// <param name="settingManager">Setting manager</param>
         /// <param name="userId">User to get settings</param>
         /// <returns>All settings of the user</returns>
-        public static IReadOnlyList<ISettingValue> GetAllSettingValuesForTenant(this ISettingManager settingManager, long userId)
+        public static IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(this ISettingManager settingManager, long userId)
         {
             return AsyncHelper.RunSync(() => settingManager.GetAllSettingValuesForUserAsync(userId));
         }

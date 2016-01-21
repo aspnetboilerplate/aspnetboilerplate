@@ -317,8 +317,8 @@ public class MyPersonManager : IPersonManager, ISingletonDependency
 {
     <span lang="tr">//...</span>
 }</pre>
-<p>In that way, you can easily register MyPersonManager as transient. When need 
-to inject a IPersonManager, MyPersonManager is used. Notice that dependency is 
+<p>In that way, you can easily register MyPersonManager. When need 
+to inject a IPersonManager, MyPersonManager class is used. Notice that dependency is 
 declared as <strong>Singleton</strong>. Thus, a single instance of 
 MyPersonManager is created and same object is passed to all needed classes. It's 
 just created in first usage, then same instance is used in whole life of the 
@@ -377,7 +377,7 @@ system at all. This is the most proper way of using DI system.</p>
 <p>Sometime you may have to directly resolve your dependency instead of 
 constructor &amp; property injection. This should be avoided when possible, but it 
 may be impossible. ASP.NET Boilerplate provides some services those can be injected 
-ans used easily. Example:</p>
+and used easily. Example:</p>
 <pre lang="cs">public class MySampleClass : ITransientDependency
 {
     private readonly IIocResolver _iocResolver;
@@ -424,8 +424,8 @@ should inject/resolve the object in order to work this feature.</p>
 <h4 id="DocMvcAndWebApiIntegration">ASP.NET MVC &amp; ASP.NET Web API integration</h4>
 <p>Surely, we must call dependency injection system to resolve the root object 
 in dependency graph. In an <strong>ASP.NET MVC </strong>application, it's 
-generally a <strong>Controller </strong>class. We can use contructor injection 
-pattern in also controllers. When a request come to our application, the 
+generally a <strong>Controller </strong>class. We can use contructor injection and property injection
+patterns also in controllers. When a request come to our application, the 
 controller is created using IOC container and all dependencies are resolved 
 recursively. So, who does that? It's done automatically by ASP.NET Boilerplate 
 by extending ASP.NET MVC's default controller factory. As similar, it's true for 

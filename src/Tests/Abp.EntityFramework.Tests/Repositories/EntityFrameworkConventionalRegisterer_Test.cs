@@ -13,7 +13,7 @@ namespace Abp.EntityFramework.Tests.Repositories
         [Fact]
         public void Should_Set_ConnectionString_If_Configured()
         {
-            new EntityFrameworkConventionalRegisterer()
+            new EntityFrameworkConventionalRegistrar()
                 .RegisterAssembly(
                     new ConventionalRegistrationContext(
                         Assembly.GetExecutingAssembly(),

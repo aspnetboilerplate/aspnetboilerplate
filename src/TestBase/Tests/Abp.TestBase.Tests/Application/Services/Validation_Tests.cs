@@ -95,6 +95,14 @@ namespace Abp.TestBase.Tests.Application.Services
                     }));
         }
 
+        [Fact]
+        public void Should_Not_Work_If_Array_Is_Null()
+        {
+            Assert.Throws<AbpValidationException>(() =>
+                _myAppService.MyMethod4(new MyMethod4Input()) //ArrayItems is null!
+                );
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -102,6 +110,7 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod(MyMethodInput input);
             MyMethodOutput MyMethod2(MyMethod2Input input);
             MyMethodOutput MyMethod3(MyMethod3Input input);
+            MyMethodOutput MyMethod4(MyMethod4Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -117,6 +126,11 @@ namespace Abp.TestBase.Tests.Application.Services
             }
 
             public MyMethodOutput MyMethod3(MyMethod3Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod4(MyMethod4Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
@@ -147,6 +161,12 @@ namespace Abp.TestBase.Tests.Application.Services
 
             public List<MyClassInList> ListItems { get; set; }
 
+            public MyClassInList[] ArrayItems { get; set; }
+        }
+
+        public class MyMethod4Input : IInputDto
+        {
+            [Required]
             public MyClassInList[] ArrayItems { get; set; }
         }
 

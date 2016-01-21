@@ -62,5 +62,29 @@ namespace Abp.Reflection
 
             return attributeList;
         }
+
+        /// <summary>
+        /// Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
+        /// Returns null if it's not declared at all.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute</typeparam>
+        /// <param name="memberInfo">MemberInfo</param>
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrNull<TAttribute>(MemberInfo memberInfo)
+            where TAttribute : Attribute
+        {
+            //Get attribute on the member
+            if (memberInfo.IsDefined(typeof(TAttribute), true))
+            {
+                return memberInfo.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>().First();
+            }
+
+            //Get attribute from class
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), true))
+            {
+                return memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>().First();
+            }
+
+            return null;
+        }
     }
 }

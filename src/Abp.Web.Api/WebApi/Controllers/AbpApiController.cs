@@ -2,8 +2,11 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Domain.Uow;
+using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Session;
@@ -20,7 +23,12 @@ namespace Abp.WebApi.Controllers
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
-        
+
+        /// <summary>
+        /// Gets the event bus.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
+
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>
@@ -35,6 +43,16 @@ namespace Abp.WebApi.Controllers
         /// Reference to the permission checker.
         /// </summary>
         public IPermissionChecker PermissionChecker { protected get; set; }
+
+        /// <summary>
+        /// Reference to the feature manager.
+        /// </summary>
+        public IFeatureManager FeatureManager { protected get; set; }
+
+        /// <summary>
+        /// Reference to the permission checker.
+        /// </summary>
+        public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
         /// Reference to the localization manager.
@@ -82,6 +100,29 @@ namespace Abp.WebApi.Controllers
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
+        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        /// </summary>
+        public IUnitOfWorkManager UnitOfWorkManager
+        {
+            get
+            {
+                if (_unitOfWorkManager == null)
+                {
+                    throw new AbpException("Must set UnitOfWorkManager before use it.");
+                }
+
+                return _unitOfWorkManager;
+            }
+            set { _unitOfWorkManager = value; }
+        }
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        /// Gets current unit of work.
+        /// </summary>
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpApiController()
@@ -90,6 +131,7 @@ namespace Abp.WebApi.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
+            EventBus = NullEventBus.Instance;
         }
         
         /// <summary>
@@ -108,7 +150,7 @@ namespace Abp.WebApi.Controllers
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        public string L(string name, params object[] args)
+        protected string L(string name, params object[] args)
         {
             return LocalizationSource.GetString(name, args);
         }
@@ -131,7 +173,7 @@ namespace Abp.WebApi.Controllers
         /// <param name="culture">culture information</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        public string L(string name, CultureInfo culture, params object[] args)
+        protected string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
         }
@@ -152,6 +194,27 @@ namespace Abp.WebApi.Controllers
         protected bool IsGranted(string permissionName)
         {
             return PermissionChecker.IsGranted(permissionName);
+        }
+
+
+        /// <summary>
+        /// Checks if given feature is enabled for current tenant.
+        /// </summary>
+        /// <param name="featureName">Name of the feature</param>
+        /// <returns></returns>
+        protected virtual Task<bool> IsEnabledAsync(string featureName)
+        {
+            return FeatureChecker.IsEnabledAsync(featureName);
+        }
+
+        /// <summary>
+        /// Checks if given feature is enabled for current tenant.
+        /// </summary>
+        /// <param name="featureName">Name of the feature</param>
+        /// <returns></returns>
+        protected virtual bool IsEnabled(string featureName)
+        {
+            return FeatureChecker.IsEnabled(featureName);
         }
     }
 }

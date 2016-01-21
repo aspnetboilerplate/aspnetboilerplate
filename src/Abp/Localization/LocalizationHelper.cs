@@ -10,6 +10,13 @@ namespace Abp.Localization
     /// </summary>
     public static class LocalizationHelper
     {
+        /// <summary>
+        /// Gets a reference to the localization manager.
+        /// Inject and use <see cref="ILocalizationManager"/>
+        /// wherever it's possible, instead of this shortcut.
+        /// </summary>
+        public static ILocalizationManager Manager { get { return LocalizationManager.Value; } }
+
         private static readonly Lazy<ILocalizationManager> LocalizationManager;
 
         static LocalizationHelper()

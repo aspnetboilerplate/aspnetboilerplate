@@ -6,6 +6,7 @@ namespace Abp.Localization
     /// <summary>
     /// Represents a string that can be localized.
     /// </summary>
+    [Serializable]
     public class LocalizableString : ILocalizableString
     {
         /// <summary>
@@ -54,5 +55,10 @@ namespace Abp.Localization
         {
             return LocalizationHelper.GetString(SourceName, Name, culture);
         }
+
+        //public override string ToString()
+        //{
+        //    return Localize();
+        //}
     }
 }

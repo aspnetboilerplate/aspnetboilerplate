@@ -6,28 +6,23 @@ using Castle.MicroKernel;
 
 namespace Abp.Auditing
 {
-    internal class AuditingInterceptorRegistrar
+    internal static class AuditingInterceptorRegistrar
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
-        private readonly IIocManager _iocManager;
+        private static IAuditingConfiguration _auditingConfiguration;
 
-        public AuditingInterceptorRegistrar(IAuditingConfiguration auditingConfiguration, IIocManager iocManager)
+        public static void Initialize(IIocManager iocManager)
         {
-            _auditingConfiguration = auditingConfiguration;
-            _iocManager = iocManager;
-        }
+            _auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
 
-        public void Initialize()
-        {
             if (!_auditingConfiguration.IsEnabled)
             {
                 return;
             }
 
-            _iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
+            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
         }
 
-        private void Kernel_ComponentRegistered(string key, IHandler handler)
+        private static void Kernel_ComponentRegistered(string key, IHandler handler)
         {
             if (ShouldIntercept(handler.ComponentModel.Implementation))
             {
@@ -35,7 +30,7 @@ namespace Abp.Auditing
             }
         }
 
-        private bool ShouldIntercept(Type type)
+        private static bool ShouldIntercept(Type type)
         {
             if (_auditingConfiguration.Selectors.Any(selector => selector.Predicate(type)))
             {

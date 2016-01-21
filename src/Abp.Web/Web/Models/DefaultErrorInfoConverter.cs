@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Abp.Collections.Extensions;
+using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Web.Configuration;
@@ -56,7 +57,8 @@ namespace Abp.Web.Models
             {
                 return new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
                        {
-                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException)
+                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
+                           Details = GetValidationErrorNarrative(exception as AbpValidationException)
                        };
             }
 
@@ -100,6 +102,16 @@ namespace Abp.Web.Models
                 }
             }
 
+            //Additional info for AbpValidationException
+            if (exception is AbpValidationException)
+            {
+                var validationException = exception as AbpValidationException;
+                if (validationException.ValidationErrors.Count > 0)
+                {
+                    detailBuilder.AppendLine(GetValidationErrorNarrative(validationException));
+                }
+            }
+
             //Exception StackTrace
             if (!string.IsNullOrEmpty(exception.StackTrace))
             {
@@ -138,13 +150,27 @@ namespace Abp.Web.Models
 
                 if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
                 {
-                    validationError.Members = validationResult.MemberNames.ToArray();
+                    validationError.Members = validationResult.MemberNames.Select(m => m.ToCamelCase()).ToArray();
                 }
 
                 validationErrorInfos.Add(validationError);
             }
 
             return validationErrorInfos.ToArray();
+        }
+
+        private static string GetValidationErrorNarrative(AbpValidationException validationException)
+        {
+            var detailBuilder = new StringBuilder();
+            detailBuilder.AppendLine(AbpWebLocalizedMessages.ValidationNarrativeTitle);
+            
+            foreach (var validationResult in validationException.ValidationErrors)
+            {
+                detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);
+                detailBuilder.AppendLine();
+            }
+
+            return detailBuilder.ToString();
         }
     }
 }

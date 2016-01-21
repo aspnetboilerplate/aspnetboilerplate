@@ -3,38 +3,12 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 </head>
 
 <body>
 
-<ul>
-	<li><a href="#DocCommonApproaches">Common connection &amp; transaction management approaches</a></li>
-	<li><a href="#DocAbpApproach">Connection &amp; transaction management in ASP.NET Boilerplate</a><ul>
-		<li><a href="#DocRepositoryClasses">Repository classes</a></li>
-		<li><a href="#DocAppServices">Application service classes</a></li>
-		<li><a href="#DocUow">Unit of work</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocUowDetails">Unit of work in detail</a><ul>
-		<li><a href="#DocDisablingUow">Disabling unit of work</a></li>
-		<li><a href="#DocUowNoTransaction">Non-transactional unit of work</a></li>
-		<li><a href="#DocUowCallsOtherMethod">A unit of work method calls another</a></li>
-		<li><a href="#DocAutoSaveChanges">Automatically saving changes</a></li>
-		<li><a href="#DocRepositoryGetAll">IRepository.GetAll() method</a></li>
-		<li><a href="#DocUowRestrictions">UnitOfWork attribute restrictions</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocUowOptions">Options</a></li>
-	<li><a href="#DocUowMethods">Methods</a><ul>
-		<li><a href="#DocUowSaveChanges">SaveChanges</a></li>
-	</ul>
-	</li>
-	<li><a href="#DocEvents">Events</a><ul>
-	</ul>
-	</li>
-</ul>
+<div class="document-contents">
 
 <h3 id="DocCommonApproaches">Common connection &amp; transaction management approaches</h3>
 <p>Connection and transaction management is one of the most important concepts 
@@ -76,7 +50,8 @@ everywhere.</p>
 <h4 id="DocRepositoryClasses">Repository classes</h4>
 <p><a href="/Pages/Documents/Repositories">Repositories</a> are main classes 
 where database operations are performed. ASP.NET Boilerplate <strong>opens
-</strong>a database connection and begins a <strong>transaction </strong>when
+</strong>a database connection (it may not be opened immediately, but opened in 
+first database usage, based on ORM provider implementation) and begins a <strong>transaction </strong>when
 <strong>entering </strong>a repository method. So, you can use connection safely 
 in a repository method. At the end of the method, the transaction is <strong>
 commited</strong> and the connection is <strong>disposed</strong>. If the 
@@ -142,6 +117,7 @@ CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</stron
 <p>Unit of work <strong>implicitly</strong> works for repository and application service methods. 
 You should <strong>explicitly </strong>use it if you want to control database connection and 
 transaction somewhere else. There are two approaches for this.</p>
+<h5>UnitOfWork attribute</h5>
 <p>First and preferred approach is using <strong>UnitOfWorkAttribute</strong>. Example:</p>
 <pre lang="cs">[UnitOfWork]
 public void CreatePerson(CreatePersonInput input)
@@ -154,6 +130,9 @@ public void CreatePerson(CreatePersonInput input)
 connection and transaction, both repositories use same unit of work. Note that 
 no need to UnitOfWork attribute if this is an application service method. See '<a href="#DocUowRestrictions">unit 
 of work method restrictions</a>' section.</p>
+<p>There are some options of the UnitOfWork attribute. See 'unit of work in 
+detail' section.</p>
+<h5>IUnitOfWorkManager</h5>
 <p>Second appropaches is using the <strong>IUnitOfWorkManager.Begin(...)</strong> 
 method as 
 shown below:</p>
@@ -183,10 +162,14 @@ shown below:</p>
         }
     }
 }</pre>
-<p>You can inject and use IUnitOfWorkManager as shown here. Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
+<p>You can inject and use IUnitOfWorkManager as shown here (if you inherit your 
+application service from ApplicationService class, then you can directly use
+<strong>CurrentUnitOfWork</strong> 
+property. If not, you should inject IUnitOfWorkManager). Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
 should call <strong>Complete</strong> method manually. If you don't call, 
-transaction is rolled back and changes are not saved. Begin method has overloads 
-to set unit of work options.</p>
+transaction is rolled back and changes are not saved.</p>
+<p>Begin method has overloads 
+to set <strong>unit of work options</strong>.</p>
 <p>It's better and 
 shorter to use <strong>UnitOfWork</strong> attribute if you don't have a good reason.</p>
 
@@ -221,7 +204,7 @@ some special cases, transaction may cause problems since it may lock some rows
 or tables in the database. In this situations, you may want to disable 
 database-level transaction. UnitOfWork attribute can get a boolean value in it's 
 constructor to work as non-transactional. Example usage:</p>
-<pre lang="cs">[UnitOfWork(false)]
+<pre lang="cs">[UnitOfWork(<span lang="tr">isTransactional: </span>false)]
 public GetTasksOutput GetTasks(GetTasksInput input)
 {
     var tasks = _taskRepository.GetAllWithPeople(input.AssignedPersonId, input.State);
@@ -231,7 +214,7 @@ public GetTasksOutput GetTasks(GetTasksInput input)
             };
 }</pre>
 <p>I suggest to use this attribute as <strong>[UnitOfWork(isTransactional: false)]</strong>. 
-I think it's more readable and explicit.</p>
+I think it's more readable and explicit. But you can use as [UnitOfWork(false)].</p>
 <p>Note that ORM frameworks (like NHibernate and EntityFramework) internally 
 saves changes in a single command. Assume that you updated a few Entities in a 
 non-transactional UOW. Even in this situation all updates are performed at end 
@@ -249,7 +232,13 @@ method manages connection, others use it. This true for methods run in same
 <strong>Thread</strong> (or in same request for web applications). Actually, when a unit of work scope begins, all codes 
 executing in same thread shares same connection and transaction until the unit of 
 work scope ends. This is true both for UnitOfWork attribute and UnitOfWorkScope 
-class. If you create a seperated Thread/Task, it uses own unit of work.</p>
+class.</p>
+<h4>Unit of work scope</h4>
+<p>You can create a different and isolated transaction in another transaction or 
+can create a non-transactional scope in a transaction. .NET defines
+<a href="https://msdn.microsoft.com/en-us/library/system.transactions.transactionscopeoption(v=vs.110).aspx" target="_blank">
+TransactionScopeOption</a> for that. You can set Scope option of the unit of 
+work. </p>
 <h4 id="DocAutoSaveChanges">Automatically saving changes</h4>
 <p>When we use unit of work for a method, ASP.NET Boilerplate saves 
 all changes at the end of the method automatically. Assume that we need method to update name of a person:</p>
@@ -366,6 +355,8 @@ completed. Example:</p>
 
     _taskRepository.Insert(task);
 }</pre>
+
+</div>
 
 </body>
 
