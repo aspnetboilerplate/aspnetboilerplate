@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Abp.Runtime.Serialization;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
@@ -26,7 +24,7 @@ namespace Abp.BackgroundJobs
             _timer = timer;
             _iocResolver = iocResolver;
 
-            _timer.Period = 5000; //5 seconds
+            _timer.Period = 5000; //5 seconds - TODO: Make configurable?
             _timer.Elapsed += Timer_Elapsed;
         }
 
@@ -70,12 +68,10 @@ namespace Abp.BackgroundJobs
         {
             try
             {
-                var waitingJobs = AsyncHelper.RunSync(GetWaitingJobsAsync);
-                Logger.DebugFormat("Found {0} waiting jobs...", waitingJobs.Count);
-
-                foreach (var task in waitingJobs)
+                var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
+                foreach (var job in waitingJobs)
                 {
-                    TryProcessJob(task);
+                    TryProcessJob(job);
                 }
             }
             catch (Exception ex)
@@ -141,11 +137,6 @@ namespace Abp.BackgroundJobs
                     Logger.Warn(updateEx.ToString(), updateEx);
                 }
             }
-        }
-
-        protected virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync()
-        {
-            return _store.GetWaitingJobsAsync(1000);
         }
     }
 }

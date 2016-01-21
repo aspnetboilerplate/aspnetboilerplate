@@ -133,15 +133,15 @@ namespace Abp
             IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
 
-            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>();
+            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsEnabled)
             {
-                IocManager.RegisterIfNot<IBackgroundJobStore, InMemoryBackgroundJobStore>();
+                IocManager.RegisterIfNot<IBackgroundJobStore, InMemoryBackgroundJobStore>(DependencyLifeStyle.Singleton);
             }
             else
             {
-                IocManager.RegisterIfNot<IBackgroundJobStore, NullBackgroundJobStore>();
+                IocManager.RegisterIfNot<IBackgroundJobStore, NullBackgroundJobStore>(DependencyLifeStyle.Singleton);
             }
         }
     }
