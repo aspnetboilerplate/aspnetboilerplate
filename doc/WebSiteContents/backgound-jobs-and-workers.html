@@ -335,7 +335,18 @@ when your applications is being shutdown.</p>
 	IBackgroundWorkerManager. In this case, your worker probably will be 
 	parametric (say that you have a single LogCleaner class but two LogCleaner 
 	worker instances they watch and clear different log folders).</p>
-	<p>....</p>
+	<h3>Making Your Application Always Running</h3>
+	<p>Background jobs and workers only works if your application is running. An 
+	ASP.NET application <strong>shutdowns</strong> by default if no request is 
+	performed to the web application for a long time. So, if you host background 
+	job execution in your web application (this is the default behaviour), you 
+	should ensure that your web application is configured to always running. 
+	Otherwise, background jobs only works while your applications is in use.</p>
+	<p>There are some techniques to accomplish that. Most simple way is to make 
+	periodic requests to your web application from an external application. 
+	Thus, you can also check if your web application is up and running.
+	<a href="http://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-always-running.html" target="_blank">
+	Hangfire documentation</a> explains some other ways.</p>
 
 </div>
 
