@@ -7,7 +7,7 @@ namespace Abp.Hangfire.Configuration
 {
     public static class HangfireGlobalConfigurationExtensions
     {
-        public static IGlobalConfiguration<WindsorJobActivator> UseWindsorJobActivator(
+        public static IGlobalConfiguration<HangfireWindsorJobActivator> UseWindsorJobActivator(
             [NotNull] this IGlobalConfiguration configuration,
             [NotNull]  IIocResolver iocResolver)
         {
@@ -21,7 +21,7 @@ namespace Abp.Hangfire.Configuration
                 throw new ArgumentNullException("iocResolver");
             }
 
-            return configuration.UseActivator(new WindsorJobActivator(iocResolver));
+            return configuration.UseActivator(new HangfireWindsorJobActivator(iocResolver));
         }
     }
 }

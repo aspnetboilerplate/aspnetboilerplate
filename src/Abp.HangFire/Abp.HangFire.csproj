@@ -71,7 +71,7 @@
     <Compile Include="Hangfire\Configuration\HangfireGlobalConfigurationExtensions.cs" />
     <Compile Include="Hangfire\HangfireBackgroundJobManager.cs" />
     <Compile Include="Hangfire\Configuration\IAbpHangfireConfiguration.cs" />
-    <Compile Include="Hangfire\WindsorJobActivator.cs" />
+    <Compile Include="Hangfire\HangfireWindsorJobActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

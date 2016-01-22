@@ -91,7 +91,7 @@ namespace Abp
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<LocalizationManager>().Initialize();
 
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
                 workerManager.Start();
@@ -101,7 +101,7 @@ namespace Abp
 
         public override void Shutdown()
         {
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 IocManager.Resolve<IBackgroundWorkerManager>().StopAndWaitToStop();
             }
@@ -135,7 +135,7 @@ namespace Abp
 
             IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 IocManager.RegisterIfNot<IBackgroundJobStore, InMemoryBackgroundJobStore>(DependencyLifeStyle.Singleton);
             }

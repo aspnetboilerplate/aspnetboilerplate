@@ -4,14 +4,14 @@ using Hangfire;
 
 namespace Abp.Hangfire
 {
-    public class WindsorJobActivator : JobActivator
+    public class HangfireWindsorJobActivator : JobActivator
     {
         readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Initializes new instance of WindsorJobActivator with a Windsor Kernel
         /// </summary>
-        public WindsorJobActivator(IIocResolver iocResolver)
+        public HangfireWindsorJobActivator(IIocResolver iocResolver)
         {
             if (iocResolver == null)
             {

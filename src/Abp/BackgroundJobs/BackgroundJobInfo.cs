@@ -10,16 +10,16 @@ namespace Abp.BackgroundJobs
     [Table("AbpBackgroundJobs")]
     public class BackgroundJobInfo : Entity<long>, IHasCreationTime
     {
-        public const int MaxJobClassLength = 256;
-        public const int MaxJobDataLength = 1024 * 1024 * 1024; //1 megabyte
+        public const int MaxJobTypeLength = 512;
+        public const int MaxJobArgsLength = 1024 * 1024 * 1024; //1 megabyte
 
         [Required]
-        [StringLength(MaxJobClassLength)]
+        [StringLength(MaxJobTypeLength)]
         public virtual string JobType { get; set; }
 
         [Required]
-        [MaxLength(MaxJobDataLength)]
-        public virtual byte[] State { get; set; }
+        [MaxLength(MaxJobArgsLength)]
+        public virtual string JobArgs { get; set; }
 
         public virtual short TryCount { get; set; }
 

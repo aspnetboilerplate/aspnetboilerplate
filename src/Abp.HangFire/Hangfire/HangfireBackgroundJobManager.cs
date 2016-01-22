@@ -1,56 +1,57 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
-using Abp.Dependency;
 using Abp.Hangfire.Configuration;
 using Abp.Threading.BackgroundWorkers;
-using Castle.Core.Logging;
 using Hangfire;
 using HangfireBackgroundJob = Hangfire.BackgroundJob;
 
 namespace Abp.Hangfire
 {
-    public class HangfireBackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager, ISingletonDependency
+    public class HangfireBackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
     {
-        public ILogger Logger { get; set; } 
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
+        private readonly IAbpHangfireConfiguration _hangfireConfiguration;
 
-        private readonly IAbpHangfireConfiguration _configuration;
-
-        public HangfireBackgroundJobManager(IAbpHangfireConfiguration configuration)
+        public HangfireBackgroundJobManager(
+            IBackgroundJobConfiguration backgroundJobConfiguration, 
+            IAbpHangfireConfiguration hangfireConfiguration)
         {
-            _configuration = configuration;
-
-            Logger = NullLogger.Instance;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
+            _hangfireConfiguration = hangfireConfiguration;
         }
 
         public override void Start()
         {
             base.Start();
 
-            if (_configuration.Server == null)
+            if (_hangfireConfiguration.Server == null && _backgroundJobConfiguration.IsJobExecutionEnabled)
             {
-                _configuration.Server = new BackgroundJobServer();
+                _hangfireConfiguration.Server = new BackgroundJobServer();
             }
         }
-        
+
         public override void WaitToStop()
         {
-            try
+            if (_hangfireConfiguration.Server != null)
             {
-                _configuration.Server.Dispose();
+                try
+                {
+                    _hangfireConfiguration.Server.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.ToString(), ex);
+                }
             }
-            catch(Exception ex)
-            {
-                Logger.Warn(ex.ToString(), ex);
-            }
-         
+
             base.WaitToStop();
         }
 
-        public Task EnqueueAsync<TJob, TArgs>(TArgs state, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
+        public Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
             TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
         {
-            HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(state));
+            HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
             return Task.FromResult(0);
         }
     }
