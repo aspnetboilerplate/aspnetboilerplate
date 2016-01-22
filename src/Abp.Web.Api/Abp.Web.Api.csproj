@@ -111,7 +111,10 @@
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\ScriptProxyManager.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScriptController.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptDefinitionGenerator.cs" />
-    <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptDefinitionProxyGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptHelper.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptServiceGenerator.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Scripting\TypeScript\TypeScriptServiceProxyGenerator.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpActionDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Selectors\DynamicHttpControllerDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\DynamicApiMethodInfo.cs" />
