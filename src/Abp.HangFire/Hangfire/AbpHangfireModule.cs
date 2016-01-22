@@ -11,9 +11,11 @@ namespace Abp.Hangfire
         public override void PreInitialize()
         {
             IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
-
-            GlobalConfiguration.Configuration
-                .UseWindsorJobActivator(IocManager);
+            
+            Configuration.Modules
+                .AbpHangfire()
+                .GlobalConfiguration
+                .UseActivator(new HangfireIocJobActivator(IocManager));
         }
 
         public override void Initialize()

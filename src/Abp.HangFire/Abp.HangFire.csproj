@@ -68,10 +68,9 @@
     <Compile Include="Hangfire\AbpHangfireModule.cs" />
     <Compile Include="Hangfire\Configuration\AbpHangfireConfiguration.cs" />
     <Compile Include="Hangfire\Configuration\AbpHangfireModuleConfigurationExtensions.cs" />
-    <Compile Include="Hangfire\Configuration\HangfireGlobalConfigurationExtensions.cs" />
     <Compile Include="Hangfire\HangfireBackgroundJobManager.cs" />
     <Compile Include="Hangfire\Configuration\IAbpHangfireConfiguration.cs" />
-    <Compile Include="Hangfire\HangfireWindsorJobActivator.cs" />
+    <Compile Include="Hangfire\HangfireIocJobActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
