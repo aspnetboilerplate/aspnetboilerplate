@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Auditing;
+using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -52,6 +53,11 @@ namespace Abp.Configuration.Startup
         public IFeatureConfiguration Features { get; private set; }
 
         /// <summary>
+        /// Used to configure background job system.
+        /// </summary>
+        public IBackgroundJobConfiguration BackgroundJobs { get; private set; }
+
+        /// <summary>
         /// Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
@@ -94,6 +100,7 @@ namespace Abp.Configuration.Startup
             MultiTenancy = IocManager.Resolve<IMultiTenancyConfig>();
             Auditing = IocManager.Resolve<IAuditingConfiguration>();
             Caching = IocManager.Resolve<ICachingConfiguration>();
+            BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
         }
     }
 }

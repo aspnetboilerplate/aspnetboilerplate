@@ -81,6 +81,22 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJob.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJob.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobManager.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobInfo.cs" />
+    <Compile Include="BackgroundJobs\BackgroundJobPriority.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobConfiguration.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobManager.cs" />
+    <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
+    <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
+    <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
+    <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
+    <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
+    <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
+    <Compile Include="Threading\BackgroundWorkers\IBackgroundWorkerManager.cs" />
     <Compile Include="Dependency\SingletonDependency.cs" />
     <Compile Include="Application\Features\Feature.cs" />
     <Compile Include="Application\Features\FeatureChecker.cs" />
@@ -115,12 +131,41 @@
     <Compile Include="Localization\LocalizationSettingNames.cs" />
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
     <Compile Include="Localization\LocalizationSourceHelper.cs" />
+    <Compile Include="Notifications\IExternalNotificationChannel.cs" />
+    <Compile Include="Notifications\INotificationConfiguration.cs" />
+    <Compile Include="Notifications\INotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\INotificationProvider.cs" />
+    <Compile Include="Notifications\INotificationStore.cs" />
+    <Compile Include="Notifications\IRealTimeNotifier.cs" />
+    <Compile Include="Notifications\IUserNotificationQueue.cs" />
+    <Compile Include="Notifications\NotificationInfo.cs" />
+    <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Notifications\NotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\NotificationManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationPublishOptions.cs" />
+    <Compile Include="Notifications\NotificationState.cs" />
+    <Compile Include="Notifications\NotificationSubscriptionOptions.cs" />
+    <Compile Include="Notifications\NotificationType.cs" />
+    <Compile Include="Notifications\NullNotificationStore.cs" />
+    <Compile Include="Notifications\NullRealTimeNotifier.cs" />
+    <Compile Include="Notifications\UserNotificationInfo.cs" />
+    <Compile Include="Notifications\UserNotificationQueue.cs" />
+    <Compile Include="Notifications\UserNotificationState.cs" />
     <Compile Include="Runtime\Caching\AbpCacheNames.cs" />
     <Compile Include="MultiTenancy\ITenantIdResolver.cs" />
     <Compile Include="MultiTenancy\NullTenantIdResolver.cs" />
     <Compile Include="Runtime\Session\ClaimsAbpSession.cs" />
     <Compile Include="Runtime\Validation\BooleanValueValidator.cs" />
     <Compile Include="Runtime\Validation\ValueValidatorBase.cs" />
+    <Compile Include="Threading\BackgroundWorkers\PeriodicBackgroundWorkerBase.cs" />
+    <Compile Include="Threading\IRunnable.cs" />
+    <Compile Include="Threading\RunnableBase.cs" />
+    <Compile Include="Threading\Timers\AbpTimer.cs" />
+    <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
@@ -525,6 +570,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-lt.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

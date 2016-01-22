@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Auditing;
+using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -78,5 +79,10 @@ namespace Abp.Configuration.Startup
         /// Used to configure features.
         /// </summary>
         IFeatureConfiguration Features { get; }
+
+        /// <summary>
+        /// Used to configure background job system.
+        /// </summary>
+        IBackgroundJobConfiguration BackgroundJobs { get; }
     }
 }

@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
     <Compile Include="Application\Navigation\NavigationTestCase.cs" />
+    <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor_Tests.cs" />
@@ -129,6 +130,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Notifications\NotificationManager_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />

@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace Abp.Localization
@@ -5,6 +6,7 @@ namespace Abp.Localization
     /// <summary>
     /// A class that gets the same string on every localization.
     /// </summary>
+    [Serializable]
     public class FixedLocalizableString : ILocalizableString
     {
         /// <summary>
