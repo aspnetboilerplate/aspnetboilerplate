@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
 
@@ -11,7 +10,7 @@ namespace Abp.BackgroundJobs
     /// Represents a background job info that is used to persist jobs.
     /// </summary>
     [Table("AbpBackgroundJobs")]
-    public class BackgroundJobInfo : Entity<long>, IHasCreationTime
+    public class BackgroundJobInfo : CreationAuditedEntity<long>
     {
         /// <summary>
         /// Maximum length of <see cref="JobType"/>.
@@ -77,11 +76,6 @@ namespace Abp.BackgroundJobs
         public virtual DateTime? LastTryTime { get; set; }
 
         /// <summary>
-        /// Creation time of this job.
-        /// </summary>
-        public virtual DateTime CreationTime { get; set; }
-
-        /// <summary>
         /// This is true if this job is continously failed and will not be executed again.
         /// </summary>
         //[Index("IX_IsAbandoned_NextTryTime", 1)]
@@ -104,7 +98,6 @@ namespace Abp.BackgroundJobs
         /// </summary>
         public BackgroundJobInfo()
         {
-            CreationTime = Clock.Now;
             NextTryTime = Clock.Now;
             Priority = BackgroundJobPriority.Normal;
         }
