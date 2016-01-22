@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Extensions;
+using  Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
-    public class TypeScriptDefinitionGenerator : ITransientDependency
+    public class TypeScriptServiceGenerator : ITransientDependency
     {
         public string GetScript()
         {
             var dynamicControllers = DynamicApiControllerManager.GetAll();
-            
+
             StringBuilder script = new StringBuilder();
             if (dynamicControllers == null || dynamicControllers.Count == 0)
                 return "";
@@ -22,11 +22,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             var sortedDynamicControllers = dynamicControllers.OrderBy(z => z.ServiceName);
             var servicePrefix = GetServicePrefix(sortedDynamicControllers.First().ServiceName);
             if (servicePrefix.IsNullOrEmpty())
-                script.AppendLine("declare module abp.services");//Create a new Module
+                script.AppendLine("module abp.services");//Create a new Module
             else
-                script.AppendLine("declare module abp.services." + servicePrefix);//Create a new Module
+                script.AppendLine("module abp.services." + servicePrefix);//Create a new Module
             script.AppendLine("{");
-            var proxyGenerator = new TypeScriptDefinitionProxyGenerator();
+            var proxyGenerator = new TypeScriptServiceProxyGenerator();
             foreach (var dynamicController in sortedDynamicControllers)
             {
                 if (servicePrefix != GetServicePrefix(dynamicController.ServiceName))
@@ -35,19 +35,20 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     servicePrefix = GetServicePrefix(dynamicController.ServiceName);
                     script.AppendLine("}");//Close the Previous Module
                     //Create new module for the new service prefix
-                    if(servicePrefix.IsNullOrEmpty())
-                        script.AppendLine("declare module abp.services");//Create a new Module
+                    if (servicePrefix.IsNullOrEmpty())
+                        script.AppendLine("module abp.services");//Create a new Module
                     else
-                        script.AppendLine("declare module abp.services." + servicePrefix);//Create a new Module
+                        script.AppendLine("module abp.services." + servicePrefix);//Create a new Module
                     script.AppendLine("{");
                 }
-                script.AppendLine(proxyGenerator.Generate(dynamicController,servicePrefix));
+                script.AppendLine(proxyGenerator.Generate(dynamicController, servicePrefix));
                 script.AppendLine();
             }
             script.AppendLine("}");
             #region Create Script for Abp common objects
 
             script.AppendLine("declare module abp {");
+            script.AppendLine("var appPath: string;");
             script.AppendLine("class ui {");
             script.AppendLine("static setBusy(element, IPromise);");
             script.AppendLine("}");
@@ -88,9 +89,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private string GetServicePrefix(string serviceName)
         {
             if (serviceName.IndexOf('/') == -1)
-                return  "";
+                return "";
             else
-                return serviceName.Substring(0,serviceName.IndexOf('/'));
+                return serviceName.Substring(0, serviceName.IndexOf('/'));
         }
     }
 }
