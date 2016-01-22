@@ -1,3 +1,4 @@
+using System;
 using Abp.Threading.Timers;
 
 namespace Abp.Threading.BackgroundWorkers
@@ -39,8 +40,22 @@ namespace Abp.Threading.BackgroundWorkers
 
         /// <summary>
         /// Handles the Elapsed event of the Timer.
+        /// </summary>
+        private void Timer_Elapsed(object sender, System.EventArgs e)
+        {
+            try
+            {
+                DoWork();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+            }
+        }
+
+        /// <summary>
         /// Periodic works should be done by implementing this method.
         /// </summary>
-        protected abstract void Timer_Elapsed(object sender, System.EventArgs e);
+        protected abstract void DoWork();
     }
 }

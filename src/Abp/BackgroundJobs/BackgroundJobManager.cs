@@ -62,19 +62,13 @@ namespace Abp.BackgroundJobs
             await _store.InsertAsync(jobInfo);
         }
 
-        protected override void Timer_Elapsed(object sender, EventArgs e)
+        protected override void DoWork()
         {
-            try
+            var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
+
+            foreach (var job in waitingJobs)
             {
-                var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
-                foreach (var job in waitingJobs)
-                {
-                    TryProcessJob(job);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message, ex);
+                TryProcessJob(job);
             }
         }
 
@@ -112,14 +106,7 @@ namespace Abp.BackgroundJobs
                             jobInfo.IsAbandoned = true;
                         }
 
-                        try
-                        {
-                            _store.UpdateAsync(jobInfo);
-                        }
-                        catch (Exception updateEx)
-                        {
-                            Logger.Warn(updateEx.ToString(), updateEx);
-                        }
+                        TryUpdate(jobInfo);
                     }
                 }
             }
@@ -129,14 +116,19 @@ namespace Abp.BackgroundJobs
 
                 jobInfo.IsAbandoned = true;
 
-                try
-                {
-                    _store.UpdateAsync(jobInfo);
-                }
-                catch (Exception updateEx)
-                {
-                    Logger.Warn(updateEx.ToString(), updateEx);
-                }
+                TryUpdate(jobInfo);
+            }
+        }
+
+        private void TryUpdate(BackgroundJobInfo jobInfo)
+        {
+            try
+            {
+                _store.UpdateAsync(jobInfo);
+            }
+            catch (Exception updateEx)
+            {
+                Logger.Warn(updateEx.ToString(), updateEx);
             }
         }
     }
