@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Timing;
 
@@ -13,6 +14,7 @@ namespace Abp.BackgroundJobs
     public class InMemoryBackgroundJobStore : IBackgroundJobStore
     {
         private readonly List<BackgroundJobInfo> _jobs;
+        private long _lastId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryBackgroundJobStore"/> class.
@@ -24,6 +26,7 @@ namespace Abp.BackgroundJobs
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
+            jobInfo.Id = Interlocked.Increment(ref _lastId);
             _jobs.Add(jobInfo);
             
             return Task.FromResult(0);
