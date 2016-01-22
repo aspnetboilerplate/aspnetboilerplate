@@ -83,7 +83,7 @@ namespace Abp.BackgroundJobs
             try
             {
                 jobInfo.TryCount++;
-                jobInfo.LastTryTime = DateTime.Now;
+                jobInfo.LastTryTime = Clock.Now;
 
                 var jobType = Type.GetType(jobInfo.JobType);
                 using (var job = _iocResolver.ResolveAsDisposable(jobType))
