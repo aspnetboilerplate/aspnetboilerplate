@@ -27,7 +27,7 @@ namespace Abp.Notifications
             {
                 if (value.IsNullOrWhiteSpace())
                 {
-                    throw new ArgumentNullException("value", "NotificationName can not be null or whitespace");
+                    throw new ArgumentException("NotificationName can not be null or whitespace!", "value");
                 }
 
                 _notificationName = value;
@@ -35,14 +35,14 @@ namespace Abp.Notifications
         }
         private string _notificationName;
 
+        public Type EntityType { get; set; }
+
+        public object EntityId { get; set; }
+
         public NotificationSubscriptionOptions(long userId, string notificationName)
         {
             UserId = userId;
             NotificationName = notificationName;
         }
-
-        public Type EntityType { get; set; }
-        
-        public object EntityId { get; set; }
     }
 }

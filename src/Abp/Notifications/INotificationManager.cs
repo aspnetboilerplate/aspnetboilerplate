@@ -8,8 +8,8 @@ namespace Abp.Notifications
     public interface INotificationManager
     {
         Task SubscribeAsync(NotificationSubscriptionOptions options);
-
-        //TODO: Unsubscribe
+        
+        Task UnsubscribeAsync(NotificationSubscriptionOptions options);
 
         Task PublishAsync(NotificationPublishOptions options);
     }

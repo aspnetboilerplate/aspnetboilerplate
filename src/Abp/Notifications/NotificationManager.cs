@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Castle.Core.Logging;
@@ -12,18 +14,18 @@ namespace Abp.Notifications
         private readonly INotificationStore _store;
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IUserNotificationQueue _userNotificationQueue;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public NotificationManager(
             INotificationStore store, 
             INotificationDefinitionManager notificationDefinitionManager,
             IUnitOfWorkManager unitOfWorkManager,
-            IUserNotificationQueue userNotificationQueue)
+            IBackgroundJobManager backgroundJobManager)
         {
             _store = store;
             _notificationDefinitionManager = notificationDefinitionManager;
             _unitOfWorkManager = unitOfWorkManager;
-            _userNotificationQueue = userNotificationQueue;
+            _backgroundJobManager = backgroundJobManager;
 
             Logger = NullLogger.Instance;
         }
@@ -35,12 +37,34 @@ namespace Abp.Notifications
             await _store.InsertSubscriptionAsync(options);
         }
 
+        public async Task UnsubscribeAsync(NotificationSubscriptionOptions options)
+        {
+            CheckNotificationName(options.NotificationName);
+
+            await _store.DeleteSubscriptionAsync(options);
+        }
+
+        [UnitOfWork]
         public virtual async Task PublishAsync(NotificationPublishOptions options)
         {
-            CheckNotificationName(options.Notification.NotificationName);
+            CheckNotificationName(options.NotificationName);
 
-            await _store.InsertNotificationAsync(options.Notification);
-            _userNotificationQueue.Add(options.Notification);
+            var notificationInfo = new NotificationInfo
+            {
+                NotificationName = options.NotificationName,
+                EntityType = options.EntityType,
+                EntityId = options.EntityId,
+                Severity = options.Severity,
+                UserIds = options.UserIds.IsNullOrEmpty() ? null : options.UserIds.JoinAsString(",")
+            };
+
+            await _store.InsertNotificationAsync(notificationInfo);
+            
+            await _backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
+                new NotificationDistributionJobArgs(
+                    notificationInfo.Id
+                    )
+                );
         }
 
         private void CheckNotificationName(string notificationName)

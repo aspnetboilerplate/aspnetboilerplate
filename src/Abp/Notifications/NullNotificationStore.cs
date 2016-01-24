@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,9 +22,19 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
+        public Task DeleteSubscriptionAsync(NotificationSubscriptionOptions options)
+        {
+            return Task.FromResult(0);
+        }
+
         public Task InsertNotificationAsync(NotificationInfo notification)
         {
             return Task.FromResult(0);
+        }
+
+        public Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId)
+        {
+            return Task.FromResult(null as NotificationInfo);
         }
 
         public Task InsertUserNotificationAsync(UserNotificationInfo userNotification)
@@ -31,7 +42,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<long[]> GetSubscribedUserIds(string name)
+        public Task<long[]> GetSubscribedUserIdsAsync(NotificationInfo notification)
         {
             return Task.FromResult(new long[0]);
         }

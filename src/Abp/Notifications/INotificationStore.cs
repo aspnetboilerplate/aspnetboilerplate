@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Abp.Notifications
@@ -9,11 +10,15 @@ namespace Abp.Notifications
     public interface INotificationStore
     {
         Task InsertSubscriptionAsync(NotificationSubscriptionOptions options);
-        
+
+        Task DeleteSubscriptionAsync(NotificationSubscriptionOptions options);
+
         Task InsertNotificationAsync(NotificationInfo notification);
 
-        Task InsertUserNotificationAsync(UserNotificationInfo userNotification);
+        Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId);
         
-        Task<long[]> GetSubscribedUserIds(string name);
+        Task InsertUserNotificationAsync(UserNotificationInfo userNotification);
+
+        Task<long[]> GetSubscribedUserIdsAsync(NotificationInfo notification);
     }
 }

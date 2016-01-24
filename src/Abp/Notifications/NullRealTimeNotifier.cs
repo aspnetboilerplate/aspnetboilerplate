@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -11,6 +12,11 @@ namespace Abp.Notifications
         private static readonly NullRealTimeNotifier SingletonInstance = new NullRealTimeNotifier();
 
         public Task SendNotificationAsync(long[] userIds, NotificationInfo notification)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task SendNotificationAsync(NotificationInfo notification, IEnumerable<UserNotificationInfo> userNotifications)
         {
             return Task.FromResult(0);
         }

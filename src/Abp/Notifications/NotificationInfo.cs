@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
-using Abp.Localization;
-using Abp.Timing;
 
 namespace Abp.Notifications
 {
@@ -10,54 +8,48 @@ namespace Abp.Notifications
     /// Represents a published/sent notification.
     /// </summary>
     [Serializable]
-    public class NotificationInfo : IHasCreationTime
+    public class NotificationInfo : CreationAuditedEntity<Guid>
     {
-        /// <summary>
-        /// Id of this object.
-        /// </summary>
-        public Guid Id { get; private set; }
-
         /// <summary>
         /// <see cref="NotificationDefinition.Name"/>.
         /// </summary>
-        public string NotificationName { get; set; }
+        [Required]
+        public virtual string NotificationName { get; set; }
+
+        /// <summary>
+        /// Notification data as JSON string.
+        /// </summary>
+        public virtual string Data { get; set; }
+
+        /// <summary>
+        /// Gets/sets entity type, if this is an entity level notification.
+        /// </summary>
+        public virtual Type EntityType { get; set; }
+
+        /// <summary>
+        /// Gets/sets primary key of the entity, if this is an entity level notification.
+        /// </summary>
+        public virtual object EntityId { get; set; }
+
+        /// <summary>
+        /// Notification severity.
+        /// </summary>
+        public virtual NotificationSeverity Severity { get; set; }
+
+        /// <summary>
+        /// Target users of the notification.
+        /// If this is set, it overrides subscribed users.
+        /// If this is null/empty, then notification is sent to all subscribed users.
+        /// </summary>
+        public virtual string UserIds { get; set; }
         
         /// <summary>
-        /// Notification title.
+        /// Initializes a new instance of the <see cref="NotificationInfo"/> class.
         /// </summary>
-        public ILocalizableString Title { get; set; } //TODO: Make localization optional?
-
-        /// <summary>
-        /// Format arguments if Title contains format parameters like {ParameterName}.
-        /// </summary>
-        public Dictionary<string, object> TitleArgs { get; set; }
-
-        /// <summary>
-        /// Notification body.
-        /// </summary>
-        public ILocalizableString Body { get; set; } //TODO: Make localization optional?
-
-        /// <summary>
-        /// Format arguments if Body contains format parameters like {ParameterName}.
-        /// </summary>
-        public Dictionary<string, object> BodyArgs { get; set; }
-
-        /// <summary>
-        /// Notification type.
-        /// </summary>
-        public NotificationType Type { get; set; }
-
-        public DateTime CreationTime { get; set; }
-
-        public NotificationState State { get; set; }
-        
-        public long[] UserIds { get; set; }
-
-        public NotificationInfo() //TODO: Add constructor parameters...
+        public NotificationInfo()
         {
-            Id = Guid.NewGuid();
-            Type = NotificationType.Info;
-            CreationTime = Clock.Now;
+            Severity = NotificationSeverity.Info;
+            Data = "{}";
         }
     }
 }
