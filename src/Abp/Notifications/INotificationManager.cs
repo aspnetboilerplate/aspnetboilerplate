@@ -9,6 +9,8 @@ namespace Abp.Notifications
     {
         Task SubscribeAsync(NotificationSubscriptionOptions options);
 
+        //TODO: Unsubscribe
+
         Task PublishAsync(NotificationPublishOptions options);
     }
 }
