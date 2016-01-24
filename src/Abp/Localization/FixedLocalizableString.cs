@@ -27,18 +27,12 @@ namespace Abp.Localization
             FixedString = fixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize()
+        public string Localize(ILocalizationContext context)
         {
             return FixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize(CultureInfo culture)
+        public string Localize(ILocalizationContext context, CultureInfo culture)
         {
             return FixedString;
         }

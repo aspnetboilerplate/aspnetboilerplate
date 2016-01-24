@@ -10,14 +10,16 @@ namespace Abp.Localization
         /// <summary>
         /// Localizes the string in current culture.
         /// </summary>
+        /// <param name="context">Localization context</param>
         /// <returns>Localized string</returns>
-        string Localize();
+        string Localize(ILocalizationContext context);
 
         /// <summary>
         /// Localizes the string in given culture.
         /// </summary>
+        /// <param name="context">Localization context</param>
         /// <param name="culture">culture</param>
         /// <returns>Localized string</returns>
-        string Localize(CultureInfo culture);
+        string Localize(ILocalizationContext context, CultureInfo culture);
     }
 }

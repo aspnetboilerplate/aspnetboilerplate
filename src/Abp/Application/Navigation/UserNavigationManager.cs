@@ -4,6 +4,7 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
@@ -16,13 +17,14 @@ namespace Abp.Application.Navigation
         public IAbpSession AbpSession { get; set; }
 
         private readonly INavigationManager _navigationManager;
-
         private readonly IFeatureDependencyContext _featureDependencyContext;
+        private readonly ILocalizationContext _localizationContext;
 
-        public UserNavigationManager(INavigationManager navigationManager, IFeatureDependencyContext featureDependencyContext)
+        public UserNavigationManager(INavigationManager navigationManager, IFeatureDependencyContext featureDependencyContext, ILocalizationContext localizationContext)
         {
             _navigationManager = navigationManager;
             _featureDependencyContext = featureDependencyContext;
+            _localizationContext = localizationContext;
             PermissionChecker = NullPermissionChecker.Instance;
             AbpSession = NullAbpSession.Instance;
         }
@@ -35,7 +37,7 @@ namespace Abp.Application.Navigation
                 throw new AbpException("There is no menu with given name: " + menuName);
             }
 
-            var userMenu = new UserMenu(menuDefinition);
+            var userMenu = new UserMenu(menuDefinition, _localizationContext);
             await FillUserMenuItems(userId, menuDefinition.Items, userMenu.Items);
             return userMenu;
         }
@@ -75,7 +77,7 @@ namespace Abp.Application.Navigation
                     continue;
                 }
 
-                var userMenuItem = new UserMenuItem(menuItemDefinition);
+                var userMenuItem = new UserMenuItem(menuItemDefinition, _localizationContext);
                 if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(userId, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                 {
                     userMenuItems.Add(userMenuItem);

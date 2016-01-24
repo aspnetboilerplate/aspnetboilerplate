@@ -37,28 +37,19 @@ namespace Abp.Localization
             SourceName = sourceName;
         }
 
-        /// <summary>
-        /// Localizes the string in current language.
-        /// </summary>
-        /// <returns>Localized string</returns>
-        public virtual string Localize()
+        public string Localize(ILocalizationContext context)
         {
-            return LocalizationHelper.GetString(SourceName, Name);
+            return context.LocalizationManager.GetString(SourceName, Name);
         }
 
-        /// <summary>
-        /// Localizes the string in current language.
-        /// </summary>
-        /// <param name="culture">culture</param>
-        /// <returns>Localized string</returns>
-        public virtual string Localize(CultureInfo culture)
+        public string Localize(ILocalizationContext context, CultureInfo culture)
         {
-            return LocalizationHelper.GetString(SourceName, Name, culture);
+            return context.LocalizationManager.GetString(SourceName, Name, culture);
         }
 
-        //public override string ToString()
-        //{
-        //    return Localize();
-        //}
+        public override string ToString()
+        {
+            return string.Format("[LocalizableString: {0}, {1}]", Name, SourceName);
+        }
     }
 }

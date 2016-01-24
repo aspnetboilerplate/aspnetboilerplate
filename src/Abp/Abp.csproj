@@ -93,6 +93,8 @@
     <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Localization\ILocalizationContext.cs" />
+    <Compile Include="Localization\LocalizationContext.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />

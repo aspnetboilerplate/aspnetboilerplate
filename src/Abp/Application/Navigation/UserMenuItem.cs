@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Abp.Localization;
 
 namespace Abp.Application.Navigation
 {
@@ -53,11 +54,11 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Creates a new <see cref="UserMenuItem"/> object from given <see cref="MenuItemDefinition"/>.
         /// </summary>
-        internal UserMenuItem(MenuItemDefinition menuItemDefinition)
+        internal UserMenuItem(MenuItemDefinition menuItemDefinition, ILocalizationContext localizationContext)
         {
             Name = menuItemDefinition.Name;
             Icon = menuItemDefinition.Icon;
-            DisplayName = menuItemDefinition.DisplayName.Localize();
+            DisplayName = menuItemDefinition.DisplayName.Localize(localizationContext);
             Order = menuItemDefinition.Order;
             Url = menuItemDefinition.Url;
             CustomData = menuItemDefinition.CustomData;
