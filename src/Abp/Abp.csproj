@@ -100,6 +100,10 @@
     <Compile Include="Notifications\NotificationDistributionJob.cs" />
     <Compile Include="Notifications\NotificationDistributionJobArgs.cs" />
     <Compile Include="Notifications\NotificationSubscriptionInfo.cs" />
+    <Compile Include="RealTime\IOnlineClient.cs" />
+    <Compile Include="RealTime\IOnlineClientManager.cs" />
+    <Compile Include="RealTime\OnlineClient.cs" />
+    <Compile Include="RealTime\OnlineClientManager.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
