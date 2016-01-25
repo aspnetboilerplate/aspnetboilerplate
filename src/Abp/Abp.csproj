@@ -95,9 +95,11 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Localization\ILocalizationContext.cs" />
     <Compile Include="Localization\LocalizationContext.cs" />
+    <Compile Include="Notifications\NotificationConfiguration.cs" />
     <Compile Include="Notifications\NotificationData.cs" />
     <Compile Include="Notifications\NotificationDistributionJob.cs" />
     <Compile Include="Notifications\NotificationDistributionJobArgs.cs" />
+    <Compile Include="Notifications\NotificationSubscriptionInfo.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />

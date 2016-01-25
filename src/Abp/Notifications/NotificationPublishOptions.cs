@@ -78,14 +78,14 @@ namespace Abp.Notifications
         /// <summary>
         /// Creates a new <see cref="NotificationPublishOptions"/>.
         /// </summary>
-        public NotificationPublishOptions(string notificationName, NotificationData data, Type entityType = null, object entityId = null, NotificationSeverity severity = NotificationSeverity.Info)
+        public NotificationPublishOptions(string notificationName, NotificationData data, Type entityType = null, object entityId = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null)
         {
             NotificationName = notificationName;
             Data = data;
             EntityType = entityType;
             EntityId = entityId;
             Severity = severity;
-            Severity = NotificationSeverity.Info;
+            UserIds = userIds;
         }
     }
 }

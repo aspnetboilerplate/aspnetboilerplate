@@ -17,6 +17,7 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
+using Abp.Notifications;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
@@ -132,6 +133,8 @@ namespace Abp
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
 
             IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -14,13 +12,15 @@ namespace Abp.Notifications
 {
     public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {
-        private readonly INotificationStore _notificationStore;
-        private readonly IRealTimeNotifier _realTimeNotifier;
+        public IRealTimeNotifier RealTimeNotifier { get; set; }
 
-        public NotificationDistributionJob(INotificationStore notificationStore, IRealTimeNotifier realTimeNotifier)
+        private readonly INotificationStore _notificationStore;
+
+        public NotificationDistributionJob(INotificationStore notificationStore)
         {
             _notificationStore = notificationStore;
-            _realTimeNotifier = realTimeNotifier;
+
+            RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
 
         public override void Execute(NotificationDistributionJobArgs args)
@@ -40,7 +40,7 @@ namespace Abp.Notifications
             long[] userIds;
             if (notification.UserIds.IsNullOrEmpty())
             {
-                userIds = await _notificationStore.GetSubscribedUserIdsAsync(notification);
+                userIds = (await _notificationStore.GetSubscriptions(notification)).Select(s => s.UserId).ToArray();
             }
             else
             {
@@ -51,7 +51,14 @@ namespace Abp.Notifications
 
             await SaveUserNotifications(userNotifications);
 
-            await _realTimeNotifier.SendNotificationAsync(notification, userNotifications);
+            try
+            {
+                await RealTimeNotifier.SendNotificationAsync(notification, userNotifications);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+            }
         }
 
         [UnitOfWork]

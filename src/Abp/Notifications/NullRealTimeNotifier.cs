@@ -16,7 +16,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task SendNotificationAsync(NotificationInfo notification, IEnumerable<UserNotificationInfo> userNotifications)
+        public Task SendNotificationAsync(NotificationInfo notification, List<UserNotificationInfo> userNotifications)
         {
             return Task.FromResult(0);
         }
