@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Api.OData", "Abp.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.HangFire", "Abp.HangFire\Abp.HangFire.csproj", "{58A5158C-C78B-4451-BFD8-FFC31D48D713}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.SignalR", "Abp.Web.SignalR\Abp.Web.SignalR.csproj", "{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,10 @@ Global
 		{58A5158C-C78B-4451-BFD8-FFC31D48D713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A5158C-C78B-4451-BFD8-FFC31D48D713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58A5158C-C78B-4451-BFD8-FFC31D48D713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
