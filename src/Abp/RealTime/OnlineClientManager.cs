@@ -35,7 +35,6 @@ namespace Abp.RealTime
 
         public void Add(IOnlineClient client)
         {
-            Logger.Debug("Connected: " + client);
             _clients[client.ConnectionId] = client;
         }
 

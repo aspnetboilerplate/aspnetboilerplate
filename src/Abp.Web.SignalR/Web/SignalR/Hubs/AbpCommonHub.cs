@@ -8,15 +8,27 @@ using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR.Hubs
 {
+    /// <summary>
+    /// Common Hub of ABP.
+    /// </summary>
     public class AbpCommonHub : Hub, ITransientDependency
     {
+        /// <summary>
+        /// Reference to the logger.
+        /// </summary>
         public ILogger Logger { get; set; }
 
+        /// <summary>
+        /// Reference to the session.
+        /// </summary>
         public IAbpSession AbpSession { get; set; }
 
-        private readonly OnlineClientManager _onlineClientManager;
+        private readonly IOnlineClientManager _onlineClientManager;
 
-        public AbpCommonHub(OnlineClientManager onlineClientManager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
+        /// </summary>
+        public AbpCommonHub(IOnlineClientManager onlineClientManager)
         {
             _onlineClientManager = onlineClientManager;
 
@@ -28,9 +40,6 @@ namespace Abp.Web.SignalR.Hubs
         {
             await base.OnConnected();
 
-            Logger.Debug("OnConnected: " + Context.ConnectionId);
-            Logger.Debug("AbpSession.UserId: " + AbpSession.UserId + ", AbpSession.TenantId: " + AbpSession.TenantId);
-
             var client = new OnlineClient(
                 Context.ConnectionId,
                 GetIpAddressOfClient(),
@@ -38,8 +47,8 @@ namespace Abp.Web.SignalR.Hubs
                 AbpSession.UserId
                 );
 
-            client["Abp.SignalRClient"] = Clients.Caller;
-
+            Logger.Debug("A client is connected: " + client);
+            
             _onlineClientManager.Add(client);
         }
 
@@ -49,19 +58,12 @@ namespace Abp.Web.SignalR.Hubs
 
             try
             {
-                Logger.Debug("OnDisconnected: " + Context.ConnectionId);
                 _onlineClientManager.Remove(Context.ConnectionId);
             }
             catch (Exception ex)
             {
                 Logger.Warn(ex.ToString(), ex);
             }
-        }
-
-        public async override Task OnReconnected() //TODO: This is for test, remove later.
-        {
-            await base.OnReconnected();
-            Logger.Debug("OnReconnected: " + Context.ConnectionId);
         }
 
         private string GetIpAddressOfClient()

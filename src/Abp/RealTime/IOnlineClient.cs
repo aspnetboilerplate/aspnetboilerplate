@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Abp.RealTime
 {
@@ -26,6 +27,11 @@ namespace Abp.RealTime
         /// User Id.
         /// </summary>
         long? UserId { get; }
+
+        /// <summary>
+        /// Connection establishment time for this client.
+        /// </summary>
+        DateTime ConnectTime { get; }
 
         /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.

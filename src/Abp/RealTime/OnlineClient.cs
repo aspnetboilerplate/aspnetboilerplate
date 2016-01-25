@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Json;
+using Abp.Timing;
 
 namespace Abp.RealTime
 {
@@ -29,6 +30,11 @@ namespace Abp.RealTime
         /// User Id.
         /// </summary>
         public long? UserId { get; set; }
+
+        /// <summary>
+        /// Connection establishment time for this client.
+        /// </summary>
+        public DateTime ConnectTime { get; set; }
 
         /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.
@@ -62,7 +68,7 @@ namespace Abp.RealTime
         /// </summary>
         public OnlineClient()
         {
-
+            ConnectTime = Clock.Now;
         }
 
         /// <summary>
@@ -73,6 +79,7 @@ namespace Abp.RealTime
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="userId">The user identifier.</param>
         public OnlineClient(string connectionId, string ipAddress, int? tenantId, long? userId)
+            : this()
         {
             ConnectionId = connectionId;
             IpAddress = ipAddress;

@@ -10,8 +10,14 @@ using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR.Notifications
 {
-    public class RealTimeNotifier : IRealTimeNotifier, ITransientDependency
+    /// <summary>
+    /// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.
+    /// </summary>
+    public class SignalRRealTimeNotifier : IRealTimeNotifier, ITransientDependency
     {
+        /// <summary>
+        /// Reference to the logger.
+        /// </summary>
         public ILogger Logger { get; set; }
 
         private readonly IOnlineClientManager _onlineClientManager;
@@ -24,12 +30,16 @@ namespace Abp.Web.SignalR.Notifications
             }
         }
 
-        public RealTimeNotifier(IOnlineClientManager onlineClientManager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SignalRRealTimeNotifier"/> class.
+        /// </summary>
+        public SignalRRealTimeNotifier(IOnlineClientManager onlineClientManager)
         {
             _onlineClientManager = onlineClientManager;
             Logger = NullLogger.Instance;
         }
 
+        /// <inheritdoc/>
         public Task SendNotificationAsync(NotificationInfo notification, List<UserNotificationInfo> userNotifications)
         {
             foreach (var userNotification in userNotifications)
@@ -50,7 +60,9 @@ namespace Abp.Web.SignalR.Notifications
                         continue;
                     }
 
-                    signalRClient.getNotification(new
+                    //TODO: Send real notification data
+                    //TODO: await call or not?
+                    signalRClient.getNotification(new 
                     {
                         subject = notification.NotificationName,
                         body = "test body for " + notification.NotificationName
@@ -58,7 +70,8 @@ namespace Abp.Web.SignalR.Notifications
                 }
                 catch (Exception ex)
                 {
-                    Logger.Debug(ex.ToString(), ex);
+                    Logger.Warn("Could not send notification to userId: " + userNotification.UserId);
+                    Logger.Warn(ex.ToString(), ex);
                 }
             }
 
