@@ -86,9 +86,9 @@ namespace Abp.Configuration.Startup
         /// </summary>
         IBackgroundJobConfiguration BackgroundJobs { get; }
 
-        /// <summary>
-        /// Used to configure notification system.
-        /// </summary>
-        INotificationConfiguration Notifications { get; }
+        ///// <summary>
+        ///// Used to configure notification system.
+        ///// </summary>
+        //INotificationConfiguration Notifications { get; }
     }
 }
