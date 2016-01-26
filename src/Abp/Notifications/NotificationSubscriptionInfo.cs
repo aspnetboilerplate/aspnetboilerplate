@@ -13,8 +13,8 @@ namespace Abp.Notifications
         [MaxLength(NotificationInfo.MaxNotificationNameLength)]
         public virtual string NotificationName { get; set; }
         
-        [MaxLength(NotificationInfo.MaxEntityTypeLength)]
-        public virtual string EntityType { get; set; }
+        [MaxLength(NotificationInfo.MaxEntityTypeNameLength)]
+        public virtual string EntityTypeName { get; set; }
 
         [MaxLength(NotificationInfo.MaxEntityIdLength)]
         public virtual string EntityId { get; set; }

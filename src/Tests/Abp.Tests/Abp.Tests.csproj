@@ -107,6 +107,7 @@
     <Compile Include="Dependency\ShouldInitialize_Simple_Tests.cs" />
     <Compile Include="Dependency\SimpleDisposableObject.cs" />
     <Compile Include="Domain\Entities\Department.cs" />
+    <Compile Include="Domain\Entities\EntityHelper_Tests.cs" />
     <Compile Include="Domain\Entities\Manager.cs" />
     <Compile Include="Domain\Entities\Test_Entities.cs" />
     <Compile Include="Domain\Entities\Worker.cs" />

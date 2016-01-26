@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -16,7 +15,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task SendNotificationAsync(NotificationInfo notification, List<UserNotificationInfo> userNotifications)
+        public Task SendNotificationsAsync(UserNotification[] userNotifications)
         {
             return Task.FromResult(0);
         }

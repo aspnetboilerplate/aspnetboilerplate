@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Notifications;
@@ -40,7 +39,7 @@ namespace Abp.Web.SignalR.Notifications
         }
 
         /// <inheritdoc/>
-        public Task SendNotificationAsync(NotificationInfo notification, List<UserNotificationInfo> userNotifications)
+        public Task SendNotificationsAsync(UserNotification[] userNotifications)
         {
             foreach (var userNotification in userNotifications)
             {
@@ -60,13 +59,8 @@ namespace Abp.Web.SignalR.Notifications
                         continue;
                     }
 
-                    //TODO: Send real notification data
                     //TODO: await call or not?
-                    signalRClient.getNotification(new 
-                    {
-                        subject = notification.NotificationName,
-                        body = "test body for " + notification.NotificationName
-                    });
+                    signalRClient.getNotification(userNotification);
                 }
                 catch (Exception ex)
                 {

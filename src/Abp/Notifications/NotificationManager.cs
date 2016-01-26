@@ -37,7 +37,7 @@ namespace Abp.Notifications
             {
                 NotificationName = options.NotificationName,
                 UserId = options.UserId,
-                EntityType = options.EntityType.AssemblyQualifiedName,
+                EntityTypeName = options.EntityType.FullName,
                 EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
             };
 
@@ -50,7 +50,7 @@ namespace Abp.Notifications
             {
                 NotificationName = options.NotificationName,
                 UserId = options.UserId,
-                EntityType = options.EntityType.AssemblyQualifiedName,
+                EntityTypeName = options.EntityType.FullName,
                 EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
             };
 
@@ -63,11 +63,13 @@ namespace Abp.Notifications
             var notificationInfo = new NotificationInfo
             {
                 NotificationName = options.NotificationName,
-                EntityType = options.EntityType == null ? null : options.EntityType.AssemblyQualifiedName,
-                EntityId = options.EntityId == null ? null : options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
+                EntityTypeName = options.EntityType == null ? null : options.EntityType.FullName,
+                EntityTypeAssemblyQualifiedName = options.EntityType == null ? null : options.EntityType.AssemblyQualifiedName,
+                EntityId = options.EntityId == null ? null : options.EntityId.ToJsonString(),
                 Severity = options.Severity,
                 UserIds = options.UserIds.IsNullOrEmpty() ? null : options.UserIds.JoinAsString(","),
-                Data = options.Data.ToJsonString()
+                Data = options.Data.ToJsonString(),
+                DataTypeName = options.Data.GetType().AssemblyQualifiedName
             };
 
             await _store.InsertNotificationAsync(notificationInfo);

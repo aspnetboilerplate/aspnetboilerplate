@@ -25,5 +25,9 @@ namespace Abp.Notifications
         //TODO: Get subscribed users for a notification
 
         //TODO: Get subscriptions of a user
+
+        //TODO: Mark a notification as read
+
+        //TODO: ...
     }
 }

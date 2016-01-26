@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Threading;
+using Newtonsoft.Json;
 
 namespace Abp.Notifications
 {
@@ -30,30 +32,33 @@ namespace Abp.Notifications
 
         private async Task ExecuteAsync(NotificationDistributionJobArgs args)
         {
-            var notification = await _notificationStore.GetNotificationOrNullAsync(args.NotificationId);
-            if (notification == null)
+            var notificationInfo = await _notificationStore.GetNotificationOrNullAsync(args.NotificationId);
+            if (notificationInfo == null)
             {
                 Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " + args.NotificationId);
                 return;
             }
 
+            var notification = notificationInfo.ToNotification(); //TODO: Handle exceptions?
+
             long[] userIds;
-            if (notification.UserIds.IsNullOrEmpty())
+            if (notificationInfo.UserIds.IsNullOrEmpty())
             {
-                userIds = (await _notificationStore.GetSubscriptions(notification)).Select(s => s.UserId).ToArray();
+                userIds = (await _notificationStore.GetSubscriptions(notificationInfo)).Select(s => s.UserId).ToArray();
             }
             else
             {
-                userIds = notification.UserIds.Split(",").Select(uidAsStr => Convert.ToInt64(uidAsStr)).ToArray();
+                userIds = notificationInfo.UserIds.Split(",").Select(uidAsStr => Convert.ToInt64(uidAsStr)).ToArray();
             }
 
-            var userNotifications = userIds.Select(userId => new UserNotificationInfo(userId, notification.Id)).ToList();
+            var userNotificationInfos = userIds.Select(userId => new UserNotificationInfo(userId, notificationInfo.Id)).ToList();
 
-            await SaveUserNotifications(userNotifications);
+            await SaveUserNotifications(userNotificationInfos);
 
             try
             {
-                await RealTimeNotifier.SendNotificationAsync(notification, userNotifications);
+                var userNotifications = userNotificationInfos.Select(uni => uni.ToUserNotification(notification)).ToArray();
+                await RealTimeNotifier.SendNotificationsAsync(userNotifications);
             }
             catch (Exception ex)
             {

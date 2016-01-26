@@ -24,10 +24,16 @@ namespace Abp.Notifications
         public const int MaxDataLength = 1024 * 1024;
 
         /// <summary>
-        /// Maximum lenght of <see cref="EntityType"/> property.
+        /// Maximum lenght of <see cref="EntityTypeName"/> property.
         /// Value: 512.
         /// </summary>
-        public const int MaxEntityTypeLength = 256;
+        public const int MaxEntityTypeNameLength = 256;
+
+        /// <summary>
+        /// Maximum lenght of <see cref="EntityTypeAssemblyQualifiedName"/> property.
+        /// Value: 512.
+        /// </summary>
+        public const int MaxEntityTypeAssemblyQualifiedNameLength = 512;
 
         /// <summary>
         /// Maximum lenght of <see cref="EntityId"/> property.
@@ -56,10 +62,23 @@ namespace Abp.Notifications
         public virtual string Data { get; set; }
 
         /// <summary>
-        /// Gets/sets entity type, if this is an entity level notification.
+        /// Type of the JSON serialized <see cref="Data"/>.
+        /// It's AssemblyQualifiedName of the type.
         /// </summary>
-        [MaxLength(MaxEntityTypeLength)]
-        public virtual string EntityType { get; set; }
+        public virtual string DataTypeName { get; set; }
+
+        /// <summary>
+        /// Gets/sets entity type name, if this is an entity level notification.
+        /// It's FullName of the entity type.
+        /// </summary>
+        [MaxLength(MaxEntityTypeNameLength)]
+        public virtual string EntityTypeName { get; set; }
+
+        /// <summary>
+        /// AssemblyQualifiedName of the entity type.
+        /// </summary>
+        [MaxLength(MaxEntityTypeAssemblyQualifiedNameLength)]
+        public virtual string EntityTypeAssemblyQualifiedName { get; set; }
 
         /// <summary>
         /// Gets/sets primary key of the entity, if this is an entity level notification.
