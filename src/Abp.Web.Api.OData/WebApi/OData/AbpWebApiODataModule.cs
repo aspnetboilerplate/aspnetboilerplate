@@ -20,12 +20,8 @@ namespace Abp.WebApi.OData
         {
             IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
 
-        public override void PostInitialize()
-        {
-            Configuration.Modules.AbpWebApi()
-                .HttpConfiguration.MapODataServiceRoute(
+            Configuration.Modules.AbpWebApi().HttpConfiguration.MapODataServiceRoute(
                     routeName: "ODataRoute",
                     routePrefix: "odata",
                     model: Configuration.Modules.AbpWebApiOData().ODataModelBuilder.GetEdmModel()
