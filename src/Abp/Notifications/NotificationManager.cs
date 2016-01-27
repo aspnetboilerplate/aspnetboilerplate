@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -13,6 +16,9 @@ namespace Abp.Notifications
     /// </summary>
     public class NotificationManager : INotificationManager, ISingletonDependency
     {
+        /// <summary>
+        /// Reference to the logger.
+        /// </summary>
         public ILogger Logger { get; set; }
 
         private readonly INotificationStore _store;
@@ -31,30 +37,58 @@ namespace Abp.Notifications
             Logger = NullLogger.Instance;
         }
 
-        public async Task SubscribeAsync(NotificationSubscriptionOptions options)
+        public async Task SubscribeAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
         {
-            var subscriptionInfo = new NotificationSubscriptionInfo
-            {
-                NotificationName = options.NotificationName,
-                UserId = options.UserId,
-                EntityTypeName = options.EntityType.FullName,
-                EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
-            };
-
-            await _store.InsertSubscriptionAsync(subscriptionInfo);
+            await _store.InsertSubscriptionAsync(
+                new NotificationSubscriptionInfo(
+                    userId,
+                    notificationName,
+                    entityType,
+                    entityId
+                    )
+                );
         }
 
-        public async Task UnsubscribeAsync(NotificationSubscriptionOptions options)
+        public async Task UnsubscribeAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
         {
-            var subscriptionInfo = new NotificationSubscriptionInfo
-            {
-                NotificationName = options.NotificationName,
-                UserId = options.UserId,
-                EntityTypeName = options.EntityType.FullName,
-                EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
-            };
+            await _store.DeleteSubscriptionAsync(
+                userId, 
+                notificationName,
+                entityType == null ? null : entityType.FullName,
+                entityId == null ? null : entityId.ToJsonString()
+                );
+        }
 
-            await _store.DeleteSubscriptionAsync(subscriptionInfo);
+        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(string notificationName, Type entityType = null, object entityId = null)
+        {
+            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
+                notificationName,
+                entityType == null ? null : entityType.FullName,
+                entityId == null ? null : entityId.ToJsonString()
+                );
+
+            return notificationSubscriptionInfos
+                .Select(nsi => nsi.ToNotificationSubscription())
+                .ToList();
+        }
+
+        public async Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(long userId)
+        {
+            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(userId);
+
+            return notificationSubscriptionInfos
+                .Select(nsi => nsi.ToNotificationSubscription())
+                .ToList();
+        }
+
+        public Task<bool> IsSubscribedAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
+        {
+            return _store.IsSubscribedAsync(
+                userId,
+                notificationName,
+                entityType == null ? null : entityType.FullName,
+                entityId == null ? null : entityId.ToJsonString()
+                );
         }
 
         [UnitOfWork]
@@ -79,6 +113,37 @@ namespace Abp.Notifications
                     notificationInfo.Id
                     )
                 );
+        }
+
+        public Task<List<UserNotification>> GetUserNotifications(long userId, int skipCount = 0, int maxResultCount = Int32.MaxValue)
+        {
+            throw new NotImplementedException();
+            //var userNotificationInfos = _store.GetUserNotifications(userId)
+        }
+
+        public Task<List<UserNotification>> GetUserNotification(Guid userNotificationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state)
+        {
+            return _store.UpdateUserNotificationStateAsync(userNotificationId, state);
+        }
+
+        public Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        {
+            return _store.UpdateAllUserNotificationStatesAsync(userId, state);
+        }
+
+        public Task DeleteUserNotificationAsync(Guid userNotificationId)
+        {
+            return _store.DeleteUserNotificationAsync(userNotificationId);
+        }
+
+        public Task DeleteAllUserNotificationsAsync(long userId)
+        {
+            return _store.DeleteAllUserNotificationsAsync(userId);
         }
     }
 }

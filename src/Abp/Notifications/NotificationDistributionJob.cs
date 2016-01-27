@@ -44,7 +44,13 @@ namespace Abp.Notifications
             long[] userIds;
             if (notificationInfo.UserIds.IsNullOrEmpty())
             {
-                userIds = (await _notificationStore.GetSubscriptions(notificationInfo)).Select(s => s.UserId).ToArray();
+                userIds = (await _notificationStore.GetSubscriptionsAsync(
+                    notificationInfo.NotificationName,
+                    notificationInfo.EntityTypeName,
+                    notificationInfo.EntityId
+                    ))
+                    .Select(s => s.UserId)
+                    .ToArray();
             }
             else
             {

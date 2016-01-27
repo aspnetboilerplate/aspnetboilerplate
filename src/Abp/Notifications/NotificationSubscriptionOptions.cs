@@ -3,7 +3,7 @@ using Abp.Extensions;
 
 namespace Abp.Notifications
 {
-    public class NotificationSubscriptionOptions
+    public class NotificationSubscriptionOptions //TODO: Remove this and use primitive types instead
     {
         public long UserId
         {

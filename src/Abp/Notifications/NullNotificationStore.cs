@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// Null pattern implementation of <see cref="INotificationStore"/>.
+    /// </summary>
     public class NullNotificationStore : INotificationStore
     {
         public Task InsertSubscriptionAsync(NotificationSubscriptionInfo subscription)
@@ -11,7 +14,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteSubscriptionAsync(NotificationSubscriptionInfo subscription)
+        public Task DeleteSubscriptionAsync(long userId, string notificationName, string entityTypeName, string entityId)
         {
             return Task.FromResult(0);
         }
@@ -31,9 +34,39 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptions(NotificationInfo notification)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName = null, string entityId = null)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
+        }
+
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId)
+        {
+            return Task.FromResult(new List<NotificationSubscriptionInfo>());
+        }
+
+        public Task<bool> IsSubscribedAsync(long userId, string notificationName, string entityTypeName, string entityId)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task DeleteUserNotificationAsync(Guid userNotificationId)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task DeleteAllUserNotificationsAsync(long userId)
+        {
+            return Task.FromResult(0);
         }
     }
 }
