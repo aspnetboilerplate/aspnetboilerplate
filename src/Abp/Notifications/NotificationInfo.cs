@@ -24,6 +24,12 @@ namespace Abp.Notifications
         public const int MaxDataLength = 1024 * 1024;
 
         /// <summary>
+        /// Maximum lenght of <see cref="DataTypeName"/> property.
+        /// Value: 512.
+        /// </summary>
+        public const int MaxDataTypeNameLength = 512;
+
+        /// <summary>
         /// Maximum lenght of <see cref="EntityTypeName"/> property.
         /// Value: 512.
         /// </summary>
@@ -57,7 +63,6 @@ namespace Abp.Notifications
         /// <summary>
         /// Notification data as JSON string.
         /// </summary>
-        [Required]
         [MaxLength(MaxDataLength)]
         public virtual string Data { get; set; }
 
@@ -65,6 +70,7 @@ namespace Abp.Notifications
         /// Type of the JSON serialized <see cref="Data"/>.
         /// It's AssemblyQualifiedName of the type.
         /// </summary>
+        [MaxLength(MaxDataTypeNameLength)]
         public virtual string DataTypeName { get; set; }
 
         /// <summary>

@@ -11,6 +11,6 @@ namespace Abp.Notifications
         /// <summary>
         /// Publishes a new notification.
         /// </summary>
-        Task PublishAsync(string notificationName, NotificationData data, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null);
+        Task PublishAsync(string notificationName, NotificationData data = null, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null);
     }
 }

@@ -32,16 +32,11 @@ namespace Abp.Notifications
 
         //Create EntityIdentifier includes entityType and entityId.
         [UnitOfWork]
-        public virtual async Task PublishAsync(string notificationName, NotificationData data, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null)
+        public virtual async Task PublishAsync(string notificationName, NotificationData data = null, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null)
         {
             if (notificationName.IsNullOrEmpty())
             {
                 throw new ArgumentException("NotificationName can not be null or whitespace!", "notificationName");
-            }
-
-            if (data == null)
-            {
-                throw new ArgumentNullException("data");
             }
 
             var notificationInfo = new NotificationInfo
@@ -52,8 +47,8 @@ namespace Abp.Notifications
                 EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
                 Severity = severity,
                 UserIds = userIds.IsNullOrEmpty() ? null : userIds.JoinAsString(","),
-                Data = data.ToJsonString(),
-                DataTypeName = data.GetType().AssemblyQualifiedName
+                Data = data == null ? null : data.ToJsonString(),
+                DataTypeName = data == null ? null : data.GetType().AssemblyQualifiedName
             };
 
             await _store.InsertNotificationAsync(notificationInfo);
