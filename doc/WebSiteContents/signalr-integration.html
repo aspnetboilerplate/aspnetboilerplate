@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+	<p>&nbsp;<a href="http://www.nuget.org/packages/Abp.Web.SignalR" target="_blank">Abp.Web.SignalR</a> 
+	nuget package makes it easily to use SignalR in ASP.NET Boilerplate based 
+	applications.</p>
+	<h3>Installation</h3>
+	<p>Install
+	<a href="http://www.nuget.org/packages/Abp.Web.SignalR" target="_blank">
+	<strong>Abp.Web.SignalR</strong></a> nuget package to your project (generally to your Web 
+	layer) and add a <strong>dependency</strong> to your module:</p>
+	<pre lang="cs"><strong>[DependsOn(typeof(AbpWebSignalRModule))]</strong>
+public class YourProjectWebModule : AbpModule
+{
+    //...
+}
+</pre>
+
+<p>Then use <strong>MapSignalR</strong> method in your OWIN startup class as you 
+always do:</p>
+
+<pre lang="cs">[assembly: OwinStartup(typeof(Startup))]
+namespace MyProject.Web
+{
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            app.MapSignalR();
+            
+            //...
+        }
+    }
+}</pre>
+	<p>That's all. SignalR is ready to use and integrated to ASP.NET Boilerplate 
+	for your application. See
+	<a href="http://www.asp.net/signalr" target="_blank">SignalR documentation</a> 
+	for more information on SignalR.</p>
+	<h3>Built-In Features</h3>
+	<p>You can use all power of SignalR in your applications. In addition,
+	<strong>Abp.Web.SignalR</strong> package implements some built-in features.</p>
+	<h4>Notification</h4>
+	<p><strong>Abp.Web.SignalR</strong> package implements <strong>
+	IRealTimeNotifier</strong> to send real time notifications to clients (see
+	<a href="/Pages/Documents/Notification-System">notification system</a>). 
+	Thus, you users can get real time push notifications.</p>
+
+</div>
+
+</body>
+
+</html>
