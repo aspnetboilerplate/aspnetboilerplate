@@ -20,13 +20,13 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public Task<List<UserNotification>> GetUserNotifications(long userId, int skipCount = 0, int maxResultCount = Int32.MaxValue)
+        public Task<List<UserNotification>> GetUserNotificationsAsync(long userId, int skipCount = 0, int maxResultCount = Int32.MaxValue)
         {
             throw new NotImplementedException();
             //var userNotificationInfos = _store.GetUserNotifications(userId)
         }
 
-        public Task<List<UserNotification>> GetUserNotification(Guid userNotificationId)
+        public Task<List<UserNotification>> GetUserNotificationAsync(Guid userNotificationId)
         {
             throw new NotImplementedException();
         }

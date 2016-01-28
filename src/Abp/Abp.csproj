@@ -94,6 +94,7 @@
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
+    <Compile Include="Domain\Entities\EntityIdentifier.cs" />
     <Compile Include="Localization\ILocalizationContext.cs" />
     <Compile Include="Localization\LocalizationContext.cs" />
     <Compile Include="Notifications\INotificationPublisher.cs" />
@@ -160,9 +161,7 @@
     <Compile Include="Notifications\IRealTimeNotifier.cs" />
     <Compile Include="Notifications\NotificationInfo.cs" />
     <Compile Include="Notifications\UserNotificationManager.cs" />
-    <Compile Include="Notifications\NotificationManagerExtensions.cs" />
-    <Compile Include="Notifications\NotificationPublishOptions.cs" />
-    <Compile Include="Notifications\NotificationSubscriptionOptions.cs" />
+    <Compile Include="Notifications\NotificationExtensions.cs" />
     <Compile Include="Notifications\NotificationSeverity.cs" />
     <Compile Include="Notifications\NullNotificationStore.cs" />
     <Compile Include="Notifications\NullRealTimeNotifier.cs" />

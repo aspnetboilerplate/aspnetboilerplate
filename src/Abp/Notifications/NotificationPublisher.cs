@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Json;
-using Castle.Core.Logging;
 
 namespace Abp.Notifications
 {
@@ -21,25 +23,37 @@ namespace Abp.Notifications
         /// </summary>
         public NotificationPublisher(
             INotificationStore store,
-            IBackgroundJobManager backgroundJobManager)
+            IBackgroundJobManager backgroundJobManager
+            )
         {
             _store = store;
             _backgroundJobManager = backgroundJobManager;
         }
 
+        //Create EntityIdentifier includes entityType and entityId.
         [UnitOfWork]
-        public virtual async Task PublishAsync(NotificationPublishOptions options)
+        public virtual async Task PublishAsync(string notificationName, NotificationData data, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null)
         {
+            if (notificationName.IsNullOrEmpty())
+            {
+                throw new ArgumentException("NotificationName can not be null or whitespace!", "notificationName");
+            }
+
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
             var notificationInfo = new NotificationInfo
             {
-                NotificationName = options.NotificationName,
-                EntityTypeName = options.EntityType == null ? null : options.EntityType.FullName,
-                EntityTypeAssemblyQualifiedName = options.EntityType == null ? null : options.EntityType.AssemblyQualifiedName,
-                EntityId = options.EntityId == null ? null : options.EntityId.ToJsonString(),
-                Severity = options.Severity,
-                UserIds = options.UserIds.IsNullOrEmpty() ? null : options.UserIds.JoinAsString(","),
-                Data = options.Data.ToJsonString(),
-                DataTypeName = options.Data.GetType().AssemblyQualifiedName
+                NotificationName = notificationName,
+                EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName,
+                EntityTypeAssemblyQualifiedName = entityIdentifier == null ? null : entityIdentifier.Type.AssemblyQualifiedName,
+                EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
+                Severity = severity,
+                UserIds = userIds.IsNullOrEmpty() ? null : userIds.JoinAsString(","),
+                Data = data.ToJsonString(),
+                DataTypeName = data.GetType().AssemblyQualifiedName
             };
 
             await _store.InsertNotificationAsync(notificationInfo);

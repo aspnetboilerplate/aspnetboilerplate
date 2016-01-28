@@ -6,7 +6,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Represents a published/sent notification.
+    /// Used to store published/sent notification.
     /// </summary>
     [Serializable]
     [Table("AbpNotifications")]

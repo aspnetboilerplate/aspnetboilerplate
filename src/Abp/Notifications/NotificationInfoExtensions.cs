@@ -23,7 +23,7 @@ namespace Abp.Notifications
             {
                 Id = notificationInfo.Id,
                 NotificationName = notificationInfo.NotificationName,
-                Data = JsonConvert.DeserializeObject(notificationInfo.Data, Type.GetType(notificationInfo.DataTypeName)),
+                Data = JsonConvert.DeserializeObject(notificationInfo.Data, Type.GetType(notificationInfo.DataTypeName)) as NotificationData,
                 EntityTypeName = notificationInfo.EntityTypeName,
                 EntityType = entityType,
                 EntityId = notificationInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(notificationInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),

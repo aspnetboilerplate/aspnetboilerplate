@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// Used to manage user notifications.
+    /// </summary>
     public interface IUserNotificationManager
     {
         /// <summary>
@@ -13,13 +16,13 @@ namespace Abp.Notifications
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
         /// <returns></returns>
-        Task<List<UserNotification>> GetUserNotifications(long userId, int skipCount = 0, int maxResultCount = int.MaxValue);
+        Task<List<UserNotification>> GetUserNotificationsAsync(long userId, int skipCount = 0, int maxResultCount = int.MaxValue);
 
         /// <summary>
         /// Gets a user notification by given id.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task<List<UserNotification>> GetUserNotification(Guid userNotificationId);
+        Task<List<UserNotification>> GetUserNotificationAsync(Guid userNotificationId);
 
         /// <summary>
         /// Updates a user notification state.
