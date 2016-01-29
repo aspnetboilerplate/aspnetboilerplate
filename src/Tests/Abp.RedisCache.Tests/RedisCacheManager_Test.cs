@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using Abp.RedisCache.Configuration;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
@@ -47,5 +48,17 @@ namespace Abp.RedisCache.Tests
         {
             public int Value { get; set; }
         }
+
+        [Fact]
+        public void DatabaseId_Test()
+        {
+            var dbIdAppSettingName = LocalIocManager.Resolve<AbpRedisCacheConfig>().DatabaseIdAppSetting;
+
+            var dbIdInConfig = LocalIocManager.Resolve<IAbpRedisConnectionProvider>().GetDatabaseId(dbIdAppSettingName);
+
+            ((AbpRedisCache)_cache.InternalCache).DatabaseId.ShouldBe(dbIdInConfig);
+        }
+
+
     }
 }

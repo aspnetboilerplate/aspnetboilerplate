@@ -17,7 +17,7 @@ namespace Abp.RedisCache.Configuration
             {
                 return "localhost";
             }
-
+            
             return connStr.ConnectionString;
         }
 
@@ -37,6 +37,17 @@ namespace Abp.RedisCache.Configuration
                 connectionString,
                 new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString))
                 ).Value;
+        }
+
+        public int GetDatabaseId(string databaseIdAppSettingName)
+        {
+            int databaseId = -1;
+
+            var appSetting = ConfigurationManager.AppSettings[databaseIdAppSettingName];
+
+            int.TryParse(appSetting, out databaseId);
+
+            return databaseId;
         }
     }
 }
