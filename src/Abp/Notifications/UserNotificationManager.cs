@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 
@@ -20,15 +21,27 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public Task<List<UserNotification>> GetUserNotificationsAsync(long userId, int skipCount = 0, int maxResultCount = Int32.MaxValue)
+        public async Task<List<UserNotification>> GetUserNotificationsAsync(long userId, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
-            throw new NotImplementedException();
-            //var userNotificationInfos = _store.GetUserNotifications(userId)
+            var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(userId, skipCount, maxResultCount);
+            return userNotifications
+                .Select(un => un.UserNotification.ToUserNotification(
+                    un.Notification.ToNotification()
+                    )
+                ).ToList();
         }
 
-        public Task<List<UserNotification>> GetUserNotificationAsync(Guid userNotificationId)
+        public async Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId)
         {
-            throw new NotImplementedException();
+            var userNotification = await _store.GetUserNotificationWithNotificationOrNullAsync(userNotificationId);
+            if (userNotification == null)
+            {
+                return null;
+            }
+
+            return userNotification.UserNotification.ToUserNotification(
+                userNotification.Notification.ToNotification()
+                );
         }
 
         public Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state)

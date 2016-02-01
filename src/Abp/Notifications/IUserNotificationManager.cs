@@ -22,7 +22,7 @@ namespace Abp.Notifications
         /// Gets a user notification by given id.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task<List<UserNotification>> GetUserNotificationAsync(Guid userNotificationId);
+        Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId);
 
         /// <summary>
         /// Updates a user notification state.

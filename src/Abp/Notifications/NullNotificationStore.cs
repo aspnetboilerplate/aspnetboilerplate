@@ -68,5 +68,15 @@ namespace Abp.Notifications
         {
             return Task.FromResult(0);
         }
+
+        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, int skipCount, int maxResultCount)
+        {
+            return Task.FromResult(new List<UserNotificationInfoWithNotificationInfo>());
+        }
+
+        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId)
+        {
+            return Task.FromResult((UserNotificationInfoWithNotificationInfo)null);
+        }
     }
 }

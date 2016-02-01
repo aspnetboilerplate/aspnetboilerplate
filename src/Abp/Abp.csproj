@@ -112,6 +112,7 @@
     <Compile Include="Notifications\NotificationSubscriptionManager.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Notifications\UserNotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\UserNotificationInfoWithNotificationInfo.cs" />
     <Compile Include="RealTime\IOnlineClient.cs" />
     <Compile Include="RealTime\IOnlineClientManager.cs" />
     <Compile Include="RealTime\OnlineClient.cs" />
