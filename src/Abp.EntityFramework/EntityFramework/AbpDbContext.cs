@@ -41,6 +41,11 @@ namespace Abp.EntityFramework
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Reference to GUID generator.
+        /// </summary>
+        public IGuidGenerator GuidGenerator { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
@@ -49,6 +54,7 @@ namespace Abp.EntityFramework
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            GuidGenerator = DefaultGuidGenerator.Instance;
         }
 
         /// <summary>
@@ -209,7 +215,7 @@ namespace Abp.EntityFramework
                 var entity = entry.Entity as IEntity<Guid>;
                 if (entity.IsTransient())
                 {
-                    entity.Id = Guid.NewGuid();
+                    entity.Id = GuidGenerator.Create();
                 }
             }
         }

@@ -17,6 +17,7 @@ namespace Abp.NHibernate.Interceptors
 
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
+        private readonly Lazy<IGuidGenerator> _guidGenerator;
 
         public AbpNHibernateInterceptor(IIocManager iocManager)
         {
@@ -26,6 +27,12 @@ namespace Abp.NHibernate.Interceptors
                     () => _iocManager.IsRegistered(typeof(IAbpSession))
                         ? _iocManager.Resolve<IAbpSession>()
                         : NullAbpSession.Instance
+                    );
+            _guidGenerator =
+                new Lazy<IGuidGenerator>(
+                    () => _iocManager.IsRegistered(typeof(IGuidGenerator))
+                        ? _iocManager.Resolve<IGuidGenerator>()
+                        : DefaultGuidGenerator.Instance
                     );
         }
 
@@ -37,7 +44,7 @@ namespace Abp.NHibernate.Interceptors
                 var guidEntity = entity as IEntity<Guid>;
                 if (guidEntity.IsTransient())
                 {
-                    guidEntity.Id = Guid.NewGuid();
+                    guidEntity.Id = _guidGenerator.Value.Create();
                 }
             }
 

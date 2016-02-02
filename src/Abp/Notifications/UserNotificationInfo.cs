@@ -37,7 +37,6 @@ namespace Abp.Notifications
         /// </summary>
         public UserNotificationInfo()
         {
-            Id = Guid.NewGuid();
             State = UserNotificationState.Unread;
             CreationTime = Clock.Now;
         }

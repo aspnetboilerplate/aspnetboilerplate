@@ -128,6 +128,7 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
+            IocManager.RegisterIfNot<IGuidGenerator, DefaultGuidGenerator>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
