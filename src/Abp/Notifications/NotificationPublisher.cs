@@ -13,7 +13,7 @@ namespace Abp.Notifications
     /// <summary>
     /// Implements <see cref="INotificationPublisher"/>.
     /// </summary>
-    public class NotificationPublisher : INotificationPublisher, ITransientDependency
+    public class NotificationPublisher : AbpServiceBase, INotificationPublisher, ITransientDependency
     {
         private readonly INotificationStore _store;
         private readonly IBackgroundJobManager _backgroundJobManager;
@@ -52,6 +52,8 @@ namespace Abp.Notifications
             };
 
             await _store.InsertNotificationAsync(notificationInfo);
+
+            await CurrentUnitOfWork.SaveChangesAsync(); //To get Id of the notification
 
             await _backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
                 new NotificationDistributionJobArgs(

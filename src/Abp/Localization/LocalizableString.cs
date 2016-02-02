@@ -19,6 +19,14 @@ namespace Abp.Localization
         /// </summary>
         public virtual string Name { get; private set; }
 
+        /// <summary>
+        /// Needed for serialization.
+        /// </summary>
+        private LocalizableString()
+        {
+            
+        }
+
         /// <param name="name">Unique name of the localization source</param>
         /// <param name="sourceName">Unique Name of the string to be localized</param>
         public LocalizableString(string name, string sourceName)

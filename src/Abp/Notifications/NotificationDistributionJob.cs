@@ -96,6 +96,8 @@ namespace Abp.Notifications
             {
                 await _notificationStore.InsertUserNotificationAsync(userNotification);
             }
+
+            await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
         }
     }
 }
