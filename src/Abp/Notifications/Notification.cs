@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 
 namespace Abp.Notifications
 {
@@ -41,5 +42,13 @@ namespace Abp.Notifications
         public NotificationSeverity Severity { get; set; }
 
         public DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Notification"/> class.
+        /// </summary>
+        public Notification()
+        {
+            CreationTime = Clock.Now;
+        }
     }
 }
