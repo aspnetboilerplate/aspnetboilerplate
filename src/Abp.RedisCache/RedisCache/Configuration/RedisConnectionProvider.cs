@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Configuration;
 using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.RedisCache.Configuration
 {
@@ -17,7 +18,7 @@ namespace Abp.RedisCache.Configuration
             {
                 return "localhost";
             }
-
+            
             return connStr.ConnectionString;
         }
 
@@ -37,6 +38,23 @@ namespace Abp.RedisCache.Configuration
                 connectionString,
                 new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString))
                 ).Value;
+        }
+
+        public int GetDatabaseId(string databaseIdAppSettingName)
+        {
+            var appSetting = ConfigurationManager.AppSettings[databaseIdAppSettingName];
+            if (appSetting.IsNullOrEmpty())
+            {
+                return -1;
+            }
+
+            int databaseId;
+            if (!int.TryParse(appSetting, out databaseId))
+            {
+                return -1;
+            }
+
+            return databaseId;
         }
     }
 }

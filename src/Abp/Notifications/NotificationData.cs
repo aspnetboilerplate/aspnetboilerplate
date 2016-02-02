@@ -6,6 +6,7 @@ namespace Abp.Notifications
 {
     /// <summary>
     /// Used to store data for a notification.
+    /// It can be directly used or can be derived.
     /// </summary>
     [Serializable]
     public class NotificationData
@@ -13,7 +14,6 @@ namespace Abp.Notifications
         /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.
         /// </summary>
-        /// <param name="key"></param>
         public object this[string key]
         {
             get { return Properties[key]; }

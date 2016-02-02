@@ -27,5 +27,20 @@ namespace Abp.Web
         /// DELETE
         /// </summary>
         Delete,
+
+        /// <summary>
+        /// OPTIONS
+        /// </summary>
+        Options,
+
+        /// <summary>
+        /// TRACE
+        /// </summary>
+        Trace,
+
+        /// <summary>
+        /// HEAD
+        /// </summary>
+        Head,
     }
 }

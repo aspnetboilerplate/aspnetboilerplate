@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 
 namespace Abp.Notifications
 {
@@ -34,5 +35,13 @@ namespace Abp.Notifications
         public object EntityId { get; set; }
 
         public DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationSubscription"/> class.
+        /// </summary>
+        public NotificationSubscription()
+        {
+            CreationTime = Clock.Now;
+        }
     }
 }

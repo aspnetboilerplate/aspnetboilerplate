@@ -11,7 +11,7 @@ using Abp.Threading;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// This background
+    /// This background job distributes notifications to users.
     /// </summary>
     public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {

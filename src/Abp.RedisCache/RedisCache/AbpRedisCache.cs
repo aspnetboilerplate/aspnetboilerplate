@@ -16,9 +16,11 @@ namespace Abp.RedisCache
         {
             get
             {
-                return _connectionMultiplexer.GetDatabase();
+                return _connectionMultiplexer.GetDatabase(DatabaseId);
             }
         }
+
+        public int DatabaseId { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -28,6 +30,7 @@ namespace Abp.RedisCache
         {
             _config = config;
             var connectionString = redisConnectionProvider.GetConnectionString(_config.ConnectionStringKey);
+            DatabaseId = redisConnectionProvider.GetDatabaseId(_config.DatabaseIdAppSetting);
             _connectionMultiplexer = redisConnectionProvider.GetConnection(connectionString);
         }
         public override object GetOrDefault(string key)
