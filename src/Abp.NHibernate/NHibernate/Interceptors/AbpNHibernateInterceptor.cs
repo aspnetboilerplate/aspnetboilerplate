@@ -31,6 +31,16 @@ namespace Abp.NHibernate.Interceptors
 
         public override bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
+            //Set Id for Guids
+            if (entity is IEntity<Guid>)
+            {
+                var guidEntity = entity as IEntity<Guid>;
+                if (guidEntity.IsTransient())
+                {
+                    guidEntity.Id = Guid.NewGuid();
+                }
+            }
+
             //Set CreationTime for new entity
             if (entity is IHasCreationTime)
             {
@@ -54,7 +64,7 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
-
+            
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
 
