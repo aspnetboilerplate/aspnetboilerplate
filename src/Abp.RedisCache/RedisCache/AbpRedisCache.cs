@@ -20,7 +20,7 @@ namespace Abp.RedisCache
             }
         }
 
-        public int DatabaseId { get; private set; } = -1;
+        public int DatabaseId { get; private set; }
 
         /// <summary>
         /// Constructor.

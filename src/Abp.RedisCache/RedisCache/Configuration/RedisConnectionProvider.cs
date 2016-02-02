@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Configuration;
 using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.RedisCache.Configuration
 {
@@ -41,11 +42,17 @@ namespace Abp.RedisCache.Configuration
 
         public int GetDatabaseId(string databaseIdAppSettingName)
         {
-            int databaseId = -1;
-
             var appSetting = ConfigurationManager.AppSettings[databaseIdAppSettingName];
+            if (appSetting.IsNullOrEmpty())
+            {
+                return -1;
+            }
 
-            int.TryParse(appSetting, out databaseId);
+            int databaseId;
+            if (!int.TryParse(appSetting, out databaseId))
+            {
+                return -1;
+            }
 
             return databaseId;
         }
