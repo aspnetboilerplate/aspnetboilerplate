@@ -68,5 +68,19 @@ namespace Abp.Notifications
         /// Deletes all notifications of a user.
         /// </summary>
         Task DeleteAllUserNotificationsAsync(long userId);
+
+        /// <summary>
+        /// Gets notifications of a user.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="skipCount">Skip count.</param>
+        /// <param name="maxResultCount">Maximum result count.</param>
+        Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, int skipCount, int maxResultCount);
+
+        /// <summary>
+        /// Gets a user notification.
+        /// </summary>
+        /// <param name="userNotificationId">Skip count.</param>
+        Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId);
     }
 }

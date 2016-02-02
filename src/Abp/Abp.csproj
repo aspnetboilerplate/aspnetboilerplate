@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -94,6 +94,7 @@
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
+    <Compile Include="Domain\Entities\EntityIdentifier.cs" />
     <Compile Include="Localization\ILocalizationContext.cs" />
     <Compile Include="Localization\LocalizationContext.cs" />
     <Compile Include="Notifications\INotificationPublisher.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Notifications\NotificationSubscriptionManager.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Notifications\UserNotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\UserNotificationInfoWithNotificationInfo.cs" />
     <Compile Include="RealTime\IOnlineClient.cs" />
     <Compile Include="RealTime\IOnlineClientManager.cs" />
     <Compile Include="RealTime\OnlineClient.cs" />
@@ -160,9 +162,7 @@
     <Compile Include="Notifications\IRealTimeNotifier.cs" />
     <Compile Include="Notifications\NotificationInfo.cs" />
     <Compile Include="Notifications\UserNotificationManager.cs" />
-    <Compile Include="Notifications\NotificationManagerExtensions.cs" />
-    <Compile Include="Notifications\NotificationPublishOptions.cs" />
-    <Compile Include="Notifications\NotificationSubscriptionOptions.cs" />
+    <Compile Include="Notifications\NotificationExtensions.cs" />
     <Compile Include="Notifications\NotificationSeverity.cs" />
     <Compile Include="Notifications\NullNotificationStore.cs" />
     <Compile Include="Notifications\NullRealTimeNotifier.cs" />
@@ -583,7 +583,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-lt.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-it.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

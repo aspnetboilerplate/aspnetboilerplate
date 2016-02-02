@@ -7,19 +7,34 @@ using Abp.Timing;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// Used to store a user notification.
+    /// </summary>
     [Serializable]
     [Table("AbpUserNotifications")]
     public class UserNotificationInfo : Entity<Guid>, IHasCreationTime
     {
+        /// <summary>
+        /// User Id.
+        /// </summary>
         public virtual long UserId { get; set; }
 
+        /// <summary>
+        /// Notification Id.
+        /// </summary>
         [Required]
         public virtual Guid NotificationId { get; set; }
 
+        /// <summary>
+        /// Current state of the user notification.
+        /// </summary>
         public virtual UserNotificationState State { get; set; }
 
         public virtual DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
+        /// </summary>
         public UserNotificationInfo()
         {
             Id = Guid.NewGuid();
@@ -27,6 +42,9 @@ namespace Abp.Notifications
             CreationTime = Clock.Now;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
+        /// </summary>
         public UserNotificationInfo(long userId, Guid notificationId)
             : this()
         {

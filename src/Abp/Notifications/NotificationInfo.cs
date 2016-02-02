@@ -6,7 +6,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Represents a published/sent notification.
+    /// Used to store published/sent notification.
     /// </summary>
     [Serializable]
     [Table("AbpNotifications")]
@@ -22,6 +22,12 @@ namespace Abp.Notifications
         /// Value: 1048576 (1 MB).
         /// </summary>
         public const int MaxDataLength = 1024 * 1024;
+
+        /// <summary>
+        /// Maximum lenght of <see cref="DataTypeName"/> property.
+        /// Value: 512.
+        /// </summary>
+        public const int MaxDataTypeNameLength = 512;
 
         /// <summary>
         /// Maximum lenght of <see cref="EntityTypeName"/> property.
@@ -57,7 +63,6 @@ namespace Abp.Notifications
         /// <summary>
         /// Notification data as JSON string.
         /// </summary>
-        [Required]
         [MaxLength(MaxDataLength)]
         public virtual string Data { get; set; }
 
@@ -65,6 +70,7 @@ namespace Abp.Notifications
         /// Type of the JSON serialized <see cref="Data"/>.
         /// It's AssemblyQualifiedName of the type.
         /// </summary>
+        [MaxLength(MaxDataTypeNameLength)]
         public virtual string DataTypeName { get; set; }
 
         /// <summary>

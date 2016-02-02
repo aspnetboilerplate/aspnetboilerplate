@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Json;
 
 namespace Abp.Notifications
@@ -22,34 +22,33 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public async Task SubscribeAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
+        public async Task SubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             await _store.InsertSubscriptionAsync(
                 new NotificationSubscriptionInfo(
                     userId,
                     notificationName,
-                    entityType,
-                    entityId
+                    entityIdentifier
                     )
                 );
         }
 
-        public async Task UnsubscribeAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
+        public async Task UnsubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             await _store.DeleteSubscriptionAsync(
                 userId,
                 notificationName,
-                entityType == null ? null : entityType.FullName,
-                entityId == null ? null : entityId.ToJsonString()
+                entityIdentifier == null ? null : entityIdentifier.Type.FullName,
+                entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()
                 );
         }
 
-        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(string notificationName, Type entityType = null, object entityId = null)
+        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(string notificationName, EntityIdentifier entityIdentifier = null)
         {
             var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
                 notificationName,
-                entityType == null ? null : entityType.FullName,
-                entityId == null ? null : entityId.ToJsonString()
+                entityIdentifier == null ? null : entityIdentifier.Type.FullName,
+                entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()
                 );
 
             return notificationSubscriptionInfos
@@ -66,13 +65,13 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public Task<bool> IsSubscribedAsync(long userId, string notificationName, Type entityType = null, object entityId = null)
+        public Task<bool> IsSubscribedAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             return _store.IsSubscribedAsync(
                 userId,
                 notificationName,
-                entityType == null ? null : entityType.FullName,
-                entityId == null ? null : entityId.ToJsonString()
+                entityIdentifier == null ? null : entityIdentifier.Type.FullName,
+                entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()
                 );
         }
     }

@@ -4,20 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
-using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Threading;
-using Newtonsoft.Json;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// This background
+    /// </summary>
     public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {
+        /// <summary>
+        /// Referece to <see cref="IRealTimeNotifier"/>.
+        /// </summary>
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
         private readonly INotificationStore _notificationStore;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
+        /// </summary>
         public NotificationDistributionJob(INotificationStore notificationStore)
         {
             _notificationStore = notificationStore;
@@ -39,7 +46,17 @@ namespace Abp.Notifications
                 return;
             }
 
-            var notification = notificationInfo.ToNotification(); //TODO: Handle exceptions?
+            Notification notification;
+
+            try
+            {
+                notification = notificationInfo.ToNotification();
+            }
+            catch (Exception)
+            {
+                Logger.Warn("NotificationDistributionJob can not continue since could not convert NotificationInfo to Notification for NotificationId: " + args.NotificationId);
+                return;
+            }
 
             long[] userIds;
             if (notificationInfo.UserIds.IsNullOrEmpty())
