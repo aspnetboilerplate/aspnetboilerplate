@@ -4,11 +4,17 @@ using Abp.Timing;
 namespace Abp
 {
     /// <summary>
-    /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids. 
-    /// NOTE: THIS CLASS IS NOT TESTED YET!
+    /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids.
+    /// This code is taken from NHibernate's GuidCombGenerator class.
     /// </summary>
-    internal class SequentialGuidGenerator : IGuidGenerator
+    public class SequentialGuidGenerator : IGuidGenerator
     {
+        /// <summary>
+        /// Gets the singleton <see cref="SequentialGuidGenerator"/> instance.
+        /// </summary>
+        public static SequentialGuidGenerator Instance { get { return _instance; } }
+        private static readonly SequentialGuidGenerator _instance = new SequentialGuidGenerator();
+
         public Guid Create()
         {
             var guidArray = Guid.NewGuid().ToByteArray();

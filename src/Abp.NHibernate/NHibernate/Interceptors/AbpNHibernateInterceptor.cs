@@ -32,7 +32,7 @@ namespace Abp.NHibernate.Interceptors
                 new Lazy<IGuidGenerator>(
                     () => _iocManager.IsRegistered(typeof(IGuidGenerator))
                         ? _iocManager.Resolve<IGuidGenerator>()
-                        : DefaultGuidGenerator.Instance
+                        : SequentialGuidGenerator.Instance
                     );
         }
 

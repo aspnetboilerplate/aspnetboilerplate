@@ -54,7 +54,7 @@ namespace Abp.EntityFramework
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
-            GuidGenerator = DefaultGuidGenerator.Instance;
+            GuidGenerator = SequentialGuidGenerator.Instance;
         }
 
         /// <summary>

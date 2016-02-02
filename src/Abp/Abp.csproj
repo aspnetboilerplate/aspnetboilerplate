@@ -93,7 +93,7 @@
     <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
-    <Compile Include="DefaultGuidGenerator.cs" />
+    <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\SimpleMessageNotificationData.cs" />
     <Compile Include="SequentialGuidGenerator.cs" />
