@@ -396,4 +396,28 @@
         return str;
     };
 
+    abp.utils.toPascalCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toUpperCase();
+        }
+
+        return str.charAt(0).toUpperCase() + str.substr(1);
+    }
+
+    abp.utils.toCamelCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toLowerCase();
+        }
+
+        return str.charAt(0).toLowerCase() + str.substr(1);
+    }
+
 })();
