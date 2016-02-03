@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
+using Abp.Domain.Uow;
 using Abp.Notifications;
 using NSubstitute;
 using Xunit;
@@ -16,8 +17,9 @@ namespace Abp.Tests.Notifications
         {
             _store = Substitute.For<INotificationStore>();
             _backgroundJobManager = Substitute.For<IBackgroundJobManager>();
-            
             _publisher = new NotificationPublisher(_store, _backgroundJobManager);
+            _publisher.UnitOfWorkManager = Substitute.For<IUnitOfWorkManager>();
+            _publisher.UnitOfWorkManager.Current.Returns(Substitute.For<IActiveUnitOfWork>());
         }
 
         [Fact]
