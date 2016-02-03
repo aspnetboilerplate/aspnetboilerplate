@@ -95,7 +95,7 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
-    <Compile Include="Notifications\SimpleMessageNotificationData.cs" />
+    <Compile Include="Notifications\MessageNotificationData.cs" />
     <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
     <Compile Include="Domain\Entities\EntityIdentifier.cs" />

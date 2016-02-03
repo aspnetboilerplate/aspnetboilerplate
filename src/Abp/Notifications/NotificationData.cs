@@ -12,6 +12,15 @@ namespace Abp.Notifications
     public class NotificationData
     {
         /// <summary>
+        /// Gets notification data type name.
+        /// It returns the full class name by default.
+        /// </summary>
+        public virtual string Type
+        {
+            get { return GetType().FullName; }
+        }
+
+        /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.
         /// </summary>
         public object this[string key]

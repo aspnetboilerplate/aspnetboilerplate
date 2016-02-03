@@ -6,7 +6,7 @@ namespace Abp.Notifications
     /// Can be used to store a simple message as notification data.
     /// </summary>
     [Serializable]
-    public class SimpleMessageNotificationData : NotificationData
+    public class MessageNotificationData : NotificationData
     {
         /// <summary>
         /// The message.
@@ -16,12 +16,12 @@ namespace Abp.Notifications
         /// <summary>
         /// Needed for serialization.
         /// </summary>
-        private SimpleMessageNotificationData()
+        private MessageNotificationData()
         {
             
         }
 
-        public SimpleMessageNotificationData(string message)
+        public MessageNotificationData(string message)
         {
             Message = message;
         }

@@ -12,7 +12,7 @@ namespace Abp.Notifications
         /// <summary>
         /// The message.
         /// </summary>
-        public LocalizableString Message { get; set; }
+        public LocalizableString Message { get; private set; }
 
         /// <summary>
         /// Needed for serialization.
@@ -22,6 +22,10 @@ namespace Abp.Notifications
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizableMessageNotificationData"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public LocalizableMessageNotificationData(LocalizableString message)
         {
             Message = message;
