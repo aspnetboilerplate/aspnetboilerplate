@@ -162,6 +162,17 @@
         return parseInt(abp.setting.values[name]);
     };
 
+    /* REALTIME NOTIFICATIONS ************************************/
+
+    abp.notifications = abp.notifications || {};
+    abp.notifications.severities = {
+        INFO: 0,
+        SUCCESS: 1,
+        WARN: 2,
+        ERROR: 3,
+        FATAL: 4
+    };
+
     /* LOGGING ***************************************************/
     //Implements Logging API that provides secure & controlled usage of console.log
 
