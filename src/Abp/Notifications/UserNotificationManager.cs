@@ -25,10 +25,8 @@ namespace Abp.Notifications
         {
             var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(userId, skipCount, maxResultCount);
             return userNotifications
-                .Select(un => un.UserNotification.ToUserNotification(
-                    un.Notification.ToNotification()
-                    )
-                ).ToList();
+                .Select(un => un.ToUserNotification())
+                .ToList();
         }
 
         public async Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId)
@@ -39,9 +37,7 @@ namespace Abp.Notifications
                 return null;
             }
 
-            return userNotification.UserNotification.ToUserNotification(
-                userNotification.Notification.ToNotification()
-                );
+            return userNotification.ToUserNotification();
         }
 
         public Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state)
