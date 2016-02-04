@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Threading;
 
@@ -99,12 +100,23 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
+        /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        /// <returns></returns>
-        public static List<UserNotification> GetUserNotificationsAsync(this IUserNotificationManager userNotificationManager, long userId, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public static List<UserNotification> GetUserNotificationsAsync(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
-            return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationsAsync(userId, skipCount, maxResultCount));
+            return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationsAsync(userId, state, skipCount: skipCount, maxResultCount: maxResultCount));
+        }
+
+        /// <summary>
+        /// Gets user notification count.
+        /// </summary>
+        /// <param name="userNotificationManager">User notificaiton manager</param>
+        /// <param name="userId">The user id.</param>
+        /// <param name="state">State.</param>
+        public static int GetUserNotificationCount(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null)
+        {
+            return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationCountAsync(userId, state));
         }
 
         /// <summary>

@@ -165,12 +165,17 @@
     /* REALTIME NOTIFICATIONS ************************************/
 
     abp.notifications = abp.notifications || {};
-    abp.notifications.severities = {
+    abp.notifications.severity = {
         INFO: 0,
         SUCCESS: 1,
         WARN: 2,
         ERROR: 3,
         FATAL: 4
+    };
+
+    abp.notifications.userNotificationState = {
+        Unread: 0,
+        Read: 0
     };
 
     /* LOGGING ***************************************************/
