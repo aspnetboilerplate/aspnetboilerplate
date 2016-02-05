@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Threading;
+using Abp.Localization;
 
 namespace Abp.Authorization
 {
@@ -99,8 +100,7 @@ namespace Abp.Authorization
                     if (!(await permissionChecker.IsGrantedAsync(permissionName)))
                     {
                         throw new AbpAuthorizationException(
-                            "Required permissions are not granted. All of these permissions must be granted: " +
-                            String.Join(", ", permissionNames)
+                                LStr("AllOfThesePermissionsMustBeGranted") + String.Join(", ", permissionNames)
                             );
                     }
                 }
@@ -116,10 +116,14 @@ namespace Abp.Authorization
                 }
 
                 throw new AbpAuthorizationException(
-                    "Required permissions are not granted. At least one of these permissions must be granted: " +
-                    String.Join(", ", permissionNames)
+                            LStr("AtLeastOneOfThesePermissionsMustBeGranted") + String.Join(", ", permissionNames)
                     );
             }
+        }
+
+        private static string LStr(string name)
+        {
+            return new LocalizableString(name, AbpConsts.LocalizationSourceName).Localize();
         }
     }
 }

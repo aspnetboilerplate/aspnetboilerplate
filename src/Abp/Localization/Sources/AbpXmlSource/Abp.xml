@@ -11,5 +11,7 @@
     <text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
     <text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
     <text name="DefaultLanguage">Default language</text>
+    <text name="AlOfThesePermissionsMustBeGranted">Required permissions are not granted. All of these permissions must be granted: </text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: </text>
   </texts>
 </localizationDictionary>
