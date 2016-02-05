@@ -103,7 +103,7 @@ namespace Abp.Notifications
         /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        public static List<UserNotification> GetUserNotificationsAsync(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public static List<UserNotification> GetUserNotifications(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationsAsync(userId, state, skipCount: skipCount, maxResultCount: maxResultCount));
         }
@@ -124,7 +124,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        public static UserNotification GetUserNotificationAsync(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
+        public static UserNotification GetUserNotification(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
         {
             return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationAsync(userNotificationId));
         }
@@ -135,7 +135,7 @@ namespace Abp.Notifications
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userNotificationId">The user notification id.</param>
         /// <param name="state">New state.</param>
-        public static void UpdateUserNotificationStateAsync(this IUserNotificationManager userNotificationManager, Guid userNotificationId, UserNotificationState state)
+        public static void UpdateUserNotificationState(this IUserNotificationManager userNotificationManager, Guid userNotificationId, UserNotificationState state)
         {
             AsyncHelper.RunSync(() => userNotificationManager.UpdateUserNotificationStateAsync(userNotificationId, state));
         }
@@ -146,7 +146,7 @@ namespace Abp.Notifications
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
         /// <param name="state">New state.</param>
-        public static void UpdateAllUserNotificationStatesAsync(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState state)
+        public static void UpdateAllUserNotificationStates(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState state)
         {
             AsyncHelper.RunSync(() => userNotificationManager.UpdateAllUserNotificationStatesAsync(userId, state));
         }
@@ -156,7 +156,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        public static void DeleteUserNotificationAsync(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
+        public static void DeleteUserNotification(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
         {
             AsyncHelper.RunSync(() => userNotificationManager.DeleteUserNotificationAsync(userNotificationId));
         }
@@ -166,7 +166,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
-        public static void DeleteAllUserNotificationsAsync(this IUserNotificationManager userNotificationManager, long userId)
+        public static void DeleteAllUserNotifications(this IUserNotificationManager userNotificationManager, long userId)
         {
             AsyncHelper.RunSync(() => userNotificationManager.DeleteAllUserNotificationsAsync(userId));
         }
