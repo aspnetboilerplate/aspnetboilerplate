@@ -174,8 +174,8 @@
     };
 
     abp.notifications.userNotificationState = {
-        Unread: 0,
-        Read: 0
+        UNREAD: 0,
+        READ: 1
     };
 
     /* LOGGING ***************************************************/
