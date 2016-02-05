@@ -13,7 +13,14 @@ namespace Abp.Notifications
     public class NotificationInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
+        /// Indicated all tenant ids for <see cref="TenantIds"/> property.
+        /// Value: "0".
+        /// </summary>
+        public const string AllTenantIds = "0";
+
+        /// <summary>
         /// Maximum length of <see cref="NotificationName"/> property.
+        /// Value: 128.
         /// </summary>
         public const int MaxNotificationNameLength = 128;
 
@@ -104,7 +111,16 @@ namespace Abp.Notifications
         /// </summary>
         [MaxLength(MaxUserIdsLength)]
         public virtual string UserIds { get; set; }
-        
+
+        /// <summary>
+        /// Target tenants of the notification.
+        /// Used to send notification to subscribed users of specific tenant(s).
+        /// This is valid only if UserIds is null.
+        /// If it's "0", then indicates to all tenants.
+        /// </summary>
+        [MaxLength(MaxUserIdsLength)]
+        public virtual string TenantIds { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationInfo"/> class.
         /// </summary>
