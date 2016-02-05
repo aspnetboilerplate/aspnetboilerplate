@@ -10,6 +10,7 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Runtime.Security;
+using Abp.Threading;
 
 namespace Abp.Web
 {
@@ -34,6 +35,8 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
+            ThreadCultureSanitizer.Sanitize();
+
             AbpBootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             AbpBootstrapper.Initialize();
         }

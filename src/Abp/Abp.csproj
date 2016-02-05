@@ -124,6 +124,7 @@
     <Compile Include="RealTime\OnlineClient.cs" />
     <Compile Include="RealTime\OnlineClientManager.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
+    <Compile Include="Threading\ThreadCultureSanitizer.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
