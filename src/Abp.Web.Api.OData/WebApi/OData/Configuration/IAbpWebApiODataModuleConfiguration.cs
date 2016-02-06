@@ -10,6 +10,6 @@ namespace Abp.WebApi.OData.Configuration
         /// <summary>
         /// Gets ODataConventionModelBuilder.
         /// </summary>
-        ODataModelBuilder ODataModelBuilder { get; }
+        ODataConventionModelBuilder ODataModelBuilder { get; }
     }
 }
