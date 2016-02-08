@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Threading;
 
@@ -22,10 +21,11 @@ namespace Abp.Notifications
         /// <param name="notificationSubscriptionManager">Notification subscription manager</param>
         /// <param name="userId">The user id.</param>
         /// <param name="notificationName">Name of the notification.</param>
+        /// <param name="tenantId"></param>
         /// <param name="entityIdentifier">entity identifier</param>
-        public static void Subscribe(this INotificationSubscriptionManager notificationSubscriptionManager, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public static void Subscribe(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
-            AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeAsync(userId, notificationName, entityIdentifier));
+            AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeAsync(tenantId, userId, notificationName, entityIdentifier));
         }
 
         /// <summary>
@@ -49,6 +49,18 @@ namespace Abp.Notifications
         public static List<NotificationSubscription> GetSubscriptions(this INotificationSubscriptionManager notificationSubscriptionManager, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             return AsyncHelper.RunSync(() => notificationSubscriptionManager.GetSubscriptionsAsync(notificationName, entityIdentifier));
+        }
+
+        /// <summary>
+        /// Gets all subscribtions for given notification.
+        /// </summary>
+        /// <param name="notificationSubscriptionManager">Notification subscription manager</param>
+        /// <param name="tenantId">Tenant id. Null for the host.</param>
+        /// <param name="notificationName">Name of the notification.</param>
+        /// <param name="entityIdentifier">entity identifier</param>
+        public static List<NotificationSubscription> GetSubscriptions(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
+        {
+            return AsyncHelper.RunSync(() => notificationSubscriptionManager.GetSubscriptionsAsync(tenantId, notificationName, entityIdentifier));
         }
 
         /// <summary>

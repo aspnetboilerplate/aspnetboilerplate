@@ -11,8 +11,10 @@ namespace Abp.Notifications
     /// Used to store a notification subscription.
     /// </summary>
     [Table("AbpNotificationSubscriptions")]
-    public class NotificationSubscriptionInfo : CreationAuditedEntity<Guid>
+    public class NotificationSubscriptionInfo : CreationAuditedEntity<Guid>, IMayHaveTenant
     {
+        public virtual int? TenantId { get; set; }
+
         /// <summary>
         /// User Id.
         /// </summary>
@@ -54,8 +56,9 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
+            TenantId = tenantId;
             NotificationName = notificationName;
             UserId = userId;
             EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName;

@@ -56,6 +56,8 @@ namespace Abp.Web.SignalR.Hubs
         {
             await base.OnDisconnected(stopCalled);
 
+            Logger.Debug("A client is disconnected: " + Context.ConnectionId);
+
             try
             {
                 _onlineClientManager.Remove(Context.ConnectionId);

@@ -55,22 +55,21 @@ namespace Abp.Notifications
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
             long[] userIds = null,
-            int[] tenantIds = null)
+            int?[] tenantIds = null)
         {
             if (notificationName.IsNullOrEmpty())
             {
                 throw new ArgumentException("NotificationName can not be null or whitespace!", "notificationName");
             }
 
-            if (tenantIds.IsNullOrEmpty())
-            {
-                tenantIds = AbpSession.TenantId.HasValue
-                    ? new[] { AbpSession.TenantId.Value }
-                    : AllTenants;
-            }
-            else if (!userIds.IsNullOrEmpty())
+            if (!tenantIds.IsNullOrEmpty() && !userIds.IsNullOrEmpty())
             {
                 throw new ArgumentException("tenantIds can be set only userIds is not set!", "tenantIds");
+            }
+
+            if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty())
+            {
+                tenantIds = new[] {AbpSession.TenantId};
             }
 
             var notificationInfo = new NotificationInfo

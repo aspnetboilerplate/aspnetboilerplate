@@ -26,8 +26,7 @@ namespace Abp.Notifications
         /// Used to send notification to subscribed users of specific tenant(s).
         /// This should not be set if <see cref="userIds"/> is set.
         /// <see cref="NotificationPublisher.AllTenants"/> can be passed to indicate all tenants.
-        /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>
-        /// (If <see cref="IAbpSession.TenantId"/> is null, then it's set to <see cref="NotificationPublisher.AllTenants"/>).
+        /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>.
         /// </param>
         Task PublishAsync(
             string notificationName,
@@ -35,6 +34,6 @@ namespace Abp.Notifications
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
             long[] userIds = null,
-            int[] tenantIds = null);
+            int?[] tenantIds = null);
     }
 }

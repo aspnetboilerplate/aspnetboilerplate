@@ -39,6 +39,11 @@ namespace Abp.Notifications
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        {
+            return Task.FromResult(new List<NotificationSubscriptionInfo>());
+        }
+
         public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());

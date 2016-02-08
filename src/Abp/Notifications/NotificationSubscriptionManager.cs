@@ -22,10 +22,11 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public async Task SubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public async Task SubscribeAsync(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             await _store.InsertSubscriptionAsync(
                 new NotificationSubscriptionInfo(
+                    tenantId,
                     userId,
                     notificationName,
                     entityIdentifier
@@ -46,6 +47,20 @@ namespace Abp.Notifications
         public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(string notificationName, EntityIdentifier entityIdentifier = null)
         {
             var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
+                notificationName,
+                entityIdentifier == null ? null : entityIdentifier.Type.FullName,
+                entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()
+                );
+
+            return notificationSubscriptionInfos
+                .Select(nsi => nsi.ToNotificationSubscription())
+                .ToList();
+        }
+
+        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(int? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
+        {
+            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
+                new[] { tenantId },
                 notificationName,
                 entityIdentifier == null ? null : entityIdentifier.Type.FullName,
                 entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()

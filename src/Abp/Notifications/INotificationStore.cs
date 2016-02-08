@@ -40,6 +40,11 @@ namespace Abp.Notifications
         Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName, string entityId);
 
         /// <summary>
+        /// Gets subscriptions for a notification for specified tenant(s).
+        /// </summary>
+        Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId);
+
+        /// <summary>
         /// Gets subscriptions for a user.
         /// </summary>
         Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId);

@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Threading;
+using Castle.Core.Internal;
 
 namespace Abp.Notifications
 {
@@ -58,21 +59,7 @@ namespace Abp.Notifications
                 return;
             }
 
-            long[] userIds;
-            if (notificationInfo.UserIds.IsNullOrEmpty())
-            {
-                userIds = (await _notificationStore.GetSubscriptionsAsync(
-                    notificationInfo.NotificationName,
-                    notificationInfo.EntityTypeName,
-                    notificationInfo.EntityId
-                    ))
-                    .Select(s => s.UserId)
-                    .ToArray();
-            }
-            else
-            {
-                userIds = notificationInfo.UserIds.Split(",").Select(uidAsStr => Convert.ToInt64(uidAsStr)).ToArray();
-            }
+            var userIds = await GetUserIds(notificationInfo);
 
             var userNotificationInfos = userIds.Select(userId => new UserNotificationInfo(userId, notificationInfo.Id)).ToList();
 
@@ -87,6 +74,58 @@ namespace Abp.Notifications
             {
                 Logger.Warn(ex.ToString(), ex);
             }
+        }
+
+        [UnitOfWork]
+        protected virtual async Task<long[]> GetUserIds(NotificationInfo notificationInfo)
+        {
+            if (!notificationInfo.UserIds.IsNullOrEmpty())
+            {
+                return notificationInfo
+                    .UserIds
+                    .Split(",")
+                    .Select(uidAsStr => uidAsStr.To<long>())
+                    .ToArray();
+            }
+
+            var tenantIds = GetTenantIds(notificationInfo);
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                if (tenantIds.IsNullOrEmpty())
+                {
+                    return (await _notificationStore.GetSubscriptionsAsync(
+                        notificationInfo.NotificationName,
+                        notificationInfo.EntityTypeName,
+                        notificationInfo.EntityId
+                        )).Select(s => s.UserId)
+                        .ToArray();
+                }
+                else
+                {
+                    return (await _notificationStore.GetSubscriptionsAsync(
+                        tenantIds,
+                        notificationInfo.NotificationName,
+                        notificationInfo.EntityTypeName,
+                        notificationInfo.EntityId
+                        )).Select(s => s.UserId)
+                        .ToArray();
+                }
+            }
+        }
+
+        private static int?[] GetTenantIds(NotificationInfo notificationInfo)
+        {
+            if (notificationInfo.TenantIds.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            return notificationInfo
+                .TenantIds
+                .Split(",")
+                .Select(uidAsStr => uidAsStr == "null" ? (int?)null : (int?)uidAsStr.To<int>())
+                .ToArray();
         }
 
         [UnitOfWork]

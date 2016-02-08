@@ -61,6 +61,12 @@ namespace Abp.Notifications
         public const int MaxUserIdsLength = 128 * 1024;
 
         /// <summary>
+        /// Maximum lenght of <see cref="TenantIds"/> property.
+        /// Value: 131072 (128 KB).
+        /// </summary>
+        public const int MaxTenantIdsLength = 128 * 1024;
+
+        /// <summary>
         /// Unique notification name.
         /// </summary>
         [Required]
@@ -118,7 +124,7 @@ namespace Abp.Notifications
         /// This is valid only if UserIds is null.
         /// If it's "0", then indicates to all tenants.
         /// </summary>
-        [MaxLength(MaxUserIdsLength)]
+        [MaxLength(MaxTenantIdsLength)]
         public virtual string TenantIds { get; set; }
 
         /// <summary>
