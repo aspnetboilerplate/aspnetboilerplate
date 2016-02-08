@@ -15,7 +15,6 @@ namespace Abp.Application.Features
     {
         /// <summary>
         /// Gets/sets arbitrary objects related to this object.
-        /// These objects must be serializable.
         /// Gets null if given key does not exists.
         /// This is a shortcut for <see cref="Attributes"/> dictionary.
         /// </summary>

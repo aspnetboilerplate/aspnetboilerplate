@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -61,13 +62,19 @@ namespace Abp.Notifications
 
             var userIds = await GetUserIds(notificationInfo);
 
-            var userNotificationInfos = userIds.Select(userId => new UserNotificationInfo(userId, notificationInfo.Id)).ToList();
+            var userNotificationInfos = userIds
+                .Where(userId => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, userId))
+                .Select(userId => new UserNotificationInfo(userId, notificationInfo.Id))
+                .ToList();
 
             await SaveUserNotifications(userNotificationInfos);
 
             try
             {
-                var userNotifications = userNotificationInfos.Select(uni => uni.ToUserNotification(notification)).ToArray();
+                var userNotifications = userNotificationInfos
+                    .Select(uni => uni.ToUserNotification(notification))
+                    .ToArray();
+
                 await RealTimeNotifier.SendNotificationsAsync(userNotifications);
             }
             catch (Exception ex)

@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Authorization\PermissionDependencyContext.cs" />
+    <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
     <Compile Include="BackgroundJobs\BackgroundJob.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobManagerExtensions.cs" />
@@ -93,6 +95,18 @@
     <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Authorization\IPermissionDependency.cs" />
+    <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Authorization\SimplePermissionDependency.cs" />
+    <Compile Include="Notifications\NotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationProvider.cs" />
+    <Compile Include="Notifications\NotificationSettingNames.cs" />
+    <Compile Include="Notifications\NotificationSettingProvider.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />

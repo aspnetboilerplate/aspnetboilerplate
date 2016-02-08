@@ -42,7 +42,11 @@ namespace Abp.Authorization
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
-                CreateAuthorizationProvider(providerType).SetPermissions(this);
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
+                using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
+                {
+                    provider.Object.SetPermissions(this);                    
+                }
             }
 
             Permissions.AddAllPermissions();
@@ -80,16 +84,6 @@ namespace Abp.Authorization
                     (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
                     p.FeatureDependency.IsSatisfied(_featureDependencyContext)
                 ).ToImmutableList();
-        }
-        
-        private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
-        {
-            if (!_iocManager.IsRegistered(providerType))
-            {
-                _iocManager.Register(providerType);
-            }
-
-            return (AuthorizationProvider)_iocManager.Resolve(providerType);
         }
     }
 }
