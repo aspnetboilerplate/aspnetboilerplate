@@ -26,6 +26,11 @@ namespace Abp.Notifications
 
         public async Task SubscribeAsync(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
+            if (await IsSubscribedAsync(userId, notificationName, entityIdentifier))
+            {
+                return;
+            }
+
             await _store.InsertSubscriptionAsync(
                 new NotificationSubscriptionInfo(
                     tenantId,
