@@ -29,6 +29,18 @@ namespace Abp.Notifications
         }
 
         /// <summary>
+        /// Subscribes to all available notifications for given user.
+        /// It does not subscribe entity related notifications.
+        /// </summary>
+        /// <param name="notificationSubscriptionManager">Notification subscription manager</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        public static void SubscribeToAllAvailableNotifications(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, long userId)
+        {
+            AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(tenantId, userId));            
+        }
+
+        /// <summary>
         /// Unsubscribes from a notification.
         /// </summary>
         /// <param name="notificationSubscriptionManager">Notification subscription manager</param>

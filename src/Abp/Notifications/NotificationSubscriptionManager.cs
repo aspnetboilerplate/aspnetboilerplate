@@ -13,13 +13,15 @@ namespace Abp.Notifications
     public class NotificationSubscriptionManager : INotificationSubscriptionManager, ITransientDependency
     {
         private readonly INotificationStore _store;
+        private readonly INotificationDefinitionManager _notificationDefinitionManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionManager"/> class.
         /// </summary>
-        public NotificationSubscriptionManager(INotificationStore store)
+        public NotificationSubscriptionManager(INotificationStore store, INotificationDefinitionManager notificationDefinitionManager)
         {
             _store = store;
+            _notificationDefinitionManager = notificationDefinitionManager;
         }
 
         public async Task SubscribeAsync(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
@@ -32,6 +34,19 @@ namespace Abp.Notifications
                     entityIdentifier
                     )
                 );
+        }
+
+        public async Task SubscribeToAllAvailableNotificationsAsync(int? tenantId, long userId)
+        {
+            var notificationDefinitions = (await _notificationDefinitionManager
+                .GetAllAvailableAsync(tenantId, userId))
+                .Where(nd => nd.EntityType == null)
+                .ToList();
+
+            foreach (var notificationDefinition in notificationDefinitions)
+            {
+                await SubscribeAsync(tenantId, userId, notificationDefinition.Name);
+            }
         }
 
         public async Task UnsubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
