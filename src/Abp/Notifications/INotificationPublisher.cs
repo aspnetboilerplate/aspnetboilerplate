@@ -21,6 +21,11 @@ namespace Abp.Notifications
         /// Used to send notification to specific user(s). 
         /// If this is null/empty, the notification is sent to subscribed users.
         /// </param>
+        /// <param name="excludedUserIds">
+        /// Excluded user id(s).
+        /// This can be set to exclude some users while publishing notifications to subscribed users.
+        /// It's normally not set if <see cref="userIds"/> is set.
+        /// </param>
         /// <param name="tenantIds">
         /// Target tenant id(s).
         /// Used to send notification to subscribed users of specific tenant(s).
@@ -34,6 +39,7 @@ namespace Abp.Notifications
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
             long[] userIds = null,
+            long[] excludedUserIds = null,
             int?[] tenantIds = null);
     }
 }

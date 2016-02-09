@@ -119,6 +119,14 @@ namespace Abp.Notifications
         public virtual string UserIds { get; set; }
 
         /// <summary>
+        /// Excluded users.
+        /// This can be set to exclude some users while publishing notifications to subscribed users.
+        /// It's not normally used if <see cref="UserIds"/> is not null.
+        /// </summary>
+        [MaxLength(MaxUserIdsLength)]
+        public virtual string ExcludedUserIds { get; set; }
+
+        /// <summary>
         /// Target tenants of the notification.
         /// Used to send notification to subscribed users of specific tenant(s).
         /// This is valid only if UserIds is null.

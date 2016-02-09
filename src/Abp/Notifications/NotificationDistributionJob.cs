@@ -86,39 +86,62 @@ namespace Abp.Notifications
         [UnitOfWork]
         protected virtual async Task<long[]> GetUserIds(NotificationInfo notificationInfo)
         {
+            List<long> userIds;
+
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
-                return notificationInfo
+                //Directly get from UserIds
+                userIds = notificationInfo
                     .UserIds
                     .Split(",")
                     .Select(uidAsStr => uidAsStr.To<long>())
-                    .ToArray();
+                    .ToList();
             }
-
-            var tenantIds = GetTenantIds(notificationInfo);
-
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            else
             {
-                if (tenantIds.IsNullOrEmpty())
+                //Get subscribed users
+
+                var tenantIds = GetTenantIds(notificationInfo);
+
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    return (await _notificationStore.GetSubscriptionsAsync(
-                        notificationInfo.NotificationName,
-                        notificationInfo.EntityTypeName,
-                        notificationInfo.EntityId
-                        )).Select(s => s.UserId)
-                        .ToArray();
-                }
-                else
-                {
-                    return (await _notificationStore.GetSubscriptionsAsync(
-                        tenantIds,
-                        notificationInfo.NotificationName,
-                        notificationInfo.EntityTypeName,
-                        notificationInfo.EntityId
-                        )).Select(s => s.UserId)
-                        .ToArray();
+                    if (tenantIds.IsNullOrEmpty())
+                    {
+                        //Get all subscribed users of all tenants
+                        userIds = (await _notificationStore.GetSubscriptionsAsync(
+                            notificationInfo.NotificationName,
+                            notificationInfo.EntityTypeName,
+                            notificationInfo.EntityId
+                            )).Select(s => s.UserId)
+                            .ToList();
+                    }
+                    else
+                    {
+                        //Get all subscribed users of specified tenant(s)
+                        userIds = (await _notificationStore.GetSubscriptionsAsync(
+                            tenantIds,
+                            notificationInfo.NotificationName,
+                            notificationInfo.EntityTypeName,
+                            notificationInfo.EntityId
+                            )).Select(s => s.UserId)
+                            .ToList();
+                    }
                 }
             }
+
+            if (!notificationInfo.ExcludedUserIds.IsNullOrEmpty())
+            {
+                //Exclude specified users.
+                var excludedUserIds = notificationInfo
+                    .ExcludedUserIds
+                    .Split(",")
+                    .Select(uidAsStr => uidAsStr.To<long>())
+                    .ToList();
+
+                userIds.RemoveAll(uid => excludedUserIds.Contains(uid));
+            }
+
+            return userIds.ToArray();
         }
 
         private static int?[] GetTenantIds(NotificationInfo notificationInfo)

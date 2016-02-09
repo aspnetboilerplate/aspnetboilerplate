@@ -55,6 +55,7 @@ namespace Abp.Notifications
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
             long[] userIds = null,
+            long[] excludedUserIds = null,
             int?[] tenantIds = null)
         {
             if (notificationName.IsNullOrEmpty())
@@ -80,6 +81,7 @@ namespace Abp.Notifications
                 EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
                 Severity = severity,
                 UserIds = userIds.IsNullOrEmpty() ? null : userIds.JoinAsString(","),
+                ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.JoinAsString(","),
                 TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
                 Data = data == null ? null : data.ToJsonString(),
                 DataTypeName = data == null ? null : data.GetType().AssemblyQualifiedName
