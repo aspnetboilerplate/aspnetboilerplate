@@ -82,7 +82,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 case "guid":
                     return "string";
                 case "datetime":
-                    return "string";
+                    return "Date";
                 case "int16":
                 case "int32":
                 case "int64":
