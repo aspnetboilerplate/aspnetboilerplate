@@ -5,8 +5,6 @@
         return;
     }
 
-    //TODO: Check if ABP's SignalR hub is enabled..?
-
     abp.signalr = abp.signalr || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
     abp.signalr.hubs.common = $.connection.abpCommonHub;
@@ -20,9 +18,11 @@
         abp.event.trigger('abp.notifications.received', notification);
     };
 
-    //TODO: Check connection state and only connect if not connected?
     $.connection.hub.start().done(function () {
         abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
+        commonHub.server.register().done(function () {
+            abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+        });
     });
 
 })(jQuery);
