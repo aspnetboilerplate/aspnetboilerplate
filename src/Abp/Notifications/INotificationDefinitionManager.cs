@@ -31,6 +31,11 @@ namespace Abp.Notifications
         IReadOnlyList<NotificationDefinition> GetAll();
 
         /// <summary>
+        /// Checks if given notification (<see cref="name"/>) is available for given user and given tenant.
+        /// </summary>
+        Task<bool> IsAvailableAsync(string name, int? tenantId, long userId);
+
+        /// <summary>
         /// Gets all available notification definitions for given <see cref="tenantId"/> and <see cref="userId"/>.
         /// </summary>
         /// <param name="tenantId">Tenant id</param>

@@ -22,13 +22,17 @@ namespace Abp.Notifications
         /// </summary>
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
+        private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
-        public NotificationDistributionJob(INotificationStore notificationStore)
+        public NotificationDistributionJob(
+            INotificationDefinitionManager notificationDefinitionManager,
+            INotificationStore notificationStore)
         {
+            _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
@@ -63,7 +67,6 @@ namespace Abp.Notifications
             var userIds = await GetUserIds(notificationInfo);
 
             var userNotificationInfos = userIds
-                .Where(userId => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, userId))
                 .Select(userId => new UserNotificationInfo(userId, notificationInfo.Id))
                 .ToList();
 
@@ -95,6 +98,7 @@ namespace Abp.Notifications
                     .UserIds
                     .Split(",")
                     .Select(uidAsStr => uidAsStr.To<long>())
+                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, uid))
                     .ToList();
             }
             else
@@ -103,30 +107,49 @@ namespace Abp.Notifications
 
                 var tenantIds = GetTenantIds(notificationInfo);
 
+                List<NotificationSubscriptionInfo> subscriptions;
+
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
                     if (tenantIds.IsNullOrEmpty())
                     {
                         //Get all subscribed users of all tenants
-                        userIds = (await _notificationStore.GetSubscriptionsAsync(
+                        subscriptions = await _notificationStore.GetSubscriptionsAsync(
                             notificationInfo.NotificationName,
                             notificationInfo.EntityTypeName,
                             notificationInfo.EntityId
-                            )).Select(s => s.UserId)
-                            .ToList();
+                            );
                     }
                     else
                     {
                         //Get all subscribed users of specified tenant(s)
-                        userIds = (await _notificationStore.GetSubscriptionsAsync(
+                        subscriptions = await _notificationStore.GetSubscriptionsAsync(
                             tenantIds,
                             notificationInfo.NotificationName,
                             notificationInfo.EntityTypeName,
                             notificationInfo.EntityId
-                            )).Select(s => s.UserId)
-                            .ToList();
+                            );
                     }
+
+                    //Remove invalid subscriptions
+                    var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
+
+                    foreach (var subscription in subscriptions)
+                    {
+                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, subscription.TenantId, subscription.UserId) ||
+                            !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
+                        {
+                            invalidSubscriptions[subscription.Id] = subscription;
+                        }
+                    }
+
+                    subscriptions.RemoveAll(s => invalidSubscriptions.ContainsKey(s.Id));
                 }
+
+                //Get user ids
+                userIds = subscriptions
+                    .Select(s => s.UserId)
+                    .ToList();
             }
 
             if (!notificationInfo.ExcludedUserIds.IsNullOrEmpty())

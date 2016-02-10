@@ -107,7 +107,7 @@ namespace Abp.BackgroundJobs
         /// Returns null if it will not wait anymore and job should be abandoned.
         /// </summary>
         /// <returns></returns>
-        internal virtual DateTime? CalculateNextTryTime()
+        protected internal virtual DateTime? CalculateNextTryTime()
         {
             var nextWaitDuration = DefaultFirstWaitDuration * (Math.Pow(DefaultWaitFactor, TryCount - 1));
             var nextTryDate = LastTryTime.HasValue

@@ -73,6 +73,39 @@ namespace Abp.Notifications
             return _notificationDefinitions.Values.ToImmutableList();
         }
 
+        public async Task<bool> IsAvailableAsync(string name, int? tenantId, long userId)
+        {
+            var notificationDefinition = Get(name);
+
+            if (notificationDefinition.FeatureDependency != null)
+            {
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                {
+                    featureDependencyContext.Object.TenantId = tenantId;
+
+                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (notificationDefinition.PermissionDependency != null)
+            {
+                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+                {
+                    permissionDependencyContext.Object.UserId = userId;
+
+                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(int? tenantId, long userId)
         {
             var availableDefinitions = new List<NotificationDefinition>();

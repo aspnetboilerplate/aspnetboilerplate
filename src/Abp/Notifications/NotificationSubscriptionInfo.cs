@@ -37,7 +37,7 @@ namespace Abp.Notifications
         /// AssemblyQualifiedName of the entity type.
         /// </summary>
         [MaxLength(NotificationInfo.MaxEntityTypeAssemblyQualifiedNameLength)]
-        public string EntityTypeAssemblyQualifiedName { get; set; }
+        public virtual string EntityTypeAssemblyQualifiedName { get; set; }
 
         /// <summary>
         /// Gets/sets primary key of the entity, if this is an entity level notification.
