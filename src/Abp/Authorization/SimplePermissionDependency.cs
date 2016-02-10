@@ -46,7 +46,9 @@ namespace Abp.Authorization
         /// <inheritdoc/>
         public Task<bool> IsSatisfiedAsync(IPermissionDependencyContext context)
         {
-            return context.PermissionChecker.IsGrantedAsync(RequiresAll, Permissions);
+            return context.UserId.HasValue
+                ? context.PermissionChecker.IsGrantedAsync(context.UserId.Value, RequiresAll, Permissions)
+                : context.PermissionChecker.IsGrantedAsync(RequiresAll, Permissions);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Abp.Application.Features;
@@ -20,20 +19,16 @@ namespace Abp.Authorization
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
-        private readonly FeatureDependencyContext _featureDependencyContext;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public PermissionManager(
-            IIocManager iocManager, 
-            IAuthorizationConfiguration authorizationConfiguration,
-            FeatureDependencyContext featureDependencyContext
-            )
+            IIocManager iocManager,
+            IAuthorizationConfiguration authorizationConfiguration)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
-            _featureDependencyContext = featureDependencyContext;
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -45,7 +40,7 @@ namespace Abp.Authorization
                 _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
                 using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
                 {
-                    provider.Object.SetPermissions(this);                    
+                    provider.Object.SetPermissions(this);
                 }
             }
 
@@ -65,25 +60,34 @@ namespace Abp.Authorization
 
         public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
-            return Permissions.Values
-                .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
-                .Where(p =>
-                    p.FeatureDependency == null ||
-                    AbpSession.MultiTenancySide == MultiTenancySides.Host ||
-                    p.FeatureDependency.IsSatisfied(_featureDependencyContext)
-                ).ToImmutableList();
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+            {
+                var featureDependencyContextObject = featureDependencyContext.Object;
+                return Permissions.Values
+                    .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+                    .Where(p =>
+                        p.FeatureDependency == null ||
+                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
+                    ).ToImmutableList();
+            }
         }
 
         public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
-            return Permissions.Values
-                .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
-                .Where(p =>
-                    p.FeatureDependency == null ||
-                    AbpSession.MultiTenancySide == MultiTenancySides.Host ||
-                    (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
-                    p.FeatureDependency.IsSatisfied(_featureDependencyContext)
-                ).ToImmutableList();
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+            {
+                var featureDependencyContextObject = featureDependencyContext.Object;
+                return Permissions.Values
+                    .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
+                    .Where(p =>
+                        p.FeatureDependency == null ||
+                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
+                         multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
+                        p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
+                    ).ToImmutableList();
+            }
         }
     }
 }
