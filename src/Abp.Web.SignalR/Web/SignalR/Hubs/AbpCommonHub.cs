@@ -36,6 +36,11 @@ namespace Abp.Web.SignalR.Hubs
             AbpSession = NullAbpSession.Instance;
         }
 
+        public void Register()
+        {
+            Logger.Debug("A client is registered: " + Context.ConnectionId);
+        }
+
         public async override Task OnConnected()
         {
             await base.OnConnected();
