@@ -34,16 +34,19 @@ namespace Abp.Notifications
 
         private readonly INotificationStore _store;
         private readonly IBackgroundJobManager _backgroundJobManager;
+        private readonly INotificationDistributer _notificationDistributer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPublisher"/> class.
         /// </summary>
         public NotificationPublisher(
             INotificationStore store,
-            IBackgroundJobManager backgroundJobManager)
+            IBackgroundJobManager backgroundJobManager,
+            INotificationDistributer notificationDistributer)
         {
             _store = store;
             _backgroundJobManager = backgroundJobManager;
+            _notificationDistributer = notificationDistributer;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -91,11 +94,20 @@ namespace Abp.Notifications
 
             await CurrentUnitOfWork.SaveChangesAsync(); //To get Id of the notification
 
-            await _backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
-                new NotificationDistributionJobArgs(
-                    notificationInfo.Id
-                    )
-                );
+            if (userIds != null && userIds.Length <= 5)
+            {
+                //We can directly distribute the notification since there are not much receivers
+                await _notificationDistributer.DistributeAsync(notificationInfo.Id);
+            }
+            else
+            {
+                //We enqueue a background job since distributing may get a long time
+                await _backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
+                    new NotificationDistributionJobArgs(
+                        notificationInfo.Id
+                        )
+                    );
+            }
         }
     }
 }

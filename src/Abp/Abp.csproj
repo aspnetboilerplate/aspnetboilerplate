@@ -99,11 +99,13 @@
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\INotificationDistributer.cs" />
     <Compile Include="Notifications\NotificationDefinition.cs" />
     <Compile Include="Authorization\SimplePermissionDependency.cs" />
     <Compile Include="Notifications\NotificationDefinitionContext.cs" />
     <Compile Include="Notifications\NotificationDefinitionManager.cs" />
     <Compile Include="Notifications\NotificationDefinitionManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationDistributer.cs" />
     <Compile Include="Notifications\NotificationProvider.cs" />
     <Compile Include="Notifications\NotificationSettingNames.cs" />
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
