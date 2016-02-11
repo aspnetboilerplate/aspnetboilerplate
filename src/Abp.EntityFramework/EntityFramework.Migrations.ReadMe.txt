@@ -1,0 +1,8 @@
+-----------------------------------------------------
+  EntityFramework.Migrations PACKAGE IS OBSOLETE    
+-----------------------------------------------------
+
+
+Code First Migrations is now included in the EntityFramework package.
+
+http://blogs.msdn.com/adonet/archive/2012/01/12/ef-4-3-beta-1-released.aspx
