@@ -235,19 +235,19 @@
 
     abp.notify = abp.notify || {};
 
-    abp.notify.success = function (message, title) {
+    abp.notify.success = function (message, title, options) {
         abp.log.warn('abp.notify.success is not implemented!');
     };
 
-    abp.notify.info = function (message, title) {
+    abp.notify.info = function (message, title, options) {
         abp.log.warn('abp.notify.info is not implemented!');
     };
 
-    abp.notify.warn = function (message, title) {
+    abp.notify.warn = function (message, title, options) {
         abp.log.warn('abp.notify.warn is not implemented!');
     };
 
-    abp.notify.error = function (message, title) {
+    abp.notify.error = function (message, title, options) {
         abp.log.warn('abp.notify.error is not implemented!');
     };
 
