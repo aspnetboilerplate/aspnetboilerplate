@@ -102,30 +102,31 @@ namespace Abp.Notifications
 
                 List<NotificationSubscriptionInfo> subscriptions;
 
+                if (tenantIds.IsNullOrEmpty())
+                {
+                    //Get all subscribed users of all tenants
+                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
+                        notificationInfo.NotificationName,
+                        notificationInfo.EntityTypeName,
+                        notificationInfo.EntityId
+                        );
+                }
+                else
+                {
+                    //Get all subscribed users of specified tenant(s)
+                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
+                        tenantIds,
+                        notificationInfo.NotificationName,
+                        notificationInfo.EntityTypeName,
+                        notificationInfo.EntityId
+                        );
+                }
+
+                //Remove invalid subscriptions
+                var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
+
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    if (tenantIds.IsNullOrEmpty())
-                    {
-                        //Get all subscribed users of all tenants
-                        subscriptions = await _notificationStore.GetSubscriptionsAsync(
-                            notificationInfo.NotificationName,
-                            notificationInfo.EntityTypeName,
-                            notificationInfo.EntityId
-                            );
-                    }
-                    else
-                    {
-                        //Get all subscribed users of specified tenant(s)
-                        subscriptions = await _notificationStore.GetSubscriptionsAsync(
-                            tenantIds,
-                            notificationInfo.NotificationName,
-                            notificationInfo.EntityTypeName,
-                            notificationInfo.EntityId
-                            );
-                    }
-
-                    //Remove invalid subscriptions
-                    var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
                     foreach (var subscription in subscriptions)
                     {
@@ -135,9 +136,9 @@ namespace Abp.Notifications
                             invalidSubscriptions[subscription.Id] = subscription;
                         }
                     }
-
-                    subscriptions.RemoveAll(s => invalidSubscriptions.ContainsKey(s.Id));
                 }
+
+                subscriptions.RemoveAll(s => invalidSubscriptions.ContainsKey(s.Id));
 
                 //Get user ids
                 userIds = subscriptions

@@ -11,8 +11,13 @@ namespace Abp.Notifications
     /// Used to store a notification subscription.
     /// </summary>
     [Table("AbpNotificationSubscriptions")]
-    public class NotificationSubscriptionInfo : CreationAuditedEntity<Guid>, IMayHaveTenant
+    public class NotificationSubscriptionInfo : CreationAuditedEntity<Guid>
     {
+        /// <summary>
+        /// Tenant id of the subscribed user.
+        /// Note: This class does not implement <see cref="IMayHaveTenant"/> filter.
+        /// So, it should be manually filtered if needed.
+        /// </summary>
         public virtual int? TenantId { get; set; }
 
         /// <summary>
