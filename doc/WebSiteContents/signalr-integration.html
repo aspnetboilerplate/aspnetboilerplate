@@ -13,7 +13,7 @@
 
 <h3>Introduction</h3>
 	<p>&nbsp;<a href="http://www.nuget.org/packages/Abp.Web.SignalR" target="_blank">Abp.Web.SignalR</a> 
-	nuget package makes it easily to use SignalR in ASP.NET Boilerplate based 
+	nuget package makes it easily to use <strong>SignalR</strong> in ASP.NET Boilerplate based 
 	applications. See
 	<a href="http://www.asp.net/signalr" target="_blank">SignalR documentation</a> 
 	for detailed information on SignalR.</p>
@@ -86,11 +86,11 @@ namespace MyProject.Web
 	<h4>Online Clients</h4>
 	<p>ASP.NET Boilerplate provides <strong>IOnlineClientManager</strong> to get 
 	information about 
-	online users (just inject IOnlineClientManager and use GetByUserIdOrNull, GetAllClients, 
+	online users (inject IOnlineClientManager and use GetByUserIdOrNull, GetAllClients, 
 	IsOnline 
 	methods for example). IOnlineClientManager needs a communication 
 	infrastructure to properly work. <strong>Abp.Web.SignalR</strong> 
-	package provides the infrastructure. So, you can IOnlineClientManager in any 
+	package provides the infrastructure. So, you can inject and use IOnlineClientManager in any 
 	layer of your application if SignalR is installed.</p>
 	<h3>Your SignalR Code</h3>
 	<p><strong>Abp.Web.SignalR</strong> package also simplifies your SignalR 
@@ -126,27 +126,30 @@ namespace MyProject.Web
 }</pre>
 	<p>We implemented <strong>ITransientDependency</strong> to simply register 
 	our hub to <a href="/Pages/Documents/Dependency-Injection">dependency 
-	injection</a> system. We
+	injection</a> system (you can make it singleton based on your needs). We
 	<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">
 	property-injected</a> the <a href="/Pages/Documents/Abp-Session">session</a> 
 	and <a href="/Pages/Documents/Logging">logger</a>.</p>
 	<p><strong>SendMessage</strong> is a method of our hub that can be used by 
 	clients. We call <strong>getMessage</strong> function of <strong>all</strong> 
-	clients in this method. We can use AbpSession to get current user id (if 
-	user logged in) as you see. We also overrided OnConnected and 
-	OnDisconnected, which is just for logging and not needed here actually.</p>
+	clients in this method. We can use <a href="/Pages/Documents/Abp-Session">AbpSession</a> to get current user id (if 
+	user logged in) as you see. We also overrided <strong>OnConnected</strong> and 
+	<strong>OnDisconnected</strong>, which is just for demonstration and not needed here actually.</p>
 	<p>Here, the <strong>client side</strong> javascript code to send/receive 
 	messages using our hub.</p>
-	<pre lang="js">var chatHub = $.connection.myChatHub; //get a reference to the hub
+	<pre lang="js">var chatHub = <strong>$.connection.myChatHub</strong>; //get a reference to the hub
 
-chatHub.client.getMessage = function (message) { //register for incoming messages
+<strong>chatHub.client.getMessage</strong> = function (message) { //register for incoming messages
     console.log(&#39;received message: &#39; + message);
 };
 
 abp.event.on(&#39;abp.signalr.connected&#39;, function() { //register for connect event
-    chatHub.server.sendMessage(&#39;Hi everybody, I\&#39;m connected to the chat!&#39;); //send a message to the server
+    <strong>chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!");</strong> //send a message to the server
 });</pre>
-	<p>Then we can use chatHub anytime we need to send message to the server.</p>
+	<p>Then we can use <strong>chatHub</strong> anytime we need to send message to the server. 
+	See
+	<a href="http://www.asp.net/signalr" target="_blank">SignalR documentation</a> 
+	for detailed information on SignalR.</p>
 
 </div>
 
