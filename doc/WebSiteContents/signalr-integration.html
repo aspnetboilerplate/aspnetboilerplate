@@ -92,6 +92,61 @@ namespace MyProject.Web
 	infrastructure to properly work. <strong>Abp.Web.SignalR</strong> 
 	package provides the infrastructure. So, you can IOnlineClientManager in any 
 	layer of your application if SignalR is installed.</p>
+	<h3>Your SignalR Code</h3>
+	<p><strong>Abp.Web.SignalR</strong> package also simplifies your SignalR 
+	code. Assume that we want to add a Hub to our application:</p>
+	<pre lang="cs">public class MyChatHub : Hub, <strong>ITransientDependency</strong>
+{
+    public IAbpSession AbpSession { get; set; }
+
+    public ILogger Logger { get; set; }
+
+    public MyChatHub()
+    {
+        AbpSession = NullAbpSession.Instance;
+        Logger = NullLogger.Instance;
+    }
+
+<strong>    public void SendMessage(string message)
+    {
+        Clients.All.getMessage(string.Format(&quot;User {0}: {1}&quot;, AbpSession.UserId, message));
+    }</strong>
+
+    public async override Task OnConnected()
+    {
+        await base.OnConnected();
+        Logger.Debug(&quot;A client connected to MyChatHub: &quot; + Context.ConnectionId);
+    }
+
+    public async override Task OnDisconnected(bool stopCalled)
+    {
+        await base.OnDisconnected(stopCalled);
+        Logger.Debug(&quot;A client disconnected from MyChatHub: &quot; + Context.ConnectionId);
+    }
+}</pre>
+	<p>We implemented <strong>ITransientDependency</strong> to simply register 
+	our hub to <a href="/Pages/Documents/Dependency-Injection">dependency 
+	injection</a> system. We
+	<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">
+	property-injected</a> the <a href="/Pages/Documents/Abp-Session">session</a> 
+	and <a href="/Pages/Documents/Logging">logger</a>.</p>
+	<p><strong>SendMessage</strong> is a method of our hub that can be used by 
+	clients. We call <strong>getMessage</strong> function of <strong>all</strong> 
+	clients in this method. We can use AbpSession to get current user id (if 
+	user logged in) as you see. We also overrided OnConnected and 
+	OnDisconnected, which is just for logging and not needed here actually.</p>
+	<p>Here, the <strong>client side</strong> javascript code to send/receive 
+	messages using our hub.</p>
+	<pre lang="js">var chatHub = $.connection.myChatHub; //get a reference to the hub
+
+chatHub.client.getMessage = function (message) { //register for incoming messages
+    console.log(&#39;received message: &#39; + message);
+};
+
+abp.event.on(&#39;abp.signalr.connected&#39;, function() { //register for connect event
+    chatHub.server.sendMessage(&#39;Hi everybody, I\&#39;m connected to the chat!&#39;); //send a message to the server
+});</pre>
+	<p>Then we can use chatHub anytime we need to send message to the server.</p>
 
 </div>
 
