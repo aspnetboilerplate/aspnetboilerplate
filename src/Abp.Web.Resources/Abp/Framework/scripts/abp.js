@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function () {
+(function ($) {
 
     /* Application paths *****************************************/
 
@@ -207,39 +207,49 @@
         }
     };
 
-    abp.notifications.messageFormatters = [];
+    abp.notifications.messageFormatters = {};
 
-    abp.notifications.messageFormatters.push({
-        type: 'Abp.Notifications.MessageNotificationData',
-        format: function (userNotification) {
-            return userNotification.notification.data.message;
-        }
-    });
+    abp.notifications.messageFormatters['Abp.Notifications.MessageNotificationData'] = function (userNotification) {
+        return userNotification.notification.data.message;
+    };
 
-    abp.notifications.messageFormatters.push({
-        type: 'Abp.Notifications.LocalizableMessageNotificationData',
-        format: function (userNotification) {
-            var localizedMessage = abp.localization.localize(
-                userNotification.notification.data.message.name,
-                userNotification.notification.data.message.sourceName
-            );
+    abp.notifications.messageFormatters['Abp.Notifications.LocalizableMessageNotificationData'] = function (userNotification) {
+        var localizedMessage = abp.localization.localize(
+            userNotification.notification.data.message.name,
+            userNotification.notification.data.message.sourceName
+        );
 
-            $.each(userNotification.notification.data.properties, function (key, value) {
-                localizedMessage = localizedMessage.replace('{' + key + '}', value);
-            });
-        }
-    });
-
-    abp.notifications.getFormattedMessageFromUserNotification = function (userNotification) {
-        for (var i = 0; i < abp.notifications.messageFormatters.length; i++) {
-            var formatter = abp.notifications.messageFormatters[i];
-            if (formatter.type === userNotification.notification.data.type) {
-                return formatter.format(userNotification);
+        //TODO: Do not use $ if possible!
+        if (userNotification.notification.data.properties) {
+            if ($) {
+                $.each(userNotification.notification.data.properties, function (key, value) {
+                    localizedMessage = localizedMessage.replace('{' + key + '}', value);
+                });
+            } else {
+                //alternative for $.each
+                var properties = Object.keys(userNotification.notification.data.properties);
+                for (var i = 0; i < properties.length; i++) {
+                    localizedMessage = localizedMessage.replace('{' + properties[i] + '}', userNotification.notification.data.properties[properties[i]]);
+                }
             }
         }
 
-        abp.log.warn('No message formatted defined for given data type: ' + userNotification.notification.data.type)
-        return '?';
+        return localizedMessage;
+    };
+
+    abp.notifications.getFormattedMessageFromUserNotification = function (userNotification) {
+        var formatter = abp.notifications.messageFormatters[userNotification.notification.data.type];
+        if (!formatter) {
+            abp.log.warn('No message formatter defined for given data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        if (!abp.utils.isFunction(formatter)) {
+            abp.log.warn('Message formatter should be a function! It is invalid for data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        return formatter(userNotification);
     }
 
     /* LOGGING ***************************************************/
@@ -544,4 +554,13 @@
         return str.substr(0, maxLength - postfix.length) + postfix;
     };
 
-})();
+    abp.utils.isFunction = function (obj) {
+        if ($) {
+            return $.isFunction(obj);
+        }
+
+        //alternative for $.isFunction
+        return !!(obj && obj.constructor && obj.call && obj.apply);
+    };
+
+})(jQuery);
