@@ -219,9 +219,9 @@
             userNotification.notification.data.message.sourceName
         );
 
-        //TODO: Do not use $ if possible!
         if (userNotification.notification.data.properties) {
             if ($) {
+                //Prefer to use jQuery if possible
                 $.each(userNotification.notification.data.properties, function (key, value) {
                     localizedMessage = localizedMessage.replace('{' + key + '}', value);
                 });
@@ -556,6 +556,7 @@
 
     abp.utils.isFunction = function (obj) {
         if ($) {
+            //Prefer to use jQuery if possible
             return $.isFunction(obj);
         }
 
