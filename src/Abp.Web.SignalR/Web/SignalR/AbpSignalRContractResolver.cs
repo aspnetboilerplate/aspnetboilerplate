@@ -16,10 +16,18 @@ namespace Abp.Web.SignalR
         /// It contains only the SignalR's own assembly.
         /// If you don't want that your assembly's types are automatically camel cased while sending to the client, then add it to this list.
         /// </summary>
-        public List<Assembly> IgnoredAssemblies { get; private set; }
+        public static List<Assembly> IgnoredAssemblies { get; private set; }
 
         private readonly IContractResolver _camelCaseContractResolver;
         private readonly IContractResolver _defaultContractSerializer;
+
+        static AbpSignalRContractResolver()
+        {
+            IgnoredAssemblies = new List<Assembly>
+            {
+                typeof (Connection).Assembly
+            };
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpSignalRContractResolver"/> class.
@@ -28,11 +36,6 @@ namespace Abp.Web.SignalR
         {
             _defaultContractSerializer = new DefaultContractResolver();
             _camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
-
-            IgnoredAssemblies = new List<Assembly>
-            {
-                typeof (Connection).Assembly
-            };
         }
 
         public JsonContract ResolveContract(Type type)
