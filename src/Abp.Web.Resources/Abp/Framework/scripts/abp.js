@@ -123,8 +123,8 @@
     abp.features = abp.features || {};
 
     abp.features.allFeatures = abp.features.allFeatures || {};
-    
-    abp.features.get = function(name) {
+
+    abp.features.get = function (name) {
         return abp.features.allFeatures[name];
     }
 
@@ -136,7 +136,7 @@
 
         return feature.value;
     }
-    
+
     abp.features.isEnabled = function (name) {
         var value = abp.features.getValue(name);
         return value == 'true' || value == 'True';
@@ -165,6 +165,7 @@
     /* REALTIME NOTIFICATIONS ************************************/
 
     abp.notifications = abp.notifications || {};
+
     abp.notifications.severity = {
         INFO: 0,
         SUCCESS: 1,
@@ -177,6 +178,69 @@
         UNREAD: 0,
         READ: 1
     };
+
+    abp.notifications.getUserNotificationStateAsString = function (userNotificationState) {
+        switch (userNotificationState) {
+            case abp.notifications.userNotificationState.READ:
+                return 'READ';
+            case abp.notifications.userNotificationState.UNREAD:
+                return 'UNREAD';
+            default:
+                abp.log.warn('Unknown user notification state value: ' + userNotificationState)
+                return '?';
+        }
+    };
+
+    abp.notifications.getUiNotifyFuncBySeverity = function (severity) {
+        switch (severity) {
+            case abp.notifications.severity.SUCCESS:
+                return abp.notify.success;
+            case abp.notifications.severity.WARN:
+                return abp.notify.warn;
+            case abp.notifications.severity.ERROR:
+                return abp.notify.error;
+            case abp.notifications.severity.FATAL:
+                return abp.notify.error;
+            case abp.notifications.severity.INFO:
+            default:
+                return abp.notify.info;
+        }
+    };
+
+    abp.notifications.messageFormatters = [];
+
+    abp.notifications.messageFormatters.push({
+        type: 'Abp.Notifications.MessageNotificationData',
+        format: function (userNotification) {
+            return userNotification.notification.data.message;
+        }
+    });
+
+    abp.notifications.messageFormatters.push({
+        type: 'Abp.Notifications.LocalizableMessageNotificationData',
+        format: function (userNotification) {
+            var localizedMessage = abp.localization.localize(
+                userNotification.notification.data.message.name,
+                userNotification.notification.data.message.sourceName
+            );
+
+            $.each(userNotification.notification.data.properties, function (key, value) {
+                localizedMessage = localizedMessage.replace('{' + key + '}', value);
+            });
+        }
+    });
+
+    abp.notifications.getFormattedMessageFromUserNotification = function (userNotification) {
+        for (var i = 0; i < abp.notifications.messageFormatters.length; i++) {
+            var formatter = abp.notifications.messageFormatters[i];
+            if (formatter.type === userNotification.notification.data.type) {
+                return formatter.format(userNotification);
+            }
+        }
+
+        abp.log.warn('No message formatted defined for given data type: ' + userNotification.notification.data.type)
+        return '?';
+    }
 
     /* LOGGING ***************************************************/
     //Implements Logging API that provides secure & controlled usage of console.log
@@ -337,11 +401,11 @@
 
     /* SIMPLE EVENT BUS *****************************************/
 
-    abp.event = (function() {
+    abp.event = (function () {
 
         var _callbacks = {};
 
-        var on = function(eventName, callback) {
+        var on = function (eventName, callback) {
             if (!_callbacks[eventName]) {
                 _callbacks[eventName] = [];
             }
@@ -370,7 +434,7 @@
             _callbacks[eventName].splice(index, 1);
         };
 
-        var trigger = function(eventName) {
+        var trigger = function (eventName) {
             var callbacks = _callbacks[eventName];
             if (!callbacks || !callbacks.length) {
                 return;
@@ -457,5 +521,27 @@
 
         return str.charAt(0).toLowerCase() + str.substr(1);
     }
+
+    abp.utils.truncateString = function (str, maxLength) {
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        return str.substr(0, maxLength);
+    };
+
+    abp.utils.truncateStringWithPostfix = function (str, maxLength, postfix) {
+        postfix = postfix || '...';
+
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        if (maxLength <= postfix.length) {
+            return postfix.substr(0, maxLength);
+        }
+
+        return str.substr(0, maxLength - postfix.length) + postfix;
+    };
 
 })();
