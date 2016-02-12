@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
@@ -21,6 +22,22 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var person = UsingDbContext(context => context.People.Single(p => p.Name == "halil"));
             _personRepository.Delete(person);
             UsingDbContext(context => context.People.FirstOrDefault(p => p.Name == "halil")).IsDeleted.ShouldBe(true);
+        }
+
+        [Fact]
+        public void Test_Update()
+        {
+            var personInitial = UsingDbContext(context => context.People.Single(p => p.Name == "halil"));
+
+            _personRepository.Update(new Person
+            {
+                Id = personInitial.Id,
+                Name = "halil-updated",
+                ContactListId = personInitial.ContactListId
+            });
+
+            var personFinal = UsingDbContext(context => context.People.Single(p => p.Id == personInitial.Id));
+            personFinal.Name.ShouldBe("halil-updated");
         }
     }
 }
