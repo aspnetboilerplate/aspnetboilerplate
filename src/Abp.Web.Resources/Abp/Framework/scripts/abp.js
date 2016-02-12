@@ -252,6 +252,12 @@
         return formatter(userNotification);
     }
 
+    abp.notifications.showUiNotifyForUserNotification = function (userNotification, options) {
+        var message = abp.notifications.getFormattedMessageFromUserNotification(userNotification);
+        var uiNotifyFunc = abp.notifications.getUiNotifyFuncBySeverity(userNotification.notification.severity);
+        uiNotifyFunc(message, undefined, options);
+    }
+
     /* LOGGING ***************************************************/
     //Implements Logging API that provides secure & controlled usage of console.log
 
