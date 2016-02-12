@@ -92,6 +92,16 @@ namespace MyProject.Web
 	infrastructure to properly work. <strong>Abp.Web.SignalR</strong> 
 	package provides the infrastructure. So, you can inject and use IOnlineClientManager in any 
 	layer of your application if SignalR is installed.</p>
+	<h4>PascalCase vs. camelCase</h4>
+	<p>Abp.Web.SignalR package overrides SignalR's default <strong>
+	ContractResolver</strong> to use <strong>
+	CamelCasePropertyNamesContractResolver</strong> on serialization. Thus, we 
+	can have classes have <strong>PascalCase</strong> properties on the server 
+	and use them as <strong>camelCase</strong> on the client for 
+	sending/receiving objects (because camelCase is preferred notation in 
+	javascript). If you want to ignore this for your classes in some assemblies, 
+	then you can add those assemblies to 
+	AbpSignalRContractResolver.IgnoredAssemblies list.</p>
 	<h3>Your SignalR Code</h3>
 	<p><strong>Abp.Web.SignalR</strong> package also simplifies your SignalR 
 	code. Assume that we want to add a Hub to our application:</p>
