@@ -189,7 +189,7 @@ public class SentFrendshipRequestNotificationData : <strong>NotificationData</st
 	<a href="/Pages/Documents/Background-Jobs-And-Workers"><strong>background 
 	job</strong></a>. So, notifications may be sent with a small delay.</p>
 	<h4>Client Side</h4>
-	<p>ASP.NET Boilerplate triggers a <strong>global event</strong> in the client side. 
+	<p>When a real time notification is received, ASP.NET Boilerplate triggers a <strong>global event</strong> in the client side. 
 	You can register like that to get notifications:</p>
 	<pre lang="js">abp.event.on(&#39;<strong>abp.notifications.received</strong>&#39;, function (userNotification) {
     console.log(userNotification);
@@ -279,12 +279,35 @@ public class SentFrendshipRequestNotificationData : <strong>NotificationData</st
     }
 });</pre>
 	<p>To be able to process notification data, we should check the data type. 
-	This example simple gets message from notification data. For the localized 
+	This example simply gets message from notification data. For the localized 
 	message (LocalizableMessageNotificationData), we are localizing the message 
 	and replacing parameters. For simple message (MessageNotificationData), we 
 	directly get the message. Surely, in a real project, we will not use alert 
 	function. We can use <a href="/Pages/Documents/Javascript-API/Notification">
-	abp.notify</a> api to show nice UI notifications. <a href="/Templates">Startup templates</a> 
+	abp.notify</a> api to show nice UI notifications.</p>
+	<p>If you need to implement such a logic above, there is an easier and 
+	scaleable way. You can just use single line of code to show a 
+	<a href="/Pages/Documents/Javascript-API/Notification">UI 
+	notification</a> when a push notification is received:</p>
+	<pre lang="js">abp.event.on('abp.notifications.received', function (userNotification) {
+    <strong>abp.notifications.showUiNotifyForUserNotification(userNotification);</strong>
+});</pre>
+	<p>This shows a <a href="/Pages/Documents/Javascript-API/Notification">UI 
+	notification</a> like that (for System.LowDisk notification published above):</p>
+	<p><img alt="" height="86" src="/SiteFiles/Content/Documents/Resources/notification-warn.png" width="314" /></p>
+	<p>It works for built-in notification data types (LocalizableMessageNotificationData 
+	and MessageNotificationData). If you have custom notification data types, 
+	then you should register data formatters like that:</p>
+	<pre lang="js">abp.notifications.messageFormatters['MyProject.MyNotificationDataType'] = function(userNotification) {
+    return ...; //format and return message here
+};</pre>
+	<p>Thus,
+    <strong>showUiNotifyForUserNotification</strong>
+	can create shown messages for your data types. If you just need to the 
+	formatted message, you can directly use <strong>
+	abp.notifications.getFormattedMessageFromUserNotification(userNotification)</strong> 
+	which is internally used by showUiNotifyForUserNotification.</p>
+	<p><a href="/Templates">Startup templates</a> 
 	include the code to show UI notifications when a push notification is 
 	received.</p>
 	<h3>Notification Store</h3>
