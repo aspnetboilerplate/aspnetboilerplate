@@ -12,7 +12,7 @@
 <div class="document-contents">
 
 <h3>Introduction</h3>
-	<p>&nbsp;<a href="http://www.nuget.org/packages/Abp.Web.SignalR" target="_blank">Abp.Web.SignalR</a> 
+	<p><a href="http://www.nuget.org/packages/Abp.Web.SignalR" target="_blank">Abp.Web.SignalR</a> 
 	nuget package makes it easily to use <strong>SignalR</strong> in ASP.NET Boilerplate based 
 	applications. See
 	<a href="http://www.asp.net/signalr" target="_blank">SignalR documentation</a> 
@@ -46,6 +46,12 @@ namespace MyProject.Web
         }
     }
 }</pre>
+	<p><strong>Note:</strong> Abp.Web.SignalR only depends on 
+	Microsoft.AspNet.SignalR.Core package. So, you will also need to <strong>
+	install</strong> <strong>Microsoft.AspNet.SignalR</strong> package to your 
+	Web project if not installed before (See
+	<a href="http://www.asp.net/signalr" target="_blank">SignalR documents</a> 
+	for more).</p>
 	<h4>Client Side</h4>
 	<p><strong>abp.signalr.js</strong> script should be included to the page. 
 	It's located in <strong>
