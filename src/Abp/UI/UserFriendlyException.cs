@@ -16,6 +16,11 @@ namespace Abp.UI
         public string Details { get; private set; }
 
         /// <summary>
+        /// An arbitrary error code.
+        /// </summary>
+        public int Code { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public UserFriendlyException()
@@ -42,6 +47,18 @@ namespace Abp.UI
 
         }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="message">Exception message</param>
+        public UserFriendlyException(int code, string message)
+            : this(message)
+        {
+            Code = code;
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -51,6 +68,18 @@ namespace Abp.UI
             : base(message)
         {
             Details = details;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="message">Exception message</param>
+        /// <param name="details">Additional information about the exception</param>
+        public UserFriendlyException(int code, string message, string details)
+            : this(message, details)
+        {
+            Code = code;
         }
 
         /// <summary>

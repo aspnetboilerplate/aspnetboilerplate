@@ -161,6 +161,18 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to cast</typeparam>
+        /// <param name="type">Type of the object to resolve</param>
+        /// <returns>The object instance</returns>
+        public T Resolve<T>(Type type)
+        {
+            return (T)IocContainer.Resolve(type);
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>

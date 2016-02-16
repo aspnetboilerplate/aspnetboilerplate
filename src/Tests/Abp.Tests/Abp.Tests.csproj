@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp.Tests</RootNamespace>
     <AssemblyName>Abp.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -43,6 +43,10 @@
     <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
@@ -81,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
     <Compile Include="Application\Navigation\NavigationTestCase.cs" />
+    <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor_Tests.cs" />
@@ -102,6 +107,7 @@
     <Compile Include="Dependency\ShouldInitialize_Simple_Tests.cs" />
     <Compile Include="Dependency\SimpleDisposableObject.cs" />
     <Compile Include="Domain\Entities\Department.cs" />
+    <Compile Include="Domain\Entities\EntityHelper_Tests.cs" />
     <Compile Include="Domain\Entities\Manager.cs" />
     <Compile Include="Domain\Entities\Test_Entities.cs" />
     <Compile Include="Domain\Entities\Worker.cs" />
@@ -129,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Notifications\NotificationPublisher_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />

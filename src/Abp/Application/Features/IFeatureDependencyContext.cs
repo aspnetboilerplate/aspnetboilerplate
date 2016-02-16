@@ -8,6 +8,12 @@ namespace Abp.Application.Features
     public interface IFeatureDependencyContext
     {
         /// <summary>
+        /// Tenant id which required the feature.
+        /// Null for current tenant.
+        /// </summary>
+        int? TenantId { get; }
+
+        /// <summary>
         /// Gets the <see cref="IIocResolver"/>.
         /// </summary>
         /// <value>
