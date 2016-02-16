@@ -53,6 +53,8 @@ namespace Abp.EntityFramework.Tests.Repositories
         public class MyMainDbContext : MyBaseDbContext
         {
             public virtual DbSet<MyEntity2> MyEntities2 { get; set; }
+
+            public virtual DbSet<MyNonEntity> MyNonEntities { get; set; }
         }
 
         [AutoRepositoryTypes(
@@ -82,6 +84,11 @@ namespace Abp.EntityFramework.Tests.Repositories
         }
 
         public class MyEntity3 : Entity<Guid>
+        {
+
+        }
+
+        public class MyNonEntity
         {
 
         }
