@@ -6,7 +6,7 @@
     <title>Abp.Web.SignalR</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET SignalR integration package for ASP.NET Boilerplate.</description>
+    <description>SignalR integration package for ASP.NET Boilerplate.</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>
     <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection signalr</tags>

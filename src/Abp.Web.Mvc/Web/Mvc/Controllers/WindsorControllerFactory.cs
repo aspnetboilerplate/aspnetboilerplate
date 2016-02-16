@@ -44,10 +44,10 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (controllerType == null)
             {
-                throw new HttpException(404, string.Format("The controller for path '{0}' could not be found.", requestContext.HttpContext.Request.Path));
+                return base.GetControllerInstance(requestContext, controllerType);
             }
 
-            return (IController)_iocManager.Resolve(controllerType);
+            return _iocManager.Resolve<IController>(controllerType);
         }
     }
 }

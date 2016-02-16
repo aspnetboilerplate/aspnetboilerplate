@@ -39,6 +39,11 @@ namespace Abp.Notifications
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        {
+            return Task.FromResult(new List<NotificationSubscriptionInfo>());
+        }
+
         public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
@@ -69,9 +74,14 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, int skipCount, int maxResultCount)
+        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             return Task.FromResult(new List<UserNotificationInfoWithNotificationInfo>());
+        }
+
+        public Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        {
+            return Task.FromResult(0);
         }
 
         public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId)

@@ -15,7 +15,7 @@
 <p>In a web application, exceptions are usually handled in MVC Controller 
 actions and Web API Controller actions. When an exception occurs, application 
 user somehow informed about the error and optionally reason of the error.</p>
-<p>If error occured in a regular HTTP request, an error page is shown. If an error 
+<p>If an error occured in a regular HTTP request, an error page is shown. If an error 
 occured in an AJAX request, server sends error information to the client and 
 then client handles and shows the error to the user.</p>
 <p>Handling exceptions in all web request is a tedious and repeating work. 
@@ -76,9 +76,8 @@ informations if you want. For example, we can show validation errors if it's an
 <p>
 <img alt="Validation errors" height="257" src="/SiteFiles/Content/Documents/Resources/error-page-validation.png" width="722" /></p>
 <h3 id="DocAjax">AJAX requests</h3>
-<p>If this request is an AJAX request, ASP.NET Boilerplate returns a JSON object 
-to the client. This is true for both of ASP.NET MVC Controllers and ASP.NET Web 
-API Controllers. Sample return object for an error:</p>
+<p>If return type of MVC action is JsonResult (or Task&lt;JsonResult for async 
+actions), ASP.NET Boilerplate returns a JSON object to the client on exceptions. Sample return object for an error:</p>
 <pre lang="js">{
   &quot;targetUrl&quot;: null,
   &quot;result&quot;: null,

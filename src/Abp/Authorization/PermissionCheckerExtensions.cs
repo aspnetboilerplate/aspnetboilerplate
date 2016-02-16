@@ -32,6 +32,108 @@ namespace Abp.Authorization
         }
 
         /// <summary>
+        /// Checks if given user is granted for given permission.
+        /// </summary>
+        /// <param name="permissionChecker">Permission checker</param>
+        /// <param name="userId">User id</param>
+        /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
+        /// <param name="permissionNames">Name of the permissions</param>
+        public static bool IsGranted(this IPermissionChecker permissionChecker, long userId, bool requiresAll, params string[] permissionNames)
+        {
+            return AsyncHelper.RunSync(() => IsGrantedAsync(permissionChecker, userId, requiresAll, permissionNames));
+        }
+
+        /// <summary>
+        /// Checks if given user is granted for given permission.
+        /// </summary>
+        /// <param name="permissionChecker">Permission checker</param>
+        /// <param name="userId">User id</param>
+        /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
+        /// <param name="permissionNames">Name of the permissions</param>
+        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, long userId, bool requiresAll, params string[] permissionNames)
+        {
+            if (permissionNames.IsNullOrEmpty())
+            {
+                return true;
+            }
+
+            if (requiresAll)
+            {
+                foreach (var permissionName in permissionNames)
+                {
+                    if (!(await permissionChecker.IsGrantedAsync(userId, permissionName)))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                foreach (var permissionName in permissionNames)
+                {
+                    if (await permissionChecker.IsGrantedAsync(userId, permissionName))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for given permission.
+        /// </summary>
+        /// <param name="permissionChecker">Permission checker</param>
+        /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
+        /// <param name="permissionNames">Name of the permissions</param>
+        public static bool IsGranted(this IPermissionChecker permissionChecker, bool requiresAll, params string[] permissionNames)
+        {
+            return AsyncHelper.RunSync(() => IsGrantedAsync(permissionChecker, requiresAll, permissionNames));
+        }
+
+        /// <summary>
+        /// Checks if current user is granted for given permission.
+        /// </summary>
+        /// <param name="permissionChecker">Permission checker</param>
+        /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
+        /// <param name="permissionNames">Name of the permissions</param>
+        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, bool requiresAll, params string[] permissionNames)
+        {
+            if (permissionNames.IsNullOrEmpty())
+            {
+                return true;
+            }
+
+            if (requiresAll)
+            {
+                foreach (var permissionName in permissionNames)
+                {
+                    if (!(await permissionChecker.IsGrantedAsync(permissionName)))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                foreach (var permissionName in permissionNames)
+                {
+                    if (await permissionChecker.IsGrantedAsync(permissionName))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Authorizes current user for given permission or permissions,
         /// throws <see cref="AbpAuthorizationException"/> if not authorized.
         /// User it authorized if any of the <see cref="permissionNames"/> are granted.
@@ -87,37 +189,23 @@ namespace Abp.Authorization
         /// <exception cref="AbpAuthorizationException">Throws authorization exception if</exception>
         public static async Task AuthorizeAsync(this IPermissionChecker permissionChecker, bool requireAll, params string[] permissionNames)
         {
-            if (permissionNames.IsNullOrEmpty())
+            if (await IsGrantedAsync(permissionChecker, requireAll, permissionNames))
             {
                 return;
             }
 
             if (requireAll)
             {
-                foreach (var permissionName in permissionNames)
-                {
-                    if (!(await permissionChecker.IsGrantedAsync(permissionName)))
-                    {
-                        throw new AbpAuthorizationException(
-                            "Required permissions are not granted. All of these permissions must be granted: " +
-                            String.Join(", ", permissionNames)
-                            );
-                    }
-                }
+                throw new AbpAuthorizationException(
+                    "Required permissions are not granted. All of these permissions must be granted: " +
+                    string.Join(", ", permissionNames)
+                    );
             }
             else
             {
-                foreach (var permissionName in permissionNames)
-                {
-                    if (await permissionChecker.IsGrantedAsync(permissionName))
-                    {
-                        return;
-                    }
-                }
-
                 throw new AbpAuthorizationException(
                     "Required permissions are not granted. At least one of these permissions must be granted: " +
-                    String.Join(", ", permissionNames)
+                    string.Join(", ", permissionNames)
                     );
             }
         }

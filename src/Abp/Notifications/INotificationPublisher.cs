@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
+using Abp.Runtime.Session;
 
 namespace Abp.Notifications
 {
@@ -15,7 +16,30 @@ namespace Abp.Notifications
         /// <param name="data">Notification data (optional)</param>
         /// <param name="entityIdentifier">The entity identifier if this notification is related to an entity</param>
         /// <param name="severity">Notification severity</param>
-        /// <param name="userIds">Target user id(s). Used to send notification to specific user(s). If this is null/empty, the notification is sent to all subscribed users</param>
-        Task PublishAsync(string notificationName, NotificationData data = null, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null);
+        /// <param name="userIds">
+        /// Target user id(s). 
+        /// Used to send notification to specific user(s). 
+        /// If this is null/empty, the notification is sent to subscribed users.
+        /// </param>
+        /// <param name="excludedUserIds">
+        /// Excluded user id(s).
+        /// This can be set to exclude some users while publishing notifications to subscribed users.
+        /// It's normally not set if <see cref="userIds"/> is set.
+        /// </param>
+        /// <param name="tenantIds">
+        /// Target tenant id(s).
+        /// Used to send notification to subscribed users of specific tenant(s).
+        /// This should not be set if <see cref="userIds"/> is set.
+        /// <see cref="NotificationPublisher.AllTenants"/> can be passed to indicate all tenants.
+        /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>.
+        /// </param>
+        Task PublishAsync(
+            string notificationName,
+            NotificationData data = null,
+            EntityIdentifier entityIdentifier = null,
+            NotificationSeverity severity = NotificationSeverity.Info,
+            long[] userIds = null,
+            long[] excludedUserIds = null,
+            int?[] tenantIds = null);
     }
 }

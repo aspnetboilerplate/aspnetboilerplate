@@ -14,6 +14,13 @@ namespace Abp.Notifications
     public class NotificationSubscriptionInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
+        /// Tenant id of the subscribed user.
+        /// Note: This class does not implement <see cref="IMayHaveTenant"/> filter.
+        /// So, it should be manually filtered if needed.
+        /// </summary>
+        public virtual int? TenantId { get; set; }
+
+        /// <summary>
         /// User Id.
         /// </summary>
         public virtual long UserId { get; set; }
@@ -35,7 +42,7 @@ namespace Abp.Notifications
         /// AssemblyQualifiedName of the entity type.
         /// </summary>
         [MaxLength(NotificationInfo.MaxEntityTypeAssemblyQualifiedNameLength)]
-        public string EntityTypeAssemblyQualifiedName { get; set; }
+        public virtual string EntityTypeAssemblyQualifiedName { get; set; }
 
         /// <summary>
         /// Gets/sets primary key of the entity, if this is an entity level notification.
@@ -54,8 +61,9 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
+            TenantId = tenantId;
             NotificationName = notificationName;
             UserId = userId;
             EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName;

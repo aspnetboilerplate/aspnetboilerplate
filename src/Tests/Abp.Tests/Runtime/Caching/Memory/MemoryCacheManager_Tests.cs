@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Dependency;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
@@ -16,6 +17,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
         {
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
+            LocalIocManager.Register<MyClientPropertyInjects>(DependencyLifeStyle.Transient);
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
@@ -42,10 +44,39 @@ namespace Abp.Tests.Runtime.Caching.Memory
             _cache.Get("B", () => new MyCacheItem { Value = 44 }).Value.ShouldBe(43); //Does not call factory, so value is not changed
         }
 
+        [Fact]
+        public void Property_Injected_CacheManager_Should_Work()
+        {
+            LocalIocManager.Using<MyClientPropertyInjects>(client =>
+            {
+                client.SetGetValue(42).ShouldBe(42); //Not in cache, getting from factory
+            });
+
+            LocalIocManager.Using<MyClientPropertyInjects>(client =>
+            {
+                client.SetGetValue(43).ShouldBe(42); //Retrieving from the cache
+            });
+        }
+
         [Serializable]
         public class MyCacheItem
         {
             public int Value { get; set; }
+        }
+
+        public class MyClientPropertyInjects
+        {
+            public ICacheManager CacheManager { get; set; }
+
+            public int SetGetValue(int value)
+            {
+                return CacheManager
+                    .GetCache("MyClientPropertyInjectsCache")
+                    .Get("A", () =>
+                    {
+                        return value;
+                    });
+            }
         }
     }
 }

@@ -13,7 +13,14 @@ namespace Abp.Notifications
     public class NotificationInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
+        /// Indicated all tenant ids for <see cref="TenantIds"/> property.
+        /// Value: "0".
+        /// </summary>
+        public const string AllTenantIds = "0";
+
+        /// <summary>
         /// Maximum length of <see cref="NotificationName"/> property.
+        /// Value: 128.
         /// </summary>
         public const int MaxNotificationNameLength = 128;
 
@@ -52,6 +59,12 @@ namespace Abp.Notifications
         /// Value: 131072 (128 KB).
         /// </summary>
         public const int MaxUserIdsLength = 128 * 1024;
+
+        /// <summary>
+        /// Maximum lenght of <see cref="TenantIds"/> property.
+        /// Value: 131072 (128 KB).
+        /// </summary>
+        public const int MaxTenantIdsLength = 128 * 1024;
 
         /// <summary>
         /// Unique notification name.
@@ -104,13 +117,29 @@ namespace Abp.Notifications
         /// </summary>
         [MaxLength(MaxUserIdsLength)]
         public virtual string UserIds { get; set; }
-        
+
+        /// <summary>
+        /// Excluded users.
+        /// This can be set to exclude some users while publishing notifications to subscribed users.
+        /// It's not normally used if <see cref="UserIds"/> is not null.
+        /// </summary>
+        [MaxLength(MaxUserIdsLength)]
+        public virtual string ExcludedUserIds { get; set; }
+
+        /// <summary>
+        /// Target tenants of the notification.
+        /// Used to send notification to subscribed users of specific tenant(s).
+        /// This is valid only if UserIds is null.
+        /// If it's "0", then indicates to all tenants.
+        /// </summary>
+        [MaxLength(MaxTenantIdsLength)]
+        public virtual string TenantIds { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationInfo"/> class.
         /// </summary>
         public NotificationInfo()
         {
-            Id = Guid.NewGuid();
             Severity = NotificationSeverity.Info;
         }
     }

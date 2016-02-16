@@ -61,6 +61,7 @@ namespace Abp
 
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
+            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
 
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
@@ -88,9 +89,10 @@ namespace Abp
 
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
             IocManager.Resolve<FeatureManager>().Initialize();
-            IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<NotificationDefinitionManager>().Initialize();
+            IocManager.Resolve<NavigationManager>().Initialize();
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
@@ -128,6 +130,7 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
+            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);

@@ -64,8 +64,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Authorization\PermissionDependencyContext.cs" />
+    <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
     <Compile Include="BackgroundJobs\BackgroundJob.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobManagerExtensions.cs" />
@@ -93,8 +95,29 @@
     <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Authorization\IPermissionDependency.cs" />
+    <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\INotificationDistributer.cs" />
+    <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Authorization\SimplePermissionDependency.cs" />
+    <Compile Include="Notifications\NotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationDistributer.cs" />
+    <Compile Include="Notifications\NotificationProvider.cs" />
+    <Compile Include="Notifications\NotificationSettingNames.cs" />
+    <Compile Include="Notifications\NotificationSettingProvider.cs" />
+    <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
+    <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
+    <Compile Include="RegularGuidGenerator.cs" />
+    <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
+    <Compile Include="Notifications\MessageNotificationData.cs" />
+    <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
     <Compile Include="Domain\Entities\EntityIdentifier.cs" />
+    <Compile Include="IGuidGenerator.cs" />
     <Compile Include="Localization\ILocalizationContext.cs" />
     <Compile Include="Localization\LocalizationContext.cs" />
     <Compile Include="Notifications\INotificationPublisher.cs" />
@@ -118,6 +141,7 @@
     <Compile Include="RealTime\OnlineClient.cs" />
     <Compile Include="RealTime\OnlineClientManager.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
+    <Compile Include="Threading\ThreadCultureSanitizer.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
@@ -563,7 +587,9 @@
   <ItemGroup>
     <None Include="Abp.nuspec" />
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />
