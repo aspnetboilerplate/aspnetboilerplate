@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace Abp.Localization
@@ -5,6 +6,7 @@ namespace Abp.Localization
     /// <summary>
     /// A class that gets the same string on every localization.
     /// </summary>
+    [Serializable]
     public class FixedLocalizableString : ILocalizableString
     {
         /// <summary>
@@ -12,6 +14,14 @@ namespace Abp.Localization
         /// Whenever Localize methods called, this string is returned.
         /// </summary>
         public virtual string FixedString { get; private set; }
+
+        /// <summary>
+        /// Needed for serialization.
+        /// </summary>
+        private FixedLocalizableString()
+        {
+
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="FixedLocalizableString"/>.
@@ -25,18 +35,12 @@ namespace Abp.Localization
             FixedString = fixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize()
+        public string Localize(ILocalizationContext context)
         {
             return FixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize(CultureInfo culture)
+        public string Localize(ILocalizationContext context, CultureInfo culture)
         {
             return FixedString;
         }

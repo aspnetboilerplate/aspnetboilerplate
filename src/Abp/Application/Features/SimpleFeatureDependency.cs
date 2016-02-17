@@ -46,7 +46,9 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public Task<bool> IsSatisfiedAsync(IFeatureDependencyContext context)
         {
-            return context.FeatureChecker.IsEnabledAsync(RequiresAll, Features);
+            return context.TenantId.HasValue
+                ? context.FeatureChecker.IsEnabledAsync(context.TenantId.Value, RequiresAll, Features)
+                : context.FeatureChecker.IsEnabledAsync(RequiresAll, Features);
         }
     }
 }

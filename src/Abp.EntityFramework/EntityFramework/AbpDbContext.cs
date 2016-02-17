@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -40,6 +41,11 @@ namespace Abp.EntityFramework
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Reference to GUID generator.
+        /// </summary>
+        public IGuidGenerator GuidGenerator { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
@@ -48,6 +54,7 @@ namespace Abp.EntityFramework
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            GuidGenerator = SequentialGuidGenerator.Instance;
         }
 
         /// <summary>
@@ -166,6 +173,7 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        CheckAndSetId(entry);
                         SetCreationAuditProperties(entry);
                         CheckAndSetTenantIdProperty(entry);
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
@@ -196,6 +204,18 @@ namespace Abp.EntityFramework
                         EntityChangeEventHelper.TriggerEntityDeletingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
                         break;
+                }
+            }
+        }
+
+        protected virtual void CheckAndSetId(DbEntityEntry entry)
+        {
+            if (entry.Entity is IEntity<Guid>)
+            {
+                var entity = entry.Entity as IEntity<Guid>;
+                if (entity.IsTransient())
+                {
+                    entity.Id = GuidGenerator.Create();
                 }
             }
         }

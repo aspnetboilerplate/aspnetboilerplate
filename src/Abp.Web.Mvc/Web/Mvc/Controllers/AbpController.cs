@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,6 +161,8 @@ namespace Abp.Web.Mvc.Controllers
         /// WrapResultAttribute for currently executing action.
         /// </summary>
         private WrapResultAttribute _wrapResultAttribute;
+
+        private static Type[] _ignoredTypesForSerialization = {typeof (HttpPostedFileBase)};
 
         /// <summary>
         /// Constructor.
@@ -495,7 +498,14 @@ namespace Abp.Web.Mvc.Controllers
 
                 foreach (var argument in arguments)
                 {
-                    dictionary[argument.Key] = argument.Value;
+                    if (argument.Value != null && _ignoredTypesForSerialization.Any(t => t.IsInstanceOfType(argument.Value)))
+                    {
+                        dictionary[argument.Key] = null;
+                    }
+                    else
+                    {
+                        dictionary[argument.Key] = argument.Value;                        
+                    }
                 }
 
                 return JsonConvert.SerializeObject(

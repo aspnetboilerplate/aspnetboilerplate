@@ -11,5 +11,6 @@
     <text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
     <text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
     <text name="DefaultLanguage">Default language</text>
+    <text name="ReceiveNotifications">Receive notifications</text>
   </texts>
 </localizationDictionary>

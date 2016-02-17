@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function () {
+(function ($) {
 
     /* Application paths *****************************************/
 
@@ -123,8 +123,8 @@
     abp.features = abp.features || {};
 
     abp.features.allFeatures = abp.features.allFeatures || {};
-    
-    abp.features.get = function(name) {
+
+    abp.features.get = function (name) {
         return abp.features.allFeatures[name];
     }
 
@@ -136,7 +136,7 @@
 
         return feature.value;
     }
-    
+
     abp.features.isEnabled = function (name) {
         var value = abp.features.getValue(name);
         return value == 'true' || value == 'True';
@@ -161,6 +161,102 @@
     abp.setting.getInt = function (name) {
         return parseInt(abp.setting.values[name]);
     };
+
+    /* REALTIME NOTIFICATIONS ************************************/
+
+    abp.notifications = abp.notifications || {};
+
+    abp.notifications.severity = {
+        INFO: 0,
+        SUCCESS: 1,
+        WARN: 2,
+        ERROR: 3,
+        FATAL: 4
+    };
+
+    abp.notifications.userNotificationState = {
+        UNREAD: 0,
+        READ: 1
+    };
+
+    abp.notifications.getUserNotificationStateAsString = function (userNotificationState) {
+        switch (userNotificationState) {
+            case abp.notifications.userNotificationState.READ:
+                return 'READ';
+            case abp.notifications.userNotificationState.UNREAD:
+                return 'UNREAD';
+            default:
+                abp.log.warn('Unknown user notification state value: ' + userNotificationState)
+                return '?';
+        }
+    };
+
+    abp.notifications.getUiNotifyFuncBySeverity = function (severity) {
+        switch (severity) {
+            case abp.notifications.severity.SUCCESS:
+                return abp.notify.success;
+            case abp.notifications.severity.WARN:
+                return abp.notify.warn;
+            case abp.notifications.severity.ERROR:
+                return abp.notify.error;
+            case abp.notifications.severity.FATAL:
+                return abp.notify.error;
+            case abp.notifications.severity.INFO:
+            default:
+                return abp.notify.info;
+        }
+    };
+
+    abp.notifications.messageFormatters = {};
+
+    abp.notifications.messageFormatters['Abp.Notifications.MessageNotificationData'] = function (userNotification) {
+        return userNotification.notification.data.message;
+    };
+
+    abp.notifications.messageFormatters['Abp.Notifications.LocalizableMessageNotificationData'] = function (userNotification) {
+        var localizedMessage = abp.localization.localize(
+            userNotification.notification.data.message.name,
+            userNotification.notification.data.message.sourceName
+        );
+
+        if (userNotification.notification.data.properties) {
+            if ($) {
+                //Prefer to use jQuery if possible
+                $.each(userNotification.notification.data.properties, function (key, value) {
+                    localizedMessage = localizedMessage.replace('{' + key + '}', value);
+                });
+            } else {
+                //alternative for $.each
+                var properties = Object.keys(userNotification.notification.data.properties);
+                for (var i = 0; i < properties.length; i++) {
+                    localizedMessage = localizedMessage.replace('{' + properties[i] + '}', userNotification.notification.data.properties[properties[i]]);
+                }
+            }
+        }
+
+        return localizedMessage;
+    };
+
+    abp.notifications.getFormattedMessageFromUserNotification = function (userNotification) {
+        var formatter = abp.notifications.messageFormatters[userNotification.notification.data.type];
+        if (!formatter) {
+            abp.log.warn('No message formatter defined for given data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        if (!abp.utils.isFunction(formatter)) {
+            abp.log.warn('Message formatter should be a function! It is invalid for data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        return formatter(userNotification);
+    }
+
+    abp.notifications.showUiNotifyForUserNotification = function (userNotification, options) {
+        var message = abp.notifications.getFormattedMessageFromUserNotification(userNotification);
+        var uiNotifyFunc = abp.notifications.getUiNotifyFuncBySeverity(userNotification.notification.severity);
+        uiNotifyFunc(message, undefined, options);
+    }
 
     /* LOGGING ***************************************************/
     //Implements Logging API that provides secure & controlled usage of console.log
@@ -219,19 +315,19 @@
 
     abp.notify = abp.notify || {};
 
-    abp.notify.success = function (message, title) {
+    abp.notify.success = function (message, title, options) {
         abp.log.warn('abp.notify.success is not implemented!');
     };
 
-    abp.notify.info = function (message, title) {
+    abp.notify.info = function (message, title, options) {
         abp.log.warn('abp.notify.info is not implemented!');
     };
 
-    abp.notify.warn = function (message, title) {
+    abp.notify.warn = function (message, title, options) {
         abp.log.warn('abp.notify.warn is not implemented!');
     };
 
-    abp.notify.error = function (message, title) {
+    abp.notify.error = function (message, title, options) {
         abp.log.warn('abp.notify.error is not implemented!');
     };
 
@@ -321,11 +417,11 @@
 
     /* SIMPLE EVENT BUS *****************************************/
 
-    abp.event = (function() {
+    abp.event = (function () {
 
         var _callbacks = {};
 
-        var on = function(eventName, callback) {
+        var on = function (eventName, callback) {
             if (!_callbacks[eventName]) {
                 _callbacks[eventName] = [];
             }
@@ -333,7 +429,28 @@
             _callbacks[eventName].push(callback);
         };
 
-        var trigger = function(eventName) {
+        var off = function (eventName, callback) {
+            var callbacks = _callbacks[eventName];
+            if (!callbacks) {
+                return;
+            }
+
+            var index = -1;
+            for (var i = 0; i < callbacks.length; i++) {
+                if (callbacks[i] === callback) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index < 0) {
+                return;
+            }
+
+            _callbacks[eventName].splice(index, 1);
+        };
+
+        var trigger = function (eventName) {
             var callbacks = _callbacks[eventName];
             if (!callbacks || !callbacks.length) {
                 return;
@@ -349,6 +466,7 @@
 
         return {
             on: on,
+            off: off,
             trigger: trigger
         };
     })();
@@ -396,4 +514,60 @@
         return str;
     };
 
-})();
+    abp.utils.toPascalCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toUpperCase();
+        }
+
+        return str.charAt(0).toUpperCase() + str.substr(1);
+    }
+
+    abp.utils.toCamelCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toLowerCase();
+        }
+
+        return str.charAt(0).toLowerCase() + str.substr(1);
+    }
+
+    abp.utils.truncateString = function (str, maxLength) {
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        return str.substr(0, maxLength);
+    };
+
+    abp.utils.truncateStringWithPostfix = function (str, maxLength, postfix) {
+        postfix = postfix || '...';
+
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        if (maxLength <= postfix.length) {
+            return postfix.substr(0, maxLength);
+        }
+
+        return str.substr(0, maxLength - postfix.length) + postfix;
+    };
+
+    abp.utils.isFunction = function (obj) {
+        if ($) {
+            //Prefer to use jQuery if possible
+            return $.isFunction(obj);
+        }
+
+        //alternative for $.isFunction
+        return !!(obj && obj.constructor && obj.call && obj.apply);
+    };
+
+})(jQuery);

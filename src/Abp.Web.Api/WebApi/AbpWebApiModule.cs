@@ -17,6 +17,7 @@ using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
+using Abp.Configuration.Startup;
 using Abp.Web.Api.Description;
 
 namespace Abp.WebApi
@@ -63,6 +64,8 @@ namespace Abp.WebApi
 
                 LogHelper.Logger.DebugFormat("Dynamic web api controller is created for type '{0}' with service name '{1}'.", controllerInfo.ServiceInterfaceType.FullName, controllerInfo.ServiceName);
             }
+
+            Configuration.Modules.AbpWebApi().HttpConfiguration.EnsureInitialized();
         }
 
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
@@ -71,7 +74,6 @@ namespace Abp.WebApi
             httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
             httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(httpConfiguration));
-           
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
@@ -93,7 +95,6 @@ namespace Abp.WebApi
 
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
-
         }
 
         private static void InitializeRoutes(HttpConfiguration httpConfiguration)

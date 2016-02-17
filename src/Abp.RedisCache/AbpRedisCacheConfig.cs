@@ -11,5 +11,13 @@ namespace Abp
             get { return connectionStringKey; }
             set { connectionStringKey = value; }
         }
+
+        private string databaseIdAppSetting = "Abp.Redis.Cache.DatabaseId";
+
+        public string DatabaseIdAppSetting
+        {
+            get { return databaseIdAppSetting; }
+            set { databaseIdAppSetting = value; }
+        }
     }
 }
