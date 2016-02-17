@@ -69,7 +69,8 @@ namespace Abp.WebApi.OData.Controllers
             }
 
             var createdEntity = await Repository.InsertAsync(entity);
-
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+            
             return Created(createdEntity);
         }
 
