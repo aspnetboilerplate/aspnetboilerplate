@@ -68,9 +68,9 @@ namespace Abp.WebApi.OData.Controllers
                 return BadRequest(ModelState);
             }
 
-            await Repository.InsertAndGetIdAsync(entity);
+            var createdEntity = await Repository.InsertAsync(entity);
 
-            return Created(entity);
+            return Created(createdEntity);
         }
 
         public virtual async Task<IHttpActionResult> Patch([FromODataUri] TPrimaryKey key, Delta<TEntity> entity)
