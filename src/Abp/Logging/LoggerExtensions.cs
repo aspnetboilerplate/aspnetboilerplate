@@ -3,6 +3,9 @@ using Castle.Core.Logging;
 
 namespace Abp.Logging
 {
+    /// <summary>
+    /// Extensions for <see cref="ILogger"/>.
+    /// </summary>
     public static class LoggerExtensions
     {
         public static void Log(this ILogger logger, LogSeverity severity, string message)
