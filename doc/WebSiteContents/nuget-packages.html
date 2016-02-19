@@ -9,6 +9,10 @@
 
 <body>
 
+<div class="document-contents">
+
+<h3>
+    Packages</h3>
 <p>
     ASP.NET Boilerplate is distributed on <strong>nuget</strong>. Here, a list 
 	of all official packages.</p>
@@ -77,6 +81,13 @@ Abp.EntityFramework</a></h4>
     <a href="http://www.nuget.org/packages/Abp.TestBase" target="_blank">Abp.TestBase</a></h4>
 <p>Base classes to create unit and integration tests for ABP based projects 
 easier.</p>
+<h3>Tips</h3>
+<p>You can use the command below in <strong>Package Manager Console</strong> to upgrade all Abp 
+packages in your solution in one command:</p>
+<pre lang="cs">get-project -all | get-package | ?{ $_.Id -like 'Abp*' } | update-package</pre>
+<p>It's tested in Visual Studio 2015.</p>
+
+</div>
 
 </body>
 
