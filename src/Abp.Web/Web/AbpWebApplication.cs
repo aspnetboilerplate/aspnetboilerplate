@@ -78,9 +78,9 @@ namespace Abp.Web
             }
             else if (!Request.UserLanguages.IsNullOrEmpty())
             {
-                var firstValidLanguage = Request.UserLanguages
-                    .Where(GlobalizationHelper.IsValidCultureCode)
-                    .FirstOrDefault();
+                var firstValidLanguage = Request
+                    .UserLanguages
+                    .FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
 
                 if (firstValidLanguage != null)
                 {
