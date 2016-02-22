@@ -75,7 +75,11 @@ namespace Abp.Notifications
 
         public async Task<bool> IsAvailableAsync(string name, int? tenantId, long userId)
         {
-            var notificationDefinition = Get(name);
+            var notificationDefinition = GetOrNull(name);
+            if (notificationDefinition == null)
+            {
+                return true;
+            }
 
             if (notificationDefinition.FeatureDependency != null)
             {

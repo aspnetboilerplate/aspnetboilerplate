@@ -66,7 +66,6 @@ namespace Abp.WebApi
             }
 
             Configuration.Modules.AbpWebApi().HttpConfiguration.EnsureInitialized();
-
         }
 
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
@@ -75,7 +74,6 @@ namespace Abp.WebApi
             httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
             httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(httpConfiguration));
-           
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
@@ -97,7 +95,6 @@ namespace Abp.WebApi
 
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
-
         }
 
         private static void InitializeRoutes(HttpConfiguration httpConfiguration)
