@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<p>ASP.NET Boilerplate provides useful APIs to make all or some part of the page 
+blocked or/and busy (with a busy indicator).</p>
+<h3>UI Block API</h3>
+<p>This API is used to block whole page or an element on the page with an 
+transparent overlay. Thus, user can not click it. 
+It's pretty useful when saving a form or loading an area (a div or even 
+complete page). Examples:</p>
+
+<pre lang="js">abp.ui.block(); //Block all page
+abp.ui.block($('#MyDivElement')); //You can use any jQuery selection..
+abp.ui.block('#MyDivElement'); //..or directly selector
+abp.ui.unblock(); //Unblock all page
+abp.ui.unblock('#MyDivElement'); //Unblock specific element</pre>
+
+<p>UI Block API is implemented using
+<a href="http://malsup.com/jquery/block/" target="_blank">blockUI</a> jQuery 
+plug-in as default. To make it work, you should include it's&nbsp;javascript file, then 
+include <strong>abp.blockUI.js</strong> to your page as adapter (See this 
+javascript file for simple implementation and defaults).</p>
+<h3>UI Busy API</h3>
+<p>This API is used to make some page/element busy. For example,
+you may want to block a form and show a busy indicator while submitting the form to the server. 
+Examples:</p>
+<pre lang="js">abp.ui.setBusy('#MyLoginForm');
+abp.ui.clearBusy('#MyLoginForm');</pre>
+<p>Example screenshot:</p>
+<p><img alt="A busy div with spin.js" height="240" src="/SiteFiles/Content/Documents/Resources/ui_busy_sample.png" width="375" /></p>
+<p>The parameter should be a jQuery selector (like '#MyLoginForm') or jQuery 
+selection (like $('#MyLoginForm')). To make busy the whole page, you can pass 
+null (or 'body') as selector.</p>
+<p>setBusy function can take a promise (as second parameter) and automatically clear busy when this 
+promise completed. Example:</p>
+<pre lang="js">abp.ui.setBusy(
+    $('#MyLoginForm'), 
+    abp.ajax({ ... })	
+);</pre>
+<p>Since <a href="/Pages/Documents/Javascript-API/AJAX">abp.ajax</a> returns promise, we can directly pass it as promise. To learn 
+more about promises, see jQuery's
+<a href="http://api.jquery.com/category/deferred-object/" target="_blank">
+Deferred</a>. setBusy also supports Q (and Angular's $http service).</p>
+<p>UI Busy API is implemented using
+<a href="http://fgnass.github.io/spin.js/" target="_blank">spin.js</a>. To make 
+it work, you should include it's javascript file, then 
+include <strong>abp.spin.js</strong> to your page as adapter (See this 
+javascript file for simple implementation and defaults).</p>
+
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<p>Every web application has some menu to navigate between pages/screens. ASP.NET Boilerplate provides a 
+common 
+ifrastructure to create and show menu to users.</p>
+<h3 id="DocCreateMenu">Creating Menus</h3>
+<p>An application may be consists of different
+<a href="/Pages/Documents/Module-System">modules</a> and each module can have 
+it's own menu items. To define menu items, we need to create a class derived 
+from <strong>NavigationProvider</strong>.</p>
+<p>Assume that we have a main menu as shown below:</p>
+<ul>
+	<li>Tasks</li>
+	<li>Reports</li>
+	<li>Administration<ul>
+		<li>User management</li>
+		<li>Role management</li>
+	</ul>
+	</li>
+</ul>
+<p>Here, Administration menu item has two <strong>sub menu items</strong>. Example navigation 
+provider class to create such a menu can be as below:</p>
+<pre lang="cs">public class SimpleTaskSystemNavigationProvider : NavigationProvider
+{
+    public override void SetNavigation(INavigationProviderContext context)
+    {
+        context.Manager.MainMenu
+            .AddItem(
+                new MenuItemDefinition(
+                    &quot;Tasks&quot;,
+                    new LocalizableString(&quot;Tasks&quot;, &quot;SimpleTaskSystem&quot;),
+                    url: &quot;/Tasks&quot;,
+                    icon: &quot;fa fa-tasks&quot;
+                    )
+            ).AddItem(
+                new MenuItemDefinition(
+                    &quot;Reports&quot;,
+                    new LocalizableString(&quot;Reports&quot;, &quot;SimpleTaskSystem&quot;),
+                    url: &quot;/Reports&quot;,
+                    icon: &quot;fa fa-bar-chart&quot;
+                    )
+            ).AddItem(
+                new MenuItemDefinition(
+                    &quot;Administration&quot;,
+                    new LocalizableString(&quot;Administration&quot;, &quot;SimpleTaskSystem&quot;),
+                    icon: &quot;fa fa-cogs&quot;
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            &quot;UserManagement&quot;,
+                            new LocalizableString(&quot;UserManagement&quot;, &quot;SimpleTaskSystem&quot;),
+                            url: &quot;/Administration/Users&quot;,
+                            icon: &quot;fa fa-users&quot;,
+                            requiredPermissionName: &quot;SimpleTaskSystem.Permissions.UserManagement&quot;
+                            )
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            &quot;RoleManagement&quot;,
+                            new LocalizableString(&quot;RoleManagement&quot;, &quot;SimpleTaskSystem&quot;),
+                            url: &quot;/Administration/Roles&quot;,
+                            icon: &quot;fa fa-star&quot;,
+                            requiredPermissionName: &quot;SimpleTaskSystem.Permissions.RoleManagement&quot;
+                            )
+                    )
+            );
+    }
+}</pre>
+<p>A MenuItemDefinition can basically have a unique <strong>name</strong>, a localizable
+<strong>display name</strong>, a <strong>url</strong> and an <strong>icon</strong>. 
+Also,</p>
+<ul>
+	<li>A menu item may require a permission to show this menu to a particular 
+user (See <a href="/Pages/Documents/Authorization">authorization</a> document).
+	<strong>requiredPermissionName</strong> property can be used in this case.</li>
+	<li>A menu item can be depend on a
+	<a href="/Pages/Documents/Feature-Management">feature</a>. <strong>
+	featureDependency</strong> property can be used in this case.</li>
+	<li>A menu item can define a <strong>customData</strong> and <strong>order</strong>.</li>
+</ul>
+<p><strong>INavigationProviderContext</strong> has methods to get existing menu 
+items, add menus and menu items. Thus, different modules can add it's own items 
+to the menu.</p>
+<p>There may be one or more menus in an application. <strong>context.Manager.MainMenu</strong> 
+references the default, main menu. We can create and add more menus using
+<strong>context.Manager.Menus</strong> property.</p>
+<h4>Registering Navigation Provider</h4>
+<p>After creating the navigation provider, we should register it to ASP.NET 
+Boilerplate configuration on <strong>PreInitialize</strong> event of our
+<a href="/Pages/Documents/Module-System">module</a>:</p>
+<pre lang="cs">Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();&nbsp;</pre>
+
+<h3 id="DocShowMenu">Showing Menu</h3>
+<p><strong>IUserNavigationManager</strong> can be
+<a href="/Pages/Documents/Dependency-Injection">injected</a> and used to get 
+menu items and show to the user. Thus, we can create menu in server side.</p>
+<p>ASP.NET Boilerplate automatically generates a <strong>javascript API</strong> 
+to get menu and items in client side. Methods and objects under <strong>abp.nav</strong> 
+namespace can be used for this purpose. For instance, <strong>
+abp.nav.menus.MainMenu</strong> can be used to get main menu of the application. 
+Thus, we can create menu in client side.</p>
+<p>ASP.NET Boilerplate <a href="/Templates">templates</a> uses this system to 
+create and show menu to the user. Try to create a template and see source codes 
+for more.</p>
+
+</div>
+
+</body>
+
+</html>
