@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entities</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+<style type="text/css">
+.auto-style1 {
+	text-decoration: underline;
+}
+.auto-style2 {
+	background-color: #F5F5F5;
+}
+</style>
+</head>
+
+<body>
+
+<ul>
+	<li><a href="#DocNeedForDTOs">The need for DTOs</a><ul>
+		<li><a href="#DocDtoAbstractDomain">Abstraction of domain layer</a></li>
+		<li><a href="#DocDtoDataHiding">Data hiding</a></li>
+		<li><a href="#DocDtoSerializationProblems">Serialization &amp; lazy-load 
+		problems</a></li>
+	</ul>
+	</li>
+	<li><a href="#DocDtoConventions">DTO conventions &amp; validation</a></li>
+	<li><a href="#DocAutoMapping">Auto mapping between DTOs and entities</a>
+        <ul>
+            <li><a href="#DocAutoMappingHelpers">Mapping using attributes and extension methods</a></li>
+        </ul>
+    </li>
+	<li><a href="#DocHelperDtoInterfaces">Helper interfaces</a></li>
+</ul>
+
+<p>
+    <strong>Data Transfer Objects</strong> are used to transfer data between
+	<strong>Application Layer</strong> and <strong>Presentation Layer</strong>.</p>
+<p>
+    Presentation Layer calls to an
+	<a href="/Pages/Documents/Application-Services">Application Service</a> 
+	method with a Data Transfer Object (<strong>DTO</strong>), then application 
+	service uses domain objects to perform some specific 
+	business logic and returns a DTO back to the presentation layer. Thus, Presentation layer is completely isolated from Domain layer. 
+	In an ideally layered application, presentation layer does not directly work 
+	with domain objects (<a href="/Pages/Documents/Repositories">Repositories</a>,
+	<a href="/Pages/Documents/Entities">Entities</a>...).</p>
+<h3 id="DocNeedForDTOs">The need for DTOs</h3>
+<p>To create a DTO for each Application Service method can be seen as a tedious 
+and time-consuming work at first. But they can save your application if you 
+correctly use it. Why?</p>
+<h4 id="DocDtoAbstractDomain">Abstraction of domain layer</h4>
+<p>DTOs provide an efficient way of abstracting domain objects from presentation 
+layer. Thus, your layers are correctly seperated. Even if you want to change 
+presentation layer completely, you can continue with existing application and 
+domain layers. As opposite, you can re-write your domain layer, completely 
+change database schema, entities and O/RM framework without any change in 
+presentation layer as long as contracts (method signatures and DTOs) of your 
+application services remain unchanged.</p>
+<h4 id="DocDtoDataHiding">Data hiding</h4>
+<p>Think that you have a User entity with properties Id, Name, EmailAddress and 
+Password fields. If GetAllUsers() method of UserAppService returns a List&lt;User&gt;, 
+anyone can see passwords of all users, even you do not show it in the screen. 
+It's not just about security, it's about data hiding. Application service should 
+return to presentation 
+layer what it needs. Not more, not less.</p>
+<h4 id="DocDtoSerializationProblems">Serialization &amp; lazy load problems</h4>
+<p>When you return a data (an object) to presentation layer, it's probably 
+serialized in somewhere. For example, in an MVC method that returns JSON, your 
+object can be serialized to JSON and sent to the client. Returning an Entity to 
+the presentation layer can be problematic in that case. How?</p>
+<p>In a real application, your entities will have references to each other. User 
+entity can has a reference to it's Role. So, if you want to serialize User, it's 
+Role is serialized also. And even Role class can has a List&lt;Permission&gt; and 
+Permission class can has a reference to a PermissionGroup class and so on... Can 
+you think that all of these objects are serialized? You can easily serialize 
+your whole database accidently. What's the solution? Marking properties as 
+NonSerialized? No, you can not know when it should be serialized and when it 
+shouldn't be. It may needed in one application service method, may not needed in 
+other. So, returning a safely serializable, specially designed DTOs are a good 
+choice in this situation.</p>
+<p>Almost all O/RM frameworks support lazy-loading. It's a feature to load 
+entities from database when it's needed. Say User class has a reference to Role 
+class. When you get a User from database, Role property is not filled. When you 
+first read the Role property, it's loaded from database. So, if you return such 
+an Entity to presentation layer, it can easily cause to retrieve additonal 
+entities from database. If a serialization tool reads the entity, it reads all 
+properties recursively and again your complete database can be retrieved (if 
+there are suitable relations between entities).</p>
+<p>We can say some more problems about using Entities in presentation layer. 
+It's best to do not reference the assembly containing domain (business) layer to 
+the presentation layer at all.</p>
+<h3 id="DocDtoConventions">DTO conventions &amp; validation</h3>
+<p>ASP.NET Boilerplate strongly supports DTOs. It provides some conventional 
+classes &amp; interfaces and advices some naming and usage conventions about DTOs. 
+When you write your codes as described here, ASP.NET Boilerplate automates some 
+tasks easily.&nbsp;</p>
+<h4>Example</h4>
+<p>Let's see a complete example. Say that we want to develop an application 
+service method that is used to <strong>search people</strong> with a name and 
+returns <strong>list of people</strong>. In that case, we may have a <strong>
+Person</strong> <a href="/Pages/Documents/Entities">entity</a> as shown below:</p>
+<pre lang="cs">public class Person : Entity
+{
+    public virtual string Name { get; set; }
+    public virtual string EmailAddress { get; set; }
+    public virtual string <span lang="tr">P<span class="auto-style2">assword</span></span> { get; set; }
+}</pre>
+<p>First, we define interface for the 
+<a href="/Pages/Documents/Application-Services">application service</a>:</p>
+<pre lang="cs">public interface IPersonAppService : IApplicationService
+{
+    SearchPeopleOutput SearchPeople(SearchPeopleInput input);
+}</pre>
+<p>ASP.NET Boilerplate suggest naming input/output parameters as MethodName<strong>Input</strong> 
+and MethodName<strong>Output </strong>and defining a seperated input and output 
+DTO for every application service method. Even if your method only take/return
+<strong>one </strong>parameter, it's better to create a DTO class. Thus, your 
+code will be more extensible. You can add more properties later without changing 
+signature of your method and without breaking existing client applications.</p>
+<p>Surely, your method can return <strong>void </strong>if there is no return 
+value. It will not break existing applications if you add a return value later. 
+If your method does not gets any argument, you do not have to define an input 
+DTO. But it maybe better to write an input DTO class if it's probable to add 
+parameter in the future. This is up to you.</p>
+<p>Let's see input and output DTO classes defined for this example:</p>
+<pre lang="cs">public class SearchPeopleInput : IInputDto
+{
+    [StringLength(40, MinimumLength = 1)]
+    public string SearchedName { get; set; }
+}
+
+public class SearchPeopleOutput : IOutputDto
+{
+    public List&lt;PersonDto&gt; People { get; set; }
+}
+
+public class PersonDto : EntityDto
+{
+    public string Name { get; set; }
+    public string EmailAddress { get; set; }
+}</pre>
+<p><span class="auto-style1"><strong>Validation</strong></span>: An input DTO 
+implements <strong>IInputDto</strong> interface, an output DTO implements <strong>IOutputDto </strong>
+interface as convention. When you declare 
+IInputDto, ASP.NET Boilerplate automatically validates input, before execution 
+of the method. It's similar to ASP.NET MVC's validation, but notice that 
+application service is not a Controller, it's a plain C# class. ASP.NET 
+Boilerplate makes interception and check input automatically. There are much 
+more about validation. See
+<a href="/Pages/Documents/Validating-Data-Transfer-Objects">DTO validation</a> 
+document.</p>
+<p><strong>EntityDto</strong> is a simple class that declares Id property since 
+they are common for entities. Has a generic version if your entity's primary key 
+is not int. It also marked by <strong>IDto</strong> interface. PersonDto does 
+not include Password property as you see, since it's not needed for presentation 
+layer. Even it can be dangerous to send all people's password to presentation 
+layer. Think that a Javascript client requested it, anyone can easily grab all 
+passwords.</p>
+<p>Let's implement <strong>IPersonAppService</strong> before go further.</p>
+<pre lang="cs">public class PersonAppService : IPersonAppService
+{
+    private readonly IPersonRepository _personRepository;
+
+    public PersonAppService(IPersonRepository personRepository)
+    {
+        _personRepository = personRepository;
+    }
+
+    public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
+    {
+        //Get entities
+        var peopleEntityList = _personRepository.GetAllList(person =&gt; person.Name.Contains(input.SearchedName));
+
+        //Convert to DTOs
+        var peopleDtoList = peopleEntityList
+            .Select(person =&gt; new PersonDto
+                                {
+                                    Id = person.Id,
+                                    Name = person.Name,
+                                    EmailAddress = person.EmailAddress
+                                }).ToList();
+
+        return new SearchPeopleOutput { People = peopleDtoList };
+    }
+}</pre>
+<p>We get entities from database, <strong>convert </strong>them to DTOs and 
+return output. Notice that we did not validated input. ASP.NET Boilerplate
+<strong>validate</strong>s it. It even checks if input parameter is <strong>null
+</strong>and throws exception if so. This saves us to write guard clauses in 
+every method.</p>
+<p>But, probably you did not like converting code from a Person entity to a 
+PersonDto object. It's really a tedious work. Person entity could have much more 
+properties. </p>
+<h3 id="DocAutoMapping">Auto mapping between DTOs and entities</h3>
+<p>Fortunately there are tools that makes this very easy. <strong>
+<a href="http://automapper.org/" target="_blank">AutoMapper</a></strong> is one 
+of them. It's distributed on nuget, you can easily add to your project. Let's 
+write SearchPeople method again but using AutoMapper:</p>
+<pre lang="cs">public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
+{
+    var peopleEntityList = _personRepository.GetAllList(person =&gt; person.Name.Contains(input.SearchedName));
+    return new SearchPeopleOutput { People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(peopleEntityList) };
+}</pre>
+<p>That's all. You can add more properties to entity and DTO but converting code 
+does not changes. The only thing to do is define a mapping before using it:</p>
+<pre lang="cs">Mapper.CreateMap<span lang="tr">&lt;</span>Person, PersonDto<span lang="tr">&gt;</span>();</pre>
+<p>AutoMapper creates mapping code. Thus, dynamic mapping does not become 
+a performance problem. It's fast &amp; easy. AutoMapper creates a PersonDto for a Person entity and assign DTO's properties 
+using naming conventions. Naming conventions can be complex and configurable. Also, 
+you can define custom maps and much more. See <a href="http://automapper.org/" target="_blank">AutoMapper</a>'s documentation 
+for more information.</p>
+
+<h4 id="DocAutoMappingHelpers">Mapping using attributes and extension methods</h4>
+
+<p>ASP.NET Boilerplate provides several attributes and extension methods to define mappings. 
+To use it, add
+<a href="http://www.nuget.org/packages/Abp.AutoMapper">Abp.AutoMapper</a> nuget 
+package to your project. Then, use attribute
+<strong>AutoMap</strong> for two way mapping, <strong>AutoMapFrom</strong> and <strong>AutoMapTo</strong> for one way mapping.
+Use <strong>MapTo </strong> extension methods to map one object to another. 
+Example mapping definition:</p>
+
+<pre lang="cs">[AutoMap(typeof(MyClass2))] //define two-way mapping
+public class MyClass1
+{
+    public string TestProp { get; set; }
+}
+
+public class MyClass2
+{
+    public string TestProp { get; set; }
+}</pre>
+
+<p>Then you can map them using MapTo extension method:</p>
+
+<pre lang="cs">var obj1 = new MyClass1 { TestProp = "Test value" };
+var obj2 = obj1.MapTo&lt;MyClass2&gt;(); //Creates a new MyClass2 object with TestProp copied from obj1.</pre>
+
+<p>The code above creates a new MyClass2 object from a MyClass1 object. Also, 
+you can map to an existing object as shown below:</p>
+<pre>var obj1 = new MyClass1 { TestProp = &quot;Test value&quot; };
+var obj2 = new MyClass2();
+obj1.MapTo(obj2); //Sets properties of obj2 from obj1</pre>
+
+<h3 id="DocHelperDtoInterfaces">Helper interfaces and classes</h3>
+
+<p>ASP.NET provides some helper interfaces that can be implemented to
+standardize common DTO property names.</p>
+
+<p><strong>ILimitedResultRequest </strong>defines <strong>MaxResultCount</strong>
+property. So, you can implement it in your input DTOs to standardize limiting
+result set.</p>
+
+<p><strong>IPagedResultRequest</strong> extends <strong>ILimitedResultRequest</strong>
+by adding <strong>SkipCount</strong>. So, we can implement this interface in
+SearchPeopleInput for paging:</p>
+
+<pre lang="cs">public class SearchPeopleInput : IInputDto, IPagedResultRequest
+{
+    [StringLength(40, MinimumLength = 1)]
+    public string SearchedName { get; set; }
+
+    public int MaxResultCount { get; set; }
+    public int SkipCount { get; set; }
+}
+</pre>
+<p>As a result to a paged request, you can return an output DTO that implements
+<strong>IHasTotalCount</strong>. Naming standardization helps us to create 
+re-usable codes and conventions. See other interfaces and classes under <strong>
+Abp.Application.Services.Dto</strong> namespace.</p>
+
+</body>
+
+</html>

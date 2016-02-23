@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate documentation</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<p>Message API is used to show a message to the user or to get a confirmation 
+from user.</p>
+<p>Message API is implemented using
+<a href="http://tristanedwards.me/sweetalert" target="_blank">sweetalert</a> by 
+default. To make sweetalert work, you should include it's css &amp; javascript 
+files, then include <strong>abp.sweet-alert.js</strong> to your page as adapter.</p>
+<h3>Show message</h3>
+<p>Examples:</p>
+
+<pre lang="js">abp.message.info('some info message', 'some optional title');
+abp.message.success('some success message', 'some optional title');
+abp.message.warn('some warning message', 'some optional title');
+abp.message.error('some error message', 'some optional title');</pre>
+
+<p>&nbsp;A success message is shown below:</p>
+<p><img alt="Success message using sweetalert" height="346" src="/SiteFiles/Content/Documents/Resources/success_message.png" width="509" /></p>
+<h3>Confirmation</h3>
+<p>Example:</p>
+<pre lang="js">abp.message.confirm(
+    'User admin will be deleted.',
+    'Are you sure?',
+    function (isConfirmed) {
+        if (isConfirmed) {
+            //...delete user
+        }
+    }
+);</pre>
+<p>Second argument (title) is optional here (so, callback function can be second 
+argument).</p>
+<p>A confirmation message is shown below:</p>
+<p><img alt="Confirmation message using sweetalert" height="347" src="/SiteFiles/Content/Documents/Resources/confirmation_message.png" width="497" /></p>
+<p>ASP.NET 
+Boilerplate internally uses Message API. For example, it calls 
+abp.message.error if an <a href="/Pages/Documents/Javascript-API/AJAX">AJAX</a> call
+fails.</p>
+
+</body>
+
+</html>
