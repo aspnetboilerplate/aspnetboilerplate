@@ -3,7 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>ASP.NET Boilerplate - Module Zero</title>
+<title>Startup Template</title>
 <link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
 </head>
 
@@ -63,7 +63,7 @@
 	<p>Just send a <strong>POST</strong> request to <strong>
 	http://localhost:6334/api/Account/Authenticate</strong> with <strong>
 	Context-Type="application/json"</strong> header as shown below:</p>
-	<p><img class="img-thumbnail" alt="Request for token" height="670" src="/SiteFiles/Content/Documents/Resources/token-authenticate.png" width="673" /></p>
+	<p><img class="img-thumbnail" alt="Request for token" height="670" src="images/token-authenticate.png" width="673" /></p>
 	<p>We sent a <strong>JSON request body</strong> includes <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. 
 	Also, <strong>tenancyName </strong>should be sent for <strong>tenant</strong> users. As seen 
 	above, <strong>result</strong> property of returning JSON contains the token. We 
@@ -73,7 +73,7 @@
 	action. All <strong>application services </strong>are available to be used remotely. For 
 	example, we can use the <strong>Tenant service</strong> to get a <strong>list of
 	tenants</strong>:</p>
-	<p><img class="img-thumbnail" alt="Authorization via token" height="713" src="/SiteFiles/Content/Documents/Resources/token-request.png" width="702" /></p>
+	<p><img class="img-thumbnail" alt="Authorization via token" height="713" src="images/token-request.png" width="702" /></p>
 	<p>Just made a <strong>POST</strong> request to <strong>
 	http://localhost:6334/api/services/app/tenant/GetTenants</strong> with <strong>
 	Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>

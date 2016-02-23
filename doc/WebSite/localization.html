@@ -3,6 +3,7 @@
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Localization</title>
 <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 <style type="text/css">
 .auto-style1 {
@@ -70,7 +71,7 @@ used to identify a text. You can use <strong>value </strong>attribute or
 last one) to set value of the localization text. We create a seperated XML file for 
 <strong>each language</strong> as shown below:</p>
 <p>
-<img alt="Localization files" height="89" src="/SiteFiles/Content/Documents/Resources/localization_files2.png" width="217" /></p>
+<img alt="Localization files" height="89" src="images/localization_files2.png" width="217" /></p>
 <p><strong>SimpleTaskSystem</strong> is the <strong>source name</strong> here 
 and SimpleTaskSystem.xml defines the <strong>default language</strong>. When a text is requested, ASP.NET 
 Boilerplate gets the text from current language's XML file (finds current 
@@ -128,7 +129,7 @@ since dot notation causes problems when finding resources.</p>
 	"en"</strong> declares that this JSON file contains English texts. We create 
 	a seperated JSON file for <strong>each language</strong> as shown below:</p>
 	<p>
-<img alt="JSON localization files" height="64" src="/SiteFiles/Content/Documents/Resources/json-localization-source-files.png" width="212" /></p>
+<img alt="JSON localization files" height="64" src="images/json-localization-source-files.png" width="212" /></p>
 	<p><strong>MySourceName </strong>is the <strong>source name</strong> here, 
 	and MySourceName.json defines the <strong>default language</strong>. It's 
 	similar to XML files.</p>
@@ -175,12 +176,12 @@ since dot notation causes problems when finding resources.&nbsp;</p>
 a resource file for each language as shown below (Right click to the project, 
 choose add new item then find resources file).</p>
 <p>
-<img alt="Localization resource files" height="97" src="/SiteFiles/Content/Documents/Resources/resource_files.png" width="149" /></p>
+<img alt="Localization resource files" height="97" src="images/resource_files.png" width="149" /></p>
 <p><strong>MyTexts.resx</strong> contains the default language texts and MyTexts<strong>.tr</strong>.resx 
 contains texts for Turkish language. When we open MyTexts.resx, we can see all 
 texts:</p>
 <p>
-<img alt="Content of a resource file" height="174" src="/SiteFiles/Content/Documents/Resources/resource_files_content.png" width="466" /></p>
+<img alt="Content of a resource file" height="174" src="images/resource_files_content.png" width="466" /></p>
 <p>In this case, ASP.NET Boilerplate uses .NET's built-in resource manager for 
 localization. You should configure a localization source for the resource:</p>
 <pre lang="cs">Configuration.Localization.Sources.Add(
@@ -329,7 +330,7 @@ IDictionaryBasedLocalizationSource interface).</p>
 <strong>Abp.Web</strong> nuget package defines a localization source named "<strong>AbpWeb</strong>" 
 as embedded XML files:</p>
 <p>
-<img alt="AbpWeb localization source files" height="147" src="/SiteFiles/Content/Documents/Resources/AbpWeb-localization-source.png" width="216" /></p>
+<img alt="AbpWeb localization source files" height="147" src="images/AbpWeb-localization-source.png" width="216" /></p>
 <p>&nbsp;Default (English) XML file 
 is like below (only first two texts are shown):</p>
 <pre lang="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
