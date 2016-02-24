@@ -35,7 +35,7 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 {
     public HomeController()
     {
-				<strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
+        <strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
     }
 
     public ActionResult Index()
@@ -69,7 +69,7 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 	and actions. Example:</p>
 			<pre lang="cs">public class HomeController : AbpController
 {
-				<strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
+    <strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
     public ActionResult Index()
     {
         return View();
@@ -94,7 +94,7 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
         _userRepository = userRepository;
     }
 
-				<strong>[UnitOfWork]</strong>
+    <strong>[UnitOfWork]</strong>
     public <strong>virtual</strong> ActionResult Users(string filter)
     {
         var users = _userRepository
