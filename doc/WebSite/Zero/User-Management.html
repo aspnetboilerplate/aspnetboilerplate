@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>User management</title>
+<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>User Entity</h3>
+<p>User entity represents a <strong>user of the application</strong>. It should be derived from 
+<strong>AbpUser</strong> class as shown below:</p>
+<pre lang="cs">public class User : AbpUser&lt;Tenant, User&gt;
+{
+    //add your own user properties here
+}</pre>
+<p>This class is created when you <a href="/Pages/Documents/Zero/Installation">install</a> module-zero. 
+Users are stored in <strong>AbpUsers</strong> table in the database. You can add 
+your custom properties to User class (and create database migrations for the 
+changes).</p>
+<p>AbpUser class defines some base properties. Some of the properties are:</p>
+<ul>
+	<li><strong>UserName</strong>: Login name of the user Should be <strong>
+	unique</strong> for a <a href="/Pages/Documents/Zero/Tenant-Management">
+	tenant</a>.</li>
+	<li><strong>EmailAddress</strong>: Email address of the user. Should be
+	<strong>unique</strong> for a
+	<a href="/Pages/Documents/Zero/Tenant-Management">tenant</a>.</li>
+	<li><strong>Password</strong>: Hashed password of the user.</li>
+	<li><strong>IsActive</strong>: True, if this user can login to the 
+	application.</li>
+	<li><strong>Name</strong> and <strong>Surname</strong> of the user.</li>
+</ul>
+<p>There are also some properties like <strong>Roles</strong>, <strong>
+Permissions</strong>, <strong>Tenant</strong>, <strong>Settings</strong>,
+<strong>IsEmailConfirmed</strong> and so on. Check AbpUser class for more 
+information.</p>
+<p>AbpUser class is inherited from <strong>FullAuditedEntity</strong>. That means it has creation, modification and deletion audit properties. It's also 
+<strong><a href="/Pages/Documents/Data-Filters#DocSoftDelete">Soft-Delete</a></strong>. So, when we delete a 
+user, it's not deleted from database, just marked as deleted.</p>
+<p>AbpUser class implements
+<a href="/Pages/Documents/Data-Filters#DocMayHaveTenant">IMayHaveTenant</a> 
+filter to properly work in a multi-tenant application.</p>
+<p>Finally, <strong>Id</strong> of the User is defined as <strong>long</strong>.</p>
+<h3>User Manager</h3>
+<p><strong>UserManager </strong>is a service to perform <strong>domain logic</strong> 
+for users:</p>
+<pre lang="cs">public class UserManager : AbpUserManager&lt;Tenant, Role, User&gt;
+{
+    //...
+}</pre>
+<p>You can <a href="/Pages/Documents/Dependency-Injection">inject</a> and use 
+UserManager to create, delete, update users, grant permissions, change roles for 
+users and much more. You can add your own methods here. Also, you can
+<strong>override</strong> any method of <strong>AbpUserManager</strong> base class for your own needs.</p>
+<h4>Multi Tenancy</h4>
+<p><em>If you're not creating a multi-tenant application, you can skip this 
+section. See <a href="/Pages/Documents/Multi-Tenancy">multi-tenancy 
+documentation</a> for more information about multi-tenancy.</em></p>
+<p>UserManager is designed to work for a <strong>single tenant</strong> in a 
+time. It works for the <strong>current tenant</strong> as default. Let's see 
+some usages of the UserManager:</p>
+<pre lang="cs">public class MyTestAppService : ApplicationService
+{
+    private readonly UserManager _userManager;
+
+    public MyTestAppService(UserManager userManager)
+    {
+        _userManager = userManager;
+    }
+
+    public void TestMethod_1()
+    {
+        //Find a user by email for current tenant
+        var user = <strong>_userManager.FindByEmail(&quot;sampleuser@aspnetboilerplate.com&quot;);</strong>
+    }
+
+    public void TestMethod_2()
+    {
+        //Switch to tenant 42
+        CurrentUnitOfWork.<strong>SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 42);</strong>
+
+        //Find a user by email for the tenant 42
+        var user = _userManager.FindByEmail(&quot;sampleuser@aspnetboilerplate.com&quot;);
+    }
+
+    public void TestMethod_3()
+    {
+        //Disabling MayHaveTenant filter, so we can reach to all users
+        using (CurrentUnitOfWork.<strong>DisableFilter(AbpDataFilters.MayHaveTenant)</strong>)
+        {
+            //Now, we can search for a user name in all tenants
+            var users = _userManager.Users.Where(u =&gt; u.UserName == &quot;sampleuser&quot;).ToList();
+
+            //Or we can add TenantId filter if we want to search for a specific tenant
+            var user = _userManager.Users.FirstOrDefault(u =&gt; u.TenantId == 42 &amp;&amp; u.UserName == &quot;sampleuser&quot;);
+        }
+    }
+}</pre>
+<h4>User Login</h4>
+<p>UserManager has a <strong>LoginAsync</strong> method used to login to the 
+application. It checks all logic for login and returns a login result. See
+<a href="/Pages/Documents/Zero/Installation#DocAccountController">sample account 
+controller</a> for example usage of the Login method.</p>
+	<h4>About IdentityResults</h4>
+	<p>Some methods of UserManager return IdentityResult as a result instead of 
+	throwing exceptions for some cases. This is nature of ASP.NET Identity 
+	Framework. Module-zero also follows it. So, we should check this returning 
+	result object to know if operation succeeded.</p>
+	<p>Module-zero defines <strong>CheckErrors</strong> extension method that 
+	automatically checks errors and throws exception (a localized
+	<a href="/Pages/Documents/Handling-Exceptions#DocShowUserFriendlyExceptions">
+	UserFriendlyException</a>) if needed. Example usage:</p>
+	<pre lang="cs">(await UserManager.CreateAsync(user)).CheckErrors();</pre>
+	<p>To get localized exceptions, we should provide a 
+	<a href="/Pages/Documents/Localization">ILocalizationManager</a> 
+	instance:</p>
+	<pre lang="cs">(await UserManager.CreateAsync(user)).CheckErrors(LocalizationManager);</pre>
+<h3>External Authentication</h3>
+<p>Login method of module-zero authenticate a user from the AbpUsers table in 
+the database. Some applications may require to authenticate users from some 
+external sources (like active directory, from another database's tables or even 
+from a remote service).</p>
+<p>For such cases, UserManager defines an extension point named 'external 
+authentication source'. We can create a class derived from <strong>
+IExternalAuthenticationSource</strong> and register to the configuration. There 
+is <strong>DefaultExternalAuthenticationSource</strong> class to simplify 
+implementation of IExternalAuthenticationSource. Let's see an example:</p>
+<pre lang="cs">public class MyExternalAuthSource : DefaultExternalAuthenticationSource&lt;Tenant, User&gt;
+{
+    public override string Name
+    {
+        get { return &quot;MyCustomSource&quot;; }
+    }
+
+    public override Task&lt;bool&gt; TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, Tenant tenant)
+    {
+        //TODO: authenticate user and return true or false
+    }
+}</pre>
+<p>In TryAuthenticateAsync method, we can check user name and password from some 
+source and return true if given user is authenticated by this source. Also, we 
+can override CreateUser and UpdateUser methods to control user creation and 
+updating for this source.</p>
+<p>When a user authenticated by an external source, module-zero checks if this 
+user does exists in the database (AbpUsers table). If not, it calls CreateUser 
+to create the user, otherwise it calls UpdateUser to allow authentication source 
+to update existing user informations.</p>
+<p>We can define more than one external authentication source in an application. 
+AbpUser entity has an AuthenticationSource property that shows which source 
+authenticated this user.</p>
+<p>To register our authenciation source, we can use such a code in
+<a href="/Pages/Documents/Module-System">PreInitialize</a> of our module:</p>
+<pre lang="cs">Configuration.Modules.Zero().UserManagement.ExternalAuthenticationSources.Add&lt;MyExternalAuthSource&gt;();</pre>
+<h4>LDAP/Active Directory</h4>
+<p>LdapAuthenticationSource is an implementation of external authentication to 
+make users login with their LDAP (active directory) user name and password.</p>
+<p>If we want to use LDAP authentication, we first add 
+<a href="https://www.nuget.org/packages/Abp.Zero.Ldap" target="_blank">
+Abp.Zero.Ldap</a> nuget 
+package to our project (generally to Core (domain) project). Then we should extend 
+<strong>LdapAuthenticationSource</strong> for our application as shown 
+below:</p>
+<pre lang="cs">public class MyLdapAuthenticationSource : LdapAuthenticationSource&lt;Tenant, User&gt;
+{
+    public MyLdapAuthenticationSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
+        : base(settings, ldapModuleConfig)
+    {
+    }
+}</pre>
+<p>Lastly, we should set a module dependency to <strong>AbpZeroLdapModule</strong> 
+and <strong>enable</strong> LDAP with the auth source created above:</p>
+	<pre lang="cs"><strong>[DependsOn(typeof(AbpZeroLdapModule))]
+</strong>public class MyApplicationCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+<strong>        Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+</strong>    }
+
+    ...
+}</pre>
+	<p>After these steps, LDAP module will be enabled for your application. But 
+	LDAP auth is not enabled by default. We can enable it using settings.</p>
+
+<h5>Settings</h5>
+	<p><strong>LdapSettingNames</strong> class defines constants for setting names. You can use these 
+constant names while changing settings (or getting settings). LDAP settings 
+are <strong>per tenant</strong> (for multi-tenant applications). So, different tenants have 
+different settings (see setting definitions on
+<a href="https://github.com/aspnetboilerplate/module-zero/blob/master/src/Abp.Zero.Ldap/Ldap/Configuration/LdapSettingProvider.cs" target="_blank">
+github</a>).&nbsp;</p>
+	<p>As you can see in the MyLdapAuthenticationSource<strong> constructor</strong>, LdapAuthenticationSource expects
+<strong>ILdapSettings</strong> as a constructor argument. This interface is used 
+to get LDAP settings like domain, user name and password to connect to Active 
+Directory. Default implementation (<strong>LdapSettings</strong> class) gets these settings from 
+the <a href="/Pages/Documents/Setting-Management">setting manager</a>.</p>
+	<p>If you work with Setting manager, then no problem. You can change LDAP 
+	settings using <a href="/Pages/Documents/Setting-Management">setting manager 
+	API</a>. If you want, you can add an initial/seed data to database to enable 
+	LDAP auth by default.</p>
+	<p>Note: If you don't define domain, username and password, LDAP authentication works for current 
+domain if your application runs in a domain with appropriate privileges.</p>
+	<h5>Custom Settings</h5>
+	<p>If you want to define 
+	another setting source, you can implement a custom ILdapSettings class as 
+	shown below:</p>
+	<pre lang="cs">public class MyLdapSettings : <strong>ILdapSettings</strong>
+{
+    public async Task&lt;bool&gt; GetIsEnabled(int? tenantId)
+    {
+        return true;
+    }
+
+    public async Task&lt;ContextType&gt; GetContextType(int? tenantId)
+    {
+        return ContextType.Domain;
+    }
+
+    public async Task&lt;string&gt; GetContainer(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetDomain(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetUserName(int? tenantId)
+    {
+        return null;
+    }
+
+    public async Task&lt;string&gt; GetPassword(int? tenantId)
+    {
+        return null;
+    }
+}</pre>
+	<p>And register it to IOC in PreInitialize of your module:</p>
+	<pre lang="cs">[DependsOn(typeof(AbpZeroLdapModule))]
+public class MyApplicationCoreModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+<strong>        IocManager.Register&lt;ILdapSettings, MyLdapSettings&gt;(); //change default setting source</strong>
+        Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+    }
+
+    ...
+}</pre>
+
+<p>Then you can get LDAP settings from any other source.</p>
+
+</div>
+
+</body>
+
+</html>
