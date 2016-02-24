@@ -35,7 +35,7 @@ the core module class (AbpZeroSampleCoreModule class for this sample) and add
 				<strong>DependsOn</strong> attribute for <strong>AbpZeroCoreModule</strong> as 
 shown below:</p>
 			<pre lang="cs">
-				<strong>[DependsOn(typeof(AbpZeroCoreModule))]</strong>
+<strong>[DependsOn(typeof(AbpZeroCoreModule))]</strong>
 public class AbpZeroSampleCoreModule : AbpModule
 {
     public override void Initialize()
@@ -358,7 +358,7 @@ You can use such a class as initial data builder:</p>
         ContextKey = &quot;AbpZeroSample&quot;;
     }
 
-				<strong>    protected override void Seed(AbpZeroSample.EntityFramework.AbpZeroSampleDbContext context)
+    <strong>protected override void Seed(AbpZeroSample.EntityFramework.AbpZeroSampleDbContext context)
     {
         context.DisableAllFilters();
         new DefaultTenantRoleAndUserBuilder(context).Build();
@@ -385,8 +385,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 
-				<strong>[assembly: OwinStartup(typeof(Startup))]
-				</strong>
+<strong>[assembly: OwinStartup(typeof(Startup))]</strong>
 namespace AbpZeroSample.Web
 {
     public class Startup
@@ -510,7 +509,7 @@ appropriate parameters.</p>
 			<p>Now, we can add an AbpAuthorize attribute to HomeController to ensure only 
 authenticated users can enter to the page:</p>
 			<pre lang="cs">
-				<strong>[AbpMvcAuthorize]</strong>
+<strong>[AbpMvcAuthorize]</strong>
 public class HomeController : AbpZeroSampleControllerBase
 {
     public ActionResult Index()

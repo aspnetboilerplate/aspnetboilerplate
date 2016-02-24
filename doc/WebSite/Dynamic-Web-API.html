@@ -72,8 +72,8 @@ useful if you will build for all application services except a few one.</p>
 
 DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task")
-    .ForMethod("CreateTask")<strong>.DontCreateAction()
-				</strong>    .Build();</pre>
+    .ForMethod("CreateTask")<strong>.DontCreateAction()</strong>.Build();
+</pre>
 			<p>In this code, we created dynamic web api controllers for all application 
 services in an assembly. Then overrided configuration for a single application 
 service (ITaskAppService) to ignore CreateTask method.</p>
@@ -93,13 +93,13 @@ in different ways.</p>
 interface:</p>
 			<pre lang="cs">public interface ITaskAppService : IApplicationService
 {
-				<strong>[HttpGet]</strong>
+    <strong>[HttpGet]</strong>
     GetTasksOutput GetTasks(GetTasksInput input);
 
-				<strong>[HttpPut]</strong>
+    <strong>[HttpPut]</strong>
     void UpdateTask(UpdateTaskInput input);
 
-				<strong>[HttpPost]</strong>
+    <strong>[HttpPost]</strong>
     void CreateTask(CreateTaskInput input);
 }</pre>
 
@@ -111,7 +111,7 @@ nuget package from your project.</p>
 WithConventionalVerbs</strong> method as shown below:</p>
 			<pre lang="cs">DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
-				<strong>.WithConventionalVerbs()</strong>
+    <strong>.WithConventionalVerbs()</strong>
     .Build();</pre>
 			<p>In this case, HTTP verbs are determined by method name prefixes:</p>
 			<ul>
@@ -185,7 +185,7 @@ Consider the sample below:</p>
         function($scope, <strong>taskService</strong>) {
             var vm = this;
             vm.tasks = [];
-				<strong>taskService.getTasks</strong>({
+            <strong>taskService.getTasks</strong>({
                 state: 0
             }).success(function(result) {
                 vm.tasks = result.tasks;
@@ -214,7 +214,7 @@ to your page:</p>
 	example application service:</p>
 			<pre lang="cs">public interface ITestAppService : IApplicationService
 {
-				<strong>[DontWrapResult]</strong>
+    <strong>[DontWrapResult]</strong>
     DoItOutput DoIt(DoItInput input);
 }</pre>
 			<p>We disabled wrapping for DoIt method. This properties should be declared 

@@ -91,8 +91,8 @@ time. It works for the <strong>current tenant</strong> as default.</p>
 {
     public virtual int TenantId { get; set; }
 
-				<strong>    public virtual long OrganizationUnitId { get; set; }
-				</strong>
+    <strong>public virtual long OrganizationUnitId { get; set; }</strong>
+    
     public virtual string Name { get; set; }
 
     public virtual float Price { get; set; }
@@ -123,11 +123,12 @@ time. It works for the <strong>current tenant</strong> as default.</p>
         _productRepository = productRepository;
     }
 
-				<strong>    public List&lt;Product&gt; GetProductsInOu(long organizationUnitId)
+    <strong>public List&lt;Product&gt; GetProductsInOu(long organizationUnitId)
     {
         return _productRepository.GetAllList(p =&gt; p.OrganizationUnitId == organizationUnitId);
     }
-				</strong>}</pre>
+				</strong>
+}</pre>
 			<p>We can simply write a predicate against Product.OrganizationUnitId as 
 	shown above.</p>
 			<h4>Get Entities In An Organization Unit Including It's Child Organization Units</h4>
@@ -146,7 +147,7 @@ time. It works for the <strong>current tenant</strong> as default.</p>
         _organizationUnitRepository = organizationUnitRepository;
     }
 
-				<strong>    [UnitOfWork]
+    <strong>[UnitOfWork]
     public virtual List&lt;Product&gt; GetProductsInOuIncludingChildren(long organizationUnitId)
     {
         var code = _organizationUnitRepository.Get(organizationUnitId).Code;
@@ -181,7 +182,7 @@ time. It works for the <strong>current tenant</strong> as default.</p>
         _userManager = userManager;
     }
 
-				<strong>    public async Task&lt;List&lt;Product&gt;&gt; GetProductsForUserAsync(long userId)
+    <strong>public async Task&lt;List&lt;Product&gt;&gt; GetProductsForUserAsync(long userId)
     {
         var user = await _userManager.GetUserByIdAsync(userId);
         var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
@@ -210,7 +211,7 @@ time. It works for the <strong>current tenant</strong> as default.</p>
         _userManager = userManager;
     }
 
-				<strong>    [UnitOfWork]
+    <strong>[UnitOfWork]
     public virtual async Task&lt;List&lt;Product&gt;&gt; GetProductsForUserIncludingChildOusAsync(long userId)
     {
         var user = await _userManager.GetUserByIdAsync(userId);

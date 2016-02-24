@@ -185,13 +185,13 @@ below:</p>
 			<p>Lastly, we should set a module dependency to <strong>AbpZeroLdapModule</strong> 
 and <strong>enable</strong> LDAP with the auth source created above:</p>
 			<pre lang="cs">
-				<strong>[DependsOn(typeof(AbpZeroLdapModule))]
-				</strong>public class MyApplicationCoreModule : AbpModule
+<strong>[DependsOn(typeof(AbpZeroLdapModule))]</strong>
+public class MyApplicationCoreModule : AbpModule
 {
     public override void PreInitialize()
     {
-				<strong>        Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
-				</strong>    }
+        <strong>Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));</strong>    
+    }
 
     ...
 }</pre>
@@ -259,7 +259,7 @@ public class MyApplicationCoreModule : AbpModule
 {
     public override void PreInitialize()
     {
-				<strong>        IocManager.Register&lt;ILdapSettings, MyLdapSettings&gt;(); //change default setting source</strong>
+        <strong>IocManager.Register&lt;ILdapSettings, MyLdapSettings&gt;(); //change default setting source</strong>
         Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
     }
 
