@@ -1,91 +1,91 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>ASP.NET MVC Controllers</title>
-<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
-</head>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>ASP.NET MVC Controllers</title>
+		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+	</head>
 
-<body>
+	<body>
 
-<div class="document-contents">
+		<div class="document-contents">
 
-<h3>Introduction</h3>
-<p>ASP.NET Boilerplate is integrated to <strong>ASP.NET MVC Controllers</strong> via <strong>
+			<h3>Introduction</h3>
+			<p>ASP.NET Boilerplate is integrated to <strong>ASP.NET MVC Controllers</strong> via <strong>
 Abp.Web.Mvc</strong> nuget package. You can create regular MVC Controllers as 
 you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> properly works for regular MVC Controllers.</p>
-	<p>But you should derive your controllers from <strong>
+			<p>But you should derive your controllers from <strong>
 	AbpController</strong>, which provides several benefits 
 	and better integrates to ASP.NET Boilerplate.</p>
-	<h3>AbpController Base Class</h3>
-	<p>This is a simple controller derived from AbpController:</p>
-	<pre lang="cs">public class HomeController : <strong>AbpController</strong>
+			<h3>AbpController Base Class</h3>
+			<p>This is a simple controller derived from AbpController:</p>
+			<pre lang="cs">public class HomeController : <strong>AbpController</strong>
 {
     public ActionResult Index()
     {
         return View();
     }
 }
-</pre>
-	<h4>Localization</h4>
-	<p>AbpController defines <strong>L</strong> method to make
-	<a href="/Pages/Documents/Localization">localization</a> easier. Example:</p>
-	<pre lang="cs">public class HomeController : AbpController
+			</pre>
+			<h4>Localization</h4>
+			<p>AbpController defines <strong>L</strong> method to make
+				<a href="/Pages/Documents/Localization">localization</a> easier. Example:</p>
+			<pre lang="cs">public class HomeController : AbpController
 {
     public HomeController()
     {
-        <strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
+				<strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
     }
-    
+
     public ActionResult Index()
     {
         var helloWorldText = <strong>L(&quot;HelloWorld&quot;)</strong>;
-        
+
         return View();
     }
 }</pre>
-	<p>You should set <strong>LocalizationSourceName</strong> to make <strong>L</strong> method 
+			<p>You should set <strong>LocalizationSourceName</strong> to make <strong>L</strong> method 
 	working. You can set it in your own base controller class, to not repeat for 
 	each controller.</p>
-	<h4>Exception Handling</h4>
-	<p>Exceptions are automatically handled, logged and a proper response is 
+			<h4>Exception Handling</h4>
+			<p>Exceptions are automatically handled, logged and a proper response is 
 	returned to the client. See <a href="/Pages/Documents/Handling-Exceptions">
 	exception handling</a> documentation for more.</p>
-	<h4>Result Wrapping&nbsp;</h4>
-	<p>ASP.NET Boilerplate <strong>wraps</strong> action results by default if 
+			<h4>Result Wrapping&nbsp;</h4>
+			<p>ASP.NET Boilerplate <strong>wraps</strong> action results by default if 
 	return type is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async 
 	actions). You can change this by using <strong>WrapResult</strong> and
-	<strong>DontWrapResult</strong> 
+				<strong>DontWrapResult</strong> 
 	attributes for controllers or actions. See
-	<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for more.</p>
-	<h4>Audit Logging</h4>
-	<p>Audit logs are automatically written if you derive from AbpController. 
+				<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for more.</p>
+			<h4>Audit Logging</h4>
+			<p>Audit logs are automatically written if you derive from AbpController. 
 	See <a href="/Pages/Documents/Audit-Logging">audit logs</a> documentation 
 	for more.</p>
-	<h4>Authorization</h4>
-	<p>You can use <strong>AbpMvcAuthorize</strong> attribute for your 
+			<h4>Authorization</h4>
+			<p>You can use <strong>AbpMvcAuthorize</strong> attribute for your 
 	controllers or actions to prevent unauthorized users to use your controllers 
 	and actions. Example:</p>
-	<pre lang="cs">public class HomeController : AbpController
+			<pre lang="cs">public class HomeController : AbpController
 {
-    <strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
+				<strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
     public ActionResult Index()
     {
         return View();
     }
 }</pre>
-	<p>AbpController also defines <strong>IsGranted</strong> method as a 
+			<p>AbpController also defines <strong>IsGranted</strong> method as a 
 	shortcut to check permissions.</p>
-	<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
+			<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
 	documentation for more.</p>
-	<h4>Unit Of Work</h4>
-	<p>MVC actions are <strong>not</strong>
-	<a href="/Pages/Documents/Unit-Of-Work">unit of work</a> by default. For 
+			<h4>Unit Of Work</h4>
+			<p>MVC actions are <strong>not</strong>
+				<a href="/Pages/Documents/Unit-Of-Work">unit of work</a> by default. For 
 	example, if you 
 	need database connection to be open in your action, you need to explicitly 
 	declare <strong>UnitOfWork</strong> attribute as shown below:</p>
-	<pre lang="cs">public class HomeController : AbpController
+			<pre lang="cs">public class HomeController : AbpController
 {
     private readonly IRepository&lt;User, long&gt; _userRepository;
 
@@ -94,7 +94,7 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
         _userRepository = userRepository;
     }
 
-    <strong>[UnitOfWork]</strong>
+				<strong>[UnitOfWork]</strong>
     public <strong>virtual</strong> ActionResult Users(string filter)
     {
         var users = _userRepository
@@ -105,28 +105,28 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
         return View(users);
     }
 }
-</pre>
-	<p>We declared <strong>UnitOfWork</strong> attribute. This is needed since 
+			</pre>
+			<p>We declared <strong>UnitOfWork</strong> attribute. This is needed since 
 	repository's <strong>GetAll()</strong> method returns <strong>IQueryable</strong>, 
 	which requires an open database connection while using <strong>ToList()</strong> 
 	method (because of deferred execution of IQueryable). Notice that it should 
 	also be <strong>virtual</strong> (because interception can not work 
 	otherwise).</p>
-	<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
+			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
 	documentation for more.</p>
-	<h4>Others</h4>
-	<p>You can also use pre-injected <a href="/Pages/Documents/Abp-Session">AbpSession</a>, 
-	<a href="/Pages/Documents/EventBus-Domain-Events">EventBus</a>, 
-	<a href="/Pages/Documents/Authorization">PermissionManager, PermissionChecker</a>, 
-	<a href="/Pages/Documents/Setting-Management">SettingManager</a>, 
-	<a href="/Pages/Documents/Feature-Management">FeatureManager, FeatureChecker</a>, 
-	<a href="/Pages/Documents/Localization">LocalizationManager</a>, 
-	<a href="/Pages/Documents/Logging">Logger</a>, 
-	<a href="/Pages/Documents/Unit-Of-Work">CurrentUnitOfWork</a> base 
+			<h4>Others</h4>
+			<p>You can also use pre-injected <a href="/Pages/Documents/Abp-Session">AbpSession</a>, 
+				<a href="/Pages/Documents/EventBus-Domain-Events">EventBus</a>, 
+				<a href="/Pages/Documents/Authorization">PermissionManager, PermissionChecker</a>, 
+				<a href="/Pages/Documents/Setting-Management">SettingManager</a>, 
+				<a href="/Pages/Documents/Feature-Management">FeatureManager, FeatureChecker</a>, 
+				<a href="/Pages/Documents/Localization">LocalizationManager</a>, 
+				<a href="/Pages/Documents/Logging">Logger</a>, 
+				<a href="/Pages/Documents/Unit-Of-Work">CurrentUnitOfWork</a> base 
 	properties and more.</p>
 
-</div>
+		</div>
 
-</body>
+	</body>
 
 </html>
