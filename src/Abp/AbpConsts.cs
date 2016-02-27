@@ -8,7 +8,7 @@ namespace Abp
         /// <summary>
         /// Current version of the ABP.
         /// </summary>
-        public const string CurrentVersion = "0.8.0.1";
+        public const string CurrentVersion = "0.8.2.1";
 
         /// <summary>
         /// Localization source name of ASP.NET Boilerplate framework.

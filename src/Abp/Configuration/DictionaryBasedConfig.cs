@@ -7,7 +7,7 @@ namespace Abp.Configuration
     /// <summary>
     /// Used to set/get custom configuration.
     /// </summary>
-    public class DictionayBasedConfig : IDictionaryBasedConfig
+    public class DictionaryBasedConfig : IDictionaryBasedConfig
     {
         /// <summary>
         /// Dictionary of custom configuration.
@@ -29,7 +29,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected DictionayBasedConfig()
+        protected DictionaryBasedConfig()
         {
             CustomSettings = new Dictionary<string, object>();
         }

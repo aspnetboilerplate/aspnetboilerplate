@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -103,6 +103,7 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
     <Compile Include="Notifications\INotificationDistributer.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Threading\RunnableBase.cs" />
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
+    <Compile Include="Logging\IHasLogSeverity.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
@@ -485,7 +487,7 @@
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
-    <Compile Include="Configuration\DictionayBasedConfig.cs" />
+    <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKeyAndTUser.cs" />
@@ -559,6 +561,7 @@
     <Compile Include="Timing\UtcClockProvider.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

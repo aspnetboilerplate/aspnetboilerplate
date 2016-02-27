@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
     /// <summary>
     /// This class is used to configure ABP and modules on startup.
     /// </summary>
-    internal class AbpStartupConfiguration : DictionayBasedConfig, IAbpStartupConfiguration
+    internal class AbpStartupConfiguration : DictionaryBasedConfig, IAbpStartupConfiguration
     {
         public IIocManager IocManager { get; private set; }
 
