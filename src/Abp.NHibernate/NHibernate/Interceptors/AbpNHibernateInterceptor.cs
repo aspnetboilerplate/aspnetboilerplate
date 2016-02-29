@@ -61,7 +61,7 @@ namespace Abp.NHibernate.Interceptors
             }
 
             //Set CreatorUserId for new entity
-            if (entity is ICreationAudited)
+            if (entity is ICreationAudited && _abpSession.Value.UserId.HasValue)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
@@ -117,7 +117,7 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
-            if (entity is IModificationAudited)
+            if (entity is IModificationAudited && _abpSession.Value.UserId.HasValue)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
@@ -156,7 +156,7 @@ namespace Abp.NHibernate.Interceptors
                     }
 
                     //set DeleterUserId
-                    if (entity is IDeletionAudited)
+                    if (entity is IDeletionAudited && _abpSession.Value.UserId.HasValue)
                     {
                         for (var i = 0; i < propertyNames.Length; i++)
                         {

@@ -477,7 +477,7 @@
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
-    <Compile Include="Configuration\DictionayBasedConfig.cs" />
+    <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKeyAndTUser.cs" />
