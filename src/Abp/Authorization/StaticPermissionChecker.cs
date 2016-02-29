@@ -1,7 +1,7 @@
 using System;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     internal static class StaticPermissionChecker
     {

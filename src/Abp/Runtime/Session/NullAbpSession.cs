@@ -1,6 +1,6 @@
-﻿using Abp.MultiTenancy;
+﻿using Adorable.MultiTenancy;
 
-namespace Abp.Runtime.Session
+namespace Adorable.Runtime.Session
 {
     /// <summary>
     /// Implements null object pattern for <see cref="IAbpSession"/>.

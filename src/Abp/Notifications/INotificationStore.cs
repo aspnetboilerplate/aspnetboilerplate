@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to store (persist) notifications.

@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Application.Services.Dto;
+using Adorable.Application.Services.Dto;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Represents a notification sent to a user.

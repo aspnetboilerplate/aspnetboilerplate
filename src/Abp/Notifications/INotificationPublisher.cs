@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Runtime.Session;
+using Adorable.Domain.Entities;
+using Adorable.Runtime.Session;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to publish notifications.

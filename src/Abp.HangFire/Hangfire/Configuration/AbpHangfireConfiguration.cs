@@ -1,7 +1,7 @@
 using Hangfire;
 using HangfireGlobalConfiguration = Hangfire.GlobalConfiguration;
 
-namespace Abp.Hangfire.Configuration
+namespace Adorable.Hangfire.Configuration
 {
     public class AbpHangfireConfiguration : IAbpHangfireConfiguration
     {

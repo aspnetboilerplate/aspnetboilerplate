@@ -1,6 +1,6 @@
 using System.Data.Entity;
 
-namespace Abp.EntityFramework
+namespace Adorable.EntityFramework
 {
     public sealed class SimpleDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : DbContext

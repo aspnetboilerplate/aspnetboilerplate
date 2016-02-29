@@ -5,18 +5,18 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - EntityFramework adapter")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - EntityFramework adapter")]
+[assembly: AssemblyTitle("ASP.NET Adorable- EntityFramework adapter")]
+[assembly: AssemblyDescription("ASP.NET Adorable- EntityFramework adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.EntityFramework")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.EntityFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
+[assembly: InternalsVisibleTo("Adorable.EntityFramework.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

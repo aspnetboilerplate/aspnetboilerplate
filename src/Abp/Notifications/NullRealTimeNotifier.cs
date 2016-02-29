@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Null pattern implementation of <see cref="IRealTimeNotifier"/>.

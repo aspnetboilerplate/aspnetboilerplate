@@ -1,6 +1,6 @@
-﻿using Abp.Application.Features;
+﻿using Adorable.Application.Features;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Adorable.TestBase.SampleApplication.ContacLists
 {
     public class ContactListAppService : IContactListAppService
     {

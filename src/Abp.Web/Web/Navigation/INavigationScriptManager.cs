@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Web.Navigation
+namespace Adorable.Web.Navigation
 {
     /// <summary>
     /// Used to generate navigation scripts.

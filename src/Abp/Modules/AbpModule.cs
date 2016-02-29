@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// This class must be implemented by all module definition classes.
@@ -60,7 +60,7 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// Checks if given type is an Abp module class.
+        /// Checks if given type is an Adorable module class.
         /// </summary>
         /// <param name="type">Type to check</param>
         public static bool IsAbpModule(Type type)

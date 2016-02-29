@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Runtime.Caching.Configuration;
-using Abp.Runtime.Caching.Memory;
+using Adorable.Configuration;
+using Adorable.Runtime.Caching.Configuration;
+using Adorable.Runtime.Caching.Memory;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Configuration
+namespace Adorable.Tests.Configuration
 {
     public class SettingManager_Tests : TestBaseWithLocalIocManager
     {

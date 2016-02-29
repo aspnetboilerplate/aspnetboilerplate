@@ -4,7 +4,7 @@ using System.Linq;
 using Castle.Windsor;
 using Microsoft.AspNet.SignalR;
 
-namespace Abp.Web.SignalR
+namespace Adorable.Web.SignalR
 {
     /// <summary>
     /// Replaces <see cref="DefaultDependencyResolver"/> to resolve dependencies from Castle Windsor (<see cref="IWindsorContainer"/>).

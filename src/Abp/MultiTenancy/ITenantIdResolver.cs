@@ -1,4 +1,4 @@
-﻿namespace Abp.MultiTenancy
+﻿namespace Adorable.MultiTenancy
 {
     /// <summary>
     /// Used to get current tenant id.

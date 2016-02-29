@@ -1,9 +1,9 @@
-using Abp.Application.Services;
-using Abp.Dependency;
+using Adorable.Application.Services;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
-namespace Abp.Authorization.Interceptors
+namespace Adorable.Authorization.Interceptors
 {
     /// <summary>
     /// This class is used to register interceptors on the Application Layer.

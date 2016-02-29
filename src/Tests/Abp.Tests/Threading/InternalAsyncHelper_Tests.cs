@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Abp.Threading;
+using Adorable.Threading;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Threading
+namespace Adorable.Tests.Threading
 {
     public class InternalAsyncHelper_Tests
     {

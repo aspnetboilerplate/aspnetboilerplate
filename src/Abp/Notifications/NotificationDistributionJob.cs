@@ -1,8 +1,8 @@
-﻿using Abp.BackgroundJobs;
-using Abp.Dependency;
-using Abp.Threading;
+﻿using Adorable.BackgroundJobs;
+using Adorable.Dependency;
+using Adorable.Threading;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// This background job distributes notifications to users.

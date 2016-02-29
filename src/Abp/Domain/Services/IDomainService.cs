@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Domain.Services
+namespace Adorable.Domain.Services
 {
     /// <summary>
     /// This interface must be implemented by all domain services to identify them by convention.

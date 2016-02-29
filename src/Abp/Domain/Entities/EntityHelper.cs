@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Domain.Entities
+namespace Adorable.Domain.Entities
 {
     /// <summary>
     /// Some helper methods for entities.

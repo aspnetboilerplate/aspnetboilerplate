@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Abp.Runtime.Caching.Configuration
+namespace Adorable.Runtime.Caching.Configuration
 {
     internal class CachingConfiguration : ICachingConfiguration
     {

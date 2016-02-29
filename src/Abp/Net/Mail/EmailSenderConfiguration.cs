@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Configuration;
-using Abp.Extensions;
+using Adorable.Configuration;
+using Adorable.Extensions;
 
-namespace Abp.Net.Mail
+namespace Adorable.Net.Mail
 {
     /// <summary>
     /// Implementation of <see cref="IEmailSenderConfiguration"/> that reads settings

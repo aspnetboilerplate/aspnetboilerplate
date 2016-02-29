@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     public class DataFilterConfiguration
     {

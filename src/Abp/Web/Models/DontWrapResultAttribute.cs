@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <summary>
     /// A shortcut for <see cref="WrapResultAttribute"/> to disable wrapping by default.

@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
 using NHibernate;
 using NHibernate.Linq;
 
-namespace Abp.NHibernate.Repositories
+namespace Adorable.NHibernate.Repositories
 {
     /// <summary>
     /// Base class for all repositories those uses NHibernate.

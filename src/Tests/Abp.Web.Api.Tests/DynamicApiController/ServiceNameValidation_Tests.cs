@@ -1,7 +1,7 @@
-﻿using Abp.WebApi.Controllers.Dynamic.Builders;
+﻿using Adorable.WebApi.Controllers.Dynamic.Builders;
 using Xunit;
 
-namespace Abp.Web.Api.Tests.DynamicApiController
+namespace Adorable.Web.Api.Tests.DynamicApiController
 {
     public class ServiceNameValidation_Tests
     {

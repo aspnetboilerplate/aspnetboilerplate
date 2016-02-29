@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Defines interface to use a dictionary to make configurations.

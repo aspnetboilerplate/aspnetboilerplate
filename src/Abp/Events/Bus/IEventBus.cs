@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Handlers;
+using Adorable.Events.Bus.Factories;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// Defines interface of the event bus.

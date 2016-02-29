@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// This interface is used to work with active unit of work.

@@ -1,12 +1,12 @@
 ﻿using System;
-using Abp.RedisCache.Configuration;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Caching.Configuration;
-using Abp.Tests;
+using Adorable.RedisCache.Configuration;
+using Adorable.Runtime.Caching;
+using Adorable.Runtime.Caching.Configuration;
+using Adorable.Tests;
 using Xunit;
 using Shouldly;
 
-namespace Abp.RedisCache.Tests
+namespace Adorable.RedisCache.Tests
 {
     public class RedisCacheManager_Test : TestBaseWithLocalIocManager
     {

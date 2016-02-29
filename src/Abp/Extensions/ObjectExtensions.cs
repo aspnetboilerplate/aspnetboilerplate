@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace Abp.Extensions
+namespace Adorable.Extensions
 {
     /// <summary>
     /// Extension methods for all objects.

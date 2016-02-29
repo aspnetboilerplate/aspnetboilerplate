@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Tests
+namespace Adorable.Tests
 {
     public abstract class TestBaseWithLocalIocManager : IDisposable
     {

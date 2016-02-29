@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Localization;
-using Abp.Runtime.Session;
-using Abp.Threading;
+using Adorable.Dependency;
+using Adorable.Localization;
+using Adorable.Runtime.Session;
+using Adorable.Threading;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     internal class AuthorizeAttributeHelper : IAuthorizeAttributeHelper, ITransientDependency
     {

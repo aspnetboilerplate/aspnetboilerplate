@@ -1,4 +1,4 @@
-﻿namespace Abp.MultiTenancy
+﻿namespace Adorable.MultiTenancy
 {
     /// <summary>
     /// Implements null object pattern for <see cref="ITenantIdResolver"/>.

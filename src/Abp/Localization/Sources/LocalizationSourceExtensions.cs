@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace Abp.Localization.Sources
+namespace Adorable.Localization.Sources
 {
     /// <summary>
     /// Extension methods for <see cref="ILocalizationSource"/>.

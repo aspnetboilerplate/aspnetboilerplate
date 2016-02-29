@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Used to pass needed objects on conventional registration process.

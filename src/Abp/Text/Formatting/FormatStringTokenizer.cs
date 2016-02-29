@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Abp.Text.Formatting
+namespace Adorable.Text.Formatting
 {
     internal class FormatStringTokenizer
     {

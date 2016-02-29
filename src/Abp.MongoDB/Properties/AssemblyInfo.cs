@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("Abp.MongoDB")]
+[assembly: AssemblyTitle("Adorable.MongoDB")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.MongoDB")]
+[assembly: AssemblyProduct("Adorable.MongoDB")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

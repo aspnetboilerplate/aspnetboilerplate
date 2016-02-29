@@ -1,6 +1,6 @@
-﻿using Abp.Localization.Dictionaries;
+﻿using Adorable.Localization.Dictionaries;
 
-namespace Abp.Localization.Sources
+namespace Adorable.Localization.Sources
 {
     /// <summary>
     /// Used to store a localization source extension information.

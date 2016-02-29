@@ -1,9 +1,9 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+﻿using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Session;
 
-namespace Abp.TestBase.Runtime.Session
+namespace Adorable.TestBase.Runtime.Session
 {
     public class TestAbpSession : IAbpSession, ISingletonDependency
     {

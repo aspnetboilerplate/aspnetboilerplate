@@ -1,8 +1,8 @@
-using Abp.Timing;
+using Adorable.Timing;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Extensions
+namespace Adorable.Tests.Extensions
 {
     public class DateTimeRange_Tests
     {

@@ -1,7 +1,7 @@
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public static class LocalizationSettingNames
     {
-        public const string DefaultLanguage = "Abp.Localization.DefaultLanguageName";
+        public const string DefaultLanguage = "Adorable.Localization.DefaultLanguageName";
     }
 }

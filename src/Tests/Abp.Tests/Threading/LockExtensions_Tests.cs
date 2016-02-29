@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Abp.Threading.Extensions;
+using Adorable.Threading.Extensions;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Threading
+namespace Adorable.Tests.Threading
 {
     public class LockExtensions_Tests
     {

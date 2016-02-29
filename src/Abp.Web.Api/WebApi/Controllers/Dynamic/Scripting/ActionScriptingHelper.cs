@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Text;
-using Abp.Extensions;
-using Abp.Reflection;
+using Adorable.Extensions;
+using Adorable.Reflection;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting
 {
     internal static class ActionScriptingHelper
     {

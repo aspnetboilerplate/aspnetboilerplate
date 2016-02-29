@@ -1,7 +1,7 @@
 using Castle.MicroKernel;
 using Xunit;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class Circular_Constructor_Dependency_Tests : TestBaseWithLocalIocManager
     {

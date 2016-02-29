@@ -1,4 +1,4 @@
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     internal class DisposableDependencyObjectWrapper : DisposableDependencyObjectWrapper<object>, IDisposableDependencyObjectWrapper
     {

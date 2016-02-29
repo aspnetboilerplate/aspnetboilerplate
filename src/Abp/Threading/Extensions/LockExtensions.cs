@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Threading.Extensions
+namespace Adorable.Threading.Extensions
 {
     /// <summary>
     /// Extension methods to make locking easier.

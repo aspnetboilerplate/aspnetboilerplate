@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Defines a unit of work.

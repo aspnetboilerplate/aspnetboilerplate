@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Reflection;
-using Abp.Dependency;
-using Abp.IO.Extensions;
+using Adorable.Dependency;
+using Adorable.IO.Extensions;
 
-namespace Abp.Resources.Embedded
+namespace Adorable.Resources.Embedded
 {
     /// <summary>
     /// 

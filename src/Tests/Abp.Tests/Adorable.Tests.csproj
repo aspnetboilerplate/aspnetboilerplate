@@ -9,8 +9,8 @@
     <ProjectGuid>{D1E31E85-0F7E-43BC-91E2-F9E544ECEBD5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Tests</RootNamespace>
-    <AssemblyName>Abp.Tests</AssemblyName>
+    <RootNamespace>Adorable.Tests</RootNamespace>
+    <AssemblyName>Adorable.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -173,9 +173,9 @@
     <EmbeddedResource Include="Resources\Embedded\MyResources\js\MyScriptFile1.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp\Abp.csproj">
+    <ProjectReference Include="..\..\Abp\Adorable.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp</Name>
+      <Name>Adorable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

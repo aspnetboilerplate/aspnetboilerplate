@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - NHibernate adapter")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - NHibernate adapter")]
+[assembly: AssemblyTitle("ASP.NET Adorable- NHibernate adapter")]
+[assembly: AssemblyDescription("ASP.NET Adorable- NHibernate adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.NHibernate")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.NHibernate")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

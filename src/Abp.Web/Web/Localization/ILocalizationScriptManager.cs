@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Abp.Web.Localization
+namespace Adorable.Web.Localization
 {
     /// <summary>
     /// Define interface to get localization javascript.

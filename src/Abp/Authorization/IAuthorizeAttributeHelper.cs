@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     internal interface IAuthorizeAttributeHelper
     {

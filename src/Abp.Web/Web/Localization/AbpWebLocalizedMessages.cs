@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Localization;
-using Abp.Localization.Sources;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
 
-namespace Abp.Web.Localization
+namespace Adorable.Web.Localization
 {
     /// <summary>
     /// This class is used to simplify getting localized messages in this assembly.

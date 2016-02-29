@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Abp.Application.Services.Dto;
+using Adorable.Application.Services.Dto;
 
-namespace Abp.Linq.Extensions
+namespace Adorable.Linq.Extensions
 {
     /// <summary>
     /// Some useful extension methods for <see cref="IQueryable{T}"/>.

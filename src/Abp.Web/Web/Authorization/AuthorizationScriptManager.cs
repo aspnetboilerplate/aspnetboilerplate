@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Runtime.Session;
+using Adorable.Authorization;
+using Adorable.Dependency;
+using Adorable.Runtime.Session;
 
-namespace Abp.Web.Authorization
+namespace Adorable.Web.Authorization
 {
     /// <summary>
     /// 

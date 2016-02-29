@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Authorization;
-using Abp.Collections.Extensions;
-using Abp.Runtime.Session;
-using Abp.Threading;
+using Adorable.Authorization;
+using Adorable.Collections.Extensions;
+using Adorable.Runtime.Session;
+using Adorable.Threading;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Some extension methods for <see cref="IFeatureChecker"/>.

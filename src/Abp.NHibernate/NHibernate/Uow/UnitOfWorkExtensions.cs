@@ -1,8 +1,8 @@
 using System;
-using Abp.Domain.Uow;
+using Adorable.Domain.Uow;
 using NHibernate;
 
-namespace Abp.NHibernate.Uow
+namespace Adorable.NHibernate.Uow
 {
     internal static class UnitOfWorkExtensions
     {

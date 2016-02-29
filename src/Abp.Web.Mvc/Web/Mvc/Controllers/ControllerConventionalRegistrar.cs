@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.Web.Mvc.Controllers
+namespace Adorable.Web.Mvc.Controllers
 {
     /// <summary>
     /// Registers all MVC Controllers derived from <see cref="Controller"/>.

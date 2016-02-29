@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Domain.Uow;
+using Adorable.Domain.Uow;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Domain.Uow
+namespace Adorable.Tests.Domain.Uow
 {
     public class InnerUnitOfWorkCompleteHandle_Test
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class SimpleDisposableObject : IDisposable
     {

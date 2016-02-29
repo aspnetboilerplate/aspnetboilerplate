@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Define interface for classes those are used to resolve dependencies.

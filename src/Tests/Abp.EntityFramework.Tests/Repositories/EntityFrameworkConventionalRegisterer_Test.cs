@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.EntityFramework.Dependency;
-using Abp.Tests;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.EntityFramework.Dependency;
+using Adorable.Tests;
 using Shouldly;
 using Xunit;
 
-namespace Abp.EntityFramework.Tests.Repositories
+namespace Adorable.EntityFramework.Tests.Repositories
 {
     public class EntityFrameworkConventionalRegisterer_Test : TestBaseWithLocalIocManager
     {

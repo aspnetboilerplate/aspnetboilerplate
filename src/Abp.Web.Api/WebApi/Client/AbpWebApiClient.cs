@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Web.Models;
+using Adorable.Dependency;
+using Adorable.Extensions;
+using Adorable.Web.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.WebApi.Client
+namespace Adorable.WebApi.Client
 {
     public class AbpWebApiClient : ITransientDependency, IAbpWebApiClient
     {

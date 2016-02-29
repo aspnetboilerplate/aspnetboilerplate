@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Dependency.Interceptors
+namespace Adorable.Tests.Dependency.Interceptors
 {
     public class Interceptors_Tests : TestBaseWithLocalIocManager
     {

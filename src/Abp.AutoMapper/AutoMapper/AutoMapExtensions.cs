@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Abp.AutoMapper
+namespace Adorable.AutoMapper
 {
     public static class AutoMapExtensions
     {

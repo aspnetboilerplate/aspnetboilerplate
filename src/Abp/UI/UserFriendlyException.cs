@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using Abp.Logging;
+using Adorable.Logging;
 
-namespace Abp.UI
+namespace Adorable.UI
 {
     /// <summary>
     /// This exception type is directly shown to the user.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// An upper level container for <see cref="ICache"/> objects. 

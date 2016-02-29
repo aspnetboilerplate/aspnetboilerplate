@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using Abp.Web.Models;
+using Adorable.Web.Models;
 
-namespace Abp.WebApi.Client
+namespace Adorable.WebApi.Client
 {
     /// <summary>
     /// This exception is thrown when a remote method call made and remote application sent an error message.

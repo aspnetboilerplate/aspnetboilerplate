@@ -1,4 +1,4 @@
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     /// <summary>
     /// This interface is used to normalize inputs before method execution.

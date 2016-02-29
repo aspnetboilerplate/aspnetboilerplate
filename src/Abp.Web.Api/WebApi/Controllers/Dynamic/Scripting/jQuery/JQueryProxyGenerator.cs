@@ -1,7 +1,7 @@
 using System.Text;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
     internal class JQueryProxyGenerator : IScriptProxyGenerator
     {

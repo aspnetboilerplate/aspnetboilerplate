@@ -1,10 +1,10 @@
 using System;
-using Abp.Domain.Entities;
-using Abp.NHibernate.Filters;
-using Abp.Runtime.Session;
+using Adorable.Domain.Entities;
+using Adorable.NHibernate.Filters;
+using Adorable.Runtime.Session;
 using FluentNHibernate.Mapping;
 
-namespace Abp.NHibernate.EntityMappings
+namespace Adorable.NHibernate.EntityMappings
 {
     /// <summary>
     /// This class is base class to map entities to database tables.

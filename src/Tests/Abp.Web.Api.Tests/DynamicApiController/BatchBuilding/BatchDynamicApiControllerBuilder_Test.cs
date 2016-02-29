@@ -1,12 +1,12 @@
 using System.Reflection;
-using Abp.Application.Services;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic;
-using Abp.WebApi.Controllers.Dynamic.Builders;
+using Adorable.Application.Services;
+using Adorable.Dependency;
+using Adorable.WebApi.Controllers.Dynamic;
+using Adorable.WebApi.Controllers.Dynamic.Builders;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
+namespace Adorable.Web.Api.Tests.DynamicApiController.BatchBuilding
 {
     public class BatchDynamicApiControllerBuilder_Test
     {

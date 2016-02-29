@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
-using Abp.Localization;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Json;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources;
-using Abp.Modules;
+using Adorable.Localization;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries.Json;
+using Adorable.Localization.Dictionaries.Xml;
+using Adorable.Localization.Sources;
+using Adorable.Modules;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization.Json
+namespace Adorable.Tests.Localization.Json
 {
     public class JsonAndXmlSourceMixing_Tests : TestBaseWithLocalIocManager
     {
@@ -73,7 +73,7 @@ namespace Abp.Tests.Localization.Json
                     "Lang",
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(),
-                         "Abp.Tests.Localization.Json.XmlSources"
+                         "Adorable.Tests.Localization.Json.XmlSources"
                         )
                     )
                 );
@@ -83,7 +83,7 @@ namespace Abp.Tests.Localization.Json
                     "Lang",
                     new JsonEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(),
-                         "Abp.Tests.Localization.Json.JsonSources"
+                         "Adorable.Tests.Localization.Json.JsonSources"
                         )));
 
             

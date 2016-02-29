@@ -1,4 +1,4 @@
-﻿namespace Abp.Runtime.Security
+﻿namespace Adorable.Runtime.Security
 {
     /// <summary>
     /// Used to get ABP-specific claim type names.

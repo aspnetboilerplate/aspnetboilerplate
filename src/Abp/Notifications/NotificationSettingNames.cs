@@ -1,4 +1,4 @@
-﻿namespace Abp.Notifications
+﻿namespace Adorable.Notifications
 {
     /// <summary>
     /// Pre-defined setting names for notification system.
@@ -7,8 +7,8 @@
     {
         /// <summary>
         /// A top-level switch to enable/disable receiving notifications for a user.
-        /// "Abp.Notifications.ReceiveNotifications".
+        /// "Adorable.Notifications.ReceiveNotifications".
         /// </summary>
-        public const string ReceiveNotifications = "Abp.Notifications.ReceiveNotifications";
+        public const string ReceiveNotifications = "Adorable.Notifications.ReceiveNotifications";
     }
 }

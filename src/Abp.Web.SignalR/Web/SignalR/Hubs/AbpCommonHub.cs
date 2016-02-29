@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.RealTime;
-using Abp.Runtime.Session;
+using Adorable.Dependency;
+using Adorable.RealTime;
+using Adorable.Runtime.Session;
 using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR;
 
-namespace Abp.Web.SignalR.Hubs
+namespace Adorable.Web.SignalR.Hubs
 {
     /// <summary>
     /// Common Hub of ABP.

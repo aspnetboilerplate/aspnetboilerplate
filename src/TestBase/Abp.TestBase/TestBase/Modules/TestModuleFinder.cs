@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Abp.Collections;
-using Abp.Modules;
+using Adorable.Collections;
+using Adorable.Modules;
 
-namespace Abp.TestBase.Modules
+namespace Adorable.TestBase.Modules
 {
     public class TestModuleFinder : IModuleFinder
     {

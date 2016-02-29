@@ -1,9 +1,9 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.EntityFramework;
-using Abp.EntityFramework.Repositories;
+﻿using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
+using Adorable.EntityFramework;
+using Adorable.EntityFramework.Repositories;
 
-namespace Abp.TestBase.SampleApplication.EntityFramework.Repositories
+namespace Adorable.TestBase.SampleApplication.EntityFramework.Repositories
 {
     public class SampleApplicationEfRepositoryBase<TEntity> : SampleApplicationEfRepositoryBase<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>

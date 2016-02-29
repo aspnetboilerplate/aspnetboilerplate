@@ -1,8 +1,8 @@
 using System;
-using Abp.Dependency;
-using Abp.Events.Bus.Handlers;
+using Adorable.Dependency;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Events.Bus.Factories
+namespace Adorable.Events.Bus.Factories
 {
     /// <summary>
     /// This <see cref="IEventHandlerFactory"/> implementation is used to get/release

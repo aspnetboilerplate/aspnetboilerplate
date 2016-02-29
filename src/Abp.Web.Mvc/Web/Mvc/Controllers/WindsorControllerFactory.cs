@@ -2,9 +2,9 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Web.Mvc.Controllers
+namespace Adorable.Web.Mvc.Controllers
 {
     /// <summary>
     /// This class is used to allow MVC to use dependency injection system while creating MVC controllers.

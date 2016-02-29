@@ -1,4 +1,4 @@
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This interface is used to define DTOs those are used as output parameters.

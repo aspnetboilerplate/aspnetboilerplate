@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using Abp.Collections;
-using Abp.Modules;
-using Abp.TestBase;
+using Adorable.Collections;
+using Adorable.Modules;
+using Adorable.TestBase;
 using Castle.MicroKernel.Registration;
 using NHibernate;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     public class NHibernateTestBase : AbpIntegratedTestBase
     {

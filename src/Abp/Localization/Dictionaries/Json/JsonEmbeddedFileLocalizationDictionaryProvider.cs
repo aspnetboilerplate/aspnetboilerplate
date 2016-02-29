@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Text;
-using Abp.IO.Extensions;
-using Abp.Localization.Dictionaries.Xml;
+using Adorable.IO.Extensions;
+using Adorable.Localization.Dictionaries.Xml;
 
-namespace Abp.Localization.Dictionaries.Json
+namespace Adorable.Localization.Dictionaries.Json
 {
     /// <summary>
     /// Provides localization dictionaries from JSON files embedded into an <see cref="Assembly"/>.

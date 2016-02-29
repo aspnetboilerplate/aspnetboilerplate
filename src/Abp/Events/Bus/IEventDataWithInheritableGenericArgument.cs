@@ -1,4 +1,4 @@
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// This interface must be implemented by event data classes that

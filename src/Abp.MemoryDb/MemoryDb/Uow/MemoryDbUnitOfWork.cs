@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.MemoryDb.Configuration;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.MemoryDb.Configuration;
 
-namespace Abp.MemoryDb.Uow
+namespace Adorable.MemoryDb.Uow
 {
     /// <summary>
     /// Implements Unit of work for MemoryDb.

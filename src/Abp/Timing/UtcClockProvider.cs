@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Timing
+namespace Adorable.Timing
 {
     /// <summary>
     /// Implements <see cref="IClockProvider"/> to work with UTC times.

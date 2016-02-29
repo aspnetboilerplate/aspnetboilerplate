@@ -1,4 +1,4 @@
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This interface is defined to standardize to return a page of items to clients.

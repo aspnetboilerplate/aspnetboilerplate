@@ -1,4 +1,4 @@
-namespace Abp.WebApi.Controllers.Dynamic.Scripting
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting
 {
     internal interface IScriptProxyGenerator
     {

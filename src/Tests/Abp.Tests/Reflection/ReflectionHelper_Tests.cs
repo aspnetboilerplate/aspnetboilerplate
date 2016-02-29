@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Reflection;
+using Adorable.Reflection;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Reflection
+namespace Adorable.Tests.Reflection
 {
     public class ReflectionHelper_Tests
     {

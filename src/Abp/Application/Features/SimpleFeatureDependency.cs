@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Most simple implementation of <see cref="IFeatureDependency"/>.

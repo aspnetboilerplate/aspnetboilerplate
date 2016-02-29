@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// Can be used to send/receive Name/Value (or Key/Value) pairs.

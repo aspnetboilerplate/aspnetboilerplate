@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
-using Abp.Runtime.Validation;
+using Adorable.Collections.Extensions;
+using Adorable.Runtime.Validation;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     [Serializable]
     public abstract class InputTypeBase : IInputType

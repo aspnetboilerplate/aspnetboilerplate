@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Redis cache implementation")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Redis cache implementation")]
+[assembly: AssemblyTitle("ASP.NET Adorable- Redis cache implementation")]
+[assembly: AssemblyDescription("ASP.NET Adorable- Redis cache implementation")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.RedisCache")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.RedisCache")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

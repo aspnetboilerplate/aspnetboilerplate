@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     [Serializable]
     [Validator("BOOLEAN")]

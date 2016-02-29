@@ -3,17 +3,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Abp.Auditing;
-using Abp.Extensions;
-using Abp.Web.Authorization;
-using Abp.Web.Features;
-using Abp.Web.Localization;
-using Abp.Web.MultiTenancy;
-using Abp.Web.Navigation;
-using Abp.Web.Sessions;
-using Abp.Web.Settings;
+using Adorable.Auditing;
+using Adorable.Extensions;
+using Adorable.Web.Authorization;
+using Adorable.Web.Features;
+using Adorable.Web.Localization;
+using Adorable.Web.MultiTenancy;
+using Adorable.Web.Navigation;
+using Adorable.Web.Sessions;
+using Adorable.Web.Settings;
 
-namespace Abp.Web.Mvc.Controllers
+namespace Adorable.Web.Mvc.Controllers
 {
     /// <summary>
     /// This controller is used to create client side scripts

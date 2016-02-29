@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Memory DB")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Memory DB")]
+[assembly: AssemblyTitle("ASP.NET Adorable- Memory DB")]
+[assembly: AssemblyDescription("ASP.NET Adorable- Memory DB")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.MemoryDb")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.MemoryDb")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

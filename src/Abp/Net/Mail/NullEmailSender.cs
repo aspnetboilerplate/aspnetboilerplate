@@ -2,9 +2,9 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 
-namespace Abp.Net.Mail
+namespace Adorable.Net.Mail
 {
-    //TODO: Move this to Abp.TestBase?
+    //TODO: Move this to Adorable.TestBase?
     /// <summary>
     /// This class is an implementation of <see cref="IEmailSender"/> as similar to null pattern.
     /// It does not send emails but logs them.

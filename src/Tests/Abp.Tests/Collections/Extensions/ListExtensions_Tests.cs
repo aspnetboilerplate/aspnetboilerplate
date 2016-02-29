@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Collections.Extensions
+namespace Adorable.Tests.Collections.Extensions
 {
     public class ListExtensions_SortByDependencies_Tests
     {

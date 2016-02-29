@@ -1,7 +1,7 @@
 using System;
 using Castle.Windsor;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// This interface is used to directly perform dependency injection tasks.

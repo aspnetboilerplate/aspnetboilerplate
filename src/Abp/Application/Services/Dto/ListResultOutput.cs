@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This class can be used to return a list from an <see cref="IApplicationService"/> method.

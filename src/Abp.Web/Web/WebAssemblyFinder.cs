@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
-using Abp.Reflection;
+using Adorable.Reflection;
 
-namespace Abp.Web
+namespace Adorable.Web
 {
     /// <summary>
     /// This class is used to get all assemblies in bin folder of a web application.

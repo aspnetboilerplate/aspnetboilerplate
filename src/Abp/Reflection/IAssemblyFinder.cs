@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Abp.Reflection
+namespace Adorable.Reflection
 {
     /// <summary>
     /// This interface is used to get all assemblies to investigate special classes

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Declares common interface for classes those have menu items.

@@ -1,10 +1,10 @@
 ﻿using System;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Dependency.Installers;
-using Abp.Modules;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Dependency.Installers;
+using Adorable.Modules;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// This is the main class that is responsible to start entire ABP system.

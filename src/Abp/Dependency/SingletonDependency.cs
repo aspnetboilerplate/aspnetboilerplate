@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Used to get a singleton of any class which can be resolved using <see cref="IocManager.Instance"/>.

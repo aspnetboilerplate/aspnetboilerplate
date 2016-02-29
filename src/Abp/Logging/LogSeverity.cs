@@ -1,4 +1,4 @@
-namespace Abp.Logging
+namespace Adorable.Logging
 {
     /// <summary>
     /// Indicates severity for log.

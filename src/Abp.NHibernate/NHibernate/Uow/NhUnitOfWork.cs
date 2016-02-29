@@ -1,12 +1,12 @@
 using System.Data;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Runtime.Session;
-using Abp.Transactions.Extensions;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.Runtime.Session;
+using Adorable.Transactions.Extensions;
 using NHibernate;
 
-namespace Abp.NHibernate.Uow
+namespace Adorable.NHibernate.Uow
 {
     /// <summary>
     /// Implements Unit of work for NHibernate.

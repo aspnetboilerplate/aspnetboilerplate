@@ -1,4 +1,4 @@
-﻿namespace Abp.Web.Configuration
+﻿namespace Adorable.Web.Configuration
 {
     /// <summary>
     /// Used to configure ABP Web module.

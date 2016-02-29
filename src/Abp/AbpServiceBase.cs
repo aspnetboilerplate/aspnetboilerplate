@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
-using Abp.Configuration;
-using Abp.Domain.Uow;
-using Abp.Localization;
-using Abp.Localization.Sources;
+using Adorable.Configuration;
+using Adorable.Domain.Uow;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
 using Castle.Core.Logging;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// This class can be used as a base class for services.

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Abp.Resources.Embedded
+namespace Adorable.Resources.Embedded
 {
     /// <summary>
     /// Provides infrastructure to use any type of resources (files) embedded into assemblies.

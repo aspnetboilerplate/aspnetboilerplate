@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using Abp.Modules;
+using Adorable.Modules;
 
-namespace Abp.TestBase
+namespace Adorable.TestBase
 {
     [DependsOn(typeof(AbpKernelModule))]
     public class TestBaseModule : AbpModule

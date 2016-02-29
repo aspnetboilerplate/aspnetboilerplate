@@ -1,4 +1,4 @@
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// This class should be inherited in order to provide <see cref="Feature"/>s.

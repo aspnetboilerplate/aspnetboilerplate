@@ -7,8 +7,8 @@
     <ProjectGuid>{9003DDA9-1DD5-41A1-B907-6F378767C441}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Web</RootNamespace>
-    <AssemblyName>Abp.Web.Resources</AssemblyName>
+    <RootNamespace>Adorable.Web</RootNamespace>
+    <AssemblyName>Adorable.Web.Resources</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Abp.Web.Resources.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Adorable.Web.Resources.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Abp.Web.Resources.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Adorable.Web.Resources.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -86,9 +86,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp\Abp.csproj">
+    <ProjectReference Include="..\Abp\Adorable.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp</Name>
+      <Name>Adorable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

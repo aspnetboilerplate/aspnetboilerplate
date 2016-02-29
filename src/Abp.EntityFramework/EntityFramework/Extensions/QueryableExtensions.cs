@@ -3,7 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Abp.EntityFramework.Extensions
+namespace Adorable.EntityFramework.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IQueryable"/> and <see cref="IQueryable{T}"/>.

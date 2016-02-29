@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Abp.Runtime.Session;
+using Adorable.Runtime.Session;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// This interface should be used to get value of

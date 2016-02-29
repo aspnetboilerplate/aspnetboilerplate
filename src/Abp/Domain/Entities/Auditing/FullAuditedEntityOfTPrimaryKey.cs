@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// Implements <see cref="IFullAudited"/> to be a base class for full-audited entities.

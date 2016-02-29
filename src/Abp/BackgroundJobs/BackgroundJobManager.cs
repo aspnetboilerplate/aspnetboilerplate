@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Json;
-using Abp.Threading;
-using Abp.Threading.BackgroundWorkers;
-using Abp.Threading.Timers;
-using Abp.Timing;
+using Adorable.Dependency;
+using Adorable.Json;
+using Adorable.Threading;
+using Adorable.Threading.BackgroundWorkers;
+using Adorable.Threading.Timers;
+using Adorable.Timing;
 using Newtonsoft.Json;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// Default implementation of <see cref="IBackgroundJobManager"/>.

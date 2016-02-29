@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// This interface is used to wrap an object that is resolved from IOC container.

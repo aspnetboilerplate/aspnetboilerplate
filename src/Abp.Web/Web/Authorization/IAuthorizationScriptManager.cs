@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Web.Authorization
+namespace Adorable.Web.Authorization
 {
     /// <summary>
     /// This class is used to build authorization script.

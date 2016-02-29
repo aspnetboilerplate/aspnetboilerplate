@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Threading.BackgroundWorkers
+namespace Adorable.Threading.BackgroundWorkers
 {
     /// <summary>
     /// Implements <see cref="IBackgroundWorkerManager"/>.

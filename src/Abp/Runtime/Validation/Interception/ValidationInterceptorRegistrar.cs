@@ -1,9 +1,9 @@
-﻿using Abp.Application.Services;
-using Abp.Dependency;
+﻿using Adorable.Application.Services;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
-namespace Abp.Runtime.Validation.Interception
+namespace Adorable.Runtime.Validation.Interception
 {
     internal static class ValidationInterceptorRegistrar
     {

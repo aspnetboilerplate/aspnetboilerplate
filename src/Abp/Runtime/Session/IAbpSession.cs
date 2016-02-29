@@ -1,6 +1,6 @@
-﻿using Abp.MultiTenancy;
+﻿using Adorable.MultiTenancy;
 
-namespace Abp.Runtime.Session
+namespace Adorable.Runtime.Session
 {
     /// <summary>
     /// Defines some session information that can be useful for applications.

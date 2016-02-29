@@ -1,4 +1,4 @@
-﻿namespace Abp.Domain.Entities
+﻿namespace Adorable.Domain.Entities
 {
     /// <summary>
     /// Implement this interface for an entity which may optionally have TenantId.

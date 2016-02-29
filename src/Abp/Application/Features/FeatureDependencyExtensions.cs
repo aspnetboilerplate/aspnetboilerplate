@@ -1,6 +1,6 @@
-using Abp.Threading;
+using Adorable.Threading;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Extension methods for <see cref="IFeatureDependency"/>.

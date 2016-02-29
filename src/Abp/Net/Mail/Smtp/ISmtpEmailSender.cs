@@ -1,6 +1,6 @@
 using System.Net.Mail;
 
-namespace Abp.Net.Mail.Smtp
+namespace Adorable.Net.Mail.Smtp
 {
     /// <summary>
     /// Used to send emails over SMTP.

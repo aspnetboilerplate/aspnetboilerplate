@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Domain.Repositories
+namespace Adorable.Domain.Repositories
 {
     /// <summary>
     /// This interface must be implemented by all repositories to identify them by convention.

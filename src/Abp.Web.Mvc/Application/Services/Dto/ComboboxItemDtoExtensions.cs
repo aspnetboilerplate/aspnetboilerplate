@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     public static class ComboboxItemDtoExtensions
     {

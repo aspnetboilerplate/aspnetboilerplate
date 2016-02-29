@@ -1,10 +1,10 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+﻿using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
 using FluentMigrator;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create.Table;
 
-namespace Abp.FluentMigrator.Extensions
+namespace Adorable.FluentMigrator.Extensions
 {
     /// <summary>
     /// This class is an extension for migration system to make easier to some common tasks.

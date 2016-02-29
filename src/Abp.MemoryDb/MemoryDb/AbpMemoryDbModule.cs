@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using Abp.MemoryDb.Configuration;
-using Abp.Modules;
+using Adorable.MemoryDb.Configuration;
+using Adorable.Modules;
 
-namespace Abp.MemoryDb
+namespace Adorable.MemoryDb
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in MemoryDb.

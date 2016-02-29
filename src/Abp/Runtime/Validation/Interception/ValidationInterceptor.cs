@@ -1,6 +1,6 @@
 ﻿using Castle.DynamicProxy;
 
-namespace Abp.Runtime.Validation.Interception
+namespace Adorable.Runtime.Validation.Interception
 {
     /// <summary>
     /// This interceptor is used intercept method calls for classes which's methods must be validated.

@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Abp.RedisCache.RedisImpl
+namespace Adorable.RedisCache.RedisImpl
 {
     public class SerializeUtil
     {

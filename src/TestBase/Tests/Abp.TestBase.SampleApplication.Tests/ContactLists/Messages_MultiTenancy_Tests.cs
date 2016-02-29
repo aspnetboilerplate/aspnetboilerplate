@@ -1,11 +1,11 @@
 using System.Linq;
-using Abp.Configuration.Startup;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
+using Adorable.Configuration.Startup;
+using Adorable.Domain.Repositories;
+using Adorable.Domain.Uow;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.ContactLists
+namespace Adorable.TestBase.SampleApplication.Tests.ContactLists
 {
     public class Messages_MultiTenancy_Tests : SampleApplicationTestBase
     {

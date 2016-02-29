@@ -1,6 +1,6 @@
 ﻿using System.Web.OData.Builder;
 
-namespace Abp.WebApi.OData.Configuration
+namespace Adorable.WebApi.OData.Configuration
 {
     internal class AbpWebApiODataModuleConfiguration : IAbpWebApiODataModuleConfiguration
     {

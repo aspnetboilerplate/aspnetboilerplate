@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Abp.Collections;
-using Abp.Modules;
-using Abp.TestBase.SampleApplication.ContacLists;
-using Abp.TestBase.SampleApplication.EntityFramework;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Collections;
+using Adorable.Modules;
+using Adorable.TestBase.SampleApplication.ContacLists;
+using Adorable.TestBase.SampleApplication.EntityFramework;
+using Adorable.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;
 
-namespace Abp.TestBase.SampleApplication.Tests
+namespace Adorable.TestBase.SampleApplication.Tests
 {
     public abstract class SampleApplicationTestBase : AbpIntegratedTestBase
     {

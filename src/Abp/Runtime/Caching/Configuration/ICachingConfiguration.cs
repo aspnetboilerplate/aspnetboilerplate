@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.Runtime.Caching.Configuration
+namespace Adorable.Runtime.Caching.Configuration
 {
     /// <summary>
     /// Used to configure caching system.

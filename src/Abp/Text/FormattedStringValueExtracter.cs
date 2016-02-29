@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Text.Formatting;
+using Adorable.Collections.Extensions;
+using Adorable.Text.Formatting;
 
-namespace Abp.Text
+namespace Adorable.Text
 {
     /// <summary>
     /// This class is used to extract dynamic values from a formatted string.

@@ -1,7 +1,7 @@
 using System;
-using Abp.Domain.Entities.Auditing;
+using Adorable.Domain.Entities.Auditing;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="IFullAudited{TUser}"/> interface.

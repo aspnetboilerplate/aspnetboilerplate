@@ -1,13 +1,13 @@
 ﻿using System;
-using Abp.Configuration.Startup;
-using Abp.Dependency.Installers;
-using Abp.Tests;
-using Abp.UI;
-using Abp.Web.Configuration;
-using Abp.Web.Models;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency.Installers;
+using Adorable.Tests;
+using Adorable.UI;
+using Adorable.Web.Configuration;
+using Adorable.Web.Models;
 using Xunit;
 
-namespace Abp.Web.Tests
+namespace Adorable.Web.Tests
 {
     public class ErrorInfoBuilder_Tests : TestBaseWithLocalIocManager
     {

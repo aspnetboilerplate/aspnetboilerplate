@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
+using Adorable.Localization.Dictionaries.Xml;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization
+namespace Adorable.Tests.Localization
 {
     public class XmlEmbeddedFileLocalizationDictionaryProvider_Tests
     {
@@ -14,7 +14,7 @@ namespace Abp.Tests.Localization
         {
             _dictionaryProvider = new XmlEmbeddedFileLocalizationDictionaryProvider(
                 Assembly.GetExecutingAssembly(),
-                "Abp.Tests.Localization.TestXmlFiles"
+                "Adorable.Tests.Localization.TestXmlFiles"
                 );
 
             _dictionaryProvider.Initialize("Test");

@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Application.Services.Dto;
-using Abp.Domain.Entities.Auditing;
-using Abp.Timing;
+using Adorable.Application.Services.Dto;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Timing;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Represents a published notification.

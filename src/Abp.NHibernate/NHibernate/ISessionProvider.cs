@@ -1,6 +1,6 @@
 using NHibernate;
 
-namespace Abp.NHibernate
+namespace Adorable.NHibernate
 {
     public interface ISessionProvider
     {

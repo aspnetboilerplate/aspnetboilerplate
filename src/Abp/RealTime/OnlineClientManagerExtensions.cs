@@ -1,4 +1,4 @@
-﻿namespace Abp.RealTime
+﻿namespace Adorable.RealTime
 {
     /// <summary>
     /// Extension methods for <see cref="IOnlineClientManager"/>.

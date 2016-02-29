@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Web.Http.Controllers;
-using Abp.WebApi.Controllers.Dynamic.Builders;
+using Adorable.WebApi.Controllers.Dynamic.Builders;
 
-namespace Abp.WebApi.Controllers.Dynamic.Selectors
+namespace Adorable.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// This class overrides ApiControllerActionSelector to select actions of dynamic ApiControllers.

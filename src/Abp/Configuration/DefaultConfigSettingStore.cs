@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
-using Abp.Logging;
+using Adorable.Logging;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Implements default behavior for ISettingStore.

@@ -7,8 +7,8 @@
     <ProjectGuid>{71962F97-5E4B-465C-9A21-2153D31992CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp</RootNamespace>
-    <AssemblyName>Abp.Web.Api</AssemblyName>
+    <RootNamespace>Adorable</RootNamespace>
+    <AssemblyName>Adorable.Web.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Abp.Web.Api.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Adorable.Web.Api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Abp.Web.Api.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Adorable.Web.Api.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -155,13 +155,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Web\Abp.Web.csproj">
+    <ProjectReference Include="..\Abp.Web\Adorable.Web.csproj">
       <Project>{D37C09D8-2F18-4F0B-A4D3-7A12C124E070}</Project>
-      <Name>Abp.Web</Name>
+      <Name>Adorable.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abp\Abp.csproj">
+    <ProjectReference Include="..\Abp\Adorable.csproj">
       <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp</Name>
+      <Name>Adorable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

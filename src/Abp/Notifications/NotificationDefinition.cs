@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Collections.Extensions;
-using Abp.Localization;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Collections.Extensions;
+using Adorable.Localization;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Definition for a notification.

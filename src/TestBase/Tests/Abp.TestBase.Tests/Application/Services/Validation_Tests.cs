@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using Abp.Dependency;
-using Abp.Runtime.Validation;
+using Adorable.Application.Services;
+using Adorable.Application.Services.Dto;
+using Adorable.Dependency;
+using Adorable.Runtime.Validation;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.Tests.Application.Services
+namespace Adorable.TestBase.Tests.Application.Services
 {
     public class Validation_Tests : AbpIntegratedTestBase
     {

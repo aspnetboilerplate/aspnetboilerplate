@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
 
-namespace Abp.MemoryDb.Repositories
+namespace Adorable.MemoryDb.Repositories
 {
     //TODO: Implement thread-safety..?
     public class MemoryRepository<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 
-namespace Abp.Localization.Dictionaries
+namespace Adorable.Localization.Dictionaries
 {
     /// <summary>
     /// Represents a simple implementation of <see cref="ILocalizationDictionary"/> interface.

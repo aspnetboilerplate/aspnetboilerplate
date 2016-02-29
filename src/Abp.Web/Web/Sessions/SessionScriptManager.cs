@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Abp.Dependency;
-using Abp.Runtime.Session;
+using Adorable.Dependency;
+using Adorable.Runtime.Session;
 
-namespace Abp.Web.Sessions
+namespace Adorable.Web.Sessions
 {
     public class SessionScriptManager : ISessionScriptManager, ITransientDependency
     {

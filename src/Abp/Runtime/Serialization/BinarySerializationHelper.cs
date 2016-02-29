@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Abp.Runtime.Serialization
+namespace Adorable.Runtime.Serialization
 {
     /// <summary>
     /// This class is used to simplify serialization/deserialization operations.

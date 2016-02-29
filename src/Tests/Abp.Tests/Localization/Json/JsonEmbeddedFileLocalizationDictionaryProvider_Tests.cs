@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Reflection;
-using Abp.Localization.Dictionaries.Json;
+using Adorable.Localization.Dictionaries.Json;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization.Json
+namespace Adorable.Tests.Localization.Json
 {
     public class JsonEmbeddedFileLocalizationDictionaryProvider_Tests
     {
@@ -14,7 +14,7 @@ namespace Abp.Tests.Localization.Json
         {
             _dictionaryProvider = new JsonEmbeddedFileLocalizationDictionaryProvider(
                 Assembly.GetExecutingAssembly(),
-                "Abp.Tests.Localization.Json.JsonSources"
+                "Adorable.Tests.Localization.Json.JsonSources"
                 );
 
             _dictionaryProvider.Initialize("Lang");

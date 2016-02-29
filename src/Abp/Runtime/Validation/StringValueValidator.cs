@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     [Serializable]
     [Validator("STRING")]

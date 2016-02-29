@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Configuration;
+using Adorable.Configuration;
 
-namespace Abp.WebApi.Runtime.Caching
+namespace Adorable.WebApi.Runtime.Caching
 {
     public class ClearCacheSettingProvider : SettingProvider
     {

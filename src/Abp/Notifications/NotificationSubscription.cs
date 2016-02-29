@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Domain.Entities.Auditing;
-using Abp.Timing;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Timing;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Represents a user subscription to a notification.

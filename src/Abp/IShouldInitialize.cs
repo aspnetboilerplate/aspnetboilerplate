@@ -1,6 +1,6 @@
 using Castle.Core;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Defines interface for objects those should be Initialized before using it.

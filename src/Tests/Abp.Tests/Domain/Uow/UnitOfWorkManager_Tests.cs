@@ -1,10 +1,10 @@
 ﻿using System.Transactions;
-using Abp.Domain.Uow;
+using Adorable.Domain.Uow;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Xunit;
 
-namespace Abp.Tests.Domain.Uow
+namespace Adorable.Tests.Domain.Uow
 {
     public class UnitOfWorkManager_Tests : TestBaseWithLocalIocManager
     {

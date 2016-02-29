@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Threading;
+using Adorable.Dependency;
+using Adorable.Threading;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// This class is used to simplify getting settings from anywhere.

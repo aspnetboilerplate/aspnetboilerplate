@@ -1,4 +1,4 @@
-﻿namespace Abp.Dependency
+﻿namespace Adorable.Dependency
 {
     /// <summary>
     /// This interface is used to register dependencies by conventions. 

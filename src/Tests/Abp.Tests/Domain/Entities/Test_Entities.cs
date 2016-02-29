@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Abp.Tests.Domain.Entities
+namespace Adorable.Tests.Domain.Entities
 {
     public class Test_Entities
     {

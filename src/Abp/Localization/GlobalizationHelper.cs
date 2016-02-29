@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     internal static class GlobalizationHelper
     {

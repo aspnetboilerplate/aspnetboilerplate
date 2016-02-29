@@ -1,10 +1,10 @@
-﻿using Abp.Runtime.Caching;
+﻿using Adorable.Runtime.Caching;
 using StackExchange.Redis;
 using System;
-using Abp.RedisCache.Configuration;
-using Abp.RedisCache.RedisImpl;
+using Adorable.RedisCache.Configuration;
+using Adorable.RedisCache.RedisImpl;
 
-namespace Abp.RedisCache
+namespace Adorable.RedisCache
 {
     public class AbpRedisCache : CacheBase
     {

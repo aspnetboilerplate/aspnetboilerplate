@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.TestBase.SampleApplication
+namespace Adorable.TestBase.SampleApplication
 {
     [Table("Messages")]
     public class Message : Entity, IMayHaveTenant

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Timing
+namespace Adorable.Timing
 {
     /// <summary>
     /// A basic implementation of <see cref="IDateTimeRange"/> to store a date range.

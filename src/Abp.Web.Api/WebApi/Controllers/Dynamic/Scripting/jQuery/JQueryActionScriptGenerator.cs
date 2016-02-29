@@ -1,8 +1,8 @@
 using System.Text;
-using Abp.Extensions;
-using Abp.Web;
+using Adorable.Extensions;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
     internal class JQueryActionScriptGenerator
     {

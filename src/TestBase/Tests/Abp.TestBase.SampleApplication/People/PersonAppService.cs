@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using Abp.Auditing;
-using Abp.Authorization;
-using Abp.AutoMapper;
-using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.TestBase.SampleApplication.People.Dto;
+using Adorable.Application.Services;
+using Adorable.Application.Services.Dto;
+using Adorable.Auditing;
+using Adorable.Authorization;
+using Adorable.AutoMapper;
+using Adorable.Domain.Repositories;
+using Adorable.Extensions;
+using Adorable.TestBase.SampleApplication.People.Dto;
 
-namespace Abp.TestBase.SampleApplication.People
+namespace Adorable.TestBase.SampleApplication.People
 {
     public class PersonAppService : ApplicationService, IPersonAppService
     {

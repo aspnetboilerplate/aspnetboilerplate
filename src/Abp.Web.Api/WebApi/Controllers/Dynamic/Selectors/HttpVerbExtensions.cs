@@ -1,7 +1,7 @@
 using System.Net.Http;
-using Abp.Web;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic.Selectors
+namespace Adorable.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// Extension methods for <see cref="HttpVerb"/>.

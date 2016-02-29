@@ -1,8 +1,8 @@
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
 using FluentNHibernate.Mapping;
 
-namespace Abp.NHibernate.EntityMappings
+namespace Adorable.NHibernate.EntityMappings
 {
     /// <summary>
     /// This class is used to make mapping easier for standart columns.

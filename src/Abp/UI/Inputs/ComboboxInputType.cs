@@ -1,7 +1,7 @@
 using System;
-using Abp.Runtime.Validation;
+using Adorable.Runtime.Validation;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     /// <summary>
     /// Combobox value UI type.

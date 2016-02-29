@@ -1,8 +1,8 @@
-using Abp.Collections.Extensions;
-using Abp.Localization;
-using Abp.UI.Inputs;
+using Adorable.Collections.Extensions;
+using Adorable.Localization;
+using Adorable.UI.Inputs;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Base for implementing <see cref="IFeatureDefinitionContext"/>.

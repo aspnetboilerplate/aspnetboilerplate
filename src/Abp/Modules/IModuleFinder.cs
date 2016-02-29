@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// This interface is responsible to find all modules (derived from <see cref="AbpModule"/>)

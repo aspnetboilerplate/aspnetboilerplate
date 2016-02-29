@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.BackgroundJobs;
-using Abp.Hangfire.Configuration;
-using Abp.Threading.BackgroundWorkers;
+using Adorable.BackgroundJobs;
+using Adorable.Hangfire.Configuration;
+using Adorable.Threading.BackgroundWorkers;
 using Hangfire;
 using HangfireBackgroundJob = Hangfire.BackgroundJob;
 
-namespace Abp.Hangfire
+namespace Adorable.Hangfire
 {
     public class HangfireBackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
     {

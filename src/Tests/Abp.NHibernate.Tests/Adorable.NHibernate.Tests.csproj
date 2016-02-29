@@ -6,16 +6,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6C1BB309-3FE8-40A1-A97C-62495CE61AB6}</ProjectGuid>
+    <ProjectGuid>{0CF3083B-364D-42C9-B6F2-552789FB6ED5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.AutoMapper.Tests</RootNamespace>
-    <AssemblyName>Abp.AutoMapper.Tests</AssemblyName>
+    <RootNamespace>Adorable.NHibernate.Tests</RootNamespace>
+    <AssemblyName>Adorable.NHibernate.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>6505a15c</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>2997313d</NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,8 +36,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Shouldly, Version=2.6.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
@@ -46,6 +60,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.99.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.99.0\lib\net451\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,22 +87,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoMapper_Inheritance_Tests.cs" />
-    <Compile Include="AutoMapping_Tests.cs" />
+    <Compile Include="Basic_Repository_Tests.cs" />
+    <Compile Include="NHibernateTestBase.cs" />
+    <Compile Include="NHibernateTestModule.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PersonMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionFactory_Test.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Abp.AutoMapper\Abp.AutoMapper.csproj">
-      <Project>{06EB5F7C-B974-4775-A305-F175D645F7C9}</Project>
-      <Name>Abp.AutoMapper</Name>
+    <ProjectReference Include="..\..\Abp.NHibernate\Adorable.NHibernate.csproj">
+      <Project>{47853DCA-C058-42F4-B020-E9AC659C9204}</Project>
+      <Name>Adorable.NHibernate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Abp\Abp.csproj">
-      <Project>{2C221D3B-5F54-4C5B-8082-318636415132}</Project>
-      <Name>Abp</Name>
+    <ProjectReference Include="..\..\Abp\Adorable.csproj">
+      <Project>{2c221d3b-5f54-4c5b-8082-318636415132}</Project>
+      <Name>Adorable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestBase\Abp.TestBase\Adorable.TestBase.csproj">
+      <Project>{f554b0ef-acf4-4f72-b711-ef36559dce43}</Project>
+      <Name>Adorable.TestBase</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +124,9 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
     <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets'))" />
   </Target>
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

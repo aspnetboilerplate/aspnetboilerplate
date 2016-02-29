@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     internal class TypeScriptHelper
     {

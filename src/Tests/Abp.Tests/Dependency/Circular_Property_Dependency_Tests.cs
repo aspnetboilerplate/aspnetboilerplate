@@ -1,8 +1,8 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class Circular_Property_Dependency_Tests : TestBaseWithLocalIocManager
     {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
+using Adorable.Collections.Extensions;
+using Adorable.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.Localization.Dictionaries.Json
+namespace Adorable.Localization.Dictionaries.Json
 {
     /// <summary>
     ///     This class is used to build a localization dictionary from json.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Defines setting definition manager.

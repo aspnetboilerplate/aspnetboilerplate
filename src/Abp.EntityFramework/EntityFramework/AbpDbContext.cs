@@ -7,18 +7,18 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Configuration.Startup;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Uow;
-using Abp.Events.Bus.Entities;
-using Abp.Extensions;
-using Abp.Runtime.Session;
-using Abp.Timing;
+using Adorable.Configuration.Startup;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus.Entities;
+using Adorable.Extensions;
+using Adorable.Runtime.Session;
+using Adorable.Timing;
 using Castle.Core.Logging;
 using EntityFramework.DynamicFilters;
 
-namespace Abp.EntityFramework
+namespace Adorable.EntityFramework
 {
     /// <summary>
     /// Base class for all DbContext classes in the application.

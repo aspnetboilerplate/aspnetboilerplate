@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.AutoMapper
+namespace Adorable.AutoMapper
 {
     public class AutoMapAttribute : Attribute
     {

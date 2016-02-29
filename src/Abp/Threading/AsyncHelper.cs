@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Abp.Threading
+namespace Adorable.Threading
 {
     /// <summary>
     /// Provides some helper methods to work with async methods.

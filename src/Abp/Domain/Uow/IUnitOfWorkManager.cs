@@ -1,6 +1,6 @@
 ﻿using System.Transactions;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Unit of work manager.

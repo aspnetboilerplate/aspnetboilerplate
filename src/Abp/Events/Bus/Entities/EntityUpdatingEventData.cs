@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Entities
+namespace Adorable.Events.Bus.Entities
 {
     /// <summary>
     /// This type of event is used to notify just before update of an Entity.

@@ -1,19 +1,19 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
-using Abp.Authorization;
-using Abp.Domain.Uow;
-using Abp.Runtime.Validation;
-using Abp.TestBase.SampleApplication.ContacLists;
-using Abp.TestBase.SampleApplication.People;
-using Abp.TestBase.SampleApplication.People.Dto;
+using Adorable.Application.Services.Dto;
+using Adorable.Authorization;
+using Adorable.Domain.Uow;
+using Adorable.Runtime.Validation;
+using Adorable.TestBase.SampleApplication.ContacLists;
+using Adorable.TestBase.SampleApplication.People;
+using Adorable.TestBase.SampleApplication.People.Dto;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.People
+namespace Adorable.TestBase.SampleApplication.Tests.People
 {
     public class PersonAppService_Tests : SampleApplicationTestBase
     {

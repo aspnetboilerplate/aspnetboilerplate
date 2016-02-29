@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Runtime.Session;
+using Adorable.Dependency;
+using Adorable.Runtime.Session;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Default implementation for <see cref="IFeatureChecker"/>.

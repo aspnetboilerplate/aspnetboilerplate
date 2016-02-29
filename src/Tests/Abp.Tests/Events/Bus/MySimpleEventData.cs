@@ -1,6 +1,6 @@
-using Abp.Events.Bus;
+using Adorable.Events.Bus;
 
-namespace Abp.Tests.Events.Bus
+namespace Adorable.Tests.Events.Bus
 {
     public class MySimpleEventData : EventData
     {

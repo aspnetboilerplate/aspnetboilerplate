@@ -1,6 +1,6 @@
-using Abp.NHibernate.EntityMappings;
+using Adorable.NHibernate.EntityMappings;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     public class PersonMap : EntityMap<Person>
     {

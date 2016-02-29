@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Abp.Web.Localization;
-using Abp.Web.Models;
+using Adorable.Web.Localization;
+using Adorable.Web.Models;
 
-namespace Abp.Web.Mvc.Models
+namespace Adorable.Web.Mvc.Models
 {
     /// <summary>
     /// TODO: THIS CLASS IS NOT FINISHED AND TESTED YET!

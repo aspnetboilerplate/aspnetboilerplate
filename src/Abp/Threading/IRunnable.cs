@@ -1,4 +1,4 @@
-﻿namespace Abp.Threading
+﻿namespace Adorable.Threading
 {
     /// <summary>
     /// Interface to start/stop self threaded services.

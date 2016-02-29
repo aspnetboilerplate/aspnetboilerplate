@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Collections;
+using Adorable.Collections;
 using Xunit;
 
-namespace Abp.Tests.Collections
+namespace Adorable.Tests.Collections
 {
     public class TypeList_Test
     {

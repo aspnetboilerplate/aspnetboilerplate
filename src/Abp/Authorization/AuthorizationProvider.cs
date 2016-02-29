@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// This is the main interface to define permissions for an application.

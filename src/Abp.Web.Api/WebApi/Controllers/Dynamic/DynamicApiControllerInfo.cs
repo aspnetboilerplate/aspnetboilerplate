@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Web.Http.Filters;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Adorable.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// Used to store a controller information.

@@ -1,6 +1,6 @@
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Web.Api.Tests
+namespace Adorable.Web.Api.Tests
 {
     public static class AbpWebApiTests
     {

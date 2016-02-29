@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// Defines interface to store/get background jobs.

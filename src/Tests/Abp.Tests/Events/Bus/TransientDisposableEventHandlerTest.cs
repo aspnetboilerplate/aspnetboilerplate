@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Abp.Tests.Events.Bus
+namespace Adorable.Tests.Events.Bus
 {
     public class TransientDisposableEventHandlerTest : EventBusTestBase
     {

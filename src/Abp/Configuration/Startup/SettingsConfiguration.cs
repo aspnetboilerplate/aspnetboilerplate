@@ -1,6 +1,6 @@
-﻿using Abp.Collections;
+﻿using Adorable.Collections;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     internal class SettingsConfiguration : ISettingsConfiguration
     {

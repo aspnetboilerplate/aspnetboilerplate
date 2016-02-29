@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
+using Adorable.Dependency;
+using Adorable.Extensions;
 
-namespace Abp.Net.Mail.Smtp
+namespace Adorable.Net.Mail.Smtp
 {
     /// <summary>
     /// Used to send emails over SMTP.

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
-    /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
+    /// Base exception type for those are thrown by Adorable system for Adorable specific exceptions.
     /// </summary>
     [Serializable]
     public class AbpException : Exception

@@ -1,4 +1,4 @@
-﻿namespace Abp.WebApi.Controllers.Dynamic.Clients
+﻿namespace Adorable.WebApi.Controllers.Dynamic.Clients
 {
     /// <summary>
     /// 

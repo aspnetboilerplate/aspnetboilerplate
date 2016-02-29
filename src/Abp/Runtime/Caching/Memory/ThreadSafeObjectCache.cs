@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Caching;
 
-namespace Abp.Runtime.Caching.Memory
+namespace Adorable.Runtime.Caching.Memory
 {
     /// <summary>
     /// This class is used to store items to a thread safe and generic cache in a simple manner.

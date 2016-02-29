@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Caching;
-using Abp.Runtime.Caching.Memory;
+using Adorable.Runtime.Caching.Memory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Runtime.Caching.Memory
+namespace Adorable.Tests.Runtime.Caching.Memory
 {
     public class ThreadSafeObjectCache_Tests
     {

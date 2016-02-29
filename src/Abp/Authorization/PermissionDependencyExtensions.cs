@@ -1,6 +1,6 @@
-using Abp.Threading;
+using Adorable.Threading;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Extension methods for <see cref="IPermissionDependency"/>.

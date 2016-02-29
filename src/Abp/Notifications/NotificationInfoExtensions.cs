@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Domain.Entities;
-using Abp.Extensions;
+using Adorable.Domain.Entities;
+using Adorable.Extensions;
 using Newtonsoft.Json;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Extension methods for <see cref="NotificationInfo"/>.

@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This DTO can be used as a simple item for a combobox/list.

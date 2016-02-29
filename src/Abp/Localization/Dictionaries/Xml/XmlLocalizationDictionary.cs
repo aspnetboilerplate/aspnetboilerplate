@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
-using Abp.Xml.Extensions;
+using Adorable.Collections.Extensions;
+using Adorable.Extensions;
+using Adorable.Xml.Extensions;
 
-namespace Abp.Localization.Dictionaries.Xml
+namespace Adorable.Localization.Dictionaries.Xml
 {
     /// <summary>
     /// This class is used to build a localization dictionary from XML.

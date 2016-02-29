@@ -1,7 +1,7 @@
 using System;
-using Abp.Web.Models;
+using Adorable.Web.Models;
 
-namespace Abp.Web.Mvc.Models
+namespace Adorable.Web.Mvc.Models
 {
     /// <summary>
     /// This class is used to create standard responses for ajax requests.

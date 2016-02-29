@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Domain.Services;
+using Adorable.Domain.Services;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to distribute notifications to users.

@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Domain.Entities
+namespace Adorable.Domain.Entities
 {
     /// <summary>
     /// Used to identify an entity.

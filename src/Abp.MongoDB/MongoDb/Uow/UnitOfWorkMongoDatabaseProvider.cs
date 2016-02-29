@@ -1,8 +1,8 @@
-using Abp.Dependency;
-using Abp.Domain.Uow;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
 using MongoDB.Driver;
 
-namespace Abp.MongoDb.Uow
+namespace Adorable.MongoDb.Uow
 {
     /// <summary>
     /// Implements <see cref="IMongoDatabaseProvider"/> that gets database from active unit of work.

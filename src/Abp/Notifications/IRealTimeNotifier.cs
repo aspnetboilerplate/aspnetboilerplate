@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Interface to send real time notifications to users.

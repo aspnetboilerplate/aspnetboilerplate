@@ -1,6 +1,6 @@
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.Tests.Domain.Entities
+namespace Adorable.Tests.Domain.Entities
 {
     public class Worker : Entity
     {

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 
-namespace Abp.WebApi.Controllers.ApiExplorer
+namespace Adorable.WebApi.Controllers.ApiExplorer
 {
     public class AbpHttpActionDescriptor : HttpActionDescriptor
     {

@@ -1,4 +1,4 @@
-﻿namespace Abp.Net.Mail
+﻿namespace Adorable.Net.Mail
 {
     /// <summary>
     /// Declares names of the settings defined by <see cref="EmailSettingProvider"/>.
@@ -6,14 +6,14 @@
     public static class EmailSettingNames
     {
         /// <summary>
-        /// Abp.Net.Mail.DefaultFromAddress
+        /// Adorable.Net.Mail.DefaultFromAddress
         /// </summary>
-        public const string DefaultFromAddress = "Abp.Net.Mail.DefaultFromAddress";
+        public const string DefaultFromAddress = "Adorable.Net.Mail.DefaultFromAddress";
 
         /// <summary>
-        /// Abp.Net.Mail.DefaultFromDisplayName
+        /// Adorable.Net.Mail.DefaultFromDisplayName
         /// </summary>
-        public const string DefaultFromDisplayName = "Abp.Net.Mail.DefaultFromDisplayName";
+        public const string DefaultFromDisplayName = "Adorable.Net.Mail.DefaultFromDisplayName";
 
         /// <summary>
         /// SMTP related email settings.
@@ -21,39 +21,39 @@
         public static class Smtp
         {
             /// <summary>
-            /// Abp.Net.Mail.Smtp.Host
+            /// Adorable.Net.Mail.Smtp.Host
             /// </summary>
-            public const string Host = "Abp.Net.Mail.Smtp.Host";
+            public const string Host = "Adorable.Net.Mail.Smtp.Host";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.Port
+            /// Adorable.Net.Mail.Smtp.Port
             /// </summary>
-            public const string Port = "Abp.Net.Mail.Smtp.Port";
+            public const string Port = "Adorable.Net.Mail.Smtp.Port";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.UserName
+            /// Adorable.Net.Mail.Smtp.UserName
             /// </summary>
-            public const string UserName = "Abp.Net.Mail.Smtp.UserName";
+            public const string UserName = "Adorable.Net.Mail.Smtp.UserName";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.Password
+            /// Adorable.Net.Mail.Smtp.Password
             /// </summary>
-            public const string Password = "Abp.Net.Mail.Smtp.Password";
+            public const string Password = "Adorable.Net.Mail.Smtp.Password";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.Domain
+            /// Adorable.Net.Mail.Smtp.Domain
             /// </summary>
-            public const string Domain = "Abp.Net.Mail.Smtp.Domain";
+            public const string Domain = "Adorable.Net.Mail.Smtp.Domain";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.EnableSsl
+            /// Adorable.Net.Mail.Smtp.EnableSsl
             /// </summary>
-            public const string EnableSsl = "Abp.Net.Mail.Smtp.EnableSsl";
+            public const string EnableSsl = "Adorable.Net.Mail.Smtp.EnableSsl";
 
             /// <summary>
-            /// Abp.Net.Mail.Smtp.UseDefaultCredentials
+            /// Adorable.Net.Mail.Smtp.UseDefaultCredentials
             /// </summary>
-            public const string UseDefaultCredentials = "Abp.Net.Mail.Smtp.UseDefaultCredentials";
+            public const string UseDefaultCredentials = "Adorable.Net.Mail.Smtp.UseDefaultCredentials";
         }
     }
 }

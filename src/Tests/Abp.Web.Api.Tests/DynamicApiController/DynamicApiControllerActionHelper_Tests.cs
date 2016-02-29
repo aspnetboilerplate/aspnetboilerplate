@@ -1,9 +1,9 @@
-using Abp.Application.Services;
-using Abp.WebApi.Controllers.Dynamic.Builders;
+using Adorable.Application.Services;
+using Adorable.WebApi.Controllers.Dynamic.Builders;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Api.Tests.DynamicApiController
+namespace Adorable.Web.Api.Tests.DynamicApiController
 {
     public class DynamicApiControllerActionHelper_Tests
     {

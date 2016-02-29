@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.MemoryDb.Repositories
+namespace Adorable.MemoryDb.Repositories
 {
     public class MemoryPrimaryKeyGenerator<TPrimaryKey>
     {

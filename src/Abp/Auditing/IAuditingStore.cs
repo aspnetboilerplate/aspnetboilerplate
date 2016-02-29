@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// This interface should be implemented by vendors to

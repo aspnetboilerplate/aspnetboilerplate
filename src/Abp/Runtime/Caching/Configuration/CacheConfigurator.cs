@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Runtime.Caching.Configuration
+namespace Adorable.Runtime.Caching.Configuration
 {
     internal class CacheConfigurator : ICacheConfigurator
     {

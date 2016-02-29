@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Localization.Dictionaries.Xml
+namespace Adorable.Localization.Dictionaries.Xml
 {
     public abstract class LocalizationDictionaryProviderBase : ILocalizationDictionaryProvider
     {

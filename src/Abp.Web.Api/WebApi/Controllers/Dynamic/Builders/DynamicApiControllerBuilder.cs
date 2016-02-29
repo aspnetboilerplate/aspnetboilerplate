@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// Used to generate dynamic api controllers for arbitrary types.

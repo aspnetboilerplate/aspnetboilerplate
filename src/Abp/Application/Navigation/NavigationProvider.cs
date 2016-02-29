@@ -1,6 +1,6 @@
-﻿using Abp.Dependency;
+﻿using Adorable.Dependency;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// This interface should be implemented by classes which change

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Abp.WebApi.Client
+namespace Adorable.WebApi.Client
 {
     /// <summary>
     /// Used to make requests to ABP based Web APIs.

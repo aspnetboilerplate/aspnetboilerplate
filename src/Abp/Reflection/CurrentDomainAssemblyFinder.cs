@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Abp.Reflection
+namespace Adorable.Reflection
 {
     /// <summary>
     /// Default implementation of <see cref="IAssemblyFinder"/>.

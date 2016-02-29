@@ -2,7 +2,7 @@
 using Shouldly;
 using Xunit;
 
-namespace Abp.AutoMapper.Tests
+namespace Adorable.AutoMapper.Tests
 {
     public class AutoMapping_Tests
     {

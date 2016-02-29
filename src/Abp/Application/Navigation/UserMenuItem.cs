@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Represents an item in a <see cref="UserMenu"/>.

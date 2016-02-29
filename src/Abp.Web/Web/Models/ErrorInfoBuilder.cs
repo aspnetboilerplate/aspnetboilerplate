@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Web.Configuration;
+using Adorable.Dependency;
+using Adorable.Web.Configuration;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <inheritdoc/>
     public class ErrorInfoBuilder : IErrorInfoBuilder, ISingletonDependency

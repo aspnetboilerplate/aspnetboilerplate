@@ -1,4 +1,4 @@
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// This interface ads <see cref="IDeletionAudited"/> to <see cref="IAudited"/> for a fully audited entity.

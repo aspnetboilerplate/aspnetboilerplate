@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// Defines interface for all Event data classes.

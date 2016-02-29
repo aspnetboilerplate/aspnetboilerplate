@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Timing;
+using Adorable.Timing;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids.

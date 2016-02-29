@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.RealTime
+namespace Adorable.RealTime
 {
     /// <summary>
     /// Used to manage online clients those are connected to the application..

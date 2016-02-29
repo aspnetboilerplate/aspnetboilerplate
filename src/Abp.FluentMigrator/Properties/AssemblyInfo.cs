@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("Abp.FluentMigrator")]
+[assembly: AssemblyTitle("Adorable.FluentMigrator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.FluentMigrator")]
+[assembly: AssemblyProduct("Adorable.FluentMigrator")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

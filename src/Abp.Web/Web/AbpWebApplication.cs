@@ -4,15 +4,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Localization;
-using Abp.MultiTenancy;
-using Abp.Reflection;
-using Abp.Runtime.Security;
-using Abp.Threading;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
+using Adorable.Localization;
+using Adorable.MultiTenancy;
+using Adorable.Reflection;
+using Adorable.Runtime.Security;
+using Adorable.Threading;
 
-namespace Abp.Web
+namespace Adorable.Web
 {
     /// <summary>
     /// This class is used to simplify starting of ABP system using <see cref="AbpBootstrapper"/> class..
@@ -70,7 +70,7 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
+            var langCookie = Request.Cookies["Adorable.Localization.CultureName"];
             if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);

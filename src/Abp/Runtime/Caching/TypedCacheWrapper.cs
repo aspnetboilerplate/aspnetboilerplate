@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// Implements <see cref="ITypedCache{TKey,TValue}"/> to wrap a <see cref="ICache"/>.

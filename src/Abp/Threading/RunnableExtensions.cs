@@ -1,4 +1,4 @@
-namespace Abp.Threading
+namespace Adorable.Threading
 {
     /// <summary>
     /// Some extension methods for <see cref="IRunnable"/>.

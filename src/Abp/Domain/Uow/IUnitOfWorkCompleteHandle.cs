@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Used to complete a unit of work.

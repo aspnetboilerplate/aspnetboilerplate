@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 using AutoMapper;
 
-namespace Abp.AutoMapper
+namespace Adorable.AutoMapper
 {
     internal static class AutoMapperHelper
     {

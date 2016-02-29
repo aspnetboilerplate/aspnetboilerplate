@@ -4,10 +4,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
 
-namespace Abp.EntityFramework.Repositories
+namespace Adorable.EntityFramework.Repositories
 {
     /// <summary>
     /// Implements IRepository for Entity Framework.

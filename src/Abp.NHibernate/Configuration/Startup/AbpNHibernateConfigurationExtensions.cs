@@ -1,6 +1,6 @@
-﻿using Abp.NHibernate.Configuration;
+﻿using Adorable.NHibernate.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP NHibernate module.
@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpNHibernateModuleConfiguration AbpNHibernate(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.NHibernate", () => new AbpNHibernateModuleConfiguration());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.NHibernate", () => new AbpNHibernateModuleConfiguration());
         }
     }
 }

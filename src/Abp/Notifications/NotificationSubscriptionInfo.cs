@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.Json;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Json;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to store a notification subscription.

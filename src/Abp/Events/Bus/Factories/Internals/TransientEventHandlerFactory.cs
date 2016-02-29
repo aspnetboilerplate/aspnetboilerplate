@@ -1,7 +1,7 @@
 using System;
-using Abp.Events.Bus.Handlers;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Events.Bus.Factories.Internals
+namespace Adorable.Events.Bus.Factories.Internals
 {
     /// <summary>
     /// This <see cref="IEventHandlerFactory"/> implementation is used to handle events

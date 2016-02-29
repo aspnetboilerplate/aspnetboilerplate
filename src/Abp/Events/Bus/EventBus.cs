@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Factories.Internals;
-using Abp.Events.Bus.Handlers;
-using Abp.Events.Bus.Handlers.Internals;
+using Adorable.Events.Bus.Factories;
+using Adorable.Events.Bus.Factories.Internals;
+using Adorable.Events.Bus.Handlers;
+using Adorable.Events.Bus.Handlers.Internals;
 using Castle.Core.Logging;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// Implements EventBus as Singleton pattern.

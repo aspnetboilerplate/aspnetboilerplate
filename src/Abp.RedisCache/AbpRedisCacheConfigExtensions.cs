@@ -1,6 +1,6 @@
-using Abp.Configuration.Startup;
+using Adorable.Configuration.Startup;
 
-namespace Abp
+namespace Adorable
 {
     public static class AbpRedisCacheConfigExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Defines a setting.

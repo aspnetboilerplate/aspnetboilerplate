@@ -1,4 +1,4 @@
-﻿namespace Abp.Auditing
+﻿namespace Adorable.Auditing
 {
     /// <summary>
     /// Used to configure auditing.

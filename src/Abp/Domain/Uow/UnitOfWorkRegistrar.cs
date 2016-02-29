@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Reflection;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// This class is used to register interceptor for needed classes for Unit Of Work mechanism.

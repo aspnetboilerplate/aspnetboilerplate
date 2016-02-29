@@ -1,4 +1,4 @@
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This interface must be implemented by all DTO classes to identify them by convention.

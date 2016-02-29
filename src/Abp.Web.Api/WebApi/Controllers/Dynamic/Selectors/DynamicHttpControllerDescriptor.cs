@@ -3,9 +3,9 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Selectors
+namespace Adorable.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
     /// This class is used to extend the default controller descriptor to add the action filters dynamically.

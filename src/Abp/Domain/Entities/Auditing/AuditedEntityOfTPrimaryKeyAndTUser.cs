@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// This class can be used to simplify implementing <see cref="IAudited{TUser}"/>.

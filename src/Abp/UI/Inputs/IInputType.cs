@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Abp.Runtime.Validation;
+using Adorable.Runtime.Validation;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     public interface IInputType
     {

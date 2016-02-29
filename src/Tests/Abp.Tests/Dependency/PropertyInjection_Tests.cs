@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Application.Services;
-using Abp.Runtime.Session;
+using Adorable.Application.Services;
+using Adorable.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class PropertyInjection_Tests : TestBaseWithLocalIocManager
     {

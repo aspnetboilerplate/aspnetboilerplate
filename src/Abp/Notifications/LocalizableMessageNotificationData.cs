@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Can be used to store a simple message as notification data.

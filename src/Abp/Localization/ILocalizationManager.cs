@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Abp.Localization.Sources;
+using Adorable.Localization.Sources;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// This interface is used to manage localization system.

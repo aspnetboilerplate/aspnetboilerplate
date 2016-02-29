@@ -1,6 +1,6 @@
-﻿using Abp.MongoDb.Configuration;
+﻿using Adorable.MongoDb.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP MongoDb module.
@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpMongoDbModuleConfiguration AbpMongoDb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.MongoDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMongoDbModuleConfiguration>());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.MongoDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMongoDbModuleConfiguration>());
         }
     }
 }

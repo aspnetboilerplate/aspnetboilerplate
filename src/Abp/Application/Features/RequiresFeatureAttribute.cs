@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// This attribute can be used on a class/method to declare that given class/method is available

@@ -1,13 +1,13 @@
-﻿using Abp.Application.Features;
-using Abp.Auditing;
-using Abp.BackgroundJobs;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
-using Abp.Notifications;
-using Abp.Runtime.Caching.Configuration;
+﻿using Adorable.Application.Features;
+using Adorable.Auditing;
+using Adorable.BackgroundJobs;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus;
+using Adorable.Notifications;
+using Adorable.Runtime.Caching.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Used to configure ABP and modules on startup.

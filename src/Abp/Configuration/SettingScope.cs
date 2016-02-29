@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Defines scope of a setting.

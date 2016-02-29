@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Auditing;
-using Abp.Localization;
-using Abp.Timing;
-using Abp.Web.Mvc.Models;
+using Adorable.Auditing;
+using Adorable.Localization;
+using Adorable.Timing;
+using Adorable.Web.Mvc.Models;
 
-namespace Abp.Web.Mvc.Controllers.Localization
+namespace Adorable.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
@@ -18,7 +18,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 throw new AbpException("Unknown language: " + cultureName + ". It must be a valid culture!");
             }
 
-            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
+            Response.Cookies.Add(new HttpCookie("Adorable.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
 
             if (Request.IsAjaxRequest())
             {

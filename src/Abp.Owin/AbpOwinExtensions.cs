@@ -1,7 +1,7 @@
-﻿using Abp.Threading;
+﻿using Adorable.Threading;
 using Owin;
 
-namespace Abp.Owin
+namespace Adorable.Owin
 {
     /// <summary>
     /// OWIN extension methods for ABP.

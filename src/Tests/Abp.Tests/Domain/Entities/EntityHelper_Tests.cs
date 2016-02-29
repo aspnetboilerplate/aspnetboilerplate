@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Domain.Entities
+namespace Adorable.Tests.Domain.Entities
 {
     public class EntityHelper_Tests
     {

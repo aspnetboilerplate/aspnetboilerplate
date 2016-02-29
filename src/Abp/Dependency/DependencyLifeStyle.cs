@@ -1,4 +1,4 @@
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Lifestyles of types used in dependency injection system.

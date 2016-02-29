@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using Abp.Modules;
-using Abp.MongoDb.Configuration;
+using Adorable.Modules;
+using Adorable.MongoDb.Configuration;
 
-namespace Abp.MongoDb
+namespace Adorable.MongoDb
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in MongoDB.

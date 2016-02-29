@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// Used to disable auditing for a single method or

@@ -1,12 +1,12 @@
 using System;
 using System.Globalization;
 using System.Text;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.MultiTenancy;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Extensions;
+using Adorable.MultiTenancy;
 
-namespace Abp.Web.MultiTenancy
+namespace Adorable.Web.MultiTenancy
 {
     public class MultiTenancyScriptManager : IMultiTenancyScriptManager, ITransientDependency
     {

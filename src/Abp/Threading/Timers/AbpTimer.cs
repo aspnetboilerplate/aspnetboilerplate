@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Threading.Timers
+namespace Adorable.Threading.Timers
 {
     /// <summary>
     /// A roboust timer implementation that ensures no overlapping occurs. It waits exactly specified <see cref="Period"/> between ticks.

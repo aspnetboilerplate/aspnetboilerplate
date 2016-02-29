@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 
-namespace Abp.NHibernate.Configuration
+namespace Adorable.NHibernate.Configuration
 {
     internal class AbpNHibernateModuleConfiguration : IAbpNHibernateModuleConfiguration
     {

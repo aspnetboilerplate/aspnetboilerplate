@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Events.Bus;
-using Abp.Events.Bus.Exceptions;
+using Adorable.Events.Bus;
+using Adorable.Events.Bus.Exceptions;
 using Xunit;
 
-namespace Abp.Web.Api.Tests.Controllers.Filters
+namespace Adorable.Web.Api.Tests.Controllers.Filters
 {
     public class AbpExceptionFilterAttribute_Tests
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Extension methods for <see cref="MenuItemDefinition"/>.

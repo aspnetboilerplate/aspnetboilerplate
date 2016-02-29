@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Threading;
 
-namespace Abp.Threading
+namespace Adorable.Threading
 {
     /// <summary>
     /// This class is copied from here:

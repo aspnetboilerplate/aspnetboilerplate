@@ -1,4 +1,4 @@
-namespace Abp.Threading
+namespace Adorable.Threading
 {
     /// <summary>
     /// Base implementation of <see cref="IRunnable"/>.

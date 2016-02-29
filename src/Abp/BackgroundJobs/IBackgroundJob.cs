@@ -1,4 +1,4 @@
-﻿namespace Abp.BackgroundJobs
+﻿namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// Defines interface of a background job.

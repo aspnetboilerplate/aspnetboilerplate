@@ -1,6 +1,6 @@
-﻿using Abp.Collections;
+﻿using Adorable.Collections;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     internal class NotificationConfiguration : INotificationConfiguration
     {

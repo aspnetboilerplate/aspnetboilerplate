@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Abp.Tests.Application.Navigation;
-using Abp.Tests.Configuration;
-using Abp.Web.Navigation;
+using Adorable.Tests.Application.Navigation;
+using Adorable.Tests.Configuration;
+using Adorable.Web.Navigation;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Tests.Navigation
+namespace Adorable.Web.Tests.Navigation
 {
     public class NavigationScript_Tests
     {

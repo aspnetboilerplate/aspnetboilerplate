@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.Json;
+using Adorable.Dependency;
+using Adorable.Domain.Entities;
+using Adorable.Json;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Implements <see cref="INotificationSubscriptionManager"/>.

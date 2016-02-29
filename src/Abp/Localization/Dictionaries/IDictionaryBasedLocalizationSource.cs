@@ -1,6 +1,6 @@
-using Abp.Localization.Sources;
+using Adorable.Localization.Sources;
 
-namespace Abp.Localization.Dictionaries
+namespace Adorable.Localization.Dictionaries
 {
     /// <summary>
     /// Interface for a dictionary based localization source.

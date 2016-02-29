@@ -1,7 +1,7 @@
-﻿using Abp.Modules;
+﻿using Adorable.Modules;
 using System.Reflection;
 
-namespace Abp.RedisCache
+namespace Adorable.RedisCache
 {
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpRedisCacheModule : AbpModule

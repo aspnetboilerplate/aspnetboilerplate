@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Extension methods to <see cref="IIocResolver"/> interface.

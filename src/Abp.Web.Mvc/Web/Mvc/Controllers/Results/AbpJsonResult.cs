@@ -5,7 +5,7 @@ using Newtonsoft.Json.Serialization;
 
 /* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
 
-namespace Abp.Web.Mvc.Controllers.Results
+namespace Adorable.Web.Mvc.Controllers.Results
 {
     /// <summary>
     /// This class is used to override returning Json results from MVC controllers.

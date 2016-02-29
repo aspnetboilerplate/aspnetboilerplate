@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Domain.Entities;
+using Adorable.TestBase.SampleApplication.People;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Adorable.TestBase.SampleApplication.ContacLists
 {
     [Table("ContactLists")]
     public class ContactList : Entity, IMustHaveTenant

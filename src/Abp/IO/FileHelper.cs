@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Abp.IO
+namespace Adorable.IO
 {
     /// <summary>
     /// A helper class for File operations.

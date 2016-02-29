@@ -1,6 +1,6 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Adorable.Application.Services.Dto;
 
-namespace Abp.TestBase.SampleApplication.People.Dto
+namespace Adorable.TestBase.SampleApplication.People.Dto
 {
     public class GetPeopleInput : IInputDto
     {

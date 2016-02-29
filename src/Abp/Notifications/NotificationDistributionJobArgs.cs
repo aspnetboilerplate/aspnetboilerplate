@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Arguments for <see cref="NotificationDistributionJob"/>.

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Abp.Resources.Embedded
+namespace Adorable.Resources.Embedded
 {
     /// <summary>
     /// Stores needed information of an embedded resource.

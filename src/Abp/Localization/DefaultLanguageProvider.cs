@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public class DefaultLanguageProvider : ILanguageProvider, ITransientDependency
     {

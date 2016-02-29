@@ -1,15 +1,15 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using Abp;
+using Adorable;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.Web.SignalR")]
+[assembly: AssemblyTitle("Adorable.Web.SignalR")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.Web.SignalR")]
+[assembly: AssemblyProduct("Adorable.Web.SignalR")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -2,9 +2,9 @@ using System;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.WebApi.Controllers
+namespace Adorable.WebApi.Controllers
 {
     /// <summary>
     /// This class is used to use IOC system to create api controllers.

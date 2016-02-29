@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.Web.SignalR
+namespace Adorable.Web.SignalR
 {
     /// <summary>
     /// Uses CamelCasePropertyNamesContractResolver instead of DefaultContractResolver for SignalR communication. 

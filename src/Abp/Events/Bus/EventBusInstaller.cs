@@ -1,13 +1,13 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Handlers;
+﻿using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Events.Bus.Factories;
+using Adorable.Events.Bus.Handlers;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// Installs event bus system and registers all handlers automatically.

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Collections.Extensions
+namespace Adorable.Collections.Extensions
 {
     /// <summary>
     /// Extension methods for Collections.

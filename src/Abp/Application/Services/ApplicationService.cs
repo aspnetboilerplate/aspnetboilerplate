@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Runtime.Session;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Runtime.Session;
 
-namespace Abp.Application.Services
+namespace Adorable.Application.Services
 {
     /// <summary>
     /// This class can be used as a base class for application services. 

@@ -1,7 +1,7 @@
 using System;
-using Abp.Timing;
+using Adorable.Timing;
 
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// This class can be used to simplify implementing <see cref="ICreationAudited"/>.

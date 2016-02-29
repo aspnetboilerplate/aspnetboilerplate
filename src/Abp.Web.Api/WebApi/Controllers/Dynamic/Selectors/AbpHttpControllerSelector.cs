@@ -2,13 +2,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Collections.Extensions;
-using Abp.WebApi.Controllers.Dynamic.Builders;
+using Adorable.Collections.Extensions;
+using Adorable.WebApi.Controllers.Dynamic.Builders;
 
-namespace Abp.WebApi.Controllers.Dynamic.Selectors
+namespace Adorable.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
-    /// This class is used to extend default controller selector to add dynamic api controller creation feature of Abp.
+    /// This class is used to extend default controller selector to add dynamic api controller creation feature of Adorable.
     /// It checks if requested controller is a dynamic api controller, if it is,
     /// returns <see cref="HttpControllerDescriptor"/> to ASP.NET system.
     /// </summary>

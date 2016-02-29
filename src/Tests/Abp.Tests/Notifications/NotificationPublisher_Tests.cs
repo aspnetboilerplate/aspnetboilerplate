@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Abp.BackgroundJobs;
-using Abp.Domain.Uow;
-using Abp.Notifications;
+using Adorable.BackgroundJobs;
+using Adorable.Domain.Uow;
+using Adorable.Notifications;
 using NSubstitute;
 using Xunit;
 
-namespace Abp.Tests.Notifications
+namespace Adorable.Tests.Notifications
 {
     public class NotificationPublisher_Tests : TestBaseWithLocalIocManager
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 using Castle.Core.Logging;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// This class is used to manage modules.
@@ -48,7 +48,7 @@ namespace Abp.Modules
 
         private void LoadAll()
         {
-            Logger.Debug("Loading Abp modules...");
+            Logger.Debug("Loading Adorable modules...");
 
             var moduleTypes = AddMissingDependedModules(_moduleFinder.FindAll());
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Abp.Localization.Dictionaries
+namespace Adorable.Localization.Dictionaries
 {
     /// <summary>
     /// Represents a dictionary that is used to find a localized string.

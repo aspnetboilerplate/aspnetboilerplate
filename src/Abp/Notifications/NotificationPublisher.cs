@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.BackgroundJobs;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.Domain.Uow;
-using Abp.Extensions;
-using Abp.Json;
-using Abp.Runtime.Session;
+using Adorable.BackgroundJobs;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Uow;
+using Adorable.Extensions;
+using Adorable.Json;
+using Adorable.Runtime.Session;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Implements <see cref="INotificationPublisher"/>.

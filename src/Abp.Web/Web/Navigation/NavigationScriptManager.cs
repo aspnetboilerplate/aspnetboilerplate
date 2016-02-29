@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
-using Abp.Application.Navigation;
-using Abp.Dependency;
-using Abp.Json;
-using Abp.Runtime.Session;
+using Adorable.Application.Navigation;
+using Adorable.Dependency;
+using Adorable.Json;
+using Adorable.Runtime.Session;
 
-namespace Abp.Web.Navigation
+namespace Adorable.Web.Navigation
 {
     internal class NavigationScriptManager : INavigationScriptManager, ITransientDependency
     {

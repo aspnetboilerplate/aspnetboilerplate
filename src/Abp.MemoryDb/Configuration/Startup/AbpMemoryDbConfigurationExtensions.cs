@@ -1,6 +1,6 @@
-﻿using Abp.MemoryDb.Configuration;
+﻿using Adorable.MemoryDb.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP MemoryDb module.
@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpMemoryDbModuleConfiguration AbpMemoryDb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.MemoryDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMemoryDbModuleConfiguration>());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.MemoryDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMemoryDbModuleConfiguration>());
         }
     }
 }

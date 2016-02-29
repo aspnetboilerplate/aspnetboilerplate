@@ -1,7 +1,7 @@
 using System;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// A shortcut to use <see cref="Random"/> class.

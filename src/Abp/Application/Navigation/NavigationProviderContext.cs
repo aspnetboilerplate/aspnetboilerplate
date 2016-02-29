@@ -1,4 +1,4 @@
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     internal class NavigationProviderContext : INavigationProviderContext
     {

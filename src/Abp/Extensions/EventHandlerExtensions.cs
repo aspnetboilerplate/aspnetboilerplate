@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Extensions
+namespace Adorable.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="EventHandler"/>.

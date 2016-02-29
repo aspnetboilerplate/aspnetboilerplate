@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Localization.Sources;
+using Adorable.Localization.Sources;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Defines a specialized list to store <see cref="ILocalizationSource"/> object.

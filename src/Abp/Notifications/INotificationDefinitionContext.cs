@@ -1,4 +1,4 @@
-﻿namespace Abp.Notifications
+﻿namespace Adorable.Notifications
 {
     /// <summary>
     /// Used as a context while defining notifications.

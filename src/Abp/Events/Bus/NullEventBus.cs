@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Handlers;
-using Abp.Utils.Etc;
+using Adorable.Events.Bus.Factories;
+using Adorable.Events.Bus.Handlers;
+using Adorable.Utils.Etc;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// An event bus that implements Null object pattern.

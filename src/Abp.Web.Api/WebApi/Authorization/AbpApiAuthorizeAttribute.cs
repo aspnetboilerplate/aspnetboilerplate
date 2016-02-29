@@ -1,10 +1,10 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Controllers;
-using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
+using Adorable.Authorization;
+using Adorable.Dependency;
+using Adorable.Logging;
 
-namespace Abp.WebApi.Authorization
+namespace Adorable.WebApi.Authorization
 {
     /// <summary>
     /// This attribute is used on a method of an <see cref="ApiController"/>

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// A class that gets the same string on every localization.

@@ -1,4 +1,4 @@
-﻿namespace Abp.Events.Bus.Handlers
+﻿namespace Adorable.Events.Bus.Handlers
 {
     /// <summary>
     /// Defines an interface of a class that handles events of type <see cref="TEventData"/>.

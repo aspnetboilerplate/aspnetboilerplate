@@ -1,4 +1,4 @@
-namespace Abp.WebApi.Runtime.Caching
+namespace Adorable.WebApi.Runtime.Caching
 {
     public class ClearAllCacheModel
     {

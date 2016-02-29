@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Extensions;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Extensions;
+using Adorable.TestBase.SampleApplication.ContacLists;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.Features
+namespace Adorable.TestBase.SampleApplication.Tests.Features
 {
     public class FeatureSystem_Tests: SampleApplicationTestBase
     {

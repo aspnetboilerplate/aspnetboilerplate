@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Used to set/get custom configuration.

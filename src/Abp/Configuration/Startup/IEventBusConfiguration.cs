@@ -1,7 +1,7 @@
-﻿using Abp.Dependency;
-using Abp.Events.Bus;
+﻿using Adorable.Dependency;
+using Adorable.Events.Bus;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Used to configure <see cref="IEventBus"/>.

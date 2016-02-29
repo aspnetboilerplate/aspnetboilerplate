@@ -1,7 +1,7 @@
-﻿using Abp.Configuration;
-using Abp.Dependency;
+﻿using Adorable.Configuration;
+using Adorable.Dependency;
 
-namespace Abp.Net.Mail.Smtp
+namespace Adorable.Net.Mail.Smtp
 {
     /// <summary>
     /// Implementation of <see cref="ISmtpEmailSenderConfiguration"/> that reads settings
