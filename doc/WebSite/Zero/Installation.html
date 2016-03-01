@@ -1,40 +1,41 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Entities</title>
-<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
-</head>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>Entities</title>
+		<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+	</head>
 
-<body>
+	<body>
 
-<div class="document-contents">
+		<div class="document-contents">
 
-<h3 id="DocCreateAuto">Creating from template (automatic way)</h3>
-<p>The easiest way of starting a new project using ABP and module-zero, to create a 
+			<h3 id="DocCreateAuto">Creating from template (automatic way)</h3>
+			<p>The easiest way of starting a new project using ABP and module-zero, to create a 
 template on <a href="/Templates">templates page</a>. See
-<a href="/Pages/Documents/Zero/Startup-Template">startup template</a> 
+				<a href="/Pages/Documents/Zero/Startup-Template">startup template</a> 
 documentation.</p>
 
-<h3 id="DocInstallManual">Installing manually</h3>
-<p>If you have a pre-created application and install module-zero later, you can 
+			<h3 id="DocInstallManual">Installing manually</h3>
+			<p>If you have a pre-created application and install module-zero later, you can 
 follow the instructions in this section.</p>
-<p>In this document, I will assume that your solution has these projects:</p>
-<ul>
-	<li>AbpZeroSample.Core</li>
-	<li>AbpZeroSample.Application</li>
-	<li>AbpZeroSample.EntityFramework</li>
-	<li>AbpZeroSample.Web</li>
-	<li>AbpZeroSample.WebApi</li>
-</ul>
+			<p>In this document, I will assume that your solution has these projects:</p>
+			<ul>
+				<li>AbpZeroSample.Core</li>
+				<li>AbpZeroSample.Application</li>
+				<li>AbpZeroSample.EntityFramework</li>
+				<li>AbpZeroSample.Web</li>
+				<li>AbpZeroSample.WebApi</li>
+			</ul>
 
-<h4 id="DocCoreLayer">Core (domain) layer</h4>
-<p>Install <strong>Abp.Zero</strong> nuget package to .Core project. Then go to 
+			<h4 id="DocCoreLayer">Core (domain) layer</h4>
+			<p>Install <strong>Abp.Zero</strong> nuget package to .Core project. Then go to 
 the core module class (AbpZeroSampleCoreModule class for this sample) and add
-<strong>DependsOn</strong> attribute for <strong>AbpZeroCoreModule</strong> as 
+				<strong>DependsOn</strong> attribute for <strong>AbpZeroCoreModule</strong> as 
 shown below:</p>
-<pre lang="cs"><strong>[DependsOn(typeof(AbpZeroCoreModule))]</strong>
+			<pre lang="cs">
+<strong>[DependsOn(typeof(AbpZeroCoreModule))]</strong>
 public class AbpZeroSampleCoreModule : AbpModule
 {
     public override void Initialize()
@@ -43,33 +44,33 @@ public class AbpZeroSampleCoreModule : AbpModule
     }
 }</pre>
 
-<h5 id="DocEntities">Domain classes (entities)</h5>
-<p>Module-zero provides <strong>User</strong>, <strong>Role</strong> and <strong>
+			<h5 id="DocEntities">Domain classes (entities)</h5>
+			<p>Module-zero provides <strong>User</strong>, <strong>Role</strong> and <strong>
 Tenant</strong> classes as abstract. So, we should implement they as shown 
 below:</p>
 
-<pre lang="cs">public class User : AbpUser&lt;Tenant, User&gt;
+			<pre lang="cs">public class User : AbpUser&lt;Tenant, User&gt;
 {
 
 }
 
 public class Role : AbpRole&lt;Tenant, User&gt;
 {
-    
+
 }
 
 public class Tenant : AbpTenant&lt;Tenant, User&gt;
 {
 
 }</pre>
-<p>You can add your custom properties here. In this way, we can extend base 
+			<p>You can add your custom properties here. In this way, we can extend base 
 user, role and tenant classes upon our needs.</p>
 
-<h5 id="DocManagers">Managers (domain services)</h5>
-<p>We should implement base <strong>manager</strong> and <strong>store</strong> 
+			<h5 id="DocManagers">Managers (domain services)</h5>
+			<p>We should implement base <strong>manager</strong> and <strong>store</strong> 
 classes since they are also abstract.</p>
-<p>Start from <strong>user store</strong> and <strong>user manager</strong>:</p>
-<pre lang="cs">public class UserStore : AbpUserStore&lt;Tenant, Role, User&gt;
+			<p>Start from <strong>user store</strong> and <strong>user manager</strong>:</p>
+			<pre lang="cs">public class UserStore : AbpUserStore&lt;Tenant, Role, User&gt;
 {
     public UserStore(
         IRepository&lt;User, long&gt; userRepository,
@@ -125,11 +126,11 @@ public class UserManager : AbpUserManager&lt;Tenant, Role, User&gt;
 
     }
 }</pre>
-<p>Don't worry dependency list. They may change in next versions. Just arrange 
+			<p>Don't worry dependency list. They may change in next versions. Just arrange 
 constructors if needed (or you can copy from
-<a href="https://github.com/aspnetboilerplate/module-zero/tree/master/src/Tests/Abp.Zero.SampleApp" target="_blank">
+				<a href="https://github.com/aspnetboilerplate/module-zero/tree/master/src/Tests/Abp.Zero.SampleApp" target="_blank">
 this project</a>). It's similar for <strong>role store</strong> and <strong>role manager</strong>:</p>
-<pre lang="cs">public class RoleStore : AbpRoleStore&lt;Tenant, Role, User&gt;
+			<pre lang="cs">public class RoleStore : AbpRoleStore&lt;Tenant, Role, User&gt;
 {
     public RoleStore(
         IRepository&lt;Role&gt; roleRepository,
@@ -160,9 +161,9 @@ public class RoleManager : AbpRoleManager&#x3C;Tenant, Role, User&#x3E;
     {
     }
 }</pre>
-<p>Here, the <strong>tenant manager</strong> (no tenant 
+			<p>Here, the <strong>tenant manager</strong> (no tenant 
 store here):</p>
-<pre lang="cs">public class TenantManager : AbpTenantManager&lt;Tenant, Role, User&gt;
+			<pre lang="cs">public class TenantManager : AbpTenantManager&lt;Tenant, Role, User&gt;
 {
     public TenantManager(
         IRepository&lt;Tenant&gt; tenantRepository, 
@@ -177,8 +178,8 @@ store here):</p>
     }
 }</pre>
 
-<p>And finally, <strong>feature value store</strong> and <strong>edition manager</strong>:</p>
-<pre>public class FeatureValueStore : AbpFeatureValueStore&#x3C;Tenant, Role, User&#x3E;
+			<p>And finally, <strong>feature value store</strong> and <strong>edition manager</strong>:</p>
+			<pre>public class FeatureValueStore : AbpFeatureValueStore&#x3C;Tenant, Role, User&#x3E;
 {
     public FeatureValueStore(TenantManager tenantManager)
         : base(tenantManager)
@@ -203,10 +204,10 @@ public class EditionManager : AbpEditionManager
     }
 }</pre>
 
-<h5 id="DocPermissionChecker">Permission checker</h5>
-<p>To make <a href="/Pages/Documents/Authorization">authorization</a> system work, we should implement 
-<strong>permission checker</strong>:</p>
-<pre lang="cs">public class PermissionChecker : PermissionChecker&lt;Tenant, Role, User&gt;
+			<h5 id="DocPermissionChecker">Permission checker</h5>
+			<p>To make <a href="/Pages/Documents/Authorization">authorization</a> system work, we should implement 
+				<strong>permission checker</strong>:</p>
+			<pre lang="cs">public class PermissionChecker : PermissionChecker&lt;Tenant, Role, User&gt;
 {
     public PermissionChecker(UserManager userManager)
         : base(userManager)
@@ -215,49 +216,49 @@ public class EditionManager : AbpEditionManager
     }
 }</pre>
 
-<h4 id="DocInfrastructureLayer">Infrastructure layer</h4>
+			<h4 id="DocInfrastructureLayer">Infrastructure layer</h4>
 
-<h5 id="DocEntityFramework">EntityFramework</h5>
+			<h5 id="DocEntityFramework">EntityFramework</h5>
 
-<p>If you selected EntityFramework, we should configure it to use module-zero. 
+			<p>If you selected EntityFramework, we should configure it to use module-zero. 
 Install <strong>Abp.Zero.EntityFramework</strong> nuget package to 
 .EntityFramework project. Then go to module file (AbpZeroSampleDataModule for 
 this sample) and change AbpEntityFrameworkModule dependency to <strong>
 AbpZeroEntityFrameworkModule</strong> as shown below:</p>
-<pre lang="cs">[<strong>DependsOn(typeof(AbpZeroEntityFrameworkModule)</strong>, typeof(AbpZeroSampleCoreModule))]
+			<pre lang="cs">[<strong>DependsOn(typeof(AbpZeroEntityFrameworkModule)</strong>, typeof(AbpZeroSampleCoreModule))]
 public class AbpZeroSampleDataModule : AbpModule
 {
     //...
 }</pre>
 
-<h6 id="DocDbContext">DbContext</h6>
-<p>Go to your DbContext class and change base class from AbpDbContext to 
-<strong>AbpZeroDbContext</strong> as shown below:</p>
-<pre lang="cs">public class AbpZeroSampleDbContext : <strong>AbpZeroDbContext&lt;Tenant, Role, User&gt;</strong>
+			<h6 id="DocDbContext">DbContext</h6>
+			<p>Go to your DbContext class and change base class from AbpDbContext to 
+				<strong>AbpZeroDbContext</strong> as shown below:</p>
+			<pre lang="cs">public class AbpZeroSampleDbContext : <strong>AbpZeroDbContext&lt;Tenant, Role, User&gt;</strong>
 {
     //...
 }</pre>
-<p>Thus, base entities from module-zero is added to your db context.</p>
+			<p>Thus, base entities from module-zero is added to your db context.</p>
 
-<h6 id="DocDatabaseMigration">Database Migration</h6>
-<p>Now, we should create database migrations since our db context is changed.
-<strong>Open Package Manager Console</strong> and type the following command:</p>
-<pre>Add-Migration "AbpZero_Installed"</pre>
-<p>Surely, you can select a different migration name. Don't forget to select 
+			<h6 id="DocDatabaseMigration">Database Migration</h6>
+			<p>Now, we should create database migrations since our db context is changed.
+				<strong>Open Package Manager Console</strong> and type the following command:</p>
+			<pre>Add-Migration "AbpZero_Installed"</pre>
+			<p>Surely, you can select a different migration name. Don't forget to select 
 Default Project to AbpZeroSample.EntityFramework in package manager console 
 (AbpZeroSample will be different for your case). After executing this command, a 
 new migration file is added to the project. Check it and change if you need. 
 Then type the following command to update database schema:</p>
-<pre>Update-Database</pre>
-<p>You can check EntityFramework's code-first migration
-<a href="https://msdn.microsoft.com/en-us/data/jj591621.aspx" target="_blank">
+			<pre>Update-Database</pre>
+			<p>You can check EntityFramework's code-first migration
+				<a href="https://msdn.microsoft.com/en-us/data/jj591621.aspx" target="_blank">
 documentation</a> for more information.</p>
 
-<h6 id="DocInitialData">Initial Data</h6>
-<p>If you check your database, you will see that tables are created but they are 
+			<h6 id="DocInitialData">Initial Data</h6>
+			<p>If you check your database, you will see that tables are created but they are 
 empty. You can use EntityFramework's <strong>seed </strong>to fill initial data. 
 You can use such a class as initial data builder:</p>
-<pre lang="cs">public class DefaultTenantRoleAndUserBuilder
+			<pre lang="cs">public class DefaultTenantRoleAndUserBuilder
 {
     private readonly AbpZeroSampleDbContext _context;
 
@@ -347,9 +348,9 @@ You can use such a class as initial data builder:</p>
         }
     }
 }</pre>
-<p>This class creates default tenant, roles and users. We can use it in EF's
-<strong>Configuration</strong> class to seed our database:</p>
-<pre lang="cs">internal sealed class Configuration : DbMigrationsConfiguration&lt;AbpZeroSample.EntityFramework.AbpZeroSampleDbContext&gt;
+			<p>This class creates default tenant, roles and users. We can use it in EF's
+				<strong>Configuration</strong> class to seed our database:</p>
+			<pre lang="cs">internal sealed class Configuration : DbMigrationsConfiguration&lt;AbpZeroSample.EntityFramework.AbpZeroSampleDbContext&gt;
 {
     public Configuration()
     {
@@ -357,35 +358,34 @@ You can use such a class as initial data builder:</p>
         ContextKey = &quot;AbpZeroSample&quot;;
     }
 
-<strong>    protected override void Seed(AbpZeroSample.EntityFramework.AbpZeroSampleDbContext context)
+    <strong>protected override void Seed(AbpZeroSample.EntityFramework.AbpZeroSampleDbContext context)
     {
         context.DisableAllFilters();
         new DefaultTenantRoleAndUserBuilder(context).Build();
     }
-</strong>}</pre>
-<p>Here, we disabled data filters (so we can freely manipulate database) and 
+				</strong>}</pre>
+			<p>Here, we disabled data filters (so we can freely manipulate database) and 
 used the initial data builder class.</p>
 
-<h4 id="DocPresentationLayer">Presentation Layer</h4>
+			<h4 id="DocPresentationLayer">Presentation Layer</h4>
 
-<h5 id="DocPresentationNugetPackages">Nuget Packages</h5>
-<p>Add the following nuget packages to the .Web project:</p>
-<ul>
-	<li>Abp.Zero.EntityFramework (this will also add Abp.Zero and all 
+			<h5 id="DocPresentationNugetPackages">Nuget Packages</h5>
+			<p>Add the following nuget packages to the .Web project:</p>
+			<ul>
+				<li>Abp.Zero.EntityFramework (this will also add Abp.Zero and all 
 	dependencies)</li>
-	<li>Microsoft.AspNet.Identity.Owin</li>
-	<li>Microsoft.Owin.Host.SystemWeb</li>
-</ul>
-<h5 id="DocOwinStartup">Owin Startup Class</h5>
-<p>Add an Owin Startup class like that:</p>
-<pre lang="cs">using AbpZeroSample.Web;
+				<li>Microsoft.AspNet.Identity.Owin</li>
+				<li>Microsoft.Owin.Host.SystemWeb</li>
+			</ul>
+			<h5 id="DocOwinStartup">Owin Startup Class</h5>
+			<p>Add an Owin Startup class like that:</p>
+			<pre lang="cs">using AbpZeroSample.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 
-<strong>[assembly: OwinStartup(typeof(Startup))]
-</strong>
+<strong>[assembly: OwinStartup(typeof(Startup))]</strong>
 namespace AbpZeroSample.Web
 {
     public class Startup
@@ -405,9 +405,9 @@ namespace AbpZeroSample.Web
     }
 }</pre>
 
-<h5 id="DocAccountController">Account Controller</h5>
-<p>We can create a Controller for login/logout as shown below:</p>
-<pre lang="cs">public class AccountController : AbpZeroSampleControllerBase
+			<h5 id="DocAccountController">Account Controller</h5>
+			<p>We can create a Controller for login/logout as shown below:</p>
+			<pre lang="cs">public class AccountController : AbpZeroSampleControllerBase
 {
     private readonly UserManager _userManager;
 
@@ -486,8 +486,8 @@ namespace AbpZeroSample.Web
         return RedirectToAction(&quot;Login&quot;);
     }
 }</pre>
-<p>With a simple LoginViewModel:</p>
-<pre lang="cs">public class LoginViewModel
+			<p>With a simple LoginViewModel:</p>
+			<pre lang="cs">public class LoginViewModel
 {
     public string TenancyName { get; set; }
 
@@ -500,15 +500,16 @@ namespace AbpZeroSample.Web
     public bool RememberMe { get; set; }
 }</pre>
 
-<h5 id="DocLoginView">Login View</h5>
-<p>To be able to use AccountController, we should create a login page. It's up 
+			<h5 id="DocLoginView">Login View</h5>
+			<p>To be able to use AccountController, we should create a login page. It's up 
 to you creating a login form. Just call AccountController.Login via AJAX with 
 appropriate parameters.</p>
 
-<h5 id="DocSecureTheApp">Secure The Application</h5>
-<p>Now, we can add an AbpAuthorize attribute to HomeController to ensure only 
+			<h5 id="DocSecureTheApp">Secure The Application</h5>
+			<p>Now, we can add an AbpAuthorize attribute to HomeController to ensure only 
 authenticated users can enter to the page:</p>
-<pre lang="cs"><strong>[AbpMvcAuthorize]</strong>
+			<pre lang="cs">
+<strong>[AbpMvcAuthorize]</strong>
 public class HomeController : AbpZeroSampleControllerBase
 {
     public ActionResult Index()
@@ -517,8 +518,8 @@ public class HomeController : AbpZeroSampleControllerBase
     }
 }</pre>
 
-</div>
+		</div>
 
-</body>
+	</body>
 
 </html>

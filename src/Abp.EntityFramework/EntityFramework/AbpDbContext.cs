@@ -287,7 +287,7 @@ namespace Abp.EntityFramework
                 entry.Cast<IHasCreationTime>().Entity.CreationTime = Clock.Now;
             }
 
-            if (entry.Entity is ICreationAudited)
+            if (entry.Entity is ICreationAudited && AbpSession.UserId.HasValue)
             {
                 entry.Cast<ICreationAudited>().Entity.CreatorUserId = AbpSession.UserId;
             }
@@ -314,7 +314,7 @@ namespace Abp.EntityFramework
                 entry.Cast<IHasModificationTime>().Entity.LastModificationTime = Clock.Now;
             }
 
-            if (entry.Entity is IModificationAudited)
+            if (entry.Entity is IModificationAudited && AbpSession.UserId.HasValue)
             {
                 entry.Cast<IModificationAudited>().Entity.LastModifierUserId = AbpSession.UserId;
             }
@@ -342,7 +342,7 @@ namespace Abp.EntityFramework
                 entry.Cast<IHasDeletionTime>().Entity.DeletionTime = Clock.Now;
             }
 
-            if (entry.Entity is IDeletionAudited)
+            if (entry.Entity is IDeletionAudited && AbpSession.UserId.HasValue)
             {
                 entry.Cast<IDeletionAudited>().Entity.DeleterUserId = AbpSession.UserId;
             }
