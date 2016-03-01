@@ -1,7 +1,7 @@
 using System;
-using Abp.Runtime.Validation;
+using Adorable.Runtime.Validation;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     [Serializable]
     [InputType("SINGLE_LINE_STRING")]

@@ -1,7 +1,7 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
+﻿using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
 
-namespace Abp.MemoryDb.Repositories
+namespace Adorable.MemoryDb.Repositories
 {
     public class MemoryRepository<TEntity> : MemoryRepository<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>

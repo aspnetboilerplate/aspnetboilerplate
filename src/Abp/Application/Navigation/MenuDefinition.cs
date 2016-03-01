@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Represents a navigation menu for an application.

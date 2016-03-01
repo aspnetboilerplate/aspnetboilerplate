@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     internal class PermissionDependencyContext : IPermissionDependencyContext, ITransientDependency
     {

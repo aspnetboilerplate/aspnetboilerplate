@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.MultiTenancy;
-using Abp.Runtime.Security;
+using Adorable.Configuration.Startup;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Security;
 
-namespace Abp.Runtime.Session
+namespace Adorable.Runtime.Session
 {
     /// <summary>
     /// Implements <see cref="IAbpSession"/> to get session properties from claims of <see cref="Thread.CurrentPrincipal"/>.

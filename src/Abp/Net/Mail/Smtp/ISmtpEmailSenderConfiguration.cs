@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace Abp.Net.Mail.Smtp
+namespace Adorable.Net.Mail.Smtp
 {
     /// <summary>
     /// Defines configurations to used by <see cref="SmtpClient"/> object.

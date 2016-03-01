@@ -1,7 +1,7 @@
-using Abp.Localization;
+using Adorable.Localization;
 using Newtonsoft.Json;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     public interface ILocalizableComboboxItem
     {

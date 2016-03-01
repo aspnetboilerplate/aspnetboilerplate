@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// Used to define dependencies of an ABP module to other modules.

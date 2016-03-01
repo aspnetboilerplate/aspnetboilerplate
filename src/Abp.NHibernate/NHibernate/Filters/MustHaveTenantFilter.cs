@@ -1,8 +1,8 @@
-﻿using Abp.Domain.Uow;
+﻿using Adorable.Domain.Uow;
 using FluentNHibernate.Mapping;
 using NHibernate;
 
-namespace Abp.NHibernate.Filters
+namespace Adorable.NHibernate.Filters
 {
     /// <summary>
     /// Add filter MustHaveTenant 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Extensions;
-using Abp.Threading;
+using Adorable.Extensions;
+using Adorable.Threading;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Extension methods for <see cref="ISettingManager"/>.

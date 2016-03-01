@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Domain.Services;
-using Abp.Domain.Uow;
-using Abp.Extensions;
+using Adorable.Configuration;
+using Adorable.Domain.Services;
+using Adorable.Domain.Uow;
+using Adorable.Extensions;
 using Castle.Core.Internal;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to distribute notifications to users.

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Abp.Auditing;
-using Abp.TestBase.SampleApplication.People;
-using Abp.TestBase.SampleApplication.People.Dto;
+using Adorable.Auditing;
+using Adorable.TestBase.SampleApplication.People;
+using Adorable.TestBase.SampleApplication.People.Dto;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.Auditing
+namespace Adorable.TestBase.SampleApplication.Tests.Auditing
 {
     public class SimpleAuditing_Test : SampleApplicationTestBase
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using Abp.Application.Services;
-using Abp.Domain.Repositories;
+using Adorable.Application.Services;
+using Adorable.Domain.Repositories;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// A helper class to simplify unit of work process.

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Web;
-using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
+using Adorable.Dependency;
+using Adorable.Extensions;
+using Adorable.Web;
+using Adorable.WebApi.Controllers.Dynamic.Scripting.Angular;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     internal class TypeScriptServiceProxyGenerator : ITransientDependency
     {

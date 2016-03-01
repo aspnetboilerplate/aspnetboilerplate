@@ -1,6 +1,6 @@
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.NHibernate.EntityMappings
+namespace Adorable.NHibernate.EntityMappings
 {
     /// <summary>
     /// A shortcut of <see cref="EntityMap{TEntity,TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).

@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 
-namespace Abp.RedisCache.Configuration
+namespace Adorable.RedisCache.Configuration
 {
     public interface IAbpRedisConnectionProvider 
     {

@@ -1,4 +1,4 @@
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Adorable.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// This interface is just used to mark dynamic web api controllers.

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace Abp.Extensions
+namespace Adorable.Extensions
 {
     /// <summary>
     /// Extension methods for String class.

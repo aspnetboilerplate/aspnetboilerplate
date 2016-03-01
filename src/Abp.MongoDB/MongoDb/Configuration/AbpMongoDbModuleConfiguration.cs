@@ -1,4 +1,4 @@
-﻿namespace Abp.MongoDb.Configuration
+﻿namespace Adorable.MongoDb.Configuration
 {
     internal class AbpMongoDbModuleConfiguration : IAbpMongoDbModuleConfiguration
     {

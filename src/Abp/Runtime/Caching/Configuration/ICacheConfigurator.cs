@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Runtime.Caching.Configuration
+namespace Adorable.Runtime.Caching.Configuration
 {
     /// <summary>
     /// A registered cache configurator.

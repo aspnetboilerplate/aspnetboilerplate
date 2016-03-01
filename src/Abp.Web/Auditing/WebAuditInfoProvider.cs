@@ -2,10 +2,10 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Web;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.Core.Logging;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// Implements <see cref="IAuditInfoProvider"/> to fill web specific audit informations.

@@ -1,6 +1,6 @@
 using System.Data.Entity;
 
-namespace Abp.EntityFramework
+namespace Adorable.EntityFramework
 {
     /// <summary>
     /// 

@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Modules;
-using Abp.NHibernate.Filters;
-using Abp.NHibernate.Interceptors;
-using Abp.NHibernate.Repositories;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Modules;
+using Adorable.NHibernate.Filters;
+using Adorable.NHibernate.Interceptors;
+using Adorable.NHibernate.Repositories;
 using Castle.Components.DictionaryAdapter.Xml;
 using NHibernate;
 
-namespace Abp.NHibernate
+namespace Adorable.NHibernate
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in NHibernate.

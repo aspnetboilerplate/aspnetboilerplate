@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <summary>
     /// This interface can be implemented to convert an <see cref="Exception"/> object to an <see cref="ErrorInfo"/> object. 

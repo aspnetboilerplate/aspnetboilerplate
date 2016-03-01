@@ -1,9 +1,9 @@
 ﻿using System.Web.OData.Builder;
 
-namespace Abp.WebApi.OData.Configuration
+namespace Adorable.WebApi.OData.Configuration
 {
     /// <summary>
-    /// Used to configure Abp.Web.Api.OData module.
+    /// Used to configure Adorable.Web.Api.OData module.
     /// </summary>
     public interface IAbpWebApiODataModuleConfiguration
     {

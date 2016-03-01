@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Timing;
+using Adorable.Timing;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// In memory implementation of <see cref="IBackgroundJobStore"/>.

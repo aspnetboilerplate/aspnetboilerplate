@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Reflection;
-using Abp.Application.Features;
-using Abp.Application.Navigation;
-using Abp.Application.Services;
-using Abp.Auditing;
-using Abp.Authorization;
-using Abp.Authorization.Interceptors;
-using Abp.BackgroundJobs;
-using Abp.Configuration;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
-using Abp.Localization;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Modules;
-using Abp.MultiTenancy;
-using Abp.Net.Mail;
-using Abp.Notifications;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
-using Abp.Runtime.Validation.Interception;
-using Abp.Threading;
-using Abp.Threading.BackgroundWorkers;
+using Adorable.Application.Features;
+using Adorable.Application.Navigation;
+using Adorable.Application.Services;
+using Adorable.Auditing;
+using Adorable.Authorization;
+using Adorable.Authorization.Interceptors;
+using Adorable.BackgroundJobs;
+using Adorable.Configuration;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus;
+using Adorable.Localization;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries.Xml;
+using Adorable.Modules;
+using Adorable.MultiTenancy;
+using Adorable.Net.Mail;
+using Adorable.Notifications;
+using Adorable.Runtime.Caching;
+using Adorable.Runtime.Session;
+using Adorable.Runtime.Validation.Interception;
+using Adorable.Threading;
+using Adorable.Threading.BackgroundWorkers;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Kernel (core) module of the ABP system.
@@ -47,7 +47,7 @@ namespace Abp
 
             Configuration.Auditing.Selectors.Add(
                 new NamedTypeSelector(
-                    "Abp.ApplicationServices",
+                    "Adorable.ApplicationServices",
                     type => typeof(IApplicationService).IsAssignableFrom(type)
                     )
                 );
@@ -56,7 +56,7 @@ namespace Abp
                 new DictionaryBasedLocalizationSource(
                     AbpConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                        Assembly.GetExecutingAssembly(), "Adorable.Localization.Sources.AbpXmlSource"
                         )));
 
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();

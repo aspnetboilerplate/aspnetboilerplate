@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace Abp.WebApi.Controllers.Dynamic.Formatters
+namespace Adorable.WebApi.Controllers.Dynamic.Formatters
 {
     /// <summary>
     /// This class is used to return plain text reponse from <see cref="ApiController"/>s.

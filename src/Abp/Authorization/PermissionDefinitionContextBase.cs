@@ -1,9 +1,9 @@
-﻿using Abp.Application.Features;
-using Abp.Collections.Extensions;
-using Abp.Localization;
-using Abp.MultiTenancy;
+﻿using Adorable.Application.Features;
+using Adorable.Collections.Extensions;
+using Adorable.Localization;
+using Adorable.MultiTenancy;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     internal abstract class PermissionDefinitionContextBase : IPermissionDefinitionContext
     {

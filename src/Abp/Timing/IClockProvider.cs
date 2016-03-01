@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Timing
+namespace Adorable.Timing
 {
     /// <summary>
     /// Defines interface to perform some common date-time operations.

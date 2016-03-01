@@ -1,7 +1,7 @@
 ﻿using Shouldly;
 using Xunit;
 
-namespace Abp.Tests
+namespace Adorable.Tests
 {
     public class DisposeAction_Test
     {

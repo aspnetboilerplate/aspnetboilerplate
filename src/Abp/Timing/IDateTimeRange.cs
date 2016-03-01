@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Timing
+namespace Adorable.Timing
 {
     /// <summary>
     /// Defines interface for a DateTime range.

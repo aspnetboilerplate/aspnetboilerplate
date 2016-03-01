@@ -1,4 +1,4 @@
-﻿namespace Abp.Configuration.Startup
+﻿namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Used to configure multi-tenancy.

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.Remoting.Messaging;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.Core.Logging;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
@@ -14,7 +14,7 @@ namespace Abp.Domain.Uow
     {
         public ILogger Logger { get; set; }
 
-        private const string ContextKey = "Abp.UnitOfWork.Current";
+        private const string ContextKey = "Adorable.UnitOfWork.Current";
 
         //TODO: Clear periodically..?
         private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary = new ConcurrentDictionary<string, IUnitOfWork>();

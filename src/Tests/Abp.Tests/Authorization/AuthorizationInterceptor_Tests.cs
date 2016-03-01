@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Abp.Authorization;
-using Abp.Authorization.Interceptors;
-using Abp.Dependency;
-using Abp.Runtime.Session;
+using Adorable.Authorization;
+using Adorable.Authorization.Interceptors;
+using Adorable.Dependency;
+using Adorable.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Authorization
+namespace Adorable.Tests.Authorization
 {
     public class AuthorizationInterceptor_Tests : TestBaseWithLocalIocManager
     {

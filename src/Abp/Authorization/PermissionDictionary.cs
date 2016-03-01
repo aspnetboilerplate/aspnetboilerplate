@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Used to store and manipulate dictionary of permissions.

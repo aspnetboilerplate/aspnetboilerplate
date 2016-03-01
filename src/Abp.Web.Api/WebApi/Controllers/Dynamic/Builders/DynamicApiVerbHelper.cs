@@ -1,7 +1,7 @@
 using System;
-using Abp.Web;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// NOTE: This is not used (as all members are private)

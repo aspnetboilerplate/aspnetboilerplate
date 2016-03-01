@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
-using Abp.Collections.Extensions;
-using Abp.Reflection;
-using Abp.Web.Models;
+using Adorable.Collections.Extensions;
+using Adorable.Reflection;
+using Adorable.Web.Models;
 
-namespace Abp.WebApi.Controllers.Dynamic.Selectors
+namespace Adorable.WebApi.Controllers.Dynamic.Selectors
 {
     public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {

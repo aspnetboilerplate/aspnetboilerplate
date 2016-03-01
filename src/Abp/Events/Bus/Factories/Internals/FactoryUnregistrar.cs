@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Factories.Internals
+namespace Adorable.Events.Bus.Factories.Internals
 {
     /// <summary>
     /// Used to unregister a <see cref="IEventHandlerFactory"/> on <see cref="Dispose"/> method.

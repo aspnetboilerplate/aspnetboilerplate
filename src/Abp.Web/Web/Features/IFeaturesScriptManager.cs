@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Web.Features
+namespace Adorable.Web.Features
 {
     /// <summary>
     /// This class is used to build feature system script.

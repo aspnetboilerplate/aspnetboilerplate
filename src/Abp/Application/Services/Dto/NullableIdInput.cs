@@ -1,4 +1,4 @@
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This <see cref="IInputDto"/> can be directly used (or inherited)

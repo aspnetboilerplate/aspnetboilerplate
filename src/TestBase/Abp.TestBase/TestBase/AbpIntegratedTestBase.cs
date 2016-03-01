@@ -1,12 +1,12 @@
 ﻿using System;
-using Abp.Collections;
-using Abp.Dependency;
-using Abp.Modules;
-using Abp.Runtime.Session;
-using Abp.TestBase.Modules;
-using Abp.TestBase.Runtime.Session;
+using Adorable.Collections;
+using Adorable.Dependency;
+using Adorable.Modules;
+using Adorable.Runtime.Session;
+using Adorable.TestBase.Modules;
+using Adorable.TestBase.Runtime.Session;
 
-namespace Abp.TestBase
+namespace Adorable.TestBase
 {
     /// <summary>
     /// This is the base class for all tests integrated to ABP.

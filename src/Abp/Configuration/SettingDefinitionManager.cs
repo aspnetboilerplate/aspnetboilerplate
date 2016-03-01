@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Implements <see cref="ISettingDefinitionManager"/>.

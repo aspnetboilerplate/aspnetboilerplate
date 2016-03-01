@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// Implements <see cref="IListResult{T}"/>.

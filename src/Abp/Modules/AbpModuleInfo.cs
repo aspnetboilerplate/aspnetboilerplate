@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// Used to store all needed information for a module.

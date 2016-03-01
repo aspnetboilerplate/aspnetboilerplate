@@ -1,15 +1,15 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.Events.Bus.Entities;
-using Abp.Extensions;
-using Abp.Runtime.Session;
-using Abp.Timing;
+using Adorable.Dependency;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Events.Bus.Entities;
+using Adorable.Extensions;
+using Adorable.Runtime.Session;
+using Adorable.Timing;
 using NHibernate;
 using NHibernate.Type;
 
-namespace Abp.NHibernate.Interceptors
+namespace Adorable.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {

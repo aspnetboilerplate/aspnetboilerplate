@@ -1,4 +1,4 @@
-﻿namespace Abp.Web.Sessions
+﻿namespace Adorable.Web.Sessions
 {
     /// <summary>
     /// Used to create client scripts for session.

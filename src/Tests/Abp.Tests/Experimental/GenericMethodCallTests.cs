@@ -1,8 +1,8 @@
-using Abp.Domain.Entities;
-using Abp.Events.Bus.Entities;
+using Adorable.Domain.Entities;
+using Adorable.Events.Bus.Entities;
 using Xunit;
 
-namespace Abp.Tests.Experimental
+namespace Adorable.Tests.Experimental
 {
     public class GenericMethodCallTests
     {

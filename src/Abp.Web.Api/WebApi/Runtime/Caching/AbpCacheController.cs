@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
-using Abp.Runtime.Caching;
-using Abp.UI;
-using Abp.Web.Models;
-using Abp.WebApi.Controllers;
+using Adorable.Collections.Extensions;
+using Adorable.Extensions;
+using Adorable.Runtime.Caching;
+using Adorable.UI;
+using Adorable.Web.Models;
+using Adorable.WebApi.Controllers;
 
-namespace Abp.WebApi.Runtime.Caching
+namespace Adorable.WebApi.Runtime.Caching
 {
     [DontWrapResult]
     public class AbpCacheController : AbpApiController

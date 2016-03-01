@@ -2,11 +2,11 @@
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Abp.Dependency;
-using Abp.Resources.Embedded;
-using Abp.Web.Mvc.Resources.Embedded.Handlers;
+using Adorable.Dependency;
+using Adorable.Resources.Embedded;
+using Adorable.Web.Mvc.Resources.Embedded.Handlers;
 
-namespace Abp.Web.Mvc.Resources
+namespace Adorable.Web.Mvc.Resources
 {
     /// <summary>
     /// A helper class to simplify expose web resources.

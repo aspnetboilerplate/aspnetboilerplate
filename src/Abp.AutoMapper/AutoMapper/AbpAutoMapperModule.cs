@@ -1,11 +1,11 @@
-﻿using Abp.Localization;
-using Abp.Modules;
+﻿using Adorable.Localization;
+using Adorable.Modules;
 using System.Reflection;
-using Abp.Reflection;
+using Adorable.Reflection;
 using AutoMapper;
 using Castle.Core.Logging;
 
-namespace Abp.AutoMapper
+namespace Adorable.AutoMapper
 {
     [DependsOn(typeof (AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule

@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Abp.Hangfire.Configuration;
-using Abp.Modules;
+using Adorable.Hangfire.Configuration;
+using Adorable.Modules;
 using Hangfire;
 
-namespace Abp.Hangfire
+namespace Adorable.Hangfire
 {
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpHangfireModule : AbpModule

@@ -1,4 +1,4 @@
-﻿namespace Abp.BackgroundJobs
+﻿namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// Priority of a background job.

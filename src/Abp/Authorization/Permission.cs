@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Application.Features;
-using Abp.Localization;
-using Abp.MultiTenancy;
+using Adorable.Application.Features;
+using Adorable.Localization;
+using Adorable.MultiTenancy;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Represents a permission.

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Defines a store to get feature values.

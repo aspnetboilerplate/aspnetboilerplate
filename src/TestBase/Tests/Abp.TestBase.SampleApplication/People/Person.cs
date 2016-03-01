@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.TestBase.SampleApplication.ContacLists;
 
-namespace Abp.TestBase.SampleApplication.People
+namespace Adorable.TestBase.SampleApplication.People
 {
     [Table("People")]
     public class Person : Entity, IDeletionAudited

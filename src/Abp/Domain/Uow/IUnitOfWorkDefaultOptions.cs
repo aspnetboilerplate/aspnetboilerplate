@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Transactions;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Used to get/set default options for a unit of work.

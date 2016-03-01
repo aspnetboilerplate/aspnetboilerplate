@@ -1,4 +1,4 @@
-﻿namespace Abp.MemoryDb.Configuration
+﻿namespace Adorable.MemoryDb.Configuration
 {
     internal class AbpMemoryDbModuleConfiguration : IAbpMemoryDbModuleConfiguration
     {

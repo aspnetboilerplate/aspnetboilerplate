@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// This class is used to permissions for users.

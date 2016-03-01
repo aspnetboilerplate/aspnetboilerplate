@@ -1,4 +1,4 @@
-﻿namespace Abp.Configuration.Startup
+﻿namespace Adorable.Configuration.Startup
 {
     internal class EventBusConfiguration : IEventBusConfiguration
     {

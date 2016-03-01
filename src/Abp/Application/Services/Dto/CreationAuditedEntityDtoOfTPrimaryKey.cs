@@ -1,8 +1,8 @@
 using System;
-using Abp.Domain.Entities.Auditing;
-using Abp.Timing;
+using Adorable.Domain.Entities.Auditing;
+using Adorable.Timing;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="ICreationAudited"/> interface.

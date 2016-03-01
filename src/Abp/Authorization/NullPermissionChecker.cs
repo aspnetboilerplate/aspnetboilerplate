@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Null (and default) implementation of <see cref="IPermissionChecker"/>.

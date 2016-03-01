@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Used in <see cref="IFeatureDependency.IsSatisfiedAsync"/> method.

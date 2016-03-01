@@ -1,8 +1,8 @@
-using Abp.Localization.Dictionaries.Xml;
+using Adorable.Localization.Dictionaries.Xml;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization
+namespace Adorable.Tests.Localization
 {
     public class Test_XmlLocalizationDictionaryBuilder
     {

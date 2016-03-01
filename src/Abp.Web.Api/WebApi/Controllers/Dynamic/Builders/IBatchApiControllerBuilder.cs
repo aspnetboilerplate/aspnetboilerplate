@@ -1,8 +1,8 @@
 using System;
 using System.Web.Http.Filters;
-using Abp.Web;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// This interface is used to define a dynamic api controllers.

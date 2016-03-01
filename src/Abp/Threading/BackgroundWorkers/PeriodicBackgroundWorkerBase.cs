@@ -1,7 +1,7 @@
 using System;
-using Abp.Threading.Timers;
+using Adorable.Threading.Timers;
 
-namespace Abp.Threading.BackgroundWorkers
+namespace Adorable.Threading.BackgroundWorkers
 {
     /// <summary>
     /// Extends <see cref="BackgroundWorkerBase"/> to add a periodic running Timer. 

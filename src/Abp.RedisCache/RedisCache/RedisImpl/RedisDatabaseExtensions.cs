@@ -1,7 +1,7 @@
 ﻿using StackExchange.Redis;
 using System;
 
-namespace Abp.RedisCache.RedisImpl
+namespace Adorable.RedisCache.RedisImpl
 {
     public static class RedisDatabaseExtensions
     {

@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
-using Abp.Collections.Extensions;
-using Abp.EntityFramework.Dependency;
-using Abp.EntityFramework.Repositories;
-using Abp.EntityFramework.Uow;
-using Abp.Modules;
-using Abp.Reflection;
+using Adorable.Collections.Extensions;
+using Adorable.EntityFramework.Dependency;
+using Adorable.EntityFramework.Repositories;
+using Adorable.EntityFramework.Uow;
+using Adorable.Modules;
+using Adorable.Reflection;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.EntityFramework
+namespace Adorable.EntityFramework
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.

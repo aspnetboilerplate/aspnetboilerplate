@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 using System.Linq;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Xml;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries.Xml;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization
+namespace Adorable.Tests.Localization
 {
     public class Test_DictionaryBasedLocalizationSource
     {

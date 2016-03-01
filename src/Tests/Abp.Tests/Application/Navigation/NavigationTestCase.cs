@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Application.Navigation;
-using Abp.Authorization;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Localization;
+using Adorable.Application.Features;
+using Adorable.Application.Navigation;
+using Adorable.Authorization;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Localization;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 
-namespace Abp.Tests.Application.Navigation
+namespace Adorable.Tests.Application.Navigation
 {
     internal class NavigationTestCase
     {
@@ -60,8 +60,8 @@ namespace Abp.Tests.Application.Navigation
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(1, "Adorable.Zero.UserManagement").Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(1, "Adorable.Zero.RoleManagement").Returns(Task.FromResult(false));
             return permissionChecker;
         }
 
@@ -71,26 +71,26 @@ namespace Abp.Tests.Application.Navigation
             {
                 context.Manager.MainMenu.AddItem(
                     new MenuItemDefinition(
-                        "Abp.Zero.Administration",
+                        "Adorable.Zero.Administration",
                         new FixedLocalizableString("Administration"),
                         "fa fa-asterisk",
                         requiresAuthentication: true
                         ).AddItem(
                             new MenuItemDefinition(
-                                "Abp.Zero.Administration.User",
+                                "Adorable.Zero.Administration.User",
                                 new FixedLocalizableString("User management"),
                                 "fa fa-users",
                                 "#/admin/users",
-                                requiredPermissionName: "Abp.Zero.UserManagement",
+                                requiredPermissionName: "Adorable.Zero.UserManagement",
                                 customData: "A simple test data"
                                 )
                         ).AddItem(
                             new MenuItemDefinition(
-                                "Abp.Zero.Administration.Role",
+                                "Adorable.Zero.Administration.Role",
                                 new FixedLocalizableString("Role management"),
                                 "fa fa-star-o",
                                 "#/admin/roles",
-                                requiredPermissionName: "Abp.Zero.RoleManagement"
+                                requiredPermissionName: "Adorable.Zero.RoleManagement"
                                 )
                         )
                     );
@@ -101,10 +101,10 @@ namespace Abp.Tests.Application.Navigation
         {
             public override void SetNavigation(INavigationProviderContext context)
             {
-                var adminMenu = context.Manager.MainMenu.GetItemByName("Abp.Zero.Administration");
+                var adminMenu = context.Manager.MainMenu.GetItemByName("Adorable.Zero.Administration");
                 adminMenu.AddItem(
                     new MenuItemDefinition(
-                        "Abp.Zero.Administration.Setting",
+                        "Adorable.Zero.Administration.Setting",
                         new FixedLocalizableString("Setting management"),
                         icon: "fa fa-cog",
                         url: "#/admin/settings",

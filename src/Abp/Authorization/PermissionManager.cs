@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Application.Features;
-using Abp.Collections.Extensions;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Adorable.Application.Features;
+using Adorable.Collections.Extensions;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Session;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Permission manager.

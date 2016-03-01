@@ -1,8 +1,8 @@
 using System;
 using System.Data.Entity;
-using Abp.Domain.Uow;
+using Adorable.Domain.Uow;
 
-namespace Abp.EntityFramework.Uow
+namespace Adorable.EntityFramework.Uow
 {
     /// <summary>
     /// Extension methods for UnitOfWork.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Hangfire;
 
-namespace Abp.Hangfire
+namespace Adorable.Hangfire
 {
     public class HangfireIocJobActivator : JobActivator
     {

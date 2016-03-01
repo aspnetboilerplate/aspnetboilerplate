@@ -1,4 +1,4 @@
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     internal interface IAbpModuleManager
     {

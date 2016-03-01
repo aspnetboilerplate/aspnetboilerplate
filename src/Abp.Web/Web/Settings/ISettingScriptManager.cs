@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Abp.Web.Settings
+namespace Adorable.Web.Settings
 {
     /// <summary>
     /// Define interface to get setting scripts

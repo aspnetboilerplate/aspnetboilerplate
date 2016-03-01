@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Manages navigation in the application.

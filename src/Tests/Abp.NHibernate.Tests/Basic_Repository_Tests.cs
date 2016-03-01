@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using Abp.Domain.Repositories;
-using Abp.Events.Bus;
-using Abp.Events.Bus.Entities;
+using Adorable.Domain.Repositories;
+using Adorable.Events.Bus;
+using Adorable.Events.Bus.Entities;
 using NHibernate.Linq;
 using Shouldly;
 using Xunit;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     public class Basic_Repository_Tests : NHibernateTestBase
     {

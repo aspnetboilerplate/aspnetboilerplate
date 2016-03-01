@@ -1,9 +1,9 @@
-﻿using Abp.Configuration;
+﻿using Adorable.Configuration;
 using NUnit.Framework;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Configuration
+namespace Adorable.Tests.Configuration
 {
     public class DictionaryBasedConfig_Test
     {

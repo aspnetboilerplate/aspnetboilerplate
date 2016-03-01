@@ -1,7 +1,7 @@
-using Abp.Dependency;
-using Abp.Domain.Uow;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
 
-namespace Abp.MemoryDb.Uow
+namespace Adorable.MemoryDb.Uow
 {
     /// <summary>
     /// Implements <see cref="IMemoryDatabaseProvider"/> that gets database from active unit of work.

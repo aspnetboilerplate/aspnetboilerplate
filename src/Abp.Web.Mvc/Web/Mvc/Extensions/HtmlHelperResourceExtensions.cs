@@ -3,11 +3,11 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Logging;
-using Abp.Web.Mvc.Resources;
+using Adorable.Logging;
+using Adorable.Web.Mvc.Resources;
 using System.Text.RegularExpressions;
 
-namespace Abp.Web.Mvc.Extensions
+namespace Adorable.Web.Mvc.Extensions
 {
     /// <summary>
     /// TODO: What if resource changes? How to update cache?

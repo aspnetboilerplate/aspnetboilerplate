@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// This handle is used for innet unit of work scopes.

@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Abp;
+using Adorable;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API - OData")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API - OData")]
+[assembly: AssemblyTitle("ASP.NET Adorable- Web API - OData")]
+[assembly: AssemblyDescription("ASP.NET Adorable- Web API - OData")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Web.Api.OData")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.Web.Api.OData")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

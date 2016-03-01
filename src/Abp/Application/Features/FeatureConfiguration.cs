@@ -1,6 +1,6 @@
-﻿using Abp.Collections;
+﻿using Adorable.Collections;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     internal class FeatureConfiguration : IFeatureConfiguration
     {

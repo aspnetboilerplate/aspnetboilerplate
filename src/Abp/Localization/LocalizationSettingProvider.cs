@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Abp.Configuration;
+using Adorable.Configuration;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public class LocalizationSettingProvider : SettingProvider
     {

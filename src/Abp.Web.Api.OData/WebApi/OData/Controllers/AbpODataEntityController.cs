@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.OData;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
+using Adorable.Domain.Uow;
 
-namespace Abp.WebApi.OData.Controllers
+namespace Adorable.WebApi.OData.Controllers
 {
     public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, int>
         where TEntity : class, IEntity<int>

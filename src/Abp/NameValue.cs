@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Can be used to store Name/Value (or Key/Value) pairs.

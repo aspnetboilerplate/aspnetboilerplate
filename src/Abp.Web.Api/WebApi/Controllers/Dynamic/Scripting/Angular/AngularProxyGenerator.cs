@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.Angular
 {
     internal class AngularProxyGenerator : IScriptProxyGenerator
     {

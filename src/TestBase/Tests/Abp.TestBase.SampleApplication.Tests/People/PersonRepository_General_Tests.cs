@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Domain.Repositories;
+using Adorable.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.People
+namespace Adorable.TestBase.SampleApplication.Tests.People
 {
     public class PersonRepository_General_Tests : SampleApplicationTestBase
     {

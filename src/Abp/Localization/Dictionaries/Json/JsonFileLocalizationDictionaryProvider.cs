@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources.Xml;
+using Adorable.Localization.Dictionaries.Xml;
+using Adorable.Localization.Sources.Xml;
 
-namespace Abp.Localization.Dictionaries.Json
+namespace Adorable.Localization.Dictionaries.Json
 {
     /// <summary>
     ///     Provides localization dictionaries from json files in a directory.

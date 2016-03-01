@@ -1,4 +1,4 @@
-namespace Abp.Events.Bus.Entities
+namespace Adorable.Events.Bus.Entities
 {
     /// <summary>
     /// Null-object implementation of <see cref="IEntityChangeEventHelper"/>.

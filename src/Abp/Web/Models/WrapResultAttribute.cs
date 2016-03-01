@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <summary>
     /// Used to determine how ABP should wrap response on the web layer.

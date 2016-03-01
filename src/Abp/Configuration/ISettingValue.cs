@@ -1,4 +1,4 @@
-﻿namespace Abp.Configuration
+﻿namespace Adorable.Configuration
 {
     /// <summary>
     /// Represents value of a setting.

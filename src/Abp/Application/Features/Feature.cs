@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Collections.Extensions;
-using Abp.Localization;
-using Abp.UI.Inputs;
+using Adorable.Collections.Extensions;
+using Adorable.Localization;
+using Adorable.UI.Inputs;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Defines a feature of the application. A <see cref="Feature"/> can be used in a multi-tenant application

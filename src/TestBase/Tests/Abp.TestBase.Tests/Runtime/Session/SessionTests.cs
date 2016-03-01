@@ -1,9 +1,9 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Runtime.Session;
+﻿using Adorable.Configuration.Startup;
+using Adorable.Runtime.Session;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.Tests.Runtime.Session
+namespace Adorable.TestBase.Tests.Runtime.Session
 {
     public class SessionTests : AbpIntegratedTestBase
     {

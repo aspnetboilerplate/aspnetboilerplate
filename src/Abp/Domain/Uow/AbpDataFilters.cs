@@ -1,6 +1,6 @@
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Standard filters of ABP.

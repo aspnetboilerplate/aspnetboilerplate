@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// Defines a cache that can be store and get items by keys.

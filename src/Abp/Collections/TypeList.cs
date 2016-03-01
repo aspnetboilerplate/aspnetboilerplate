@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Abp.Collections
+namespace Adorable.Collections
 {
     /// <summary>
     /// A shortcut for <see cref="TypeList{TBaseType}"/> to use object as base type.

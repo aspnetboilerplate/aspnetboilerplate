@@ -1,6 +1,6 @@
-﻿using Abp.Threading;
+﻿using Adorable.Threading;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// Extension methods for <see cref="IAuditingStore"/>.

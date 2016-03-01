@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Web.Http.Controllers;
-using Abp.Collections.Extensions;
-using Abp.Web.Models;
+using Adorable.Collections.Extensions;
+using Adorable.Web.Models;
 
-namespace Abp.WebApi.Controllers
+namespace Adorable.WebApi.Controllers
 {
     internal static class HttpActionDescriptorHelper
     {

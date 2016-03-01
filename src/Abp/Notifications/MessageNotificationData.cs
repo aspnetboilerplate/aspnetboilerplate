@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Can be used to store a simple message as notification data.

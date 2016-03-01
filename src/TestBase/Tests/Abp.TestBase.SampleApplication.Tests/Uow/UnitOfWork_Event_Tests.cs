@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Data.Entity.Validation;
 using System.Linq;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Domain.Repositories;
+using Adorable.Domain.Uow;
+using Adorable.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.Uow
+namespace Adorable.TestBase.SampleApplication.Tests.Uow
 {
     public class UnitOfWork_Event_Tests : SampleApplicationTestBase
     {

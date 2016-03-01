@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// Base class for caches.

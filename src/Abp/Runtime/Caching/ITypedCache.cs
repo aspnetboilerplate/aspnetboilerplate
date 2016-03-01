@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// An interface to work with cache in a typed manner.

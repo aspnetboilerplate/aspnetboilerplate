@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// Implements common properties for entity based DTOs.

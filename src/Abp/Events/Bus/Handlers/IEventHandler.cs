@@ -1,4 +1,4 @@
-namespace Abp.Events.Bus.Handlers
+namespace Adorable.Events.Bus.Handlers
 {
     /// <summary>
     /// Undirect base interface for all event handlers.

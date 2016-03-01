@@ -1,4 +1,4 @@
-﻿namespace Abp.Threading.BackgroundWorkers
+﻿namespace Adorable.Threading.BackgroundWorkers
 {
     /// <summary>
     /// Used to manage background workers.

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Reflection;
-using Abp.Threading;
+using Adorable.Dependency;
+using Adorable.Reflection;
+using Adorable.Threading;
 using Castle.DynamicProxy;
 
-namespace Abp.Authorization.Interceptors
+namespace Adorable.Authorization.Interceptors
 {
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.

@@ -1,6 +1,6 @@
-using Abp.Events.Bus.Handlers;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Events.Bus.Factories
+namespace Adorable.Events.Bus.Factories
 {
     /// <summary>
     /// Defines an interface for factories those are responsible to create/get and release of event handlers.

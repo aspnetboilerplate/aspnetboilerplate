@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Extensions;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Adorable.Extensions;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Session;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Base for all Unit Of Work classes.

@@ -1,7 +1,7 @@
-﻿using Abp.Application.Features;
-using Abp.Dependency;
+﻿using Adorable.Application.Features;
+using Adorable.Dependency;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Permission dependency context.

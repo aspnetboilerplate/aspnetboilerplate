@@ -1,10 +1,10 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
-using Abp.EntityFramework;
-using Abp.TestBase.SampleApplication.ContacLists;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.EntityFramework;
+using Adorable.TestBase.SampleApplication.ContacLists;
+using Adorable.TestBase.SampleApplication.People;
 
-namespace Abp.TestBase.SampleApplication.EntityFramework
+namespace Adorable.TestBase.SampleApplication.EntityFramework
 {
     public class SampleApplicationDbContext : AbpDbContext
     {

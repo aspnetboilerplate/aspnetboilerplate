@@ -1,7 +1,7 @@
-﻿using Abp.Application.Navigation;
-using Abp.Collections;
+﻿using Adorable.Application.Navigation;
+using Adorable.Collections;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     internal class NavigationConfiguration : INavigationConfiguration
     {

@@ -1,4 +1,4 @@
-﻿namespace Abp.WebApi.Controllers.Dynamic.Clients
+﻿namespace Adorable.WebApi.Controllers.Dynamic.Clients
 {
     /// <summary>
     /// Defines interface of a client to use a remote Web Api service.

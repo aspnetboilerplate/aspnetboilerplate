@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace Abp.MongoDb
+namespace Adorable.MongoDb
 {
     /// <summary>
     /// Defines interface to obtain a <see cref="MongoDatabase"/> object.

@@ -1,6 +1,6 @@
-﻿using Abp.Modules;
+﻿using Adorable.Modules;
 
-namespace Abp.Owin
+namespace Adorable.Owin
 {
     /// <summary>
     /// OWIN integration module for ABP.

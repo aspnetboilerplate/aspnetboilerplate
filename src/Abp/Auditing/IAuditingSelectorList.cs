@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// List of selector functions to select classes/interfaces to be audited.

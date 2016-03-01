@@ -1,9 +1,9 @@
 ﻿using System.Web.Mvc;
-using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
+using Adorable.Authorization;
+using Adorable.Dependency;
+using Adorable.Logging;
 
-namespace Abp.Web.Mvc.Authorization
+namespace Adorable.Web.Mvc.Authorization
 {
     /// <summary>
     /// This attribute is used on an action of an MVC <see cref="Controller"/>

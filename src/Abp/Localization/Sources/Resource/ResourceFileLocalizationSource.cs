@@ -5,10 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Localization.Sources.Resource
+namespace Adorable.Localization.Sources.Resource
 {
     /// <summary>
     /// This class is used to simplify to create a localization source that

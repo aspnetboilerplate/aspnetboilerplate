@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Json;
+using Adorable.Json;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to store data for a notification.

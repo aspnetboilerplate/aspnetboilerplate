@@ -1,7 +1,7 @@
 using System.Web;
 using System.Web.Routing;
 
-namespace Abp.Web.Mvc.Resources.Embedded.Handlers
+namespace Adorable.Web.Mvc.Resources.Embedded.Handlers
 {
     internal class EmbeddedResourceRouteHandler : IRouteHandler
     {

@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
-using Abp.Reflection;
+using Adorable.Collections.Extensions;
+using Adorable.Reflection;
 
-namespace Abp.Runtime.Validation.Interception
+namespace Adorable.Runtime.Validation.Interception
 {
     /// <summary>
     /// This class is used to validate a method call (invocation) for method arguments.

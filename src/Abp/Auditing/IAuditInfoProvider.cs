@@ -1,4 +1,4 @@
-﻿namespace Abp.Auditing
+﻿namespace Adorable.Auditing
 {
     /// <summary>
     /// Provides an interface to provide audit informations in the upper layers.

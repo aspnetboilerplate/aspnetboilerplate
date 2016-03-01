@@ -1,7 +1,7 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Logging;
+﻿using Adorable.Configuration.Startup;
+using Adorable.Logging;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public static class LocalizationSourceHelper
     {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Dependency;
-using Abp.Runtime.Caching.Configuration;
+using Adorable.Dependency;
+using Adorable.Runtime.Caching.Configuration;
 
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// Base class for cache managers.

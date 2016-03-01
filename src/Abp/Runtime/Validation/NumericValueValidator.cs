@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     [Serializable]
     [Validator("NUMERIC")]

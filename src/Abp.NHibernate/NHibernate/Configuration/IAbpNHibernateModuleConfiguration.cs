@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 
-namespace Abp.NHibernate.Configuration
+namespace Adorable.NHibernate.Configuration
 {
     /// <summary>
     /// Used to configure ABP NHibernate module.

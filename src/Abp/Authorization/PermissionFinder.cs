@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// This class is used to get permissions out of the system.
     /// Normally, you should inject and use <see cref="IPermissionManager"/> and use it.
-    /// This class can be used in database migrations or in unit tests where Abp is not initialized.
+    /// This class can be used in database migrations or in unit tests where Adorable is not initialized.
     /// </summary>
     public static class PermissionFinder
     {
         /// <summary>
         /// Collects and gets all permissions in given providers.
-        /// This method can be used to get permissions in database migrations or in unit tests where Abp is not initialized.
+        /// This method can be used to get permissions in database migrations or in unit tests where Adorable is not initialized.
         /// Otherwise, use <see cref="IPermissionManager.GetAllPermissions(bool)"/> method.
         /// 
         /// </summary>

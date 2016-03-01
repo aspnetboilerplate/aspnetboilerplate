@@ -1,8 +1,8 @@
 using System.Reflection;
 using System.Web.Http.Filters;
-using Abp.Web;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Adorable.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// Used to store an action information of a dynamic ApiController.

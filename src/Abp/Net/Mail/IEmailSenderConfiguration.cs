@@ -1,4 +1,4 @@
-﻿namespace Abp.Net.Mail
+﻿namespace Adorable.Net.Mail
 {
     /// <summary>
     /// Defines configurations used while sending emails.

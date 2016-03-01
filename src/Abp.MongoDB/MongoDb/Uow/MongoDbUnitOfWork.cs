@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.MongoDb.Configuration;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.MongoDb.Configuration;
 using MongoDB.Driver;
 
-namespace Abp.MongoDb.Uow
+namespace Adorable.MongoDb.Uow
 {
     /// <summary>
     /// Implements Unit of work for MongoDB.

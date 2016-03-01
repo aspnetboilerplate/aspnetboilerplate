@@ -5,17 +5,17 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abp.Tests")]
+[assembly: AssemblyTitle("Adorable.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.Tests")]
+[assembly: AssemblyProduct("Adorable.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: InternalsVisibleTo("Abp.Web.Tests")]
-[assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
+[assembly: InternalsVisibleTo("Adorable.Web.Tests")]
+[assembly: InternalsVisibleTo("Adorable.EntityFramework.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

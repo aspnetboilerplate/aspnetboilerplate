@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Runtime.Caching;
+using Adorable.Runtime.Caching;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Extension methods for <see cref="ICacheManager"/> to get setting caches.

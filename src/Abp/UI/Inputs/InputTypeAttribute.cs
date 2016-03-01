@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class InputTypeAttribute : Attribute

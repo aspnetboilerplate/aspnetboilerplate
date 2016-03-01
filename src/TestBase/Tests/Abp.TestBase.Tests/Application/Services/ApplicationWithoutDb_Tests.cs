@@ -1,10 +1,10 @@
-﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using Abp.Dependency;
+﻿using Adorable.Application.Services;
+using Adorable.Application.Services.Dto;
+using Adorable.Dependency;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.Tests.Application.Services
+namespace Adorable.TestBase.Tests.Application.Services
 {
     /// <summary>
     /// Should support working without database or a unit of work.

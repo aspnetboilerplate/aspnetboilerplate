@@ -1,6 +1,6 @@
-﻿using Abp.WebApi.Controllers.ApiExplorer;
-using Abp.WebApi.Controllers.Dynamic;
-using Abp.WebApi.Controllers.Dynamic.Selectors;
+﻿using Adorable.WebApi.Controllers.ApiExplorer;
+using Adorable.WebApi.Controllers.Dynamic;
+using Adorable.WebApi.Controllers.Dynamic.Selectors;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
 
-namespace Abp.Web.Api.Description
+namespace Adorable.Web.Api.Description
 {
     public class AbpApiExplorer : ApiExplorer,IApiExplorer
     {
@@ -170,7 +170,7 @@ namespace Abp.Web.Api.Description
 
             return null;
         }
-        private HttpMethod GetMethod(Abp.Web.HttpVerb verb)
+        private HttpMethod GetMethod(Adorable.Web.HttpVerb verb)
         {
             if (verb == HttpVerb.Post)
                 return HttpMethod.Post;

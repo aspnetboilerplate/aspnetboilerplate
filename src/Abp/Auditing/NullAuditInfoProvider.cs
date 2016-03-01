@@ -1,4 +1,4 @@
-﻿namespace Abp.Auditing
+﻿namespace Adorable.Auditing
 {
     /// <summary>
     /// Null implementation of <see cref="IAuditInfoProvider"/>.

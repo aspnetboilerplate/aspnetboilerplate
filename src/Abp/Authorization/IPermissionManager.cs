@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.MultiTenancy;
+using Adorable.MultiTenancy;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Permission manager.

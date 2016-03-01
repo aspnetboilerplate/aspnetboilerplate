@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Represents a setting information.

@@ -1,12 +1,12 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Caching.Configuration;
-using Abp.Runtime.Caching.Memory;
+using Adorable.Dependency;
+using Adorable.Runtime.Caching;
+using Adorable.Runtime.Caching.Configuration;
+using Adorable.Runtime.Caching.Memory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Runtime.Caching.Memory
+namespace Adorable.Tests.Runtime.Caching.Memory
 {
     public class MemoryCacheManager_Tests : TestBaseWithLocalIocManager
     {

@@ -2,7 +2,7 @@
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class IocManager_LifeStyle_Tests : TestBaseWithLocalIocManager
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Configuration;
 
-namespace Abp.Reflection
+namespace Adorable.Reflection
 {
     /// <summary>
     /// Some simple type-checking methods used internally.

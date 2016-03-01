@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Abp.Dependency;
-using Abp.Modules;
+using Adorable.Dependency;
+using Adorable.Modules;
 
-namespace Abp.MemoryDb
+namespace Adorable.MemoryDb
 {
     [DependsOn(typeof(AbpKernelModule))]
     public class MemoryDatabase : ISingletonDependency

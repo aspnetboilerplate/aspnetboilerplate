@@ -1,8 +1,8 @@
-﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
+﻿using Adorable.Application.Services;
+using Adorable.Application.Services.Dto;
 using Xunit;
 
-namespace Abp.Web.Api.Tests.DynamicApiController.Clients
+namespace Adorable.Web.Api.Tests.DynamicApiController.Clients
 {
     //NOTE: This feature is being developed. So, unit tests will be failed if enabled!
 

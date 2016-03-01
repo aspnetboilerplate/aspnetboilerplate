@@ -2,20 +2,20 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Configuration;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
-using Abp.Localization;
-using Abp.Localization.Sources;
-using Abp.Runtime.Session;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Configuration;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
+using Adorable.Runtime.Session;
 using Castle.Core.Logging;
 
-namespace Abp.WebApi.Controllers
+namespace Adorable.WebApi.Controllers
 {
     /// <summary>
-    /// Base class for all ApiControllers in web applications those use Abp system.
+    /// Base class for all ApiControllers in web applications those use Adorable system.
     /// </summary>
     public abstract class AbpApiController : ApiController
     {

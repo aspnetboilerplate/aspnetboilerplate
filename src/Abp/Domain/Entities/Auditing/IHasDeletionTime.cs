@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// An entity can implement this interface if <see cref="DeletionTime"/> of this entity must be stored.

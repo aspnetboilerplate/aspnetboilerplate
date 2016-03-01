@@ -1,8 +1,8 @@
 ﻿using System.Web.Http;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.WebApi.Controllers
+namespace Adorable.WebApi.Controllers
 {
     /// <summary>
     /// Registers all Web API Controllers derived from <see cref="ApiController"/>.

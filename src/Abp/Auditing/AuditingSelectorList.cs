@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     internal class AuditingSelectorList : List<NamedTypeSelector>, IAuditingSelectorList
     {

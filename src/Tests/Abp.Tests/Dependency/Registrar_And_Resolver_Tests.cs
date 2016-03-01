@@ -1,8 +1,8 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Dependency
+namespace Adorable.Tests.Dependency
 {
     public class Registrar_And_Resolver_Tests : TestBaseWithLocalIocManager
     {

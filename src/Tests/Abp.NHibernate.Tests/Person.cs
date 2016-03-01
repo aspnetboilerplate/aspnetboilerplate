@@ -1,6 +1,6 @@
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     public class Person : Entity
     {

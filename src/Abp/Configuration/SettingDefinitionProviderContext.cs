@@ -1,4 +1,4 @@
-﻿namespace Abp.Configuration
+﻿namespace Adorable.Configuration
 {
     /// <summary>
     /// The context that is used in setting providers.

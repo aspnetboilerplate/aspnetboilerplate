@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using Abp.Modules;
+using Adorable.Modules;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 
-namespace Abp.Web.SignalR
+namespace Adorable.Web.SignalR
 {
     /// <summary>
     /// ABP SignalR integration module.

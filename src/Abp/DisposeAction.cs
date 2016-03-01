@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// This class can be used to provide an action when

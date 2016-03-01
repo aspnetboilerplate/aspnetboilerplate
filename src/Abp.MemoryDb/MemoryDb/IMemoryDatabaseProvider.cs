@@ -1,4 +1,4 @@
-namespace Abp.MemoryDb
+namespace Adorable.MemoryDb
 {
     /// <summary>
     /// Defines interface to obtain a <see cref="MemoryDatabase"/> object.

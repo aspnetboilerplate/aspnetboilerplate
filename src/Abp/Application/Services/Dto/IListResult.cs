@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Application.Services.Dto
+namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// This interface is defined to standardize to return a list of items to clients.

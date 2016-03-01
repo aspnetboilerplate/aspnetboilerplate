@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Used as event arguments on <see cref="IActiveUnitOfWork.Failed"/> event.

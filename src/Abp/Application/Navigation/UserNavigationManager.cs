@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Localization;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
+using Adorable.Localization;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Session;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {

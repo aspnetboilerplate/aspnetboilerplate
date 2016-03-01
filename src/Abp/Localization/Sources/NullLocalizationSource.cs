@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Localization.Sources
+namespace Adorable.Localization.Sources
 {
     /// <summary>
     /// Null object pattern for <see cref="ILocalizationSource"/>.

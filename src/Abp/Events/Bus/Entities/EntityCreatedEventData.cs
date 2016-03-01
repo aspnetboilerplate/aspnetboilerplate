@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Events.Bus.Entities
+namespace Adorable.Events.Bus.Entities
 {
     /// <summary>
     /// This type of event can be used to notify just after creation of an Entity.

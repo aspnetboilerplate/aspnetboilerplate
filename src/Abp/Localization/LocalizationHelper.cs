@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
-using Abp.Dependency;
-using Abp.Localization.Sources;
+using Adorable.Dependency;
+using Adorable.Localization.Sources;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// This static class is used to simplify getting localized strings.

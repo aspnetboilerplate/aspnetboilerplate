@@ -1,7 +1,7 @@
 using System;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     /// <summary>
     /// Defines extension methods for <see cref="IHasMenuItemDefinitions"/>.

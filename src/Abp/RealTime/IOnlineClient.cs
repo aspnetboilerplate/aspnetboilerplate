@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.RealTime
+namespace Adorable.RealTime
 {
     /// <summary>
     /// Represents an online client connected to the application.

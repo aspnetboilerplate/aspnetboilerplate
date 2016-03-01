@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.ExceptionServices;
 
-namespace Abp.Extensions
+namespace Adorable.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="Exception"/> class.

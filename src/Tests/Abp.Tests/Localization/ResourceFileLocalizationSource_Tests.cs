@@ -1,12 +1,12 @@
 ﻿using System.Globalization;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Localization.Sources.Resource;
-using Abp.Tests.Localization.TestResourceFiles;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Localization.Sources.Resource;
+using Adorable.Tests.Localization.TestResourceFiles;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Localization
+namespace Adorable.Tests.Localization
 {
     public class ResourceFileLocalizationSource_Tests
     {

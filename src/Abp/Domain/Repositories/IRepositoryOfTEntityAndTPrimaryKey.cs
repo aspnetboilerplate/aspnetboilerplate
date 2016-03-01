@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Domain.Uow;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Uow;
 
-namespace Abp.Domain.Repositories
+namespace Adorable.Domain.Repositories
 {
     /// <summary>
     /// This interface is implemented by all repositories to ensure implementation of fixed methods.

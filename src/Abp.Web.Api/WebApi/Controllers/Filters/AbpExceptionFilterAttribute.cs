@@ -2,14 +2,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
-using Abp.Dependency;
-using Abp.Events.Bus;
-using Abp.Events.Bus.Exceptions;
-using Abp.Logging;
-using Abp.Web.Models;
+using Adorable.Dependency;
+using Adorable.Events.Bus;
+using Adorable.Events.Bus.Exceptions;
+using Adorable.Logging;
+using Adorable.Web.Models;
 using Castle.Core.Logging;
 
-namespace Abp.WebApi.Controllers.Filters
+namespace Adorable.WebApi.Controllers.Filters
 {
     /// <summary>
     /// Used to handle exceptions on web api controllers.
@@ -67,7 +67,7 @@ namespace Abp.WebApi.Controllers.Filters
                     HttpStatusCode.OK, //TODO: Consider to return 500
                     new AjaxResponse(
                         ErrorInfoBuilder.Instance.BuildForException(context.Exception),
-                        context.Exception is Abp.Authorization.AbpAuthorizationException)
+                        context.Exception is Adorable.Authorization.AbpAuthorizationException)
                     );
 
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));

@@ -1,8 +1,8 @@
-﻿using Abp.Dependency;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Caching.Configuration;
+﻿using Adorable.Dependency;
+using Adorable.Runtime.Caching;
+using Adorable.Runtime.Caching.Configuration;
 
-namespace Abp.RedisCache
+namespace Adorable.RedisCache
 {
     public class AbpRedisCacheManager : CacheManagerBase
     {

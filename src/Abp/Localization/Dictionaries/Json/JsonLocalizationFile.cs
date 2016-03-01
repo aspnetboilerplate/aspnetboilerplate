@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Localization.Dictionaries.Json
+namespace Adorable.Localization.Dictionaries.Json
 {
     /// <summary>
     /// Use it to serialize json file

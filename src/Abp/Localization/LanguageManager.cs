@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {

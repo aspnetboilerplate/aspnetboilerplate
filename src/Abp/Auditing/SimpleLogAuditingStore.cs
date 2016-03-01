@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Castle.Core.Logging;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// Implements <see cref="IAuditingStore"/> to simply write audits to logs.

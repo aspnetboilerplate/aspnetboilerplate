@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Abp.Logging;
+using Adorable.Logging;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     /// <summary>
     /// This exception type is used to throws validation exceptions.

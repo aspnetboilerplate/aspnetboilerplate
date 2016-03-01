@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Used to register <see cref="FeatureInterceptor"/> for needed classes.

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 using Castle.Core.Logging;
 
-namespace Abp.Reflection
+namespace Adorable.Reflection
 {
     public class TypeFinder : ITypeFinder
     {

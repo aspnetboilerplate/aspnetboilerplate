@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     internal static class DynamicApiServiceNameHelper
     {

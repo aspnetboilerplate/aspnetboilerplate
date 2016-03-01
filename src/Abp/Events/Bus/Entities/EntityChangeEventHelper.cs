@@ -1,8 +1,8 @@
 using System;
-using Abp.Dependency;
-using Abp.Domain.Uow;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
 
-namespace Abp.Events.Bus.Entities
+namespace Adorable.Events.Bus.Entities
 {
     /// <summary>
     /// Used to trigger entity change events.

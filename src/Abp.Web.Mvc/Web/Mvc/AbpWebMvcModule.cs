@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Web.Mvc;
-using Abp.Modules;
-using Abp.Web.Mvc.Controllers;
+using Adorable.Modules;
+using Adorable.Web.Mvc.Controllers;
 
-namespace Abp.Web.Mvc
+namespace Adorable.Web.Mvc
 {
     /// <summary>
-    /// This module is used to build ASP.NET MVC web sites using Abp.
+    /// This module is used to build ASP.NET MVC web sites using Adorable.
     /// </summary>
     [DependsOn(typeof(AbpWebModule))]
     public class AbpWebMvcModule : AbpModule

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Define interface for classes those are used to register dependencies.

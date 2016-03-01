@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Transactions;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Reflection;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
 
-namespace Abp.EntityFramework.Uow
+namespace Adorable.EntityFramework.Uow
 {
     /// <summary>
     /// Implements Unit of work for Entity Framework.

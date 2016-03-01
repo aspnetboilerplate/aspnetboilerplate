@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.Domain.Repositories
+namespace Adorable.Domain.Repositories
 {
     /// <summary>
     /// Base class to implement <see cref="IRepository{TEntity,TPrimaryKey}"/>.

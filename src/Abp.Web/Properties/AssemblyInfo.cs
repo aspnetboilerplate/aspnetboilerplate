@@ -5,19 +5,19 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
+using Adorable;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Web")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Web Layer")]
+[assembly: AssemblyTitle("ASP.NET Adorable- Web")]
+[assembly: AssemblyDescription("ASP.NET Adorable- Web Layer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
-[assembly: AssemblyProduct("Abp.Web")]
+[assembly: AssemblyCompany("ASP.NET Adorable")]
+[assembly: AssemblyProduct("Adorable.Web")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: InternalsVisibleTo("Abp.Web.Tests")]
-[assembly: InternalsVisibleTo("Abp.Web.Mvc")]
+[assembly: InternalsVisibleTo("Adorable.Web.Tests")]
+[assembly: InternalsVisibleTo("Adorable.Web.Mvc")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
+using Adorable.Runtime.Caching;
+using Adorable.Runtime.Session;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// This class implements <see cref="ISettingManager"/> to manage setting values in the database.

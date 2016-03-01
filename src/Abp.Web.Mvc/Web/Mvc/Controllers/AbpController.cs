@@ -8,31 +8,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Application.Features;
-using Abp.Auditing;
-using Abp.Authorization;
-using Abp.Collections.Extensions;
-using Abp.Configuration;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
-using Abp.Events.Bus.Exceptions;
-using Abp.Localization;
-using Abp.Localization.Sources;
-using Abp.Logging;
-using Abp.Reflection;
-using Abp.Runtime.Session;
-using Abp.Timing;
-using Abp.Web.Models;
-using Abp.Web.Mvc.Controllers.Results;
-using Abp.Web.Mvc.Models;
+using Adorable.Application.Features;
+using Adorable.Auditing;
+using Adorable.Authorization;
+using Adorable.Collections.Extensions;
+using Adorable.Configuration;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus;
+using Adorable.Events.Bus.Exceptions;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
+using Adorable.Logging;
+using Adorable.Reflection;
+using Adorable.Runtime.Session;
+using Adorable.Timing;
+using Adorable.Web.Models;
+using Adorable.Web.Mvc.Controllers.Results;
+using Adorable.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.Web.Mvc.Controllers
+namespace Adorable.Web.Mvc.Controllers
 {
     /// <summary>
-    /// Base class for all MVC Controllers in Abp system.
+    /// Base class for all MVC Controllers in Adorable system.
     /// </summary>
     public abstract class AbpController : Controller
     {

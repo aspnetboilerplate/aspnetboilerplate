@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// Represents a localized string.

@@ -2,10 +2,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
 
-namespace Abp.RealTime
+namespace Adorable.RealTime
 {
     /// <summary>
     /// Implements <see cref="IOnlineClientManager"/>.

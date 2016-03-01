@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.BackgroundJobs;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.BackgroundJobs;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 
-namespace Abp.Hangfire.Configuration
+namespace Adorable.Hangfire.Configuration
 {
     public static class AbpHangfireConfigurationExtensions
     {
@@ -12,7 +12,7 @@ namespace Abp.Hangfire.Configuration
         /// </summary>
         public static IAbpHangfireConfiguration AbpHangfire(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Hangfire", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpHangfireConfiguration>());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.Hangfire", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpHangfireConfiguration>());
         }
 
         /// <summary>

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Extensions;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Extensions;
 
-namespace Abp.Localization.Dictionaries
+namespace Adorable.Localization.Dictionaries
 {
     /// <summary>
     /// This class is used to build a localization source

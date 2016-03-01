@@ -4,26 +4,26 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Abp.Logging;
-using Abp.Modules;
-using Abp.Web;
-using Abp.WebApi.Configuration;
-using Abp.WebApi.Controllers;
-using Abp.WebApi.Controllers.Dynamic;
-using Abp.WebApi.Controllers.Dynamic.Formatters;
-using Abp.WebApi.Controllers.Dynamic.Selectors;
-using Abp.WebApi.Controllers.Filters;
-using Abp.WebApi.Runtime.Caching;
+using Adorable.Logging;
+using Adorable.Modules;
+using Adorable.Web;
+using Adorable.WebApi.Configuration;
+using Adorable.WebApi.Controllers;
+using Adorable.WebApi.Controllers.Dynamic;
+using Adorable.WebApi.Controllers.Dynamic.Formatters;
+using Adorable.WebApi.Controllers.Dynamic.Selectors;
+using Adorable.WebApi.Controllers.Filters;
+using Adorable.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
-using Abp.Configuration.Startup;
-using Abp.Web.Api.Description;
+using Adorable.Configuration.Startup;
+using Adorable.Web.Api.Description;
 
-namespace Abp.WebApi
+namespace Adorable.WebApi
 {
     /// <summary>
-    /// This module provides Abp features for ASP.NET Web API.
+    /// This module provides Adorable features for ASP.NET Web API.
     /// </summary>
     [DependsOn(typeof(AbpWebModule))]
     public class AbpWebApiModule : AbpModule

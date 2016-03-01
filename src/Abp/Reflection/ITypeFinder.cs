@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Reflection
+namespace Adorable.Reflection
 {
     public interface ITypeFinder
     {

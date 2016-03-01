@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Caching;
-using Abp.Dependency;
-using Abp.Runtime.Caching.Configuration;
+using Adorable.Dependency;
+using Adorable.Runtime.Caching.Configuration;
 
-namespace Abp.Runtime.Caching.Memory
+namespace Adorable.Runtime.Caching.Memory
 {
     /// <summary>
     /// Implements <see cref="ICacheManager"/> to work with <see cref="MemoryCache"/>.

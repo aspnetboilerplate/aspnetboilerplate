@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// This class can be used to serialize <see cref="ILocalizableString"/> to <see cref="string"/> during serialization.

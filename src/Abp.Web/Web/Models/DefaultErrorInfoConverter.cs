@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
-using Abp.Runtime.Validation;
-using Abp.UI;
-using Abp.Web.Configuration;
-using Abp.Web.Localization;
+using Adorable.Collections.Extensions;
+using Adorable.Extensions;
+using Adorable.Runtime.Validation;
+using Adorable.UI;
+using Adorable.Web.Configuration;
+using Adorable.Web.Localization;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     //TODO@Halil: I did not like constructing ErrorInfo this way. It works wlll but I think we should change it later...
     internal class DefaultErrorInfoConverter : IExceptionToErrorInfoConverter
@@ -62,9 +62,9 @@ namespace Abp.Web.Models
                        };
             }
 
-            if (exception is Abp.Authorization.AbpAuthorizationException)
+            if (exception is Adorable.Authorization.AbpAuthorizationException)
             {
-                var authorizationException = exception as Abp.Authorization.AbpAuthorizationException;
+                var authorizationException = exception as Adorable.Authorization.AbpAuthorizationException;
                 return new ErrorInfo(authorizationException.Message);
             }
 

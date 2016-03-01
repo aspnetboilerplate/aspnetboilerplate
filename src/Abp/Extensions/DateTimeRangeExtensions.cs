@@ -1,6 +1,6 @@
-﻿using Abp.Timing;
+﻿using Adorable.Timing;
 
-namespace Abp.Extensions
+namespace Adorable.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IDateTimeRange"/>.

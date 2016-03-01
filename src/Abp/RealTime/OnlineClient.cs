@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Json;
-using Abp.Timing;
+using Adorable.Json;
+using Adorable.Timing;
 
-namespace Abp.RealTime
+namespace Adorable.RealTime
 {
     /// <summary>
     /// Implements <see cref="IOnlineClient"/>.

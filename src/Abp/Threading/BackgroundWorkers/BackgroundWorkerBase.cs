@@ -1,11 +1,11 @@
 using System.Globalization;
-using Abp.Configuration;
-using Abp.Domain.Uow;
-using Abp.Localization;
-using Abp.Localization.Sources;
+using Adorable.Configuration;
+using Adorable.Domain.Uow;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
 using Castle.Core.Logging;
 
-namespace Abp.Threading.BackgroundWorkers
+namespace Adorable.Threading.BackgroundWorkers
 {
     /// <summary>
     /// Base class that can be used to implement <see cref="IBackgroundWorker"/>.

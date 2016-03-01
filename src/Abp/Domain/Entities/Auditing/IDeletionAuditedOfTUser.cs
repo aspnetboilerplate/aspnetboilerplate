@@ -1,4 +1,4 @@
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// Adds navigation properties to <see cref="IDeletionAudited"/> interface for user.

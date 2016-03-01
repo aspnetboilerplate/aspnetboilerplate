@@ -1,6 +1,6 @@
-﻿using Abp.Dependency;
+﻿using Adorable.Dependency;
 
-namespace Abp.Domain.Policies
+namespace Adorable.Domain.Policies
 {
     /// <summary>
     /// This interface can be implemented by all Policy classes/interfaces to identify them by convention.

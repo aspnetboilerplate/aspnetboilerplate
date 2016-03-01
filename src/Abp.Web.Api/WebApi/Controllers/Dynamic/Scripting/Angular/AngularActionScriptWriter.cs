@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text;
-using Abp.Extensions;
-using Abp.Web;
+using Adorable.Extensions;
+using Adorable.Web;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.Angular
 {
     internal class AngularActionScriptWriter
     {

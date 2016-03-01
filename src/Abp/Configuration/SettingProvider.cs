@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Configuration
+namespace Adorable.Configuration
 {
     /// <summary>
     /// Inherit this class to define settings for a module/application.

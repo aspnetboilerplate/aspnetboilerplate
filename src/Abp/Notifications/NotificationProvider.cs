@@ -1,6 +1,6 @@
-﻿using Abp.Dependency;
+﻿using Adorable.Dependency;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// This class should be implemented in order to define notifications.

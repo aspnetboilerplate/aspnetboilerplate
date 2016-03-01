@@ -1,7 +1,7 @@
 using System;
-using Abp.Timing;
+using Adorable.Timing;
 
-namespace Abp.Events.Bus
+namespace Adorable.Events.Bus
 {
     /// <summary>
     /// Implements <see cref="IEventData"/> and provides a base for event data classes.

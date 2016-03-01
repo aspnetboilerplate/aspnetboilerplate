@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml;
 
-namespace Abp.Xml.Extensions
+namespace Adorable.Xml.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="XmlNode"/> class.

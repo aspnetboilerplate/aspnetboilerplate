@@ -1,7 +1,7 @@
 ﻿using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// This class is used to register basic dependency implementations such as <see cref="ITransientDependency"/> and <see cref="ISingletonDependency"/>.

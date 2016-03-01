@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Localization.Dictionaries
+namespace Adorable.Localization.Dictionaries
 {
     /// <summary>
     /// Used to get localization dictionaries (<see cref="ILocalizationDictionary"/>)

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Abp.Threading;
+using Adorable.Threading;
 using Castle.DynamicProxy;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// This interceptor is used to manage database connection and transactions.

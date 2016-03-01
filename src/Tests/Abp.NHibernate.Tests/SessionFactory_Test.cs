@@ -1,7 +1,7 @@
 ﻿using NHibernate;
 using Xunit;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     public class SessionFactory_Test : NHibernateTestBase
     {

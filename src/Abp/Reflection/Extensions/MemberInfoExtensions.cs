@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Abp.Reflection.Extensions
+namespace Adorable.Reflection.Extensions
 {
     /// <summary>
     /// Extensions to <see cref="MemberInfo"/>.

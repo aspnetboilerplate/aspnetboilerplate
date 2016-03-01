@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Threading.BackgroundWorkers;
+using Adorable.Threading.BackgroundWorkers;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     //TODO: Create a non-generic EnqueueAsync extension method to IBackgroundJobManager which takes types as input parameters rather than generic parameters.
     /// <summary>

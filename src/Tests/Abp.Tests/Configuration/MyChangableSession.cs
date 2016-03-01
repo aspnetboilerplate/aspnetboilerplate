@@ -1,7 +1,7 @@
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Adorable.MultiTenancy;
+using Adorable.Runtime.Session;
 
-namespace Abp.Tests.Configuration
+namespace Adorable.Tests.Configuration
 {
     public class MyChangableSession : IAbpSession
     {

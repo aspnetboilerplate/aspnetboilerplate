@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using Abp.TestBase.SampleApplication.People.Dto;
+using Adorable.Application.Services;
+using Adorable.Application.Services.Dto;
+using Adorable.TestBase.SampleApplication.People.Dto;
 
-namespace Abp.TestBase.SampleApplication.People
+namespace Adorable.TestBase.SampleApplication.People
 {
     public interface IPersonAppService : IApplicationService
     {

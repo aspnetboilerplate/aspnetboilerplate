@@ -1,8 +1,8 @@
-using Abp.Dependency;
-using Abp.Domain.Uow;
+using Adorable.Dependency;
+using Adorable.Domain.Uow;
 using NHibernate;
 
-namespace Abp.NHibernate.Uow
+namespace Adorable.NHibernate.Uow
 {
     public class UnitOfWorkSessionProvider : ISessionProvider, ITransientDependency
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Transactions;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Unit of work manager.

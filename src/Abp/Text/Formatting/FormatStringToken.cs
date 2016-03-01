@@ -1,4 +1,4 @@
-namespace Abp.Text.Formatting
+namespace Adorable.Text.Formatting
 {
     internal class FormatStringToken
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
+using Adorable.Collections.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     /// <summary>
     /// Used to store AbpModuleInfo objects as a dictionary.

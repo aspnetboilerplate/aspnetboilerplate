@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Threading;
+using Adorable.Threading;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     /// <summary>
     /// Some extension methods for <see cref="IBackgroundJobManager"/>.

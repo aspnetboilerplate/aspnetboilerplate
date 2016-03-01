@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Dependency;
-using Abp.Runtime.Session;
+using Adorable.Application.Features;
+using Adorable.Dependency;
+using Adorable.Runtime.Session;
 
-namespace Abp.Web.Features
+namespace Adorable.Web.Features
 {
     public class FeaturesScriptManager : IFeaturesScriptManager, ITransientDependency
     {

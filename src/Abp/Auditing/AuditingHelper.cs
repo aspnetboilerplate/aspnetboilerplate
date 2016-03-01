@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Reflection;
-using Abp.Runtime.Session;
+using Adorable.Runtime.Session;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     public static class AuditingHelper
     {

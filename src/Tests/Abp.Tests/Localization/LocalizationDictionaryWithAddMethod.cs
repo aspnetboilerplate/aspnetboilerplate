@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using Abp.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries;
 
-namespace Abp.Tests.Localization
+namespace Adorable.Tests.Localization
 {
     /// <summary>
     /// Derived from LocalizationDictionary to be able to add "<see cref="Add"/>" method.

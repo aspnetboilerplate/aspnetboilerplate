@@ -1,18 +1,18 @@
 ﻿using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Configuration;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Localization;
-using Abp.Localization.Sources;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Configuration;
+using Adorable.Dependency;
+using Adorable.Extensions;
+using Adorable.Localization;
+using Adorable.Localization.Sources;
 
-namespace Abp.Web.Mvc.Views
+namespace Adorable.Web.Mvc.Views
 {
     /// <summary>
-    /// Base class for all views in Abp system.
+    /// Base class for all views in Adorable system.
     /// </summary>
     /// <typeparam name="TModel">Type of the View Model</typeparam>
     public abstract class AbpWebViewPage<TModel> : WebViewPage<TModel>

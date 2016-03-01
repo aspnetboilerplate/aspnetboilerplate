@@ -1,6 +1,6 @@
-﻿using Abp.Web.Configuration;
+﻿using Adorable.Web.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP Web module.
@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpWebModuleConfiguration AbpWeb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebModuleConfiguration>());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.Web", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebModuleConfiguration>());
         }
     }
 }

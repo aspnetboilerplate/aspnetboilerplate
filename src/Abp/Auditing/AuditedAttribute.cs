@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// This attribute is used to apply audit logging for a single method or

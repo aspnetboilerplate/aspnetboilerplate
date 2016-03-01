@@ -1,6 +1,6 @@
-using Abp.Domain.Entities;
+using Adorable.Domain.Entities;
 
-namespace Abp.MultiTenancy
+namespace Adorable.MultiTenancy
 {
     /// <summary>
     /// Extension methods for multi-tenancy.

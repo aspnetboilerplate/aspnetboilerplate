@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Mvc.Async;
 
-namespace Abp.Web.Mvc.Controllers
+namespace Adorable.Web.Mvc.Controllers
 {
     internal static class ActionDescriptorHelper
     {

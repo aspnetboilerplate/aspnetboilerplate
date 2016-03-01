@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Text.Formatting;
+using Adorable.Collections.Extensions;
+using Adorable.Text.Formatting;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Text.Formatting
+namespace Adorable.Tests.Text.Formatting
 {
     public class FormattedStringTokenizer_Test
     {

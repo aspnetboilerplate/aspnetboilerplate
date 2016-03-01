@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Transactions;
 
-namespace Abp.Domain.Uow
+namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// This attribute is used to indicate that declaring method is atomic and should be considered as a unit of work.

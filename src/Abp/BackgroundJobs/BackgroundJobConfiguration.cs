@@ -1,6 +1,6 @@
-﻿using Abp.Configuration.Startup;
+﻿using Adorable.Configuration.Startup;
 
-namespace Abp.BackgroundJobs
+namespace Adorable.BackgroundJobs
 {
     internal class BackgroundJobConfiguration : IBackgroundJobConfiguration
     {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Most simple implementation of <see cref="IPermissionDependency"/>.

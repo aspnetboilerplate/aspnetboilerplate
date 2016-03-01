@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     public interface ILanguageProvider
     {

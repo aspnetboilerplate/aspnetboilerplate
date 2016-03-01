@@ -3,12 +3,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Abp.Dependency;
-using Abp.Json;
-using Abp.Localization;
-using Abp.Runtime.Caching;
+using Adorable.Dependency;
+using Adorable.Json;
+using Adorable.Localization;
+using Adorable.Runtime.Caching;
 
-namespace Abp.Web.Localization
+namespace Adorable.Web.Localization
 {
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Sources;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Sources;
 using Castle.Core.Logging;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     internal class LocalizationManager : ILocalizationManager
     {

@@ -1,8 +1,8 @@
-using Abp.Application.Features;
-using Abp.Runtime.Validation;
-using Abp.UI.Inputs;
+using Adorable.Application.Features;
+using Adorable.Runtime.Validation;
+using Adorable.UI.Inputs;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Adorable.TestBase.SampleApplication.ContacLists
 {
     public class SampleFeatureProvider : FeatureProvider
     {

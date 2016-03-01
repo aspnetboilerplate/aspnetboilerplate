@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <summary>
     /// This interface is used to build <see cref="ErrorInfo"/> objects.

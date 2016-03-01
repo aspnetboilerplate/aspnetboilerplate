@@ -1,9 +1,9 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Events.Bus.Exceptions;
-using Abp.Events.Bus.Handlers;
+using Adorable.Dependency;
+using Adorable.Events.Bus.Exceptions;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Web.Api.Tests.Controllers.Filters
+namespace Adorable.Web.Api.Tests.Controllers.Filters
 {
     public class MyExceptionHandler : IEventHandler<AbpHandledExceptionData>, ITransientDependency
     {

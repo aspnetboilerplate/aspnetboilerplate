@@ -1,4 +1,4 @@
-﻿namespace Abp.Domain.Uow
+﻿namespace Adorable.Domain.Uow
 {
     /// <summary>
     /// Used to get/set current <see cref="IUnitOfWork"/>. 

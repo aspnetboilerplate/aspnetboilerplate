@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Domain.Repositories;
+using Adorable.Domain.Uow;
+using Adorable.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.People
+namespace Adorable.TestBase.SampleApplication.Tests.People
 {
     public class PersonRepository_SoftDelete_Tests : SampleApplicationTestBase
     {

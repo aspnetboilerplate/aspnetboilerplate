@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
-using Abp.WebApi.Controllers.Dynamic.Interceptors;
+using Adorable.WebApi.Controllers.Dynamic.Interceptors;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// Used to build <see cref="DynamicApiControllerInfo"/> object.

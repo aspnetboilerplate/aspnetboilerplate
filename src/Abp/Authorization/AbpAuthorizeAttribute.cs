@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Application.Services;
+using Adorable.Application.Services;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)

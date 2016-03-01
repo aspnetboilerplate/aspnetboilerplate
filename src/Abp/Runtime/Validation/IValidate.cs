@@ -1,4 +1,4 @@
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     /// <summary>
     /// This interface is implemented by classes those are needed to validate before use.

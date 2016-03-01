@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+using Adorable.BackgroundJobs;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.BackgroundJobs
+namespace Adorable.Tests.BackgroundJobs
 {
     public class InMemoryBackgroundJobStore_Tests
     {

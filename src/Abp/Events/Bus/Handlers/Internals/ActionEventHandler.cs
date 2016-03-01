@@ -1,7 +1,7 @@
 using System;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Events.Bus.Handlers.Internals
+namespace Adorable.Events.Bus.Handlers.Internals
 {
     /// <summary>
     /// This event handler is an adapter to be able to use an action as <see cref="IEventHandler{TEventData}"/> implementation.

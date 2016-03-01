@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Dependency;
+using Adorable.Configuration;
+using Adorable.Dependency;
 
-namespace Abp.Web.Settings
+namespace Adorable.Web.Settings
 {
     /// <summary>
     /// This class is used to build setting script.

@@ -1,4 +1,4 @@
-﻿namespace Abp.Auditing
+﻿namespace Adorable.Auditing
 {
     internal class MvcControllersAuditingConfiguration : IMvcControllersAuditingConfiguration
     {

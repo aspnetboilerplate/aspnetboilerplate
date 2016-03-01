@@ -1,4 +1,4 @@
-﻿namespace Abp.Application.Services.Dto
+﻿namespace Adorable.Application.Services.Dto
 {
     /// <summary>
     /// Defines common properties for entity based DTOs.

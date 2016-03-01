@@ -1,4 +1,4 @@
-namespace Abp.Domain.Entities.Auditing
+namespace Adorable.Domain.Entities.Auditing
 {
     /// <summary>
     /// This interface is implemented by entities which must be audited.

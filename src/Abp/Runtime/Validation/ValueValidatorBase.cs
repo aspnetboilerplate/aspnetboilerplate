@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     [Serializable]
     public abstract class ValueValidatorBase : IValueValidator

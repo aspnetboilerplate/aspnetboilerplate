@@ -1,7 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace Abp.Net.Mail
+namespace Adorable.Net.Mail
 {
     /// <summary>
     /// This service can be used simply sending emails.

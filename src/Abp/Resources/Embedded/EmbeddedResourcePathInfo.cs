@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace Abp.Resources.Embedded
+namespace Adorable.Resources.Embedded
 {
     /// <summary>
     /// 

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Modules;
+using Adorable.Modules;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Startup
+namespace Adorable.Tests.Startup
 {
     public class AbpBootstraper_Tester : TestBaseWithLocalIocManager
     {

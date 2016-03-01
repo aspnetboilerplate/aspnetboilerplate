@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Threading;
+using Adorable.Collections.Extensions;
+using Adorable.Threading;
 
-namespace Abp.Authorization
+namespace Adorable.Authorization
 {
     /// <summary>
     /// Extension methods for <see cref="IPermissionChecker"/>

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using Abp.Domain.Entities;
-using Abp.Reflection;
+using Adorable.Domain.Entities;
+using Adorable.Reflection;
 
-namespace Abp.EntityFramework.Extensions
+namespace Adorable.EntityFramework.Extensions
 {
     internal static class DbContextExtensions
     {

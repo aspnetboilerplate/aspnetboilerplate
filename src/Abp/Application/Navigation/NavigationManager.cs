@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Localization;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Localization;
 
-namespace Abp.Application.Navigation
+namespace Adorable.Application.Navigation
 {
     internal class NavigationManager : INavigationManager, ISingletonDependency
     {

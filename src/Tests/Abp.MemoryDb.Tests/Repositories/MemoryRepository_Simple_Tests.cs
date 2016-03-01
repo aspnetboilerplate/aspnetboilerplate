@@ -1,11 +1,11 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.MemoryDb.Repositories;
+﻿using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
+using Adorable.MemoryDb.Repositories;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Abp.MemoryDb.Tests.Repositories
+namespace Adorable.MemoryDb.Tests.Repositories
 {
     public class MemoryRepository_Simple_Tests
     {

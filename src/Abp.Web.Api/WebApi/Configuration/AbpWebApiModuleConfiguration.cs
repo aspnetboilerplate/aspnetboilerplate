@@ -1,6 +1,6 @@
 using System.Web.Http;
 
-namespace Abp.WebApi.Configuration
+namespace Adorable.WebApi.Configuration
 {
     internal class AbpWebApiModuleConfiguration : IAbpWebApiModuleConfiguration
     {

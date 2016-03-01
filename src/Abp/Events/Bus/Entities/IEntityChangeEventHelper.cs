@@ -1,4 +1,4 @@
-namespace Abp.Events.Bus.Entities
+namespace Adorable.Events.Bus.Entities
 {
     /// <summary>
     /// Used to trigger entity change events.

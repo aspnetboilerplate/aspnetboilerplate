@@ -1,4 +1,4 @@
-namespace Abp.Runtime.Caching
+namespace Adorable.Runtime.Caching
 {
     /// <summary>
     /// Names of standard caches used in ABP.

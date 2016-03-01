@@ -1,6 +1,6 @@
-﻿using Abp.Application.Services;
+﻿using Adorable.Application.Services;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Adorable.TestBase.SampleApplication.ContacLists
 {
     public interface IContactListAppService : IApplicationService
     {

@@ -1,7 +1,7 @@
 using System;
-using Abp.Events.Bus.Handlers;
+using Adorable.Events.Bus.Handlers;
 
-namespace Abp.Tests.Events.Bus
+namespace Adorable.Tests.Events.Bus
 {
     public class MySimpleTransientEventHandler : IEventHandler<MySimpleEventData>, IDisposable
     {

@@ -1,7 +1,7 @@
 using System;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     [Serializable]
     public class LocalizableComboboxItem : ILocalizableComboboxItem

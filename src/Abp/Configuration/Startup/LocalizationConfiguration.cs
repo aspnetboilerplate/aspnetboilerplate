@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Abp.Localization;
+using Adorable.Localization;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
     /// Used for localization configurations.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.MultiTenancy
+namespace Adorable.MultiTenancy
 {
     /// <summary>
     /// Represents sides in a multi tenancy application.

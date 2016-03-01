@@ -1,13 +1,13 @@
 ﻿using System;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.Events.Bus;
-using Abp.Events.Bus.Entities;
-using Abp.TestBase.SampleApplication.People;
+using Adorable.Domain.Repositories;
+using Adorable.Domain.Uow;
+using Adorable.Events.Bus;
+using Adorable.Events.Bus.Entities;
+using Adorable.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.People
+namespace Adorable.TestBase.SampleApplication.Tests.People
 {
     public class PersonRepository_Tests_For_EntityChangeEvents : SampleApplicationTestBase
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.Json
+namespace Adorable.Json
 {
     public static class JsonExtensions
     {

@@ -1,4 +1,4 @@
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Adorable.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// This class is used as base class for all dynamically created ApiControllers.  

@@ -1,4 +1,4 @@
-namespace Abp.Domain.Services
+namespace Adorable.Domain.Services
 {
     /// <summary>
     /// This class can be used as a base class for domain services. 

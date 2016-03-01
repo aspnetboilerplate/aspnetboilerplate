@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.Modules;
+using Adorable.Configuration.Startup;
+using Adorable.Modules;
 using FluentNHibernate.Cfg.Db;
 using NHibernate.Tool.hbm2ddl;
 
-namespace Abp.NHibernate.Tests
+namespace Adorable.NHibernate.Tests
 {
     [DependsOn(typeof(AbpNHibernateModule))]
     public class NHibernateTestModule : AbpModule

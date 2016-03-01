@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using Abp.AutoMapper;
-using Abp.EntityFramework;
-using Abp.Modules;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Adorable.AutoMapper;
+using Adorable.EntityFramework;
+using Adorable.Modules;
+using Adorable.TestBase.SampleApplication.ContacLists;
 
-namespace Abp.TestBase.SampleApplication
+namespace Adorable.TestBase.SampleApplication
 {
     [DependsOn(typeof(AbpEntityFrameworkModule), typeof(AbpAutoMapperModule))]
     public class SampleApplicationModule : AbpModule

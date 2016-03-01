@@ -1,4 +1,4 @@
-﻿namespace Abp.Runtime.Session
+﻿namespace Adorable.Runtime.Session
 {
     /// <summary>
     /// Extension methods for <see cref="IAbpSession"/>.

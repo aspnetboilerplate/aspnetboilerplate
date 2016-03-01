@@ -1,8 +1,8 @@
-﻿using Abp.Net.Mail.Smtp;
+﻿using Adorable.Net.Mail.Smtp;
 using NSubstitute;
 using Xunit;
 
-namespace Abp.Tests.Net.Mail
+namespace Adorable.Tests.Net.Mail
 {
     public class SmtpEmailSender_Tests
     {

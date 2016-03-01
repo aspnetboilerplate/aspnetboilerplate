@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Collections.Extensions;
+using Adorable.Collections.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic
+namespace Adorable.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// This class is used to store dynamic controller information.

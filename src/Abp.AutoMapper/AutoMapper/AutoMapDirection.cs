@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.AutoMapper
+namespace Adorable.AutoMapper
 {
     [Flags]
     public enum AutoMapDirection

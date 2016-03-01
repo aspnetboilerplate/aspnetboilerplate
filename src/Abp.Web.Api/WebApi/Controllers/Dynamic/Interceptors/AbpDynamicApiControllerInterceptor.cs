@@ -1,9 +1,9 @@
 using System.Reflection;
-using Abp.Extensions;
-using Abp.WebApi.Controllers.Dynamic.Builders;
+using Adorable.Extensions;
+using Adorable.WebApi.Controllers.Dynamic.Builders;
 using Castle.DynamicProxy;
 
-namespace Abp.WebApi.Controllers.Dynamic.Interceptors
+namespace Adorable.WebApi.Controllers.Dynamic.Interceptors
 {
     /// <summary>
     /// Interceptor dynamic controllers.

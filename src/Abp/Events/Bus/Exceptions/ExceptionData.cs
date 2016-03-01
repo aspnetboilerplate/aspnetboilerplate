@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Events.Bus.Exceptions
+namespace Adorable.Events.Bus.Exceptions
 {
     /// <summary>
     /// This type of events can be used to notify for an exception.

@@ -2,11 +2,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Web.Models;
-using Abp.WebApi.Configuration;
+using Adorable.Dependency;
+using Adorable.Web.Models;
+using Adorable.WebApi.Configuration;
 
-namespace Abp.WebApi.Controllers
+namespace Adorable.WebApi.Controllers
 {
     /// <summary>
     /// Wrapps Web API return values by <see cref="AjaxResponse"/>.

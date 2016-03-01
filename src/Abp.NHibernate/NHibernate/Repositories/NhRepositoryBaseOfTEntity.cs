@@ -1,7 +1,7 @@
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
 
-namespace Abp.NHibernate.Repositories
+namespace Adorable.NHibernate.Repositories
 {
     /// <summary>
     /// A shortcut of <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).

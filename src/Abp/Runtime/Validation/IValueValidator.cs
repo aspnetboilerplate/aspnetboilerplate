@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     public interface IValueValidator
     {

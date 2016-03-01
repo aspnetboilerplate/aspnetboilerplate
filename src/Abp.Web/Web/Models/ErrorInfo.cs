@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Web.Models
+namespace Adorable.Web.Models
 {
     /// <summary>
     /// Used to store information about an error.

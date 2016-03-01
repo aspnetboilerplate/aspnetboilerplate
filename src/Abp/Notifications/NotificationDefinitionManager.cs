@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Authorization;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
+using Adorable.Application.Features;
+using Adorable.Authorization;
+using Adorable.Collections.Extensions;
+using Adorable.Dependency;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Implements <see cref="INotificationDefinitionManager"/>.

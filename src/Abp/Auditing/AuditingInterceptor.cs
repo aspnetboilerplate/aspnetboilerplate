@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Transactions;
-using Abp.Collections.Extensions;
-using Abp.Domain.Uow;
-using Abp.Json;
-using Abp.Runtime.Session;
-using Abp.Threading;
-using Abp.Timing;
+using Adorable.Collections.Extensions;
+using Adorable.Domain.Uow;
+using Adorable.Json;
+using Adorable.Runtime.Session;
+using Adorable.Threading;
+using Adorable.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     internal class AuditingInterceptor : IInterceptor
     {

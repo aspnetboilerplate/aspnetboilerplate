@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
-using Abp.Collections;
-using Abp.Localization;
-using Abp.Modules;
-using Abp.TestBase;
-using Abp.Web.Localization;
+using Adorable.Collections;
+using Adorable.Localization;
+using Adorable.Modules;
+using Adorable.TestBase;
+using Adorable.Web.Localization;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Tests.Localization
+namespace Adorable.Web.Tests.Localization
 {
     public class AbpWebLocalizationTests : AbpIntegratedTestBase
     {

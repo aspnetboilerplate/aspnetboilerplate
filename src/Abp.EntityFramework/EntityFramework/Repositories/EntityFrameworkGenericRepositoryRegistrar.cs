@@ -1,10 +1,10 @@
 ﻿using System;
-using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.EntityFramework.Extensions;
-using Abp.Reflection.Extensions;
+using Adorable.Dependency;
+using Adorable.Domain.Entities;
+using Adorable.EntityFramework.Extensions;
+using Adorable.Reflection.Extensions;
 
-namespace Abp.EntityFramework.Repositories
+namespace Adorable.EntityFramework.Repositories
 {
     internal static class EntityFrameworkGenericRepositoryRegistrar
     {

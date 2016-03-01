@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Abp.Configuration;
-using Abp.Localization;
+using Adorable.Configuration;
+using Adorable.Localization;
 
-namespace Abp.Net.Mail
+namespace Adorable.Net.Mail
 {
     /// <summary>
     /// Defines settings to send emails.

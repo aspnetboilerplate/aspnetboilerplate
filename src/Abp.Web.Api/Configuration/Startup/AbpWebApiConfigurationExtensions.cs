@@ -1,18 +1,18 @@
-﻿using Abp.WebApi.Configuration;
+﻿using Adorable.WebApi.Configuration;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.Web.Api module.
+    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Adorable.Web.Api module.
     /// </summary>
     public static class AbpWebApiConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure Abp.Web.Api module.
+        /// Used to configure Adorable.Web.Api module.
         /// </summary>
         public static IAbpWebApiModuleConfiguration AbpWebApi(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web.Api", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebApiModuleConfiguration>());
+            return configurations.AbpConfiguration.GetOrCreate("Modules.Adorable.Web.Api", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebApiModuleConfiguration>());
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Notifications;
-using Abp.RealTime;
-using Abp.Web.SignalR.Hubs;
+using Adorable.Dependency;
+using Adorable.Notifications;
+using Adorable.RealTime;
+using Adorable.Web.SignalR.Hubs;
 using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR;
 
-namespace Abp.Web.SignalR.Notifications
+namespace Adorable.Web.SignalR.Notifications
 {
     /// <summary>
     /// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Abp.Configuration;
-using Abp.Localization;
+using Adorable.Configuration;
+using Adorable.Localization;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     public class NotificationSettingProvider : SettingProvider
     {

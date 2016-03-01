@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Abp.Aspects
+namespace Adorable.Aspects
 {
     //THIS NAMESPACE IS WORK-IN-PROGRESS
 

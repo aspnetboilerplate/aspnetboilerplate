@@ -1,4 +1,4 @@
-﻿namespace Abp.Domain.Entities
+﻿namespace Adorable.Domain.Entities
 {
     /// <summary>
     /// Some usefull extension methods for Entities.

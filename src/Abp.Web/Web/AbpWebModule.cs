@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Web;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources.Xml;
-using Abp.Modules;
-using Abp.Web.Configuration;
-using Abp.Web.Localization;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries.Xml;
+using Adorable.Localization.Sources.Xml;
+using Adorable.Modules;
+using Adorable.Web.Configuration;
+using Adorable.Web.Localization;
 
-namespace Abp.Web
+namespace Adorable.Web
 {
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
@@ -29,7 +29,7 @@ namespace Abp.Web
                 new DictionaryBasedLocalizationSource(
                     AbpWebLocalizedMessages.SourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
+                        Assembly.GetExecutingAssembly(), "Adorable.Web.Localization.AbpWebXmlSource"
                         )));
         }
 

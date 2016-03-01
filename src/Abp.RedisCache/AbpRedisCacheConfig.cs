@@ -1,10 +1,10 @@
-﻿using Abp.Dependency;
+﻿using Adorable.Dependency;
 
-namespace Abp
+namespace Adorable
 {
     public class AbpRedisCacheConfig : ISingletonDependency
     {
-        private string connectionStringKey = "Abp.Redis.Cache";
+        private string connectionStringKey = "Adorable.Redis.Cache";
 
         public string ConnectionStringKey
         {
@@ -12,7 +12,7 @@ namespace Abp
             set { connectionStringKey = value; }
         }
 
-        private string databaseIdAppSetting = "Abp.Redis.Cache.DatabaseId";
+        private string databaseIdAppSetting = "Adorable.Redis.Cache.DatabaseId";
 
         public string DatabaseIdAppSetting
         {

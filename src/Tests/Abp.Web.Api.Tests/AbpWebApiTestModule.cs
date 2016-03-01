@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using Abp.Modules;
-using Abp.Web.Api.Tests.DynamicApiController.Clients;
-using Abp.WebApi;
-using Abp.WebApi.Controllers.Dynamic.Clients;
+using Adorable.Modules;
+using Adorable.Web.Api.Tests.DynamicApiController.Clients;
+using Adorable.WebApi;
+using Adorable.WebApi.Controllers.Dynamic.Clients;
 
-namespace Abp.Web.Api.Tests
+namespace Adorable.Web.Api.Tests
 {
     [DependsOn(typeof(AbpWebApiModule))]
     public class AbpWebApiTestModule : AbpModule

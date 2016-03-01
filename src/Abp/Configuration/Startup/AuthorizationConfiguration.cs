@@ -1,7 +1,7 @@
-﻿using Abp.Authorization;
-using Abp.Collections;
+﻿using Adorable.Authorization;
+using Adorable.Collections;
 
-namespace Abp.Configuration.Startup
+namespace Adorable.Configuration.Startup
 {
     internal class AuthorizationConfiguration : IAuthorizationConfiguration
     {

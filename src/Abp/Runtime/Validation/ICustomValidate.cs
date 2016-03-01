@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     /// <summary>
     /// Defines interface that must be implemented by classes those must be validated with custom rules.

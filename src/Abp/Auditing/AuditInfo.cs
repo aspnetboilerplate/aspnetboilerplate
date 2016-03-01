@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     /// <summary>
     /// This informations are collected for an <see cref="AuditedAttribute"/> method.

@@ -1,4 +1,4 @@
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Used to define some constants for ABP.
@@ -13,6 +13,6 @@ namespace Abp
         /// <summary>
         /// Localization source name of ASP.NET Boilerplate framework.
         /// </summary>
-        public const string LocalizationSourceName = "Abp";
+        public const string LocalizationSourceName = "Adorable";
     }
 }

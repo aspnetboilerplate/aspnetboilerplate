@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Dependency
+namespace Adorable.Dependency
 {
     /// <summary>
     /// Extension methods for <see cref="IIocRegistrar"/> interface.

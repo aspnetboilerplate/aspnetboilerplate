@@ -1,10 +1,10 @@
-﻿namespace Abp.WebApi.Runtime.Caching
+﻿namespace Adorable.WebApi.Runtime.Caching
 {
     public static class ClearCacheSettingNames
     {
         /// <summary>
-        /// Abp.WebApi.Runtime.Caching.ClearPassword
+        /// Adorable.WebApi.Runtime.Caching.ClearPassword
         /// </summary>
-        public const string Password = "Abp.WebApi.Runtime.Caching.ClearPassword";
+        public const string Password = "Adorable.WebApi.Runtime.Caching.ClearPassword";
     }
 }

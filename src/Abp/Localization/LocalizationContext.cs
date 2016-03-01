@@ -1,6 +1,6 @@
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// Implements <see cref="ILocalizationContext"/>.

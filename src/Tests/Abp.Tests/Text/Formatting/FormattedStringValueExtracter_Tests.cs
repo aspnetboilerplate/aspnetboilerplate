@@ -1,8 +1,8 @@
-﻿using Abp.Text;
+﻿using Adorable.Text;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Text.Formatting
+namespace Adorable.Tests.Text.Formatting
 {
     public class FormattedStringValueExtracter_Tests
     {

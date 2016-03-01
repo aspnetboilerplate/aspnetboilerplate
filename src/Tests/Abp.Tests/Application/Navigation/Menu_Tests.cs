@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Navigation;
+using Adorable.Application.Navigation;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Application.Navigation
+namespace Adorable.Tests.Application.Navigation
 {
     public class Menu_Tests : TestBaseWithLocalIocManager
     {
@@ -17,7 +17,7 @@ namespace Abp.Tests.Application.Navigation
             var mainMenuDefinition = testCase.NavigationManager.MainMenu;
             mainMenuDefinition.Items.Count.ShouldBe(1);
 
-            var adminMenuItemDefinition = mainMenuDefinition.GetItemByNameOrNull("Abp.Zero.Administration");
+            var adminMenuItemDefinition = mainMenuDefinition.GetItemByNameOrNull("Adorable.Zero.Administration");
             adminMenuItemDefinition.ShouldNotBe(null);
             adminMenuItemDefinition.Items.Count.ShouldBe(3);
             
@@ -25,12 +25,12 @@ namespace Abp.Tests.Application.Navigation
             var userMenu = await testCase.UserNavigationManager.GetMenuAsync(mainMenuDefinition.Name, 1);
             userMenu.Items.Count.ShouldBe(1);
 
-            var userAdminMenu = userMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration");
+            var userAdminMenu = userMenu.Items.FirstOrDefault(i => i.Name == "Adorable.Zero.Administration");
             userAdminMenu.ShouldNotBe(null);
 
-            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.User").ShouldNotBe(null);
-            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.Role").ShouldBe(null);
-            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.Setting").ShouldNotBe(null);
+            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Adorable.Zero.Administration.User").ShouldNotBe(null);
+            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Adorable.Zero.Administration.Role").ShouldBe(null);
+            userAdminMenu.Items.FirstOrDefault(i => i.Name == "Adorable.Zero.Administration.Setting").ShouldNotBe(null);
         }
     }
 }

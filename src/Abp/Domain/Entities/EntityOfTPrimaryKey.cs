@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.Domain.Entities
+namespace Adorable.Domain.Entities
 {
     /// <summary>
     /// Basic implementation of IEntity interface.

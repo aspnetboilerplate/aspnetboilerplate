@@ -1,18 +1,18 @@
-﻿using Abp.Application.Features;
-using Abp.Auditing;
-using Abp.BackgroundJobs;
-using Abp.Configuration.Startup;
-using Abp.Domain.Uow;
-using Abp.Localization;
-using Abp.Modules;
-using Abp.Notifications;
-using Abp.Reflection;
-using Abp.Runtime.Caching.Configuration;
+﻿using Adorable.Application.Features;
+using Adorable.Auditing;
+using Adorable.BackgroundJobs;
+using Adorable.Configuration.Startup;
+using Adorable.Domain.Uow;
+using Adorable.Localization;
+using Adorable.Modules;
+using Adorable.Notifications;
+using Adorable.Reflection;
+using Adorable.Runtime.Caching.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Abp.Dependency.Installers
+namespace Adorable.Dependency.Installers
 {
     internal class AbpCoreInstaller : IWindsorInstaller
     {

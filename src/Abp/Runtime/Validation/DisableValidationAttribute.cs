@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Runtime.Validation
+namespace Adorable.Runtime.Validation
 {
     /// <summary>
     /// Can be added to a method to disable auto validation.

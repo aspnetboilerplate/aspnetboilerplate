@@ -1,10 +1,10 @@
-﻿using Abp.Domain.Repositories;
+﻿using Adorable.Domain.Repositories;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using NHibernate;
 
-namespace Abp.NHibernate.Repositories
+namespace Adorable.NHibernate.Repositories
 {
     internal class NhRepositoryInstaller : IWindsorInstaller
     {

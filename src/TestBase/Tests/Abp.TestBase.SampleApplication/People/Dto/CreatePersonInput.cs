@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
-using Abp.AutoMapper;
+using Adorable.Application.Services.Dto;
+using Adorable.AutoMapper;
 
-namespace Abp.TestBase.SampleApplication.People.Dto
+namespace Adorable.TestBase.SampleApplication.People.Dto
 {
     [AutoMapTo(typeof(Person))]
     public class CreatePersonInput : IInputDto

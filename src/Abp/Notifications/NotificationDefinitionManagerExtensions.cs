@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Abp.Threading;
+using Adorable.Threading;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Extension methods for <see cref="INotificationDefinitionManager"/>.

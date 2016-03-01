@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Web.OData;
 using System.Web.OData.Extensions;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Modules;
-using Abp.WebApi.OData.Configuration;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
+using Adorable.Modules;
+using Adorable.WebApi.OData.Configuration;
 
-namespace Abp.WebApi.OData
+namespace Adorable.WebApi.OData
 {
     [DependsOn(typeof(AbpWebApiModule))]
     public class AbpWebApiODataModule : AbpModule

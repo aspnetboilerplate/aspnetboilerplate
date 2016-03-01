@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Abp.Dependency;
-using Abp.Reflection;
+using Adorable.Dependency;
+using Adorable.Reflection;
 using Castle.DynamicProxy;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Intercepts methods to apply <see cref="RequiresFeatureAttribute"/>.

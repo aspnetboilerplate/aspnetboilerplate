@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Abp.Dependency;
+using Adorable.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
 
-namespace Abp.Auditing
+namespace Adorable.Auditing
 {
     internal static class AuditingInterceptorRegistrar
     {

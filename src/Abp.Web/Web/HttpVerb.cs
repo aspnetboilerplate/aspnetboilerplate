@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.Web
+namespace Adorable.Web
 {
     /// <summary>
     /// Represents an HTTP verb.

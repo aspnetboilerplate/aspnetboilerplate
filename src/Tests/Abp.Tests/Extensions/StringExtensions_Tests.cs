@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using Abp.Extensions;
+using Adorable.Extensions;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Extensions
+namespace Adorable.Tests.Extensions
 {
     public class StringExtensions_Tests
     {

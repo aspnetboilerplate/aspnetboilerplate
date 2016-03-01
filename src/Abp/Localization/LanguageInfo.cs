@@ -1,4 +1,4 @@
-namespace Abp.Localization
+namespace Adorable.Localization
 {
     /// <summary>
     /// Represents an available language for the application.

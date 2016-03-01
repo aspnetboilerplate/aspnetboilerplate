@@ -1,6 +1,6 @@
-﻿using Abp.Collections;
+﻿using Adorable.Collections;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Used to configure notification system.

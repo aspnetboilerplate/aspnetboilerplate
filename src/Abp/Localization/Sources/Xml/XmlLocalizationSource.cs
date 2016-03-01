@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Abp.Dependency;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Xml;
+using Adorable.Dependency;
+using Adorable.Localization.Dictionaries;
+using Adorable.Localization.Dictionaries.Xml;
 
-namespace Abp.Localization.Sources.Xml
+namespace Adorable.Localization.Sources.Xml
 {
     /// <summary>
     /// XML based localization source.

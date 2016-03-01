@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Caching;
 
-namespace Abp.Runtime.Caching.Memory
+namespace Adorable.Runtime.Caching.Memory
 {
     /// <summary>
     /// Implements <see cref="ICache"/> to work with <see cref="MemoryCache"/>.

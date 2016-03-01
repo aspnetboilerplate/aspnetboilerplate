@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Domain.Entities;
-using Abp.Threading;
+using Adorable.Domain.Entities;
+using Adorable.Threading;
 
-namespace Abp.Notifications
+namespace Adorable.Notifications
 {
     /// <summary>
     /// Extension methods for

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.EntityFramework.Repositories;
-using Abp.Tests;
+using Adorable.Domain.Entities;
+using Adorable.Domain.Repositories;
+using Adorable.EntityFramework.Repositories;
+using Adorable.Tests;
 using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
-namespace Abp.EntityFramework.Tests.Repositories
+namespace Adorable.EntityFramework.Tests.Repositories
 {
     public class EntityFrameworkGenericRepositoryRegistrar_Tests : TestBaseWithLocalIocManager
     {

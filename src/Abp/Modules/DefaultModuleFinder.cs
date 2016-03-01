@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Reflection;
+using Adorable.Reflection;
 
-namespace Abp.Modules
+namespace Adorable.Modules
 {
     internal class DefaultModuleFinder : IModuleFinder
     {

@@ -1,6 +1,6 @@
-﻿using Abp.Dependency;
+﻿using Adorable.Dependency;
 
-namespace Abp.Application.Services
+namespace Adorable.Application.Services
 {
     /// <summary>
     /// This interface must be implemented by all application services to identify them by convention.

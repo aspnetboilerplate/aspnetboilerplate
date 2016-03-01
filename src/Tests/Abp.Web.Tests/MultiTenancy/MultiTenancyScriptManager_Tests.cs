@@ -1,9 +1,9 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Web.MultiTenancy;
+﻿using Adorable.Configuration.Startup;
+using Adorable.Web.MultiTenancy;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Tests.MultiTenancy
+namespace Adorable.Web.Tests.MultiTenancy
 {
     public class MultiTenancyScriptManager_Tests
     {

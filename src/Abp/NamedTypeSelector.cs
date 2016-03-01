@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Used to represent a named type selector.

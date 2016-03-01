@@ -1,9 +1,9 @@
-using Abp.Domain.Entities;
-using Abp.Events.Bus.Entities;
+using Adorable.Domain.Entities;
+using Adorable.Events.Bus.Entities;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Events.Bus
+namespace Adorable.Tests.Events.Bus
 {
     public class GenericInheritanceTest : EventBusTestBase
     {

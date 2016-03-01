@@ -1,9 +1,9 @@
 using System.Configuration;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Adorable.Configuration.Startup;
+using Adorable.Dependency;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.EntityFramework.Dependency
+namespace Adorable.EntityFramework.Dependency
 {
     /// <summary>
     /// Registers classes derived from AbpDbContext with configurations.

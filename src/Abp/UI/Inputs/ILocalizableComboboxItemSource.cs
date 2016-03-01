@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Abp.UI.Inputs
+namespace Adorable.UI.Inputs
 {
     public interface ILocalizableComboboxItemSource
     {

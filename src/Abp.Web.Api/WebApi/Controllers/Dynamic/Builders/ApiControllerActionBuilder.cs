@@ -1,12 +1,12 @@
 using System.Reflection;
-using Abp.Web;
+using Adorable.Web;
 using System.Web.Http.Filters;
 using System.Linq;
-using Abp.Reflection;
+using Adorable.Reflection;
 using System;
 using System.Web.Http;
 
-namespace Abp.WebApi.Controllers.Dynamic.Builders
+namespace Adorable.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
     /// Used to build <see cref="DynamicApiActionInfo"/> object.

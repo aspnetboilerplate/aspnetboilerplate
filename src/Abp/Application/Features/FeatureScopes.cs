@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.Application.Features
+namespace Adorable.Application.Features
 {
     /// <summary>
     /// Scopes of a <see cref="Feature"/>.

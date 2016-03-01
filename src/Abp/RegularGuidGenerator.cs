@@ -1,7 +1,7 @@
 ﻿using System;
-using Abp.Dependency;
+using Adorable.Dependency;
 
-namespace Abp
+namespace Adorable
 {
     /// <summary>
     /// Implements <see cref="IGuidGenerator"/> by using <see cref="Guid.NewGuid"/>.

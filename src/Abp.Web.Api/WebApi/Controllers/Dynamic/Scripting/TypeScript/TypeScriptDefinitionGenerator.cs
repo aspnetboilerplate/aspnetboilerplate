@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
+using Adorable.Dependency;
+using Adorable.Extensions;
 
-namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
+namespace Adorable.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     public class TypeScriptDefinitionGenerator : ITransientDependency
     {

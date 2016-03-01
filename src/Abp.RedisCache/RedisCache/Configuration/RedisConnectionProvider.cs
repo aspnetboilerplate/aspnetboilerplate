@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
-using Abp.Dependency;
-using Abp.Extensions;
+using Adorable.Dependency;
+using Adorable.Extensions;
 
-namespace Abp.RedisCache.Configuration
+namespace Adorable.RedisCache.Configuration
 {
     public class AbpRedisConnectionProvider : IAbpRedisConnectionProvider, ISingletonDependency
     {

@@ -1,9 +1,9 @@
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Extensions;
+using Adorable.Extensions;
 
-namespace Abp.Net.Mail
+namespace Adorable.Net.Mail
 {
     /// <summary>
     /// This class can be used as base to implement <see cref="IEmailSender"/>.
