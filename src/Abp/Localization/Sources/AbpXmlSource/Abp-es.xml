@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">
+<localizationDictionary culture="es">
   <texts>
     <text name="SmtpHost">Servidor SMTP</text>
     <text name="SmtpPort">Puerto SMTP</text>
