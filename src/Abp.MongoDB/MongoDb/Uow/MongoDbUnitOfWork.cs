@@ -21,8 +21,8 @@ namespace Abp.MongoDb.Uow
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             _configuration = configuration;
         }

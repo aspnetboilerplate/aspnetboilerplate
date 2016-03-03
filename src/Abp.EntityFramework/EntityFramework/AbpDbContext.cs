@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
@@ -23,7 +24,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext, IShouldInitialize
+    public abstract class AbpDbContext : DbContext, ITransientDependency, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.

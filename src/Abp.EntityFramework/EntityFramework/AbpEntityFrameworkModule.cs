@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Abp.Collections.Extensions;
-using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
@@ -24,11 +23,6 @@ namespace Abp.EntityFramework
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
-        }
-
-        public override void PreInitialize()
-        {
-            IocManager.AddConventionalRegistrar(new EntityFrameworkConventionalRegistrar());
         }
 
         public override void Initialize()

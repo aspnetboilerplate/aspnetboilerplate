@@ -16,7 +16,7 @@ namespace Abp.EntityFramework.Uow
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        protected readonly IDictionary<Type, DbContext> ActiveDbContexts;
+        protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
 
         protected IIocResolver IocResolver { get; private set; }
         
@@ -25,11 +25,11 @@ namespace Abp.EntityFramework.Uow
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
-        public EfUnitOfWork(IIocResolver iocResolver, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public EfUnitOfWork(IIocResolver iocResolver, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             IocResolver = iocResolver;
-            ActiveDbContexts = new Dictionary<Type, DbContext>();
+            ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
         protected override void BeginUow()
@@ -119,10 +119,13 @@ namespace Abp.EntityFramework.Uow
         public virtual TDbContext GetOrCreateDbContext<TDbContext>()
             where TDbContext : DbContext
         {
+            var connectionString = ResolveConnectionString();
+            var dbContextKey = typeof (DbContext).FullName + "#" + connectionString;
+
             DbContext dbContext;
-            if (!ActiveDbContexts.TryGetValue(typeof(TDbContext), out dbContext))
+            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
-                dbContext = Resolve<TDbContext>();
+                dbContext = Resolve<TDbContext>(connectionString);
 
                 foreach (var filter in Filters)
                 {
@@ -148,7 +151,7 @@ namespace Abp.EntityFramework.Uow
                     }
                 }
 
-                ActiveDbContexts[typeof(TDbContext)] = dbContext;
+                ActiveDbContexts[dbContextKey] = dbContext;
             }
 
             return (TDbContext)dbContext;
@@ -174,9 +177,12 @@ namespace Abp.EntityFramework.Uow
             await dbContext.SaveChangesAsync();
         }
 
-        protected virtual TDbContext Resolve<TDbContext>()
+        protected virtual TDbContext Resolve<TDbContext>(string connectionString)
         {
-            return IocResolver.Resolve<TDbContext>();
+            return IocResolver.Resolve<TDbContext>(new
+            {
+                nameOrConnectionString = connectionString
+            });
         }
 
         protected virtual void Release(DbContext dbContext)

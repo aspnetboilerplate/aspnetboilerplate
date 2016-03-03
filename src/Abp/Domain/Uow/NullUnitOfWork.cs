@@ -39,8 +39,8 @@ namespace Abp.Domain.Uow
 
         }
 
-        public NullUnitOfWork(IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NullUnitOfWork(IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
         }
     }

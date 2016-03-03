@@ -43,6 +43,11 @@ namespace Abp.Domain.Uow
         protected IUnitOfWorkDefaultOptions DefaultOptions { get; private set; }
 
         /// <summary>
+        /// Gets the connection string resolver.
+        /// </summary>
+        protected IConnectionStringResolver ConnectionStringResolver { get; private set; }
+
+        /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
         /// </summary>
         public bool IsDisposed { get; private set; }
@@ -75,9 +80,10 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected UnitOfWorkBase(IUnitOfWorkDefaultOptions defaultOptions)
+        protected UnitOfWorkBase(IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
         {
             DefaultOptions = defaultOptions;
+            ConnectionStringResolver = connectionStringResolver;
 
             Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
@@ -292,6 +298,11 @@ namespace Abp.Domain.Uow
         protected virtual void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
             throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
+        }
+
+        protected string ResolveConnectionString()
+        {
+            return ConnectionStringResolver.GetNameOrConnectionString(this);
         }
 
         /// <summary>

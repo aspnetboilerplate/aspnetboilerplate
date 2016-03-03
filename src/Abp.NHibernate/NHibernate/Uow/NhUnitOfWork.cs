@@ -34,8 +34,8 @@ namespace Abp.NHibernate.Uow
         /// <summary>
         /// Creates a new instance of <see cref="NhUnitOfWork"/>.
         /// </summary>
-        public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NhUnitOfWork(ISessionFactory sessionFactory, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
