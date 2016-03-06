@@ -1,58 +1,56 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Runtime.Serialization;
+using Abp.Json;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
+using Newtonsoft.Json;
 
 namespace Abp.BackgroundJobs
 {
-    public class BackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
+    /// <summary>
+    /// Default implementation of <see cref="IBackgroundJobManager"/>.
+    /// </summary>
+    public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager
     {
+        /// <summary>
+        /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.
+        /// Default value: 5000 (5 seconds).
+        /// </summary>
+        public static int JobPollPeriod { get; set; }
+
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
-        private readonly AbpTimer _timer;
 
+        static BackgroundJobManager()
+        {
+            JobPollPeriod = 5000;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BackgroundJobManager"/> class.
+        /// </summary>
         public BackgroundJobManager(
             IIocResolver iocResolver,
-            IBackgroundJobStore store, 
+            IBackgroundJobStore store,
             AbpTimer timer)
+            : base(timer)
         {
             _store = store;
-            _timer = timer;
             _iocResolver = iocResolver;
 
-            _timer.Period = 5000; //5 seconds - TODO: Make configurable?
-            _timer.Elapsed += Timer_Elapsed;
+            Timer.Period = JobPollPeriod;
         }
 
-        public override void Start()
-        {
-            base.Start();
-            _timer.Start();
-        }
-
-        public override void Stop()
-        {
-            _timer.Stop();
-            base.Stop();
-        }
-
-        public override void WaitToStop()
-        {
-            _timer.WaitToStop();
-            base.WaitToStop();
-        }
-
-        public async Task EnqueueAsync<TJob>(object state, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
-            where TJob : IBackgroundJob
+        public async Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+            where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
             {
                 JobType = typeof(TJob).AssemblyQualifiedName,
-                State = BinarySerializationHelper.Serialize(state),
+                JobArgs = args.ToJsonString(),
                 Priority = priority
             };
 
@@ -64,19 +62,13 @@ namespace Abp.BackgroundJobs
             await _store.InsertAsync(jobInfo);
         }
 
-        private void Timer_Elapsed(object sender, EventArgs e)
+        protected override void DoWork()
         {
-            try
+            var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
+
+            foreach (var job in waitingJobs)
             {
-                var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
-                foreach (var job in waitingJobs)
-                {
-                    TryProcessJob(job);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message, ex);
+                TryProcessJob(job);
             }
         }
 
@@ -85,16 +77,19 @@ namespace Abp.BackgroundJobs
             try
             {
                 jobInfo.TryCount++;
-                jobInfo.LastTryTime = DateTime.Now;
+                jobInfo.LastTryTime = Clock.Now;
 
                 var jobType = Type.GetType(jobInfo.JobType);
-                using (var job = _iocResolver.ResolveAsDisposable<IBackgroundJob>(jobType))
+                using (var job = _iocResolver.ResolveAsDisposable(jobType))
                 {
-                    var stateObj = BinarySerializationHelper.DeserializeExtended(jobInfo.State);
-
                     try
                     {
-                        job.Object.Execute(stateObj);
+                        var jobExecuteMethod = job.Object.GetType().GetMethod("Execute");
+                        var argsType = jobExecuteMethod.GetParameters()[0].ParameterType;
+                        var argsObj = JsonConvert.DeserializeObject(jobInfo.JobArgs, argsType);
+
+                        jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
+
                         AsyncHelper.RunSync(() => _store.DeleteAsync(jobInfo));
                     }
                     catch (Exception ex)
@@ -111,14 +106,7 @@ namespace Abp.BackgroundJobs
                             jobInfo.IsAbandoned = true;
                         }
 
-                        try
-                        {
-                            _store.UpdateAsync(jobInfo);
-                        }
-                        catch (Exception updateEx)
-                        {
-                            Logger.Warn(updateEx.ToString(), updateEx);
-                        }
+                        TryUpdate(jobInfo);
                     }
                 }
             }
@@ -128,14 +116,19 @@ namespace Abp.BackgroundJobs
 
                 jobInfo.IsAbandoned = true;
 
-                try
-                {
-                    _store.UpdateAsync(jobInfo);
-                }
-                catch (Exception updateEx)
-                {
-                    Logger.Warn(updateEx.ToString(), updateEx);
-                }
+                TryUpdate(jobInfo);
+            }
+        }
+
+        private void TryUpdate(BackgroundJobInfo jobInfo)
+        {
+            try
+            {
+                _store.UpdateAsync(jobInfo);
+            }
+            catch (Exception updateEx)
+            {
+                Logger.Warn(updateEx.ToString(), updateEx);
             }
         }
     }

@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
+using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -17,7 +18,11 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider1>();
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>()));
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>()))
+                );
+
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(5);

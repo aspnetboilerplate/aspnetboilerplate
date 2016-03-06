@@ -20,7 +20,7 @@ namespace Abp.Tests.BackgroundJobs
             var jobInfo = new BackgroundJobInfo
             {
                 JobType = "TestType",
-                State = new byte[0]
+                JobArgs = "{}"
             };
             
             await _store.InsertAsync(jobInfo);

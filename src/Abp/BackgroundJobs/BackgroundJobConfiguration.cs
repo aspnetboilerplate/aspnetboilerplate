@@ -1,12 +1,18 @@
-﻿namespace Abp.BackgroundJobs
+﻿using Abp.Configuration.Startup;
+
+namespace Abp.BackgroundJobs
 {
     internal class BackgroundJobConfiguration : IBackgroundJobConfiguration
     {
-        public bool IsEnabled { get; set; }
+        public bool IsJobExecutionEnabled { get; set; }
+        
+        public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
-        public BackgroundJobConfiguration()
+        public BackgroundJobConfiguration(IAbpStartupConfiguration abpConfiguration)
         {
-            IsEnabled = true;
+            AbpConfiguration = abpConfiguration;
+
+            IsJobExecutionEnabled = true;
         }
     }
 }

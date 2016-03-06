@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="uk">
+  <texts>
+    <text name="InternalServerError" value="Під час виконання запиту відбулася внутрішня помилка!" />
+    <text name="ValidationError" value="Ваш запит не є дійсним!" />
+    <text name="AreYouSure" value="Ви впевнені?" />
+    <text name="Cancel" value="Скасувати" />
+    <text name="Yes" value="Так" />
+    <text name="ValidationNarrativeTitle" value="Під час валідації були виявлені такі помилки." />
+  </texts>
+</localizationDictionary>

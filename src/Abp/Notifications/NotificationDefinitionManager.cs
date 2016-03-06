@@ -1,18 +1,31 @@
-﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using Abp.Application.Features;
+using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 
 namespace Abp.Notifications
 {
-    public class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
+    /// <summary>
+    /// Implements <see cref="INotificationDefinitionManager"/>.
+    /// </summary>
+    internal class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
     {
         private readonly INotificationConfiguration _configuration;
         private readonly IocManager _iocManager;
 
-        public NotificationDefinitionManager(INotificationConfiguration configuration, IocManager iocManager)
+        private readonly IDictionary<string, NotificationDefinition> _notificationDefinitions;
+
+        public NotificationDefinitionManager(
+            IocManager iocManager,
+            INotificationConfiguration configuration)
         {
             _configuration = configuration;
             _iocManager = iocManager;
+
+            _notificationDefinitions = new Dictionary<string, NotificationDefinition>();
         }
 
         public void Initialize()
@@ -21,39 +34,115 @@ namespace Abp.Notifications
 
             foreach (var providerType in _configuration.Providers)
             {
-                var provider = CreateProvider(providerType);
-                provider.SetNotifications(context);
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
+                using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
+                {
+                    provider.Object.SetNotifications(context);
+                }
             }
         }
 
         public void Add(NotificationDefinition notificationDefinition)
         {
-            throw new System.NotImplementedException();
+            if (_notificationDefinitions.ContainsKey(notificationDefinition.Name))
+            {
+                throw new AbpInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
+            }
+
+            _notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
         }
 
         public NotificationDefinition Get(string name)
         {
-            throw new System.NotImplementedException();
+            var definition = GetOrNull(name);
+            if (definition == null)
+            {
+                throw new AbpException("There is no notification definition with given name: " + name);
+            }
+
+            return definition;
         }
 
         public NotificationDefinition GetOrNull(string name)
         {
-            throw new System.NotImplementedException();
+            return _notificationDefinitions.GetOrDefault(name);
         }
 
         public IReadOnlyList<NotificationDefinition> GetAll()
         {
-            throw new System.NotImplementedException();
+            return _notificationDefinitions.Values.ToImmutableList();
         }
 
-        private NotificationProvider CreateProvider(Type providerType)
+        public async Task<bool> IsAvailableAsync(string name, int? tenantId, long userId)
         {
-            if (!_iocManager.IsRegistered(providerType))
+            var notificationDefinition = GetOrNull(name);
+            if (notificationDefinition == null)
             {
-                _iocManager.Register(providerType);
+                return true;
             }
 
-            return (NotificationProvider)_iocManager.Resolve(providerType);
+            if (notificationDefinition.FeatureDependency != null)
+            {
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                {
+                    featureDependencyContext.Object.TenantId = tenantId;
+
+                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (notificationDefinition.PermissionDependency != null)
+            {
+                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+                {
+                    permissionDependencyContext.Object.UserId = userId;
+
+                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(int? tenantId, long userId)
+        {
+            var availableDefinitions = new List<NotificationDefinition>();
+
+            using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+            {
+                permissionDependencyContext.Object.UserId = userId;
+
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                {
+                    featureDependencyContext.Object.TenantId = tenantId;
+
+                    foreach (var notificationDefinition in GetAll())
+                    {
+                        if (notificationDefinition.PermissionDependency != null &&
+                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+                        {
+                            continue;
+                        }
+
+                        if (tenantId.HasValue &&
+                            notificationDefinition.FeatureDependency != null &&
+                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                        {
+                            continue;
+                        }
+
+                        availableDefinitions.Add(notificationDefinition);
+                    }
+                }
+            }
+
+            return availableDefinitions.ToImmutableList();
         }
     }
 }

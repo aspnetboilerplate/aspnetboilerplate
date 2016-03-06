@@ -1,47 +1,93 @@
 ﻿using System;
+using System.Collections.Generic;
+using Abp.Application.Features;
+using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Localization;
 
 namespace Abp.Notifications
 {
     /// <summary>
-    /// A notification should be defined first.
-    /// This is needed, because then users will see list of notifications and subscribe them.
+    /// Definition for a notification.
     /// </summary>
     public class NotificationDefinition
     {
+        /// <summary>
+        /// Unique name of the notification.
+        /// </summary>
         public string Name { get; private set; }
+        
+        /// <summary>
+        /// Related entity type with this notification (optional).
+        /// </summary>
+        public Type EntityType { get; private set; }
 
-        public ILocalizableString DisplayName
+        /// <summary>
+        /// Display name of the notification.
+        /// Optional.
+        /// </summary>
+        public ILocalizableString DisplayName { get; set; }
+
+        /// <summary>
+        /// Description for the notification.
+        /// Optional.
+        /// </summary>
+        public ILocalizableString Description { get; set; }
+
+        /// <summary>
+        /// A permission dependency. This notification will be available to a user if this dependency is satisfied.
+        /// Optional.
+        /// </summary>
+        public IPermissionDependency PermissionDependency { get; set; }
+        
+        /// <summary>
+        /// A feature dependency. This notification will be available to a tenant if this feature is enabled.
+        /// Optional.
+        /// </summary>
+        public IFeatureDependency FeatureDependency { get; set; }
+
+        /// <summary>
+        /// Gets/sets arbitrary objects related to this object.
+        /// Gets null if given key does not exists.
+        /// This is a shortcut for <see cref="Attributes"/> dictionary.
+        /// </summary>
+        /// <param name="key">Key</param>
+        public object this[string key]
         {
-            get { return _displayName; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
-                _displayName = value;
-            }
+            get { return Attributes.GetOrDefault(key); }
+            set { Attributes[key] = value; }
         }
-        private ILocalizableString _displayName;
 
-        public NotificationDefinition(string name, ILocalizableString displayName)
+        /// <summary>
+        /// Arbitrary objects related to this object.
+        /// These objects must be serializable.
+        /// </summary>
+        public IDictionary<string, object> Attributes { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationDefinition"/> class.
+        /// </summary>
+        /// <param name="name">Unique name of the notification.</param>
+        /// <param name="entityType">Related entity type with this notification (optional).</param>
+        /// <param name="displayName">Display name of the notification.</param>
+        /// <param name="description">Description for the notification</param>
+        /// <param name="permissionDependency">A permission dependency. This notification will be available to a user if this dependency is satisfied.</param>
+        /// <param name="featureDependency">A feature dependency. This notification will be available to a tenant if this feature is enabled.</param>
+        public NotificationDefinition(string name, Type entityType = null, ILocalizableString displayName = null, ILocalizableString description = null, IPermissionDependency permissionDependency = null, IFeatureDependency featureDependency = null)
         {
-            if (name == null)
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException("name", "name can not be null, empty or whitespace!");
             }
-
-            if (displayName == null)
-            {
-                throw new ArgumentNullException("displayName");
-            }
-
+            
             Name = name;
+            EntityType = entityType;
             DisplayName = displayName;
-        }
+            Description = description;
+            PermissionDependency = permissionDependency;
+            FeatureDependency = featureDependency;
 
-        //TODO: Available chanells, type (entity based or custom...?)
+            Attributes = new Dictionary<string, object>();
+        }
     }
 }

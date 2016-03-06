@@ -18,7 +18,7 @@ namespace Abp.Localization
             }
 
             var localizableString = (ILocalizableString) value;
-            writer.WriteValue(localizableString.Localize());
+            writer.WriteValue(localizableString.Localize(new LocalizationContext(LocalizationHelper.Manager)));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

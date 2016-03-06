@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using Abp.BackgroundJobs;
-using Abp.Dependency;
 using Abp.Hangfire.Configuration;
 using Abp.Modules;
 using Hangfire;
@@ -13,15 +11,15 @@ namespace Abp.Hangfire
         public override void PreInitialize()
         {
             IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
-
-            GlobalConfiguration.Configuration
-                .UseWindsorJobActivator(IocManager);
+            
+            Configuration.Modules
+                .AbpHangfire()
+                .GlobalConfiguration
+                .UseActivator(new HangfireIocJobActivator(IocManager));
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterIfNot<IBackgroundJobManager, HangfireBackgroundJobManager>(); //TODO: should not be needed.
-            
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }

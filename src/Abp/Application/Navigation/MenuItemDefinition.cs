@@ -44,7 +44,7 @@ namespace Abp.Application.Navigation
         public string RequiredPermissionName { get; set; }
 
         /// <summary>
-        /// A permission name. Only users that has this permission can see this menu item.
+        /// A feature dependency.
         /// Optional.
         /// </summary>
         public IFeatureDependency FeatureDependency { get; set; }

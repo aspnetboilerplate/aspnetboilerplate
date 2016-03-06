@@ -6,7 +6,7 @@ namespace Abp.Dependency
     /// <summary>
     /// This class is used to pass configuration/options while registering classes in conventional way.
     /// </summary>
-    public class ConventionalRegistrationConfig : DictionayBasedConfig
+    public class ConventionalRegistrationConfig : DictionaryBasedConfig
     {
         /// <summary>
         /// Install all <see cref="IInterceptor"/> implementations automatically or not.

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ca-ES">
+  <texts>
+    <text name="SmtpHost">Servidor SMTP</text>
+    <text name="SmtpPort">Port SMTP</text>
+    <text name="Username">Nom d'usuari</text>
+    <text name="Password">Contrasenya</text>
+    <text name="DomainName">Nom del domini</text>
+    <text name="UseSSL">Utilitza SSL</text>
+    <text name="UseDefaultCredentials">Utilitzar les credencials predeterminades</text>
+    <text name="DefaultFromSenderEmailAddress">Por defecto el correo electrónico del remitente</text>
+    <text name="DefaultFromSenderDisplayName">Per defecte el nom a mostrar del remitent</text>
+    <text name="DefaultLanguage">Idioma predeterminat</text>
+    <text name="ReceiveNotifications">Rebre notificacions</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">L'usuari actual no ha iniciat sessió a l'aplicació!</text>
+  </texts>
+</localizationDictionary>

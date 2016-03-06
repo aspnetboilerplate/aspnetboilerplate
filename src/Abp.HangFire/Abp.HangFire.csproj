@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Abp.HangFire.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Abp.HangFire.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -68,10 +71,9 @@
     <Compile Include="Hangfire\AbpHangfireModule.cs" />
     <Compile Include="Hangfire\Configuration\AbpHangfireConfiguration.cs" />
     <Compile Include="Hangfire\Configuration\AbpHangfireModuleConfigurationExtensions.cs" />
-    <Compile Include="Hangfire\Configuration\HangfireGlobalConfigurationExtensions.cs" />
     <Compile Include="Hangfire\HangfireBackgroundJobManager.cs" />
     <Compile Include="Hangfire\Configuration\IAbpHangfireConfiguration.cs" />
-    <Compile Include="Hangfire\WindsorJobActivator.cs" />
+    <Compile Include="Hangfire\HangfireIocJobActivator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

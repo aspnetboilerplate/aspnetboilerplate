@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Threading;
 
@@ -12,17 +13,20 @@ namespace Abp.Authorization
 
         public IPermissionChecker PermissionChecker { get; set; }
 
+        public ILocalizationManager LocalizationManager { get; set; }
+
         public AuthorizeAttributeHelper()
         {
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
+            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
             if (!AbpSession.UserId.HasValue)
             {
-                throw new AbpAuthorizationException("No user logged in!");
+                throw new AbpAuthorizationException(LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication"));
             }
 
             foreach (var authorizeAttribute in authorizeAttributes)

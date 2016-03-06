@@ -7,6 +7,8 @@ namespace Abp.Application.Features
     /// </summary>
     public class FeatureDependencyContext : IFeatureDependencyContext, ITransientDependency
     {
+        public int? TenantId { get; set; }
+
         /// <inheritdoc/>
         public IIocResolver IocResolver { get; private set; }
 
@@ -16,8 +18,6 @@ namespace Abp.Application.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatureDependencyContext"/> class.
         /// </summary>
-        /// <param name="iocResolver">The ioc resolver.</param>
-        /// <param name="featureChecker">The feature checker.</param>
         public FeatureDependencyContext(IIocResolver iocResolver, IFeatureChecker featureChecker)
         {
             IocResolver = iocResolver;

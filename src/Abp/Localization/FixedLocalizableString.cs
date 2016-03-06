@@ -16,6 +16,14 @@ namespace Abp.Localization
         public virtual string FixedString { get; private set; }
 
         /// <summary>
+        /// Needed for serialization.
+        /// </summary>
+        private FixedLocalizableString()
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new instance of <see cref="FixedLocalizableString"/>.
         /// </summary>
         /// <param name="fixedString">
@@ -27,18 +35,12 @@ namespace Abp.Localization
             FixedString = fixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize()
+        public string Localize(ILocalizationContext context)
         {
             return FixedString;
         }
 
-        /// <summary>
-        /// Gets the <see cref="FixedString"/> always.
-        /// </summary>
-        public virtual string Localize(CultureInfo culture)
+        public string Localize(ILocalizationContext context, CultureInfo culture)
         {
             return FixedString;
         }

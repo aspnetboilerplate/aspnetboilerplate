@@ -50,7 +50,7 @@ namespace Abp.Web.Models
             if (exception is UserFriendlyException)
             {
                 var userFriendlyException = exception as UserFriendlyException;
-                return new ErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
+                return new ErrorInfo(userFriendlyException.Code, userFriendlyException.Message, userFriendlyException.Details);
             }
 
             if (exception is AbpValidationException)

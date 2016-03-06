@@ -2,6 +2,9 @@
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// Null pattern implementation of <see cref="IRealTimeNotifier"/>.
+    /// </summary>
     public class NullRealTimeNotifier : IRealTimeNotifier
     {
         /// <summary>
@@ -10,7 +13,7 @@ namespace Abp.Notifications
         public static NullRealTimeNotifier Instance { get { return SingletonInstance; } }
         private static readonly NullRealTimeNotifier SingletonInstance = new NullRealTimeNotifier();
 
-        public Task SendNotificationAsync(long[] userIds, NotificationInfo notification)
+        public Task SendNotificationsAsync(UserNotification[] userNotifications)
         {
             return Task.FromResult(0);
         }

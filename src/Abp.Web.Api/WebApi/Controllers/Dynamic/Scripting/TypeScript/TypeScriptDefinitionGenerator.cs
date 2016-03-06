@@ -26,7 +26,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             else
                 script.AppendLine("declare module abp.services." + servicePrefix);//Create a new Module
             script.AppendLine("{");
-            var proxyGenerator = new TypeScriptProxyGenerator();
+            var proxyGenerator = new TypeScriptDefinitionProxyGenerator();
             foreach (var dynamicController in sortedDynamicControllers)
             {
                 if (servicePrefix != GetServicePrefix(dynamicController.ServiceName))

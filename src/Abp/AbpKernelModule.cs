@@ -17,6 +17,7 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
+using Abp.Notifications;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
@@ -60,6 +61,7 @@ namespace Abp
 
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
+            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
 
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
@@ -87,11 +89,12 @@ namespace Abp
 
             IocManager.Resolve<SettingDefinitionManager>().Initialize();
             IocManager.Resolve<FeatureManager>().Initialize();
-            IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<PermissionManager>().Initialize();
             IocManager.Resolve<LocalizationManager>().Initialize();
+            IocManager.Resolve<NotificationDefinitionManager>().Initialize();
+            IocManager.Resolve<NavigationManager>().Initialize();
 
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
                 workerManager.Start();
@@ -101,7 +104,7 @@ namespace Abp
 
         public override void Shutdown()
         {
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 IocManager.Resolve<IBackgroundWorkerManager>().StopAndWaitToStop();
             }
@@ -127,15 +130,18 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
+            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
 
             IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 
-            if (Configuration.BackgroundJobs.IsEnabled)
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 IocManager.RegisterIfNot<IBackgroundJobStore, InMemoryBackgroundJobStore>(DependencyLifeStyle.Singleton);
             }

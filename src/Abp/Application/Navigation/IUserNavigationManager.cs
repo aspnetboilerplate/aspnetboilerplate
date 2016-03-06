@@ -13,12 +13,14 @@ namespace Abp.Application.Navigation
         /// </summary>
         /// <param name="menuName">Unique name of the menu</param>
         /// <param name="userId">User id or null for anonymous users</param>
-        Task<UserMenu> GetMenuAsync(string menuName, long? userId);
+        /// <param name="tenantId">Tenant id (optional). Uses current tenant if not provided.</param>
+        Task<UserMenu> GetMenuAsync(string menuName, long? userId, int? tenantId = null);
 
         /// <summary>
         /// Gets all menus specialized for given user.
         /// </summary>
         /// <param name="userId">User id or null for anonymous users</param>
-        Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId);
+        /// <param name="tenantId">Tenant id (optional). Uses current tenant if not provided.</param>
+        Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId, int? tenantId = null);
     }
 }
