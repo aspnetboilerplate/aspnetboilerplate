@@ -81,15 +81,15 @@ infrastructure.</p>
     }
 
     <strong>//Subscribe to a general notification</strong>
-    public async Task Subscribe_SentFrendshipRequest(long userId)
+    public async Task Subscribe_SentFrendshipRequest(int? tenantId, long userId)
     {
-        <strong>await _notificationSubscriptionManager.SubscribeAsync(userId, &quot;SentFrendshipRequest&quot;);</strong>    
+        <strong>await _notificationSubscriptionManager.SubscribeAsync(tenantId, userId, &quot;SentFrendshipRequest&quot;);</strong>    
     }
 
     <strong>//Subscribe to an entity notification</strong>
-    public async Task Subscribe_CommentPhoto(long userId, Guid photoId)
+    public async Task Subscribe_CommentPhoto(int? tenantId, long userId, Guid photoId)
     {
-        <strong>await _notificationSubscriptionManager.SubscribeAsync(userId, &quot;CommentPhoto&quot;, new EntityIdentifier(typeof(Photo), photoI</strong>   
+        <strong>await _notificationSubscriptionManager.SubscribeAsync(tenantId, userId, &quot;CommentPhoto&quot;, new EntityIdentifier(typeof(Photo), photoId));</strong>   
     }
 }</pre>
 			<p>First, we <a href="/Pages/Documents/Dependency-Injection">injected</a>
