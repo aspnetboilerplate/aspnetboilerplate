@@ -112,6 +112,8 @@
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
+    <Compile Include="Reflection\FolderAssemblyFinder.cs" />
+    <Compile Include="Reflection\MultiSourceAssemblyFinder.cs" />
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\MessageNotificationData.cs" />
