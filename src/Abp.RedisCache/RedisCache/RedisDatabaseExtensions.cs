@@ -1,9 +1,12 @@
-﻿using StackExchange.Redis;
-using System;
+﻿using System;
+using StackExchange.Redis;
 
-namespace Abp.RedisCache.RedisImpl
+namespace Abp.RedisCache
 {
-    public static class RedisDatabaseExtensions
+    /// <summary>
+    /// Extension methods for <see cref="IDatabase"/>.
+    /// </summary>
+    internal static class RedisDatabaseExtensions
     {
         public static void KeyDeleteWithPrefix(this IDatabase database, string prefix)
         {
