@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.RedisCache</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -50,16 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbpRedisCacheConfig.cs" />
-    <Compile Include="AbpRedisCacheConfigExtensions.cs" />
     <Compile Include="RedisCache\AbpRedisCacheModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisCache\AbpRedisCache.cs" />
     <Compile Include="RedisCache\AbpRedisCacheManager.cs" />
-    <Compile Include="RedisCache\Configuration\IRedisConnectionProvider.cs" />
-    <Compile Include="RedisCache\Configuration\RedisConnectionProvider.cs" />
-    <Compile Include="RedisCache\RedisImpl\RedisDatabaseExtensions.cs" />
-    <Compile Include="RedisCache\RedisImpl\SerializeUtil.cs" />
+    <Compile Include="RedisCache\IAbpRedisCacheDatabaseProvider.cs" />
+    <Compile Include="RedisCache\AbpRedisCacheDatabaseProvider.cs" />
+    <Compile Include="RedisCache\RedisDatabaseExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">

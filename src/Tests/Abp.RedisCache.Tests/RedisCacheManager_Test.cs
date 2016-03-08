@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.RedisCache.Configuration;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Tests;
@@ -14,9 +13,8 @@ namespace Abp.RedisCache.Tests
 
         public RedisCacheManager_Test()
         {
-            LocalIocManager.Register<AbpRedisCacheConfig, AbpRedisCacheConfig>();
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
-            LocalIocManager.Register<IAbpRedisConnectionProvider, AbpRedisConnectionProvider>();
+            LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
@@ -46,16 +44,6 @@ namespace Abp.RedisCache.Tests
         public class MyCacheItem
         {
             public int Value { get; set; }
-        }
-
-        [Fact]
-        public void DatabaseId_Test()
-        {
-            var dbIdAppSettingName = LocalIocManager.Resolve<AbpRedisCacheConfig>().DatabaseIdAppSetting;
-
-            var dbIdInConfig = LocalIocManager.Resolve<IAbpRedisConnectionProvider>().GetDatabaseId(dbIdAppSettingName);
-
-            ((AbpRedisCache)_cache.InternalCache).DatabaseId.ShouldBe(dbIdInConfig);
         }
     }
 }
