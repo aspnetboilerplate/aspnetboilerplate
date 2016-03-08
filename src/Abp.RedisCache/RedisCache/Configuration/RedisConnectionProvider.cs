@@ -9,7 +9,7 @@ namespace Abp.RedisCache.Configuration
 {
     public class AbpRedisConnectionProvider : IAbpRedisConnectionProvider, ISingletonDependency
     {
-        private static readonly ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> ConnectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
+        private static readonly ConcurrentDictionary<string, ConnectionMultiplexer> ConnectionMultiplexers = new ConcurrentDictionary<string, ConnectionMultiplexer>();
 
         public string GetConnectionString(string name)
         {
@@ -29,15 +29,10 @@ namespace Abp.RedisCache.Configuration
                 throw new ArgumentNullException("connectionString");
             }
 
-            // when using ConcurrentDictionary, multiple threads can create the value
-            // at the same time, so we need to pass a Lazy so that it's only 
-            // the object which is added that will create a ConnectionMultiplexer,
-            // even when a delegate is passed
-
             return ConnectionMultiplexers.GetOrAdd(
                 connectionString,
-                new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString))
-                ).Value;
+                ConnectionMultiplexer.Connect(connectionString)
+                );
         }
 
         public int GetDatabaseId(string databaseIdAppSettingName)
