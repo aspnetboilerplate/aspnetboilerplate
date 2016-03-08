@@ -1,6 +1,8 @@
 ﻿using Abp.Runtime.Caching;
 using StackExchange.Redis;
 using System;
+using Abp.Domain.Entities;
+using Abp.Json;
 using Abp.Runtime.Serialization;
 
 namespace Abp.RedisCache
@@ -25,7 +27,7 @@ namespace Abp.RedisCache
         {
             var objbyte = _database.StringGet(GetLocalizedKey(key));
             return objbyte.HasValue
-                ? BinarySerializationHelper.DeserializeExtended(objbyte)
+                ? JsonSerializationHelper.DeserializeWithType(objbyte)
                 : null;
         }
 
@@ -36,9 +38,17 @@ namespace Abp.RedisCache
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
+            //TODO: This is a workaround for serialization problems of entities.
+            //TODO: Normally, entities should not be stored in the cache, but currently Abp.Zero packages does it. It will be fixed in the future.
+            var type = value.GetType();
+            if (EntityHelper.IsEntity(type) && type.Assembly.FullName.Contains("EntityFrameworkDynamicProxies"))
+            {
+                type = type.BaseType;
+            }
+
             _database.StringSet(
                 GetLocalizedKey(key),
-                BinarySerializationHelper.Serialize(value),
+                JsonSerializationHelper.SerializeWithType(value, type),
                 slidingExpireTime
                 );
         }

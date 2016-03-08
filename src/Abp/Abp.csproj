@@ -97,6 +97,7 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Json\JsonSerializationHelper.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
