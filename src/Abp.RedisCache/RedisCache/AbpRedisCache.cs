@@ -3,6 +3,7 @@ using StackExchange.Redis;
 using System;
 using Abp.RedisCache.Configuration;
 using Abp.RedisCache.RedisImpl;
+using Abp.Runtime.Serialization;
 
 namespace Abp.RedisCache
 {
@@ -37,7 +38,7 @@ namespace Abp.RedisCache
         {
             var objbyte = Database.StringGet(GetLocalizedKey(key));
             return objbyte.HasValue
-                ? SerializeUtil.Deserialize(objbyte)
+                ? BinarySerializationHelper.DeserializeExtended(objbyte)
                 : null;
         }
 
@@ -50,7 +51,7 @@ namespace Abp.RedisCache
 
             Database.StringSet(
                 GetLocalizedKey(key),
-                SerializeUtil.Serialize(value),
+                BinarySerializationHelper.Serialize(value),
                 slidingExpireTime
                 );
         }

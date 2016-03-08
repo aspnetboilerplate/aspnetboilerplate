@@ -59,7 +59,6 @@
     <Compile Include="RedisCache\Configuration\IRedisConnectionProvider.cs" />
     <Compile Include="RedisCache\Configuration\RedisConnectionProvider.cs" />
     <Compile Include="RedisCache\RedisImpl\RedisDatabaseExtensions.cs" />
-    <Compile Include="RedisCache\RedisImpl\SerializeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">
