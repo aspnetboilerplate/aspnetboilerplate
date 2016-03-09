@@ -150,7 +150,20 @@ namespace MyProject.AbpZeroTemplate.Web
         //...other code
     }
 }</pre>
-		<p>&nbsp;</p>
+		<p>Abp.RedisCache package uses "<strong>localhost</strong>" as <strong>connection string</strong> 
+		as default. You can add connection string to your config file to 
+		override it. Example:</p>
+			<pre lang="xml">&lt;add name=&quot;<strong>Abp.Redis.Cache</strong>&quot; connectionString=&quot;localhost&quot;/&gt;</pre>
+			<p>Also, you can add setting to appSettings to set database id of 
+			Redis. Example:</p>
+			<pre lang="xml">&lt;add key=&quot;<strong>Abp.Redis.Cache.DatabaseId</strong>&quot; value=&quot;2&quot;/&gt;</pre>
+			<p>Different database ids are useful to create different key spaces 
+			(isolated caches) in same server.</p>
+			<p>See <a href="http://redis.io/documentation" target="_blank">Redis 
+			documentation</a> for more information on Redis and it's 
+			configuration.</p>
+			<p><strong>Note</strong>: Redis server should be installed and 
+			running to use Redis cache in ABP.</p>
 
 		</div>
 
