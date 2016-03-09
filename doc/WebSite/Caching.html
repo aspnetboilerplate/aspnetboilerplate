@@ -83,7 +83,7 @@ There are also <strong>async</strong> versions of all methods.</p>
 and <strong>object</strong> as value. <strong>ITypedCache</strong> is a 
 wrapper to ICache to provide <strong>type safe</strong>, generic cache. We can 
 				use generic GetCache extension method to get an ITypedCache:</p>
-			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;()</strong>(&quot;MyCache&quot;);</pre>
+			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;</strong>(&quot;MyCache&quot;);</pre>
 			<p>
 				Also, we can use <strong>AsTyped</strong> extension method to 
 				convert an existing ICache instance to ITypedCache.</p>
