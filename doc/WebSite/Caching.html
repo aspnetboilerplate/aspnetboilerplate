@@ -76,16 +76,17 @@ method. It has two arguments:</p>
 				<strong>Set</strong>, <strong>Remove</strong> and <strong>Clear</strong>. 
 There are also <strong>async</strong> versions of all methods.</p>
 
-			<h3>ITypedCache</h3>
+			<h4>ITypedCache</h4>
 
 			<p>
 				<strong>ICache </strong>interface works <strong>string</strong> as key 
 and <strong>object</strong> as value. <strong>ITypedCache</strong> is a 
-wrapper to ICache to provide <strong>type safe</strong>, generic cache. To 
-convert ICache to ITypedCache, we can use <strong>AsTyped</strong> extension method as shown 
-below:</p>
-			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache(&quot;MyCache&quot;)<strong>.AsTyped&lt;int, Item&gt;()</strong>;</pre>
-			<p>Then we can use Get method without converting and casting code.</p>
+wrapper to ICache to provide <strong>type safe</strong>, generic cache. We can 
+				use generic GetCache extension method to get an ITypedCache:</p>
+			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;()</strong>(&quot;MyCache&quot;);</pre>
+			<p>
+				Also, we can use <strong>AsTyped</strong> extension method to 
+				convert an existing ICache instance to ITypedCache.</p>
 
 			<h3>Configuration</h3>
 
@@ -113,6 +114,43 @@ while all other caches will have 2 hours.</p>
 first request). Configuration is not restricted to DefaultSlidingExpireTime 
 only, since cache object is an ICache, you can use it's properties and methods 
 freely configure and initialize it.</p>
+			<h3>Redis Cache Integration</h3>
+			<p>Default cache manager uses <strong>in-memory</strong> caches. So, it can be a 
+			problem if you have more than one concurrent web server running the 
+			same application. In that case, you may want to a 
+			<strong>distributed/central cache</strong> server. You can use Redis as 
+			your cache server 
+			easily.</p>
+			<p>First, you need to install 
+			<a href="https://www.nuget.org/packages/Abp.RedisCache" target="_blank">
+			<strong>Abp.RedisCache</strong></a> nuget package to your 
+			application (you can install it to your Web project, for example). 
+			Then you need to add a <strong>DependsOn</strong> 
+			attribute for <strong>AbpRedisCacheModule</strong> and call <strong>UseRedis</strong> 
+			extension method in <strong>PreInitialize</strong> method of your
+			<a href="Module-System.html">module</a>, as shown below:</p>
+
+		<pre lang="cs">//...other namespaces
+<strong>using Abp.Runtime.Caching.Redis;</strong>
+
+namespace MyProject.AbpZeroTemplate.Web
+{
+    [DependsOn(
+        //...other module dependencies
+        <strong>typeof(AbpRedisCacheModule)</strong>)]
+    public class MyProjectWebModule : AbpModule
+    {
+        public override void <strong>PreInitialize</strong>()
+        {
+            //...other configurations
+            
+            <strong>Configuration.Caching.UseRedis();</strong>
+        }
+        
+        //...other code
+    }
+}</pre>
+		<p>&nbsp;</p>
 
 		</div>
 
