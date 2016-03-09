@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Runtime.Caching.Redis;
 using Abp.Tests;
 using Xunit;
 using Shouldly;

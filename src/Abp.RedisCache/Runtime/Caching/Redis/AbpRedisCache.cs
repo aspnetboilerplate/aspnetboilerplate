@@ -1,11 +1,9 @@
-﻿using Abp.Runtime.Caching;
-using StackExchange.Redis;
-using System;
+﻿using System;
 using Abp.Domain.Entities;
 using Abp.Json;
-using Abp.Runtime.Serialization;
+using StackExchange.Redis;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Used to store cache in a Redis server.

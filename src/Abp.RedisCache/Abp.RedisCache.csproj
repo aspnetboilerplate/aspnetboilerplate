@@ -50,13 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RedisCache\AbpRedisCacheModule.cs" />
+    <Compile Include="Runtime\Caching\Redis\AbpRedisCacheModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RedisCache\AbpRedisCache.cs" />
-    <Compile Include="RedisCache\AbpRedisCacheManager.cs" />
-    <Compile Include="RedisCache\IAbpRedisCacheDatabaseProvider.cs" />
-    <Compile Include="RedisCache\AbpRedisCacheDatabaseProvider.cs" />
-    <Compile Include="RedisCache\RedisDatabaseExtensions.cs" />
+    <Compile Include="Runtime\Caching\Redis\AbpRedisCache.cs" />
+    <Compile Include="Runtime\Caching\Redis\AbpRedisCacheManager.cs" />
+    <Compile Include="Runtime\Caching\Redis\IAbpRedisCacheDatabaseProvider.cs" />
+    <Compile Include="Runtime\Caching\Redis\AbpRedisCacheDatabaseProvider.cs" />
+    <Compile Include="Runtime\Caching\Redis\RedisCacheConfigurationExtensions.cs" />
+    <Compile Include="Runtime\Caching\Redis\RedisDatabaseExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj">
