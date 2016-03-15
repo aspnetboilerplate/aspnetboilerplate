@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Configuration.Startup;
 
 namespace Abp.Runtime.Caching.Configuration
 {
     internal class CachingConfiguration : ICachingConfiguration
     {
+        public IAbpStartupConfiguration AbpConfiguration { get; private set; }
+
         public IReadOnlyList<ICacheConfigurator> Configurators
         {
             get { return _configurators.ToImmutableList(); }
         }
         private readonly List<ICacheConfigurator> _configurators;
 
-        public CachingConfiguration()
+        public CachingConfiguration(IAbpStartupConfiguration abpConfiguration)
         {
+            AbpConfiguration = abpConfiguration;
+
             _configurators = new List<ICacheConfigurator>();
         }
 

@@ -30,6 +30,7 @@
 	</li>
 	<li><a href="#ArticleCreateInterceptor">Creating Interceptors</a></li>
 	<li><a href="#ArticleRegisterInterceptor">Registering Interceptors</a></li>
+	<li><a href="#ArticleInterceptAsync">Intercepting Async Methods</a></li>
 	<li><a href="#ArticleMore">More</a></li>
 	<li><a href="#ArticleHistory">Article History</a></li>
 </ul>
@@ -210,6 +211,276 @@ public class InterceptionDemoApplicationModule : AbpModule
 INFO 2016-02-23 14:59:28,611 [63 ] .Interceptors.MeasureDurationInterceptor - 
 <strong>GetCurrentLoginInformations executed in 4,939 milliseconds</strong>.</pre>
 
+<p>Note: GetCurrentLoginInformations is a method of SessionAppService class. You 
+can check it in source code, but it's not important since our interceptor does 
+not know details of intercepted methods.</p>
+
+<h2 id="ArticleInterceptAsync">Intercepting Async Methods</h2>
+<p>Intercepting an async method is different than intercepting a sync 
+method. For example, <code>MeasureDurationInterceptor</code> defined above does not work 
+properly for async methods. Because, an async method immediately returns a <code>Task</code> 
+and it's executed asynchronously. So, we can not measure when it's actually completed 
+(Actually, the example <code>GetCurrentLoginInformations</code> above was also an async 
+method and 4,939 ms was a wrong value).</p>
+<p>Let's change MeasureDurationInterceptor to support async methods, then 
+explain how we implemented it:</p>
+<pre lang="cs">public class MeasureDurationAsyncInterceptor : IInterceptor
+{
+    private readonly ILogger _logger;
+
+    public MeasureDurationAsyncInterceptor(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void Intercept(IInvocation invocation)
+    {
+        if (<strong>IsAsyncMethod</strong>(invocation.Method))
+        {
+            InterceptAsync(invocation);
+        }
+        else
+        {
+            InterceptSync(invocation);
+        }
+    }
+
+<strong>    private void InterceptAsync(IInvocation invocation)
+    {
+        //Before method execution
+        var stopwatch = Stopwatch.StartNew();
+
+        //Calling the actual method, but execution has not been finished yet
+        invocation.Proceed();
+
+        //We should wait for finishing of the method execution
+        ((Task) invocation.ReturnValue)
+            .ContinueWith(task =&gt;
+            {
+                //After method execution
+                stopwatch.Stop();
+                _logger.InfoFormat(
+                    &quot;MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.&quot;,
+                    invocation.MethodInvocationTarget.Name,
+                    stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+                    );
+            });
+    }</strong>
+
+    private void InterceptSync(IInvocation invocation)
+    {
+        //Before method execution
+        var stopwatch = Stopwatch.StartNew();
+
+        //Executing the actual method
+        invocation.Proceed();
+
+        //After method execution
+        stopwatch.Stop();
+        _logger.InfoFormat(
+            &quot;{0} executed in {1} milliseconds.&quot;,
+            invocation.MethodInvocationTarget.Name,
+            stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+            );
+    }
+    
+    public static bool IsAsyncMethod(MethodInfo method)
+    {
+        return (
+            method.ReturnType == typeof(Task) ||
+            (method.ReturnType.IsGenericType &amp;&amp; method.ReturnType.GetGenericTypeDefinition() == typeof(Task&lt;&gt;))
+            );
+    }
+}</pre>
+<p>Since sync and async execution logic is completely different, I checked if 
+current method is async or sync (<code>IsAsyncMethod</code> does it). I moved 
+previous code to <code>InterceptSync</code> method and introduced new <code>
+InterceptAsync</code> method. I used <code>Task.ContinueWith(...)</code> method 
+to perform action after task complete. <code>ContinueWith</code> method works 
+even if intercepted method throws <strong>exception</strong>.</p>
+<p>Now, I'm registering <code>MeasureDurationAsyncInterceptor</code> as a second 
+interceptor for application services by modifying <code>MeasureDurationInterceptorRegistrar</code> 
+defined above:</p>
+<pre lang="cs">public static class MeasureDurationInterceptorRegistrar
+{
+    public static void Initialize(IKernel kernel)
+    {
+        kernel.ComponentRegistered += Kernel_ComponentRegistered;
+    }
+
+    private static void Kernel_ComponentRegistered(string key, IHandler handler)
+    {
+        if (typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
+        {
+            handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MeasureDurationInterceptor)));
+            handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MeasureDurationAsyncInterceptor)));
+        }
+    }
+}</pre>
+<p>If we run the application again, we will see that <code>
+MeasureDurationAsyncInterceptor</code> measured much more longer than <code>
+MeasureDurationInterceptor</code>, since it actually waits until method completely 
+executed.</p>
+<pre>INFO  2016-03-01 10:29:07,592 [10   ] .Interceptors.MeasureDurationInterceptor - <strong>MeasureDurationInterceptor: GetCurrentLoginInformations executed in 4.964 milliseconds.</strong>
+INFO  2016-03-01 10:29:07,693 [7    ] rceptors.MeasureDurationAsyncInterceptor - <strong>MeasureDurationAsyncInterceptor: GetCurrentLoginInformations executed in 104,994 milliseconds</strong>.
+</pre>
+<p>This way, we can properly intercept async methods to run code before and 
+after. But, if our before and after code involve another async method calls, 
+things get a bit complicated.</p>
+<p>First of all, I could not find a way of executing async code before <code>
+invocation.Proceed()</code>. Because Castle Windsor does not support async 
+naturally (other IOC managers also don't support as I know). So, if you need to run code before the actual method execution, do it 
+synchronously. If you find a way of it, please share your solution as comment to 
+this article.</p>
+<p>We can execute async code after method execution. I changed <code>
+InterceptAsync</code> like that to support it:</p>
+<pre lang="cs">public class MeasureDurationWithPostAsyncActionInterceptor : IInterceptor
+{
+    private readonly ILogger _logger;
+
+    public MeasureDurationWithPostAsyncActionInterceptor(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void Intercept(IInvocation invocation)
+    {
+        if (IsAsyncMethod(invocation.Method))
+        {
+            InterceptAsync(invocation);
+        }
+        else
+        {
+            InterceptSync(invocation);
+        }
+    }
+
+<strong>    private void InterceptAsync(IInvocation invocation)
+    {
+        //Before method execution
+        var stopwatch = Stopwatch.StartNew();
+
+        //Calling the actual method, but execution has not been finished yet
+        invocation.Proceed();
+
+        //Wait task execution and modify return value
+        if (invocation.Method.ReturnType == typeof(Task))
+        {
+            invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
+                (Task) invocation.ReturnValue,
+                async () =&gt; await TestActionAsync(invocation),
+                ex =&gt;
+                {
+                    LogExecutionTime(invocation, stopwatch);
+                });
+        }
+        else //Task&lt;TResult&gt;
+        {
+            invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithPostActionAndFinallyAndGetResult(
+                invocation.Method.ReturnType.GenericTypeArguments[0],
+                invocation.ReturnValue,
+                async () =&gt; await TestActionAsync(invocation),
+                ex =&gt;
+                {
+                    LogExecutionTime(invocation, stopwatch);
+                });
+        }
+    }</strong>
+
+    private void InterceptSync(IInvocation invocation)
+    {
+        //Before method execution
+        var stopwatch = Stopwatch.StartNew();
+
+        //Executing the actual method
+        invocation.Proceed();
+
+        //After method execution
+        LogExecutionTime(invocation, stopwatch);
+    }
+
+    public static bool IsAsyncMethod(MethodInfo method)
+    {
+        return (
+            method.ReturnType == typeof(Task) ||
+            (method.ReturnType.IsGenericType &amp;&amp; method.ReturnType.GetGenericTypeDefinition() == typeof(Task&lt;&gt;))
+            );
+    }
+
+<strong>    private async Task TestActionAsync(IInvocation invocation)
+    {
+        _logger.Info(&quot;Waiting after method execution for &quot; + invocation.MethodInvocationTarget.Name);
+        await Task.Delay(200); //Here, we can await another methods. This is just for test.
+        _logger.Info(&quot;Waited after method execution for &quot; + invocation.MethodInvocationTarget.Name);
+    }</strong>
+
+    private void LogExecutionTime(IInvocation invocation, Stopwatch stopwatch)
+    {
+        stopwatch.Stop();
+        _logger.InfoFormat(
+            &quot;MeasureDurationWithPostAsyncActionInterceptor: {0} executed in {1} milliseconds.&quot;,
+            invocation.MethodInvocationTarget.Name,
+            stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+            );
+    }
+}</pre>
+<p>If we want to execute an async method after method execution, we should replace 
+the return value with the second method's return value. I created a magical 
+<code>InternalAsyncHelper</code> 
+class to accomplish it. <code>InternalAsyncHelper</code> is 
+shown below: </p>
+<pre lang="cs">internal static class InternalAsyncHelper
+{
+    public static async Task AwaitTaskWithPostActionAndFinally(Task actualReturnValue, Func&lt;Task&gt; postAction, Action&lt;Exception&gt; finalAction)
+    {
+        Exception exception = null;
+
+        try
+        {
+            await actualReturnValue;
+            await postAction();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+            throw;
+        }
+        finally
+        {
+            finalAction(exception);
+        }
+    }
+
+    public static async Task&lt;T&gt; AwaitTaskWithPostActionAndFinallyAndGetResult&lt;T&gt;(Task&lt;T&gt; actualReturnValue, Func&lt;Task&gt; postAction, Action&lt;Exception&gt; finalAction)
+    {
+        Exception exception = null;
+
+        try
+        {
+            var result = await actualReturnValue;
+            await postAction();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+            throw;
+        }
+        finally
+        {
+            finalAction(exception);
+        }
+    }
+
+    public static object CallAwaitTaskWithPostActionAndFinallyAndGetResult(Type taskReturnType, object actualReturnValue, Func&lt;Task&gt; action, Action&lt;Exception&gt; finalAction)
+    {
+        return typeof (InternalAsyncHelper)
+            .GetMethod(&quot;AwaitTaskWithPostActionAndFinallyAndGetResult&quot;, BindingFlags.Public | BindingFlags.Static)
+            .MakeGenericMethod(taskReturnType)
+            .Invoke(null, new object[] { actualReturnValue, action, finalAction });
+    }
+}</pre>
+
 <h2 id="ArticleMore">More</h2>
 
 <p>I will improve this article by adding some use cases:</p>
@@ -218,7 +489,6 @@ INFO 2016-02-23 14:59:28,611 [63 ] .Interceptors.MeasureDurationInterceptor -
 	<li>Defining attributes to control interception logic</li>
 	<li>Working with method arguments</li>
 	<li>Manipulating return values</li>
-	<li>Intercepting async methods</li>
 	<li>...</li>
 </ul>
 
@@ -227,7 +497,14 @@ INFO 2016-02-23 14:59:28,611 [63 ] .Interceptors.MeasureDurationInterceptor -
 <h2 id="ArticleHistory">Article History</h2>
 
 <ul>
-	<li>2016-02-23: Initial publication</li>
+	<li>2016-03-01<ul>
+		<li>Added async method interception sample.</li>
+	</ul>
+	</li>
+	<li>2016-02-23<ul>
+		<li>Initial publication.</li>
+	</ul>
+	</li>
 </ul>
 
 </body>

@@ -120,7 +120,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a class as self registration.
+        /// Registers a type with it's implementation.
         /// </summary>
         /// <param name="type">Type of the class</param>
         /// <param name="impl">The type that implements <paramref name="type"/></param>
