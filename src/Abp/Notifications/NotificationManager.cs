@@ -3,28 +3,29 @@ using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Castle.Core.Logging;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// Implements <see cref="INotificationManager"/>.
+    /// </summary>
     public class NotificationManager : INotificationManager, ISingletonDependency
     {
         public ILogger Logger { get; set; }
 
         private readonly INotificationStore _store;
-        private readonly INotificationDefinitionManager _notificationDefinitionManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationManager"/> class.
+        /// </summary>
         public NotificationManager(
-            INotificationStore store, 
-            INotificationDefinitionManager notificationDefinitionManager,
-            IUnitOfWorkManager unitOfWorkManager,
+            INotificationStore store,
             IBackgroundJobManager backgroundJobManager)
         {
             _store = store;
-            _notificationDefinitionManager = notificationDefinitionManager;
-            _unitOfWorkManager = unitOfWorkManager;
             _backgroundJobManager = backgroundJobManager;
 
             Logger = NullLogger.Instance;
@@ -32,30 +33,43 @@ namespace Abp.Notifications
 
         public async Task SubscribeAsync(NotificationSubscriptionOptions options)
         {
-            CheckNotificationName(options.NotificationName);
+            var subscriptionInfo = new NotificationSubscriptionInfo
+            {
+                NotificationName = options.NotificationName,
+                UserId = options.UserId,
+                EntityTypeName = options.EntityType.FullName,
+                EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
+            };
 
-            await _store.InsertSubscriptionAsync(options);
+            await _store.InsertSubscriptionAsync(subscriptionInfo);
         }
 
         public async Task UnsubscribeAsync(NotificationSubscriptionOptions options)
         {
-            CheckNotificationName(options.NotificationName);
+            var subscriptionInfo = new NotificationSubscriptionInfo
+            {
+                NotificationName = options.NotificationName,
+                UserId = options.UserId,
+                EntityTypeName = options.EntityType.FullName,
+                EntityId = options.EntityId.ToString(), //TODO: ToString() can be problem for some types, use JSON serialization instead, based on entity's primary key type
+            };
 
-            await _store.DeleteSubscriptionAsync(options);
+            await _store.DeleteSubscriptionAsync(subscriptionInfo);
         }
 
         [UnitOfWork]
         public virtual async Task PublishAsync(NotificationPublishOptions options)
         {
-            CheckNotificationName(options.NotificationName);
-
             var notificationInfo = new NotificationInfo
             {
                 NotificationName = options.NotificationName,
-                EntityType = options.EntityType,
-                EntityId = options.EntityId,
+                EntityTypeName = options.EntityType == null ? null : options.EntityType.FullName,
+                EntityTypeAssemblyQualifiedName = options.EntityType == null ? null : options.EntityType.AssemblyQualifiedName,
+                EntityId = options.EntityId == null ? null : options.EntityId.ToJsonString(),
                 Severity = options.Severity,
-                UserIds = options.UserIds.IsNullOrEmpty() ? null : options.UserIds.JoinAsString(",")
+                UserIds = options.UserIds.IsNullOrEmpty() ? null : options.UserIds.JoinAsString(","),
+                Data = options.Data.ToJsonString(),
+                DataTypeName = options.Data.GetType().AssemblyQualifiedName
             };
 
             await _store.InsertNotificationAsync(notificationInfo);
@@ -65,14 +79,6 @@ namespace Abp.Notifications
                     notificationInfo.Id
                     )
                 );
-        }
-
-        private void CheckNotificationName(string notificationName)
-        {
-            if (_notificationDefinitionManager.GetOrNull(notificationName) == null)
-            {
-                throw new AbpException(string.Format("There is no defined notificationName with {0}", notificationName));
-            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
+using Abp.Notifications;
 using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
@@ -58,6 +59,11 @@ namespace Abp.Configuration.Startup
         public IBackgroundJobConfiguration BackgroundJobs { get; private set; }
 
         /// <summary>
+        /// Used to configure notification system.
+        /// </summary>
+        public INotificationConfiguration Notifications { get; private set; }
+
+        /// <summary>
         /// Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
@@ -101,6 +107,7 @@ namespace Abp.Configuration.Startup
             Auditing = IocManager.Resolve<IAuditingConfiguration>();
             Caching = IocManager.Resolve<ICachingConfiguration>();
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
+            Notifications = IocManager.Resolve<INotificationConfiguration>();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Json;
 
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Used to hold data for a notification.
+    /// Used to store data for a notification.
     /// </summary>
     [Serializable]
     public class NotificationData
@@ -43,6 +44,11 @@ namespace Abp.Notifications
         public NotificationData()
         {
             Properties = new Dictionary<string, object>();
+        }
+
+        public override string ToString()
+        {
+            return this.ToJsonString();
         }
     }
 }

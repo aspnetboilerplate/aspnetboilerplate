@@ -6,23 +6,12 @@ namespace Abp.Notifications
 {
     public class NullNotificationStore : INotificationStore
     {
-        /// <summary>
-        /// Gets single instance of <see cref="NullNotificationStore"/> class.
-        /// </summary>
-        public static NullNotificationStore Instance { get { return SingletonInstance; } }
-        private static readonly NullNotificationStore SingletonInstance = new NullNotificationStore();
-
-        private NullNotificationStore()
-        {
-
-        }
-
-        public Task InsertSubscriptionAsync(NotificationSubscriptionOptions options)
+        public Task InsertSubscriptionAsync(NotificationSubscriptionInfo subscription)
         {
             return Task.FromResult(0);
         }
 
-        public Task DeleteSubscriptionAsync(NotificationSubscriptionOptions options)
+        public Task DeleteSubscriptionAsync(NotificationSubscriptionInfo subscription)
         {
             return Task.FromResult(0);
         }
@@ -42,9 +31,9 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<long[]> GetSubscribedUserIdsAsync(NotificationInfo notification)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptions(NotificationInfo notification)
         {
-            return Task.FromResult(new long[0]);
+            return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
     }
 }

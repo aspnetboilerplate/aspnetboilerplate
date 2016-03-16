@@ -9,16 +9,34 @@ namespace Abp.Notifications
     /// </summary>
     public interface INotificationStore
     {
-        Task InsertSubscriptionAsync(NotificationSubscriptionOptions options);
+        /// <summary>
+        /// Inserts a notification subscription.
+        /// </summary>
+        Task InsertSubscriptionAsync(NotificationSubscriptionInfo subscription);
 
-        Task DeleteSubscriptionAsync(NotificationSubscriptionOptions options);
+        /// <summary>
+        /// Deletes a notification subscription.
+        /// </summary>
+        Task DeleteSubscriptionAsync(NotificationSubscriptionInfo subscription);
 
+        /// <summary>
+        /// Inserts a notification.
+        /// </summary>
         Task InsertNotificationAsync(NotificationInfo notification);
 
+        /// <summary>
+        /// Gets a notification by Id, or returns null if not found.
+        /// </summary>
         Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId);
-        
+
+        /// <summary>
+        /// Inserts a user notification.
+        /// </summary>
         Task InsertUserNotificationAsync(UserNotificationInfo userNotification);
 
-        Task<long[]> GetSubscribedUserIdsAsync(NotificationInfo notification);
+        /// <summary>
+        /// Gets subscriptions for a notification.
+        /// </summary>
+        Task<List<NotificationSubscriptionInfo>> GetSubscriptions(NotificationInfo notification);
     }
 }
