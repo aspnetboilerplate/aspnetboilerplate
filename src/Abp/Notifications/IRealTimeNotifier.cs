@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
-using Abp.Domain.Entities.Auditing;
+﻿using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -16,31 +12,5 @@ namespace Abp.Notifications
         /// If a user is not online, it should ignore him.
         /// </summary>
         Task SendNotificationsAsync(UserNotification[] userNotifications);
-    }
-
-    public class UserNotification : EntityDto<Guid>
-    {
-        public long UserId { get; set; }
-
-        public UserNotificationState State { get; set; }
-
-        public Notification Notification { get; set; }
-    }
-
-    public class Notification : EntityDto<Guid>, IHasCreationTime
-    {
-        public string NotificationName { get; set; }
-
-        public object Data { get; set; }
-
-        public Type EntityType { get; set; }
-
-        public string EntityTypeName { get; set; }
-
-        public object EntityId { get; set; }
-
-        public NotificationSeverity Severity { get; set; }
-
-        public DateTime CreationTime { get; set; }
     }
 }

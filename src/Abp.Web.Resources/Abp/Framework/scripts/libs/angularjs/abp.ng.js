@@ -18,9 +18,9 @@
 
         showError: function (error) {
             if (error.details) {
-                return abp.message.error(error.details, error.message);
+                return abp.message.error(error.details, error.message || abp.ng.http.defaultError.message);
             } else {
-                return abp.message.error(error.message);
+                return abp.message.error(error.message || abp.ng.http.defaultError.message);
             }
         },
 
@@ -109,8 +109,8 @@
 
                     'responseError': function (ngError) {
                         var error = {
-                            message: ngError.data,
-                            details: ngError.statusText,
+                            message: ngError.data || abp.ng.http.defaultError.message,
+                            details: ngError.statusText || abp.ng.http.defaultError.details,
                             responseError: true
                         }
 

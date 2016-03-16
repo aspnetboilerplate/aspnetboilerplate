@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Castle.Core.Logging;
 
 namespace Abp.RealTime
 {
@@ -13,11 +12,6 @@ namespace Abp.RealTime
     /// </summary>
     public class OnlineClientManager : IOnlineClientManager, ISingletonDependency
     {
-        /// <summary>
-        /// Reference to Logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
         /// <summary>
         /// Online clients.
         /// </summary>
@@ -29,8 +23,6 @@ namespace Abp.RealTime
         public OnlineClientManager()
         {
             _clients = new ConcurrentDictionary<string, IOnlineClient>();
-
-            Logger = NullLogger.Instance;
         }
 
         public void Add(IOnlineClient client)
@@ -56,7 +48,8 @@ namespace Abp.RealTime
 
         public IOnlineClient GetByUserIdOrNull(long userId)
         {
-            return GetAllClients().FirstOrDefault(c => c.UserId == userId); //TODO: We can create an index for a faster lookup.
+            //TODO: We can create a dictionary for a faster lookup.
+            return GetAllClients().FirstOrDefault(c => c.UserId == userId);
         }
 
         public IReadOnlyList<IOnlineClient> GetAllClients()

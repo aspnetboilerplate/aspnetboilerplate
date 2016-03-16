@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ru">
+  <texts>
+    <text name="SmtpHost">SMTP сервер</text>
+    <text name="SmtpPort">SMTP порт</text>
+    <text name="Username">Имя пользователя</text>
+    <text name="Password">Пароль</text>
+    <text name="DomainName">Домен</text>
+    <text name="UseSSL">Использовать SSL</text>
+    <text name="UseDefaultCredentials">Использовать учетные данные по умолчанию</text>
+    <text name="DefaultFromSenderEmailAddress">Электронный адрес отправителя по умолчанию</text>
+    <text name="DefaultFromSenderDisplayName">Имя отправителя по умолчанию</text>
+    <text name="DefaultLanguage">Язык по умолчанию</text>
+    <text name="ReceiveNotifications">Получать уведомления</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Текущий пользователь не вошёл в приложение!</text>
+  </texts>
+</localizationDictionary>

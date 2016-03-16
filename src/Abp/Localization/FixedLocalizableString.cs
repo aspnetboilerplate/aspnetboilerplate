@@ -16,6 +16,14 @@ namespace Abp.Localization
         public virtual string FixedString { get; private set; }
 
         /// <summary>
+        /// Needed for serialization.
+        /// </summary>
+        private FixedLocalizableString()
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new instance of <see cref="FixedLocalizableString"/>.
         /// </summary>
         /// <param name="fixedString">

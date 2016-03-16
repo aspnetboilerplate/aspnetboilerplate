@@ -11,5 +11,7 @@
     <text name="DefaultFromSenderEmailAddress">Varsayılan gönderici e-posta adresi</text>
     <text name="DefaultFromSenderDisplayName">Varsayılan gönderici görünen ismi</text>
     <text name="DefaultLanguage">Varsayılan dil</text>
+    <text name="ReceiveNotifications">Bildirimleri al</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Kullanıcı girişi yapılmamış!</text>
   </texts>
 </localizationDictionary>

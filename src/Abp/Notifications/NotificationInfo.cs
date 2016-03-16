@@ -6,16 +6,23 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Represents a published/sent notification.
+    /// Used to store published/sent notification.
     /// </summary>
     [Serializable]
     [Table("AbpNotifications")]
     public class NotificationInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
-        /// Maximum length of <see cref="NotificationName"/> property.
+        /// Indicated all tenant ids for <see cref="TenantIds"/> property.
+        /// Value: "0".
         /// </summary>
-        public const int MaxNotificationNameLength = 128;
+        public const string AllTenantIds = "0";
+
+        /// <summary>
+        /// Maximum length of <see cref="NotificationName"/> property.
+        /// Value: 96.
+        /// </summary>
+        public const int MaxNotificationNameLength = 96;
 
         /// <summary>
         /// Maximum length of <see cref="Data"/> property.
@@ -24,28 +31,40 @@ namespace Abp.Notifications
         public const int MaxDataLength = 1024 * 1024;
 
         /// <summary>
-        /// Maximum lenght of <see cref="EntityTypeName"/> property.
+        /// Maximum length of <see cref="DataTypeName"/> property.
         /// Value: 512.
         /// </summary>
-        public const int MaxEntityTypeNameLength = 256;
+        public const int MaxDataTypeNameLength = 512;
 
         /// <summary>
-        /// Maximum lenght of <see cref="EntityTypeAssemblyQualifiedName"/> property.
+        /// Maximum length of <see cref="EntityTypeName"/> property.
+        /// Value: 250.
+        /// </summary>
+        public const int MaxEntityTypeNameLength = 250;
+
+        /// <summary>
+        /// Maximum length of <see cref="EntityTypeAssemblyQualifiedName"/> property.
         /// Value: 512.
         /// </summary>
         public const int MaxEntityTypeAssemblyQualifiedNameLength = 512;
 
         /// <summary>
-        /// Maximum lenght of <see cref="EntityId"/> property.
-        /// Value: 256.
+        /// Maximum length of <see cref="EntityId"/> property.
+        /// Value: 96.
         /// </summary>
-        public const int MaxEntityIdLength = 128;
+        public const int MaxEntityIdLength = 96;
 
         /// <summary>
-        /// Maximum lenght of <see cref="UserIds"/> property.
+        /// Maximum length of <see cref="UserIds"/> property.
         /// Value: 131072 (128 KB).
         /// </summary>
         public const int MaxUserIdsLength = 128 * 1024;
+
+        /// <summary>
+        /// Maximum length of <see cref="TenantIds"/> property.
+        /// Value: 131072 (128 KB).
+        /// </summary>
+        public const int MaxTenantIdsLength = 128 * 1024;
 
         /// <summary>
         /// Unique notification name.
@@ -57,7 +76,6 @@ namespace Abp.Notifications
         /// <summary>
         /// Notification data as JSON string.
         /// </summary>
-        [Required]
         [MaxLength(MaxDataLength)]
         public virtual string Data { get; set; }
 
@@ -65,6 +83,7 @@ namespace Abp.Notifications
         /// Type of the JSON serialized <see cref="Data"/>.
         /// It's AssemblyQualifiedName of the type.
         /// </summary>
+        [MaxLength(MaxDataTypeNameLength)]
         public virtual string DataTypeName { get; set; }
 
         /// <summary>
@@ -98,13 +117,29 @@ namespace Abp.Notifications
         /// </summary>
         [MaxLength(MaxUserIdsLength)]
         public virtual string UserIds { get; set; }
-        
+
+        /// <summary>
+        /// Excluded users.
+        /// This can be set to exclude some users while publishing notifications to subscribed users.
+        /// It's not normally used if <see cref="UserIds"/> is not null.
+        /// </summary>
+        [MaxLength(MaxUserIdsLength)]
+        public virtual string ExcludedUserIds { get; set; }
+
+        /// <summary>
+        /// Target tenants of the notification.
+        /// Used to send notification to subscribed users of specific tenant(s).
+        /// This is valid only if UserIds is null.
+        /// If it's "0", then indicates to all tenants.
+        /// </summary>
+        [MaxLength(MaxTenantIdsLength)]
+        public virtual string TenantIds { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationInfo"/> class.
         /// </summary>
         public NotificationInfo()
         {
-            Id = Guid.NewGuid();
             Severity = NotificationSeverity.Info;
         }
     }

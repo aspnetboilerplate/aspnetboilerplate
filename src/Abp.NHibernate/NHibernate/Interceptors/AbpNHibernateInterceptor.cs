@@ -17,6 +17,7 @@ namespace Abp.NHibernate.Interceptors
 
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
+        private readonly Lazy<IGuidGenerator> _guidGenerator;
 
         public AbpNHibernateInterceptor(IIocManager iocManager)
         {
@@ -27,10 +28,26 @@ namespace Abp.NHibernate.Interceptors
                         ? _iocManager.Resolve<IAbpSession>()
                         : NullAbpSession.Instance
                     );
+            _guidGenerator =
+                new Lazy<IGuidGenerator>(
+                    () => _iocManager.IsRegistered(typeof(IGuidGenerator))
+                        ? _iocManager.Resolve<IGuidGenerator>()
+                        : SequentialGuidGenerator.Instance
+                    );
         }
 
         public override bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
+            //Set Id for Guids
+            if (entity is IEntity<Guid>)
+            {
+                var guidEntity = entity as IEntity<Guid>;
+                if (guidEntity.IsTransient())
+                {
+                    guidEntity.Id = _guidGenerator.Value.Create();
+                }
+            }
+
             //Set CreationTime for new entity
             if (entity is IHasCreationTime)
             {
@@ -44,7 +61,7 @@ namespace Abp.NHibernate.Interceptors
             }
 
             //Set CreatorUserId for new entity
-            if (entity is ICreationAudited)
+            if (entity is ICreationAudited && _abpSession.Value.UserId.HasValue)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
@@ -54,7 +71,7 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
-
+            
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
 
@@ -100,7 +117,7 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
-            if (entity is IModificationAudited)
+            if (entity is IModificationAudited && _abpSession.Value.UserId.HasValue)
             {
                 for (var i = 0; i < propertyNames.Length; i++)
                 {
@@ -139,7 +156,7 @@ namespace Abp.NHibernate.Interceptors
                     }
 
                     //set DeleterUserId
-                    if (entity is IDeletionAudited)
+                    if (entity is IDeletionAudited && _abpSession.Value.UserId.HasValue)
                     {
                         for (var i = 0; i < propertyNames.Length; i++)
                         {

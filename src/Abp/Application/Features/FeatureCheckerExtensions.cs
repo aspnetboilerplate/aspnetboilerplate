@@ -133,6 +133,47 @@ namespace Abp.Application.Features
             }
         }
 
+
+        /// <summary>
+        /// Used to check if one of all given features are enabled.
+        /// </summary>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
+        /// <param name="featureNames">Name of the features</param>
+        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, int tenantId, bool requiresAll, params string[] featureNames)
+        {
+            if (featureNames.IsNullOrEmpty())
+            {
+                return true;
+            }
+
+            if (requiresAll)
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (!(await featureChecker.IsEnabledAsync(tenantId, featureName)))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (await featureChecker.IsEnabledAsync(tenantId, featureName))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         /// <summary>
         /// Used to check if one of all given features are enabled.
         /// </summary>
@@ -142,6 +183,18 @@ namespace Abp.Application.Features
         public static bool IsEnabled(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
             return AsyncHelper.RunSync(() => featureChecker.IsEnabledAsync(requiresAll, featureNames));
+        }
+
+        /// <summary>
+        /// Used to check if one of all given features are enabled.
+        /// </summary>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
+        /// <param name="featureNames">Name of the features</param>
+        public static bool IsEnabled(this IFeatureChecker featureChecker, int tenantId, bool requiresAll, params string[] featureNames)
+        {
+            return AsyncHelper.RunSync(() => featureChecker.IsEnabledAsync(tenantId, requiresAll, featureNames));
         }
 
         /// <summary>
@@ -176,7 +229,6 @@ namespace Abp.Application.Features
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
         /// <param name="featureNames">Name of the features</param>
-        /// <returns></returns>
         public static async Task CheckEnabledAsync(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
             if (featureNames.IsNullOrEmpty())
@@ -218,11 +270,67 @@ namespace Abp.Application.Features
         /// Checks if one of all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
+        /// <param name="featureNames">Name of the features</param>
+        public static async Task CheckEnabledAsync(this IFeatureChecker featureChecker, int tenantId, bool requiresAll, params string[] featureNames)
+        {
+            if (featureNames.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            if (requiresAll)
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (!(await featureChecker.IsEnabledAsync(tenantId, featureName)))
+                    {
+                        throw new AbpAuthorizationException(
+                            "Required features are not enabled. All of these features must be enabled: " +
+                            string.Join(", ", featureNames)
+                            );
+                    }
+                }
+            }
+            else
+            {
+                foreach (var featureName in featureNames)
+                {
+                    if (await featureChecker.IsEnabledAsync(tenantId, featureName))
+                    {
+                        return;
+                    }
+                }
+
+                throw new AbpAuthorizationException(
+                    "Required features are not enabled. At least one of these features must be enabled: " +
+                    string.Join(", ", featureNames)
+                    );
+            }
+        }
+
+        /// <summary>
+        /// Checks if one of all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// </summary>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
         /// <param name="featureNames">Name of the features</param>
         public static void CheckEnabled(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
             AsyncHelper.RunSync(() => featureChecker.CheckEnabledAsync(requiresAll, featureNames));
+        }
+
+        /// <summary>
+        /// Checks if one of all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// </summary>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
+        /// <param name="tenantId">Tenant id</param>
+        /// <param name="requiresAll">True, to require all given features are enabled. False, to require one or more.</param>
+        /// <param name="featureNames">Name of the features</param>
+        public static void CheckEnabled(this IFeatureChecker featureChecker, int tenantId, bool requiresAll, params string[] featureNames)
+        {
+            AsyncHelper.RunSync(() => featureChecker.CheckEnabledAsync(tenantId, requiresAll, featureNames));
         }
     }
 }

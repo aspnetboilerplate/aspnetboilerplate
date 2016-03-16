@@ -143,6 +143,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return HttpVerb.Delete;
             }
 
+            if (_methodInfo.IsDefined(typeof(HttpOptionsAttribute)))
+            {
+                return HttpVerb.Options;
+            }
+
+            if (_methodInfo.IsDefined(typeof(HttpHeadAttribute)))
+            {
+                return HttpVerb.Head;
+            }
+
             if (conventionalVerbs)
             {
                 var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);

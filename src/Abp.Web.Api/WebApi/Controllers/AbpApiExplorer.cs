@@ -180,6 +180,12 @@ namespace Abp.Web.Api.Description
                 return HttpMethod.Delete;
             else if (verb == HttpVerb.Put)
                 return HttpMethod.Put;
+            else if (verb == HttpVerb.Trace)
+                return HttpMethod.Trace;
+            else if (verb == HttpVerb.Options)
+                return HttpMethod.Options;
+            else if (verb == HttpVerb.Head)
+                return HttpMethod.Head;
             else
                 return HttpMethod.Post;
         }

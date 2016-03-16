@@ -1,10 +1,15 @@
-﻿namespace Abp.Notifications
+﻿using Abp.Collections;
+
+namespace Abp.Notifications
 {
     /// <summary>
     /// Used to configure notification system.
     /// </summary>
     public interface INotificationConfiguration
     {
-        //no members yet.
+        /// <summary>
+        /// Notification providers.
+        /// </summary>
+        ITypeList<NotificationProvider> Providers { get; }
     }
 }

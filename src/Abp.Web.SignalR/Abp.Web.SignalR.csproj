@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Web\SignalR\AbpSignalRContractResolver.cs" />
     <Compile Include="Web\SignalR\Hubs\AbpCommonHub.cs" />
     <Compile Include="Web\SignalR\AbpWebSignalRModule.cs" />
     <Compile Include="Web\SignalR\Notifications\SignalRRealTimeNotifier.cs" />

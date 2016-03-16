@@ -6,14 +6,23 @@ namespace Abp.Notifications
 {
     /// <summary>
     /// Used to store data for a notification.
+    /// It can be directly used or can be derived.
     /// </summary>
     [Serializable]
     public class NotificationData
     {
         /// <summary>
+        /// Gets notification data type name.
+        /// It returns the full class name by default.
+        /// </summary>
+        public virtual string Type
+        {
+            get { return GetType().FullName; }
+        }
+
+        /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.
         /// </summary>
-        /// <param name="key"></param>
         public object this[string key]
         {
             get { return Properties[key]; }
