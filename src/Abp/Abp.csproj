@@ -81,12 +81,6 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <Compile Include="Application\Services\Attributes\WebApiDescriptionAttribute.cs" />
-=======
-=======
->>>>>>> 4f3db55290d996385c38768118d953382d026c14
     <Compile Include="Authorization\PermissionDependencyContext.cs" />
     <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
@@ -156,10 +150,6 @@
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorkerManager.cs" />
-<<<<<<< HEAD
->>>>>>> refs/remotes/aspnetboilerplate/master
-=======
->>>>>>> 4f3db55290d996385c38768118d953382d026c14
     <Compile Include="Dependency\SingletonDependency.cs" />
     <Compile Include="Application\Features\Feature.cs" />
     <Compile Include="Application\Features\FeatureChecker.cs" />

@@ -83,15 +83,7 @@ There are also <strong>async</strong> versions of all methods.</p>
 and <strong>object</strong> as value. <strong>ITypedCache</strong> is a 
 wrapper to ICache to provide <strong>type safe</strong>, generic cache. We can 
 				use generic GetCache extension method to get an ITypedCache:</p>
-<<<<<<< HEAD
-<<<<<<< HEAD
 			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;</strong>(&quot;MyCache&quot;);</pre>
-=======
-			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;()</strong>(&quot;MyCache&quot;);</pre>
->>>>>>> 1e8496d3fad47fff44875226287f2b71aa7b6e3c
-=======
-			<pre lang="cs">ITypedCache&lt;int, Item&gt; myCache = _cacheManager.GetCache<strong>&lt;int, Item&gt;</strong>(&quot;MyCache&quot;);</pre>
->>>>>>> 62ef9634e5847c2cef42784619fdec545fb0d64c
 			<p>
 				Also, we can use <strong>AsTyped</strong> extension method to 
 				convert an existing ICache instance to ITypedCache.</p>
@@ -158,10 +150,6 @@ namespace MyProject.AbpZeroTemplate.Web
         //...other code
     }
 }</pre>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 62ef9634e5847c2cef42784619fdec545fb0d64c
 		<p>Abp.RedisCache package uses "<strong>localhost</strong>" as <strong>connection string</strong> 
 		as default. You can add connection string to your config file to 
 		override it. Example:</p>
@@ -176,12 +164,6 @@ namespace MyProject.AbpZeroTemplate.Web
 			configuration.</p>
 			<p><strong>Note</strong>: Redis server should be installed and 
 			running to use Redis cache in ABP.</p>
-<<<<<<< HEAD
-=======
-		<p>&nbsp;</p>
->>>>>>> 1e8496d3fad47fff44875226287f2b71aa7b6e3c
-=======
->>>>>>> 62ef9634e5847c2cef42784619fdec545fb0d64c
 
 		</div>
 
