@@ -37,23 +37,23 @@ easily inject a <strong>Logger</strong> object using
 				<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">property injection</a> pattern. 
 See a sample class that writes a log line:</p>
 			<pre lang="cs">
-				<strong>using Castle.Core.Logging</strong>; //1: Import Logging namespace
+<strong>using Castle.Core.Logging</strong>; //1: Import Logging namespace
 
 public class TaskAppService : ITaskAppService
 {    
     //2: Getting a logger using property injection
-				<strong>public ILogger Logger { get; set; }</strong>
+    <strong>public ILogger Logger { get; set; }</strong>
 
     public TaskAppService()
     {
         //3: Do not write logs if no Logger supplied.
-				<strong>Logger = NullLogger.Instance;</strong>
+        <strong>Logger = NullLogger.Instance;</strong>
     }
 
     public void CreateTask(CreateTaskInput input)
     {
         //4: Write logs
-				<strong>Logger.Info(&quot;Creating a new task with description<span lang="tr">:</span> &quot; + input.Description);</strong>
+        <strong>Logger.Info(&quot;Creating a new task with description<span lang="tr">:</span> &quot; + input.Description);</strong>
 
         //TODO: save task to database...
     }
@@ -95,7 +95,7 @@ this Logger to write logs, no injection needed. Example:</p>
 {
     public ActionResult Index()
     { 
-				<strong>Logger.Debug(&quot;A sample log message...&quot;);</strong>
+        <strong>Logger.Debug(&quot;A sample log message...&quot;);</strong>
         return View();
     }
 }</pre>
@@ -167,7 +167,7 @@ log4net.config file:</p>
 {
     protected override void Application_Start(object sender, EventArgs e)
     {
-				<strong>IocManager.Instance.IocContainer.AddFacility&lt;LoggingFacility&gt;(f =&gt; f.UseLog4Net().WithConfig(&quot;log4net.config&quot;));</strong>
+        <strong>IocManager.Instance.IocContainer.AddFacility&lt;LoggingFacility&gt;(f =&gt; f.UseLog4Net().WithConfig(&quot;log4net.config&quot;));</strong>
         base.Application_Start(sender, e);
     }
 }</pre>

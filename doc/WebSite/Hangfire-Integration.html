@@ -30,16 +30,17 @@
 	nuget package). After you installed these nuget packages, you can 
 				<strong>configure</strong> ASP.NET Boilerplate to use Hangfire as shown below:</p>
 			<pre lang="cs">
-				<strong>[DependsOn(typeof (AbpHangfireModule))]</strong>
+<strong>[DependsOn(typeof (AbpHangfireModule))]</strong>
 public class MyProjectWebModule : AbpModule
 {
     public override void PreInitialize()
     {
-				<strong>        Configuration.BackgroundJobs.UseHangfire(configuration =&gt;
+        <strong>Configuration.BackgroundJobs.UseHangfire(configuration =&gt;
         {
             configuration.GlobalConfiguration.UseSqlServerStorage(&quot;Default&quot;);
         });
-				</strong>    }
+				</strong>
+    }
 
     //...
 }</pre>

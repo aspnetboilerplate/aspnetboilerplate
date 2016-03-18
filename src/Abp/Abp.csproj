@@ -103,6 +103,7 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Json\JsonSerializationHelper.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
+    <Compile Include="Reflection\FolderAssemblyFinder.cs" />
+    <Compile Include="Reflection\MultiSourceAssemblyFinder.cs" />
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\MessageNotificationData.cs" />
@@ -624,6 +627,20 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-it.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-ru.xml" />
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-uk.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-es.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-ca-ES.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

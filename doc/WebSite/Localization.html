@@ -122,7 +122,7 @@ since dot notation causes problems when finding resources.</p>
 			<p>JSON files can be used to store texts for a localization source. A sample 
 	JSON localization file is shown below:</p>
 			<pre lang="js">{
-				<strong>&quot;culture&quot;: &quot;en&quot;</strong>,
+  <strong>&quot;culture&quot;: &quot;en&quot;</strong>,
   &quot;texts&quot;: {
     &quot;TaskSystem&quot;: &quot;Task system&quot;,
     &quot;Xtasks&quot;: &quot;{0} tasks&quot;
@@ -308,8 +308,7 @@ from one of the ASP.NET Boilerplate <a href="/Templates">templates</a>.</p>
 			<h4 id="DocInJavascript">In Javascript</h4>
 			<p>ASP.NET Boilerplate makes possible to use same localization texts in also 
 javascript code. First, you should be added dynamic ABP scripts to the page:</p>
-			<pre lang="xml">&lt;script src=&quot;/Abp<span lang="tr">S<span class="auto-style1">cripts</span>
-				</span>/GetScripts&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+			<pre lang="xml">&lt;script src=&quot;/Abp<span lang="tr">S<span class="auto-style1">cripts</span></span>/GetScripts&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
 			<p>ASP.NET Boilerplate automatically generates needed javascript code to get 
 localized texts in the client side. Then you can easily get a localized text in 
 javascript as shown below:</p>
@@ -367,7 +366,7 @@ change <strong>InternalServerError</strong> text. We can define an XML file as s
 &lt;/localizationDictionary&gt;</pre>
 			<p>Then we can register it on PreInitialize method of our module:</p>
 			<pre lang="cs">
-				<strong>Configuration.Localization.Sources.Extensions.Add</strong>(
+<strong>Configuration.Localization.Sources.Extensions.Add</strong>(
     new LocalizationSourceExtensionInfo(&quot;<strong>AbpWeb</strong>&quot;,
         new XmlFileLocalizationDictionaryProvider(
             HttpContext.Current.Server.MapPath(&quot;<strong>~/Localization/AbpWebExtensions</strong>&quot;)

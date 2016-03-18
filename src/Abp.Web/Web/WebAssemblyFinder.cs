@@ -14,15 +14,35 @@ namespace Abp.Web
     public class WebAssemblyFinder : IAssemblyFinder
     {
         /// <summary>
-        /// The search option used to find assemblies in bin folder.
+        /// The search option used to find assemblies in bin folder. 
         /// </summary>
-        public static SearchOption FindAssembliesSearchOption = SearchOption.TopDirectoryOnly;
-        
+        public static SearchOption FindAssembliesSearchOption = SearchOption.TopDirectoryOnly; //TODO: Make this non static and rename to SearchOption
+
+        private List<Assembly> _assemblies;
+
+        private readonly object _syncLock = new object();
+
         /// <summary>
         /// This return all assemblies in bin folder of the web application.
         /// </summary>
         /// <returns>List of assemblies</returns>
         public List<Assembly> GetAllAssemblies()
+        {
+            if (_assemblies == null)
+            {
+                lock (_syncLock)
+                {
+                    if (_assemblies == null)
+                    {
+                        _assemblies = GetAllAssembliesInternal();
+                    }
+                }
+            }
+
+            return _assemblies;
+        }
+
+        private List<Assembly> GetAllAssembliesInternal()
         {
             var assembliesInBinFolder = new List<Assembly>();
 

@@ -1,4 +1,5 @@
 using System;
+using Abp.Reflection;
 
 namespace Abp.Domain.Entities
 {
@@ -7,6 +8,11 @@ namespace Abp.Domain.Entities
     /// </summary>
     public static class EntityHelper
     {
+        public static bool IsEntity(Type type)
+        {
+            return ReflectionHelper.IsAssignableToGenericType(type, typeof (IEntity<>));
+        }
+
         public static Type GetPrimaryKeyType<TEntity>()
         {
             return GetPrimaryKeyType(typeof (TEntity));

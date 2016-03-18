@@ -29,7 +29,7 @@ Abp.Web.Api.OData</a> nuget package simplifies it's usage.</p>
 			<p>We should set dependency to AbpWebApiODataModule from our module. 
 	Example:</p>
 			<pre lang="cs">
-				<strong>[DependsOn(typeof(AbpWebApiODataModule))]</strong>
+<strong>[DependsOn(typeof(AbpWebApiODataModule))]</strong>
 public class MyProjectWebApiModule : AbpModule
 {
     ...
@@ -49,7 +49,7 @@ public class MyProjectWebApiModule : AbpModule
         var builder = Configuration.Modules.AbpWebApiOData().ODataModelBuilder;
 
         //Configure your entities here...
-				<strong>builder.EntitySet&lt;Person&gt;(&quot;Persons&quot;);</strong>
+        <strong>builder.EntitySet&lt;Person&gt;(&quot;Persons&quot;);</strong>
     }
 
     ...

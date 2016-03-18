@@ -13,7 +13,7 @@ namespace Abp.BackgroundJobs
     /// </summary>
     public class InMemoryBackgroundJobStore : IBackgroundJobStore
     {
-        private readonly List<BackgroundJobInfo> _jobs;
+        private readonly Dictionary<long, BackgroundJobInfo> _jobs;
         private long _lastId;
 
         /// <summary>
@@ -21,20 +21,20 @@ namespace Abp.BackgroundJobs
         /// </summary>
         public InMemoryBackgroundJobStore()
         {
-            _jobs = new List<BackgroundJobInfo>();
+            _jobs = new Dictionary<long, BackgroundJobInfo>();
         }
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             jobInfo.Id = Interlocked.Increment(ref _lastId);
-            _jobs.Add(jobInfo);
-            
+            _jobs[jobInfo.Id] = jobInfo;
+
             return Task.FromResult(0);
         }
 
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = _jobs
+            var waitingJobs = _jobs.Values
                 .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
                 .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.TryCount)
@@ -47,14 +47,24 @@ namespace Abp.BackgroundJobs
 
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
-            _jobs.Remove(jobInfo);
+            if (!_jobs.ContainsKey(jobInfo.Id))
+            {
+                return Task.FromResult(0);
+            }
+
+            _jobs.Remove(jobInfo.Id);
 
             return Task.FromResult(0);
         }
 
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
         {
-            return Task.FromResult(0);            
+            if (jobInfo.IsAbandoned)
+            {
+                return DeleteAsync(jobInfo);
+            }
+
+            return Task.FromResult(0);
         }
     }
 }
