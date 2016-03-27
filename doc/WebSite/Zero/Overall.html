@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>Module Zero Overall</title>
+		<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+	</head>
+
+	<body>
+
+		<div class="document-contents">
+
+			<h3 id="DocIntro">Introduction</h3>
+
+			<p>ASP.NET Boilerplate framework is designed to be independent of any database 
+	schema and to be as generic as possible. Therefore, It leaves some concepts 
+				<strong>abstract</strong> and <strong>optional</strong> (like audit logging, session management and authorization) 
+	which requires some <strong>data store</strong>.</p>
+			<p>
+				<strong>Module Zero </strong>implements all fundamental concepts of ASP.NET 
+	Boilerplate framework such as <a href="/Pages/Documents/Zero/Tenant-Management">tenant management</a> (<strong>multi-tenancy</strong>), 
+				<a href="/Pages/Documents/Zero/Role-Management">role 
+	management</a>, <a href="/Pages/Documents/Zero/User-Management">user management</a>, <a href="/Pages/Documents/Abp-Session">session</a>,
+				<a href="/Pages/Documents/Authorization">authorization</a> (<a href="/Pages/Documents/Zero/Permission-Management">permission 
+	management</a>),
+				<a href="/Pages/Documents/Setting-Management">setting 
+	management</a>, <a href="/Pages/Documents/Zero/Language-Management">language 
+	management</a>, <a href="/Pages/Documents/Audit-Logging">audit logging</a> 
+	and so on.</p>
+			<p>Module-Zero defines entities and implements <strong>domain logic</strong> 
+	(domain layer). It leaves application and presentation layers to the 
+	application. You can use the
+				<a href="/Pages/Documents/Zero/Startup-Template">startup template</a> 
+	to create your application based on module zero.</p>
+
+			<h3 id="DocIdentity">Microsoft ASP.NET Identity Framework</h3>
+
+			<p>Module Zero is based on Microsoft's
+				<a href="http://www.asp.net/identity" target="_blank">ASP.NET Identity Framework</a>. 
+	It extends user and role managers and implements user and role stores using generic repositories. 
+	It supports any ORM that can be used with ASP.NET Boilerplate 
+	(like Entity Framework and NHibernate). While module zero extends Identity Framework, it has many unique features.</p>
+
+			<h3>Source code</h3>
+
+			<p>Module-Zero source code is seperated from ASP.NET Boilerplate and hosted on
+				<a href="https://github.com/aspnetboilerplate/module-zero" target="_blank">https://github.com/aspnetboilerplate/module-zero</a>. 
+	It's distributed on <a href="/Pages/Documents/Zero/Nuget-Packages">nuget</a> as 
+	the framework.</p>
+
+		</div>
+
+	</body>
+
+</html>

@@ -32,7 +32,9 @@ namespace Abp.Logging
 
         public static void LogException(ILogger logger, Exception ex)
         {
-            var severity = (ex as IHasLogSeverity)?.Severity ?? LogSeverity.Error;
+            var severity = (ex is IHasLogSeverity)
+                    ? (ex as IHasLogSeverity).Severity
+                    : LogSeverity.Error;
 
             logger.Log(severity, ex.Message, ex);
 
