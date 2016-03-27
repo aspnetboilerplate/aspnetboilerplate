@@ -26,7 +26,7 @@
 				</a> nuget package to your project (generally to your Web 
 	layer) and add a <strong>dependency</strong> to your module:</p>
 			<pre lang="cs">
-				<strong>[DependsOn(typeof(AbpWebSignalRModule))]</strong>
+<strong>[DependsOn(typeof(AbpWebSignalRModule))]</strong>
 public class YourProjectWebModule : AbpModule
 {
     //...
@@ -37,14 +37,14 @@ public class YourProjectWebModule : AbpModule
 always do:</p>
 
 			<pre lang="cs">
-				<strong>[assembly: OwinStartup(typeof(Startup))]</strong>
+<strong>[assembly: OwinStartup(typeof(Startup))]</strong>
 namespace MyProject.Web
 {
     public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
-				<strong>app.MapSignalR();</strong>
+            <strong>app.MapSignalR();</strong>
 
             //...
         }
@@ -70,7 +70,7 @@ namespace MyProject.Web
 				<a href="/Templates">startup templates</a>). We should include it after 
 	signalr hubs:</p>
 			<pre lang="xml">&lt;script src=&quot;~/signalr/hubs&quot;&gt;&lt;/script&gt;
-				<strong>&lt;script src=&quot;~/Abp/Framework/scripts/libs/abp.signalr.js&quot;&gt;&lt;/script&gt;</strong>
+<strong>&lt;script src=&quot;~/Abp/Framework/scripts/libs/abp.signalr.js&quot;&gt;&lt;/script&gt;</strong>
 			</pre>
 			<p>That's all. SignalR is properly configured and integrated to your 
 	project.</p>
@@ -136,7 +136,7 @@ namespace MyProject.Web
         Logger = NullLogger.Instance;
     }
 
-				<strong>    public void SendMessage(string message)
+    <strong>public void SendMessage(string message)
     {
         Clients.All.getMessage(string.Format(&quot;User {0}: {1}&quot;, AbpSession.UserId, message));
     }</strong>
@@ -169,12 +169,12 @@ namespace MyProject.Web
 	messages using our hub.</p>
 			<pre lang="js">var chatHub = <strong>$.connection.myChatHub</strong>; //get a reference to the hub
 
-				<strong>chatHub.client.getMessage</strong> = function (message) { //register for incoming messages
+<strong>chatHub.client.getMessage</strong> = function (message) { //register for incoming messages
     console.log(&#39;received message: &#39; + message);
 };
 
 abp.event.on(&#39;abp.signalr.connected&#39;, function() { //register for connect event
-				<strong>chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!");</strong> //send a message to the server
+    <strong>chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!");</strong> //send a message to the server
 });</pre>
 			<p>Then we can use <strong>chatHub</strong> anytime we need to send message to the server. 
 	See

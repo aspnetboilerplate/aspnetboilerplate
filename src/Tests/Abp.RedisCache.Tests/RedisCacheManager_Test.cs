@@ -1,7 +1,11 @@
 ﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Runtime.Caching.Redis;
 using Abp.Tests;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 using Xunit;
 using Shouldly;
 
@@ -16,6 +20,7 @@ namespace Abp.RedisCache.Tests
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache =>

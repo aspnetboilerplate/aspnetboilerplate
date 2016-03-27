@@ -1,7 +1,7 @@
 ﻿using System;
 using StackExchange.Redis;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Extension methods for <see cref="IDatabase"/>.

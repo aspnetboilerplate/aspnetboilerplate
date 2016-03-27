@@ -128,6 +128,7 @@
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
     <Compile Include="Json\JsonExtensions_Tests.cs" />
+    <Compile Include="Json\JsonSerializationHelper_Tests.cs" />
     <Compile Include="Localization\Json\JsonAndXmlSourceMixing_Tests.cs" />
     <Compile Include="Localization\Json\JsonEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource_Tests.cs" />

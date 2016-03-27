@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Used to get <see cref="IDatabase"/> for Redis cache.

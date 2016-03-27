@@ -1,8 +1,7 @@
 ﻿using Abp.Dependency;
-using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Used to create <see cref="AbpRedisCache"/> instances.

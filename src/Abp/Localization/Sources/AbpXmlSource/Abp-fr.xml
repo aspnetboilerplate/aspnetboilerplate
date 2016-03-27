@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fr">
+  <texts>
+    <text name="SmtpHost">Serveur SMTP</text>
+    <text name="SmtpPort">Port SMTP</text>
+    <text name="Username">Utilisateur</text>
+    <text name="Password">Mot de passe</text>
+    <text name="DomainName">Domaine</text>
+    <text name="UseSSL">Activer le chiffrement SSL</text>
+    <text name="UseDefaultCredentials">Utiliser l'authentification par défaut</text>
+    <text name="DefaultFromSenderEmailAddress">Adresse email d'envoi par défaut</text>
+    <text name="DefaultFromSenderDisplayName">Nom affiché de l'émetteur par défaut</text>
+    <text name="DefaultLanguage">Language par défaut</text>
+    <text name="ReceiveNotifications">Recevoir les notifications</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">L'utilisateur courant ne peut pas s'authentifier à l'application!</text>
+  </texts>
+</localizationDictionary>

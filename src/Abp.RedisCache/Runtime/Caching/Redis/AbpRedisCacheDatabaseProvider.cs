@@ -4,7 +4,7 @@ using Abp.Dependency;
 using Abp.Extensions;
 using StackExchange.Redis;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Implements <see cref="IAbpRedisCacheDatabaseProvider"/>.
