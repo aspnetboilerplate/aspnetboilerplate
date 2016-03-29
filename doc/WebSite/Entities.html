@@ -23,7 +23,7 @@ class. See the sample below:</p>
 
     public virtual DateTime CreationTime { get; set; }
 
-    public Task()
+    public Person()
     {
         CreationTime = DateTime.Now;
     }
@@ -44,7 +44,7 @@ type as Id, you should explicitly declare it as shown below:</p>
 
     public virtual DateTime CreationTime { get; set; }
 
-    public Task()
+    public Person()
     {
         CreationTime = DateTime.Now;
     }
@@ -68,7 +68,7 @@ CreationTime to <strong>current time</strong> when an Entity is inserted
 into database which implements this interface.</p>
 			<pre lang="cs">public interface IHasCreationTime
 {
-				<span lang="tr"> </span>DateTime CreationTime { get; set; }
+    DateTime CreationTime { get; set; }
 }</pre>
 			<p>Person class can be re-written as shown below by implementing IHasCreationTime interface:</p>
 			<pre lang="cs">public class Person : Entity&lt;long&gt;, IHasCreationTime
@@ -77,7 +77,7 @@ into database which implements this interface.</p>
 
     public virtual DateTime CreationTime { get; set; }
 
-    public Task()
+    public Person()
     {
         CreationTime = DateTime.Now;
     }
