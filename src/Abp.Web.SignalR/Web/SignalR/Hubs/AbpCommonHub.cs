@@ -36,6 +36,11 @@ namespace Abp.Web.SignalR.Hubs
             AbpSession = NullAbpSession.Instance;
         }
 
+        public void Register()
+        {
+            Logger.Debug("A client is registered: " + Context.ConnectionId);
+        }
+
         public async override Task OnConnected()
         {
             await base.OnConnected();
@@ -55,6 +60,8 @@ namespace Abp.Web.SignalR.Hubs
         public async override Task OnDisconnected(bool stopCalled)
         {
             await base.OnDisconnected(stopCalled);
+
+            Logger.Debug("A client is disconnected: " + Context.ConnectionId);
 
             try
             {

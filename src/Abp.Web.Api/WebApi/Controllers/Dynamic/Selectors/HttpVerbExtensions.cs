@@ -36,6 +36,21 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 return true;
             }
 
+            if (verb == HttpVerb.Options && method == HttpMethod.Options)
+            {
+                return true;
+            }
+
+            if (verb == HttpVerb.Trace && method == HttpMethod.Trace)
+            {
+                return true;
+            }
+
+            if (verb == HttpVerb.Head && method == HttpMethod.Head)
+            {
+                return true;
+            }
+
             return false;
         }
     }

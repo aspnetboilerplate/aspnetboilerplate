@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Abp.Extensions
@@ -29,7 +30,7 @@ namespace Abp.Extensions
         public static T To<T>(this object obj)
             where T : struct
         {
-            return (T)Convert.ChangeType(obj, typeof(T));
+            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -64,9 +64,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Authorization\PermissionDependencyContext.cs" />
+    <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobConfiguration.cs" />
     <Compile Include="BackgroundJobs\BackgroundJob.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobManagerExtensions.cs" />
@@ -93,20 +95,57 @@
     <Compile Include="BackgroundJobs\IBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore.cs" />
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
+    <Compile Include="Authorization\IPermissionDependency.cs" />
+    <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Json\JsonSerializationHelper.cs" />
+    <Compile Include="Logging\LoggerExtensions.cs" />
+    <Compile Include="Notifications\INotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\INotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\INotificationDistributer.cs" />
+    <Compile Include="Notifications\NotificationDefinition.cs" />
+    <Compile Include="Authorization\SimplePermissionDependency.cs" />
+    <Compile Include="Notifications\NotificationDefinitionContext.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManager.cs" />
+    <Compile Include="Notifications\NotificationDefinitionManagerExtensions.cs" />
+    <Compile Include="Notifications\NotificationDistributer.cs" />
+    <Compile Include="Notifications\NotificationProvider.cs" />
+    <Compile Include="Notifications\NotificationSettingNames.cs" />
+    <Compile Include="Notifications\NotificationSettingProvider.cs" />
+    <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
+    <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
+    <Compile Include="Reflection\FolderAssemblyFinder.cs" />
+    <Compile Include="Reflection\MultiSourceAssemblyFinder.cs" />
+    <Compile Include="RegularGuidGenerator.cs" />
+    <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
+    <Compile Include="Notifications\MessageNotificationData.cs" />
+    <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
+    <Compile Include="Domain\Entities\EntityIdentifier.cs" />
+    <Compile Include="IGuidGenerator.cs" />
     <Compile Include="Localization\ILocalizationContext.cs" />
     <Compile Include="Localization\LocalizationContext.cs" />
+    <Compile Include="Notifications\INotificationPublisher.cs" />
+    <Compile Include="Notifications\IUserNotificationManager.cs" />
+    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationConfiguration.cs" />
     <Compile Include="Notifications\NotificationData.cs" />
     <Compile Include="Notifications\NotificationDistributionJob.cs" />
     <Compile Include="Notifications\NotificationDistributionJobArgs.cs" />
     <Compile Include="Notifications\NotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\NotificationPublisher.cs" />
+    <Compile Include="Notifications\NotificationSubscription.cs" />
     <Compile Include="Notifications\NotificationSubscriptionInfo.cs" />
+    <Compile Include="Notifications\NotificationSubscriptionInfoExtensions.cs" />
+    <Compile Include="Notifications\NotificationSubscriptionManager.cs" />
+    <Compile Include="Notifications\UserNotification.cs" />
+    <Compile Include="Notifications\UserNotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\UserNotificationInfoWithNotificationInfo.cs" />
     <Compile Include="RealTime\IOnlineClient.cs" />
     <Compile Include="RealTime\IOnlineClientManager.cs" />
     <Compile Include="RealTime\OnlineClient.cs" />
     <Compile Include="RealTime\OnlineClientManager.cs" />
     <Compile Include="Runtime\Serialization\BinarySerializationHelper.cs" />
+    <Compile Include="Threading\ThreadCultureSanitizer.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerManager.cs" />
     <Compile Include="Threading\BackgroundWorkers\BackgroundWorkerBase.cs" />
     <Compile Include="Threading\BackgroundWorkers\IBackgroundWorker.cs" />
@@ -146,14 +185,12 @@
     <Compile Include="Localization\LocalizationSettingProvider.cs" />
     <Compile Include="Localization\LocalizationSourceHelper.cs" />
     <Compile Include="Notifications\INotificationConfiguration.cs" />
-    <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\INotificationSubscriptionManager.cs" />
     <Compile Include="Notifications\INotificationStore.cs" />
     <Compile Include="Notifications\IRealTimeNotifier.cs" />
     <Compile Include="Notifications\NotificationInfo.cs" />
-    <Compile Include="Notifications\NotificationManager.cs" />
-    <Compile Include="Notifications\NotificationManagerExtensions.cs" />
-    <Compile Include="Notifications\NotificationPublishOptions.cs" />
-    <Compile Include="Notifications\NotificationSubscriptionOptions.cs" />
+    <Compile Include="Notifications\UserNotificationManager.cs" />
+    <Compile Include="Notifications\NotificationExtensions.cs" />
     <Compile Include="Notifications\NotificationSeverity.cs" />
     <Compile Include="Notifications\NullNotificationStore.cs" />
     <Compile Include="Notifications\NullRealTimeNotifier.cs" />
@@ -170,6 +207,7 @@
     <Compile Include="Threading\RunnableBase.cs" />
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
+    <Compile Include="Logging\IHasLogSeverity.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
@@ -442,7 +480,7 @@
     <Compile Include="Configuration\SettingScope.cs" />
     <Compile Include="Configuration\ISettingValue.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
-    <Compile Include="Configuration\DictionayBasedConfig.cs" />
+    <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Dependency\IDisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKey.cs" />
     <Compile Include="Domain\Entities\Auditing\AuditedEntityOfTPrimaryKeyAndTUser.cs" />
@@ -516,6 +554,7 @@
     <Compile Include="Timing\UtcClockProvider.cs" />
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
@@ -554,7 +593,9 @@
   <ItemGroup>
     <None Include="Abp.nuspec" />
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-tr.xml" />
@@ -574,7 +615,30 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-lt.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-it.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-ru.xml" />
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-uk.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-es.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-ca-ES.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-fr.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

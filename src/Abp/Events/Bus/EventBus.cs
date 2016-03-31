@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
@@ -292,7 +293,9 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-            return Task.Factory.StartNew(
+            ExecutionContext.SuppressFlow();
+
+            var task = Task.Factory.StartNew(
                 () =>
                 {
                     try
@@ -304,6 +307,10 @@ namespace Abp.Events.Bus
                         Logger.Warn(ex.ToString(), ex);
                     }
                 });
+
+            ExecutionContext.RestoreFlow();
+
+            return task;
         }
 
         /// <inheritdoc/>
@@ -315,7 +322,9 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
-            return Task.Factory.StartNew(
+            ExecutionContext.SuppressFlow();
+
+            var task = Task.Factory.StartNew(
                 () =>
                 {
                     try
@@ -327,6 +336,10 @@ namespace Abp.Events.Bus
                         Logger.Warn(ex.ToString(), ex);
                     }
                 });
+
+            ExecutionContext.RestoreFlow();
+
+            return task;
         }
 
         #endregion

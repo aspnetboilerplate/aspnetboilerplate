@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Events.Bus;
@@ -40,12 +41,24 @@ namespace Abp.WebApi.Controllers.Filters
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor)
-                                      ?? DontWrapResultAttribute.Default;
+            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor);
+
+            if (wrapResultAttribute == null)
+            {
+                var returnType = context.ActionContext.ActionDescriptor.ReturnType;
+                if (returnType == typeof(AjaxResponse) || returnType == typeof(Task<AjaxResponse>))
+                {
+                    wrapResultAttribute = WrapResultAttribute.Default;
+                }
+                else
+                {
+                    wrapResultAttribute = DontWrapResultAttribute.Default;                    
+                }
+            }
             
             if (wrapResultAttribute.LogError)
             {
-                LogHelper.LogException(Logger, context.Exception);                
+                LogHelper.LogException(Logger, context.Exception);
             }
 
             if (wrapResultAttribute.WrapOnError)

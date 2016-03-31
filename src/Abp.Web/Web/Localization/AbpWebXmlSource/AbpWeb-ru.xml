@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ru">
+  <texts>
+    <text name="InternalServerError" value="Во время исполнения запроса произошла внутренняя ошибка!" />
+    <text name="ValidationError" value="Ваш запрос не является действительным!" />
+    <text name="AreYouSure" value="Вы уверены?" />
+    <text name="Cancel" value="Отмена" />
+    <text name="Yes" value="Да" />
+    <text name="ValidationNarrativeTitle" value="Во время валидации были обнаружены cледующие ошибки." />
+  </texts>
+</localizationDictionary>

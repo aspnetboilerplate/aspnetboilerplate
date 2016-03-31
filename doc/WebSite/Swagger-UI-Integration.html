@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Boilerplate</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+<p>From it's web site: "....with a Swagger-enabled API, you get <strong>
+interactive documentation</strong>, client SDK generation and discoverability."</p>
+	<h3>Installation</h3>
+	<p>It's easy to integrate <a href="http://swagger.io/">Swagger</a> into your 
+	ASP.NET Boilerplate based application.</p>
+	<h4>Install Nuget Package</h4>
+	<p>Install <strong>
+	<a href="https://www.nuget.org/packages/Swashbuckle.Core/">Swashbuckle.Core</a></strong> 
+	nuget package to your <strong>WebApi</strong> project (or Web project).</p>
+	<h4>Configure</h4>
+	<p>Add configuration code for Swagger into 
+	<a href="/Pages/Documents/Module-System">Initialize</a> method of your module. 
+	Example:</p>
+	<pre lang="cs">public class SwaggerIntegrationDemoWebApiModule : AbpModule
+{
+    public override void Initialize()
+    {
+        //your other code...
+
+        <strong>ConfigureSwaggerUi();</strong>
+    }
+
+<strong>    private void ConfigureSwaggerUi()
+    {
+        Configuration.Modules.AbpWebApi().HttpConfiguration
+            .EnableSwagger(c =&gt;
+            {
+                c.SingleApiVersion(&quot;v1&quot;, &quot;SwaggerIntegrationDemo.WebApi&quot;);
+                c.ResolveConflictingActions(apiDescriptions =&gt; apiDescriptions.First());
+            })
+            .EnableSwaggerUi();
+    }</strong>
+}
+</pre>
+	<p>See it's own
+	<a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank">
+	documentation</a> for more configuration options.</p>
+	<h4>Test</h4>
+	<p>That's all. Let's browse <strong>/swagger/ui/index</strong>:</p>
+	<p><img alt="Swagger UI" height="657" src="images/swagger-ui.png" width="1027" /></p>
+	<p>You can see all Web API Controllers (and also
+	<a href="/Pages/Documents/Dynamic-Web-API">dynamic web api</a> controllers) 
+	and test them.</p>
+
+</div>
+
+</body>
+
+</html>

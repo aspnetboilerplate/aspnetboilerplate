@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="uk">
+  <texts>
+    <text name="SmtpHost">SMTP сервер</text>
+    <text name="SmtpPort">SMTP порт</text>
+    <text name="Username">Ім'я користувача</text>
+    <text name="Password">Пароль</text>
+    <text name="DomainName">Домен</text>
+    <text name="UseSSL">Використовувати SSL</text>
+    <text name="UseDefaultCredentials">Використовувати облікові дані за замовчуванням</text>
+    <text name="DefaultFromSenderEmailAddress">Електронна адреса відправника за замовчуванням</text>
+    <text name="DefaultFromSenderDisplayName">Ім'я відправника за замовчуванням</text>
+    <text name="DefaultLanguage">Мова за замовчуванням</text>
+    <text name="ReceiveNotifications">Отримувати сповіщення</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Поточний користувач не увійшов в додаток!</text>
+  </texts>
+</localizationDictionary>

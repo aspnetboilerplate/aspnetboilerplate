@@ -43,7 +43,7 @@ namespace Abp.Tests.Configuration
             _config.Get<int>("MyUndefinedName").ShouldBe(0);
         }
 
-        private class MyConfig : DictionayBasedConfig
+        private class MyConfig : DictionaryBasedConfig
         {
 
         }

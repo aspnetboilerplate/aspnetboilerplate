@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp.Tests</RootNamespace>
     <AssemblyName>Abp.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -127,6 +127,8 @@
     <Compile Include="Extensions\ObjectExtension_Test.cs" />
     <Compile Include="Extensions\DayOfWeekExtensions_Tests.cs" />
     <Compile Include="Extensions\StringExtensions_Tests.cs" />
+    <Compile Include="Json\JsonExtensions_Tests.cs" />
+    <Compile Include="Json\JsonSerializationHelper_Tests.cs" />
     <Compile Include="Localization\Json\JsonAndXmlSourceMixing_Tests.cs" />
     <Compile Include="Localization\Json\JsonEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource_Tests.cs" />
@@ -135,7 +137,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Notifications\NotificationManager_Tests.cs" />
+    <Compile Include="Notifications\NotificationPublisher_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />

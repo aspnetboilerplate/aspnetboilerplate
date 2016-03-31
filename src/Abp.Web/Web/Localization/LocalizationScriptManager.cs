@@ -106,7 +106,7 @@ namespace Abp.Web.Localization
             {
                 script.Append("    abp.localization.values['" + source.Name + "'] = ");
 
-                var stringValues = source.GetAllStrings().OrderBy(s => s.Name).ToList();
+                var stringValues = source.GetAllStrings(cultureInfo).OrderBy(s => s.Name).ToList();
                 var stringJson = stringValues
                     .ToDictionary(_ => _.Name, _ => _.Value)
                     .ToJsonString(indented: true);
