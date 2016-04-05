@@ -18,7 +18,7 @@ namespace Abp.NHibernate.Repositories
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
         /// </summary>
-        protected ISession Session { get { return _sessionProvider.Session; } }
+        public virtual ISession Session { get { return _sessionProvider.Session; } }
 
         private readonly ISessionProvider _sessionProvider;
 

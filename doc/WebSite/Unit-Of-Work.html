@@ -71,7 +71,7 @@ all of these automatically. Here, a sample repository:</p>
                     where content.IsActive &amp;&amp; !content.IsDeleted
                     select content;
 
-        if (string.IsNullOrEmpty(searchCondition))
+        if (!string.IsNullOrEmpty(searchCondition))
         {
             query = query.Where(content =&gt; content.Text.Contains(searchCondition));
         }
