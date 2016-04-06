@@ -16,14 +16,34 @@ namespace Abp
         /// </summary>
         public static SequentialGuidGenerator Instance { get { return _instance; } }
         private static readonly SequentialGuidGenerator _instance = new SequentialGuidGenerator();
+
         private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
-        public SequentialGuidDatabase SequentialGuidDatabase { get; set; }
-        public Guid Create()
+
+        public SequentialGuidDatabaseType DatabaseType { get; set; }
+
+        public SequentialGuidGenerator()
         {
-           return NewGuid(SequentialGuidDatabase);
+            DatabaseType = SequentialGuidDatabaseType.SqlServer;
         }
 
-        public  Guid NewGuid(SequentialGuidType guidType)
+        public Guid Create()
+        {
+           return Create(DatabaseType);
+        }
+
+        public Guid Create(SequentialGuidDatabaseType databaseType)
+        {
+            switch (databaseType)
+            {
+                case SequentialGuidDatabaseType.SqlServer: return Create(SequentialGuidType.SequentialAtEnd);
+                case SequentialGuidDatabaseType.Oracle: return Create(SequentialGuidType.SequentialAsBinary);
+                case SequentialGuidDatabaseType.MySql: return Create(SequentialGuidType.SequentialAsString);
+                case SequentialGuidDatabaseType.PostgreSql: return Create(SequentialGuidType.SequentialAsString);
+                default: throw new InvalidOperationException();
+            }
+        }
+
+        public Guid Create(SequentialGuidType guidType)
         {
             // We start with 16 bytes of cryptographically strong random data.
             byte[] randomBytes = new byte[10];
@@ -95,49 +115,43 @@ namespace Abp
 
             return new Guid(guidBytes);
         }
-
-        public  Guid NewGuid(SequentialGuidDatabase database)
+        
+        /// <summary>
+        /// Database type to generate GUIDs.
+        /// </summary>
+        public enum SequentialGuidDatabaseType
         {
-            switch (database)
-            {
-                case SequentialGuidDatabase.SqlServer: return NewGuid(SequentialGuidType.SequentialAtEnd);
-                case SequentialGuidDatabase.Oracle: return NewGuid(SequentialGuidType.SequentialAsBinary);
-                case SequentialGuidDatabase.MySql: return NewGuid(SequentialGuidType.SequentialAsString);
-                case SequentialGuidDatabase.PostgreSql: return NewGuid(SequentialGuidType.SequentialAsString);
-                default: throw new InvalidOperationException();
-            }
+            SqlServer,
+
+            Oracle,
+
+            MySql,
+
+            PostgreSql,
         }
-    }
-
-
-    public enum SequentialGuidDatabase
-    {
-        SqlServer,
-        Oracle,
-        MySql,
-        PostgreSql,
-    }
-    /// <summary>
-    /// Describes the type of a sequential GUID value.
-    /// </summary>
-    public enum SequentialGuidType
-    {
-        /// <summary>
-        /// The GUID should be sequential when formatted using the
-        /// <see cref="Guid.ToString()" /> method.
-        /// </summary>
-        SequentialAsString,
 
         /// <summary>
-        /// The GUID should be sequential when formatted using the
-        /// <see cref="Guid.ToByteArray" /> method.
+        /// Describes the type of a sequential GUID value.
         /// </summary>
-        SequentialAsBinary,
+        public enum SequentialGuidType
+        {
+            /// <summary>
+            /// The GUID should be sequential when formatted using the
+            /// <see cref="Guid.ToString()" /> method.
+            /// </summary>
+            SequentialAsString,
 
-        /// <summary>
-        /// The sequential portion of the GUID should be located at the end
-        /// of the Data4 block.
-        /// </summary>
-        SequentialAtEnd
+            /// <summary>
+            /// The GUID should be sequential when formatted using the
+            /// <see cref="Guid.ToByteArray" /> method.
+            /// </summary>
+            SequentialAsBinary,
+
+            /// <summary>
+            /// The sequential portion of the GUID should be located at the end
+            /// of the Data4 block.
+            /// </summary>
+            SequentialAtEnd
+        }
     }
 }
