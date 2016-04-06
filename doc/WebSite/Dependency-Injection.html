@@ -280,12 +280,12 @@ registration rules. ASP.NET Boilerplate provides <strong>ITransientDependency</s
 				<strong>ISingletonDependency</strong> interfaces as a shortcut. For example:</p>
 			<pre lang="cs">public interface IPersonManager
 {
-				<span lang="tr">    //...</span>
+    //...
 }
 
 public class MyPersonManager : IPersonManager, ISingletonDependency
 {
-				<span lang="tr">//...</span>
+    //...
 }</pre>
 			<p>In that way, you can easily register MyPersonManager. When need 
 to inject a IPersonManager, MyPersonManager class is used. Notice that dependency is 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
 using NSubstitute;
@@ -22,7 +23,7 @@ namespace Abp.Tests.Configuration
                 CreateMockSettingDefinitionManager(),
                 new AbpMemoryCacheManager(
                     LocalIocManager,
-                    new CachingConfiguration()
+                    new CachingConfiguration(Substitute.For<IAbpStartupConfiguration>())
                     )
                 );
         }

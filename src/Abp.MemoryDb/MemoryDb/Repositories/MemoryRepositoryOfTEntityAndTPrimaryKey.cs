@@ -9,11 +9,11 @@ namespace Abp.MemoryDb.Repositories
     public class MemoryRepository<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
+        public virtual MemoryDatabase Database { get { return _databaseProvider.Database; } }
+
+        public virtual List<TEntity> Table { get { return Database.Set<TEntity>(); } }
+
         private readonly IMemoryDatabaseProvider _databaseProvider;
-        protected MemoryDatabase Database { get { return _databaseProvider.Database; } }
-
-        protected List<TEntity> Table { get { return Database.Set<TEntity>(); } }
-
         private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
 
         public MemoryRepository(IMemoryDatabaseProvider databaseProvider)

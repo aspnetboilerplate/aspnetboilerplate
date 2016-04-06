@@ -116,6 +116,9 @@ some usages of the UserManager:</p>
 application. It checks all logic for login and returns a login result. See
 				<a href="/Pages/Documents/Zero/Installation#DocAccountController">sample account 
 controller</a> for example usage of the Login method.</p>
+			<p>LoginAsync method also <strong>automatically saves all login 
+			attempts </strong>to the database (even it's a failed attempt). You 
+			can use <strong>UserLoginAttempt</strong> entity to query it.</p>
 			<h4>About IdentityResults</h4>
 			<p>Some methods of UserManager return IdentityResult as a result instead of 
 	throwing exceptions for some cases. This is nature of ASP.NET Identity 
@@ -131,7 +134,7 @@ controller</a> for example usage of the Login method.</p>
 	instance:</p>
 			<pre lang="cs">(await UserManager.CreateAsync(user)).CheckErrors(LocalizationManager);</pre>
 			<h3>External Authentication</h3>
-			<p>Login method of module-zero authenticate a user from the AbpUsers table in 
+			<p>Login method of module-zero authenticate a user from the <strong>AbpUsers</strong> table in 
 the database. Some applications may require to authenticate users from some 
 external sources (like active directory, from another database's tables or even 
 from a remote service).</p>
@@ -267,6 +270,9 @@ public class MyApplicationCoreModule : AbpModule
 }</pre>
 
 			<p>Then you can get LDAP settings from any other source.</p>
+			<h4>Social Logins</h4>
+			<p>See <a href="Startup-Template.html">startup template</a> document 
+			for social logins.</p>
 
 		</div>
 

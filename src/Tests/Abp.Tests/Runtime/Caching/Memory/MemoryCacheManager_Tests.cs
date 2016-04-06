@@ -1,8 +1,11 @@
 ﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -18,6 +21,8 @@ namespace Abp.Tests.Runtime.Caching.Memory
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             LocalIocManager.Register<MyClientPropertyInjects>(DependencyLifeStyle.Transient);
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
+
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
