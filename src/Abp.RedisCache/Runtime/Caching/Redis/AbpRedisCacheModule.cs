@@ -1,8 +1,11 @@
-﻿using Abp.Modules;
-using System.Reflection;
+﻿using System.Reflection;
+using Abp.Modules;
 
-namespace Abp.RedisCache
+namespace Abp.Runtime.Caching.Redis
 {
+    /// <summary>
+    /// This modules is used to replace ABP's cache system with Redis server.
+    /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpRedisCacheModule : AbpModule
     {

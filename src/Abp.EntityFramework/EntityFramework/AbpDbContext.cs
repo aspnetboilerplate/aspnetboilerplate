@@ -52,10 +52,7 @@ namespace Abp.EntityFramework
         /// </summary>
         protected AbpDbContext()
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
-            GuidGenerator = SequentialGuidGenerator.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -64,9 +61,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -75,9 +70,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbCompiledModel model)
             : base(model)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -86,9 +79,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -97,9 +88,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(string nameOrConnectionString, DbCompiledModel model)
             : base(nameOrConnectionString, model)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -108,9 +97,7 @@ namespace Abp.EntityFramework
         protected AbpDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
             : base(objectContext, dbContextOwnsObjectContext)
         {
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-            EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            SetNullsForInjectedProperties();
         }
 
         /// <summary>
@@ -119,9 +106,15 @@ namespace Abp.EntityFramework
         protected AbpDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
+            SetNullsForInjectedProperties();
+        }
+
+        private void SetNullsForInjectedProperties()
+        {
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
+            GuidGenerator = SequentialGuidGenerator.Instance;
         }
 
         public virtual void Initialize()

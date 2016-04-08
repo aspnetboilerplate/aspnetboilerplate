@@ -32,7 +32,7 @@ namespace Abp.Threading.BackgroundWorkers
         {
             _backgroundJobs.ForEach(job => job.Stop());
 
-            base.WaitToStop();
+            base.Stop();
         }
 
         public override void WaitToStop()

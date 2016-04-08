@@ -2,6 +2,7 @@ using System;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Abp.Collections.Extensions;
 
 /* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
 
@@ -38,7 +39,13 @@ namespace Abp.Web.Mvc.Controllers.Results
                 throw new ArgumentNullException("context");
             }
 
-            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet && String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+            var ignoreJsonRequestBehaviorDenyGet = false;
+            if (context.HttpContext.Items.Contains("IgnoreJsonRequestBehaviorDenyGet"))
+            {
+                ignoreJsonRequestBehaviorDenyGet = String.Equals(context.HttpContext.Items["IgnoreJsonRequestBehaviorDenyGet"].ToString(), "true", StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (!ignoreJsonRequestBehaviorDenyGet && JsonRequestBehavior == JsonRequestBehavior.DenyGet && String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.");
             }
@@ -55,9 +62,9 @@ namespace Abp.Web.Mvc.Controllers.Results
             {
                 //TODO: Make this static for performance reason?
                 var jsonSerializerSettings = new JsonSerializerSettings
-                                                 {
-                                                     ContractResolver = new CamelCasePropertyNamesContractResolver()
-                                                 };
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
 
                 response.Write(JsonConvert.SerializeObject(Data, Formatting.Indented, jsonSerializerSettings));
             }
