@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
     <Compile Include="Application\Navigation\NavigationTestCase.cs" />
+    <Compile Include="Auditing\AuditingHelper_Tests.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
