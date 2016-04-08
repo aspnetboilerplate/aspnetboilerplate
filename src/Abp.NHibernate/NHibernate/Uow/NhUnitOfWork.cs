@@ -137,8 +137,16 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            Session.GetEnabledFilter(filterName)
-                .SetParameter(parameterName, value);
+            if (Session == null)
+            {
+                return;
+            }
+
+            var filter = Session.GetEnabledFilter(filterName);
+            if (filter != null)
+            {
+                filter.SetParameter(parameterName, value);
+            }
         }
     }
 }

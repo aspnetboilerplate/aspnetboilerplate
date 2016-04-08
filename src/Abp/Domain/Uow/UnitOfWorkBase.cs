@@ -77,6 +77,8 @@ namespace Abp.Domain.Uow
         /// </summary>
         private Exception _exception;
 
+        private int? _tenantId;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -102,6 +104,8 @@ namespace Abp.Domain.Uow
             Options = options; //TODO: Do not set options like that, instead make a copy?
 
             SetFilters(options.FilterOverrides);
+
+            SetTenantId(AbpSession.TenantId);
 
             BeginUow();
         }
@@ -171,10 +175,10 @@ namespace Abp.Domain.Uow
 
             //Store old value
             object oldValue = null;
-            var hasOldValue = newfilter.FilterParameters.ContainsKey(filterName);
+            var hasOldValue = newfilter.FilterParameters.ContainsKey(parameterName);
             if (hasOldValue)
             {
-                oldValue = newfilter.FilterParameters[filterName];
+                oldValue = newfilter.FilterParameters[parameterName];
             }
 
             newfilter.FilterParameters[parameterName] = value;
@@ -191,6 +195,33 @@ namespace Abp.Domain.Uow
                     SetFilterParameter(filterName, parameterName, oldValue);
                 }
             });
+        }
+
+        public IDisposable SetTenantId(int? tenantId)
+        {
+            var oldTenantId = _tenantId;
+            _tenantId = tenantId;
+
+            var mayHaveTenantChange = SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId);
+
+            var mustHaveTenantEnableChange = tenantId == null
+                ? DisableFilter(AbpDataFilters.MustHaveTenant)
+                : EnableFilter(AbpDataFilters.MustHaveTenant);
+
+            var mustHaveTenantChange = SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId ?? 0);
+
+            return new DisposeAction(() =>
+            {
+                mayHaveTenantChange.Dispose();
+                mustHaveTenantEnableChange.Dispose();
+                mustHaveTenantChange.Dispose();
+                _tenantId = oldTenantId;
+            });
+        }
+
+        public int? GetTenantId()
+        {
+            return _tenantId;
         }
 
         /// <inheritdoc/>
@@ -274,7 +305,7 @@ namespace Abp.Domain.Uow
         /// <param name="filterName">Filter name</param>
         protected virtual void ApplyDisableFilter(string filterName)
         {
-            throw new NotImplementedException("DisableFilter is not implemented for " + GetType().FullName);
+            //throw new NotImplementedException("DisableFilter is not implemented for " + GetType().FullName);
         }
 
         /// <summary>
@@ -285,22 +316,20 @@ namespace Abp.Domain.Uow
         /// <param name="filterName">Filter name</param>
         protected virtual void ApplyEnableFilter(string filterName)
         {
-            throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
+            //throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
         }
-
-
+        
         /// <summary>
         /// Concrete Unit of work classes should implement this
         /// method in order to set a parameter's value.
         /// Should not call base method since it throws <see cref="NotImplementedException"/>.
         /// </summary>
-        /// <param name="filterName">Filter name</param>
         protected virtual void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
+            //throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
         }
 
-        protected string ResolveConnectionString()
+        protected virtual string ResolveConnectionString()
         {
             return ConnectionStringResolver.GetNameOrConnectionString(this);
         }
@@ -361,7 +390,7 @@ namespace Abp.Domain.Uow
                 }
             }
 
-            if (!AbpSession.UserId.HasValue || AbpSession.MultiTenancySide == MultiTenancySides.Host)
+            if (AbpSession.TenantId == null)
             {
                 ChangeFilterIsEnabledIfNotOverrided(filterOverrides, AbpDataFilters.MustHaveTenant, false);
             }

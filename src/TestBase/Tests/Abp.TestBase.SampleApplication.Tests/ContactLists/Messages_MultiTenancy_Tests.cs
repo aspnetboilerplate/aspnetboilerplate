@@ -39,12 +39,19 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
+                unitOfWorkManager.Current.GetTenantId().ShouldBe(null);
+                
                 //We can also set tenantId parameter's value without changing AbpSession.TenantId
-                unitOfWorkManager.Current.SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 1);
+                using (unitOfWorkManager.Current.SetTenantId(1))
+                {
+                    unitOfWorkManager.Current.GetTenantId().ShouldBe(1);
 
-                //We should only get tenant 1's entities since we set tenantId to 1
-                _messageRepository.Count().ShouldBe(2);
-                _messageRepository.GetAllList().Any(m => m.TenantId != 1).ShouldBe(false);
+                    //We should only get tenant 1's entities since we set tenantId to 1
+                    _messageRepository.Count().ShouldBe(2);
+                    _messageRepository.GetAllList().Any(m => m.TenantId != 1).ShouldBe(false);
+                }
+
+                unitOfWorkManager.Current.GetTenantId().ShouldBe(null);
 
                 //We can disable the filter to get all entities of host and tenants
                 using (unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))

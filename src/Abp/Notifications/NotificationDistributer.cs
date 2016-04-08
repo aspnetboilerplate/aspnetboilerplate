@@ -125,10 +125,9 @@ namespace Abp.Notifications
                 //Remove invalid subscriptions
                 var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+                foreach (var subscription in subscriptions)
                 {
-
-                    foreach (var subscription in subscriptions)
+                    using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
                         if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, subscription.TenantId, subscription.UserId) ||
                             !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
