@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Runtime.Session;
+using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -58,6 +59,16 @@ namespace Abp.Auditing
             }
 
             return defaultValue;
+        }
+
+        public static string Serialize(object obj)
+        {
+            var options = new JsonSerializerSettings
+            {
+                ContractResolver = new AuditingContractResolver()
+            };
+
+            return JsonConvert.SerializeObject(obj, options);
         }
     }
 }
