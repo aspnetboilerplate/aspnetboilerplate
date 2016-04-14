@@ -1,20 +1,21 @@
-﻿using System.Linq;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using NHibernate.Linq;
 using Shouldly;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace Abp.NHibernate.Tests
 {
     public class Basic_Repository_Tests : NHibernateTestBase
     {
-        private readonly IRepository<Person> _personRepository;
+        private readonly IRepository<Person, Guid> _personRepository;
 
         public Basic_Repository_Tests()
         {
-            _personRepository = Resolve<IRepository<Person>>();
+            _personRepository = Resolve<IRepository<Person, Guid>>();
             UsingSession(session => session.Save(new Person() { Name = "emre" }));
         }
 

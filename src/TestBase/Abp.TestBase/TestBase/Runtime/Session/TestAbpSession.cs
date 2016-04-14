@@ -2,27 +2,28 @@
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using System;
 
 namespace Abp.TestBase.Runtime.Session
 {
     public class TestAbpSession : IAbpSession, ISingletonDependency
     {
-        public long? UserId { get; set; }
+        public Guid? UserId { get; set; }
 
-        public int? TenantId
+        public Guid? TenantId
         {
             get
             {
                 if (!_multiTenancy.IsEnabled)
                 {
-                    return 1;
+                    return Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001");
                 }
-                
+
                 return _tenantId;
             }
             set
             {
-                if (!_multiTenancy.IsEnabled && value != 1)
+                if (!_multiTenancy.IsEnabled && value != Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"))
                 {
                     throw new AbpException("Can not set TenantId since multi-tenancy is not enabled. Use IMultiTenancyConfig.IsEnabled to enable it.");
                 }
@@ -32,13 +33,13 @@ namespace Abp.TestBase.Runtime.Session
         }
 
         public MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
-        
-        public long? ImpersonatorUserId { get; set; }
-        
-        public int? ImpersonatorTenantId { get; set; }
+
+        public Guid? ImpersonatorUserId { get; set; }
+
+        public Guid? ImpersonatorTenantId { get; set; }
 
         private readonly IMultiTenancyConfig _multiTenancy;
-        private int? _tenantId;
+        private Guid? _tenantId;
 
         public TestAbpSession(IMultiTenancyConfig multiTenancy)
         {

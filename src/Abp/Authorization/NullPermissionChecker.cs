@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Abp.Authorization
@@ -11,6 +12,7 @@ namespace Abp.Authorization
         /// Singleton instance.
         /// </summary>
         public static NullPermissionChecker Instance { get { return SingletonInstance; } }
+
         private static readonly NullPermissionChecker SingletonInstance = new NullPermissionChecker();
 
         public Task<bool> IsGrantedAsync(string permissionName)
@@ -24,14 +26,13 @@ namespace Abp.Authorization
         /// <param name="userId">Id of the user to check</param>
         /// <param name="permissionName">Name of the permission</param>
         /// <returns><c>true</c> if this instance is granted the specified userId permissionName; otherwise, <c>false</c>.</returns>
-        public Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public Task<bool> IsGrantedAsync(Guid userId, string permissionName)
         {
             return Task.FromResult(true);
         }
 
         private NullPermissionChecker()
         {
-
         }
     }
 }

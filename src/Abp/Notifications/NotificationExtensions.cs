@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Threading;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Notifications
 {
     /// <summary>
     /// Extension methods for
-    /// <see cref="INotificationSubscriptionManager"/>, 
-    /// <see cref="INotificationPublisher"/>, 
+    /// <see cref="INotificationSubscriptionManager"/>,
+    /// <see cref="INotificationPublisher"/>,
     /// <see cref="IUserNotificationManager"/>.
     /// </summary>
     public static class NotificationExtensions
@@ -23,7 +23,7 @@ namespace Abp.Notifications
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="tenantId"></param>
         /// <param name="entityIdentifier">entity identifier</param>
-        public static void Subscribe(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public static void Subscribe(this INotificationSubscriptionManager notificationSubscriptionManager, Guid? tenantId, Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeAsync(tenantId, userId, notificationName, entityIdentifier));
         }
@@ -35,9 +35,9 @@ namespace Abp.Notifications
         /// <param name="notificationSubscriptionManager">Notification subscription manager</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="userId">The user identifier.</param>
-        public static void SubscribeToAllAvailableNotifications(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, long userId)
+        public static void SubscribeToAllAvailableNotifications(this INotificationSubscriptionManager notificationSubscriptionManager, Guid? tenantId, Guid userId)
         {
-            AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(tenantId, userId));            
+            AsyncHelper.RunSync(() => notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(tenantId, userId));
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Abp.Notifications
         /// <param name="userId">The user id.</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        public static void Unsubscribe(this INotificationSubscriptionManager notificationSubscriptionManager, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public static void Unsubscribe(this INotificationSubscriptionManager notificationSubscriptionManager, Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             AsyncHelper.RunSync(() => notificationSubscriptionManager.UnsubscribeAsync(userId, notificationName, entityIdentifier));
         }
@@ -70,7 +70,7 @@ namespace Abp.Notifications
         /// <param name="tenantId">Tenant id. Null for the host.</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        public static List<NotificationSubscription> GetSubscriptions(this INotificationSubscriptionManager notificationSubscriptionManager, int? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public static List<NotificationSubscription> GetSubscriptions(this INotificationSubscriptionManager notificationSubscriptionManager, Guid? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             return AsyncHelper.RunSync(() => notificationSubscriptionManager.GetSubscriptionsAsync(tenantId, notificationName, entityIdentifier));
         }
@@ -80,7 +80,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="notificationSubscriptionManager">Notification subscription manager</param>
         /// <param name="userId">The user id.</param>
-        public static List<NotificationSubscription> GetSubscribedNotifications(this INotificationSubscriptionManager notificationSubscriptionManager, long userId)
+        public static List<NotificationSubscription> GetSubscribedNotifications(this INotificationSubscriptionManager notificationSubscriptionManager, Guid userId)
         {
             return AsyncHelper.RunSync(() => notificationSubscriptionManager.GetSubscribedNotificationsAsync(userId));
         }
@@ -92,12 +92,12 @@ namespace Abp.Notifications
         /// <param name="userId">The user id.</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        public static bool IsSubscribed(this INotificationSubscriptionManager notificationSubscriptionManager, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public static bool IsSubscribed(this INotificationSubscriptionManager notificationSubscriptionManager, Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             return AsyncHelper.RunSync(() => notificationSubscriptionManager.IsSubscribedAsync(userId, notificationName, entityIdentifier));
         }
 
-        #endregion
+        #endregion INotificationSubscriptionManager
 
         #region INotificationPublisher
 
@@ -110,12 +110,12 @@ namespace Abp.Notifications
         /// <param name="entityIdentifier">The entity identifier if this notification is related to an entity</param>
         /// <param name="severity">Notification severity</param>
         /// <param name="userIds">Target user id(s). Used to send notification to specific user(s). If this is null/empty, the notification is sent to all subscribed users</param>
-        public static void Publish(this INotificationPublisher notificationPublisher, string notificationName, NotificationData data = null, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, long[] userIds = null)
+        public static void Publish(this INotificationPublisher notificationPublisher, string notificationName, NotificationData data = null, EntityIdentifier entityIdentifier = null, NotificationSeverity severity = NotificationSeverity.Info, Guid[] userIds = null)
         {
             AsyncHelper.RunSync(() => notificationPublisher.PublishAsync(notificationName, data, entityIdentifier, severity, userIds));
         }
 
-        #endregion
+        #endregion INotificationPublisher
 
         #region IUserNotificationManager
 
@@ -127,7 +127,7 @@ namespace Abp.Notifications
         /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        public static List<UserNotification> GetUserNotifications(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public static List<UserNotification> GetUserNotifications(this IUserNotificationManager userNotificationManager, Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationsAsync(userId, state, skipCount: skipCount, maxResultCount: maxResultCount));
         }
@@ -138,7 +138,7 @@ namespace Abp.Notifications
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
         /// <param name="state">State.</param>
-        public static int GetUserNotificationCount(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState? state = null)
+        public static int GetUserNotificationCount(this IUserNotificationManager userNotificationManager, Guid userId, UserNotificationState? state = null)
         {
             return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationCountAsync(userId, state));
         }
@@ -170,7 +170,7 @@ namespace Abp.Notifications
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
         /// <param name="state">New state.</param>
-        public static void UpdateAllUserNotificationStates(this IUserNotificationManager userNotificationManager, long userId, UserNotificationState state)
+        public static void UpdateAllUserNotificationStates(this IUserNotificationManager userNotificationManager, Guid userId, UserNotificationState state)
         {
             AsyncHelper.RunSync(() => userNotificationManager.UpdateAllUserNotificationStatesAsync(userId, state));
         }
@@ -190,11 +190,11 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
         /// <param name="userId">The user id.</param>
-        public static void DeleteAllUserNotifications(this IUserNotificationManager userNotificationManager, long userId)
+        public static void DeleteAllUserNotifications(this IUserNotificationManager userNotificationManager, Guid userId)
         {
             AsyncHelper.RunSync(() => userNotificationManager.DeleteAllUserNotificationsAsync(userId));
         }
 
-        #endregion
+        #endregion IUserNotificationManager
     }
 }

@@ -5,6 +5,5 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     public interface IFullAudited : IAudited, IDeletionAudited
     {
-        
     }
 }

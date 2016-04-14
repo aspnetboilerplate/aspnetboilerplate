@@ -14,7 +14,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteSubscriptionAsync(long userId, string notificationName, string entityTypeName, string entityId)
+        public Task DeleteSubscriptionAsync(Guid userId, string notificationName, string entityTypeName, string entityId)
         {
             return Task.FromResult(0);
         }
@@ -39,17 +39,17 @@ namespace Abp.Notifications
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(Guid?[] tenantIds, string notificationName, string entityTypeName, string entityId)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(Guid userId)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<bool> IsSubscribedAsync(long userId, string notificationName, string entityTypeName, string entityId)
+        public Task<bool> IsSubscribedAsync(Guid userId, string notificationName, string entityTypeName, string entityId)
         {
             return Task.FromResult(false);
         }
@@ -59,7 +59,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        public Task UpdateAllUserNotificationStatesAsync(Guid userId, UserNotificationState state)
         {
             return Task.FromResult(0);
         }
@@ -69,17 +69,17 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteAllUserNotificationsAsync(long userId)
+        public Task DeleteAllUserNotificationsAsync(Guid userId)
         {
             return Task.FromResult(0);
         }
 
-        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             return Task.FromResult(new List<UserNotificationInfoWithNotificationInfo>());
         }
 
-        public Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        public Task<int> GetUserNotificationCountAsync(Guid userId, UserNotificationState? state = null)
         {
             return Task.FromResult(0);
         }

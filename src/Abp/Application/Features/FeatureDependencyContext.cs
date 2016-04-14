@@ -1,4 +1,5 @@
 using Abp.Dependency;
+using System;
 
 namespace Abp.Application.Features
 {
@@ -7,7 +8,7 @@ namespace Abp.Application.Features
     /// </summary>
     public class FeatureDependencyContext : IFeatureDependencyContext, ITransientDependency
     {
-        public int? TenantId { get; set; }
+        public Guid? TenantId { get; set; }
 
         /// <inheritdoc/>
         public IIocResolver IocResolver { get; private set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Abp.Configuration
         /// <param name="userId">UserId or null</param>
         /// <param name="name">Name of the setting</param>
         /// <returns>Setting object</returns>
-        Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name);
+        Task<SettingInfo> GetSettingOrNullAsync(Guid? tenantId, Guid? userId, string name);
 
         /// <summary>
         /// Deletes a setting.
@@ -41,6 +42,6 @@ namespace Abp.Configuration
         /// <param name="tenantId">TenantId or null</param>
         /// <param name="userId">UserId or null</param>
         /// <returns>List of settings</returns>
-        Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId);
+        Task<List<SettingInfo>> GetAllListAsync(Guid? tenantId, Guid? userId);
     }
 }

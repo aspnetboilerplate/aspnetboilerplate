@@ -1,7 +1,8 @@
+using Abp.Logging;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
-using Abp.Logging;
 
 namespace Abp.Configuration
 {
@@ -16,16 +17,17 @@ namespace Abp.Configuration
         /// Gets singleton instance.
         /// </summary>
         public static DefaultConfigSettingStore Instance { get { return SingletonInstance; } }
+
         private static readonly DefaultConfigSettingStore SingletonInstance = new DefaultConfigSettingStore();
 
         private DefaultConfigSettingStore()
         {
         }
 
-        public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
+        public Task<SettingInfo> GetSettingOrNullAsync(Guid? tenantId, Guid? userId, string name)
         {
             var value = ConfigurationManager.AppSettings[name];
-            
+
             if (value == null)
             {
                 return Task.FromResult<SettingInfo>(null);
@@ -53,7 +55,7 @@ namespace Abp.Configuration
         }
 
         /// <inheritdoc/>
-        public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
+        public Task<List<SettingInfo>> GetAllListAsync(Guid? tenantId, Guid? userId)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.");
             return Task.FromResult(new List<SettingInfo>());

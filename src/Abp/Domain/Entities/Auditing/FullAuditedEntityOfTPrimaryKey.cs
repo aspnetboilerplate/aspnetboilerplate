@@ -13,12 +13,12 @@ namespace Abp.Domain.Entities.Auditing
         /// Is this entity Deleted?
         /// </summary>
         public virtual bool IsDeleted { get; set; }
-        
+
         /// <summary>
         /// Which user deleted this entity?
         /// </summary>
-        public virtual long? DeleterUserId { get; set; }
-        
+        public virtual Guid? DeleterUserId { get; set; }
+
         /// <summary>
         /// Deletion time of this entity.
         /// </summary>

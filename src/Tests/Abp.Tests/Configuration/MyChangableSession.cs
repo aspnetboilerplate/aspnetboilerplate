@@ -1,13 +1,14 @@
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using System;
 
 namespace Abp.Tests.Configuration
 {
     public class MyChangableSession : IAbpSession
     {
-        public long? UserId { get; set; }
+        public Guid? UserId { get; set; }
 
-        public int? TenantId { get; set; }
+        public Guid? TenantId { get; set; }
 
         public MultiTenancySides MultiTenancySide
         {
@@ -17,8 +18,8 @@ namespace Abp.Tests.Configuration
             }
         }
 
-        public long? ImpersonatorUserId { get; set; }
+        public Guid? ImpersonatorUserId { get; set; }
 
-        public int? ImpersonatorTenantId { get; set; }
+        public Guid? ImpersonatorTenantId { get; set; }
     }
 }

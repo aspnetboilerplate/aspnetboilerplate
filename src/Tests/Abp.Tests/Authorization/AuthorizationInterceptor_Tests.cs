@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.Authorization
@@ -27,8 +28,8 @@ namespace Abp.Tests.Authorization
 
             //Mock session
             var session = Substitute.For<IAbpSession>();
-            session.TenantId.Returns(1);
-            session.UserId.Returns(1);
+            session.TenantId.Returns(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
+            session.UserId.Returns(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
             LocalIocManager.IocContainer.Register(Component.For<IAbpSession>().UsingFactoryMethod(() => session));
 
             //Mock permission checker
@@ -46,7 +47,7 @@ namespace Abp.Tests.Authorization
         public void Test_Authorization_Sync()
         {
             //Authorized methods
-            
+
             _syncObj.MethodWithoutPermission();
             _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
 
@@ -58,7 +59,7 @@ namespace Abp.Tests.Authorization
 
             _syncObj.MethodWithPermission1AndPermission3();
             _syncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
-            
+
             //Non authorized methods
 
             Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
@@ -152,15 +153,15 @@ namespace Abp.Tests.Authorization
         public class MyTestClassToBeAuthorized_Async
         {
             public bool Called_MethodWithoutPermission { get; private set; }
-            
+
             public bool Called_MethodWithPermission1 { get; private set; }
-            
+
             public bool Called_MethodWithPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission2 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3WithRequireAll { get; private set; }
 
             public virtual async Task MethodWithoutPermission()

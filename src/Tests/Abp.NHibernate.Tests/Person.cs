@@ -1,8 +1,9 @@
 using Abp.Domain.Entities;
+using System;
 
 namespace Abp.NHibernate.Tests
 {
-    public class Person : Entity
+    public class Person : Entity<Guid>
     {
         public const int MaxNameLength = 64;
 

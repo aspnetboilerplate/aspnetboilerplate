@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Abp.Notifications
@@ -33,13 +34,13 @@ namespace Abp.Notifications
         /// <summary>
         /// Checks if given notification (<see cref="name"/>) is available for given user and given tenant.
         /// </summary>
-        Task<bool> IsAvailableAsync(string name, int? tenantId, long userId);
+        Task<bool> IsAvailableAsync(string name, Guid? tenantId, Guid userId);
 
         /// <summary>
         /// Gets all available notification definitions for given <see cref="tenantId"/> and <see cref="userId"/>.
         /// </summary>
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
-        Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(int? tenantId, long userId);
+        Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(Guid? tenantId, Guid userId);
     }
 }

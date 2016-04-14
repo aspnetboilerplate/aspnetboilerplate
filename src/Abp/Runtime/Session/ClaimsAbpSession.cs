@@ -1,10 +1,10 @@
+using Abp.Configuration.Startup;
+using Abp.MultiTenancy;
+using Abp.Runtime.Security;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.MultiTenancy;
-using Abp.Runtime.Security;
 
 namespace Abp.Runtime.Session
 {
@@ -13,9 +13,9 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class ClaimsAbpSession : IAbpSession
     {
-        private const int DefaultTenantId = 1;
+        private const string DefaultTenantId = "FFFFFFFF-FFFF-FFFF-FFFF-000000000001";
 
-        public virtual long? UserId
+        public virtual Guid? UserId
         {
             get
             {
@@ -37,8 +37,8 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                long userId;
-                if (!long.TryParse(userIdClaim.Value, out userId))
+                Guid userId;
+                if (!Guid.TryParse(userIdClaim.Value, out userId))
                 {
                     return null;
                 }
@@ -47,13 +47,13 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public virtual int? TenantId
+        public virtual Guid? TenantId
         {
             get
             {
                 if (!_multiTenancy.IsEnabled)
                 {
-                    return DefaultTenantId;
+                    return Guid.Parse(DefaultTenantId);
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -68,7 +68,13 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                return Convert.ToInt32(tenantIdClaim.Value);
+                Guid tenantId;
+                if (!Guid.TryParse(tenantIdClaim.Value, out tenantId))
+                {
+                    return null;
+                }
+
+                return tenantId;
             }
         }
 
@@ -82,7 +88,7 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public virtual long? ImpersonatorUserId
+        public virtual Guid? ImpersonatorUserId
         {
             get
             {
@@ -98,17 +104,24 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                return Convert.ToInt64(impersonatorUserIdClaim.Value);
+                Guid impersonatorUserId;
+
+                if (!Guid.TryParse(impersonatorUserIdClaim.Value, out impersonatorUserId))
+                {
+                    return null;
+                }
+
+                return impersonatorUserId;
             }
         }
 
-        public virtual int? ImpersonatorTenantId
+        public virtual Guid? ImpersonatorTenantId
         {
             get
             {
                 if (!_multiTenancy.IsEnabled)
                 {
-                    return DefaultTenantId;
+                    return Guid.Parse(DefaultTenantId);
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -123,7 +136,13 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                return Convert.ToInt32(impersonatorTenantIdClaim.Value);
+                Guid impersonatorTenantId;
+                if (!Guid.TryParse(impersonatorTenantIdClaim.Value, out impersonatorTenantId))
+                {
+                    return null;
+                }
+
+                return impersonatorTenantId;
             }
         }
 

@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Navigation
 {
@@ -21,7 +22,7 @@ namespace Abp.Application.Navigation
         private readonly IIocResolver _iocResolver;
 
         public UserNavigationManager(
-            INavigationManager navigationManager, 
+            INavigationManager navigationManager,
             ILocalizationContext localizationContext,
             IIocResolver iocResolver)
         {
@@ -32,7 +33,7 @@ namespace Abp.Application.Navigation
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<UserMenu> GetMenuAsync(string menuName, long? userId, int? tenantId = null)
+        public async Task<UserMenu> GetMenuAsync(string menuName, Guid? userId, Guid? tenantId = null)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
@@ -45,7 +46,7 @@ namespace Abp.Application.Navigation
             return userMenu;
         }
 
-        public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId, int? tenantId = null)
+        public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(Guid? userId, Guid? tenantId = null)
         {
             var userMenus = new List<UserMenu>();
 
@@ -57,7 +58,7 @@ namespace Abp.Application.Navigation
             return userMenus;
         }
 
-        private async Task<int> FillUserMenuItems(int? tenantId, long? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(Guid? tenantId, Guid? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
             var addedMenuItemCount = 0;
 

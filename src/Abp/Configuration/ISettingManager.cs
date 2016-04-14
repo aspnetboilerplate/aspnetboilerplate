@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Abp.Configuration
@@ -30,7 +31,7 @@ namespace Abp.Configuration
         /// <param name="name">Unique name of the setting</param>
         /// <param name="tenantId">Tenant id</param>
         /// <returns>Current value of the setting</returns>
-        Task<string> GetSettingValueForTenantAsync(string name, int tenantId);
+        Task<string> GetSettingValueForTenantAsync(string name, Guid tenantId);
 
         /// <summary>
         /// Gets current value of a setting for a user level.
@@ -40,7 +41,7 @@ namespace Abp.Configuration
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <returns>Current value of the setting for the user</returns>
-        Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId);
+        Task<string> GetSettingValueForUserAsync(string name, Guid? tenantId, Guid userId);
 
         /// <summary>
         /// Gets current values of all settings.
@@ -74,7 +75,7 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="tenantId">Tenant to get settings</param>
         /// <returns>List of setting values</returns>
-        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForTenantAsync(int tenantId);
+        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForTenantAsync(Guid tenantId);
 
         /// <summary>
         /// Gets a list of all setting values specified for a user.
@@ -84,7 +85,7 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="userId">User to get settings</param>
         /// <returns>All settings of the user</returns>
-        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForUserAsync(long userId);
+        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForUserAsync(Guid userId);
 
         /// <summary>
         /// Changes setting for the application level.
@@ -99,7 +100,7 @@ namespace Abp.Configuration
         /// <param name="tenantId">TenantId</param>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
-        Task ChangeSettingForTenantAsync(int tenantId, string name, string value);
+        Task ChangeSettingForTenantAsync(Guid tenantId, string name, string value);
 
         /// <summary>
         /// Changes setting for a user.
@@ -107,6 +108,6 @@ namespace Abp.Configuration
         /// <param name="userId">UserId</param>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
-        Task ChangeSettingForUserAsync(long userId, string name, string value);
+        Task ChangeSettingForUserAsync(Guid userId, string name, string value);
     }
 }

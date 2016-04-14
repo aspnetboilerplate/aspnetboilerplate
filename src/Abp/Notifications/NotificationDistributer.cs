@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Castle.Core.Internal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -80,9 +80,9 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        protected virtual async Task<long[]> GetUserIds(NotificationInfo notificationInfo)
+        protected virtual async Task<Guid[]> GetUserIds(NotificationInfo notificationInfo)
         {
-            List<long> userIds;
+            List<Guid> userIds;
 
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
@@ -90,7 +90,7 @@ namespace Abp.Notifications
                 userIds = notificationInfo
                     .UserIds
                     .Split(",")
-                    .Select(uidAsStr => uidAsStr.To<long>())
+                    .Select(uidAsStr => Guid.Parse(uidAsStr))
                     .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, uid))
                     .ToList();
             }
@@ -127,7 +127,6 @@ namespace Abp.Notifications
 
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-
                     foreach (var subscription in subscriptions)
                     {
                         if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, subscription.TenantId, subscription.UserId) ||
@@ -152,7 +151,7 @@ namespace Abp.Notifications
                 var excludedUserIds = notificationInfo
                     .ExcludedUserIds
                     .Split(",")
-                    .Select(uidAsStr => uidAsStr.To<long>())
+                    .Select(uidAsStr => uidAsStr.To<Guid>())
                     .ToList();
 
                 userIds.RemoveAll(uid => excludedUserIds.Contains(uid));
@@ -161,7 +160,7 @@ namespace Abp.Notifications
             return userIds.ToArray();
         }
 
-        private static int?[] GetTenantIds(NotificationInfo notificationInfo)
+        private static Guid?[] GetTenantIds(NotificationInfo notificationInfo)
         {
             if (notificationInfo.TenantIds.IsNullOrEmpty())
             {
@@ -171,7 +170,7 @@ namespace Abp.Notifications
             return notificationInfo
                 .TenantIds
                 .Split(",")
-                .Select(uidAsStr => uidAsStr == "null" ? (int?)null : (int?)uidAsStr.To<int>())
+                .Select(uidAsStr => uidAsStr == "null" ? (Guid?)null : (Guid?)uidAsStr.To<Guid>())
                 .ToArray();
         }
 

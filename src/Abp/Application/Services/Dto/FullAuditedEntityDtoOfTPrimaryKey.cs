@@ -1,5 +1,5 @@
-using System;
 using Abp.Domain.Entities.Auditing;
+using System;
 
 namespace Abp.Application.Services.Dto
 {
@@ -18,7 +18,7 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Deleter user's Id, if this entity is deleted,
         /// </summary>
-        public long? DeleterUserId { get; set; }
+        public Guid? DeleterUserId { get; set; }
 
         /// <summary>
         /// Deletion time, if this entity is deleted,

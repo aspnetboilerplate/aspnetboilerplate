@@ -1,4 +1,5 @@
 using Abp.Dependency;
+using System;
 
 namespace Abp.Application.Features
 {
@@ -11,7 +12,7 @@ namespace Abp.Application.Features
         /// Tenant id which required the feature.
         /// Null for current tenant.
         /// </summary>
-        int? TenantId { get; }
+        Guid? TenantId { get; }
 
         /// <summary>
         /// Gets the <see cref="IIocResolver"/>.

@@ -1,9 +1,10 @@
+using Abp.Collections.Extensions;
+using Abp.Dependency;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
 
 namespace Abp.RealTime
 {
@@ -46,7 +47,7 @@ namespace Abp.RealTime
             return _clients.GetOrDefault(connectionId);
         }
 
-        public IOnlineClient GetByUserIdOrNull(long userId)
+        public IOnlineClient GetByUserIdOrNull(Guid userId)
         {
             //TODO: We can create a dictionary for a faster lookup.
             return GetAllClients().FirstOrDefault(c => c.UserId == userId);

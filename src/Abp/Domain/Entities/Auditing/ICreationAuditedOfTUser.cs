@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     /// <typeparam name="TUser">Type of the user</typeparam>
     public interface ICreationAudited<TUser> : ICreationAudited
-        where TUser : IEntity<long>
+        where TUser : IEntity<Guid>
     {
         /// <summary>
         /// Reference to the creator user of this entity.

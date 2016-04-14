@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Dependency;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Dependency;
 
 namespace Abp.Notifications
 {
@@ -21,7 +21,7 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public async Task<List<UserNotification>> GetUserNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public async Task<List<UserNotification>> GetUserNotificationsAsync(Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(userId, state, skipCount, maxResultCount);
             return userNotifications
@@ -29,7 +29,7 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        public Task<int> GetUserNotificationCountAsync(Guid userId, UserNotificationState? state = null)
         {
             return _store.GetUserNotificationCountAsync(userId, state);
         }
@@ -50,7 +50,7 @@ namespace Abp.Notifications
             return _store.UpdateUserNotificationStateAsync(userNotificationId, state);
         }
 
-        public Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        public Task UpdateAllUserNotificationStatesAsync(Guid userId, UserNotificationState state)
         {
             return _store.UpdateAllUserNotificationStatesAsync(userId, state);
         }
@@ -60,7 +60,7 @@ namespace Abp.Notifications
             return _store.DeleteUserNotificationAsync(userNotificationId);
         }
 
-        public Task DeleteAllUserNotificationsAsync(long userId)
+        public Task DeleteAllUserNotificationsAsync(Guid userId)
         {
             return _store.DeleteAllUserNotificationsAsync(userId);
         }

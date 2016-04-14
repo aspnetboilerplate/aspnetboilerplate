@@ -1,4 +1,6 @@
-﻿namespace Abp.Runtime.Session
+﻿using System;
+
+namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Extension methods for <see cref="IAbpSession"/>.
@@ -11,7 +13,7 @@
         /// </summary>
         /// <param name="session">Session object.</param>
         /// <returns>Current User's Id.</returns>
-        public static long GetUserId(this IAbpSession session)
+        public static Guid GetUserId(this IAbpSession session)
         {
             if (!session.UserId.HasValue)
             {
@@ -28,7 +30,7 @@
         /// <param name="session">Session object.</param>
         /// <returns>Current Tenant's Id.</returns>
         /// <exception cref="AbpException"></exception>
-        public static int GetTenantId(this IAbpSession session)
+        public static Guid GetTenantId(this IAbpSession session)
         {
             if (!session.TenantId.HasValue)
             {

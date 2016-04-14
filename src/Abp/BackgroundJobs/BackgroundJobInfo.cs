@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Timing;
 
 namespace Abp.BackgroundJobs
 {
@@ -10,7 +10,7 @@ namespace Abp.BackgroundJobs
     /// Represents a background job info that is used to persist jobs.
     /// </summary>
     [Table("AbpBackgroundJobs")]
-    public class BackgroundJobInfo : CreationAuditedEntity<long>
+    public class BackgroundJobInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
         /// Maximum length of <see cref="JobType"/>.
@@ -80,7 +80,7 @@ namespace Abp.BackgroundJobs
         /// </summary>
         //[Index("IX_IsAbandoned_NextTryTime", 1)]
         public virtual bool IsAbandoned { get; set; }
-        
+
         /// <summary>
         /// Priority of this job.
         /// </summary>

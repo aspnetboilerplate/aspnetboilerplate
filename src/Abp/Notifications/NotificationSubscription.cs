@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
+using System;
 
 namespace Abp.Notifications
 {
@@ -12,7 +12,7 @@ namespace Abp.Notifications
         /// <summary>
         /// User Id.
         /// </summary>
-        public long UserId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Notification unique name.

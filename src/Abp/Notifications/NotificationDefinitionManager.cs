@@ -1,10 +1,11 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -73,7 +74,7 @@ namespace Abp.Notifications
             return _notificationDefinitions.Values.ToImmutableList();
         }
 
-        public async Task<bool> IsAvailableAsync(string name, int? tenantId, long userId)
+        public async Task<bool> IsAvailableAsync(string name, Guid? tenantId, Guid userId)
         {
             var notificationDefinition = GetOrNull(name);
             if (notificationDefinition == null)
@@ -110,7 +111,7 @@ namespace Abp.Notifications
             return true;
         }
 
-        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(int? tenantId, long userId)
+        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(Guid? tenantId, Guid userId)
         {
             var availableDefinitions = new List<NotificationDefinition>();
 

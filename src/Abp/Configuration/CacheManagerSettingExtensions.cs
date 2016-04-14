@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Caching;
+﻿using Abp.Runtime.Caching;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Configuration
 {
@@ -20,19 +21,19 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets tenant settings cache.
         /// </summary>
-        public static ITypedCache<int, Dictionary<string, SettingInfo>> GetTenantSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, Dictionary<string, SettingInfo>> GetTenantSettingsCache(this ICacheManager cacheManager)
         {
             return cacheManager
-                .GetCache<int, Dictionary<string, SettingInfo>>(AbpCacheNames.TenantSettings);
+                .GetCache<Guid, Dictionary<string, SettingInfo>>(AbpCacheNames.TenantSettings);
         }
 
         /// <summary>
         /// Gets user settings cache.
         /// </summary>
-        public static ITypedCache<long, Dictionary<string, SettingInfo>> GetUserSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, Dictionary<string, SettingInfo>> GetUserSettingsCache(this ICacheManager cacheManager)
         {
             return cacheManager
-                .GetCache<long, Dictionary<string, SettingInfo>>(AbpCacheNames.UserSettings);
+                .GetCache<Guid, Dictionary<string, SettingInfo>>(AbpCacheNames.UserSettings);
         }
     }
 }

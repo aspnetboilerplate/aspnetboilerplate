@@ -12,13 +12,13 @@ namespace Abp.Configuration
         /// TenantId for this setting.
         /// TenantId is null if this setting is not Tenant level.
         /// </summary>
-        public int? TenantId { get; set; }
+        public Guid? TenantId { get; set; }
 
         /// <summary>
         /// UserId for this setting.
         /// UserId is null if this setting is not user level.
         /// </summary>
-        public long? UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// Unique name of the setting.
@@ -35,7 +35,6 @@ namespace Abp.Configuration
         /// </summary>
         public SettingInfo()
         {
-            
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Abp.Configuration
         /// <param name="userId">UserId for this setting. UserId is null if this setting is not user level.</param>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
-        public SettingInfo(int? tenantId, long? userId, string name, string value)
+        public SettingInfo(Guid? tenantId, Guid? userId, string name, string value)
         {
             TenantId = tenantId;
             UserId = userId;

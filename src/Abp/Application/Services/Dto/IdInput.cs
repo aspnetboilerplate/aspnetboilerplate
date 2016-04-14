@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
@@ -11,7 +13,6 @@ namespace Abp.Application.Services.Dto
 
         public IdInput()
         {
-
         }
 
         public IdInput(TId id)
@@ -21,19 +22,17 @@ namespace Abp.Application.Services.Dto
     }
 
     /// <summary>
-    /// A shortcut of <see cref="IdInput{TPrimaryKey}"/> for <see cref="int"/>.
+    /// A shortcut of <see cref="IdInput{TPrimaryKey}"/> for <see cref="Guid"/>.
     /// </summary>
-    public class IdInput : IdInput<int>
+    public class IdInput : IdInput<Guid>
     {
         public IdInput()
         {
-
         }
 
-        public IdInput(int id)
+        public IdInput(Guid id)
             : base(id)
         {
-
         }
     }
 }

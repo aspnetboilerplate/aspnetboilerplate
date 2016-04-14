@@ -1,4 +1,5 @@
 ﻿using Abp.MultiTenancy;
+using System;
 
 namespace Abp.Runtime.Session
 {
@@ -10,12 +11,12 @@ namespace Abp.Runtime.Session
         /// <summary>
         /// Gets current UserId or null.
         /// </summary>
-        long? UserId { get; }
+        Guid? UserId { get; }
 
         /// <summary>
         /// Gets current TenantId or null.
         /// </summary>
-        int? TenantId { get; }
+        Guid? TenantId { get; }
 
         /// <summary>
         /// Gets current multi-tenancy side.
@@ -26,12 +27,12 @@ namespace Abp.Runtime.Session
         /// UserId of the impersonator.
         /// This is filled if a user is performing actions behalf of the <see cref="UserId"/>.
         /// </summary>
-        long? ImpersonatorUserId { get; }
+        Guid? ImpersonatorUserId { get; }
 
         /// <summary>
         /// TenantId of the impersonator.
         /// This is filled if a user with <see cref="ImpersonatorUserId"/> performing actions behalf of the <see cref="UserId"/>.
         /// </summary>
-        int? ImpersonatorTenantId { get; }
+        Guid? ImpersonatorTenantId { get; }
     }
 }

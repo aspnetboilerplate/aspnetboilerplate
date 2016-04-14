@@ -1,6 +1,6 @@
-using System;
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
+using System;
 
 namespace Abp.Application.Services.Dto
 {
@@ -19,7 +19,7 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Creator user's id for this entity.
         /// </summary>
-        public long? CreatorUserId { get; set; }
+        public Guid? CreatorUserId { get; set; }
 
         /// <summary>
         /// Constructor.

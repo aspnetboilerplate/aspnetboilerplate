@@ -1,5 +1,5 @@
-using System;
 using Abp.Domain.Entities.Auditing;
+using System;
 
 namespace Abp.Application.Services.Dto
 {
@@ -18,6 +18,6 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
-        public long? LastModifierUserId { get; set; }
+        public Guid? LastModifierUserId { get; set; }
     }
 }

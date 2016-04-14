@@ -1,13 +1,4 @@
-﻿using System;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
@@ -17,6 +8,15 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
 using EntityFramework.DynamicFilters;
+using System;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.EntityFramework
 {
@@ -119,7 +119,7 @@ namespace Abp.EntityFramework
         public virtual void Initialize()
         {
             Database.Initialize(false);
-            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
             this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
         }
 
@@ -127,8 +127,8 @@ namespace Abp.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId, 0);
-            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, Guid tenantId) => t.TenantId == tenantId, Guid.Empty);
+            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, Guid? tenantId) => t.TenantId == tenantId, Guid.Empty);
         }
 
         public override int SaveChanges()
@@ -172,6 +172,7 @@ namespace Abp.EntityFramework
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
+
                     case EntityState.Modified:
                         PreventSettingCreationAuditProperties(entry);
                         CheckAndSetTenantIdProperty(entry);
@@ -191,6 +192,7 @@ namespace Abp.EntityFramework
                         }
 
                         break;
+
                     case EntityState.Deleted:
                         PreventSettingCreationAuditProperties(entry);
                         HandleSoftDelete(entry);
@@ -231,7 +233,7 @@ namespace Abp.EntityFramework
 
             if (!this.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
             {
-                if (AbpSession.TenantId != null && entity.TenantId == 0)
+                if (AbpSession.TenantId != null && entity.TenantId == Guid.Empty)
                 {
                     entity.TenantId = AbpSession.GetTenantId();
                 }
@@ -239,14 +241,14 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            var currentTenantId = (int)this.GetFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId);
+            var currentTenantId = (Guid)this.GetFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId);
 
-            if (currentTenantId == 0)
+            if (currentTenantId == Guid.Empty)
             {
                 throw new DbEntityValidationException("Can not save a IMustHaveTenant entity while MustHaveTenant filter is enabled and current filter parameter value is not set (Probably, no tenant user logged in)!");
             }
 
-            if (entity.TenantId == 0)
+            if (entity.TenantId == Guid.Empty)
             {
                 entity.TenantId = currentTenantId;
             }
@@ -263,7 +265,7 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            var currentTenantId = (int?)this.GetFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId);
+            var currentTenantId = (Guid?)this.GetFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId);
 
             var entity = entry.Cast<IMayHaveTenant>().Entity;
 

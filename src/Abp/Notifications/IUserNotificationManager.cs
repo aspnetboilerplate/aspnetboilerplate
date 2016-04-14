@@ -16,14 +16,14 @@ namespace Abp.Notifications
         /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        Task<List<UserNotification>> GetUserNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue);
+        Task<List<UserNotification>> GetUserNotificationsAsync(Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue);
 
         /// <summary>
         /// Gets user notification count.
         /// </summary>
         /// <param name="userId">The user id.</param>
         /// <param name="state">State.</param>
-        Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null);
+        Task<int> GetUserNotificationCountAsync(Guid userId, UserNotificationState? state = null);
 
         /// <summary>
         /// Gets a user notification by given id.
@@ -43,7 +43,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="userId">The user id.</param>
         /// <param name="state">New state.</param>
-        Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state);
+        Task UpdateAllUserNotificationStatesAsync(Guid userId, UserNotificationState state);
 
         /// <summary>
         /// Deletes a user notification.
@@ -55,6 +55,6 @@ namespace Abp.Notifications
         /// Deletes all notifications of a user.
         /// </summary>
         /// <param name="userId">The user id.</param>
-        Task DeleteAllUserNotificationsAsync(long userId);
+        Task DeleteAllUserNotificationsAsync(Guid userId);
     }
 }

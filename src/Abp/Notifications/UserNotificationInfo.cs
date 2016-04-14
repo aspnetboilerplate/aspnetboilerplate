@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abp.Notifications
 {
@@ -17,7 +17,7 @@ namespace Abp.Notifications
         /// <summary>
         /// User Id.
         /// </summary>
-        public virtual long UserId { get; set; }
+        public virtual Guid UserId { get; set; }
 
         /// <summary>
         /// Notification Id.
@@ -44,7 +44,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
         /// </summary>
-        public UserNotificationInfo(long userId, Guid notificationId)
+        public UserNotificationInfo(Guid userId, Guid notificationId)
             : this()
         {
             UserId = userId;

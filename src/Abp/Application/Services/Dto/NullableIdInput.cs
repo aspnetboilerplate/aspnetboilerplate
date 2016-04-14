@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
@@ -12,7 +14,6 @@ namespace Abp.Application.Services.Dto
 
         public NullableIdInput()
         {
-
         }
 
         public NullableIdInput(TId? id)
@@ -22,19 +23,17 @@ namespace Abp.Application.Services.Dto
     }
 
     /// <summary>
-    /// A shortcut of <see cref="NullableIdInput{TPrimaryKey}"/> for <see cref="int"/>.
+    /// A shortcut of <see cref="NullableIdInput{TPrimaryKey}"/> for <see cref="Guid"/>.
     /// </summary>
-    public class NullableIdInput : NullableIdInput<int>
+    public class NullableIdInput : NullableIdInput<Guid>
     {
         public NullableIdInput()
         {
-
         }
 
-        public NullableIdInput(int? id)
+        public NullableIdInput(Guid? id)
             : base(id)
         {
-
         }
     }
 }

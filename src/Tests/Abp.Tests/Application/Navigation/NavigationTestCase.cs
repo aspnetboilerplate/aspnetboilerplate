@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Authorization;
@@ -7,6 +6,8 @@ using Abp.Dependency;
 using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Tests.Application.Navigation
 {
@@ -49,19 +50,19 @@ namespace Abp.Tests.Application.Navigation
                     .UsingFactoryMethod(
                         () => new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                 );
-            
+
             //Create user navigation manager to test
             UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager)
-                                    {
-                                        PermissionChecker = CreateMockPermissionChecker()
-                                    };
+            {
+                PermissionChecker = CreateMockPermissionChecker()
+            };
         }
 
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"), "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"), "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
             return permissionChecker;
         }
 

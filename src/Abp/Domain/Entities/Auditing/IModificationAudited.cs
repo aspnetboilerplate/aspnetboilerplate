@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
@@ -9,6 +11,6 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Last modifier user for this entity.
         /// </summary>
-        long? LastModifierUserId { get; set; }
+        Guid? LastModifierUserId { get; set; }
     }
 }

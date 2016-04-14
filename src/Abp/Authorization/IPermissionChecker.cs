@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Abp.Authorization
@@ -18,6 +19,6 @@ namespace Abp.Authorization
         /// </summary>
         /// <param name="userId">Id of the user to check</param>
         /// <param name="permissionName">Name of the permission</param>
-        Task<bool> IsGrantedAsync(long userId, string permissionName);
+        Task<bool> IsGrantedAsync(Guid userId, string permissionName);
     }
 }

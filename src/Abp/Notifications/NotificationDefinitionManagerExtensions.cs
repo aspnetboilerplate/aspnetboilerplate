@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using Abp.Threading;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Notifications
 {
@@ -14,7 +15,7 @@ namespace Abp.Notifications
         /// <param name="notificationDefinitionManager">Notification definition manager</param>
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
-        public static IReadOnlyList<NotificationDefinition> GetAllAvailable(this INotificationDefinitionManager notificationDefinitionManager, int? tenantId, long userId)
+        public static IReadOnlyList<NotificationDefinition> GetAllAvailable(this INotificationDefinitionManager notificationDefinitionManager, Guid? tenantId, Guid userId)
         {
             return AsyncHelper.RunSync(() => notificationDefinitionManager.GetAllAvailableAsync(tenantId, userId));
         }

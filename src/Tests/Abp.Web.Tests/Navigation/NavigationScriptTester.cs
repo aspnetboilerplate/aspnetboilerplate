@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using Abp.Tests.Application.Navigation;
+﻿using Abp.Tests.Application.Navigation;
 using Abp.Tests.Configuration;
 using Abp.Web.Navigation;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Web.Tests.Navigation
@@ -15,7 +16,7 @@ namespace Abp.Web.Tests.Navigation
             var testCase = new NavigationTestCase();
             var scriptManager = new NavigationScriptManager(testCase.UserNavigationManager)
             {
-                AbpSession = new MyChangableSession { UserId = 1 }
+                AbpSession = new MyChangableSession { UserId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001") }
             };
 
             var script = await scriptManager.GetScriptAsync();

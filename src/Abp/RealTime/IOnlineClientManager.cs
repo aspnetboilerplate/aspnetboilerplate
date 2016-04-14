@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Abp.RealTime
 {
@@ -39,7 +40,7 @@ namespace Abp.RealTime
         /// Returns null if not found.
         /// </summary>
         /// <param name="userId">UserId.</param>
-        IOnlineClient GetByUserIdOrNull(long userId);
+        IOnlineClient GetByUserIdOrNull(Guid userId);
 
         /// <summary>
         /// Gets all online clients.

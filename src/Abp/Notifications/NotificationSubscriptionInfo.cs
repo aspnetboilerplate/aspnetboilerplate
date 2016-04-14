@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abp.Notifications
 {
@@ -18,12 +18,12 @@ namespace Abp.Notifications
         /// Note: This class does not implement <see cref="IMayHaveTenant"/> filter.
         /// So, it should be manually filtered if needed.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// User Id.
         /// </summary>
-        public virtual long UserId { get; set; }
+        public virtual Guid UserId { get; set; }
 
         /// <summary>
         /// Notification unique name.
@@ -55,13 +55,12 @@ namespace Abp.Notifications
         /// </summary>
         public NotificationSubscriptionInfo()
         {
-            
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(Guid? tenantId, Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             TenantId = tenantId;
             NotificationName = notificationName;

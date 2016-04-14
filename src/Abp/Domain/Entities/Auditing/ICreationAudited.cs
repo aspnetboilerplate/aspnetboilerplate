@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
@@ -9,6 +11,6 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Id of the creator user of this entity.
         /// </summary>
-        long? CreatorUserId { get; set; }
+        Guid? CreatorUserId { get; set; }
     }
 }

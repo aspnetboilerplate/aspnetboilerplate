@@ -1,5 +1,5 @@
-using System;
 using Abp.Timing;
+using System;
 
 namespace Abp.Domain.Entities.Auditing
 {
@@ -18,7 +18,7 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Creator of this entity.
         /// </summary>
-        public virtual long? CreatorUserId { get; set; }
+        public virtual Guid? CreatorUserId { get; set; }
 
         /// <summary>
         /// Constructor.

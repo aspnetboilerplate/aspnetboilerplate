@@ -21,12 +21,12 @@ namespace Abp.RealTime
         /// <summary>
         /// Tenant Id.
         /// </summary>
-        int? TenantId { get; }
+        Guid? TenantId { get; }
 
         /// <summary>
         /// User Id.
         /// </summary>
-        long? UserId { get; }
+        Guid? UserId { get; }
 
         /// <summary>
         /// Connection establishment time for this client.

@@ -1,9 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -24,7 +25,7 @@ namespace Abp.Notifications
             _notificationDefinitionManager = notificationDefinitionManager;
         }
 
-        public async Task SubscribeAsync(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public async Task SubscribeAsync(Guid? tenantId, Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             if (await IsSubscribedAsync(userId, notificationName, entityIdentifier))
             {
@@ -41,7 +42,7 @@ namespace Abp.Notifications
                 );
         }
 
-        public async Task SubscribeToAllAvailableNotificationsAsync(int? tenantId, long userId)
+        public async Task SubscribeToAllAvailableNotificationsAsync(Guid? tenantId, Guid userId)
         {
             var notificationDefinitions = (await _notificationDefinitionManager
                 .GetAllAvailableAsync(tenantId, userId))
@@ -54,7 +55,7 @@ namespace Abp.Notifications
             }
         }
 
-        public async Task UnsubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public async Task UnsubscribeAsync(Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             await _store.DeleteSubscriptionAsync(
                 userId,
@@ -77,7 +78,7 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(int? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(Guid? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
                 new[] { tenantId },
@@ -91,7 +92,7 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public async Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(long userId)
+        public async Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(Guid userId)
         {
             var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(userId);
 
@@ -100,7 +101,7 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public Task<bool> IsSubscribedAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public Task<bool> IsSubscribedAsync(Guid userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             return _store.IsSubscribedAsync(
                 userId,

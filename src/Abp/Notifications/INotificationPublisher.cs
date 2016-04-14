@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Runtime.Session;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -17,8 +18,8 @@ namespace Abp.Notifications
         /// <param name="entityIdentifier">The entity identifier if this notification is related to an entity</param>
         /// <param name="severity">Notification severity</param>
         /// <param name="userIds">
-        /// Target user id(s). 
-        /// Used to send notification to specific user(s). 
+        /// Target user id(s).
+        /// Used to send notification to specific user(s).
         /// If this is null/empty, the notification is sent to subscribed users.
         /// </param>
         /// <param name="excludedUserIds">
@@ -38,8 +39,8 @@ namespace Abp.Notifications
             NotificationData data = null,
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
-            long[] userIds = null,
-            long[] excludedUserIds = null,
-            int?[] tenantIds = null);
+            Guid[] userIds = null,
+            Guid[] excludedUserIds = null,
+            Guid?[] tenantIds = null);
     }
 }

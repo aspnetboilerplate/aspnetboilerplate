@@ -17,6 +17,6 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
-        public virtual long? LastModifierUserId { get; set; }
+        public virtual Guid? LastModifierUserId { get; set; }
     }
 }

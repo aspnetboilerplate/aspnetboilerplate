@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Dependency;
+using System;
 
 namespace Abp.Authorization
 {
@@ -11,7 +12,7 @@ namespace Abp.Authorization
         /// <summary>
         /// The user which requires permission.
         /// </summary>
-        long? UserId { get; }
+        Guid? UserId { get; }
 
         /// <summary>
         /// Gets the <see cref="IIocResolver"/>.

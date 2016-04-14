@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -8,6 +6,8 @@ using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -57,9 +57,9 @@ namespace Abp.Notifications
             NotificationData data = null,
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
-            long[] userIds = null,
-            long[] excludedUserIds = null,
-            int?[] tenantIds = null)
+            Guid[] userIds = null,
+            Guid[] excludedUserIds = null,
+            Guid?[] tenantIds = null)
         {
             if (notificationName.IsNullOrEmpty())
             {
@@ -73,7 +73,7 @@ namespace Abp.Notifications
 
             if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty())
             {
-                tenantIds = new[] {AbpSession.TenantId};
+                tenantIds = new[] { AbpSession.TenantId };
             }
 
             var notificationInfo = new NotificationInfo

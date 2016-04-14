@@ -1,6 +1,7 @@
 ﻿using Abp.Configuration.Startup;
 using Abp.Runtime.Session;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.TestBase.Tests.Runtime.Session
@@ -13,7 +14,7 @@ namespace Abp.TestBase.Tests.Runtime.Session
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
 
             AbpSession.UserId.ShouldBe(null);
-            AbpSession.TenantId.ShouldBe(1);
+            AbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
 
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
 
@@ -26,18 +27,18 @@ namespace Abp.TestBase.Tests.Runtime.Session
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
 
-            AbpSession.UserId = 1;
-            AbpSession.TenantId = 42;
+            AbpSession.UserId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001");
+            AbpSession.TenantId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000042");
 
             var resolvedAbpSession = LocalIocManager.Resolve<IAbpSession>();
 
-            resolvedAbpSession.UserId.ShouldBe(1);
-            resolvedAbpSession.TenantId.ShouldBe(42);
+            resolvedAbpSession.UserId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
+            resolvedAbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000042"));
 
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
 
-            AbpSession.UserId.ShouldBe(1);
-            AbpSession.TenantId.ShouldBe(1);
+            AbpSession.UserId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
+            AbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
         }
     }
 }

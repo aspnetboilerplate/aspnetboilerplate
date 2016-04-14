@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
@@ -8,6 +10,6 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Which user deleted this entity?
         /// </summary>
-        long? DeleterUserId { get; set; }
+        Guid? DeleterUserId { get; set; }
     }
 }
