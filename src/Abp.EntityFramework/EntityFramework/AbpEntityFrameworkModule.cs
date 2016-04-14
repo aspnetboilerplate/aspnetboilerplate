@@ -1,5 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
@@ -30,15 +34,15 @@ namespace Abp.EntityFramework
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             IocManager.IocContainer.Register(
-                Component.For(typeof (IDbContextProvider<>))
-                    .ImplementedBy(typeof (UnitOfWorkDbContextProvider<>))
+                Component.For(typeof(IDbContextProvider<>))
+                    .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
                 );
-            
-            RegisterGenericRepositories();
+
+            RegisterGenericRepositoriesAndMatchDbContexes();
         }
 
-        private void RegisterGenericRepositories()
+        private void RegisterGenericRepositoriesAndMatchDbContexes()
         {
             var dbContextTypes =
                 _typeFinder.Find(type =>
@@ -54,9 +58,34 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            foreach (var dbContextType in dbContextTypes)
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
             {
-                EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(dbContextType, IocManager);
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
+                }
+            }
+
+            using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
+            {
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    var types = new List<Type>();
+                    AddWithBaseTypes(dbContextType, types);
+                    foreach (var type in types)
+                    {
+                        dbContextMatcher.Object.Add(type, dbContextType);
+                    }
+                }
+            }
+        }
+
+        private static void AddWithBaseTypes(Type dbContextType, List<Type> types)
+        {
+            types.Add(dbContextType);
+            if (dbContextType != typeof(DbContext))
+            {
+                AddWithBaseTypes(dbContextType.BaseType, types);
             }
         }
     }

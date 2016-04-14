@@ -21,14 +21,20 @@ namespace Abp.EntityFramework.Uow
         protected IIocResolver IocResolver { get; private set; }
         
         protected TransactionScope CurrentTransaction;
+        private readonly IDbContextResolver _dbContextResolver;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
-        public EfUnitOfWork(IIocResolver iocResolver, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+        public EfUnitOfWork(
+            IIocResolver iocResolver, 
+            IConnectionStringResolver connectionStringResolver, 
+            IDbContextResolver dbContextResolver, 
+            IUnitOfWorkDefaultOptions defaultOptions)
             : base(connectionStringResolver, defaultOptions)
         {
             IocResolver = iocResolver;
+            _dbContextResolver = dbContextResolver;
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
@@ -125,7 +131,8 @@ namespace Abp.EntityFramework.Uow
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
-                dbContext = Resolve<TDbContext>(connectionString);
+
+                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
 
                 foreach (var filter in Filters)
                 {
@@ -176,15 +183,7 @@ namespace Abp.EntityFramework.Uow
         {
             await dbContext.SaveChangesAsync();
         }
-
-        protected virtual TDbContext Resolve<TDbContext>(string connectionString)
-        {
-            return IocResolver.Resolve<TDbContext>(new
-            {
-                nameOrConnectionString = connectionString
-            });
-        }
-
+        
         protected virtual void Release(DbContext dbContext)
         {
             dbContext.Dispose();
