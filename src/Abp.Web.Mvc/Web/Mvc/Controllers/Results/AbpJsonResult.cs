@@ -1,8 +1,6 @@
 using System;
 using System.Web.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Abp.Collections.Extensions;
+using Abp.Json;
 
 /* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
 
@@ -60,13 +58,7 @@ namespace Abp.Web.Mvc.Controllers.Results
 
             if (Data != null)
             {
-                //TODO: Make this static for performance reason?
-                var jsonSerializerSettings = new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                };
-
-                response.Write(JsonConvert.SerializeObject(Data, Formatting.Indented, jsonSerializerSettings));
+                response.Write(Data.ToJsonString(true, true));
             }
         }
     }
