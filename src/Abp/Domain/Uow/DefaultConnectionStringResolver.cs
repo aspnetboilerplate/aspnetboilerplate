@@ -13,7 +13,7 @@ namespace Abp.Domain.Uow
             _configuration = configuration;
         }
 
-        public virtual string GetNameOrConnectionString(IUnitOfWork unitOfWork)
+        public virtual string GetNameOrConnectionString()
         {
             var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
             if (!string.IsNullOrWhiteSpace(defaultConnectionString))
@@ -24,6 +24,11 @@ namespace Abp.Domain.Uow
             if (ConfigurationManager.ConnectionStrings["Default"] != null)
             {
                 return "Default";
+            }
+
+            if (ConfigurationManager.ConnectionStrings.Count == 1)
+            {
+                return ConfigurationManager.ConnectionStrings[0].ConnectionString;
             }
 
             return null;

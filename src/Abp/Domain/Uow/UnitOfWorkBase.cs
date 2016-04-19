@@ -331,7 +331,7 @@ namespace Abp.Domain.Uow
 
         protected virtual string ResolveConnectionString()
         {
-            return ConnectionStringResolver.GetNameOrConnectionString(this);
+            return ConnectionStringResolver.GetNameOrConnectionString();
         }
 
         /// <summary>
