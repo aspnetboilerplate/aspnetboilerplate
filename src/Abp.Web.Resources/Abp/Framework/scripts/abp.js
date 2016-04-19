@@ -641,6 +641,16 @@
         };
     })();
 
+    abp.timing.convertToLocalTime = function(targetTimeZoneOffset) {
+        var now = abp.clock.now();
+        var localTime = now.getTime();
+        var localOffset = now.getTimezoneOffset() * 60000;
+        var utc = localTime + localOffset;
+
+        var targetTime = utc + (3600000 * targetTimeZoneOffset);
+        return new Date(targetTime);
+    };
+
     /* CLOCK *****************************************/
     abp.clock = abp.clock || {};
 

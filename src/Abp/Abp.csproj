@@ -210,6 +210,8 @@
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="Logging\IHasLogSeverity.cs" />
+    <Compile Include="Timing\TimingSettingNames.cs" />
+    <Compile Include="Timing\TimingSettingProvider.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
