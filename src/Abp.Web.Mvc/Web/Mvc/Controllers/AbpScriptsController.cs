@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Extensions;
+using Abp.Timing;
 using Abp.Web.Authorization;
 using Abp.Web.Features;
 using Abp.Web.Localization;
@@ -34,10 +35,10 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         public AbpScriptsController(
             IMultiTenancyScriptManager multiTenancyScriptManager,
-            ISettingScriptManager settingScriptManager, 
-            INavigationScriptManager navigationScriptManager, 
-            ILocalizationScriptManager localizationScriptManager, 
-            IAuthorizationScriptManager authorizationScriptManager, 
+            ISettingScriptManager settingScriptManager,
+            INavigationScriptManager navigationScriptManager,
+            ILocalizationScriptManager localizationScriptManager,
+            IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager)
         {
@@ -58,7 +59,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);                
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
             }
 
             var sb = new StringBuilder();
@@ -68,7 +69,7 @@ namespace Abp.Web.Mvc.Controllers
 
             sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
-            
+
             sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
 
@@ -80,10 +81,12 @@ namespace Abp.Web.Mvc.Controllers
 
             sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
-            
+
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
 
             sb.AppendLine(GetTriggerScript());
+
+            sb.AppendLine(GetClockProviderScript());
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }
@@ -94,6 +97,17 @@ namespace Abp.Web.Mvc.Controllers
 
             script.AppendLine("(function(){");
             script.AppendLine("    abp.event.trigger('abp.dynamicScriptsInitialized');");
+            script.Append("})();");
+
+            return script.ToString();
+        }
+
+        private static string GetClockProviderScript()
+        {
+            var script = new StringBuilder();
+
+            script.AppendLine("(function(){");
+            script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase());
             script.Append("})();");
 
             return script.ToString();
