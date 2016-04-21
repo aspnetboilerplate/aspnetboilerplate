@@ -13,7 +13,7 @@ namespace Abp.Notifications
     public class NotificationInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
-        /// Indicated all tenant ids for <see cref="TenantIds"/> property.
+        /// Indicates all tenant ids for <see cref="TenantIds"/> property.
         /// Value: "0".
         /// </summary>
         public const string AllTenantIds = "0";

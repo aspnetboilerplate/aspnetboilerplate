@@ -113,6 +113,7 @@
     <Compile Include="Notifications\NotificationProvider.cs" />
     <Compile Include="Notifications\NotificationSettingNames.cs" />
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
+    <Compile Include="Notifications\TenantNotificationInfo.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
     <Compile Include="Reflection\FolderAssemblyFinder.cs" />
@@ -557,6 +558,7 @@
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="UserIdentifier.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

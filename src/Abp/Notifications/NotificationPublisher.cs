@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
@@ -57,8 +58,8 @@ namespace Abp.Notifications
             NotificationData data = null,
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
-            long[] userIds = null,
-            long[] excludedUserIds = null,
+            UserIdentifier[] userIds = null,
+            UserIdentifier[] excludedUserIds = null,
             int?[] tenantIds = null)
         {
             if (notificationName.IsNullOrEmpty())
@@ -68,7 +69,7 @@ namespace Abp.Notifications
 
             if (!tenantIds.IsNullOrEmpty() && !userIds.IsNullOrEmpty())
             {
-                throw new ArgumentException("tenantIds can be set only userIds is not set!", "tenantIds");
+                throw new ArgumentException("tenantIds can be set only if userIds is not set!", "tenantIds");
             }
 
             if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty())
@@ -83,8 +84,8 @@ namespace Abp.Notifications
                 EntityTypeAssemblyQualifiedName = entityIdentifier == null ? null : entityIdentifier.Type.AssemblyQualifiedName,
                 EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
                 Severity = severity,
-                UserIds = userIds.IsNullOrEmpty() ? null : userIds.JoinAsString(","),
-                ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.JoinAsString(","),
+                UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
+                ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
                 Data = data == null ? null : data.ToJsonString(),
                 DataTypeName = data == null ? null : data.GetType().AssemblyQualifiedName

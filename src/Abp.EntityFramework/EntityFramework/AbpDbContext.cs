@@ -229,10 +229,9 @@ namespace Abp.EntityFramework
         protected virtual void CheckAndSetMustHaveTenant(DbEntityEntry entry)
         {
             var entity = entry.Cast<IMustHaveTenant>().Entity;
-            var currentTenantId = CurrentUnitOfWorkProvider.Current.GetTenantId();
-
             if (entity.TenantId == 0)
             {
+                var currentTenantId = GetCurrentTenantId();
                 if (currentTenantId != null)
                 {
                     entity.TenantId = currentTenantId.Value;
@@ -337,6 +336,17 @@ namespace Abp.EntityFramework
             }
 
             return null;
+        }
+
+        protected virtual int? GetCurrentTenantId()
+        {
+            if (CurrentUnitOfWorkProvider != null &&
+                CurrentUnitOfWorkProvider.Current != null)
+            {
+                return CurrentUnitOfWorkProvider.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

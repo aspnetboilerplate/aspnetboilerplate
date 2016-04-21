@@ -21,17 +21,17 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public async Task<List<UserNotification>> GetUserNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public async Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
-            var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(userId, state, skipCount, maxResultCount);
+            var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(user, state, skipCount, maxResultCount);
             return userNotifications
                 .Select(un => un.ToUserNotification())
                 .ToList();
         }
 
-        public Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
         {
-            return _store.GetUserNotificationCountAsync(userId, state);
+            return _store.GetUserNotificationCountAsync(user, state);
         }
 
         public async Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId)
@@ -50,9 +50,9 @@ namespace Abp.Notifications
             return _store.UpdateUserNotificationStateAsync(userNotificationId, state);
         }
 
-        public Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        public Task UpdateAllUserNotificationStatesAsync(UserIdentifier user, UserNotificationState state)
         {
-            return _store.UpdateAllUserNotificationStatesAsync(userId, state);
+            return _store.UpdateAllUserNotificationStatesAsync(user, state);
         }
 
         public Task DeleteUserNotificationAsync(Guid userNotificationId)
@@ -60,9 +60,9 @@ namespace Abp.Notifications
             return _store.DeleteUserNotificationAsync(userNotificationId);
         }
 
-        public Task DeleteAllUserNotificationsAsync(long userId)
+        public Task DeleteAllUserNotificationsAsync(UserIdentifier user)
         {
-            return _store.DeleteAllUserNotificationsAsync(userId);
+            return _store.DeleteAllUserNotificationsAsync(user);
         }
     }
 }

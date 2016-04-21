@@ -38,8 +38,8 @@ namespace Abp.Notifications
             NotificationData data = null,
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
-            long[] userIds = null,
-            long[] excludedUserIds = null,
+            UserIdentifier[] userIds = null,
+            UserIdentifier[] excludedUserIds = null,
             int?[] tenantIds = null);
     }
 }

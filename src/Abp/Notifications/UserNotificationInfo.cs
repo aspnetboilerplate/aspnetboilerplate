@@ -12,8 +12,13 @@ namespace Abp.Notifications
     /// </summary>
     [Serializable]
     [Table("AbpUserNotifications")]
-    public class UserNotificationInfo : Entity<Guid>, IHasCreationTime
+    public class UserNotificationInfo : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {
+        /// <summary>
+        /// Tenant Id.
+        /// </summary>
+        public virtual int? TenantId { get; set; }
+
         /// <summary>
         /// User Id.
         /// </summary>
@@ -44,9 +49,10 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
         /// </summary>
-        public UserNotificationInfo(long userId, Guid notificationId)
+        public UserNotificationInfo(int? tenantId, long userId, Guid notificationId)
             : this()
         {
+            TenantId = tenantId;
             UserId = userId;
             NotificationId = notificationId;
         }

@@ -57,10 +57,10 @@ namespace Abp.Notifications
                 return;
             }
 
-            var userIds = await GetUserIds(notificationInfo);
+            var users = await GetUsers(notificationInfo);
 
-            var userNotificationInfos = userIds
-                .Select(userId => new UserNotificationInfo(userId, notificationInfo.Id))
+            var userNotificationInfos = users
+                .Select(user => new UserNotificationInfo(user.TenantId,user.UserId, notificationInfo.Id))
                 .ToList();
 
             await SaveUserNotifications(userNotificationInfos);
@@ -78,11 +78,11 @@ namespace Abp.Notifications
                 Logger.Warn(ex.ToString(), ex);
             }
         }
-
+        
         [UnitOfWork]
-        protected virtual async Task<long[]> GetUserIds(NotificationInfo notificationInfo)
+        protected virtual async Task<UserIdentifier[]> GetUsers(NotificationInfo notificationInfo)
         {
-            List<long> userIds;
+            List<UserIdentifier> userIds;
 
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
@@ -90,8 +90,8 @@ namespace Abp.Notifications
                 userIds = notificationInfo
                     .UserIds
                     .Split(",")
-                    .Select(uidAsStr => uidAsStr.To<long>())
-                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, uid))
+                    .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
+                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId))
                     .ToList();
             }
             else
@@ -113,6 +113,8 @@ namespace Abp.Notifications
                 }
                 else
                 {
+                    //TODO: Seems NotificationPublisher.AllTenants has not been implemented!
+
                     //Get all subscribed users of specified tenant(s)
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         tenantIds,
@@ -129,7 +131,7 @@ namespace Abp.Notifications
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
-                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, subscription.TenantId, subscription.UserId) ||
+                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
                             !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
                         {
                             invalidSubscriptions[subscription.Id] = subscription;
@@ -141,7 +143,7 @@ namespace Abp.Notifications
 
                 //Get user ids
                 userIds = subscriptions
-                    .Select(s => s.UserId)
+                    .Select(s => new UserIdentifier(s.TenantId, s.UserId))
                     .ToList();
             }
 
@@ -151,10 +153,10 @@ namespace Abp.Notifications
                 var excludedUserIds = notificationInfo
                     .ExcludedUserIds
                     .Split(",")
-                    .Select(uidAsStr => uidAsStr.To<long>())
+                    .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
                     .ToList();
 
-                userIds.RemoveAll(uid => excludedUserIds.Contains(uid));
+                userIds.RemoveAll(uid => excludedUserIds.Any(euid => euid.Equals(uid)));
             }
 
             return userIds.ToArray();
@@ -170,7 +172,7 @@ namespace Abp.Notifications
             return notificationInfo
                 .TenantIds
                 .Split(",")
-                .Select(uidAsStr => uidAsStr == "null" ? (int?)null : (int?)uidAsStr.To<int>())
+                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?)null : (int?)tenantIdAsStr.To<int>())
                 .ToArray();
         }
 
