@@ -25,7 +25,7 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
         {
             Clock.Provider = new UtcClockProvider();
 
-            var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc);
+            var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, Clock.Kind);
             var fields = new NameValueCollection { { "date", sourceDate } };
             var metaData = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(DateTime?));
 
@@ -38,7 +38,7 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
 
             var boundDate = new AbpMvcDateTimeBinder().BindModel(new ControllerContext(), binderContext) as DateTime?;
             boundDate.ShouldBe(resultDate);
-            boundDate?.Kind.ShouldBe(DateTimeKind.Utc);
+            boundDate?.Kind.ShouldBe(Clock.Kind);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
 
             var boundDate = new AbpMvcDateTimeBinder().BindModel(new ControllerContext(), binderContext) as DateTime?;
             boundDate.ShouldBe(resultDate);
-            boundDate?.Kind.ShouldBe(DateTimeKind.Local);
+            boundDate?.Kind.ShouldBe(Clock.Kind);
         }
     }
 }

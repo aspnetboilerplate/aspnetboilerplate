@@ -641,13 +641,10 @@
         };
     })();
 
-    abp.timing.convertToLocalTime = function(targetTimeZoneOffset) {
-        var now = abp.clock.now();
-        var localTime = now.getTime();
-        var localOffset = now.getTimezoneOffset() * 60000;
-        var utc = localTime + localOffset;
-
-        var targetTime = utc + (3600000 * targetTimeZoneOffset);
+    abp.timing.convertToUserTimezone = function (date) {
+        var localTime = date.getTime();
+        var utcTime = localTime + (date.getTimezoneOffset() * 60000);
+        var targetTime = parseInt(utcTime) + parseInt(abp.timing.timeZoneInfo.windows.currentUtcOffsetInMilliseconds);
         return new Date(targetTime);
     };
 
@@ -670,6 +667,6 @@
         return date;
     }
 
-    abp.clock.provider = abp.timing.utcClockProvider;
+    abp.clock.provider = abp.timing.localClockProvider;
 
 })(jQuery);

@@ -12,6 +12,14 @@ namespace Abp.Timing
             get { return DateTime.Now; }
         }
 
+        public DateTimeKind Kind
+        {
+            get
+            {
+                return DateTimeKind.Local;
+            }
+        }
+
         public DateTime Normalize(DateTime dateTime)
         {
             if (dateTime.Kind == DateTimeKind.Unspecified)
@@ -25,6 +33,11 @@ namespace Abp.Timing
             }
 
             return dateTime;
+        }
+
+        public bool SupportsMultipleTimezone()
+        {
+            return false;
         }
     }
 }

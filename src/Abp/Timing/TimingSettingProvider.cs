@@ -10,7 +10,7 @@ namespace Abp.Timing
         {
             return new[]
             {
-                new SettingDefinition(TimingSettingNames.TimeZone, null, L("TimeZone"), scopes: SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true)
+                new SettingDefinition(TimingSettingNames.TimeZone, "UTC", L("TimeZone"), scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true)
             };
         }
 
