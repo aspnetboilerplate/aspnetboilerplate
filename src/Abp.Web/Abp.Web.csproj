@@ -71,6 +71,8 @@
     <Compile Include="Web\MultiTenancy\IMultiTenancyScriptManager.cs" />
     <Compile Include="Web\Sessions\ISessionScriptManager.cs" />
     <Compile Include="Web\Sessions\SessionScriptManager.cs" />
+    <Compile Include="Web\Timing\ITimingScriptManager.cs" />
+    <Compile Include="Web\Timing\TimingScriptManager.cs" />
     <Compile Include="Web\WebAssemblyFinder.cs" />
     <Compile Include="Web\Authorization\AuthorizationScriptManager.cs" />
     <Compile Include="Web\Authorization\IAuthorizationScriptManager.cs" />

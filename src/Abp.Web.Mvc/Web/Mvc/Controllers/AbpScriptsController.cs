@@ -13,6 +13,7 @@ using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
 using Abp.Web.Settings;
+using Abp.Web.Timing;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -29,6 +30,7 @@ namespace Abp.Web.Mvc.Controllers
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly IFeaturesScriptManager _featuresScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
+        private readonly ITimingScriptManager _timingScriptManager;
 
         /// <summary>
         /// Constructor.
@@ -40,7 +42,8 @@ namespace Abp.Web.Mvc.Controllers
             ILocalizationScriptManager localizationScriptManager,
             IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
-            ISessionScriptManager sessionScriptManager)
+            ISessionScriptManager sessionScriptManager, 
+            ITimingScriptManager timingScriptManager)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
@@ -49,6 +52,7 @@ namespace Abp.Web.Mvc.Controllers
             _authorizationScriptManager = authorizationScriptManager;
             _featuresScriptManager = featuresScriptManager;
             _sessionScriptManager = sessionScriptManager;
+            _timingScriptManager = timingScriptManager;
         }
 
         /// <summary>
@@ -83,10 +87,14 @@ namespace Abp.Web.Mvc.Controllers
             sb.AppendLine();
 
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
+            sb.AppendLine();
+
+            sb.AppendLine(await _timingScriptManager.GetScriptAsync());
+            sb.AppendLine();
 
             sb.AppendLine(GetTriggerScript());
 
-            sb.AppendLine(GetClockProviderScript());
+            
 
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }
@@ -97,17 +105,6 @@ namespace Abp.Web.Mvc.Controllers
 
             script.AppendLine("(function(){");
             script.AppendLine("    abp.event.trigger('abp.dynamicScriptsInitialized');");
-            script.Append("})();");
-
-            return script.ToString();
-        }
-
-        private static string GetClockProviderScript()
-        {
-            var script = new StringBuilder();
-
-            script.AppendLine("(function(){");
-            script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase());
             script.Append("})();");
 
             return script.ToString();

@@ -23,6 +23,7 @@ using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
+using Abp.Timing;
 
 namespace Abp
 {
@@ -62,6 +63,7 @@ namespace Abp
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
             Configuration.Settings.Providers.Add<NotificationSettingProvider>();
+            Configuration.Settings.Providers.Add<TimingSettingProvider>();
 
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);

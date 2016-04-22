@@ -210,6 +210,7 @@
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="Logging\IHasLogSeverity.cs" />
+    <Compile Include="Timing\Timezone\TimezoneHelper.cs" />
     <Compile Include="Timing\TimingSettingNames.cs" />
     <Compile Include="Timing\TimingSettingProvider.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
@@ -642,6 +643,9 @@
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-fr.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Timing\Timezone\Mapping\WindowsZones.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

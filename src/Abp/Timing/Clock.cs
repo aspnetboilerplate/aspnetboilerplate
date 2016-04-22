@@ -48,5 +48,19 @@ namespace Abp.Timing
         {
             return Provider.Normalize(dateTime);
         }
+
+        public static DateTimeKind Kind
+        {
+            get { return Provider.Kind; }
+        }
+
+        /// <summary>
+        /// Returns true if multiple timezone is supported, returns false if not.
+        /// </summary>
+        /// <returns></returns>
+        public static bool SupportsMultipleTimezone()
+        {
+            return Provider.SupportsMultipleTimezone();
+        }
     }
 }
