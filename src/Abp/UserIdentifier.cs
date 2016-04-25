@@ -77,7 +77,7 @@ namespace Abp
         /// - "userId@tenantId". Ex: "42@3" (for tenant users).
         /// - "userId". Ex: 1 (for host users)
         /// 
-        /// Returning string can be user in <see cref="Parse"/> method to re-create <see cref="UserIdentifier"/> object.
+        /// Returning string can be used in <see cref="Parse"/> method to re-create identical <see cref="UserIdentifier"/> object.
         /// </summary>
         public string ToUserIdentifierString()
         {

@@ -29,10 +29,10 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets user settings cache.
         /// </summary>
-        public static ITypedCache<long, Dictionary<string, SettingInfo>> GetUserSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, Dictionary<string, SettingInfo>> GetUserSettingsCache(this ICacheManager cacheManager)
         {
             return cacheManager
-                .GetCache<long, Dictionary<string, SettingInfo>>(AbpCacheNames.UserSettings);
+                .GetCache<string, Dictionary<string, SettingInfo>>(AbpCacheNames.UserSettings);
         }
     }
 }
