@@ -203,13 +203,12 @@ namespace Abp.Domain.Uow
             _tenantId = tenantId;
 
             var mayHaveTenantChange = SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId);
+            var mustHaveTenantChange = SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId ?? 0);
 
             var mustHaveTenantEnableChange = tenantId == null
                 ? DisableFilter(AbpDataFilters.MustHaveTenant)
                 : EnableFilter(AbpDataFilters.MustHaveTenant);
-
-            var mustHaveTenantChange = SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId ?? 0);
-
+            
             return new DisposeAction(() =>
             {
                 mayHaveTenantChange.Dispose();

@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Notifications
 {
+    [Table("AbpTenantNotifications")]
     public class TenantNotificationInfo : CreationAuditedEntity<Guid>, IMayHaveTenant
     {
         /// <summary>
@@ -56,5 +58,20 @@ namespace Abp.Notifications
         /// </summary>
         public virtual NotificationSeverity Severity { get; set; }
 
+        public TenantNotificationInfo()
+        {
+            
+        }
+
+        public TenantNotificationInfo(int? tenantId, NotificationInfo notification)
+        {
+            TenantId = tenantId;
+            NotificationName = notification.NotificationName;
+            Data = notification.Data;
+            DataTypeName = notification.DataTypeName;
+            EntityTypeName = notification.EntityTypeName;
+            EntityTypeAssemblyQualifiedName = notification.EntityTypeAssemblyQualifiedName;
+            EntityId = notification.EntityId;
+        }
     }
 }

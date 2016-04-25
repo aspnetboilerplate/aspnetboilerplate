@@ -114,6 +114,7 @@
     <Compile Include="Notifications\NotificationSettingNames.cs" />
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
     <Compile Include="Notifications\TenantNotificationInfo.cs" />
+    <Compile Include="Notifications\TenantNotificationInfoExtensions.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
     <Compile Include="Reflection\FolderAssemblyFinder.cs" />

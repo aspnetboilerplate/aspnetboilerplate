@@ -28,15 +28,16 @@ namespace Abp.Notifications
         /// <summary>
         /// Gets a user notification by given id.
         /// </summary>
+        /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId);
+        Task<UserNotification> GetUserNotificationAsync(int? tenantId, Guid userNotificationId);
 
         /// <summary>
         /// Updates a user notification state.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
         /// <param name="state">New state.</param>
-        Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state);
+        Task UpdateUserNotificationStateAsync(int? tenantId, Guid userNotificationId, UserNotificationState state);
 
         /// <summary>
         /// Updates all notification states for a user.
@@ -49,7 +50,7 @@ namespace Abp.Notifications
         /// Deletes a user notification.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task DeleteUserNotificationAsync(Guid userNotificationId);
+        Task DeleteUserNotificationAsync(int? tenantId, Guid userNotificationId);
 
         /// <summary>
         /// Deletes all notifications of a user.

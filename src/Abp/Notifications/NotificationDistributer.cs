@@ -15,23 +15,23 @@ namespace Abp.Notifications
     /// </summary>
     public class NotificationDistributer : DomainService, INotificationDistributer
     {
-        /// <summary>
-        /// Referece to <see cref="IRealTimeNotifier"/>.
-        /// </summary>
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
         public NotificationDistributer(
             INotificationDefinitionManager notificationDefinitionManager,
-            INotificationStore notificationStore)
+            INotificationStore notificationStore,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
+            _unitOfWorkManager = unitOfWorkManager;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
@@ -60,10 +60,12 @@ namespace Abp.Notifications
             var users = await GetUsers(notificationInfo);
 
             var userNotificationInfos = users
-                .Select(user => new UserNotificationInfo(user.TenantId,user.UserId, notificationInfo.Id))
+                .Select(user => new UserNotificationInfo(user.TenantId, user.UserId, notificationInfo.Id))
                 .ToList();
 
-            await SaveUserNotifications(userNotificationInfos);
+            await SaveUserNotifications(userNotificationInfos, notificationInfo);
+
+            //TODO: Delete notificationInfo (since it's distributed to related tenants..?)
 
             try
             {
@@ -177,14 +179,23 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        protected virtual async Task SaveUserNotifications(IEnumerable<UserNotificationInfo> userNotifications)
+        protected virtual async Task SaveUserNotifications(List<UserNotificationInfo> userNotifications, NotificationInfo notificationInfo)
         {
-            foreach (var userNotification in userNotifications)
+            var tenantGroups = userNotifications.GroupBy(un => un.TenantId);
+            foreach (var tenantGroup in tenantGroups)
             {
-                await _notificationStore.InsertUserNotificationAsync(userNotification);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
+                {
+                    await _notificationStore.InsertTenantNotificationAsync(new TenantNotificationInfo(tenantGroup.Key, notificationInfo));
 
-            await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
+                    foreach (var userNotification in tenantGroup)
+                    {
+                        await _notificationStore.InsertUserNotificationAsync(userNotification);
+                    }
+
+                    await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
+                }
+            }
         }
     }
 }

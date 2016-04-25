@@ -54,7 +54,7 @@ namespace Abp.Notifications
             return Task.FromResult(false);
         }
 
-        public Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state)
+        public Task UpdateUserNotificationStateAsync(int? notificationId, Guid userNotificationId, UserNotificationState state)
         {
             return Task.FromResult(0);
         }
@@ -64,7 +64,7 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteUserNotificationAsync(Guid userNotificationId)
+        public Task DeleteUserNotificationAsync(int? notificationId, Guid userNotificationId)
         {
             return Task.FromResult(0);
         }
@@ -84,9 +84,14 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId)
+        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(int? tenantId, Guid userNotificationId)
         {
             return Task.FromResult((UserNotificationInfoWithNotificationInfo)null);
+        }
+
+        public Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo)
+        {
+            return Task.FromResult(0);
         }
     }
 }

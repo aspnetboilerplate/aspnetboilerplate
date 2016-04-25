@@ -146,21 +146,23 @@ namespace Abp.Notifications
         /// Gets a user notification by given id.
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
+        /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        public static UserNotification GetUserNotification(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
+        public static UserNotification GetUserNotification(this IUserNotificationManager userNotificationManager, int? tenantId, Guid userNotificationId)
         {
-            return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationAsync(userNotificationId));
+            return AsyncHelper.RunSync(() => userNotificationManager.GetUserNotificationAsync(tenantId, userNotificationId));
         }
 
         /// <summary>
         /// Updates a user notification state.
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
+        /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNotificationId">The user notification id.</param>
         /// <param name="state">New state.</param>
-        public static void UpdateUserNotificationState(this IUserNotificationManager userNotificationManager, Guid userNotificationId, UserNotificationState state)
+        public static void UpdateUserNotificationState(this IUserNotificationManager userNotificationManager, int? tenantId, Guid userNotificationId, UserNotificationState state)
         {
-            AsyncHelper.RunSync(() => userNotificationManager.UpdateUserNotificationStateAsync(userNotificationId, state));
+            AsyncHelper.RunSync(() => userNotificationManager.UpdateUserNotificationStateAsync(tenantId, userNotificationId, state));
         }
 
         /// <summary>
@@ -178,10 +180,11 @@ namespace Abp.Notifications
         /// Deletes a user notification.
         /// </summary>
         /// <param name="userNotificationManager">User notificaiton manager</param>
+        /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        public static void DeleteUserNotification(this IUserNotificationManager userNotificationManager, Guid userNotificationId)
+        public static void DeleteUserNotification(this IUserNotificationManager userNotificationManager, int? tenantId, Guid userNotificationId)
         {
-            AsyncHelper.RunSync(() => userNotificationManager.DeleteUserNotificationAsync(userNotificationId));
+            AsyncHelper.RunSync(() => userNotificationManager.DeleteUserNotificationAsync(tenantId, userNotificationId));
         }
 
         /// <summary>
