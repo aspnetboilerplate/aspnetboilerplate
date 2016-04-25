@@ -72,7 +72,7 @@ namespace Abp.Application.Navigation
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !(await PermissionChecker.IsGrantedAsync(userId.Value, menuItemDefinition.RequiredPermissionName))))
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !(await PermissionChecker.IsGrantedAsync(new UserIdentifier(tenantId, userId.Value), menuItemDefinition.RequiredPermissionName))))
                     {
                         continue;
                     }
