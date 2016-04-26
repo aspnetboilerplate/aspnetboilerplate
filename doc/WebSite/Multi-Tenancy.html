@@ -33,19 +33,28 @@ to <strong>multiple tenants</strong> in a single server. We just make sure that 
 of the application don't <strong>conflict</strong> with each other in same 
 server environment.</p>
 			<p>This can be possible also for an <strong>existing application</strong> which is not designed 
-multitenant. It's easier to create such an application since the application is 
+multitenant. It's easier to create such an application since the application has 
 not aware of multitenancy. But there are setup, utilization and maintenance 
 problems in this approach.</p>
 			<h4>Single Deployment - Multiple Database</h4>
-			<p>ln this approach, we may run a <strong>single instance</strong> of the application in a 
-server. For each user login, we check tenant of the user from a <strong>master database</strong> 
-and get database informations (<strong>connection string</strong>) of the tenant. Then we can 
-store connection string into a <strong>session-like</strong> variable and perform all database 
-operations using this <strong>tenant-specific</strong> connection string.</p>
-			<p>In this approach, application should be designed as multi-tenant in some 
-level. But most of the application can remain independed from multi-tenancy. 
-This approach is also some setup, utilization and maintenance problems. We 
-should create and maintain a <strong>seperated database</strong> for each tenant.</p>
+			<p>ln this approach, we may run a <strong>single instance</strong> 
+			of the application in a server. We have a <strong>master</strong> 
+			(host) database to store tenant metadata (like tenant name and 
+			subdomain) and a <strong>seperated database</strong> for each 
+			tenant. Once we identify the <strong>current tenant</strong> (for 
+			example, from subdomain), then we can <strong>switch</strong> to 
+			that tenant's database to perform operations.</p>
+			<p>In this approach, application should be designed as multi-tenant 
+			in some level. But most of the application can remain independed 
+			from multi-tenancy. </p>
+			<p>In this approach, we 
+should create and maintain a <strong>seperated database</strong> for each tenant, 
+			this includes <strong>database migrations</strong>. If we have many 
+			customers with dedicated databases, it may take long time to migrate 
+			database schema in an application update. Since we have seperated 
+			database for a tenant, we can <strong>backup</strong> it's database 
+			seperately from other tenants. Also, we can <strong>move</strong> 
+			the tenant database to a stronger server if that tenant needs it.</p>
 			<h4>Single Deployment - Single Database</h4>
 			<p>This is the most <strong>real multi-tenancy</strong> architecture: We only deploy 
 				<strong>single 
@@ -56,15 +65,24 @@ is used to isolate a tenant's data from others.</p>
 			<p>This is easy to setup and maintain. But harder to create such an application. 
 Because, we must prevent a Tenant to read or write other tenant datas. We may 
 add <strong>TenantId filter</strong> for each database read (select) operation. Also, we may 
-check in every write, if this entity is related to the <strong>current tenant</strong>. This is 
+check it every write, if this entity is related to the <strong>current tenant</strong>. This is 
 tedious and error-prone. But ASP.NET Boilerplate helps us here by using <strong>
 automatic data filtering</strong>.</p>
-			<p>This approach may have performance problems if we have many tenants with huge 
-datas. We may use table partitioning feature of relational databases and/or 
-group tenants in different servers.</p>
+			<p>This approach may have performance problems if we have many 
+			tenants with huge datas. We may use table partitioning or other 
+			database features to overcome this problem.</p>
+			<h4>Single Deployment - Hybrid Databases</h4>
+			<p>We may want to store tenants in single databases normally, but 
+			want to create seperated databases for desired tenants. For example, 
+			we can store tenants with big data in their own databases, but store 
+			all other tenants in a single database.</p>
+			<h4>Multiple Deployment - Single/Multiple/Hybrit Database</h4>
+			<p>Finally, we may want to deploy our application to more than one 
+			server (like web farms) for a better application performance, high 
+			availability, or scalability. This is independent from database 
+			approach.</p>
 			<h3>Multi-Tenancy in ASP.NET Boilerplate</h3>
-			<p>ASP.NET Boilerplate provides infrastructure to create a <strong>single-deployment, 
-single-database, multi-tenant</strong> architecture.</p>
+			<p>ASP.NET Boilerplate can work with all scenarios described above.</p>
 			<h4>Enabling Multi Tenancy</h4>
 			<p>Multi-tenancy is disabled by default. We can enable it in PreInitialize 
 	of our module as shown below:</p>
@@ -86,7 +104,7 @@ single-database, multi-tenant</strong> architecture.</p>
 			<h4>Session</h4>
 			<p>ASP.NET Boilerplate defines <strong>IAbpSession</strong> interface to obtain 
 current <strong>user</strong> and <strong>tenant</strong> ids. This interface is 
-used in multi-tenancy to get current tenant's id. Thus, it can filter datas 
+used in multi-tenancy to get current tenant's id by default. Thus, it can filter datas 
 based on current tenant's id. We can say these rules: </p>
 			<ul>
 				<li>If both of UserId and TenantId is null, then current user is <strong>not logged 
@@ -100,10 +118,12 @@ based on current tenant's id. We can say these rules: </p>
 			<p>See <a href="/Pages/Documents/Abp-Session">session documentation</a> for more 
 information on the session.</p>
 			<h4>Data Filters</h4>
-			<p>While retrieving <a href="/Pages/Documents/Entities">entities</a> from 
-database, we must add a TenantId filter to get only current tenant's entities. 
+			<p>For <strong>multi tenant single database</strong> approach, we must add a
+			<strong>TenantId</strong> filter to get only current tenant's entities 
+			while retrieving <a href="/Pages/Documents/Entities">entities</a> 
+			from database. 
 ASP.NET Boilerplate automatically does it when you implement one of two 
-interfaces for your entity: IMustHaveTenant and IMayHaveTenant.</p>
+interfaces for your entity: <strong>IMustHaveTenant</strong> and <strong>IMayHaveTenant</strong>.</p>
 			<h5>IMustHaveTenant Interface</h5>
 			<p>This interface is used to distinguish entities of different tenants by 
 defining <strong>TenantId</strong> property. An example entitiy that implements IMustHaveTenant:</p>
@@ -139,11 +159,62 @@ case, TenantId property says if this is an host entity or tenant entitiy. A
 can not be IMayHaveTenant since a Product is related to actual application 
 functionality, not related to managing tenants. So, use IMayHaveTenant interface 
 carefully since it's harder to maintain a code shared by host and tenants.</p>
+			<h4>Switching Between Host and Tenants</h4>
+			<p>While working on a multitenant application database, we should 
+			know the <strong>current tenant</strong>. By default, it's obtained 
+			from <a href="Abp-Session.html">IAbpSession</a> (as described 
+			before). We can change this behaviour and switch to other tenant's 
+			database. Example:</p>
+			<pre lang="cs">public class ProductService : ITransientDependency
+{
+    private readonly IRepository&lt;Product&gt; _productRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public ProductService(IRepository&lt;Product&gt; productRepository, <strong>IUnitOfWorkManager unitOfWorkManager</strong>)
+    {
+        _productRepository = productRepository;
+        _unitOfWorkManager = unitOfWorkManager;
+    }
+
+    [UnitOfWork]
+    public virtual List&lt;Product&gt; GetProducts(int tenantId)
+    {
+        using (<strong>_unitOfWorkManager.Current.SetTenantId(tenantId)</strong>)
+        {
+            return _productRepository.GetAllList();
+        }
+    }
+}</pre>
+			<p>SetTenantId ensures that we work on given tenant datas, 
+			independent from database architecture:</p>
+			<ul>
+				<li>If given tenant has a dedicated database, it switches to 
+				that database and gets products from it.</li>
+				<li>If given tenant has not a dedicated database (single 
+				database approach, for example), it adds automatic TenantId 
+				filter to query get only that tenant's products.</li>
+			</ul>
+			<p>If we don't use SetTenantId, it gets tenantId from
+			<a href="Abp-Session.html">session</a>, as said before. There are 
+			some notes and best practices here:</p>
+			<ul>
+				<li>Use <strong>SetTenantId(null)</strong> to switch to the 
+				host.</li>
+				<li>Use SetTenantId within a <strong>using</strong> block as in 
+				the example if there is not a special case. Thus, it 
+				automatically restore tenantId at the end of the using block. 
+				Thus, the code calls GetProducts method works as before.</li>
+				<li>You can use SetTenantId in <strong>nested blocks </strong>if 
+				needed.</li>
+				<li>Since <strong>_unitOfWorkManager.Current</strong> only 
+				available in a <a href="Unit-Of-Work.html">unit of work</a>, be 
+				sure that your code runs in a UOW.</li>
+			</ul>
 			<h4>Saving Entities</h4>
-			<p>A tenant user should not create/edit other tenant entities. ASP.NET 
+			<p>A tenant user should not create/edit other tenant entities 
+			normally. ASP.NET 
 Boilerplate checks it on saving changes to database if related data filters are 
-enabled.&nbsp;</p>
-			<p>See <a href="/Pages/Documents/Data-Filters">data filters</a> document for 
+enabled.&nbsp;See <a href="/Pages/Documents/Data-Filters">data filters</a> document for 
 more information on data filters.</p>
 
 		</div>
