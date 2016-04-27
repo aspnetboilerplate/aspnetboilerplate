@@ -2,6 +2,7 @@
 using Abp.Domain.Repositories;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
+using Abp.NHibernate.Tests.Entities;
 using NHibernate.Linq;
 using Shouldly;
 using Xunit;

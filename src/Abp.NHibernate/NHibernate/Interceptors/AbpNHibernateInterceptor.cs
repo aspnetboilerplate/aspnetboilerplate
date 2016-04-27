@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -6,8 +8,10 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
+using Abp.Utils;
 using NHibernate;
 using NHibernate.Type;
+using NHibernate.Util;
 
 namespace Abp.NHibernate.Interceptors
 {
@@ -71,7 +75,7 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
-            
+
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
 
@@ -191,6 +195,68 @@ namespace Abp.NHibernate.Interceptors
             EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
 
             base.OnDelete(entity, id, state, propertyNames, types);
+        }
+
+        public override bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
+            NormalizeDateTimePropertiesForEntity(state, types);
+            return true;
+        }
+
+        private static void NormalizeDateTimePropertiesForEntity(object[] state, IList<IType> types)
+        {
+            for (var i = 0; i < types.Count; i++)
+            {
+                if (types[i].IsComponentType)
+                {
+                    NormalizeDateTimePropertiesForComponentType(state[i], types[i]);
+                }
+
+                if (types[i].ReturnedClass != typeof(DateTime) && types[i].ReturnedClass != typeof(DateTime?))
+                {
+                    continue;
+                }
+
+                var dateTime = state[i] as DateTime?;
+
+                if (!dateTime.HasValue)
+                {
+                    continue;
+                }
+
+                state[i] = Clock.Normalize(dateTime.Value);
+            }
+        }
+
+        private static void NormalizeDateTimePropertiesForComponentType(object componentObject, IType type)
+        {
+            var componentType = type as ComponentType;
+            if (componentType != null)
+            {
+                for (int i = 0; i < componentType.PropertyNames.Length; i++)
+                {
+                    var propertyName = componentType.PropertyNames[i];
+                    if (componentType.Subtypes[i].IsComponentType)
+                    {
+                        var value = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject, null);
+                        NormalizeDateTimePropertiesForComponentType(value, componentType.Subtypes[i]);
+                    }
+
+                    if (componentType.Subtypes[i].ReturnedClass != typeof(DateTime) && componentType.Subtypes[i].ReturnedClass != typeof(DateTime?))
+                    {
+                        continue;
+                    }
+
+                    var dateTime = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject) as DateTime?;
+
+                    if (!dateTime.HasValue)
+                    {
+                        continue;
+                    }
+
+                    componentObject.GetType().GetProperty(propertyName).SetValue(componentObject, Clock.Normalize(dateTime.Value));
+                }
+            }
         }
     }
 }

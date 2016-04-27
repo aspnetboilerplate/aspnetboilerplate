@@ -26,7 +26,7 @@ namespace Abp.EntityFramework.Utils
         {
             return DateTimeProperties.GetOrAdd(
                        entityType,
-                       (key) => FindDatePropertySetterActionsForType(entityType)
+                       key => FindDatePropertyInfosForType(entityType)
                    );
         }
 
@@ -53,7 +53,7 @@ namespace Abp.EntityFramework.Utils
             });
         }
 
-        private static EntityDateTimePropertiesInfo FindDatePropertySetterActionsForType(Type entityType)
+        private static EntityDateTimePropertiesInfo FindDatePropertyInfosForType(Type entityType)
         {
             var datetimeProperties = entityType.GetProperties()
                                      .Where(property =>

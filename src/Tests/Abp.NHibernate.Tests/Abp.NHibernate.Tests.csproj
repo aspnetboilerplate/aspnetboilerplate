@@ -87,11 +87,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbpNHibernateInterceptor_Tests.cs" />
     <Compile Include="Basic_Repository_Tests.cs" />
+    <Compile Include="Entities\Hotel.cs" />
+    <Compile Include="Entities\HotelMap.cs" />
+    <Compile Include="Entities\Location.cs" />
     <Compile Include="NHibernateTestBase.cs" />
     <Compile Include="NHibernateTestModule.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="PersonMap.cs" />
+    <Compile Include="Entities\Person.cs" />
+    <Compile Include="Entities\PersonMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionFactory_Test.cs" />
   </ItemGroup>
