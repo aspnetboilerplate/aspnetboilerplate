@@ -66,7 +66,7 @@ namespace Abp.EntityFramework
             targetList = targetList.Where(type =>
             {
                 var attrs = type.GetCustomAttributes(typeof (MultiTenancySideAttribute), true);
-                if (CollectionExtensions.IsNullOrEmpty<object>(attrs))
+                if (attrs.IsNullOrEmpty())
                 {
                     return false;
                 }

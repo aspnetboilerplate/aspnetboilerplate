@@ -101,6 +101,7 @@
     <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
     <Compile Include="Json\JsonSerializationHelper.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
+    <Compile Include="MultiTenancy\MultiTenancySideAttribute.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
     <Compile Include="Notifications\INotificationDistributer.cs" />

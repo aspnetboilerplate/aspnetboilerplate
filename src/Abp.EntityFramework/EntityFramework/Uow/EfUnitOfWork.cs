@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 using Abp.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
@@ -122,10 +123,10 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        public virtual TDbContext GetOrCreateDbContext<TDbContext>()
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
-            var connectionString = ResolveConnectionString();
+            var connectionString = ResolveConnectionString(multiTenancySide);
             var dbContextKey = typeof (DbContext).FullName + "#" + connectionString;
 
             DbContext dbContext;

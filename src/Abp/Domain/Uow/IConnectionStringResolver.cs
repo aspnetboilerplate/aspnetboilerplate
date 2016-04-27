@@ -1,7 +1,9 @@
+using Abp.MultiTenancy;
+
 namespace Abp.Domain.Uow
 {
     public interface IConnectionStringResolver
     {
-        string GetNameOrConnectionString();
+        string GetNameOrConnectionString(MultiTenancySides? multiTenancySide = null);
     }
 }

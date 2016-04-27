@@ -22,13 +22,13 @@ namespace Abp.EntityFramework.Repositories
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.DbContext; } }
+        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
         public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
-
+        
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.MultiTenancy;
 
 namespace Abp.Domain.Uow
 {
@@ -13,7 +14,7 @@ namespace Abp.Domain.Uow
             _configuration = configuration;
         }
 
-        public virtual string GetNameOrConnectionString()
+        public virtual string GetNameOrConnectionString(MultiTenancySides? multiTenancySide = null)
         {
             var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
             if (!string.IsNullOrWhiteSpace(defaultConnectionString))

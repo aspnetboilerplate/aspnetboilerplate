@@ -81,7 +81,6 @@
     <Compile Include="EntityFramework\DefaultDbContextResolver.cs" />
     <Compile Include="EntityFramework\IDbContextResolver.cs" />
     <Compile Include="EntityFramework\IDbContextTypeMatcher.cs" />
-    <Compile Include="MultiTenancy\MultiTenancySideAttribute.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="EntityFramework\Uow\EfUnitOfWork.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkExtensions.cs" />

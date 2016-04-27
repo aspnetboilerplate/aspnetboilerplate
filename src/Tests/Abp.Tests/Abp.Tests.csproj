@@ -138,6 +138,7 @@
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Notifications\NotificationPublisher_Tests.cs" />
+    <Compile Include="Reflection\Extensions\MemberInfoExtensions_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
