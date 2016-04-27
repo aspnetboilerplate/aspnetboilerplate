@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Utils;
 using Abp.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
@@ -19,7 +22,7 @@ namespace Abp.EntityFramework.Uow
         protected readonly IDictionary<Type, DbContext> ActiveDbContexts;
 
         protected IIocResolver IocResolver { get; private set; }
-        
+
         protected TransactionScope CurrentTransaction;
 
         /// <summary>
@@ -176,13 +179,21 @@ namespace Abp.EntityFramework.Uow
 
         protected virtual TDbContext Resolve<TDbContext>()
         {
-            return IocResolver.Resolve<TDbContext>();
+            var dbContext = IocResolver.Resolve<TDbContext>();
+            ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+            return dbContext;
         }
 
         protected virtual void Release(DbContext dbContext)
         {
             dbContext.Dispose();
             IocResolver.Release(dbContext);
+        }
+
+        private static void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        {
+            var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
+            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity,entityType);
         }
     }
 }

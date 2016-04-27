@@ -210,7 +210,9 @@
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="Logging\IHasLogSeverity.cs" />
+    <Compile Include="Timing\Timezone\ITimeZoneConverter.cs" />
     <Compile Include="Timing\Timezone\TimezoneHelper.cs" />
+    <Compile Include="Timing\Timezone\TimeZoneConverter.cs" />
     <Compile Include="Timing\TimingSettingNames.cs" />
     <Compile Include="Timing\TimingSettingProvider.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />

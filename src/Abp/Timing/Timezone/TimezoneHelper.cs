@@ -42,6 +42,23 @@ namespace Abp.Timing.Timezone
             throw new Exception($"Unable to map {windowsTimezoneId} to iana timezone.");
         }
 
+        public static DateTime? Convert(DateTime? date, string fromTimeZoneId, string toTimeZoneId)
+        {
+            if (!date.HasValue)
+            {
+                return null;
+            }
+
+            var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById(fromTimeZoneId);
+            var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(toTimeZoneId);
+            return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
+        }
+
+        public static DateTime? ConvertFromUtc(DateTime? date, string toTimeZoneId)
+        {
+            return Convert(date, "UTC", toTimeZoneId);
+        }
+
         private static void GetTimezoneMappings()
         {
             lock (SyncObj)
