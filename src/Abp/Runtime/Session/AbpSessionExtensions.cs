@@ -42,17 +42,14 @@ namespace Abp.Runtime.Session
 
         /// <summary>
         /// Creates <see cref="UserIdentifier"/> from given session.
-        /// Can not be used if session.UserId is null.
+        /// Returns null if <see cref="IAbpSession.UserId"/> is null.
         /// </summary>
         /// <param name="session">The session.</param>
         public static UserIdentifier ToUserIdentifier(this IAbpSession session)
         {
-            if (session.UserId == null)
-            {
-                throw new ArgumentException("Can not create UserIdentifier from given session since UserId is null!", "session");
-            }
-
-            return new UserIdentifier(session.TenantId, session.GetUserId());
+            return session.UserId == null
+                ? null
+                : new UserIdentifier(session.TenantId, session.GetUserId());
         }
     }
 }
