@@ -145,15 +145,7 @@ namespace Abp.EntityFramework.Repositories
         public override void Delete(TEntity entity)
         {
             AttachIfNot(entity);
-
-            if (entity is ISoftDelete)
-            {
-                (entity as ISoftDelete).IsDeleted = true;
-            }
-            else
-            {
-                Table.Remove(entity);
-            }
+            Table.Remove(entity);
         }
 
         public override void Delete(TPrimaryKey id)

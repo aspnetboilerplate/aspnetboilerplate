@@ -122,8 +122,10 @@ namespace Abp.EntityFramework
 
         private void RegisterToChanges()
         {
-            var contextAdapter = (IObjectContextAdapter)this;
-            contextAdapter.ObjectContext.ObjectStateManager.ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
+            ((IObjectContextAdapter)this)
+                .ObjectContext
+                .ObjectStateManager
+                .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
         }
 
         protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, System.ComponentModel.CollectionChangeEventArgs e)
@@ -223,6 +225,7 @@ namespace Abp.EntityFramework
                         break;
                     case EntityState.Deleted:
                         CancelDeletionForSoftDelete(entry);
+                        SetDeletionAuditProperties(entry.Entity, userId);
                         EntityChangeEventHelper.TriggerEntityDeletingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
                         break;
@@ -344,16 +347,43 @@ namespace Abp.EntityFramework
             if (entityAsObj is IHasDeletionTime)
             {
                 var entity = entityAsObj.As<IHasDeletionTime>();
+
                 if (entity.DeletionTime == null)
                 {
                     entity.DeletionTime = Clock.Now;
                 }
             }
 
-            if (userId.HasValue && entityAsObj is IDeletionAudited)
+            if (entityAsObj is IDeletionAudited)
             {
                 var entity = entityAsObj.As<IDeletionAudited>();
-                if (entity.DeleterUserId == null)
+
+                if (entity.DeleterUserId != null)
+                {
+                    return;
+                }
+
+                if (userId == null)
+                {
+                    entity.DeleterUserId = null;
+                    return;
+                }
+
+                //Special check for multi-tenant entities
+                if (entity is IMayHaveTenant || entity is IMustHaveTenant)
+                {
+                    //Sets LastModifierUserId only if current user is in same tenant/host with the given entity
+                    if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
+                        (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
+                    {
+                        entity.DeleterUserId = userId;
+                    }
+                    else
+                    {
+                        entity.DeleterUserId = null;
+                    }
+                }
+                else
                 {
                     entity.DeleterUserId = userId;
                 }

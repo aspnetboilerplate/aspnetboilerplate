@@ -10,5 +10,15 @@ namespace Abp.TestBase.SampleApplication
         public int? TenantId { get; set; }
 
         public string Text { get; set; }
+
+        public Message()
+        {
+            
+        }
+
+        public Message(int? tenantId, string text)
+        {
+            
+        }
     }
 }
