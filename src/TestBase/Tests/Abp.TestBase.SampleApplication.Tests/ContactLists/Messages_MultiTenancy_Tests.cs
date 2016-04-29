@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
@@ -15,6 +16,39 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _messageRepository = Resolve<IRepository<Message>>();
+        }
+
+        [Fact]
+        public void EntityAuditProperty_Tests()
+        {
+            AbpSession.TenantId = null;
+            AbpSession.UserId = 999;
+
+            //Can not get tenant's data from host user
+            var tenant1Message1 = _messageRepository.FirstOrDefault(m => m.Text == "tenant-1-message-1");
+            tenant1Message1.ShouldBeNull();
+
+            var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+            using (var unitOfWork = unitOfWorkManager.Begin())
+            {
+                //Should start UOW with TenantId in the session
+                unitOfWorkManager.Current.GetTenantId().ShouldBeNull();
+
+                using (unitOfWorkManager.Current.SetTenantId(1))
+                {
+                    tenant1Message1 = _messageRepository.FirstOrDefault(m => m.Text == "tenant-1-message-1");
+                    tenant1Message1.ShouldNotBeNull(); //Can get tenant's data from host since we used SetTenantId()
+                    tenant1Message1.LastModifierUserId.ShouldBeNull();
+                    tenant1Message1.LastModificationTime.ShouldBeNull();
+
+                    tenant1Message1.Text = "tenant-1-message-1-modified";
+                }
+
+                unitOfWork.Complete();
+            }
+
+            tenant1Message1.LastModificationTime.ShouldNotBeNull(); //It's set since we modified Text
+            tenant1Message1.LastModifierUserId.ShouldBeNull(); //It's not set since user in the AbpSession is not that tenant's user!
         }
 
         [Fact]

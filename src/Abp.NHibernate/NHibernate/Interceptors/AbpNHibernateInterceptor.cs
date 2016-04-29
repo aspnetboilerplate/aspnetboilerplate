@@ -80,31 +80,6 @@ namespace Abp.NHibernate.Interceptors
 
         public override bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
         {
-            //TODO@Halil: Implement this when tested well (Issue #49)
-            ////Prevent changing CreationTime on update 
-            //if (entity is IHasCreationTime)
-            //{
-            //    for (var i = 0; i < propertyNames.Length; i++)
-            //    {
-            //        if (propertyNames[i] == "CreationTime" && previousState[i] != currentState[i])
-            //        {
-            //            throw new AbpException(string.Format("Can not change CreationTime on a modified entity {0}", entity.GetType().FullName));
-            //        }
-            //    }
-            //}
-
-            //Prevent changing CreatorUserId on update
-            //if (entity is ICreationAudited)
-            //{
-            //    for (var i = 0; i < propertyNames.Length; i++)
-            //    {
-            //        if (propertyNames[i] == "CreatorUserId" && previousState[i] != currentState[i])
-            //        {
-            //            throw new AbpException(string.Format("Can not change CreatorUserId on a modified entity {0}", entity.GetType().FullName));
-            //        }
-            //    }
-            //}
-
             //Set modification audits
             if (entity is IHasModificationTime)
             {
