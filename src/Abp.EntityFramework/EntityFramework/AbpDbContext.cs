@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -131,6 +132,11 @@ namespace Abp.EntityFramework
         protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, System.ComponentModel.CollectionChangeEventArgs e)
         {
             var contextAdapter = (IObjectContextAdapter)this;
+            if (e.Action != CollectionChangeAction.Add)
+            {
+                return;
+            }
+
             var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
             switch (entry.State)
             {
@@ -139,9 +145,9 @@ namespace Abp.EntityFramework
                     CheckAndSetMustHaveTenantIdProperty(entry.Entity);
                     SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                     break;
-                case EntityState.Deleted:
-                    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-                    break;
+                //case EntityState.Deleted: //It's not going here at all
+                //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
+                //    break;
             }
         }
 
