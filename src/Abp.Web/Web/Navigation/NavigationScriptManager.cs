@@ -21,7 +21,7 @@ namespace Abp.Web.Navigation
 
         public async Task<string> GetScriptAsync()
         {
-            var userMenus = await _userNavigationManager.GetMenusAsync(AbpSession.UserId, AbpSession.TenantId);
+            var userMenus = await _userNavigationManager.GetMenusAsync(AbpSession.ToUserIdentifier());
 
             var sb = new StringBuilder();
             sb.AppendLine("(function() {");
