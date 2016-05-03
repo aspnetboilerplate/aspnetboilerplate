@@ -1,8 +1,8 @@
-﻿using System;
-using System.Configuration;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Extensions;
 using StackExchange.Redis;
+using System;
+using System.Configuration;
 
 namespace Abp.Runtime.Caching.Redis
 {

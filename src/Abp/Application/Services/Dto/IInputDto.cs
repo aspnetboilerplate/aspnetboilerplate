@@ -7,6 +7,5 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     public interface IInputDto : IDto, IValidate
     {
-
     }
 }

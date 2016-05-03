@@ -1,16 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Web;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Runtime.Security;
 using Abp.Threading;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Web;
 
 namespace Abp.Web
 {
@@ -54,7 +54,6 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Session_Start(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>
@@ -62,7 +61,6 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Session_End(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>
@@ -95,7 +93,6 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_EndRequest(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
@@ -105,7 +102,6 @@ namespace Abp.Web
 
         protected virtual void Application_Error(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>

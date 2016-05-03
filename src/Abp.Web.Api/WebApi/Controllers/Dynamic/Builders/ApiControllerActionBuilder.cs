@@ -1,10 +1,9 @@
-using System.Reflection;
-using Abp.Web;
-using System.Web.Http.Filters;
-using System.Linq;
 using Abp.Reflection;
-using System;
+using Abp.Web;
+using System.Linq;
+using System.Reflection;
 using System.Web.Http;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -123,21 +122,21 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return Verb.Value;
             }
 
-            if(_methodInfo.IsDefined(typeof (HttpGetAttribute)))
+            if (_methodInfo.IsDefined(typeof(HttpGetAttribute)))
             {
                 return HttpVerb.Get;
             }
-            
-            if (_methodInfo.IsDefined(typeof (HttpPostAttribute)))
+
+            if (_methodInfo.IsDefined(typeof(HttpPostAttribute)))
             {
-                return HttpVerb.Post;                
+                return HttpVerb.Post;
             }
 
             if (_methodInfo.IsDefined(typeof(HttpPutAttribute)))
             {
                 return HttpVerb.Put;
             }
-            
+
             if (_methodInfo.IsDefined(typeof(HttpDeleteAttribute)))
             {
                 return HttpVerb.Delete;
@@ -169,7 +168,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
         {
-            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof(FromUriAttribute)));
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Shouldly;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Collections.Extensions

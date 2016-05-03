@@ -9,6 +9,7 @@
         /// Singleton instance.
         /// </summary>
         public static NullTenantIdResolver Instance { get { return SingletonInstance; } }
+
         private static readonly NullTenantIdResolver SingletonInstance = new NullTenantIdResolver();
 
         public int? TenantId { get { return null; } }

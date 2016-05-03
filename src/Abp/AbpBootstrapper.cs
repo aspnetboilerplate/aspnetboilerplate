@@ -1,8 +1,8 @@
-﻿using System;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Modules;
+using System;
 
 namespace Abp
 {
@@ -31,7 +31,6 @@ namespace Abp
         public AbpBootstrapper()
             : this(Dependency.IocManager.Instance)
         {
-
         }
 
         /// <summary>

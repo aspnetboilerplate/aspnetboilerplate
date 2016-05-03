@@ -9,7 +9,7 @@
         /// Unique name of the setting.
         /// </summary>
         string Name { get; }
-        
+
         /// <summary>
         /// Value of the setting.
         /// </summary>

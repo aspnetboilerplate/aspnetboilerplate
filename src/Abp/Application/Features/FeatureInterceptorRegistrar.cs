@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Abp.Application.Features
 {

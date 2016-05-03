@@ -1,11 +1,11 @@
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Abp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Extensions;
 
 namespace Abp.Localization.Dictionaries
 {
@@ -27,7 +27,7 @@ namespace Abp.Localization.Dictionaries
         private readonly ILocalizationDictionaryProvider _dictionaryProvider;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="name"></param>
         /// <param name="dictionaryProvider"></param>

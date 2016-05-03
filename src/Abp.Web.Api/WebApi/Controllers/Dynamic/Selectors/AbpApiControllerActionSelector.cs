@@ -1,6 +1,6 @@
+using Abp.WebApi.Controllers.Dynamic.Builders;
 using System.Linq;
 using System.Web.Http.Controllers;
-using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
@@ -46,8 +46,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var actionName = DynamicApiServiceNameHelper.GetActionNameInServiceNameWithAction(serviceNameWithAction);
 
             return GetActionDescriptorByActionName(
-                controllerContext, 
-                controllerInfo, 
+                controllerContext,
+                controllerInfo,
                 actionName
                 );
         }

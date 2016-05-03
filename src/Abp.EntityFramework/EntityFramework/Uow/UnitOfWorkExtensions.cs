@@ -1,6 +1,6 @@
+using Abp.Domain.Uow;
 using System;
 using System.Data.Entity;
-using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -15,7 +15,7 @@ namespace Abp.EntityFramework.Uow
         /// </summary>
         /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
         /// <param name="unitOfWork">Current (active) unit of work</param>
-        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork) 
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork)
             where TDbContext : DbContext
         {
             if (unitOfWork == null)

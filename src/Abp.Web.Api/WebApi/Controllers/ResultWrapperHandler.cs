@@ -1,10 +1,10 @@
+using Abp.Dependency;
+using Abp.Web.Models;
+using Abp.WebApi.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Web.Models;
-using Abp.WebApi.Configuration;
 
 namespace Abp.WebApi.Controllers
 {
@@ -27,7 +27,6 @@ namespace Abp.WebApi.Controllers
                 {
                     WrapResultIfNeeded(request, task.Result);
                     return task.Result;
-
                 }, cancellationToken);
         }
 

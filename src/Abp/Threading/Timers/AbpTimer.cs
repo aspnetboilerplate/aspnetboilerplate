@@ -1,6 +1,6 @@
+using Abp.Dependency;
 using System;
 using System.Threading;
-using Abp.Dependency;
 
 namespace Abp.Threading.Timers
 {
@@ -134,7 +134,6 @@ namespace Abp.Threading.Timers
             }
             catch
             {
-
             }
             finally
             {

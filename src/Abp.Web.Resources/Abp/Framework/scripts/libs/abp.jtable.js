@@ -2,7 +2,6 @@
  * by Halil ibrahim Kalkan (http://halilibrahimkalkan.com).
  */
 (function ($) {
-
     if (!$ || !$.hik || !$.hik.jtable) {
         return;
     }
@@ -14,7 +13,6 @@
 
     //Extending jTable to adapt ASP.NET Boilerplate
     $.extend(true, $.hik.jtable.prototype, {
-
         //Override _create function to change actions according to Abp system
         _create: function () {
             var self = this;
@@ -43,7 +41,6 @@
             var originalListAction = self.options.actions.listAction;
             self.options.actions.listAction = function (postData, jtParams) {
                 return $.Deferred(function ($dfd) {
-
                     var input = $.extend({}, postData, {
                         skipCount: jtParams.jtStartIndex,
                         maxResultCount: jtParams.jtPageSize,
@@ -72,7 +69,6 @@
             var originalCreateAction = self.options.actions.createAction;
             self.options.actions.createAction = function (postData) {
                 return $.Deferred(function ($dfd) {
-
                     var input = $.extend({}, postData);
 
                     originalCreateAction.method(input)
@@ -96,7 +92,6 @@
             var originalUpdateAction = self.options.actions.updateAction;
             self.options.actions.updateAction = function (postData) {
                 return $.Deferred(function ($dfd) {
-
                     var input = $.extend({}, postData);
 
                     originalUpdateAction.method(input)
@@ -129,7 +124,6 @@
             var originalDeleteAction = self.options.actions.deleteAction;
             self.options.actions.deleteAction = function (postData) {
                 return $.Deferred(function ($dfd) {
-
                     var input = $.extend({}, postData);
 
                     originalDeleteAction.method(input)
@@ -161,12 +155,10 @@
         _showError: function (message) {
             //do nothing since Abp handles error messages!
         }
-
     });
 
     //Overriding some defaults
     $.extend(true, $.hik.jtable.prototype.options, {
         pageList: "minimal"
     });
-
 })(jQuery);

@@ -5,7 +5,7 @@ using NHibernate;
 namespace Abp.NHibernate.Filters
 {
     /// <summary>
-    /// Add filter MustHaveTenant 
+    /// Add filter MustHaveTenant
     /// </summary>
     public class MustHaveTenantFilter : FilterDefinition
     {

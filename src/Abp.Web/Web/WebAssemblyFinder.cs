@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Reflection;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
-using Abp.Reflection;
 
 namespace Abp.Web
 {
@@ -14,7 +14,7 @@ namespace Abp.Web
     public class WebAssemblyFinder : IAssemblyFinder
     {
         /// <summary>
-        /// The search option used to find assemblies in bin folder. 
+        /// The search option used to find assemblies in bin folder.
         /// </summary>
         public static SearchOption FindAssembliesSearchOption = SearchOption.TopDirectoryOnly; //TODO: Make this non static and rename to SearchOption
 

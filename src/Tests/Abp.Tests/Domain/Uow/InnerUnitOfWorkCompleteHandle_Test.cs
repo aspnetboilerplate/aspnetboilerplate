@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Domain.Uow;
+﻿using Abp.Domain.Uow;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.Tests.Domain.Uow
@@ -23,7 +23,6 @@ namespace Abp.Tests.Domain.Uow
             {
                 using (var uow = new InnerUnitOfWorkCompleteHandle())
                 {
-
                 }
             }).Message.ShouldBe(InnerUnitOfWorkCompleteHandle.DidNotCallCompleteMethodExceptionMessage);
         }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Events.Bus.Factories;
+﻿using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
 using Abp.Utils.Etc;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Events.Bus
 {
@@ -15,6 +15,7 @@ namespace Abp.Events.Bus
         /// Gets single instance of <see cref="NullEventBus"/> class.
         /// </summary>
         public static NullEventBus Instance { get { return SingletonInstance; } }
+
         private static readonly NullEventBus SingletonInstance = new NullEventBus();
 
         private NullEventBus()

@@ -24,6 +24,7 @@ namespace Abp.Timing
                 _provider = value;
             }
         }
+
         private static IClockProvider _provider;
 
         static Clock()

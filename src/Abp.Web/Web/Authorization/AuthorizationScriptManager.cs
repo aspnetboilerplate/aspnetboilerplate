@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Authorization;
+using Abp.Dependency;
+using Abp.Runtime.Session;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Runtime.Session;
 
 namespace Abp.Web.Authorization
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
     {
@@ -45,7 +45,7 @@ namespace Abp.Web.Authorization
                     }
                 }
             }
-            
+
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");

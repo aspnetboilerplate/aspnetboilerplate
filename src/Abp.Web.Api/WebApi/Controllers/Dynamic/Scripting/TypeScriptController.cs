@@ -1,23 +1,23 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web.Http;
-using Abp.Web.Models;
+﻿using Abp.Web.Models;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
-    [DontWrapResult]    
+    [DontWrapResult]
     public class TypeScriptController : AbpApiController
     {
-        readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;
-        readonly TypeScriptServiceGenerator _typeScriptServiceGenerator;
+        private readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;
+        private readonly TypeScriptServiceGenerator _typeScriptServiceGenerator;
+
         public TypeScriptController(TypeScriptDefinitionGenerator typeScriptDefinitionGenerator, TypeScriptServiceGenerator typeScriptServiceGenerator)
         {
             _typeScriptDefinitionGenerator = typeScriptDefinitionGenerator;
             _typeScriptServiceGenerator = typeScriptServiceGenerator;
         }
-        
+
         public HttpResponseMessage Get(bool isCompleteService = false)
         {
             if (isCompleteService)

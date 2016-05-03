@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Reflection;
-using Abp.Localization.Dictionaries.Json;
+﻿using Abp.Localization.Dictionaries.Json;
 using Shouldly;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace Abp.Tests.Localization.Json

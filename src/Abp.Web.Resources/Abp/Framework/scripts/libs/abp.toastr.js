@@ -1,6 +1,5 @@
 ﻿var abp = abp || {};
 (function () {
-
     if (!toastr) {
         return;
     }
@@ -30,5 +29,4 @@
     abp.notify.error = function (message, title, options) {
         showNotification('error', message, title, options);
     };
-
 })();

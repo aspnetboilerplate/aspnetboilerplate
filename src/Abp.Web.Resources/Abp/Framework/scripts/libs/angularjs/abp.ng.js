@@ -1,5 +1,4 @@
 ﻿(function (abp, angular) {
-
     if (!angular) {
         return;
     }
@@ -84,9 +83,7 @@
     abpModule.config([
         '$httpProvider', function ($httpProvider) {
             $httpProvider.interceptors.push(['$q', function ($q) {
-
                 return {
-
                     'request': function (config) {
                         if (endsWith(config.url, '.cshtml')) {
                             config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url + '&_t=' + abp.pageLoadTime.getTime();
@@ -120,7 +117,6 @@
 
                         return $q.reject(ngError);
                     }
-
                 };
             }]);
         }
@@ -133,5 +129,4 @@
 
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     }
-
 })((abp || (abp = {})), (angular || undefined));

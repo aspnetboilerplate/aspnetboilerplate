@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Extensions;
+﻿using Abp.Extensions;
+using System;
 
 namespace Abp.Runtime.Validation
 {
@@ -21,7 +21,6 @@ namespace Abp.Runtime.Validation
 
         public NumericValueValidator()
         {
-
         }
 
         public NumericValueValidator(int minValue = int.MinValue, int maxValue = int.MaxValue)

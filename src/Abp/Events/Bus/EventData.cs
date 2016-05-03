@@ -1,5 +1,5 @@
-using System;
 using Abp.Timing;
+using System;
 
 namespace Abp.Events.Bus
 {

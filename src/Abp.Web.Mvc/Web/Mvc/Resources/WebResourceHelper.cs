@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Abp.Dependency;
+using Abp.Resources.Embedded;
+using Abp.Web.Mvc.Resources.Embedded.Handlers;
+using System;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Abp.Dependency;
-using Abp.Resources.Embedded;
-using Abp.Web.Mvc.Resources.Embedded.Handlers;
 
 namespace Abp.Web.Mvc.Resources
 {

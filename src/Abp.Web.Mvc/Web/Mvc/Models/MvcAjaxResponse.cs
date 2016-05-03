@@ -1,5 +1,5 @@
-using System;
 using Abp.Web.Models;
+using System;
 
 namespace Abp.Web.Mvc.Models
 {
@@ -15,7 +15,6 @@ namespace Abp.Web.Mvc.Models
         /// </summary>
         public MvcAjaxResponse()
         {
-
         }
 
         /// <summary>
@@ -25,7 +24,6 @@ namespace Abp.Web.Mvc.Models
         public MvcAjaxResponse(bool success)
             : base(success)
         {
-
         }
 
         /// <summary>
@@ -36,7 +34,6 @@ namespace Abp.Web.Mvc.Models
         public MvcAjaxResponse(object result)
             : base(result)
         {
-
         }
 
         /// <summary>
@@ -48,7 +45,6 @@ namespace Abp.Web.Mvc.Models
         public MvcAjaxResponse(ErrorInfo error, bool unAuthorizedRequest = false)
             : base(error, unAuthorizedRequest)
         {
-
         }
     }
 }

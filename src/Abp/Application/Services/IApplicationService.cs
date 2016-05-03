@@ -7,6 +7,5 @@ namespace Abp.Application.Services
     /// </summary>
     public interface IApplicationService : ITransientDependency
     {
-
     }
 }

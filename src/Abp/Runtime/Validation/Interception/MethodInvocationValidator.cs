@@ -1,3 +1,5 @@
+using Abp.Collections.Extensions;
+using Abp.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,8 +7,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
-using Abp.Reflection;
 
 namespace Abp.Runtime.Validation.Interception
 {
@@ -44,10 +44,10 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            if (_method.IsDefined(typeof (DisableValidationAttribute)))
+            if (_method.IsDefined(typeof(DisableValidationAttribute)))
             {
                 //Don't validate if explicitly requested!
-                return;                
+                return;
             }
 
             if (_parameters.IsNullOrEmpty())

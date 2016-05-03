@@ -10,7 +10,7 @@ namespace Abp.Dependency
     {
         /// <summary>
         /// Install all <see cref="IInterceptor"/> implementations automatically or not.
-        /// Default: true. 
+        /// Default: true.
         /// </summary>
         public bool InstallInstallers { get; set; }
 

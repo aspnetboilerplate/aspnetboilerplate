@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Threading;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization
 {

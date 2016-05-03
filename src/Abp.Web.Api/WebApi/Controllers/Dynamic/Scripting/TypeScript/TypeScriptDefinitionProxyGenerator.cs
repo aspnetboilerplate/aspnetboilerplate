@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Abp.Dependency;
+using Abp.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -15,6 +15,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private HashSet<Type> _typesToBeDone = new HashSet<Type>();
         private HashSet<Type> _doneTypes = new HashSet<Type>();
         private string _servicePrefix = "";
+
         public string Generate(DynamicApiControllerInfo controllerInfo, string servicePrefix)
         {
             if (_servicePrefix != servicePrefix)
@@ -34,7 +35,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             foreach (var methodInfo in _controllerInfo.Actions.Values)
             {
                 PrepareInputParameterTypes(methodInfo.Method);
-                
+
                 List<Type> newTypes = new List<Type>();
                 var returnType = TypeScriptHelper.GetTypeContractName(methodInfo.Method.ReturnType, newTypes);
                 this.AddNewTypesIfRequired(newTypes.ToArray());
@@ -42,7 +43,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     script.AppendLine(string.Format("            {0} ({1}): abp.IPromise; ", methodInfo.ActionName.ToCamelCase(), GetMethodInputParameter(methodInfo.Method)));
                 else
                     script.AppendLine(string.Format("            {0} ({1}): abp.IGenericPromise<{2}>; ", methodInfo.ActionName.ToCamelCase(), GetMethodInputParameter(methodInfo.Method), returnType));
-
             }
 
             script.AppendLine("     }");
@@ -70,14 +70,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             List<Type> newTypes = new List<Type>();
             foreach (var parameter in methodInfo.GetParameters())
             {
-                script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(parameter.ParameterType,newTypes)));
+                script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(parameter.ParameterType, newTypes)));
             }
             this.AddNewTypesIfRequired(newTypes.ToArray());
             script.Append("httpParams?: any");
             return script.ToString();
-
         }
- 
+
         protected void PrepareInputParameterTypes(MethodInfo methodInfo)
         {
             foreach (var parameter in methodInfo.GetParameters())
@@ -107,20 +106,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 return "";
             }
 
-
-
             var myscript = new StringBuilder();
             List<Type> newTypes = new List<Type>();
-            myscript.AppendLine("     interface " + TypeScriptHelper.GetTypeContractName(type,newTypes));
+            myscript.AppendLine("     interface " + TypeScriptHelper.GetTypeContractName(type, newTypes));
             myscript.AppendLine("         {");
             foreach (var property in type.GetProperties())
             {
-                myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(),TypeScriptHelper.GetTypeContractName(property.PropertyType,newTypes)));
+                myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(property.PropertyType, newTypes)));
             }
             this.AddNewTypesIfRequired(newTypes.ToArray());
             myscript.AppendLine("         }");
             return myscript.ToString();
         }
+
         private bool CanAddToBeDone(Type type)
         {
             if (type == typeof(Task))

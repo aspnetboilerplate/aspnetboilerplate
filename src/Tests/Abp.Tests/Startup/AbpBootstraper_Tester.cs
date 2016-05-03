@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Modules;
+﻿using Abp.Modules;
 using Shouldly;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Startup
@@ -119,7 +119,6 @@ namespace Abp.Tests.Startup
 
     public class MyAnotherModule : MyEventCounterModuleBase
     {
-
     }
 
     public abstract class MyEventCounterModuleBase : AbpModule

@@ -5,7 +5,6 @@ namespace Abp.Dependency
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object obj)
             : base(iocResolver, obj)
         {
-
         }
     }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Abp.Runtime.Caching
 {
     /// <summary>
-    /// An upper level container for <see cref="ICache"/> objects. 
+    /// An upper level container for <see cref="ICache"/> objects.
     /// A cache manager should work as Singleton and track and manage <see cref="ICache"/> objects.
     /// </summary>
     public interface ICacheManager : IDisposable

@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Abp.MemoryDb.Configuration;
+﻿using Abp.MemoryDb.Configuration;
 using Abp.Modules;
+using System.Reflection;
 
 namespace Abp.MemoryDb
 {

@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.Tests.Domain.Entities
@@ -17,7 +17,6 @@ namespace Abp.Tests.Domain.Entities
 
         private class TestEntityWithGuidPk : Entity<Guid>
         {
-            
         }
     }
 }

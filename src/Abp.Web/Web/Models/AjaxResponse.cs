@@ -14,7 +14,6 @@ namespace Abp.Web.Models
         /// </summary>
         public AjaxResponse()
         {
-
         }
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace Abp.Web.Models
         public AjaxResponse(bool success)
             : base(success)
         {
-
         }
 
         /// <summary>
@@ -35,7 +33,6 @@ namespace Abp.Web.Models
         public AjaxResponse(object result)
             : base(result)
         {
-
         }
 
         /// <summary>
@@ -47,7 +44,6 @@ namespace Abp.Web.Models
         public AjaxResponse(ErrorInfo error, bool unAuthorizedRequest = false)
             : base(error, unAuthorizedRequest)
         {
-
         }
     }
 }

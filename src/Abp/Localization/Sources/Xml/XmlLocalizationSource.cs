@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Abp.Localization.Sources.Xml
 {
@@ -29,7 +29,6 @@ namespace Abp.Localization.Sources.Xml
         public XmlLocalizationSource(string name, string directoryPath)
             : base(name, new XmlFileLocalizationDictionaryProvider(directoryPath))
         {
-
         }
     }
 }

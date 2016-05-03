@@ -1,5 +1,5 @@
-using System;
 using Abp.Localization;
+using System;
 
 namespace Abp.UI.Inputs
 {
@@ -12,7 +12,6 @@ namespace Abp.UI.Inputs
 
         public LocalizableComboboxItem()
         {
-            
         }
 
         public LocalizableComboboxItem(string value, ILocalizableString displayText)

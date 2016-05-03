@@ -1,7 +1,7 @@
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
-    /// This class is used as base class for all dynamically created ApiControllers.  
+    /// This class is used as base class for all dynamically created ApiControllers.
     /// </summary>
     /// <typeparam name="T">Type of the proxied object</typeparam>
     /// <remarks>
@@ -10,6 +10,5 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// </remarks>
     public class DynamicApiController<T> : AbpApiController, IDynamicApiController
     {
-
     }
 }

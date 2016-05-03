@@ -13,6 +13,7 @@ namespace Abp.Web.Models
         /// Gets default <see cref="DontWrapResultAttribute"/>.
         /// </summary>
         public new static DontWrapResultAttribute Default { get { return _default; } }
+
         private static readonly DontWrapResultAttribute _default = new DontWrapResultAttribute();
 
         /// <summary>
@@ -21,7 +22,6 @@ namespace Abp.Web.Models
         public DontWrapResultAttribute()
             : base(false, false)
         {
-
         }
     }
 }

@@ -1,5 +1,5 @@
-using System;
 using Abp.Collections.Extensions;
+using System;
 
 namespace Abp.Application.Navigation
 {

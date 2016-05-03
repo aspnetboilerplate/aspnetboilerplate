@@ -1,6 +1,5 @@
 ﻿var abp = abp || {};
 (function ($) {
-
     if (!$) {
         return;
     }
@@ -127,7 +126,7 @@
 
     /* JQUERY PLUGIN ENHANCEMENTS ********************************************/
 
-    /* jQuery Form Plugin 
+    /* jQuery Form Plugin
      * http://www.malsup.com/jquery/form/
      */
 
@@ -162,5 +161,4 @@
             method: 'POST'
         };
     }
-
 })(jQuery);

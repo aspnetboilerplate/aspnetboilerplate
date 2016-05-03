@@ -1,7 +1,7 @@
-using System.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Castle.MicroKernel.Registration;
+using System.Configuration;
 
 namespace Abp.EntityFramework.Dependency
 {

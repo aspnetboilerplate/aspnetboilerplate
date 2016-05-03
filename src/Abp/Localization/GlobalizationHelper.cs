@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Abp.Extensions;
+﻿using Abp.Extensions;
+using System.Globalization;
 
 namespace Abp.Localization
 {

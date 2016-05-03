@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using Abp.IO.Extensions;
+using System.Reflection;
 using System.Text;
-using Abp.IO.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
@@ -11,7 +11,7 @@ namespace Abp.Localization.Dictionaries.Xml
     {
         private readonly Assembly _assembly;
         private readonly string _rootNamespace;
-        
+
         /// <summary>
         /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
         /// </summary>

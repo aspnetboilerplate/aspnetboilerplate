@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
+using System;
 
 namespace Abp.Authorization
 {

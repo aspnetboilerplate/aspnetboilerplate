@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Reflection;
+﻿using Abp.Reflection;
 using Shouldly;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Reflection
@@ -13,7 +13,7 @@ namespace Abp.Tests.Reflection
         {
             ReflectionHelper.IsAssignableToGenericType(typeof(List<string>), typeof(List<>)).ShouldBe(true);
             ReflectionHelper.IsAssignableToGenericType(new List<string>().GetType(), typeof(List<>)).ShouldBe(true);
-            
+
             ReflectionHelper.IsAssignableToGenericType(typeof(MyList), typeof(List<>)).ShouldBe(true);
             ReflectionHelper.IsAssignableToGenericType(new MyList().GetType(), typeof(List<>)).ShouldBe(true);
         }
@@ -27,11 +27,10 @@ namespace Abp.Tests.Reflection
             attributes[1].Number.ShouldBe(2);
             //attributes[2].Number.ShouldBe(3);
         }
-        
+
         [MyAttribute(3)]
         public class MyList : List<int>
         {
-
         }
 
         [MyAttribute(2)]
@@ -40,7 +39,6 @@ namespace Abp.Tests.Reflection
             [MyAttribute(1)]
             public void DoIt()
             {
-
             }
         }
 

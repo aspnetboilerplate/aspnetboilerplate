@@ -33,7 +33,7 @@ namespace Abp.Collections.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T">The type of the members of values.</typeparam>
         /// <param name="item">Item to resolve</param>

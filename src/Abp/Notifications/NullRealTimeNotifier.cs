@@ -11,6 +11,7 @@ namespace Abp.Notifications
         /// Gets single instance of <see cref="NullRealTimeNotifier"/> class.
         /// </summary>
         public static NullRealTimeNotifier Instance { get { return SingletonInstance; } }
+
         private static readonly NullRealTimeNotifier SingletonInstance = new NullRealTimeNotifier();
 
         public Task SendNotificationsAsync(UserNotification[] userNotifications)

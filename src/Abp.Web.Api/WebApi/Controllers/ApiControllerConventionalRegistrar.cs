@@ -1,6 +1,6 @@
-﻿using System.Web.Http;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Castle.MicroKernel.Registration;
+using System.Web.Http;
 
 namespace Abp.WebApi.Controllers
 {

@@ -1,14 +1,14 @@
+using Abp.Events.Bus.Factories;
+using Abp.Events.Bus.Factories.Internals;
+using Abp.Events.Bus.Handlers;
+using Abp.Events.Bus.Handlers.Internals;
+using Castle.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Factories.Internals;
-using Abp.Events.Bus.Handlers;
-using Abp.Events.Bus.Handlers.Internals;
-using Castle.Core.Logging;
 
 namespace Abp.Events.Bus
 {
@@ -23,6 +23,7 @@ namespace Abp.Events.Bus
         /// Gets the default <see cref="EventBus"/> instance.
         /// </summary>
         public static EventBus Default { get { return DefaultInstance; } }
+
         private static readonly EventBus DefaultInstance = new EventBus();
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Abp.Events.Bus
         /// </summary>
         public ILogger Logger { get; set; }
 
-        #endregion
+        #endregion Public properties
 
         #region Private fields
 
@@ -41,7 +42,7 @@ namespace Abp.Events.Bus
         /// </summary>
         private readonly Dictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
 
-        #endregion
+        #endregion Private fields
 
         #region Constructor
 
@@ -55,7 +56,7 @@ namespace Abp.Events.Bus
             Logger = NullLogger.Instance;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Public methods
 
@@ -103,7 +104,7 @@ namespace Abp.Events.Bus
             }
         }
 
-        #endregion
+        #endregion Register
 
         #region Unregister
 
@@ -183,7 +184,7 @@ namespace Abp.Events.Bus
             }
         }
 
-        #endregion
+        #endregion Unregister
 
         #region Trigger
 
@@ -236,7 +237,7 @@ namespace Abp.Events.Bus
 
             //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
             if (eventType.IsGenericType &&
-                eventType.GetGenericArguments().Length == 1 && 
+                eventType.GetGenericArguments().Length == 1 &&
                 typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
             {
                 var genericArg = eventType.GetGenericArguments()[0];
@@ -244,7 +245,7 @@ namespace Abp.Events.Bus
                 if (baseArg != null)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument) eventData).GetConstructorArgs();
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
                     var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
                     baseEventData.EventTime = eventData.EventTime;
                     Trigger(baseEventType, eventData.EventSource, baseEventData);
@@ -275,7 +276,7 @@ namespace Abp.Events.Bus
                 return true;
             }
 
-            //Should trigger 
+            //Should trigger
             if (handlerType.IsAssignableFrom(eventType))
             {
                 return true;
@@ -342,9 +343,9 @@ namespace Abp.Events.Bus
             return task;
         }
 
-        #endregion
+        #endregion Trigger
 
-        #endregion
+        #endregion Public methods
 
         #region Private methods
 
@@ -359,6 +360,6 @@ namespace Abp.Events.Bus
             return handlers;
         }
 
-        #endregion
+        #endregion Private methods
     }
 }

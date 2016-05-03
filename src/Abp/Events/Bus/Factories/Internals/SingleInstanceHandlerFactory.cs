@@ -4,7 +4,7 @@ namespace Abp.Events.Bus.Factories.Internals
 {
     /// <summary>
     /// This <see cref="IEventHandlerFactory"/> implementation is used to handle events
-    /// by a single instance object. 
+    /// by a single instance object.
     /// </summary>
     /// <remarks>
     /// This class always gets the same single instance of handler.
@@ -17,7 +17,7 @@ namespace Abp.Events.Bus.Factories.Internals
         public IEventHandler HandlerInstance { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handler"></param>
         public SingleInstanceHandlerFactory(IEventHandler handler)
@@ -32,7 +32,6 @@ namespace Abp.Events.Bus.Factories.Internals
 
         public void ReleaseHandler(IEventHandler handler)
         {
-            
         }
     }
 }

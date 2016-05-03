@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Localization;
+using System;
 using System.Collections.Generic;
-using Abp.Localization;
 
 namespace Abp.Application.Navigation
 {

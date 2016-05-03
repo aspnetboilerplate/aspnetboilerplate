@@ -14,7 +14,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public EntityResultOutput()
         {
-
         }
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace Abp.Application.Services.Dto
         public EntityResultOutput(TPrimaryKey id)
             : base(id)
         {
-
         }
     }
 }

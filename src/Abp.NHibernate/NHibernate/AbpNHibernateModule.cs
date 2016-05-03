@@ -1,12 +1,11 @@
-﻿using System.Reflection;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.NHibernate.Filters;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
-using Castle.Components.DictionaryAdapter.Xml;
 using NHibernate;
+using System.Reflection;
 
 namespace Abp.NHibernate
 {
@@ -20,7 +19,7 @@ namespace Abp.NHibernate
         /// NHibernate session factory object.
         /// </summary>
         private ISessionFactory _sessionFactory;
-        
+
         /// <inheritdoc/>
         public override void Initialize()
         {

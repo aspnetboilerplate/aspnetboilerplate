@@ -24,7 +24,7 @@ namespace Abp.Runtime.Caching.Memory
         {
             return _memoryCache.Get(key);
         }
-        
+
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
         {
             if (value == null)

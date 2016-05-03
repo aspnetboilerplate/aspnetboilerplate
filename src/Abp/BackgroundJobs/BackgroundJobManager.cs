@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Json;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
 using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.BackgroundJobs
 {

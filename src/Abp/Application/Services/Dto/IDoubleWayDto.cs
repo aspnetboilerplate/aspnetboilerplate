@@ -5,6 +5,5 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     public interface IDoubleWayDto : IInputDto, IOutputDto
     {
-
     }
 }

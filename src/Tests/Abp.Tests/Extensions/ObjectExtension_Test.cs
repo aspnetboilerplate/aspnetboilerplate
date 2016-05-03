@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.Tests.Extensions
@@ -32,7 +32,7 @@ namespace Abp.Tests.Extensions
 
             "false".To<bool>().ShouldBeOfType<bool>().ShouldBe(false);
             "True".To<bool>().ShouldBeOfType<bool>().ShouldBe(true);
-            
+
             Assert.Throws<FormatException>(() => "test".To<bool>());
             Assert.Throws<FormatException>(() => "test".To<int>());
         }

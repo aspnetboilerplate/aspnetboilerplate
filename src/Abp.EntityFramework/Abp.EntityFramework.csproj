@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Abp</RootNamespace>
     <AssemblyName>Abp.EntityFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -47,8 +47,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Ninetowns\CBB\ECommerce\packages\EntityFramework.DynamicFilters.1.4.9\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.10.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.DynamicFilters.1.4.10.2\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

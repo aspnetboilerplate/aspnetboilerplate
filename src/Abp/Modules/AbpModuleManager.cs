@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Castle.Core.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Castle.Core.Logging;
 
 namespace Abp.Modules
 {
@@ -89,7 +89,7 @@ namespace Abp.Modules
 
         private void EnsureKernelModuleToBeFirst()
         {
-            var kernelModuleIndex = _modules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            var kernelModuleIndex = _modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
             if (kernelModuleIndex > 0)
             {
                 var kernelModule = _modules[kernelModuleIndex];

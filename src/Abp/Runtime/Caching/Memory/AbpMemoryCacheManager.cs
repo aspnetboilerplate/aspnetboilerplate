@@ -1,6 +1,6 @@
-﻿using System.Runtime.Caching;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
+using System.Runtime.Caching;
 
 namespace Abp.Runtime.Caching.Memory
 {

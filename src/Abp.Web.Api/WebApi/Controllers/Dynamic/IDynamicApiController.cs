@@ -5,6 +5,5 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// </summary>
     internal interface IDynamicApiController
     {
-
     }
 }

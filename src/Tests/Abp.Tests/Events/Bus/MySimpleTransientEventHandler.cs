@@ -1,5 +1,5 @@
-using System;
 using Abp.Events.Bus.Handlers;
+using System;
 
 namespace Abp.Tests.Events.Bus
 {

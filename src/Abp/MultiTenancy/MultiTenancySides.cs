@@ -12,7 +12,7 @@ namespace Abp.MultiTenancy
         /// Tenant side.
         /// </summary>
         Tenant = 1,
-        
+
         /// <summary>
         /// Host (tenancy owner) side.
         /// </summary>

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Threading;
+using Shouldly;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Abp.Threading;
-using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Threading
@@ -64,7 +64,7 @@ namespace Abp.Tests.Threading
 
             calledFinally.ShouldBe(true);
         }
-        
+
         [Fact]
         public async Task Should_Call_Finally_On_Exception()
         {
@@ -109,7 +109,6 @@ namespace Abp.Tests.Threading
 
         private void MyMethod2Sync()
         {
-
         }
     }
 }

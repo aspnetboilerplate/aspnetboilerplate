@@ -1,9 +1,9 @@
-using System.Globalization;
 using Abp.Configuration;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
+using System.Globalization;
 
 namespace Abp.BackgroundJobs
 {
@@ -33,6 +33,7 @@ namespace Abp.BackgroundJobs
             }
             set { _unitOfWorkManager = value; }
         }
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
@@ -72,6 +73,7 @@ namespace Abp.BackgroundJobs
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>

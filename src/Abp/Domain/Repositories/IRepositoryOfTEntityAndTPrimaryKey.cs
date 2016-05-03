@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Uow;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.Domain.Uow;
 
 namespace Abp.Domain.Repositories
 {
@@ -122,7 +122,7 @@ namespace Abp.Domain.Repositories
         /// <returns>Entity</returns>
         TEntity Load(TPrimaryKey id);
 
-        #endregion
+        #endregion Select/Get/Query
 
         #region Insert
 
@@ -188,7 +188,7 @@ namespace Abp.Domain.Repositories
         /// <returns>Id of the entity</returns>
         Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
-        #endregion
+        #endregion Insert
 
         #region Update
 
@@ -199,7 +199,7 @@ namespace Abp.Domain.Repositories
         TEntity Update(TEntity entity);
 
         /// <summary>
-        /// Updates an existing entity. 
+        /// Updates an existing entity.
         /// </summary>
         /// <param name="entity">Entity</param>
         Task<TEntity> UpdateAsync(TEntity entity);
@@ -220,7 +220,7 @@ namespace Abp.Domain.Repositories
         /// <returns>Updated entity</returns>
         Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
 
-        #endregion
+        #endregion Update
 
         #region Delete
 
@@ -266,7 +266,7 @@ namespace Abp.Domain.Repositories
         /// <param name="predicate">A condition to filter entities</param>
         Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 
-        #endregion
+        #endregion Delete
 
         #region Aggregates
 
@@ -324,6 +324,6 @@ namespace Abp.Domain.Repositories
         /// <returns>Count of entities</returns>
         Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate);
 
-        #endregion
+        #endregion Aggregates
     }
 }

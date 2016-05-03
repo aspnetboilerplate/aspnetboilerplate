@@ -1,11 +1,11 @@
-﻿using System;
-using System.Data;
-using System.Data.SQLite;
-using Abp.Collections;
+﻿using Abp.Collections;
 using Abp.Modules;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;
 using NHibernate;
+using System;
+using System.Data;
+using System.Data.SQLite;
 
 namespace Abp.NHibernate.Tests
 {

@@ -20,10 +20,10 @@ namespace Abp.Authorization
         /// <param name="featureDependency">Depended feature(s) of this permission</param>
         /// <returns>New created permission</returns>
         Permission CreatePermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            bool isGrantedByDefault = false, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            bool isGrantedByDefault = false,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null
             );

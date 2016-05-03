@@ -1,13 +1,13 @@
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 using Castle.Core.Logging;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Filters
 {
@@ -52,10 +52,10 @@ namespace Abp.WebApi.Controllers.Filters
                 }
                 else
                 {
-                    wrapResultAttribute = DontWrapResultAttribute.Default;                    
+                    wrapResultAttribute = DontWrapResultAttribute.Default;
                 }
             }
-            
+
             if (wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);

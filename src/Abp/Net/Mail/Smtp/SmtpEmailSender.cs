@@ -1,8 +1,8 @@
+using Abp.Dependency;
+using Abp.Extensions;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
 
 namespace Abp.Net.Mail.Smtp
 {

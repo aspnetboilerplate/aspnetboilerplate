@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Abp.Logging;
 
 namespace Abp.Runtime.Validation
 {
@@ -52,7 +52,6 @@ namespace Abp.Runtime.Validation
             ValidationErrors = new List<ValidationResult>();
             Severity = LogSeverity.Warn;
         }
-
 
         /// <summary>
         /// Constructor.

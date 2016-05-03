@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using System;
+using System.Collections.ObjectModel;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
-using Abp.Collections.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {

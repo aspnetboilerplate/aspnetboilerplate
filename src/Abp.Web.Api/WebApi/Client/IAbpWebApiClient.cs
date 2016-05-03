@@ -12,7 +12,7 @@ namespace Abp.WebApi.Client
     public interface IAbpWebApiClient
     {
         /// <summary>
-        /// Base URL for all request. 
+        /// Base URL for all request.
         /// </summary>
         string BaseUrl { get; set; }
 

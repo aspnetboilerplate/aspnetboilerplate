@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Threading;
+using System;
 
 namespace Abp.Configuration
 {

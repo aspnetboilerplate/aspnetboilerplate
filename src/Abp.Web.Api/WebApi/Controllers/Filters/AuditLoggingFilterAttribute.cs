@@ -1,19 +1,10 @@
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
-using Abp.Auditing;
-using Abp.Dependency;
-using Castle.Core.Logging;
-
 namespace Abp.WebApi.Controllers.Filters
 {
     //TODO: This will be implemented to save audit logs for regular web api methods.
     //public class AuditLoggingFilterAttribute : ActionFilterAttribute, ITransientDependency
     //{
     //    public ILogger Logger { get; set; }
-        
+
     //    private readonly IAuditingConfiguration _auditingConfiguration;
 
     //    public AuditLoggingFilterAttribute(IAuditingConfiguration auditingConfiguration)

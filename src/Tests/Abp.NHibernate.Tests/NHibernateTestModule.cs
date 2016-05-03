@@ -1,10 +1,10 @@
-﻿using System;
-using System.Data;
-using System.Reflection;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Modules;
 using FluentNHibernate.Cfg.Db;
 using NHibernate.Tool.hbm2ddl;
+using System;
+using System.Data;
+using System.Reflection;
 
 namespace Abp.NHibernate.Tests
 {

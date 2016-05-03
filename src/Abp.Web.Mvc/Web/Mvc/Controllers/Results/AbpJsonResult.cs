@@ -1,8 +1,7 @@
-using System;
-using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Abp.Collections.Extensions;
+using System;
+using System.Web.Mvc;
 
 /* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
 

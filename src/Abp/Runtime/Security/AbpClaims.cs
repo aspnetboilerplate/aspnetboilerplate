@@ -14,7 +14,7 @@
         /// ImpersonatorUserId.
         /// </summary>
         public const string ImpersonatorUserId = "http://www.aspnetboilerplate.com/identity/claims/impersonatorUserId";
-        
+
         /// <summary>
         /// ImpersonatorTenantId
         /// </summary>

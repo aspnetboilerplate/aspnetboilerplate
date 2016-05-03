@@ -1,7 +1,7 @@
-﻿using System;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using System;
 
 namespace Abp.Hangfire.Configuration
 {

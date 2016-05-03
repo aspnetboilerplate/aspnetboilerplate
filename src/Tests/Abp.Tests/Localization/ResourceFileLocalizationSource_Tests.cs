@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization.Sources.Resource;
 using Abp.Tests.Localization.TestResourceFiles;
 using Shouldly;
+using System.Globalization;
 using Xunit;
 
 namespace Abp.Tests.Localization
@@ -28,7 +28,7 @@ namespace Abp.Tests.Localization
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("en-US")).ShouldBe("Hello!");
             _resourceFileLocalizationSource.GetString("World", new CultureInfo("en-US")).ShouldBe("World!");
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("en-GB")).ShouldBe("Hello!");
-            
+
             //Defined in Turkish
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("tr")).ShouldBe("Merhaba!");
 
@@ -37,7 +37,7 @@ namespace Abp.Tests.Localization
 
             //Undefined for Turkish, fallbacks to default language
             _resourceFileLocalizationSource.GetString("World", new CultureInfo("tr-TR")).ShouldBe("World!");
-            
+
             //Undefined at all, fallback to given text
             _resourceFileLocalizationSource.GetString("Apple", new CultureInfo("en-US")).ShouldBe("[Apple]");
         }

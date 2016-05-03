@@ -1,7 +1,7 @@
-using System;
-using System.Globalization;
 using Abp.Dependency;
 using Abp.Localization.Sources;
+using System;
+using System.Globalization;
 
 namespace Abp.Localization
 {

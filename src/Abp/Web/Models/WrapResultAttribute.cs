@@ -12,6 +12,7 @@ namespace Abp.Web.Models
         /// Gets default <see cref="WrapResultAttribute"/>.
         /// </summary>
         public static WrapResultAttribute Default { get { return _default; } }
+
         private static readonly WrapResultAttribute _default = new WrapResultAttribute();
 
         /// <summary>

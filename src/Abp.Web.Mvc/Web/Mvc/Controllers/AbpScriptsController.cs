@@ -1,9 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Extensions;
 using Abp.Web.Authorization;
 using Abp.Web.Features;
@@ -12,6 +7,11 @@ using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
 using Abp.Web.Settings;
+using System.Globalization;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -34,10 +34,10 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         public AbpScriptsController(
             IMultiTenancyScriptManager multiTenancyScriptManager,
-            ISettingScriptManager settingScriptManager, 
-            INavigationScriptManager navigationScriptManager, 
-            ILocalizationScriptManager localizationScriptManager, 
-            IAuthorizationScriptManager authorizationScriptManager, 
+            ISettingScriptManager settingScriptManager,
+            INavigationScriptManager navigationScriptManager,
+            ILocalizationScriptManager localizationScriptManager,
+            IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager)
         {
@@ -58,7 +58,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);                
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
             }
 
             var sb = new StringBuilder();
@@ -68,7 +68,7 @@ namespace Abp.Web.Mvc.Controllers
 
             sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
-            
+
             sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
 
@@ -80,7 +80,7 @@ namespace Abp.Web.Mvc.Controllers
 
             sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
-            
+
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
 
             sb.AppendLine(GetTriggerScript());

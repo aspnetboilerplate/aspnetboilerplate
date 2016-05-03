@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.Threading.Extensions;
+﻿using Abp.Threading.Extensions;
 using Shouldly;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Threading

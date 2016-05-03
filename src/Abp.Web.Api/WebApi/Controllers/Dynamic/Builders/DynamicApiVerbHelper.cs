@@ -1,5 +1,5 @@
-using System;
 using Abp.Web;
+using System;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -8,7 +8,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// </summary>
     internal static class DynamicApiVerbHelper
     {
-        public  static HttpVerb GetConventionalVerbForMethodName(string methodName)
+        public static HttpVerb GetConventionalVerbForMethodName(string methodName)
         {
             if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
             {

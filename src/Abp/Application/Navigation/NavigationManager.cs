@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
+using System.Collections.Generic;
 
 namespace Abp.Application.Navigation
 {

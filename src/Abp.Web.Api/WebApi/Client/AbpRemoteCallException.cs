@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Web.Models;
+using System;
 using System.Runtime.Serialization;
-using Abp.Web.Models;
 
 namespace Abp.WebApi.Client
 {
@@ -20,7 +20,6 @@ namespace Abp.WebApi.Client
         /// </summary>
         public AbpRemoteCallException()
         {
-
         }
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace Abp.WebApi.Client
         public AbpRemoteCallException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>

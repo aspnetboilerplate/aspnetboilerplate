@@ -1,6 +1,6 @@
+using Abp.Domain.Services;
 using System;
 using System.Threading.Tasks;
-using Abp.Domain.Services;
 
 namespace Abp.Notifications
 {

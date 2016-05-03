@@ -8,6 +8,5 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public abstract class FullAuditedEntityDto : FullAuditedEntityDto<int>
     {
-
     }
 }

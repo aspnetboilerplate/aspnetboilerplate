@@ -10,22 +10,19 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.Register<IEmpty, EmptyImplOne>();
             LocalIocManager.Register<IEmpty, EmptyImplTwo>(); //Second registered has no effect!
-            LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof (EmptyImplOne));
+            LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof(EmptyImplOne));
         }
 
         public interface IEmpty
         {
-            
         }
 
         public class EmptyImplOne : IEmpty
         {
-            
         }
 
         public class EmptyImplTwo : IEmpty
         {
-
         }
     }
 }

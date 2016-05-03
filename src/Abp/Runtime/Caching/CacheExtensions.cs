@@ -22,7 +22,7 @@ namespace Abp.Runtime.Caching
         {
             return new TypedCacheWrapper<TKey, TValue>(cache);
         }
-        
+
         public static TValue Get<TKey, TValue>(this ICache cache, TKey key, Func<TKey, TValue> factory)
         {
             return (TValue)cache.Get(key.ToString(), (k) => (object)factory(key));
@@ -57,7 +57,7 @@ namespace Abp.Runtime.Caching
                 return default(TValue);
             }
 
-            return (TValue) value;
+            return (TValue)value;
         }
 
         public static async Task<TValue> GetOrDefaultAsync<TKey, TValue>(this ICache cache, TKey key)

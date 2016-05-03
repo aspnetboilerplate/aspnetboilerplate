@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Abp.Dependency
 {
@@ -151,7 +151,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The instance object</returns>
         public T Resolve<T>()
@@ -162,7 +162,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to cast</typeparam>
         /// <param name="type">Type of the object to resolve</param>
         /// <returns>The object instance</returns>
@@ -174,7 +174,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object</returns>
@@ -186,7 +186,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <returns>The instance object</returns>
         public object Resolve(Type type)
@@ -197,7 +197,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object</returns>
@@ -228,8 +228,10 @@ namespace Abp.Dependency
             {
                 case DependencyLifeStyle.Transient:
                     return registration.LifestyleTransient();
+
                 case DependencyLifeStyle.Singleton:
                     return registration.LifestyleSingleton();
+
                 default:
                     return registration;
             }

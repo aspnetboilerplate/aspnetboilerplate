@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Reflection;
 using Castle.DynamicProxy;
+using System.Collections.Generic;
 
 namespace Abp.Application.Features
 {

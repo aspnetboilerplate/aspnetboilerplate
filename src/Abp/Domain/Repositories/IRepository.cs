@@ -8,6 +8,5 @@ namespace Abp.Domain.Repositories
     /// </summary>
     public interface IRepository : ITransientDependency
     {
-        
     }
 }

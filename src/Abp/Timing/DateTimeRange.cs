@@ -25,7 +25,6 @@ namespace Abp.Timing
         /// </summary>
         public DateTimeRange()
         {
-
         }
 
         /// <summary>
@@ -127,7 +126,6 @@ namespace Abp.Timing
             }
         }
 
-
         /// <summary>
         /// Gets a date range represents the last year.
         /// </summary>
@@ -163,7 +161,6 @@ namespace Abp.Timing
                 return new DateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1));
             }
         }
-
 
         /// <summary>
         /// Gets a date range represents the last 30 days (30x24 hours) including today.

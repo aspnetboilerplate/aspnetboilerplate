@@ -1,6 +1,6 @@
+using Abp.Collections.Extensions;
 using System;
 using System.Collections.Generic;
-using Abp.Collections.Extensions;
 
 namespace Abp.Configuration
 {
@@ -45,7 +45,7 @@ namespace Abp.Configuration
             var value = this[name];
             return value == null
                 ? default(T)
-                : (T) Convert.ChangeType(value, typeof (T));
+                : (T)Convert.ChangeType(value, typeof(T));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Abp.Configuration
                 value = creator();
                 Set(name, value);
             }
-            return (T) value;
+            return (T)value;
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Shouldly;
+﻿using Shouldly;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests

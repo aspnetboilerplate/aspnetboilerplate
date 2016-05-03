@@ -5,24 +5,24 @@ using System.Text;
 namespace Abp.Resources.Embedded
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal class EmbeddedResourcePathInfo
     {
         public string Path { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Assembly Assembly { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ResourceNamespace { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         /// <param name="assembly"></param>
@@ -48,7 +48,7 @@ namespace Abp.Resources.Embedded
             {
                 return path;
             }
-            
+
             var sb = new StringBuilder();
 
             for (var i = 0; i < pathFolders.Length - 1; i++)

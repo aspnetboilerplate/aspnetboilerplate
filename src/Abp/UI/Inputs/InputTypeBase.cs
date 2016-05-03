@@ -1,9 +1,9 @@
+using Abp.Collections.Extensions;
+using Abp.Runtime.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Collections.Extensions;
-using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
@@ -43,9 +43,8 @@ namespace Abp.UI.Inputs
         public IValueValidator Validator { get; set; }
 
         protected InputTypeBase()
-            :this(new AlwaysValidValueValidator())
+            : this(new AlwaysValidValueValidator())
         {
-
         }
 
         protected InputTypeBase(IValueValidator validator)

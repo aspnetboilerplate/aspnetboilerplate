@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using Abp.Configuration;
+using Abp.Dependency;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Configuration;
-using Abp.Dependency;
 
 namespace Abp.Web.Settings
 {
@@ -47,7 +47,7 @@ namespace Abp.Web.Settings
                 var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
 
                 script.Append("        '" +
-                              settingDefinition.Name .Replace("'", @"\'") + "': " +
+                              settingDefinition.Name.Replace("'", @"\'") + "': " +
                               (settingValue == null ? "null" : "'" + settingValue.Replace(@"\", @"\\").Replace("'", @"\'") + "'"));
 
                 ++added;

@@ -1,6 +1,6 @@
-﻿using System.IO;
-using Abp.Localization.Dictionaries.Xml;
+﻿using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources.Xml;
+using System.IO;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -24,7 +24,7 @@ namespace Abp.Localization.Dictionaries.Json
 
             _directoryPath = directoryPath;
         }
-        
+
         public override void Initialize(string sourceName)
         {
             var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);

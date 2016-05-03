@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Web.Configuration;
+using System;
 
 namespace Abp.Web.Models
 {

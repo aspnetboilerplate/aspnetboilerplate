@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Abp.Dependency;
+using Abp.Extensions;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -13,7 +10,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         public string GetScript()
         {
             var dynamicControllers = DynamicApiControllerManager.GetAll();
-            
+
             StringBuilder script = new StringBuilder();
             if (dynamicControllers == null || dynamicControllers.Count == 0)
                 return "";
@@ -35,16 +32,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     servicePrefix = GetServicePrefix(dynamicController.ServiceName);
                     script.AppendLine("}");//Close the Previous Module
                     //Create new module for the new service prefix
-                    if(servicePrefix.IsNullOrEmpty())
+                    if (servicePrefix.IsNullOrEmpty())
                         script.AppendLine("declare module abp.services");//Create a new Module
                     else
                         script.AppendLine("declare module abp.services." + servicePrefix);//Create a new Module
                     script.AppendLine("{");
                 }
-                script.AppendLine(proxyGenerator.Generate(dynamicController,servicePrefix));
+                script.AppendLine(proxyGenerator.Generate(dynamicController, servicePrefix));
                 script.AppendLine();
             }
             script.AppendLine("}");
+
             #region Create Script for Abp common objects
 
             script.AppendLine("declare module abp {");
@@ -80,7 +78,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             script.AppendLine("}");
             script.AppendLine("}");
 
-            #endregion
+            #endregion Create Script for Abp common objects
 
             return script.ToString();
         }
@@ -88,9 +86,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private string GetServicePrefix(string serviceName)
         {
             if (serviceName.IndexOf('/') == -1)
-                return  "";
+                return "";
             else
-                return serviceName.Substring(0,serviceName.IndexOf('/'));
+                return serviceName.Substring(0, serviceName.IndexOf('/'));
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
+using System.Reflection;
 
 namespace Abp.TestBase
 {

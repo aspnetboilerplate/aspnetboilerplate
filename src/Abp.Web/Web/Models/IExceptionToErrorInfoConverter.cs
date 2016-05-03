@@ -3,7 +3,7 @@
 namespace Abp.Web.Models
 {
     /// <summary>
-    /// This interface can be implemented to convert an <see cref="Exception"/> object to an <see cref="ErrorInfo"/> object. 
+    /// This interface can be implemented to convert an <see cref="Exception"/> object to an <see cref="ErrorInfo"/> object.
     /// Implements Chain Of Responsibility pattern.
     /// </summary>
     public interface IExceptionToErrorInfoConverter

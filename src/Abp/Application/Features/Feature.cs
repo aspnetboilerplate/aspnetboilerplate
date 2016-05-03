@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.UI.Inputs;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Abp.Application.Features
 {
@@ -50,10 +50,10 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// A brief description for this feature.
-        /// This can be used to show feature description on UI. 
+        /// This can be used to show feature description on UI.
         /// </summary>
         public ILocalizableString Description { get; set; }
-        
+
         /// <summary>
         /// Input type.
         /// This can be used to prepare an input for changing this feature's value.
@@ -69,7 +69,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Feature's scope.
-        /// 
+        ///
         /// </summary>
         public FeatureScopes Scope { get; set; }
 
@@ -80,6 +80,7 @@ namespace Abp.Application.Features
         {
             get { return _children.ToImmutableList(); }
         }
+
         private readonly List<Feature> _children;
 
         /// <summary>

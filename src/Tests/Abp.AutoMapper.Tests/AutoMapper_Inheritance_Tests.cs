@@ -27,7 +27,6 @@ namespace Abp.AutoMapper.Tests
 
         public class MyDerivedClass : MyBaseClass
         {
-
         }
 
         [AutoMapFrom(typeof(MyBaseClass))]
@@ -39,7 +38,7 @@ namespace Abp.AutoMapper.Tests
         //[Fact] //TODO: That's a problem but related to AutoMapper rather than ABP.
         public void Should_Map_EntityProxy_To_EntityDto_And_To_DrivedEntityDto()
         {
-            var proxy = new EntityProxy() { Value = "42"};
+            var proxy = new EntityProxy() { Value = "42" };
             var target = proxy.MapTo<EntityDto>();
             var target2 = proxy.MapTo<DerivedEntityDto>();
             target.Value.ShouldBe("42");
@@ -50,7 +49,9 @@ namespace Abp.AutoMapper.Tests
         {
             public string Value { get; set; }
         }
+
         public class DerivedEntity : Entity { }
+
         public class EntityProxy : DerivedEntity { }
 
         [AutoMapFrom(typeof(Entity))]

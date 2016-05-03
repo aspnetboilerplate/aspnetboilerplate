@@ -1,6 +1,6 @@
+using Nito.AsyncEx;
 using System;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching
 {
@@ -111,7 +111,6 @@ namespace Abp.Runtime.Caching
 
         public virtual void Dispose()
         {
-
         }
     }
 }

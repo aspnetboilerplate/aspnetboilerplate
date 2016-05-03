@@ -1,7 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Events.Bus
 {
@@ -21,7 +21,7 @@ namespace Abp.Events.Bus
         IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData;
 
         /// <summary>
-        /// Registers to an event. 
+        /// Registers to an event.
         /// Same (given) instance of the handler is used for all event occurrences.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
@@ -59,7 +59,7 @@ namespace Abp.Events.Bus
         /// <param name="handlerFactory">A factory to create/release handlers</param>
         IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory);
 
-        #endregion
+        #endregion Register
 
         #region Unregister
 
@@ -110,7 +110,7 @@ namespace Abp.Events.Bus
         /// <param name="eventType">Event type</param>
         void UnregisterAll(Type eventType);
 
-        #endregion
+        #endregion Unregister
 
         #region Trigger
 
@@ -178,7 +178,6 @@ namespace Abp.Events.Bus
         /// <returns>The task to handle async operation</returns>
         Task TriggerAsync(Type eventType, object eventSource, IEventData eventData);
 
-
-        #endregion
+        #endregion Trigger
     }
 }

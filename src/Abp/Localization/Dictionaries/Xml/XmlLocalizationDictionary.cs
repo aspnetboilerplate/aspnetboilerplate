@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Extensions;
+using Abp.Xml.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
-using Abp.Xml.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
@@ -24,7 +24,6 @@ namespace Abp.Localization.Dictionaries.Xml
         private XmlLocalizationDictionary(CultureInfo cultureInfo)
             : base(cultureInfo)
         {
-
         }
 
         /// <summary>

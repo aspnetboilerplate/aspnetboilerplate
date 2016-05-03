@@ -9,6 +9,5 @@ namespace Abp.Auditing
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuditedAttribute : Attribute
     {
-
     }
 }

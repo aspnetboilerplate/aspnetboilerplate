@@ -1,6 +1,5 @@
 ﻿var abp = abp || {};
 (function ($) {
-
     /* Application paths *****************************************/
 
     //Current application root path (including virtual directory if exists).
@@ -418,7 +417,6 @@
     /* SIMPLE EVENT BUS *****************************************/
 
     abp.event = (function () {
-
         var _callbacks = {};
 
         var on = function (eventName, callback) {
@@ -470,7 +468,6 @@
             trigger: trigger
         };
     })();
-
 
     /* UTILS ***************************************************/
 
@@ -569,5 +566,4 @@
         //alternative for $.isFunction
         return !!(obj && obj.constructor && obj.call && obj.apply);
     };
-
 })(jQuery);

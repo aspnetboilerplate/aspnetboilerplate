@@ -1,6 +1,6 @@
+using Castle.Core.Logging;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 
 namespace Abp.Net.Mail
 {

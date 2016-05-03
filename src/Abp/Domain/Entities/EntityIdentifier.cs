@@ -24,7 +24,6 @@ namespace Abp.Domain.Entities
         /// </summary>
         private EntityIdentifier()
         {
-            
         }
 
         /// <summary>

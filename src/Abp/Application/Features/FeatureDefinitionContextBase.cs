@@ -39,7 +39,6 @@ namespace Abp.Application.Features
             var feature = new Feature(name, defaultValue, displayName, description, scope, inputType);
             Features[feature.Name] = feature;
             return feature;
-
         }
 
         /// <summary>

@@ -24,7 +24,6 @@ namespace Abp.Localization
         /// </summary>
         private LocalizableString()
         {
-            
         }
 
         /// <param name="name">Unique name of the localization source</param>

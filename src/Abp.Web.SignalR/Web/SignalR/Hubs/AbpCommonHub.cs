@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Web.SignalR.Hubs
 {
@@ -53,7 +53,7 @@ namespace Abp.Web.SignalR.Hubs
                 );
 
             Logger.Debug("A client is connected: " + client);
-            
+
             _onlineClientManager.Add(client);
         }
 

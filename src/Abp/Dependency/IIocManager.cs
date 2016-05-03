@@ -1,5 +1,5 @@
-using System;
 using Castle.Windsor;
+using System;
 
 namespace Abp.Dependency
 {

@@ -24,7 +24,6 @@ namespace Abp.Threading
 
         public virtual void WaitToStop()
         {
-
         }
     }
 }

@@ -1,5 +1,5 @@
-using System;
 using Abp.Domain.Repositories;
+using System;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -23,17 +23,17 @@ namespace Abp.EntityFramework.Repositories
         static AutoRepositoryTypesAttribute()
         {
             Default = new AutoRepositoryTypesAttribute(
-                typeof (IRepository<>),
-                typeof (IRepository<,>),
-                typeof (EfRepositoryBase<,>),
-                typeof (EfRepositoryBase<,,>)
+                typeof(IRepository<>),
+                typeof(IRepository<,>),
+                typeof(EfRepositoryBase<,>),
+                typeof(EfRepositoryBase<,,>)
                 );
         }
 
         public AutoRepositoryTypesAttribute(
-            Type repositoryInterface, 
-            Type repositoryInterfaceWithPrimaryKey, 
-            Type repositoryImplementation, 
+            Type repositoryInterface,
+            Type repositoryInterfaceWithPrimaryKey,
+            Type repositoryImplementation,
             Type repositoryImplementationWithPrimaryKey)
         {
             RepositoryInterface = repositoryInterface;

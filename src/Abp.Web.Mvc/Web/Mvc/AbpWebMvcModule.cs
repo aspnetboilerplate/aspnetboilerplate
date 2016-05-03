@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using System.Web.Mvc;
-using Abp.Modules;
+﻿using Abp.Modules;
 using Abp.Web.Mvc.Controllers;
+using System.Reflection;
+using System.Web.Mvc;
 
 namespace Abp.Web.Mvc
 {

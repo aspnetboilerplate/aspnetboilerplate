@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Reflection;
 using Castle.Core.Internal;
 using EntityFramework.DynamicFilters;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -19,7 +19,7 @@ namespace Abp.EntityFramework.Uow
         protected readonly IDictionary<Type, DbContext> ActiveDbContexts;
 
         protected IIocResolver IocResolver { get; private set; }
-        
+
         protected TransactionScope CurrentTransaction;
 
         /// <summary>

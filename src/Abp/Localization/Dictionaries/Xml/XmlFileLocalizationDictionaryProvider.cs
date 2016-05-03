@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Abp.Localization.Sources.Xml;
+﻿using Abp.Localization.Sources.Xml;
+using System.IO;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
@@ -42,7 +42,7 @@ namespace Abp.Localization.Dictionaries.Xml
                 {
                     if (DefaultDictionary != null)
                     {
-                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);                        
+                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
                     }
 
                     DefaultDictionary = dictionary;

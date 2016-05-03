@@ -1,8 +1,8 @@
+using Abp.Application.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Abp.Application.Services;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -15,8 +15,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             FillMethodsRecursively(type, BindingFlags.Public | BindingFlags.Instance, allMethods);
 
             return allMethods.Where(
-                method => method.DeclaringType != typeof (object) &&
-                          method.DeclaringType != typeof (ApplicationService) &&
+                method => method.DeclaringType != typeof(object) &&
+                          method.DeclaringType != typeof(ApplicationService) &&
                           !IsPropertyAccessor(method)
                 ).ToList();
         }

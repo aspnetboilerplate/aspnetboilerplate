@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
 using Abp.Web.Api.Tests.DynamicApiController.Clients;
 using Abp.WebApi;
 using Abp.WebApi.Controllers.Dynamic.Clients;
+using System.Reflection;
 
 namespace Abp.Web.Api.Tests
 {
@@ -18,9 +18,9 @@ namespace Abp.Web.Api.Tests
         public override void Initialize()
         {
             base.Initialize();
-            
+
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            
+
             DynamicApiClientBuilder
                 .For<IMyAppService>("http://www.aspnetboilerplate.com/api/services/myapp/myservice")
                 .Build();

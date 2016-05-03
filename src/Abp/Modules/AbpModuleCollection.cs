@@ -1,7 +1,6 @@
+using Abp.Collections.Extensions;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
 
 namespace Abp.Modules
 {
@@ -40,7 +39,7 @@ namespace Abp.Modules
 
         private static void EnsureKernelModuleToBeFirst(List<AbpModuleInfo> sortedModules)
         {
-            var kernelModuleIndex = sortedModules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            var kernelModuleIndex = sortedModules.FindIndex(m => m.Type == typeof(AbpKernelModule));
             if (kernelModuleIndex > 0)
             {
                 var kernelModule = sortedModules[kernelModuleIndex];

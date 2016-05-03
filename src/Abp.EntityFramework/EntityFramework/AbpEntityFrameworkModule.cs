@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.EntityFramework.Dependency;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
@@ -7,6 +6,7 @@ using Abp.Modules;
 using Abp.Reflection;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
+using System.Reflection;
 
 namespace Abp.EntityFramework
 {
@@ -36,11 +36,11 @@ namespace Abp.EntityFramework
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             IocManager.IocContainer.Register(
-                Component.For(typeof (IDbContextProvider<>))
-                    .ImplementedBy(typeof (UnitOfWorkDbContextProvider<>))
+                Component.For(typeof(IDbContextProvider<>))
+                    .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
                 );
-            
+
             RegisterGenericRepositories();
         }
 

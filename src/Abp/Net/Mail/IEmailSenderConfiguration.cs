@@ -9,7 +9,7 @@
         /// Default from address.
         /// </summary>
         string DefaultFromAddress { get; }
-        
+
         /// <summary>
         /// Default display name.
         /// </summary>

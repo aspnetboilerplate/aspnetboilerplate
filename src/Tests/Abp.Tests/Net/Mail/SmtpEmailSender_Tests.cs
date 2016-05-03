@@ -1,6 +1,5 @@
 ﻿using Abp.Net.Mail.Smtp;
 using NSubstitute;
-using Xunit;
 
 namespace Abp.Tests.Net.Mail
 {
@@ -32,8 +31,8 @@ namespace Abp.Tests.Net.Mail
         public void Test_Send_Email()
         {
             _smtpEmailSender.Send(
-                "...", 
-                "Test email", 
+                "...",
+                "Test email",
                 "An email body"
                 );
         }

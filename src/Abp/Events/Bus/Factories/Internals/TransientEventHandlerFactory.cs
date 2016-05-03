@@ -1,16 +1,16 @@
-using System;
 using Abp.Events.Bus.Handlers;
+using System;
 
 namespace Abp.Events.Bus.Factories.Internals
 {
     /// <summary>
     /// This <see cref="IEventHandlerFactory"/> implementation is used to handle events
-    /// by a single instance object. 
+    /// by a single instance object.
     /// </summary>
     /// <remarks>
     /// This class always gets the same single instance of handler.
     /// </remarks>
-    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory 
+    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory
         where THandler : IEventHandler, new()
     {
         /// <summary>

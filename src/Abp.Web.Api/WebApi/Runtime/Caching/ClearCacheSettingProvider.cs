@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Abp.Configuration;
+﻿using Abp.Configuration;
+using System.Collections.Generic;
 
 namespace Abp.WebApi.Runtime.Caching
 {

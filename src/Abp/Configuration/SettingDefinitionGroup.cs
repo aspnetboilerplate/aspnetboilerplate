@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Abp.Localization;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Localization;
 
 namespace Abp.Configuration
 {
@@ -34,6 +34,7 @@ namespace Abp.Configuration
         {
             get { return _children.ToImmutableList(); }
         }
+
         private readonly List<SettingDefinitionGroup> _children;
 
         /// <summary>

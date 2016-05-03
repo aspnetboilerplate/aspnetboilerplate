@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Globalization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Abp.Localization.Sources
 {
@@ -14,6 +14,7 @@ namespace Abp.Localization.Sources
         /// Singleton instance.
         /// </summary>
         public static NullLocalizationSource Instance { get { return SingletonInstance; } }
+
         private static readonly NullLocalizationSource SingletonInstance = new NullLocalizationSource();
 
         public string Name { get { return null; } }
@@ -22,12 +23,10 @@ namespace Abp.Localization.Sources
 
         private NullLocalizationSource()
         {
-            
         }
 
         public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            
         }
 
         public string GetString(string name)

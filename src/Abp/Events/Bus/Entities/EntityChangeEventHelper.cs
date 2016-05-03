@@ -1,6 +1,6 @@
-using System;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using System;
 
 namespace Abp.Events.Bus.Entities
 {

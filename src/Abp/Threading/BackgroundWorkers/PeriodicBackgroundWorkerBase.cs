@@ -1,10 +1,10 @@
-using System;
 using Abp.Threading.Timers;
+using System;
 
 namespace Abp.Threading.BackgroundWorkers
 {
     /// <summary>
-    /// Extends <see cref="BackgroundWorkerBase"/> to add a periodic running Timer. 
+    /// Extends <see cref="BackgroundWorkerBase"/> to add a periodic running Timer.
     /// </summary>
     public abstract class PeriodicBackgroundWorkerBase : BackgroundWorkerBase
     {

@@ -1,12 +1,12 @@
-﻿using System.Collections;
+﻿using Abp.Configuration.Startup;
+using Abp.Dependency;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
 
 namespace Abp.Localization.Sources.Resource
 {

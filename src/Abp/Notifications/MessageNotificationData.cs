@@ -18,7 +18,6 @@ namespace Abp.Notifications
         /// </summary>
         private MessageNotificationData()
         {
-            
         }
 
         public MessageNotificationData(string message)

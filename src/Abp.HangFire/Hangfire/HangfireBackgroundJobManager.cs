@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Hangfire.Configuration;
 using Abp.Threading.BackgroundWorkers;
 using Hangfire;
+using System;
+using System.Threading.Tasks;
 using HangfireBackgroundJob = Hangfire.BackgroundJob;
 
 namespace Abp.Hangfire

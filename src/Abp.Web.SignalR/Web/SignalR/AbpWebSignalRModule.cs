@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Abp.Web.SignalR
 {
@@ -32,7 +32,7 @@ namespace Abp.Web.SignalR
                 {
                     ContractResolver = new AbpSignalRContractResolver()
                 });
-            
+
             IocManager.IocContainer.Register(
                 Component.For<JsonSerializer>().UsingFactoryMethod(() => serializer)
                 );

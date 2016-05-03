@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,19 +10,15 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.OData;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 
 namespace Abp.WebApi.OData.Controllers
 {
-    public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, int>
-        where TEntity : class, IEntity<int>
+    public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, Guid>
+        where TEntity : class, IEntity<Guid>
     {
         protected AbpODataEntityController(IRepository<TEntity> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -70,7 +69,7 @@ namespace Abp.WebApi.OData.Controllers
 
             var createdEntity = await Repository.InsertAsync(entity);
             await UnitOfWorkManager.Current.SaveChangesAsync();
-            
+
             return Created(createdEntity);
         }
 
@@ -80,13 +79,13 @@ namespace Abp.WebApi.OData.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
             var dbLookup = await Repository.GetAsync(key);
             if (entity == null)
             {
                 return NotFound();
             }
-            
+
             entity.Patch(dbLookup);
 
             return Updated(entity);
@@ -103,7 +102,7 @@ namespace Abp.WebApi.OData.Controllers
             {
                 return BadRequest();
             }
-            
+
             var updated = await Repository.UpdateAsync(update);
 
             return Updated(updated);
@@ -116,7 +115,7 @@ namespace Abp.WebApi.OData.Controllers
             {
                 return NotFound();
             }
-            
+
             await Repository.DeleteAsync(key);
 
             return StatusCode(HttpStatusCode.NoContent);

@@ -1,8 +1,8 @@
-﻿using System.Web.Http;
-using System.Web.Http.Controllers;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
+using System.Web.Http;
+using System.Web.Http.Controllers;
 
 namespace Abp.WebApi.Authorization
 {

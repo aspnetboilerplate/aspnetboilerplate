@@ -5,6 +5,5 @@ namespace Abp.Runtime.Validation
     /// </summary>
     public interface IValidate
     {
-        
     }
 }

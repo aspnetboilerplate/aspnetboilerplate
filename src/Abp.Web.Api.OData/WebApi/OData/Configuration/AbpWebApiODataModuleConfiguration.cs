@@ -8,7 +8,7 @@ namespace Abp.WebApi.OData.Configuration
 
         public AbpWebApiODataModuleConfiguration()
         {
-            ODataModelBuilder  = new ODataConventionModelBuilder();
+            ODataModelBuilder = new ODataConventionModelBuilder();
         }
     }
 }

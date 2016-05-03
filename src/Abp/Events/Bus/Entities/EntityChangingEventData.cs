@@ -1,5 +1,5 @@
-using System;
 using Abp.Domain.Entities;
+using System;
 
 namespace Abp.Events.Bus.Entities
 {
@@ -18,7 +18,6 @@ namespace Abp.Events.Bus.Entities
         public EntityChangingEventData(TEntity entity)
             : base(entity)
         {
-
         }
     }
 }

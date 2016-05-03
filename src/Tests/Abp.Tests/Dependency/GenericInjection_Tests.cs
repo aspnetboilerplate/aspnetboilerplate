@@ -11,14 +11,14 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.IocContainer.Register(
                 Component.For<MyClass>(),
-                Component.For(typeof (IEmpty<>)).ImplementedBy(typeof (EmptyImplOne<>))
+                Component.For(typeof(IEmpty<>)).ImplementedBy(typeof(EmptyImplOne<>))
                 );
 
             var genericObj = LocalIocManager.Resolve<IEmpty<MyClass>>();
             genericObj.GenericArg.GetType().ShouldBe(typeof(MyClass));
         }
 
-        public interface IEmpty<T> where T : class 
+        public interface IEmpty<T> where T : class
         {
             T GenericArg { get; set; }
         }
@@ -30,7 +30,6 @@ namespace Abp.Tests.Dependency
 
         public class MyClass
         {
-
         }
     }
 }

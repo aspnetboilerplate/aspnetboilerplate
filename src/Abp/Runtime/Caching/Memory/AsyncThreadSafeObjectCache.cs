@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -34,7 +34,6 @@ namespace Abp.Runtime.Caching.Memory
         public AsyncThreadSafeObjectCache(ObjectCache cache)
             : this(cache, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(DefaultSlidingCacheDurationAsMinutes) })
         {
-
         }
 
         /// <summary>
@@ -45,7 +44,6 @@ namespace Abp.Runtime.Caching.Memory
         public AsyncThreadSafeObjectCache(ObjectCache cache, TimeSpan slidingExpiration)
             : this(cache, new CacheItemPolicy { SlidingExpiration = slidingExpiration })
         {
-
         }
 
         /// <summary>
@@ -56,7 +54,6 @@ namespace Abp.Runtime.Caching.Memory
         public AsyncThreadSafeObjectCache(ObjectCache cache, DateTimeOffset absoluteExpiration)
             : this(cache, new CacheItemPolicy { AbsoluteExpiration = absoluteExpiration })
         {
-
         }
 
         /// <summary>

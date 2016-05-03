@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Reflection;
+﻿using Abp.Reflection;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.Tests.Reflection

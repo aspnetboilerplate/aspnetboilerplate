@@ -1,6 +1,6 @@
-﻿using System.Web.Mvc;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Castle.MicroKernel.Registration;
+using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Controllers
 {

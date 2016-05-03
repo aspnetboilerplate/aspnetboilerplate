@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Abp.Localization.Dictionaries;
+﻿using Abp.Localization.Dictionaries;
+using System.Globalization;
 
 namespace Abp.Tests.Localization
 {

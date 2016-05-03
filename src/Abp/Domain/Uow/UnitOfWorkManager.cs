@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Abp.Dependency;
 using System.Transactions;
-using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {

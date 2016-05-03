@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Transactions;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
-using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.Auditing
 {
@@ -99,6 +98,7 @@ namespace Abp.Auditing
                 AuditingStore.Save(auditInfo);
             }
         }
+
         private void PerformAsyncAuditing(IInvocation invocation, AuditInfo auditInfo)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -108,7 +108,7 @@ namespace Abp.Auditing
             if (invocation.Method.ReturnType == typeof(Task))
             {
                 invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithFinally(
-                    (Task) invocation.ReturnValue,
+                    (Task)invocation.ReturnValue,
                     exception => SaveAuditInfo(auditInfo, stopwatch, exception)
                     );
             }

@@ -21,7 +21,6 @@ namespace Abp.Tests.Json
 
             public MyClass1()
             {
-
             }
 
             public MyClass1(string name)

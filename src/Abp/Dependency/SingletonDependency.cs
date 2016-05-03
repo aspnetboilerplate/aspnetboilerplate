@@ -16,6 +16,7 @@ namespace Abp.Dependency
         /// The instance.
         /// </value>
         public static T Instance { get { return LazyInstance.Value; } }
+
         private static readonly Lazy<T> LazyInstance;
 
         static SingletonDependency()

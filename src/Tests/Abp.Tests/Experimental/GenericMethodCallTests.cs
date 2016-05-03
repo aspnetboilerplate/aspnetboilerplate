@@ -17,7 +17,6 @@ namespace Abp.Tests.Experimental
 
         public void Method_BaseEvent_BaseArg(EntityEventData<Person> data)
         {
-
         }
 
         [Fact]
@@ -29,7 +28,6 @@ namespace Abp.Tests.Experimental
 
         public void Method_BaseEvent_DerivedArg(EntityEventData<Student> data)
         {
-
         }
 
         [Fact]
@@ -41,7 +39,6 @@ namespace Abp.Tests.Experimental
 
         public void Method_DerivedEvent_BaseArg(EntityUpdatedEventData<Person> data)
         {
-
         }
 
         [Fact]
@@ -52,17 +49,14 @@ namespace Abp.Tests.Experimental
 
         public void Method_DerivedEvent_DerivedArg(EntityUpdatedEventData<Student> data)
         {
-
         }
 
         public class Person : Entity
         {
-
         }
 
         public class Student : Person
         {
-
         }
     }
 }

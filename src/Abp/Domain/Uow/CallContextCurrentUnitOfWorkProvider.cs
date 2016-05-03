@@ -1,13 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.Remoting.Messaging;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Castle.Core;
 using Castle.Core.Logging;
+using System.Collections.Concurrent;
+using System.Runtime.Remoting.Messaging;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
+    /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>.
     /// This is the default implementation.
     /// </summary>
     public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ITransientDependency

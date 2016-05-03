@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.MongoDb.Configuration;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 namespace Abp.MongoDb.Uow
 {
@@ -36,27 +36,22 @@ namespace Abp.MongoDb.Uow
 
         public override void SaveChanges()
         {
-
         }
 
         public override async Task SaveChangesAsync()
         {
-
         }
 
         protected override void CompleteUow()
         {
-
         }
 
         protected override async Task CompleteUowAsync()
         {
-
         }
 
         protected override void DisposeUow()
         {
-
         }
     }
 }

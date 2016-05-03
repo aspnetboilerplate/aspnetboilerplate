@@ -1,10 +1,10 @@
-﻿using System;
-using Abp.Collections;
+﻿using Abp.Collections;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
 using Abp.TestBase.Modules;
 using Abp.TestBase.Runtime.Session;
+using System;
 
 namespace Abp.TestBase
 {
@@ -52,7 +52,6 @@ namespace Abp.TestBase
         /// </summary>
         protected virtual void PreInitialize()
         {
-
         }
 
         public virtual void Dispose()

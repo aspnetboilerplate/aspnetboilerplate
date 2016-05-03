@@ -1,7 +1,7 @@
+using Abp.Extensions;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Extensions;
 
 namespace Abp.Net.Mail
 {

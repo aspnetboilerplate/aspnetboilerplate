@@ -21,7 +21,7 @@ namespace Abp.Tests.Extensions
 
             DateTimeRange.ThisYear.StartTime.Month.ShouldBe(1);
             DateTimeRange.ThisYear.StartTime.Day.ShouldBe(1);
-            
+
             DateTimeRange.ThisYear.StartTime.ShouldBeGreaterThan(DateTimeRange.LastYear.EndTime);
             DateTimeRange.ThisYear.EndTime.ShouldBeLessThan(DateTimeRange.NextYear.StartTime);
 

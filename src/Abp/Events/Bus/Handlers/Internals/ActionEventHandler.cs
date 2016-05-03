@@ -1,5 +1,5 @@
-using System;
 using Abp.Dependency;
+using System;
 
 namespace Abp.Events.Bus.Handlers.Internals
 {

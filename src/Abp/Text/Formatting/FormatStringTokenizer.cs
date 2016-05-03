@@ -33,6 +33,7 @@ namespace Abp.Text.Formatting
                         }
 
                         break;
+
                     case '}':
                         if (!inDynamicValue)
                         {
@@ -56,6 +57,7 @@ namespace Abp.Text.Formatting
                         currentText.Clear();
 
                         break;
+
                     default:
                         currentText.Append(c);
                         break;

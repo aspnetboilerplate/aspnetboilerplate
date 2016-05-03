@@ -1,11 +1,11 @@
+using Abp.Extensions;
+using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Extensions;
-using Abp.MultiTenancy;
-using Abp.Runtime.Session;
 
 namespace Abp.Domain.Uow
 {
@@ -35,6 +35,7 @@ namespace Abp.Domain.Uow
         {
             get { return _filters.ToImmutableList(); }
         }
+
         private readonly List<DataFilterConfiguration> _filters;
 
         /// <summary>
@@ -281,7 +282,6 @@ namespace Abp.Domain.Uow
         {
             throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
         }
-
 
         /// <summary>
         /// Concrete Unit of work classes should implement this

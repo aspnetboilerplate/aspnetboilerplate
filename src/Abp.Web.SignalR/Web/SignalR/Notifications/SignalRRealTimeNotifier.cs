@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Notifications;
 using Abp.RealTime;
 using Abp.Web.SignalR.Hubs;
 using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Web.SignalR.Notifications
 {

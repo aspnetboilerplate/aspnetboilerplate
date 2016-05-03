@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Dependency;
+using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
+using Abp.WebApi.Controllers.Dynamic.Scripting.jQuery;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
-using Abp.WebApi.Controllers.Dynamic.Scripting.jQuery;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
@@ -78,8 +78,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             {
                 case ProxyScriptType.JQuery:
                     return new JQueryProxyGenerator(controllerInfo, amdModule);
+
                 case ProxyScriptType.Angular:
                     return new AngularProxyGenerator(controllerInfo);
+
                 default:
                     throw new AbpException("Unknown ProxyScriptType: " + type);
             }

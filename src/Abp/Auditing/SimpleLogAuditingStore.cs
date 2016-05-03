@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Castle.Core.Logging;
+﻿using Castle.Core.Logging;
+using System.Threading.Tasks;
 
 namespace Abp.Auditing
 {
@@ -12,6 +12,7 @@ namespace Abp.Auditing
         /// Singleton instance.
         /// </summary>
         public static SimpleLogAuditingStore Instance { get { return SingletonInstance; } }
+
         private static readonly SimpleLogAuditingStore SingletonInstance = new SimpleLogAuditingStore();
 
         public ILogger Logger { get; set; }

@@ -72,7 +72,6 @@ namespace Abp.Net.Mail.Smtp
         public SmtpEmailSenderConfiguration(ISettingManager settingManager)
             : base(settingManager)
         {
-
         }
     }
 }

@@ -5,6 +5,5 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     public interface IOutputDto : IDto
     {
-
     }
 }

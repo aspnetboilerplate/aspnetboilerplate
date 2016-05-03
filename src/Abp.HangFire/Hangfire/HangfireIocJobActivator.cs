@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Hangfire;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Hangfire
 {
@@ -29,7 +29,7 @@ namespace Abp.Hangfire
             return new HangfireIocJobActivatorScope(this, _iocResolver);
         }
 
-        class HangfireIocJobActivatorScope : JobActivatorScope
+        private class HangfireIocJobActivatorScope : JobActivatorScope
         {
             private readonly JobActivator _activator;
             private readonly IIocResolver _iocResolver;

@@ -15,7 +15,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public PagedResultOutput()
         {
-
         }
 
         /// <summary>
@@ -26,7 +25,6 @@ namespace Abp.Application.Services.Dto
         public PagedResultOutput(int totalCount, IReadOnlyList<T> items)
             : base(totalCount, items)
         {
-
         }
     }
 }

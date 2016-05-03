@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Transactions;
 
 namespace Abp.Domain.Uow
@@ -40,7 +39,7 @@ namespace Abp.Domain.Uow
         public TransactionScopeAsyncFlowOption? AsyncFlowOption { get; set; }
 
         /// <summary>
-        /// Can be used to enable/disable some filters. 
+        /// Can be used to enable/disable some filters.
         /// </summary>
         public List<DataFilterConfiguration> FilterOverrides { get; private set; }
 

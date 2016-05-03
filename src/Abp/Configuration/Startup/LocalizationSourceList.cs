@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Abp.Localization.Sources;
+﻿using Abp.Localization.Sources;
+using System.Collections.Generic;
 
 namespace Abp.Configuration.Startup
 {

@@ -11,7 +11,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
@@ -22,7 +22,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
@@ -34,7 +34,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
@@ -45,7 +45,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -57,7 +57,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
@@ -70,7 +70,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
-        /// </summary> 
+        /// </summary>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -80,14 +80,14 @@ namespace Abp.Dependency
             return new DisposableDependencyObjectWrapper(iocResolver, iocResolver.Resolve(type, argumentsAsAnonymousType));
         }
 
-        #endregion
+        #endregion ResolveAsDisposable
 
         #region Using
 
         /// <summary>
         /// This method can be used to resolve and release an object automatically.
         /// You can use the object in <see cref="action"/>.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to use</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="action">An action that can use the resolved object</param>
@@ -99,6 +99,6 @@ namespace Abp.Dependency
             }
         }
 
-        #endregion
+        #endregion Using
     }
 }

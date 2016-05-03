@@ -1,13 +1,13 @@
 ﻿using Abp.Localization;
 using Abp.Modules;
-using System.Reflection;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.Core.Logging;
+using System.Reflection;
 
 namespace Abp.AutoMapper
 {
-    [DependsOn(typeof (AbpKernelModule))]
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule
     {
         public ILogger Logger { get; set; }

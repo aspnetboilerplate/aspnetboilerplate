@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Reflection;
 using Abp.Threading;
 using Castle.DynamicProxy;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Interceptors
 {
@@ -40,7 +40,7 @@ namespace Abp.Authorization.Interceptors
             //}
             //else
             //{
-                InterceptSync(invocation, authorizeAttributes);
+            InterceptSync(invocation, authorizeAttributes);
             //}
         }
 

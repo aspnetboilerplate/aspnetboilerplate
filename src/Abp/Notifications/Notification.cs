@@ -1,7 +1,7 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
+using System;
 
 namespace Abp.Notifications
 {

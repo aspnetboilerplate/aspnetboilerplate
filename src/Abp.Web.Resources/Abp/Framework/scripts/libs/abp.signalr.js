@@ -1,6 +1,5 @@
 ﻿var abp = abp || {};
 (function ($) {
-
     //Check if SignalR is defined
     if (!$ || !$.connection) {
         return;
@@ -41,5 +40,4 @@
     if (abp.signalr.autoConnect) {
         abp.signalr.connect();
     }
-
 })(jQuery);

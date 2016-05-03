@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Configuration.Startup;
+using Abp.Dependency;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Configuration.Startup;
-using Abp.Dependency;
 
 namespace Abp.Modules
 {
@@ -27,12 +27,11 @@ namespace Abp.Modules
         protected internal IAbpStartupConfiguration Configuration { get; internal set; }
 
         /// <summary>
-        /// This is the first event called on application startup. 
+        /// This is the first event called on application startup.
         /// Codes can be placed here to run before dependency injection registrations.
         /// </summary>
         public virtual void PreInitialize()
         {
-
         }
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void Initialize()
         {
-
         }
 
         /// <summary>
@@ -48,7 +46,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void PostInitialize()
         {
-            
         }
 
         /// <summary>
@@ -56,7 +53,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void Shutdown()
         {
-            
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
-﻿using System.Runtime.Caching;
-using Abp.Runtime.Caching.Memory;
+﻿using Abp.Runtime.Caching.Memory;
 using Shouldly;
+using System.Runtime.Caching;
 using Xunit;
 
 namespace Abp.Tests.Runtime.Caching.Memory
@@ -28,7 +28,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
                 ++cacheCallCount;
                 return "B-value-1";
             });
-            
+
             bValue.ShouldBe("B-value-1");
             cacheCallCount.ShouldBe(2);
 
@@ -37,7 +37,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
                 ++cacheCallCount;
                 return "A-value-2";
             });
-            
+
             aValue.ShouldBe("A-value-1");
             cacheCallCount.ShouldBe(2);
         }

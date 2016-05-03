@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Abp.Localization
 {
@@ -30,7 +30,7 @@ namespace Abp.Localization
         /// </summary>
         public LocalizationManager(
             ILanguageManager languageManager,
-            ILocalizationConfiguration configuration, 
+            ILocalizationConfiguration configuration,
             IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;

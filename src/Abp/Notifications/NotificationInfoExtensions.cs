@@ -1,7 +1,7 @@
-﻿using System;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Extensions;
 using Newtonsoft.Json;
+using System;
 
 namespace Abp.Notifications
 {

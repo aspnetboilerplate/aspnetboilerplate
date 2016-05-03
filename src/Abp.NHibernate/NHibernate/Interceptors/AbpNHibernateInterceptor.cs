@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
@@ -8,6 +7,7 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using NHibernate;
 using NHibernate.Type;
+using System;
 
 namespace Abp.NHibernate.Interceptors
 {
@@ -71,7 +71,7 @@ namespace Abp.NHibernate.Interceptors
                     }
                 }
             }
-            
+
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
 
@@ -81,7 +81,7 @@ namespace Abp.NHibernate.Interceptors
         public override bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
         {
             //TODO@Halil: Implement this when tested well (Issue #49)
-            ////Prevent changing CreationTime on update 
+            ////Prevent changing CreationTime on update
             //if (entity is IHasCreationTime)
             //{
             //    for (var i = 0; i < propertyNames.Length; i++)

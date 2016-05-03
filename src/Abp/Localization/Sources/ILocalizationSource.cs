@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Globalization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Abp.Localization.Sources
 {

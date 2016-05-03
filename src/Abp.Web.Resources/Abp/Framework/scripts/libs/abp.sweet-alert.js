@@ -10,7 +10,6 @@
     abp.libs.sweetAlert = {
         config: {
             'default': {
-
             },
             info: {
                 type: 'info'
@@ -107,5 +106,4 @@
         abp.libs.sweetAlert.config.confirm.cancelButtonText = abp.localization.abpWeb('Cancel');
         abp.libs.sweetAlert.config.confirm.confirmButtonText = abp.localization.abpWeb('Yes');
     });
-
 })(jQuery);

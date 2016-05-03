@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Json;
+using System;
 using System.Collections.Generic;
-using Abp.Json;
 
 namespace Abp.Notifications
 {
@@ -45,6 +45,7 @@ namespace Abp.Notifications
                 _properties = value;
             }
         }
+
         private Dictionary<string, object> _properties;
 
         /// <summary>

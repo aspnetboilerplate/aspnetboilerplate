@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Web.Configuration;
 using Abp.Web.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Abp.Web.Models
 {
@@ -56,10 +56,10 @@ namespace Abp.Web.Models
             if (exception is AbpValidationException)
             {
                 return new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
-                       {
-                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
-                           Details = GetValidationErrorNarrative(exception as AbpValidationException)
-                       };
+                {
+                    ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
+                    Details = GetValidationErrorNarrative(exception as AbpValidationException)
+                };
             }
 
             if (exception is Abp.Authorization.AbpAuthorizationException)
@@ -163,7 +163,7 @@ namespace Abp.Web.Models
         {
             var detailBuilder = new StringBuilder();
             detailBuilder.AppendLine(AbpWebLocalizedMessages.ValidationNarrativeTitle);
-            
+
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);

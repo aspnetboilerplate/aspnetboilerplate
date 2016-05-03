@@ -1,9 +1,9 @@
+using Abp.Collections.Extensions;
+using Abp.Text.Formatting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Text.Formatting;
 
 namespace Abp.Text
 {
@@ -13,7 +13,7 @@ namespace Abp.Text
     /// </summary>
     /// <example>
     /// Say that str is "My name is Neo." and format is "My name is {name}.".
-    /// Then Extract method gets "Neo" as "name".  
+    /// Then Extract method gets "Neo" as "name".
     /// </example>
     public class FormattedStringValueExtracter
     {

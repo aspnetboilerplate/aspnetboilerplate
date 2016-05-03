@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
 using Abp.MongoDb.Configuration;
+using System.Reflection;
 
 namespace Abp.MongoDb
 {

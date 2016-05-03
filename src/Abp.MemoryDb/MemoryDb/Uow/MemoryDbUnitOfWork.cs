@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.MemoryDb.Configuration;
+using System.Threading.Tasks;
 
 namespace Abp.MemoryDb.Uow
 {
@@ -35,27 +35,22 @@ namespace Abp.MemoryDb.Uow
 
         public override void SaveChanges()
         {
-
         }
 
         public override async Task SaveChangesAsync()
         {
-
         }
 
         protected override void CompleteUow()
         {
-
         }
 
         protected override async Task CompleteUowAsync()
         {
-
         }
 
         protected override void DisposeUow()
         {
-
         }
     }
 }

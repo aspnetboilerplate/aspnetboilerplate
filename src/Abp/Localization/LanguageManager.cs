@@ -1,7 +1,7 @@
+using Abp.Dependency;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Abp.Dependency;
 
 namespace Abp.Localization
 {

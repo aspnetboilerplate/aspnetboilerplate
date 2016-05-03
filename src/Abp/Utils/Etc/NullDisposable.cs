@@ -12,12 +12,10 @@ namespace Abp.Utils.Etc
 
         private NullDisposable()
         {
-            
         }
 
         public void Dispose()
         {
-
         }
     }
 }

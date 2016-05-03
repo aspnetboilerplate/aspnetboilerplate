@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using System.Text;
-using Abp.IO.Extensions;
+﻿using Abp.IO.Extensions;
 using Abp.Localization.Dictionaries.Xml;
+using System.Reflection;
+using System.Text;
 
 namespace Abp.Localization.Dictionaries.Json
 {

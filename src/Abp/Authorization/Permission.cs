@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Abp.Authorization
 {
@@ -59,6 +59,7 @@ namespace Abp.Authorization
         {
             get { return _children.ToImmutableList(); }
         }
+
         private readonly List<Permission> _children;
 
         /// <summary>
@@ -99,10 +100,10 @@ namespace Abp.Authorization
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
         public Permission CreateChildPermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            bool isGrantedByDefault = false, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            bool isGrantedByDefault = false,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {

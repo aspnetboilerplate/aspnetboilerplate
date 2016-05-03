@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using NHibernate;
 using NHibernate.Linq;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Repositories
 {

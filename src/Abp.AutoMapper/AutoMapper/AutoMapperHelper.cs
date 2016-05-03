@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using AutoMapper;
+using System;
+using System.Reflection;
 
 namespace Abp.AutoMapper
 {
@@ -17,7 +17,7 @@ namespace Abp.AutoMapper
         public static void CreateMap<TAttribute>(Type type)
             where TAttribute : AutoMapAttribute
         {
-            if (!type.IsDefined(typeof (TAttribute)))
+            if (!type.IsDefined(typeof(TAttribute)))
             {
                 return;
             }
@@ -38,7 +38,7 @@ namespace Abp.AutoMapper
 
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.From))
                     {
-                        Mapper.CreateMap(targetType, type);                                
+                        Mapper.CreateMap(targetType, type);
                     }
                 }
             }

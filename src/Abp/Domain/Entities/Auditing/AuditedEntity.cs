@@ -8,6 +8,5 @@ namespace Abp.Domain.Entities.Auditing
     [Serializable]
     public abstract class AuditedEntity : AuditedEntity<int>
     {
-
     }
 }

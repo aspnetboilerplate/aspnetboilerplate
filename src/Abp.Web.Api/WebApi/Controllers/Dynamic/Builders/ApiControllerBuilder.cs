@@ -1,7 +1,7 @@
+using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
-using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -92,13 +92,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public void Build()
         {
             var controllerInfo = new DynamicApiControllerInfo(
-                _serviceName, 
+                _serviceName,
                 typeof(T),
                 typeof(DynamicApiController<T>),
                 typeof(AbpDynamicApiControllerInterceptor<T>),
                 _filters
                 );
-            
+
             foreach (var actionBuilder in _actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
@@ -108,7 +108,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(_conventionalVerbs);
             }
-            
+
             DynamicApiControllerManager.Register(controllerInfo);
         }
     }

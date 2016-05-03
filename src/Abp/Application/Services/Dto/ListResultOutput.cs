@@ -15,7 +15,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public ListResultOutput()
         {
-
         }
 
         /// <summary>
@@ -25,7 +24,6 @@ namespace Abp.Application.Services.Dto
         public ListResultOutput(IReadOnlyList<T> items)
             : base(items)
         {
-
         }
     }
 }

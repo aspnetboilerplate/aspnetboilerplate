@@ -40,12 +40,13 @@ namespace Abp.Tests.Dependency
         public void Should_Get_Different_Objects_For_Transients()
         {
             _registrar.Register<MyClass>(DependencyLifeStyle.Transient);
-            
+
             var obj1 = _resolver.Resolve<MyClass>();
             var obj2 = _resolver.Resolve<MyClass>();
 
             obj1.ShouldNotBeSameAs(obj2);
         }
+
         [Fact]
         public void Should_Get_Same_Object_For_Singleton()
         {
@@ -57,15 +58,12 @@ namespace Abp.Tests.Dependency
             obj1.ShouldBeSameAs(obj2);
         }
 
-
         public class MyClass : IMyInterface
         {
-            
         }
 
         public interface IMyInterface
         {
-
         }
     }
 }

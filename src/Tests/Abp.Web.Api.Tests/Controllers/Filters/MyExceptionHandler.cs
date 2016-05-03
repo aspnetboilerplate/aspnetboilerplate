@@ -1,7 +1,7 @@
-﻿using System;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Events.Bus.Exceptions;
 using Abp.Events.Bus.Handlers;
+using System;
 
 namespace Abp.Web.Api.Tests.Controllers.Filters
 {

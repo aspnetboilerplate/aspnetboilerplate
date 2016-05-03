@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Abp.Application.Services.Dto;
 
 namespace Abp.Linq.Extensions
 {

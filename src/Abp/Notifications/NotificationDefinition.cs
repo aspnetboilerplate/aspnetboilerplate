@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Localization;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Notifications
 {
@@ -16,7 +16,7 @@ namespace Abp.Notifications
         /// Unique name of the notification.
         /// </summary>
         public string Name { get; private set; }
-        
+
         /// <summary>
         /// Related entity type with this notification (optional).
         /// </summary>
@@ -39,7 +39,7 @@ namespace Abp.Notifications
         /// Optional.
         /// </summary>
         public IPermissionDependency PermissionDependency { get; set; }
-        
+
         /// <summary>
         /// A feature dependency. This notification will be available to a tenant if this feature is enabled.
         /// Optional.
@@ -79,7 +79,7 @@ namespace Abp.Notifications
             {
                 throw new ArgumentNullException("name", "name can not be null, empty or whitespace!");
             }
-            
+
             Name = name;
             EntityType = entityType;
             DisplayName = displayName;

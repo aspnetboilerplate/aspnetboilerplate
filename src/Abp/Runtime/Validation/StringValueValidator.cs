@@ -1,7 +1,7 @@
+using Abp.Extensions;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Abp.Extensions;
 
 namespace Abp.Runtime.Validation
 {
@@ -35,7 +35,6 @@ namespace Abp.Runtime.Validation
 
         public StringValueValidator()
         {
-            
         }
 
         public StringValueValidator(int minLength = 0, int maxLength = 0, string regularExpression = null, bool allowNull = false)
@@ -59,7 +58,7 @@ namespace Abp.Runtime.Validation
             }
 
             var strValue = value as string;
-            
+
             if (MinLength > 0 && strValue.Length < MinLength)
             {
                 return false;

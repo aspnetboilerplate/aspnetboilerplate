@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Localization;
+﻿using Abp.Localization;
 using Abp.Localization.Sources;
+using System;
 
 namespace Abp.Web.Localization
 {
@@ -16,7 +16,7 @@ namespace Abp.Web.Localization
         public static string ValidationError { get { return L("ValidationError"); } }
 
         public static string ValidationNarrativeTitle { get { return L("ValidationNarrativeTitle"); } }
-        
+
         private static readonly ILocalizationSource Source;
 
         static AbpWebLocalizedMessages()

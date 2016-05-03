@@ -1,5 +1,3 @@
-using System;
-
 namespace Abp.Domain.Uow
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace Abp.Domain.Uow
         /// Reference to the outer UOW if exists.
         /// </summary>
         IUnitOfWork Outer { get; set; }
-        
+
         /// <summary>
         /// Begins the unit of work with given options.
         /// </summary>

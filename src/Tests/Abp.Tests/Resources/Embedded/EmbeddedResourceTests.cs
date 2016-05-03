@@ -17,7 +17,7 @@ namespace Abp.Tests.Resources.Embedded
         {
             _embeddedResourceManager.ExposeResources("MyApp/MyResources", GetType().Assembly, "Abp.Tests.Resources.Embedded.MyResources");
             var resource = _embeddedResourceManager.GetResource("MyApp/MyResources/js/MyScriptFile1.js");
-            
+
             Assert.True(resource.Assembly == GetType().Assembly);
             Assert.True(resource.Content.Length > 0);
         }

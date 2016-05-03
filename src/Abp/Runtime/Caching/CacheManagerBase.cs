@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using Abp.Dependency;
+using Abp.Runtime.Caching.Configuration;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Abp.Dependency;
-using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching
 {
@@ -34,7 +34,7 @@ namespace Abp.Runtime.Caching
         {
             return Caches.Values.ToImmutableList();
         }
-        
+
         public virtual ICache GetCache(string name)
         {
             return Caches.GetOrAdd(name, (cacheName) =>

@@ -22,6 +22,7 @@ namespace Abp.Domain.Uow
         {
             get { return _filters; }
         }
+
         private readonly List<DataFilterConfiguration> _filters;
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)

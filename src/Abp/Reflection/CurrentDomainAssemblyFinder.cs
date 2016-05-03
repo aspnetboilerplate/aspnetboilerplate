@@ -15,6 +15,7 @@ namespace Abp.Reflection
         /// Gets Singleton instance of <see cref="CurrentDomainAssemblyFinder"/>.
         /// </summary>
         public static CurrentDomainAssemblyFinder Instance { get { return SingletonInstance; } }
+
         private static readonly CurrentDomainAssemblyFinder SingletonInstance = new CurrentDomainAssemblyFinder();
 
         public List<Assembly> GetAllAssemblies()

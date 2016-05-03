@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using Abp.Hangfire.Configuration;
+﻿using Abp.Hangfire.Configuration;
 using Abp.Modules;
 using Hangfire;
+using System.Reflection;
 
 namespace Abp.Hangfire
 {
@@ -11,7 +11,7 @@ namespace Abp.Hangfire
         public override void PreInitialize()
         {
             IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
-            
+
             Configuration.Modules
                 .AbpHangfire()
                 .GlobalConfiguration

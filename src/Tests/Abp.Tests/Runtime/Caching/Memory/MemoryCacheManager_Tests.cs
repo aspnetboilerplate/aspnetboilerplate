@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
@@ -7,6 +6,7 @@ using Abp.Runtime.Caching.Memory;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.Tests.Runtime.Caching.Memory

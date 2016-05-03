@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Web.Models;
+﻿using Abp.Web.Models;
+using System;
 
 namespace Abp.Web.Mvc.Models
 {
@@ -11,7 +11,6 @@ namespace Abp.Web.Mvc.Models
 
         public ErrorViewModel()
         {
-            
         }
 
         public ErrorViewModel(Exception exception)

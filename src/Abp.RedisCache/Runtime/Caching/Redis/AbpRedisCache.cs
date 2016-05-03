@@ -1,7 +1,7 @@
-﻿using System;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Json;
 using StackExchange.Redis;
+using System;
 
 namespace Abp.Runtime.Caching.Redis
 {

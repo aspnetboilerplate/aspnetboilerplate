@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 
 namespace Abp.Threading
 {

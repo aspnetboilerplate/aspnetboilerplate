@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Abp.Logging;
+using Abp.Web.Mvc.Resources;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Logging;
-using Abp.Web.Mvc.Resources;
-using System.Text.RegularExpressions;
 
 namespace Abp.Web.Mvc.Extensions
 {
@@ -103,7 +103,7 @@ namespace Abp.Web.Mvc.Extensions
 
             if (embeddedResourcePath.StartsWith("/"))
             {
-                embeddedResourcePath = embeddedResourcePath.Substring(1);                
+                embeddedResourcePath = embeddedResourcePath.Substring(1);
             }
 
             var resource = WebResourceHelper.GetEmbeddedResource(embeddedResourcePath);

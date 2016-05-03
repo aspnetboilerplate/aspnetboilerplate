@@ -29,7 +29,7 @@ namespace Abp.Web.Api.Tests.DynamicApiController
 
         private interface IMyBaseAppService : IApplicationService
         {
-            int MyBaseMethod();            
+            int MyBaseMethod();
         }
     }
 }

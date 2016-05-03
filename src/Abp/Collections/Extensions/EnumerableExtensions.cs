@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Abp.Collections.Extensions
-{    
-    /// <summary> 
+{
+    /// <summary>
     /// Extension methods for <see cref="IEnumerable{T}"/>.
     /// </summary>
     public static class EnumerableExtensions

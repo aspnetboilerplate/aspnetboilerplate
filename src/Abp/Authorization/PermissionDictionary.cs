@@ -31,7 +31,7 @@ namespace Abp.Authorization
             {
                 if (existingPermission != permission)
                 {
-                    throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);                    
+                    throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);
                 }
             }
             else

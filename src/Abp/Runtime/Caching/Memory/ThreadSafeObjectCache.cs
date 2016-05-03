@@ -29,7 +29,6 @@ namespace Abp.Runtime.Caching.Memory
         public ThreadSafeObjectCache(ObjectCache cache)
             : this(cache, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(DefaultSlidingCacheDurationAsMinutes) })
         {
-
         }
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace Abp.Runtime.Caching.Memory
         public ThreadSafeObjectCache(ObjectCache cache, TimeSpan slidingExpiration)
             : this(cache, new CacheItemPolicy { SlidingExpiration = slidingExpiration })
         {
-
         }
 
         /// <summary>
@@ -51,7 +49,6 @@ namespace Abp.Runtime.Caching.Memory
         public ThreadSafeObjectCache(ObjectCache cache, DateTimeOffset absoluteExpiration)
             : this(cache, new CacheItemPolicy { AbsoluteExpiration = absoluteExpiration })
         {
-
         }
 
         /// <summary>

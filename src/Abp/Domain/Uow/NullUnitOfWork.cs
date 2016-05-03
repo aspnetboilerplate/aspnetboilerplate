@@ -11,32 +11,26 @@ namespace Abp.Domain.Uow
     {
         public override void SaveChanges()
         {
-
         }
 
         public async override Task SaveChangesAsync()
         {
-
         }
 
         protected override void BeginUow()
         {
-
         }
 
         protected override void CompleteUow()
         {
-
         }
 
         protected async override Task CompleteUowAsync()
         {
-
         }
 
         protected override void DisposeUow()
         {
-
         }
 
         public NullUnitOfWork(IUnitOfWorkDefaultOptions defaultOptions)

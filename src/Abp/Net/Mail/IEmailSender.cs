@@ -34,7 +34,7 @@ namespace Abp.Net.Mail
         /// <param name="mail">Mail to be sent</param>
         /// <param name="normalize">
         /// Should normalize email?
-        /// If true, it sets sender address/name if it's not set before and makes mail encoding UTF-8. 
+        /// If true, it sets sender address/name if it's not set before and makes mail encoding UTF-8.
         /// </param>
         void Send(MailMessage mail, bool normalize = true);
 
@@ -44,7 +44,7 @@ namespace Abp.Net.Mail
         /// <param name="mail">Mail to be sent</param>
         /// <param name="normalize">
         /// Should normalize email?
-        /// If true, it sets sender address/name if it's not set before and makes mail encoding UTF-8. 
+        /// If true, it sets sender address/name if it's not set before and makes mail encoding UTF-8.
         /// </param>
         Task SendAsync(MailMessage mail, bool normalize = true);
     }

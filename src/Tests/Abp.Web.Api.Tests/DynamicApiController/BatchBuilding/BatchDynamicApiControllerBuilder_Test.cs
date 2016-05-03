@@ -1,9 +1,4 @@
-using System.Reflection;
 using Abp.Application.Services;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic;
-using Abp.WebApi.Controllers.Dynamic.Builders;
-using Shouldly;
 using Xunit;
 
 namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
@@ -27,11 +22,9 @@ namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
 
     public interface IMyFirstAppService : IApplicationService
     {
-        
     }
 
     public abstract class MyFirstAppService : IMyFirstAppService
     {
-        
     }
 }

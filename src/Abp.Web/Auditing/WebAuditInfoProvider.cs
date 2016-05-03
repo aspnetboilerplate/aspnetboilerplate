@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Abp.Dependency;
+using Castle.Core.Logging;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Web;
-using Abp.Dependency;
-using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {

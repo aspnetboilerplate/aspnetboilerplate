@@ -1,5 +1,5 @@
-﻿using System;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
+using System;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -21,8 +21,8 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             database.ScriptEvaluate(@"
-                local keys = redis.call('keys', ARGV[1]) 
-                for i=1,#keys,5000 do 
+                local keys = redis.call('keys', ARGV[1])
+                for i=1,#keys,5000 do
                 redis.call('del', unpack(keys, i, math.min(i+4999, #keys)))
                 end", values: new RedisValue[] { prefix });
         }

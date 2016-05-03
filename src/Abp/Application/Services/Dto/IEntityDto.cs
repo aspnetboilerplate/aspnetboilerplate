@@ -5,6 +5,5 @@
     /// </summary>
     public interface IEntityDto : IEntityDto<int>
     {
-
     }
 }

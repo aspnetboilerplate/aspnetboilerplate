@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp.Threading;
+﻿using Abp.Threading;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.Threading

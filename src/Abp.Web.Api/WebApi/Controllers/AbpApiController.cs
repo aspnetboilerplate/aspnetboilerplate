@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Uow;
@@ -11,6 +7,10 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Abp.WebApi.Controllers
 {
@@ -86,6 +86,7 @@ namespace Abp.WebApi.Controllers
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>
@@ -115,6 +116,7 @@ namespace Abp.WebApi.Controllers
             }
             set { _unitOfWorkManager = value; }
         }
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
@@ -133,7 +135,7 @@ namespace Abp.WebApi.Controllers
             PermissionChecker = NullPermissionChecker.Instance;
             EventBus = NullEventBus.Instance;
         }
-        
+
         /// <summary>
         /// Gets localized string for given key name and current language.
         /// </summary>
@@ -195,7 +197,6 @@ namespace Abp.WebApi.Controllers
         {
             return PermissionChecker.IsGranted(permissionName);
         }
-
 
         /// <summary>
         /// Checks if given feature is enabled for current tenant.

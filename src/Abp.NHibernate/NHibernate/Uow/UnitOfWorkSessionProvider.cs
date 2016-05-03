@@ -10,7 +10,7 @@ namespace Abp.NHibernate.Uow
         {
             get { return _unitOfWorkProvider.Current.GetSession(); }
         }
-        
+
         private readonly ICurrentUnitOfWorkProvider _unitOfWorkProvider;
 
         public UnitOfWorkSessionProvider(ICurrentUnitOfWorkProvider unitOfWorkProvider)

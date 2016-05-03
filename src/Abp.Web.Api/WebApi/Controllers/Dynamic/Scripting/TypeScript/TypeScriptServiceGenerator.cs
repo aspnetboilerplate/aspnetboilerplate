@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Abp.Dependency;
+using Abp.Extensions;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Abp.Dependency;
-using  Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -45,6 +42,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 script.AppendLine();
             }
             script.AppendLine("}");
+
             #region Create Script for Abp common objects
 
             script.AppendLine("declare module abp {");
@@ -81,7 +79,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             script.AppendLine("}");
             script.AppendLine("}");
 
-            #endregion
+            #endregion Create Script for Abp common objects
 
             return script.ToString();
         }

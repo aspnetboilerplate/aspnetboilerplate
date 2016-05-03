@@ -1,10 +1,10 @@
-using System.Data;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Transactions.Extensions;
 using NHibernate;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Uow
 {
@@ -17,6 +17,7 @@ namespace Abp.NHibernate.Uow
         /// Used to get current session values.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
+
         /// <summary>
         /// Gets NHibernate session object to perform queries.
         /// </summary>
@@ -47,18 +48,15 @@ namespace Abp.NHibernate.Uow
                 ? _sessionFactory.OpenSession(DbConnection)
                 : _sessionFactory.OpenSession();
 
-            
-
             if (Options.IsTransactional == true)
             {
                 _transaction = Options.IsolationLevel.HasValue
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
             }
-            
+
             this.CheckAndSetMayHaveTenant();
             this.CheckAndSetMustHaveTenant();
-
         }
 
         protected virtual void CheckAndSetMustHaveTenant()
@@ -126,12 +124,13 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyEnableFilter(string filterName)
         {
-            if( Session.GetEnabledFilter(filterName) == null )
+            if (Session.GetEnabledFilter(filterName) == null)
                 Session.EnableFilter(filterName);
         }
+
         protected override void ApplyDisableFilter(string filterName)
         {
-            if ( Session.GetEnabledFilter(filterName) != null )
+            if (Session.GetEnabledFilter(filterName) != null)
                 Session.DisableFilter(filterName);
         }
 

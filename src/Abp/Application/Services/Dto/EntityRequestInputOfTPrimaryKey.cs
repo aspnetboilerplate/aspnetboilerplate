@@ -14,7 +14,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public EntityRequestInput()
         {
-
         }
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace Abp.Application.Services.Dto
         public EntityRequestInput(TPrimaryKey id)
             : base(id)
         {
-
         }
     }
 }

@@ -1,5 +1,5 @@
-using System.Data.Entity;
 using Abp.Domain.Uow;
+using System.Data.Entity;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -8,7 +8,7 @@ namespace Abp.EntityFramework.Uow
     /// active unit of work.
     /// </summary>
     /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
-    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> 
+    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : DbContext
     {
         /// <summary>

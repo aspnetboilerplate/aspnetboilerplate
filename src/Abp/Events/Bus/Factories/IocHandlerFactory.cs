@@ -1,6 +1,6 @@
-using System;
 using Abp.Dependency;
 using Abp.Events.Bus.Handlers;
+using System;
 
 namespace Abp.Events.Bus.Factories
 {

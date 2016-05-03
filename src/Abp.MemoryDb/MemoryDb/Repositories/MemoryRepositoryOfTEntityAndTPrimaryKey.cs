@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Abp.MemoryDb.Repositories
 {

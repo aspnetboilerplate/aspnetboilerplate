@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -28,6 +18,16 @@ using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -103,6 +103,7 @@ namespace Abp.Web.Mvc.Controllers
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>
@@ -132,6 +133,7 @@ namespace Abp.Web.Mvc.Controllers
             }
             set { _unitOfWorkManager = value; }
         }
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
@@ -239,7 +241,6 @@ namespace Abp.Web.Mvc.Controllers
             return PermissionChecker.IsGranted(permissionName);
         }
 
-
         /// <summary>
         /// Checks if given feature is enabled for current tenant.
         /// </summary>
@@ -317,7 +318,7 @@ namespace Abp.Web.Mvc.Controllers
                 WrapResultAttribute.Default;
         }
 
-        #endregion
+        #endregion OnActionExecuting / OnActionExecuted
 
         #region Exception handling
 
@@ -413,7 +414,7 @@ namespace Abp.Web.Mvc.Controllers
             };
         }
 
-        #endregion
+        #endregion Exception handling
 
         #region Auditing
 
@@ -524,6 +525,6 @@ namespace Abp.Web.Mvc.Controllers
             }
         }
 
-        #endregion
+        #endregion Auditing
     }
 }

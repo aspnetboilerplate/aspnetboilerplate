@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Abp.Dependency;
+﻿using Abp.Dependency;
+using System.Collections.Generic;
 
 namespace Abp.Configuration
 {

@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.EntityFramework.Dependency;
 using Abp.Tests;
 using Shouldly;
+using System.Reflection;
 using Xunit;
 
 namespace Abp.EntityFramework.Tests.Repositories
@@ -21,13 +21,13 @@ namespace Abp.EntityFramework.Tests.Repositories
                         new ConventionalRegistrationConfig()
                         ));
 
-            //Should call default constructor since IAbpStartupConfiguration is not configured. 
+            //Should call default constructor since IAbpStartupConfiguration is not configured.
             var context1 = LocalIocManager.Resolve<MyDbContext>();
             context1.CalledConstructorWithConnectionString.ShouldBe(false);
 
             LocalIocManager.Register<IAbpStartupConfiguration, AbpStartupConfiguration>();
 
-            //Should call default constructor since IAbpStartupConfiguration registered by IAbpStartupConfiguration.DefaultNameOrConnectionString is not set. 
+            //Should call default constructor since IAbpStartupConfiguration registered by IAbpStartupConfiguration.DefaultNameOrConnectionString is not set.
             var context2 = LocalIocManager.Resolve<MyDbContext>();
             context2.CalledConstructorWithConnectionString.ShouldBe(false);
 
@@ -44,7 +44,6 @@ namespace Abp.EntityFramework.Tests.Repositories
 
             public MyDbContext()
             {
-
             }
 
             public MyDbContext(string nameOrConnectionString)
@@ -55,7 +54,6 @@ namespace Abp.EntityFramework.Tests.Repositories
 
             public override void Initialize()
             {
-
             }
         }
     }

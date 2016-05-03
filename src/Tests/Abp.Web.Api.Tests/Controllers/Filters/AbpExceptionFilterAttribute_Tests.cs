@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Events.Bus;
+﻿using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
+using System;
 using Xunit;
 
 namespace Abp.Web.Api.Tests.Controllers.Filters

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Runtime.Session;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Services
 {
     /// <summary>
-    /// This class can be used as a base class for application services. 
+    /// This class can be used as a base class for application services.
     /// </summary>
     public abstract class ApplicationService : AbpServiceBase, IApplicationService
     {
@@ -15,7 +15,7 @@ namespace Abp.Application.Services
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
-        
+
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>

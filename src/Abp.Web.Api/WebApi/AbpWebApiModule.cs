@@ -1,12 +1,8 @@
-﻿using System.Linq;
-using System.Net.Http.Formatting;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
+﻿using Abp.Configuration.Startup;
 using Abp.Logging;
 using Abp.Modules;
 using Abp.Web;
+using Abp.Web.Api.Description;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
@@ -16,9 +12,13 @@ using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
+using System.Net.Http.Formatting;
+using System.Reflection;
+using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using Abp.Configuration.Startup;
-using Abp.Web.Api.Description;
+using System.Web.Http.Dispatcher;
 
 namespace Abp.WebApi
 {
@@ -89,7 +89,7 @@ namespace Abp.WebApi
             {
                 if (!(currentFormatter is JsonMediaTypeFormatter))
                 {
-                    httpConfiguration.Formatters.Remove(currentFormatter);                    
+                    httpConfiguration.Formatters.Remove(currentFormatter);
                 }
             }
 

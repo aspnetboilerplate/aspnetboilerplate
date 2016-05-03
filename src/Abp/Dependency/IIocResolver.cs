@@ -10,7 +10,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The object instance</returns>
         T Resolve<T>();
@@ -18,7 +18,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to cast</typeparam>
         /// <param name="type">Type of the object to resolve</param>
         /// <returns>The object instance</returns>
@@ -27,7 +27,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The object instance</returns>
@@ -36,7 +36,7 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <returns>The object instance</returns>
         object Resolve(Type type);
@@ -44,12 +44,12 @@ namespace Abp.Dependency
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
-        /// </summary> 
+        /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The object instance</returns>
         object Resolve(Type type, object argumentsAsAnonymousType);
-        
+
         /// <summary>
         /// Releases a pre-resolved object. See Resolve methods.
         /// </summary>

@@ -24,7 +24,7 @@ namespace Abp.Domain.Uow
 
         public async Task CompleteAsync()
         {
-            _isCompleteCalled = true;           
+            _isCompleteCalled = true;
         }
 
         public void Dispose()
@@ -46,7 +46,7 @@ namespace Abp.Domain.Uow
                 throw new AbpException(DidNotCallCompleteMethodExceptionMessage);
             }
         }
-        
+
         private static bool HasException()
         {
             try

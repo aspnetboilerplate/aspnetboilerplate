@@ -12,7 +12,6 @@ namespace Abp.AutoMapper
         public AutoMapToAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
-
         }
     }
 }

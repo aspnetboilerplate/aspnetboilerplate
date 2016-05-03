@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
 using Shouldly;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace Abp.TestBase.Tests.Application.Services
@@ -37,10 +37,10 @@ namespace Abp.TestBase.Tests.Application.Services
         public void Should_Work_With_Right_Nesned_Inputs()
         {
             var output = _myAppService.MyMethod2(new MyMethod2Input
-                            {
-                                MyStringValue2 = "test 1",
-                                Input1 = new MyMethodInput { MyStringValue = "test 2" }
-                            });
+            {
+                MyStringValue2 = "test 1",
+                Input1 = new MyMethodInput { MyStringValue = "test 2" }
+            });
             output.Result.ShouldBe(42);
         }
 
@@ -60,9 +60,9 @@ namespace Abp.TestBase.Tests.Application.Services
         {
             Assert.Throws<AbpValidationException>(() =>
                 _myAppService.MyMethod2(new MyMethod2Input //Input1 is not set
-                                        {
-                                            MyStringValue2 = "test 1"
-                                        }));
+                {
+                    MyStringValue2 = "test 1"
+                }));
         }
 
         [Fact]
@@ -108,8 +108,11 @@ namespace Abp.TestBase.Tests.Application.Services
         public interface IMyAppService
         {
             MyMethodOutput MyMethod(MyMethodInput input);
+
             MyMethodOutput MyMethod2(MyMethod2Input input);
+
             MyMethodOutput MyMethod3(MyMethod3Input input);
+
             MyMethodOutput MyMethod4(MyMethod4Input input);
         }
 
@@ -182,6 +185,6 @@ namespace Abp.TestBase.Tests.Application.Services
             public int Result { get; set; }
         }
 
-        #endregion
+        #endregion Nested Classes
     }
 }

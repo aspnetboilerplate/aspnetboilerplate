@@ -13,7 +13,6 @@ namespace Abp
         /// </summary>
         public NameValue()
         {
-
         }
 
         /// <summary>
@@ -47,7 +46,6 @@ namespace Abp
         /// </summary>
         public NameValue()
         {
-
         }
 
         /// <summary>

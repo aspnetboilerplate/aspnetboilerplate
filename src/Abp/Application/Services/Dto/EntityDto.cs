@@ -13,7 +13,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public EntityDto()
         {
-
         }
 
         /// <summary>

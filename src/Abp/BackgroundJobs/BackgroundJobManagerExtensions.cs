@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Threading;
+﻿using Abp.Threading;
+using System;
 
 namespace Abp.BackgroundJobs
 {

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Data.Entity;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
 using Abp.Tests;
 using Castle.MicroKernel.Registration;
 using Shouldly;
+using System;
+using System.Data.Entity;
 using Xunit;
 
 namespace Abp.EntityFramework.Tests.Repositories
@@ -35,13 +35,13 @@ namespace Abp.EntityFramework.Tests.Repositories
             (entity1Repository is EfRepositoryBase<MyMainDbContext, MyEntity1>).ShouldBe(true);
 
             //Entity 1 (with specified PK)
-            var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1, int>>();
+            var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1>>();
             entity1RepositoryWithPk.ShouldNotBe(null);
-            (entity1RepositoryWithPk is EfRepositoryBase<MyMainDbContext, MyEntity1, int>).ShouldBe(true);
+            (entity1RepositoryWithPk is EfRepositoryBase<MyMainDbContext, MyEntity1>).ShouldBe(true);
 
             //Entity 2
-            var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2, long>>();
-            (entity2Repository is EfRepositoryBase<MyMainDbContext, MyEntity2, long>).ShouldBe(true);
+            var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2>>();
+            (entity2Repository is EfRepositoryBase<MyMainDbContext, MyEntity2>).ShouldBe(true);
             entity2Repository.ShouldNotBe(null);
 
             //Entity 3
@@ -58,9 +58,9 @@ namespace Abp.EntityFramework.Tests.Repositories
         }
 
         [AutoRepositoryTypes(
-            typeof(IMyModuleRepository<>), 
-            typeof(IMyModuleRepository<,>), 
-            typeof(MyModuleRepositoryBase<>), 
+            typeof(IMyModuleRepository<>),
+            typeof(IMyModuleRepository<,>),
+            typeof(MyModuleRepositoryBase<>),
             typeof(MyModuleRepositoryBase<,>)
             )]
         public class MyModuleDbContext : MyBaseDbContext
@@ -75,34 +75,28 @@ namespace Abp.EntityFramework.Tests.Repositories
 
         public class MyEntity1 : Entity
         {
-
         }
 
-        public class MyEntity2 : Entity<long>
+        public class MyEntity2 : Entity<Guid>
         {
-
         }
 
         public class MyEntity3 : Entity<Guid>
         {
-
         }
 
         public class MyNonEntity
         {
-
         }
 
         public interface IMyModuleRepository<TEntity> : IRepository<TEntity>
-            where TEntity : class, IEntity<int>
+            where TEntity : class, IEntity<Guid>
         {
-
         }
 
         public interface IMyModuleRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {
-
         }
 
         public class MyModuleRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
@@ -114,8 +108,8 @@ namespace Abp.EntityFramework.Tests.Repositories
             }
         }
 
-        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, int>, IMyModuleRepository<TEntity>
-            where TEntity : class, IEntity<int>
+        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, Guid>, IMyModuleRepository<TEntity>
+            where TEntity : class, IEntity<Guid>
         {
             public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
                 : base(dbContextProvider)

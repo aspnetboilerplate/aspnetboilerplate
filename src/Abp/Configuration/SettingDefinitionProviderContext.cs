@@ -7,7 +7,6 @@
     {
         internal SettingDefinitionProviderContext()
         {
-            
         }
     }
 }

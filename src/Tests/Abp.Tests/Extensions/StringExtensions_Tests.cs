@@ -1,8 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Shouldly;
+using System;
+using System.Globalization;
 using Xunit;
 
 namespace Abp.Tests.Extensions

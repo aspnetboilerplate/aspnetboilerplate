@@ -1,10 +1,10 @@
-﻿using System.Globalization;
-using Abp.Collections;
+﻿using Abp.Collections;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Web.Localization;
 using Shouldly;
+using System.Globalization;
 using Xunit;
 
 namespace Abp.Web.Tests.Localization

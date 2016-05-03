@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Abp.Web.Localization;
+﻿using Abp.Web.Localization;
 using Abp.Web.Models;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Models
 {
@@ -28,9 +28,9 @@ namespace Abp.Web.Mvc.Models
             }
 
             var errorInfo = new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
-                            {
-                                ValidationErrors = validationErrors.ToArray()
-                            };
+            {
+                ValidationErrors = validationErrors.ToArray()
+            };
 
             return new MvcAjaxResponse(errorInfo);
         }

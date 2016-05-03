@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Localization;
+﻿using Abp.Localization;
+using System;
 
 namespace Abp.Notifications
 {
@@ -19,7 +19,6 @@ namespace Abp.Notifications
         /// </summary>
         private LocalizableMessageNotificationData()
         {
-
         }
 
         /// <summary>

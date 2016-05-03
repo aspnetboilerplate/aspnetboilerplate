@@ -1,6 +1,5 @@
 ﻿var abp = abp || {};
 (function () {
-
     if (!$.fn.spin) {
         return;
     }
@@ -8,7 +7,6 @@
     abp.libs = abp.libs || {};
 
     abp.libs.spinjs = {
-
         spinner_config: {
             lines: 11,
             length: 0,
@@ -29,7 +27,6 @@
             trail: 60,
             speed: 1.2
         }
-
     };
 
     abp.ui.setBusy = function (elm, optionsOrPromise) {
@@ -91,5 +88,4 @@
             }
         }
     };
-
 })();

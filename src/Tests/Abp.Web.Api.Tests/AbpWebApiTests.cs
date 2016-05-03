@@ -1,5 +1,3 @@
-using Abp.Localization;
-
 namespace Abp.Web.Api.Tests
 {
     public static class AbpWebApiTests
@@ -12,7 +10,7 @@ namespace Abp.Web.Api.Tests
             {
                 return;
             }
-            
+
             _bootstrapper = new AbpBootstrapper();
             _bootstrapper.Initialize();
         }

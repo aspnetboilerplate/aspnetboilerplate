@@ -1,13 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using Abp.Dependency;
+using Abp.IO.Extensions;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Reflection;
-using Abp.Dependency;
-using Abp.IO.Extensions;
 
 namespace Abp.Resources.Embedded
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class EmbeddedResourceManager : IEmbeddedResourceManager, ISingletonDependency
     {

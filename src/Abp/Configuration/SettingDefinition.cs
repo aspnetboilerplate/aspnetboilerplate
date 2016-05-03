@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Localization;
+﻿using Abp.Localization;
+using System;
 
 namespace Abp.Configuration
 {
@@ -72,13 +72,13 @@ namespace Abp.Configuration
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
         public SettingDefinition(
-            string name, 
-            string defaultValue, 
-            ILocalizableString displayName = null, 
-            SettingDefinitionGroup group = null, 
-            ILocalizableString description = null, 
-            SettingScopes scopes = SettingScopes.Application, 
-            bool isVisibleToClients = false, 
+            string name,
+            string defaultValue,
+            ILocalizableString displayName = null,
+            SettingDefinitionGroup group = null,
+            ILocalizableString description = null,
+            SettingScopes scopes = SettingScopes.Application,
+            bool isVisibleToClients = false,
             bool isInherited = true,
             object customData = null)
         {

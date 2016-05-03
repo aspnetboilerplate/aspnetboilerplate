@@ -19,7 +19,6 @@ namespace Abp.Tests.Dependency
         {
             public MyClass1(MyClass2 obj)
             {
-
             }
         }
 
@@ -27,7 +26,6 @@ namespace Abp.Tests.Dependency
         {
             public MyClass2(MyClass3 obj)
             {
-
             }
         }
 
@@ -35,7 +33,6 @@ namespace Abp.Tests.Dependency
         {
             public MyClass3(MyClass1 obj)
             {
-
             }
         }
     }

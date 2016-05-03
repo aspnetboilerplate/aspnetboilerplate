@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Castle.Windsor;
+using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Windsor;
-using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR
 {
@@ -21,7 +21,7 @@ namespace Abp.Web.SignalR
         {
             _windsorContainer = windsorContainer;
         }
-        
+
         public override object GetService(Type serviceType)
         {
             return _windsorContainer.Kernel.HasComponent(serviceType)

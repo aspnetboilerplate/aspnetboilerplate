@@ -1,6 +1,6 @@
+using Abp.Threading.BackgroundWorkers;
 using System;
 using System.Threading.Tasks;
-using Abp.Threading.BackgroundWorkers;
 
 namespace Abp.BackgroundJobs
 {

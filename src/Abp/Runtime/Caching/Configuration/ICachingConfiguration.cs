@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Configuration.Startup;
+using System;
 using System.Collections.Generic;
-using Abp.Configuration.Startup;
 
 namespace Abp.Runtime.Caching.Configuration
 {
@@ -29,7 +29,7 @@ namespace Abp.Runtime.Caching.Configuration
         void ConfigureAll(Action<ICache> initAction);
 
         /// <summary>
-        /// Used to configure a specific cache. 
+        /// Used to configure a specific cache.
         /// </summary>
         /// <param name="cacheName">Cache name</param>
         /// <param name="initAction">

@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.Timing;
 using System.Security.Cryptography;
 
 namespace Abp
@@ -15,6 +14,7 @@ namespace Abp
         /// Gets the singleton <see cref="SequentialGuidGenerator"/> instance.
         /// </summary>
         public static SequentialGuidGenerator Instance { get { return _instance; } }
+
         private static readonly SequentialGuidGenerator _instance = new SequentialGuidGenerator();
 
         private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
@@ -28,7 +28,7 @@ namespace Abp
 
         public Guid Create()
         {
-           return Create(DatabaseType);
+            return Create(DatabaseType);
         }
 
         public Guid Create(SequentialGuidDatabaseType databaseType)
@@ -115,7 +115,7 @@ namespace Abp
 
             return new Guid(guidBytes);
         }
-        
+
         /// <summary>
         /// Database type to generate GUIDs.
         /// </summary>

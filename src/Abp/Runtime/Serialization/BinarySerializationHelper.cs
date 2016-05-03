@@ -53,7 +53,7 @@ namespace Abp.Runtime.Serialization
         /// Deserializes an object from given stream.
         /// </summary>
         /// <param name="stream">The stream that contains object</param>
-        /// <returns>deserialized object</returns> 
+        /// <returns>deserialized object</returns>
         public static object Deserialize(Stream stream)
         {
             return CreateBinaryFormatter().Deserialize(stream);
@@ -65,7 +65,7 @@ namespace Abp.Runtime.Serialization
         /// types that are defined in dynamically loaded assemblies (like PlugIns).
         /// </summary>
         /// <param name="bytes">The byte array that contains object</param>
-        /// <returns>deserialized object</returns>        
+        /// <returns>deserialized object</returns>
         public static object DeserializeExtended(byte[] bytes)
         {
             using (var memoryStream = new MemoryStream(bytes))
@@ -80,7 +80,7 @@ namespace Abp.Runtime.Serialization
         /// types that are defined in dynamically loaded assemblies (like PlugIns).
         /// </summary>
         /// <param name="stream">The stream that contains object</param>
-        /// <returns>deserialized object</returns> 
+        /// <returns>deserialized object</returns>
         public static object DeserializeExtended(Stream stream)
         {
             return CreateBinaryFormatter(true).Deserialize(stream);

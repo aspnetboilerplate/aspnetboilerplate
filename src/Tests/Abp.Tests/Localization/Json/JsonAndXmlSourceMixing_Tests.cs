@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-using System.Threading;
-using Abp.Localization;
+﻿using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Json;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using System.Threading;
 using Xunit;
 
 namespace Abp.Tests.Localization.Json
@@ -85,8 +85,6 @@ namespace Abp.Tests.Localization.Json
                         Assembly.GetExecutingAssembly(),
                          "Abp.Tests.Localization.Json.JsonSources"
                         )));
-
-            
         }
 
         public override void Initialize()

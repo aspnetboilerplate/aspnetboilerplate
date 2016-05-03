@@ -1,10 +1,10 @@
-﻿using System.Reflection;
-using System.Web.OData;
-using System.Web.OData.Extensions;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.WebApi.OData.Configuration;
+using System.Reflection;
+using System.Web.OData;
+using System.Web.OData.Extensions;
 
 namespace Abp.WebApi.OData
 {

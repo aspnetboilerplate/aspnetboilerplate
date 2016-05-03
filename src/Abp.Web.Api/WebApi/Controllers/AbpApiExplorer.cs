@@ -1,5 +1,4 @@
-﻿using Abp.WebApi.Controllers.ApiExplorer;
-using Abp.WebApi.Controllers.Dynamic;
+﻿using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using System;
 using System.Collections.Generic;
@@ -9,24 +8,23 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using System.Web.Http.Dispatcher;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
 
 namespace Abp.Web.Api.Description
 {
-    public class AbpApiExplorer : ApiExplorer,IApiExplorer
+    public class AbpApiExplorer : ApiExplorer, IApiExplorer
     {
         private Lazy<Collection<ApiDescription>> _apiDescriptions;
         private HttpConfiguration _config;
-        public AbpApiExplorer(HttpConfiguration config):base(config)
+
+        public AbpApiExplorer(HttpConfiguration config) : base(config)
         {
             _apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);
             _config = config;
-
         }
 
-       public new  Collection<ApiDescription> ApiDescriptions
+        public new Collection<ApiDescription> ApiDescriptions
         {
             get
             {
@@ -34,8 +32,8 @@ namespace Abp.Web.Api.Description
             }
         }
 
-        private Collection<ApiDescription> InitializeApiDescriptions() {
-           
+        private Collection<ApiDescription> InitializeApiDescriptions()
+        {
             Collection<ApiDescription> apiDescriptions = new Collection<ApiDescription>();
             //webapi
             foreach (var item in base.ApiDescriptions)
@@ -53,7 +51,7 @@ namespace Abp.Web.Api.Description
                     var httpaction = new HttpControllerDescriptor();
                     httpaction.Configuration = _config;
                     httpaction.ControllerType = dynamicapiinfo.ServiceInterfaceType;
-                    httpaction.ControllerName = dynamicapiinfo.ServiceName;               
+                    httpaction.ControllerName = dynamicapiinfo.ServiceName;
                     var action = new DynamicHttpActionDescriptor(httpaction, item.Value.Method, item.Value.Filters);
                     api.ActionDescriptor = action;
                     api.HttpMethod = GetMethod(item.Value.Verb);
@@ -61,25 +59,25 @@ namespace Abp.Web.Api.Description
                     HttpActionBinding actionBinding = actionValueBinder.GetBinding(action);
 
                     //parameter
-                    IList<ApiParameterDescription> parameterDescriptions = CreateParameterDescription(actionBinding,action);
-                    //using refletions to internal set 
-                    var prop=typeof(ApiDescription).GetProperties().Where(p => p.Name == "ParameterDescriptions").SingleOrDefault();
-                    prop.SetValue(api, new Collection<ApiParameterDescription>(parameterDescriptions));        
-
+                    IList<ApiParameterDescription> parameterDescriptions = CreateParameterDescription(actionBinding, action);
+                    //using refletions to internal set
+                    var prop = typeof(ApiDescription).GetProperties().Where(p => p.Name == "ParameterDescriptions").SingleOrDefault();
+                    prop.SetValue(api, new Collection<ApiParameterDescription>(parameterDescriptions));
 
                     //resopnse
                     ResponseDescription responseDescription = CreateResponseDescription(action);
                     var prop2 = typeof(ApiDescription).GetProperties().Where(p => p.Name == "ResponseDescription").SingleOrDefault();
                     prop2.SetValue(api, responseDescription);
-                    
-                    api.RelativePath = "api/services/"+dynamicapiinfo.ServiceName + "/" + item.Value.ActionName;
-                    
+
+                    api.RelativePath = "api/services/" + dynamicapiinfo.ServiceName + "/" + item.Value.ActionName;
+
                     apiDescriptions.Add(api);
                 }
             }
             return apiDescriptions;
         }
-        private IList<ApiParameterDescription> CreateParameterDescription(HttpActionBinding actionBinding,HttpActionDescriptor actionDescriptor)
+
+        private IList<ApiParameterDescription> CreateParameterDescription(HttpActionBinding actionBinding, HttpActionDescriptor actionDescriptor)
         {
             IList<ApiParameterDescription> parameterDescriptions = new List<ApiParameterDescription>();
             // try get parameter binding information if available
@@ -106,14 +104,11 @@ namespace Abp.Web.Api.Description
                 }
             }
 
-            
             return parameterDescriptions;
         }
 
-
         private ApiParameterDescription CreateParameterDescriptionFromDescriptor(HttpParameterDescriptor parameter)
         {
-            
             return new ApiParameterDescription
             {
                 ParameterDescriptor = parameter,
@@ -137,6 +132,7 @@ namespace Abp.Web.Api.Description
 
             return parameterDescription;
         }
+
         private ResponseDescription CreateResponseDescription(HttpActionDescriptor actionDescriptor)
         {
             Collection<ResponseTypeAttribute> responseTypeAttribute = actionDescriptor.GetCustomAttributes<ResponseTypeAttribute>();
@@ -160,6 +156,7 @@ namespace Abp.Web.Api.Description
 
             return null;
         }
+
         private string GetApiParameterDocumentation(HttpParameterDescriptor parameterDescriptor)
         {
             IDocumentationProvider documentationProvider = DocumentationProvider ?? parameterDescriptor.Configuration.Services.GetDocumentationProvider();
@@ -170,6 +167,7 @@ namespace Abp.Web.Api.Description
 
             return null;
         }
+
         private HttpMethod GetMethod(Abp.Web.HttpVerb verb)
         {
             if (verb == HttpVerb.Post)
@@ -189,9 +187,8 @@ namespace Abp.Web.Api.Description
             else
                 return HttpMethod.Post;
         }
-
-
     }
+
     internal static class HttpParameterBindingExtensions
     {
         public static bool WillReadUri(this HttpParameterBinding parameterBinding)

@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Web;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Web;
-using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -65,15 +64,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
                     script.AppendLine("                    }, httpParams));");
 
-
                     script.AppendLine("}");
-
-
                 }
-
                 else
                 {
-                    script.AppendLine(string.Format("           public {0} = function ({1}): abp.IGenericPromise<{2}> ", methodInfo.ActionName.ToCamelCase(), 
+                    script.AppendLine(string.Format("           public {0} = function ({1}): abp.IGenericPromise<{2}> ", methodInfo.ActionName.ToCamelCase(),
                         GetMethodInputParameter(methodInfo.Method), returnType));
                     script.AppendLine("{");
                     script.AppendLine("                    var self = this;");
@@ -95,14 +90,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
                     script.AppendLine("}");
                 }
-                    
-
             }
-            
+
             script.AppendLine("     }");
 
-            script.AppendLine("angular.module('abp').service('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." + _controllerInfo.ServiceName.Replace("/", ".")+");");
-
+            script.AppendLine("angular.module('abp').service('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + ");");
 
             while (_typesToBeDone != null && _typesToBeDone.Count > 0)
             {
@@ -114,10 +106,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             }
             return script.ToString();
         }
+
         protected string GetMethodInputParameter(MethodInfo methodInfo)
         {
             var script = new StringBuilder();
-            
+
             List<Type> newTypes = new List<Type>();
             foreach (var parameter in methodInfo.GetParameters())
             {
@@ -126,8 +119,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             script.Append("httpParams?: any");
             this.AddNewTypesIfRequired(newTypes.ToArray());
             return script.ToString();
-
         }
+
         protected string GenerateTypeScript(Type type)
         {
             if (type.IsArray ||
@@ -148,8 +141,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             {
                 return "";
             }
-
-
 
             var myscript = new StringBuilder();
             List<Type> newTypes = new List<Type>();
@@ -186,6 +177,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 _typesToBeDone.Add(methodInfo.ReturnType);
             }
         }
+
         private bool CanAddToBeDone(Type type)
         {
             if (type == typeof(Task))

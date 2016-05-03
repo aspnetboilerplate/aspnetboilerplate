@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Abp.Localization;
+﻿using Abp.Localization;
+using System.Collections.Generic;
 
 namespace Abp.Application.Navigation
 {
@@ -9,7 +9,7 @@ namespace Abp.Application.Navigation
     public class UserMenuItem
     {
         /// <summary>
-        /// Unique name of the menu item in the application. 
+        /// Unique name of the menu item in the application.
         /// </summary>
         public string Name { get; set; }
 
@@ -48,7 +48,6 @@ namespace Abp.Application.Navigation
         /// </summary>
         public UserMenuItem()
         {
-            
         }
 
         /// <summary>

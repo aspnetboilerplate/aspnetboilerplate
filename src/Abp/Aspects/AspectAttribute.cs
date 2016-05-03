@@ -30,9 +30,7 @@ namespace Abp.Aspects
 
     internal interface IAbpBeforeExecutionInterceptionContext : IAbpInterceptionContext
     {
-
     }
-
 
     internal interface IAbpAfterExecutionInterceptionContext : IAbpInterceptionContext
     {
@@ -91,7 +89,6 @@ namespace Abp.Aspects
             [MyAspect(TestValue = 41)] //Usage!
             public void DoIt()
             {
-
             }
         }
 

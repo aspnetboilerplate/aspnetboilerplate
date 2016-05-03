@@ -15,10 +15,10 @@ namespace Abp.Authorization
         }
 
         public Permission CreatePermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            bool isGrantedByDefault = false, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            bool isGrantedByDefault = false,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {

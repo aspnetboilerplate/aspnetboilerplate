@@ -67,7 +67,6 @@ namespace Abp.Dependency
             return true;
         }
 
-
         /// <summary>
         /// Registers a type with it's implementation if it's not registered before.
         /// </summary>
@@ -87,6 +86,6 @@ namespace Abp.Dependency
             return true;
         }
 
-        #endregion
+        #endregion RegisterIfNot
     }
 }

@@ -1,10 +1,10 @@
+using Abp.Domain.Entities;
+using Abp.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using Abp.Domain.Entities;
-using Abp.Reflection;
 
 namespace Abp.EntityFramework.Extensions
 {

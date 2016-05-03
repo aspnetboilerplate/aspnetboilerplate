@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Domain.Uow;
 using Abp.Notifications;
 using NSubstitute;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.Notifications

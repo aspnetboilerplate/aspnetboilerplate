@@ -1,5 +1,5 @@
-using System;
 using Abp.Runtime.Validation;
+using System;
 
 namespace Abp.UI.Inputs
 {
@@ -9,7 +9,6 @@ namespace Abp.UI.Inputs
     {
         public SingleLineStringInputType()
         {
-
         }
 
         public SingleLineStringInputType(IValueValidator validator)

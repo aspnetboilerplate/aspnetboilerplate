@@ -1,6 +1,6 @@
+using Abp.Logging;
 using System;
 using System.Runtime.Serialization;
-using Abp.Logging;
 
 namespace Abp.UI
 {
@@ -40,7 +40,6 @@ namespace Abp.UI
         public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>

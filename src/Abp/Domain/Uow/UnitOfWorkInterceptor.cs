@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
+using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {

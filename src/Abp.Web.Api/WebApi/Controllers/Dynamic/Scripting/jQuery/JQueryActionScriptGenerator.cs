@@ -1,6 +1,6 @@
-using System.Text;
 using Abp.Extensions;
 using Abp.Web;
+using System.Text;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
@@ -38,7 +38,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
         protected string GenerateAjaxCallParameters()
         {
             var script = new StringBuilder();
-            
+
             script.AppendLine("            url: abp.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
             script.AppendLine("            type: '" + _actionInfo.Verb.ToString().ToUpperInvariant() + "',");
 
@@ -48,9 +48,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
             }
             else
             {
-                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");                
+                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");
             }
-            
+
             return script.ToString();
         }
     }

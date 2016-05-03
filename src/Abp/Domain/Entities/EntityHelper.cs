@@ -1,5 +1,5 @@
-using System;
 using Abp.Reflection;
+using System;
 
 namespace Abp.Domain.Entities
 {
@@ -10,12 +10,12 @@ namespace Abp.Domain.Entities
     {
         public static bool IsEntity(Type type)
         {
-            return ReflectionHelper.IsAssignableToGenericType(type, typeof (IEntity<>));
+            return ReflectionHelper.IsAssignableToGenericType(type, typeof(IEntity<>));
         }
 
         public static Type GetPrimaryKeyType<TEntity>()
         {
-            return GetPrimaryKeyType(typeof (TEntity));
+            return GetPrimaryKeyType(typeof(TEntity));
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Abp.Domain.Entities
         {
             foreach (var interfaceType in entityType.GetInterfaces())
             {
-                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof (IEntity<>))
+                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IEntity<>))
                 {
                     return interfaceType.GenericTypeArguments[0];
                 }
