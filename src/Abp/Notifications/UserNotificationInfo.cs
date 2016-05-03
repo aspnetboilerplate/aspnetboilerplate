@@ -28,7 +28,7 @@ namespace Abp.Notifications
         /// Notification Id.
         /// </summary>
         [Required]
-        public virtual Guid NotificationId { get; set; }
+        public virtual Guid TenantNotificationId { get; set; }
 
         /// <summary>
         /// Current state of the user notification.
@@ -44,17 +44,6 @@ namespace Abp.Notifications
         {
             State = UserNotificationState.Unread;
             CreationTime = Clock.Now;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
-        /// </summary>
-        public UserNotificationInfo(int? tenantId, long userId, Guid notificationId)
-            : this()
-        {
-            TenantId = tenantId;
-            UserId = userId;
-            NotificationId = notificationId;
         }
     }
 }

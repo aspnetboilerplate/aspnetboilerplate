@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Threading;
@@ -25,6 +26,7 @@ namespace Abp.Authorization
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="userId">Id of the user to check</param>
         /// <param name="permissionName">Name of the permission</param>
+        [Obsolete("Use IsGranted(IPermissionChecker, UserIdentifier, string) instead.")]
         public static bool IsGranted(this IPermissionChecker permissionChecker, long userId, string permissionName)
         {
             return AsyncHelper.RunSync(() => permissionChecker.IsGrantedAsync(userId, permissionName));
@@ -48,6 +50,7 @@ namespace Abp.Authorization
         /// <param name="userId">User id</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
+        [Obsolete("Use IsGranted(IPermissionChecker, UserIdentifier, bool, params string[]) instead")]
         public static bool IsGranted(this IPermissionChecker permissionChecker, long userId, bool requiresAll, params string[] permissionNames)
         {
             return AsyncHelper.RunSync(() => IsGrantedAsync(permissionChecker, userId, requiresAll, permissionNames));
@@ -72,6 +75,7 @@ namespace Abp.Authorization
         /// <param name="userId">User id</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
+        [Obsolete("Use IsGrantedAsync(IPermissionChecker, UserIdentifier, bool, params string[]) instead")]
         public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, long userId, bool requiresAll, params string[] permissionNames)
         {
             if (permissionNames.IsNullOrEmpty())

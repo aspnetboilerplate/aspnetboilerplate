@@ -11,24 +11,25 @@ namespace Abp.Notifications
     public static class TenantNotificationInfoExtensions
     {
         /// <summary>
-        /// Converts <see cref="NotificationInfo"/> to <see cref="Notification"/>.
+        /// Converts <see cref="NotificationInfo"/> to <see cref="TenantNotification"/>.
         /// </summary>
-        public static Notification ToNotification(this TenantNotificationInfo notificationInfo)
+        public static TenantNotification ToTenantNotification(this TenantNotificationInfo tenantNotificationInfo)
         {
-            var entityType = notificationInfo.EntityTypeAssemblyQualifiedName.IsNullOrEmpty()
+            var entityType = tenantNotificationInfo.EntityTypeAssemblyQualifiedName.IsNullOrEmpty()
                 ? null
-                : Type.GetType(notificationInfo.EntityTypeAssemblyQualifiedName);
+                : Type.GetType(tenantNotificationInfo.EntityTypeAssemblyQualifiedName);
 
-            return new Notification
+            return new TenantNotification
             {
-                Id = notificationInfo.Id,
-                NotificationName = notificationInfo.NotificationName,
-                Data = notificationInfo.Data.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(notificationInfo.Data, Type.GetType(notificationInfo.DataTypeName)) as NotificationData,
-                EntityTypeName = notificationInfo.EntityTypeName,
+                Id = tenantNotificationInfo.Id,
+                TenantId = tenantNotificationInfo.TenantId,
+                NotificationName = tenantNotificationInfo.NotificationName,
+                Data = tenantNotificationInfo.Data.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.Data, Type.GetType(tenantNotificationInfo.DataTypeName)) as NotificationData,
+                EntityTypeName = tenantNotificationInfo.EntityTypeName,
                 EntityType = entityType,
-                EntityId = notificationInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(notificationInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
-                Severity = notificationInfo.Severity,
-                CreationTime = notificationInfo.CreationTime,
+                EntityId = tenantNotificationInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
+                Severity = tenantNotificationInfo.Severity,
+                CreationTime = tenantNotificationInfo.CreationTime
             };
         }
     }

@@ -99,6 +99,7 @@
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
     <Compile Include="Domain\Uow\DefaultConnectionStringResolver.cs" />
     <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
+    <Compile Include="IUserIdentifier.cs" />
     <Compile Include="Json\JsonSerializationHelper.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="MultiTenancy\MultiTenancySideAttribute.cs" />
@@ -115,7 +116,6 @@
     <Compile Include="Notifications\NotificationSettingNames.cs" />
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
     <Compile Include="Notifications\TenantNotificationInfo.cs" />
-    <Compile Include="Notifications\TenantNotificationInfoExtensions.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
     <Compile Include="Reflection\FolderAssemblyFinder.cs" />
@@ -137,7 +137,7 @@
     <Compile Include="Notifications\NotificationData.cs" />
     <Compile Include="Notifications\NotificationDistributionJob.cs" />
     <Compile Include="Notifications\NotificationDistributionJobArgs.cs" />
-    <Compile Include="Notifications\NotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\TenantNotificationInfoExtensions.cs" />
     <Compile Include="Notifications\NotificationPublisher.cs" />
     <Compile Include="Notifications\NotificationSubscription.cs" />
     <Compile Include="Notifications\NotificationSubscriptionInfo.cs" />
@@ -562,6 +562,7 @@
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
     <Compile Include="UserIdentifier.cs" />
+    <Compile Include="UserIdentifierExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />

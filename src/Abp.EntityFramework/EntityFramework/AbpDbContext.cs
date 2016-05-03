@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Data.Entity;
@@ -241,14 +242,11 @@ namespace Abp.EntityFramework
 
         protected virtual void CheckAndSetId(object entityAsObj)
         {
-            //Set GUID
+            //Set GUID Ids
             var entity = entityAsObj as IEntity<Guid>;
-            if (entity != null)
+            if (entity != null && entity.Id == Guid.Empty)
             {
-                if (entity.IsTransient())
-                {
-                    entity.Id = GuidGenerator.Create();
-                }
+                entity.Id = GuidGenerator.Create();
             }
         }
 

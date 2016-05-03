@@ -7,7 +7,7 @@ namespace Abp
     /// Used to identify a user.
     /// </summary>
     [Serializable]
-    public class UserIdentifier
+    public class UserIdentifier : IUserIdentifier
     {
         /// <summary>
         /// Tenant Id of the user.

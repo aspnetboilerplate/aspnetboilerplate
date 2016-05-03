@@ -6,6 +6,9 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Notifications
 {
+    /// <summary>
+    /// A notification distributed to it's related tenant.
+    /// </summary>
     [Table("AbpTenantNotifications")]
     public class TenantNotificationInfo : CreationAuditedEntity<Guid>, IMayHaveTenant
     {
@@ -72,6 +75,7 @@ namespace Abp.Notifications
             EntityTypeName = notification.EntityTypeName;
             EntityTypeAssemblyQualifiedName = notification.EntityTypeAssemblyQualifiedName;
             EntityId = notification.EntityId;
+            Severity = notification.Severity;
         }
     }
 }

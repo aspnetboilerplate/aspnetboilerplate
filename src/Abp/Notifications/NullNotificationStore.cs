@@ -93,5 +93,10 @@ namespace Abp.Notifications
         {
             return Task.FromResult(0);
         }
+
+        public Task DeleteNotificationAsync(NotificationInfo notification)
+        {
+            return Task.FromResult(0);
+        }
     }
 }

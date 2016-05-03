@@ -101,5 +101,11 @@ namespace Abp.Notifications
         /// Inserts notification for a tenant.
         /// </summary>
         Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo);
+
+        /// <summary>
+        /// Deletes the notification.
+        /// </summary>
+        /// <param name="notification">The notification.</param>
+        Task DeleteNotificationAsync(NotificationInfo notification);
     }
 }

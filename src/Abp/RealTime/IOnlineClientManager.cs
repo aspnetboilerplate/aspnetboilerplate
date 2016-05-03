@@ -38,8 +38,8 @@ namespace Abp.RealTime
         /// Tries to find a client by userId.
         /// Returns null if not found.
         /// </summary>
-        /// <param name="userId">UserId.</param>
-        IOnlineClient GetByUserIdOrNull(long userId);
+        /// <param name="user">User.</param>
+        IOnlineClient GetByUserIdOrNull(IUserIdentifier user);
 
         /// <summary>
         /// Gets all online clients.

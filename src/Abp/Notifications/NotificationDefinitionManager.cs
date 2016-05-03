@@ -98,7 +98,7 @@ namespace Abp.Notifications
             {
                 using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
                 {
-                    permissionDependencyContext.Object.UserId = user.UserId;
+                    permissionDependencyContext.Object.User = user;
 
                     if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
                     {
@@ -116,7 +116,7 @@ namespace Abp.Notifications
 
             using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
             {
-                permissionDependencyContext.Object.UserId = user.UserId;
+                permissionDependencyContext.Object.User = user;
 
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {

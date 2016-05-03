@@ -45,42 +45,22 @@ namespace Abp.Notifications
                 return;
             }
 
-            Notification notification;
-
-            try
-            {
-                notification = notificationInfo.ToNotification();
-            }
-            catch (Exception)
-            {
-                Logger.Warn("NotificationDistributionJob can not continue since could not convert NotificationInfo to Notification for NotificationId: " + notificationId);
-                return;
-            }
-
             var users = await GetUsers(notificationInfo);
 
-            var userNotificationInfos = users
-                .Select(user => new UserNotificationInfo(user.TenantId, user.UserId, notificationInfo.Id))
-                .ToList();
+            var userNotifications = await SaveUserNotifications(users, notificationInfo);
 
-            await SaveUserNotifications(userNotificationInfos, notificationInfo);
-
-            //TODO: Delete notificationInfo (since it's distributed to related tenants..?)
+            await _notificationStore.DeleteNotificationAsync(notificationInfo);
 
             try
             {
-                var userNotifications = userNotificationInfos
-                    .Select(uni => uni.ToUserNotification(notification))
-                    .ToArray();
-
-                await RealTimeNotifier.SendNotificationsAsync(userNotifications);
+                await RealTimeNotifier.SendNotificationsAsync(userNotifications.ToArray());
             }
             catch (Exception ex)
             {
                 Logger.Warn(ex.ToString(), ex);
             }
         }
-        
+
         [UnitOfWork]
         protected virtual async Task<UserIdentifier[]> GetUsers(NotificationInfo notificationInfo)
         {
@@ -179,23 +159,39 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        protected virtual async Task SaveUserNotifications(List<UserNotificationInfo> userNotifications, NotificationInfo notificationInfo)
+        protected virtual async Task<List<UserNotification>> SaveUserNotifications(UserIdentifier[] users, NotificationInfo notificationInfo)
         {
-            var tenantGroups = userNotifications.GroupBy(un => un.TenantId);
+            var userNotifications = new List<UserNotification>();
+
+            var tenantGroups = users.GroupBy(user => user.TenantId);
             foreach (var tenantGroup in tenantGroups)
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                 {
-                    await _notificationStore.InsertTenantNotificationAsync(new TenantNotificationInfo(tenantGroup.Key, notificationInfo));
+                    var tenantNotificationInfo = new TenantNotificationInfo(tenantGroup.Key, notificationInfo);
+                    await _notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
+                    await _unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
 
-                    foreach (var userNotification in tenantGroup)
+                    var tenantNotification = tenantNotificationInfo.ToTenantNotification();
+
+                    foreach (var user in tenantGroup)
                     {
+                        var userNotification = new UserNotificationInfo
+                        {
+                            TenantId = tenantGroup.Key,
+                            UserId = user.UserId,
+                            TenantNotificationId = tenantNotificationInfo.Id
+                        };
+
                         await _notificationStore.InsertUserNotificationAsync(userNotification);
+                        userNotifications.Add(userNotification.ToUserNotification(tenantNotification));
                     }
 
                     await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
                 }
             }
+
+            return userNotifications;
         }
     }
 }
