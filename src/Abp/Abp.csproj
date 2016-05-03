@@ -123,6 +123,7 @@
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\MessageNotificationData.cs" />
+    <Compile Include="Runtime\Security\SimpleStringCipher.cs" />
     <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
     <Compile Include="Domain\Entities\EntityIdentifier.cs" />

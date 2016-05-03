@@ -142,6 +142,7 @@
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
+    <Compile Include="Runtime\Security\SimpleStringCipher_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
