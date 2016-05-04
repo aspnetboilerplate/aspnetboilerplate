@@ -140,7 +140,7 @@ namespace Abp.Auditing
                     dictionary[parameter.Name] = argument;
                 }
 
-                return dictionary.ToJsonString(true);
+                return AuditingHelper.Serialize(dictionary);
             }
             catch (Exception ex)
             {

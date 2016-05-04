@@ -13,5 +13,6 @@
     <text name="DefaultLanguage">Default language</text>
     <text name="ReceiveNotifications">Receive notifications</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Current user did not login to the application!</text>
+    <text name="TimeZone">Timezone</text>
   </texts>
 </localizationDictionary>

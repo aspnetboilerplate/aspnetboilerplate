@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Utils;
 using Abp.MultiTenancy;
 using Abp.Reflection;
 using Castle.Core.Internal;
@@ -20,7 +23,7 @@ namespace Abp.EntityFramework.Uow
         protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
 
         protected IIocResolver IocResolver { get; private set; }
-        
+
         protected TransactionScope CurrentTransaction;
         private readonly IDbContextResolver _dbContextResolver;
 
@@ -134,6 +137,7 @@ namespace Abp.EntityFramework.Uow
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
                 foreach (var filter in Filters)
                 {
@@ -189,6 +193,12 @@ namespace Abp.EntityFramework.Uow
         {
             dbContext.Dispose();
             IocResolver.Release(dbContext);
+        }
+
+        private static void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        {
+            var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
+            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity,entityType);
         }
     }
 }

@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
     <Compile Include="Application\Navigation\NavigationTestCase.cs" />
+    <Compile Include="Auditing\AuditingHelper_Tests.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
     <Compile Include="TestBaseWithLocalIocManager.cs" />
     <Compile Include="Threading\LockExtensions_Tests.cs" />
+    <Compile Include="Timing\TimezoneHelper_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
