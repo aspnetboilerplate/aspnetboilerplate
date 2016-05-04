@@ -206,7 +206,8 @@ namespace Abp.EntityFramework
         {
             var userId = GetAuditUserId();
 
-            foreach (var entry in ChangeTracker.Entries())
+            var entries = ChangeTracker.Entries().ToList();
+            foreach (var entry in entries)
             {
                 switch (entry.State)
                 {

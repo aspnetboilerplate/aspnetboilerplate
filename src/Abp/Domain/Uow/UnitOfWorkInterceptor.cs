@@ -22,13 +22,6 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                //Continue with current uow
-                invocation.Proceed();
-                return;
-            }
-
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
