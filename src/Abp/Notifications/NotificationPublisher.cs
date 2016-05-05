@@ -17,10 +17,12 @@ namespace Abp.Notifications
     /// </summary>
     public class NotificationPublisher : AbpServiceBase, INotificationPublisher, ITransientDependency
     {
+        public const int MaxUserCountToDirectlyDistributeANotification = 5;
+
         /// <summary>
         /// Indicates all tenants.
         /// </summary>
-        public int[] AllTenants
+        public static int[] AllTenants
         {
             get
             {
@@ -95,7 +97,7 @@ namespace Abp.Notifications
 
             await CurrentUnitOfWork.SaveChangesAsync(); //To get Id of the notification
 
-            if (userIds != null && userIds.Length <= 5)
+            if (userIds != null && userIds.Length <= MaxUserCountToDirectlyDistributeANotification)
             {
                 //We can directly distribute the notification since there are not much receivers
                 await _notificationDistributer.DistributeAsync(notificationInfo.Id);

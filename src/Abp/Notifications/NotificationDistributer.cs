@@ -84,7 +84,8 @@ namespace Abp.Notifications
 
                 List<NotificationSubscriptionInfo> subscriptions;
 
-                if (tenantIds.IsNullOrEmpty())
+                if (tenantIds.IsNullOrEmpty() ||
+                    (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
                 {
                     //Get all subscribed users of all tenants
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
@@ -95,8 +96,6 @@ namespace Abp.Notifications
                 }
                 else
                 {
-                    //TODO: Seems NotificationPublisher.AllTenants has not been implemented!
-
                     //Get all subscribed users of specified tenant(s)
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         tenantIds,
