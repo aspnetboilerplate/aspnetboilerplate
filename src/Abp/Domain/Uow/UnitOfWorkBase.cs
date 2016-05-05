@@ -328,9 +328,9 @@ namespace Abp.Domain.Uow
             //throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
         }
 
-        protected virtual string ResolveConnectionString(MultiTenancySides? multiTenancySide = null)
+        protected virtual string ResolveConnectionString(ConnectionStringResolveArgs args)
         {
-            return ConnectionStringResolver.GetNameOrConnectionString(multiTenancySide);
+            return ConnectionStringResolver.GetNameOrConnectionString(args);
         }
 
         /// <summary>

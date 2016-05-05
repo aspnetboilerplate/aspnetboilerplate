@@ -133,7 +133,12 @@ namespace Abp.EntityFramework.Uow
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
-            var connectionString = ResolveConnectionString(multiTenancySide);
+            var connectionString = ResolveConnectionString(new ConnectionStringResolveArgs
+            {
+                MultiTenancySide = multiTenancySide,
+                ["DbContextType"] = typeof(DbContext)
+            });
+
             var dbContextKey = typeof (DbContext).FullName + "#" + connectionString;
 
             DbContext dbContext;

@@ -98,6 +98,7 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Domain\Uow\ConnectionStringResolveArgs.cs" />
     <Compile Include="Domain\Uow\DefaultConnectionStringResolver.cs" />
     <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
     <Compile Include="IUserIdentifier.cs" />

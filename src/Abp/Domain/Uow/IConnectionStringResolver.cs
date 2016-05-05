@@ -1,5 +1,3 @@
-using Abp.MultiTenancy;
-
 namespace Abp.Domain.Uow
 {
     /// <summary>
@@ -10,7 +8,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Gets a connection string name (in config file) or a valid connection string.
         /// </summary>
-        /// <param name="multiTenancySide">The multi tenancy side.</param>
-        string GetNameOrConnectionString(MultiTenancySides? multiTenancySide = null);
+        /// <param name="args">Arguments that can be used while resolving connection string.</param>
+        string GetNameOrConnectionString(ConnectionStringResolveArgs args);
     }
 }
