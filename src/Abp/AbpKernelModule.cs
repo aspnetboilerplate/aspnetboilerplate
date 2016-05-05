@@ -8,6 +8,7 @@ using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -74,7 +75,10 @@ namespace Abp
 
         public override void Initialize()
         {
-            base.Initialize();
+            foreach (var replaceAction in ((AbpStartupConfiguration)Configuration).ServiceReplaceActions.Values)
+            {
+                replaceAction();
+            }
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 

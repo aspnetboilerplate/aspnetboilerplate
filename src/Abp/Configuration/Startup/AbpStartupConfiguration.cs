@@ -1,4 +1,6 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
@@ -14,6 +16,9 @@ namespace Abp.Configuration.Startup
     /// </summary>
     internal class AbpStartupConfiguration : DictionaryBasedConfig, IAbpStartupConfiguration
     {
+        /// <summary>
+        /// Reference to the IocManager.
+        /// </summary>
         public IIocManager IocManager { get; private set; }
 
         /// <summary>
@@ -85,6 +90,8 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public IMultiTenancyConfig MultiTenancy { get; private set; }
 
+        public Dictionary<Type, Action> ServiceReplaceActions { get; private set; }
+
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
@@ -108,6 +115,12 @@ namespace Abp.Configuration.Startup
             Caching = IocManager.Resolve<ICachingConfiguration>();
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
             Notifications = IocManager.Resolve<INotificationConfiguration>();
+            ServiceReplaceActions = new Dictionary<Type, Action>();
+        }
+
+        public void ReplaceService(Type type, Action replaceAction)
+        {
+            ServiceReplaceActions[type] = replaceAction;
         }
     }
 }
