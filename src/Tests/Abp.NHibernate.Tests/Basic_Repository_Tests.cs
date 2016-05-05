@@ -11,11 +11,11 @@ namespace Abp.NHibernate.Tests
 {
     public class Basic_Repository_Tests : NHibernateTestBase
     {
-        private readonly IRepository<Person, Guid> _personRepository;
+        private readonly IRepository<Person> _personRepository;
 
         public Basic_Repository_Tests()
         {
-            _personRepository = Resolve<IRepository<Person, Guid>>();
+            _personRepository = Resolve<IRepository<Person>>();
             UsingSession(session => session.Save(new Person() { Name = "emre" }));
         }
 

@@ -3,10 +3,10 @@ using System;
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
-    /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+    /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
     /// </summary>
     [Serializable]
-    public abstract class AuditedEntity : AuditedEntity<int>
+    public abstract class AuditedEntity : AuditedEntity<Guid>
     {
     }
 }
