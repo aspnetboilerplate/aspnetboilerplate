@@ -157,7 +157,7 @@ namespace Abp.TestBase.SampleApplication.Tests
         protected override void AddModules(ITypeList<AbpModule> modules)
         {
             base.AddModules(modules);
-            modules.Add<SampleApplicationModule>();
+            modules.Add<SampleApplicationTestModule>();
         }
 
         public void UsingDbContext(Action<SampleApplicationDbContext> action)

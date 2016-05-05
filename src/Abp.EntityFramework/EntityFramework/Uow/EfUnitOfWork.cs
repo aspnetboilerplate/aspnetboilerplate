@@ -84,6 +84,8 @@ namespace Abp.EntityFramework.Uow
             {
                 CurrentTransaction.Complete();
             }
+
+            DisposeUow();
         }
 
         protected override async Task CompleteUowAsync()
@@ -93,6 +95,8 @@ namespace Abp.EntityFramework.Uow
             {
                 CurrentTransaction.Complete();
             }
+
+            DisposeUow();
         }
 
         protected override void ApplyDisableFilter(string filterName)
@@ -172,10 +176,12 @@ namespace Abp.EntityFramework.Uow
         protected override void DisposeUow()
         {
             ActiveDbContexts.Values.ForEach(Release);
+            ActiveDbContexts.Clear();
 
             if (CurrentTransaction != null)
             {
                 CurrentTransaction.Dispose();
+                CurrentTransaction = null;
             }
         }
 

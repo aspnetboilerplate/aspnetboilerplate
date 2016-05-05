@@ -18,7 +18,8 @@ namespace Abp.TestBase.SampleApplication
 
         public Message(int? tenantId, string text)
         {
-            
+            TenantId = tenantId;
+            Text = text;
         }
     }
 }

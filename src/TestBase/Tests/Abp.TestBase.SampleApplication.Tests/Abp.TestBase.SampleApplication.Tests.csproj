@@ -107,6 +107,7 @@
     <Compile Include="People\PersonRepository_General_Tests.cs" />
     <Compile Include="People\PersonRepository_SoftDelete_Tests.cs" />
     <Compile Include="People\PersonRepository_Tests_For_EntityChangeEvents.cs" />
+    <Compile Include="SampleApplicationTestModule.cs" />
     <Compile Include="Uow\UnitOfWork_Event_Tests.cs" />
     <Compile Include="People\PersonAppService_Tests.cs" />
     <Compile Include="SampleApplicationTestBase.cs" />

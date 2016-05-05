@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.TestBase.SampleApplication.Tests.People;
 using Abp.Timing;
 using Shouldly;
 using Xunit;
@@ -168,7 +169,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 //We can disable the filter to get all entities of host and tenants
                 using (unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    _messageRepository.Count().ShouldBe(3);
+                    _messageRepository.Count(m => m.TenantId != PersonRepository_Tests_For_EntityChangeEvents.PersonHandler.FakeTenantId).ShouldBe(3);
                 }
 
                 unitOfWork.Complete();
