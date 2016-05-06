@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http.Filters;
+using Abp.Application.Services;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -50,6 +52,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
                 _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
+                var list = methodInfo.GetCustomAttributes(false);
+                if (list.Any(x => x.GetType() == typeof(DontCreateAttribute)))
+                {
+                    _actionBuilders[methodInfo.Name].DontCreateAction();
+                }
             }
         }
 
