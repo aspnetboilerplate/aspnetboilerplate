@@ -92,6 +92,12 @@ namespace Abp.Configuration.Startup
         /// </summary>
         INotificationConfiguration Notifications { get; }
 
+        /// <summary>
+        /// Used to replace a service type.
+        /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
+        /// </summary>
+        /// <param name="type">The type to be replaced.</param>
+        /// <param name="replaceAction">Replace action.</param>
         void ReplaceService(Type type, Action replaceAction);
     }
 }
