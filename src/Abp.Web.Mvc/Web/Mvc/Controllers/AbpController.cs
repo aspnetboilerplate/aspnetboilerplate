@@ -162,7 +162,7 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         private WrapResultAttribute _wrapResultAttribute;
 
-        private static Type[] _ignoredTypesForSerialization = {typeof (HttpPostedFileBase)};
+        private static Type[] _ignoredTypesForSerialization = { typeof(HttpPostedFileBase) };
 
         /// <summary>
         /// Constructor.
@@ -282,7 +282,7 @@ namespace Abp.Web.Mvc.Controllers
             {
                 data = new AjaxResponse(data);
             }
-            
+
             return new AbpJsonResult
             {
                 Data = data,
@@ -293,7 +293,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         #region OnActionExecuting / OnActionExecuted
-        
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
@@ -385,12 +385,13 @@ namespace Abp.Web.Mvc.Controllers
 
         protected virtual bool IsJsonResult()
         {
-            return typeof (JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
-                   typeof (Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
+            return typeof(JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
+                   typeof(Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
         }
 
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
+            context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
             context.HttpContext.Response.StatusCode = 200; //TODO: Consider to return 500
             return new AbpJsonResult(
                 new MvcAjaxResponse(
@@ -413,7 +414,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         #endregion
-        
+
         #region Auditing
 
         private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
@@ -504,7 +505,7 @@ namespace Abp.Web.Mvc.Controllers
                     }
                     else
                     {
-                        dictionary[argument.Key] = argument.Value;                        
+                        dictionary[argument.Key] = argument.Value;
                     }
                 }
 

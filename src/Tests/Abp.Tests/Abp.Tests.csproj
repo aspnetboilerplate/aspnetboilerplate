@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Application\Navigation\Menu_Tests.cs" />
     <Compile Include="Application\Navigation\NavigationTestCase.cs" />
+    <Compile Include="Auditing\AuditingHelper_Tests.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
@@ -138,9 +139,11 @@
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Notifications\NotificationPublisher_Tests.cs" />
+    <Compile Include="Reflection\Extensions\MemberInfoExtensions_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
+    <Compile Include="Runtime\Security\SimpleStringCipher_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
@@ -156,6 +159,7 @@
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
     <Compile Include="TestBaseWithLocalIocManager.cs" />
     <Compile Include="Threading\LockExtensions_Tests.cs" />
+    <Compile Include="Timing\TimezoneHelper_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

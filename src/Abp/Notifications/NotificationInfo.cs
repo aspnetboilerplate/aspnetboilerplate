@@ -2,18 +2,21 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Used to store published/sent notification.
+    /// Used to store a notification request.
+    /// This notification is distributed to tenants and users by <see cref="INotificationDistributer"/>.
     /// </summary>
     [Serializable]
     [Table("AbpNotifications")]
+    [MultiTenancySide(MultiTenancySides.Host)]
     public class NotificationInfo : CreationAuditedEntity<Guid>
     {
         /// <summary>
-        /// Indicated all tenant ids for <see cref="TenantIds"/> property.
+        /// Indicates all tenant ids for <see cref="TenantIds"/> property.
         /// Value: "0".
         /// </summary>
         public const string AllTenantIds = "0";

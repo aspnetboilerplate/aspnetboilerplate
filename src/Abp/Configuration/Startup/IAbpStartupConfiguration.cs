@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
@@ -90,5 +91,7 @@ namespace Abp.Configuration.Startup
         /// Used to configure notification system.
         /// </summary>
         INotificationConfiguration Notifications { get; }
+
+        void ReplaceService(Type type, Action replaceAction);
     }
 }

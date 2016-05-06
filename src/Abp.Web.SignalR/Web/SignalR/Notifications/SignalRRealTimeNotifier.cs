@@ -45,7 +45,7 @@ namespace Abp.Web.SignalR.Notifications
             {
                 try
                 {
-                    var onlineClient = _onlineClientManager.GetByUserIdOrNull(userNotification.UserId);
+                    var onlineClient = _onlineClientManager.GetByUserIdOrNull(userNotification);
                     if (onlineClient == null)
                     {
                         //User is not online. No problem, go to the next user.

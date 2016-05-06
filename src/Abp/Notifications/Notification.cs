@@ -6,11 +6,16 @@ using Abp.Timing;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Represents a published notification.
+    /// Represents a published notification for a tenant/user.
     /// </summary>
     [Serializable]
-    public class Notification : EntityDto<Guid>, IHasCreationTime
+    public class TenantNotification : EntityDto<Guid>, IHasCreationTime
     {
+        /// <summary>
+        /// Tenant Id.
+        /// </summary>
+        public int? TenantId { get; set; }
+
         /// <summary>
         /// Unique notification name.
         /// </summary>
@@ -44,9 +49,9 @@ namespace Abp.Notifications
         public DateTime CreationTime { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Notification"/> class.
+        /// Initializes a new instance of the <see cref="TenantNotification"/> class.
         /// </summary>
-        public Notification()
+        public TenantNotification()
         {
             CreationTime = Clock.Now;
         }

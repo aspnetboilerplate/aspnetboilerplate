@@ -39,7 +39,7 @@ namespace Abp.Web.Authorization
             {
                 foreach (var permissionName in allPermissionNames)
                 {
-                    if (await PermissionChecker.IsGrantedAsync(AbpSession.UserId.Value, permissionName))
+                    if (await PermissionChecker.IsGrantedAsync(permissionName))
                     {
                         grantedPermissionNames.Add(permissionName);
                     }

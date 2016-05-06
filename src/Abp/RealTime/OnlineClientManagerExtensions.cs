@@ -9,10 +9,10 @@
         /// Determines whether the specified user is online or not.
         /// </summary>
         /// <param name="onlineClientManager">The online client manager.</param>
-        /// <param name="userId">User id.</param>
-        public static bool IsOnline(IOnlineClientManager onlineClientManager,long userId)
+        /// <param name="user">User.</param>
+        public static bool IsOnline(IOnlineClientManager onlineClientManager, UserIdentifier user)
         {
-            return onlineClientManager.GetByUserIdOrNull(userId) != null;
+            return onlineClientManager.GetByUserIdOrNull(user) != null;
         }
     }
 }

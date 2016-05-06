@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Extensions;
 
 namespace Abp.Domain.Entities
 {
@@ -50,6 +51,18 @@ namespace Abp.Domain.Entities
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
             if (!typeOfThis.IsAssignableFrom(typeOfOther) && !typeOfOther.IsAssignableFrom(typeOfThis))
+            {
+                return false;
+            }
+
+            if (this is IMayHaveTenant && other is IMayHaveTenant &&
+                this.As<IMayHaveTenant>().TenantId != other.As<IMayHaveTenant>().TenantId)
+            {
+                return false;
+            }
+
+            if (this is IMustHaveTenant && other is IMustHaveTenant &&
+                this.As<IMustHaveTenant>().TenantId != other.As<IMustHaveTenant>().TenantId)
             {
                 return false;
             }
