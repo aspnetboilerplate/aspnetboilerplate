@@ -37,8 +37,9 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
             };
 
             var boundDate = new AbpMvcDateTimeBinder().BindModel(new ControllerContext(), binderContext) as DateTime?;
+            boundDate.ShouldNotBe(null);
             boundDate.ShouldBe(resultDate);
-            boundDate?.Kind.ShouldBe(Clock.Kind);
+            boundDate.Value.Kind.ShouldBe(Clock.Kind);
         }
 
         [Fact]
@@ -80,8 +81,9 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
             };
 
             var boundDate = new AbpMvcDateTimeBinder().BindModel(new ControllerContext(), binderContext) as DateTime?;
+            boundDate.ShouldNotBe(null);
             boundDate.ShouldBe(resultDate);
-            boundDate?.Kind.ShouldBe(Clock.Kind);
+            boundDate.Value.Kind.ShouldBe(Clock.Kind);
         }
     }
 }

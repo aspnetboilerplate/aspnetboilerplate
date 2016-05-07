@@ -39,7 +39,7 @@ namespace Abp.Timing.Timezone
                 return TimeZoneMappings[windowsTimezoneId];
             }
 
-            throw new Exception($"Unable to map {windowsTimezoneId} to iana timezone.");
+            throw new Exception(string.Format("Unable to map {0} to iana timezone.", windowsTimezoneId));
         }
 
         public static DateTime? Convert(DateTime? date, string fromTimeZoneId, string toTimeZoneId)
