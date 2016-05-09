@@ -53,7 +53,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             {
                 var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
 
-                if (methodInfo.IsDefined(typeof (DisableDynamicWebApi), true))
+                if (methodInfo.IsDefined(typeof (DisableDynamicWebApiAttribute), true))
                 {
                     actionBuilder.DontCreateAction();
                 }

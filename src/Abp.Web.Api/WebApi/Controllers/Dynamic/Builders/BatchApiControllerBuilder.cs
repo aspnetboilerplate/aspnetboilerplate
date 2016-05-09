@@ -61,7 +61,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     type.IsInterface && 
                     typeof(T).IsAssignableFrom(type) && 
                     IocManager.Instance.IsRegistered(type) &&
-                    !type.IsDefined(typeof(DisableDynamicWebApi), true)
+                    !type.IsDefined(typeof(DisableDynamicWebApiAttribute), true)
                 select
                     type;
 

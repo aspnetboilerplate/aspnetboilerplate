@@ -7,7 +7,7 @@ namespace Abp.Application.Services
     /// </summary>
     [Serializable]
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Method)]
-    public class DisableDynamicWebApi : Attribute
+    public class DisableDynamicWebApiAttribute : Attribute
     {
 
     }

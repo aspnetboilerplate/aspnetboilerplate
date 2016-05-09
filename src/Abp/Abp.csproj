@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
-    <Compile Include="Application\Services\DisableDynamicWebApi.cs" />
+    <Compile Include="Application\Services\DisableDynamicWebApiAttribute.cs" />
     <Compile Include="Auditing\AuditingContractResolver.cs" />
     <Compile Include="Authorization\PermissionDependencyContext.cs" />
     <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
