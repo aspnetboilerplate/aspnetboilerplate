@@ -24,7 +24,7 @@ its data</strong>, configuration, user management, tenant individual functionali
  non-functional properties. Multitenancy contrasts with multi-instance architectures,
   where separate software instances operate on behalf of different tenants"</p>
 			<p>Multi-tenancy is used to create <strong>SaaS</strong> (Software as-a Service) 
-applications (cloud computing). There are some types of multi-tenancy:</p>
+applications (cloud computing). There are some architectures multi-tenancy:</p>
 			<h4>Multiple Deployment - Multiple Database</h4>
 			<p>This is <strong>not multi tenancy</strong> actually. But, if we run <strong>one instance</strong> of 
 the application <strong>for each</strong> customer (tenant) with a <strong>
@@ -33,7 +33,7 @@ to <strong>multiple tenants</strong> in a single server. We just make sure that 
 of the application don't <strong>conflict</strong> with each other in same 
 server environment.</p>
 			<p>This can be possible also for an <strong>existing application</strong> which is not designed 
-multitenant. It's easier to create such an application since the application has 
+			as multitenant. It's easier to create such an application since the application has 
 not aware of multitenancy. But there are setup, utilization and maintenance 
 problems in this approach.</p>
 			<h4>Single Deployment - Multiple Database</h4>
@@ -42,12 +42,12 @@ problems in this approach.</p>
 			(host) database to store tenant metadata (like tenant name and 
 			subdomain) and a <strong>seperated database</strong> for each 
 			tenant. Once we identify the <strong>current tenant</strong> (for 
-			example, from subdomain), then we can <strong>switch</strong> to 
+			example; from subdomain or from a user login form), then we can <strong>switch</strong> to 
 			that tenant's database to perform operations.</p>
 			<p>In this approach, application should be designed as multi-tenant 
 			in some level. But most of the application can remain independed 
 			from multi-tenancy. </p>
-			<p>In this approach, we 
+			<p>We 
 should create and maintain a <strong>seperated database</strong> for each tenant, 
 			this includes <strong>database migrations</strong>. If we have many 
 			customers with dedicated databases, it may take long time to migrate 
@@ -67,7 +67,7 @@ Because, we must prevent a Tenant to read or write other tenant datas. We may
 add <strong>TenantId filter</strong> for each database read (select) operation. Also, we may 
 check it every write, if this entity is related to the <strong>current tenant</strong>. This is 
 tedious and error-prone. But ASP.NET Boilerplate helps us here by using <strong>
-automatic data filtering</strong>.</p>
+automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<p>This approach may have performance problems if we have many 
 			tenants with huge datas. We may use table partitioning or other 
 			database features to overcome this problem.</p>
@@ -79,7 +79,7 @@ automatic data filtering</strong>.</p>
 			<h4>Multiple Deployment - Single/Multiple/Hybrit Database</h4>
 			<p>Finally, we may want to deploy our application to more than one 
 			server (like web farms) for a better application performance, high 
-			availability, or scalability. This is independent from database 
+			availability, and/or scalability. This is independent from database 
 			approach.</p>
 			<h3>Multi-Tenancy in ASP.NET Boilerplate</h3>
 			<p>ASP.NET Boilerplate can work with all scenarios described above.</p>
@@ -155,10 +155,19 @@ case, TenantId property says if this is an host entity or tenant entitiy. A
 				<strong>null</strong> value means this is a <strong>host</strong> entity, a 
 				<strong>non-null</strong> value means this entity owned by a <strong>tenant</strong> which's Id is the 
 				<strong>TenantId</strong>.</p>
+			<h5>Additional Notes</h5>
 			<p>IMayHaveTenant is not common as IMustHaveTenant. For example, a Product class 
 can not be IMayHaveTenant since a Product is related to actual application 
 functionality, not related to managing tenants. So, use IMayHaveTenant interface 
 carefully since it's harder to maintain a code shared by host and tenants.</p>
+			<p>When you define an entity type as IMustHaveTenant or 
+			IMayHaveTenant, <strong>always set TenantId</strong> when you create 
+			a new entity (While ASP.NET Boilerplate tries to set it from current 
+			TenantId, it may not be possible in some cases, especially for 
+			IMayHaveTenant entities). Most of times, this will be the only point 
+			you deal with TenantId properties. You don't need to explicitly 
+			write TenantId filter in Where conditions while writing LINQ, since 
+			it will be automatically filtered.</p>
 			<h4>Switching Between Host and Tenants</h4>
 			<p>While working on a multitenant application database, we should 
 			know the <strong>current tenant</strong>. By default, it's obtained 
@@ -185,7 +194,7 @@ carefully since it's harder to maintain a code shared by host and tenants.</p>
         }
     }
 }</pre>
-			<p>SetTenantId ensures that we work on given tenant datas, 
+			<p>SetTenantId ensures that we are working on given tenant datas, 
 			independent from database architecture:</p>
 			<ul>
 				<li>If given tenant has a dedicated database, it switches to 
@@ -205,17 +214,11 @@ carefully since it's harder to maintain a code shared by host and tenants.</p>
 				automatically restore tenantId at the end of the using block. 
 				Thus, the code calls GetProducts method works as before.</li>
 				<li>You can use SetTenantId in <strong>nested blocks </strong>if 
-				needed.</li>
+				it's needed.</li>
 				<li>Since <strong>_unitOfWorkManager.Current</strong> only 
 				available in a <a href="Unit-Of-Work.html">unit of work</a>, be 
 				sure that your code runs in a UOW.</li>
 			</ul>
-			<h4>Saving Entities</h4>
-			<p>A tenant user should not create/edit other tenant entities 
-			normally. ASP.NET 
-Boilerplate checks it on saving changes to database if related data filters are 
-enabled.&nbsp;See <a href="/Pages/Documents/Data-Filters">data filters</a> document for 
-more information on data filters.</p>
 
 		</div>
 

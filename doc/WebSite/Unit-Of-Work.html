@@ -11,7 +11,8 @@
 
 		<div class="document-contents">
 
-			<h3 id="DocCommonApproaches">Common connection &amp; transaction management approaches</h3>
+			<h3 id="DocCommonApproaches">Common Connection &amp; Transaction Management 
+			Approaches</h3>
 			<p>Connection and transaction management is one of the most important concepts 
 in an application that uses a database. When to open a connection, when to 
 start a transaction, how to dispose the connection and so on.. </p>
@@ -47,10 +48,10 @@ it must be short-lived.</p>
 before using it) and disposing it just after using it. This is the most 
 efficient but a tedious and repating work to create/dispose connections 
 everywhere.</p>
-			<h3 id="DocAbpApproach">Connection &amp; Transaction management in ASP.NET Boilerplate</h3>
+			<h3 id="DocAbpApproach">Connection &amp; Transaction Management in ASP.NET Boilerplate</h3>
 
 			<p>ASP.NET Boilerplate mixes both approach and provides a simple yet efficient model.</p>
-			<h4 id="DocRepositoryClasses">Repository classes</h4>
+			<h4 id="DocRepositoryClasses">Repository Classes</h4>
 			<p>
 				<a href="/Pages/Documents/Repositories">Repositories</a> are main classes 
 where database operations are performed. ASP.NET Boilerplate <strong>opens
@@ -86,7 +87,7 @@ all of these automatically. Here, a sample repository:</p>
 of work method calls another unit of work method), both uses same 
 connection &amp; transaction. The first entering method manages connection &amp; 
 transaction, others use it.</p>
-			<h4 id="DocAppServices">Application services</h4>
+			<h4 id="DocAppServices">Application Services</h4>
 			<p>An <a href="/Pages/Documents/Application-Services">application service</a> 
 method is also considered a unit of work. Assume that we have an <a href="/Pages/Documents/Application-Services">
 application service</a> method like below:</p>
@@ -177,8 +178,8 @@ to set <strong>unit of work options</strong>.</p>
 			<p>It's better and 
 shorter to use <strong>UnitOfWork</strong> attribute if you don't have a good reason.</p>
 
-			<h3 id="DocUowDetails">Unit of work in detail</h3>
-			<h4 id="DocDisablingUow">Disabling unit of work</h4>
+			<h3 id="DocUowDetails">Unit Of Work in Detail</h3>
+			<h4 id="DocDisablingUow">Disabling Unit Of Work</h4>
 			<p>You may want to disable unit of work for an <strong>application service method</strong> 
 (since it's enabled as default). To do 
 that, use UnitOfWorkAttribute's IsDisabled property. Example usage:</p>
@@ -201,7 +202,7 @@ disable unit of work for an application service method:</p>
 disabling is ignored and it uses the same unit of work with the caller method. 
 So, use disabling by carefully. Also, the code above works well since repository 
 methods are unit of work as default.</p>
-			<h4 id="DocUowNoTransaction">Non-transactional unit of work</h4>
+			<h4 id="DocUowNoTransaction">Non-Transactional Unit Of Work</h4>
 			<p>A unit of work is transactional as default (by it's nature). Thus, ASP.NET 
 Boilerplate starts/commits/rollbacks an explicit database-level transaction. In 
 some special cases, transaction may cause problems since it may lock some rows 
@@ -229,7 +230,7 @@ transactional unit of work scope, setting isTransactional to false is ignored.</
 			<p>Use non-transactional unit of works carefully since most of the times it 
 should be transactional for data integrity. If your method just reads data, not 
 changes it, it can be non-transactional of course.</p>
-			<h4 id="DocUowCallsOtherMethod">A unit of work method calls another</h4>
+			<h4 id="DocUowCallsOtherMethod">A Unit Of Work Method Calls Another</h4>
 			<p>If a unit of work method (a method declared with UnitOfWork attribute) calls 
 another unit of work method, they share same connection and transaction. First 
 method manages connection, others use it. This true for methods run in same
@@ -237,13 +238,13 @@ method manages connection, others use it. This true for methods run in same
 executing in same thread shares same connection and transaction until the unit of 
 work scope ends. This is true both for UnitOfWork attribute and UnitOfWorkScope 
 class.</p>
-			<h4>Unit of work scope</h4>
+			<h4>Unit Of Work Scope</h4>
 			<p>You can create a different and isolated transaction in another transaction or 
 can create a non-transactional scope in a transaction. .NET defines
 				<a href="https://msdn.microsoft.com/en-us/library/system.transactions.transactionscopeoption(v=vs.110).aspx" target="_blank">
 TransactionScopeOption</a> for that. You can set Scope option of the unit of 
 work. </p>
-			<h4 id="DocAutoSaveChanges">Automatically saving changes</h4>
+			<h4 id="DocAutoSaveChanges">Automatically Saving Changes</h4>
 			<p>When we use unit of work for a method, ASP.NET Boilerplate saves 
 all changes at the end of the method automatically. Assume that we need method to update name of a person:</p>
 			<pre lang="cs">[UnitOfWork]
@@ -257,7 +258,7 @@ method. O/RM framework keep track of all changes of entities in a unit of work
 and reflects changes to the database.</p>
 			<p>Note that no need to declare UnitOfWork for application service methods since 
 they are unit of work as default.</p>
-			<h4 id="DocRepositoryGetAll">IRepository.GetAll() method</h4>
+			<h4 id="DocRepositoryGetAll">IRepository.GetAll() Method</h4>
 			<p>When you call GetAll() out of a repository method, there must be an open database connection since it 
 returns IQueryable. This is needed because of deferred execution of IQueryable<T>. It does not perform database query unless you call ToList() method or use the IQueryable<T> in a foreach loop (or somehow access to queried items). So, when you call ToList() method, database connection must be alive.</p>
 					<p>Consider the example below:</p>
@@ -289,7 +290,7 @@ IQueryable.ToList() is executed.</p>
 					<p>Like that for GetAll() method, you must use unit of work if a database 
 connection is needed out of the repository. Note that application service 
 methods are unit of work by default.&nbsp;</p>
-					<h4 id="DocUowRestrictions">UnitOfWork attribute restrictions</h4>
+					<h4 id="DocUowRestrictions">UnitOfWork Attribute Restrictions</h4>
 					<p>You can use UnitOfWork attribute for;</p>
 					<ul>
 						<li>All <strong>public</strong> or <strong>public virtual</strong> methods for classes 

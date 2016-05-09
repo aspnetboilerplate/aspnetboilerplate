@@ -34,7 +34,7 @@ namespace Abp.Notifications
 
         /// <summary>
         /// Gets all subscribtions for given notification (including all tenants).
-        /// TODO: Can work only for single database approach!
+        /// This only works for single database approach in a multitenant application!
         /// </summary>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
