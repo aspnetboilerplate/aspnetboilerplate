@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
@@ -49,14 +48,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
+
             foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
-                _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
-                var list = methodInfo.GetCustomAttributes(false);
-                if (list.Any(x => x.GetType() == typeof(DontCreateAttribute)))
+                var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
+
+                if (methodInfo.IsDefined(typeof (DisableDynamicWebApi), true))
                 {
-                    _actionBuilders[methodInfo.Name].DontCreateAction();
+                    actionBuilder.DontCreateAction();
                 }
+
+                _actionBuilders[methodInfo.Name] = actionBuilder;
             }
         }
 

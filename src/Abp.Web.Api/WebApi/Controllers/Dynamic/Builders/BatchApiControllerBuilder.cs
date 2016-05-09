@@ -57,7 +57,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    type.IsPublic && type.IsInterface && typeof(T).IsAssignableFrom(type) && IocManager.Instance.IsRegistered(type)
+                    type.IsPublic && 
+                    type.IsInterface && 
+                    typeof(T).IsAssignableFrom(type) && 
+                    IocManager.Instance.IsRegistered(type) &&
+                    !type.IsDefined(typeof(DisableDynamicWebApi), true)
                 select
                     type;
 
@@ -68,9 +72,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             foreach (var type in types)
             {
-                if (type.GetCustomAttributes().Any(x => x.GetType() == typeof (DontCreateAttribute)))
-                    continue;
-
                 var serviceName = _serviceNameSelector != null
                     ? _serviceNameSelector(type)
                     : GetConventionalServiceName(type);
