@@ -2,11 +2,11 @@
 {
     internal class ModuleConfigurations : IModuleConfigurations
     {
-        public IAbpStartupConfiguration AbpConfiguration { get; private set; }
-
         public ModuleConfigurations(IAbpStartupConfiguration abpConfiguration)
         {
             AbpConfiguration = abpConfiguration;
         }
+
+        public IAbpStartupConfiguration AbpConfiguration { get; }
     }
 }

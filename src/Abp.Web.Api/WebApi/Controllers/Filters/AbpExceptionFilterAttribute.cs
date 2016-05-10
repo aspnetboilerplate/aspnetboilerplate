@@ -1,33 +1,24 @@
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http.Filters;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 using Castle.Core.Logging;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http.Filters;
 
 namespace Abp.WebApi.Controllers.Filters
 {
     /// <summary>
-    /// Used to handle exceptions on web api controllers.
+    ///     Used to handle exceptions on web api controllers.
     /// </summary>
     public class AbpExceptionFilterAttribute : ExceptionFilterAttribute, ITransientDependency
     {
         /// <summary>
-        /// Reference to the <see cref="ILogger"/>.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Reference to the <see cref="IEventBus"/>.
-        /// </summary>
-        public IEventBus EventBus { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbpExceptionFilterAttribute"/> class.
+        ///     Initializes a new instance of the <see cref="AbpExceptionFilterAttribute" /> class.
         /// </summary>
         public AbpExceptionFilterAttribute()
         {
@@ -36,12 +27,23 @@ namespace Abp.WebApi.Controllers.Filters
         }
 
         /// <summary>
-        /// Raises the exception event.
+        ///     Reference to the <see cref="ILogger" />.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        ///     Reference to the <see cref="IEventBus" />.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
+
+        /// <summary>
+        ///     Raises the exception event.
         /// </summary>
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor);
+            var wrapResultAttribute =
+                HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor);
 
             if (wrapResultAttribute == null)
             {
@@ -67,7 +69,7 @@ namespace Abp.WebApi.Controllers.Filters
                     HttpStatusCode.OK, //TODO: Consider to return 500
                     new AjaxResponse(
                         ErrorInfoBuilder.Instance.BuildForException(context.Exception),
-                        context.Exception is Abp.Authorization.AbpAuthorizationException)
+                        context.Exception is AbpAuthorizationException)
                     );
 
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));

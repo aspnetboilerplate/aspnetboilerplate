@@ -1,11 +1,11 @@
-﻿using Abp.Modules;
+﻿using System.Reflection;
+using Abp.Modules;
 using Abp.MongoDb.Configuration;
-using System.Reflection;
 
 namespace Abp.MongoDb
 {
     /// <summary>
-    /// This module is used to implement "Data Access Layer" in MongoDB.
+    ///     This module is used to implement "Data Access Layer" in MongoDB.
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpMongoDbModule : AbpModule

@@ -1,30 +1,19 @@
-﻿using Abp.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Abp.Logging;
 
 namespace Abp.Runtime.Validation
 {
     /// <summary>
-    /// This exception type is used to throws validation exceptions.
+    ///     This exception type is used to throws validation exceptions.
     /// </summary>
     [Serializable]
     public class AbpValidationException : AbpException, IHasLogSeverity
     {
         /// <summary>
-        /// Detailed list of validation errors for this exception.
-        /// </summary>
-        public List<ValidationResult> ValidationErrors { get; set; }
-
-        /// <summary>
-        /// Exception severity.
-        /// Default: Warn.
-        /// </summary>
-        public LogSeverity Severity { get; set; }
-
-        /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public AbpValidationException()
         {
@@ -33,7 +22,7 @@ namespace Abp.Runtime.Validation
         }
 
         /// <summary>
-        /// Constructor for serializing.
+        ///     Constructor for serializing.
         /// </summary>
         public AbpValidationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -43,7 +32,7 @@ namespace Abp.Runtime.Validation
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpValidationException(string message)
@@ -54,7 +43,7 @@ namespace Abp.Runtime.Validation
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="validationErrors">Validation errors</param>
@@ -66,7 +55,7 @@ namespace Abp.Runtime.Validation
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
@@ -76,5 +65,16 @@ namespace Abp.Runtime.Validation
             ValidationErrors = new List<ValidationResult>();
             Severity = LogSeverity.Warn;
         }
+
+        /// <summary>
+        ///     Detailed list of validation errors for this exception.
+        /// </summary>
+        public List<ValidationResult> ValidationErrors { get; set; }
+
+        /// <summary>
+        ///     Exception severity.
+        ///     Default: Warn.
+        /// </summary>
+        public LogSeverity Severity { get; set; }
     }
 }

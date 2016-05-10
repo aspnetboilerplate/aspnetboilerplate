@@ -1,15 +1,11 @@
-using Abp.Localization;
 using System;
+using Abp.Localization;
 
 namespace Abp.UI.Inputs
 {
     [Serializable]
     public class LocalizableComboboxItem : ILocalizableComboboxItem
     {
-        public string Value { get; set; }
-
-        public ILocalizableString DisplayText { get; set; }
-
         public LocalizableComboboxItem()
         {
         }
@@ -19,5 +15,9 @@ namespace Abp.UI.Inputs
             Value = value;
             DisplayText = displayText;
         }
+
+        public string Value { get; set; }
+
+        public ILocalizableString DisplayText { get; set; }
     }
 }

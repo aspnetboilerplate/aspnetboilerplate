@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// This handle is used for innet unit of work scopes.
-    /// A inner unit of work scope actually uses outer unit of work scope
-    /// and has no effect on <see cref="IUnitOfWorkCompleteHandle.Complete"/> call.
-    /// But if it's not called, an exception is thrown at end of the UOW to rollback the UOW.
+    ///     This handle is used for innet unit of work scopes.
+    ///     A inner unit of work scope actually uses outer unit of work scope
+    ///     and has no effect on <see cref="IUnitOfWorkCompleteHandle.Complete" /> call.
+    ///     But if it's not called, an exception is thrown at end of the UOW to rollback the UOW.
     /// </summary>
     internal class InnerUnitOfWorkCompleteHandle : IUnitOfWorkCompleteHandle
     {

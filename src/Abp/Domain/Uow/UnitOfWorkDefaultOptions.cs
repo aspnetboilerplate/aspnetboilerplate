@@ -7,23 +7,30 @@ namespace Abp.Domain.Uow
 {
     internal class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
     {
+        private readonly List<DataFilterConfiguration> _filters;
+
+        public UnitOfWorkDefaultOptions()
+        {
+            _filters = new List<DataFilterConfiguration>();
+            IsTransactional = true;
+            Scope = TransactionScopeOption.Required;
+        }
+
         public TransactionScopeOption Scope { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsTransactional { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public TimeSpan? Timeout { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IsolationLevel? IsolationLevel { get; set; }
 
         public IReadOnlyList<DataFilterConfiguration> Filters
         {
             get { return _filters; }
         }
-
-        private readonly List<DataFilterConfiguration> _filters;
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)
         {
@@ -39,13 +46,6 @@ namespace Abp.Domain.Uow
         {
             _filters.RemoveAll(f => f.FilterName == filterName);
             _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
-        }
-
-        public UnitOfWorkDefaultOptions()
-        {
-            _filters = new List<DataFilterConfiguration>();
-            IsTransactional = true;
-            Scope = TransactionScopeOption.Required;
         }
     }
 }

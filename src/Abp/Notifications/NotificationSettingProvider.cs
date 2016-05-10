@@ -1,6 +1,6 @@
-﻿using Abp.Configuration;
+﻿using System.Collections.Generic;
+using Abp.Configuration;
 using Abp.Localization;
-using System.Collections.Generic;
 
 namespace Abp.Notifications
 {

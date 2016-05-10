@@ -1,23 +1,21 @@
-﻿using Abp.Localization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using System.Threading;
+using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Json;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-using System.Threading;
 using Xunit;
 
 namespace Abp.Tests.Localization.Json
 {
     public class JsonAndXmlSourceMixing_Tests : TestBaseWithLocalIocManager
     {
-        private readonly AbpBootstrapper _bootstrapper;
-
         public JsonAndXmlSourceMixing_Tests()
         {
             LocalIocManager.Register<IModuleFinder, MyTestModuleFinder>();
@@ -28,6 +26,8 @@ namespace Abp.Tests.Localization.Json
             _bootstrapper = new AbpBootstrapper(LocalIocManager);
             _bootstrapper.Initialize();
         }
+
+        private readonly AbpBootstrapper _bootstrapper;
 
         [Fact]
         public void Test_Xml_Json()
@@ -58,9 +58,9 @@ namespace Abp.Tests.Localization.Json
         public ICollection<Type> FindAll()
         {
             return new List<Type>
-                   {
-                       typeof (MyLangModule)
-                   };
+            {
+                typeof(MyLangModule)
+            };
         }
     }
 
@@ -73,7 +73,7 @@ namespace Abp.Tests.Localization.Json
                     "Lang",
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(),
-                         "Abp.Tests.Localization.Json.XmlSources"
+                        "Abp.Tests.Localization.Json.XmlSources"
                         )
                     )
                 );
@@ -83,7 +83,7 @@ namespace Abp.Tests.Localization.Json
                     "Lang",
                     new JsonEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(),
-                         "Abp.Tests.Localization.Json.JsonSources"
+                        "Abp.Tests.Localization.Json.JsonSources"
                         )));
         }
 

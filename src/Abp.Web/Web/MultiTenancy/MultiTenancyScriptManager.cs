@@ -1,10 +1,10 @@
+using System;
+using System.Globalization;
+using System.Text;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
-using System;
-using System.Globalization;
-using System.Text;
 
 namespace Abp.Web.MultiTenancy
 {
@@ -25,15 +25,16 @@ namespace Abp.Web.MultiTenancy
             script.AppendLine();
 
             script.AppendLine("    abp.multiTenancy = abp.multiTenancy || {};");
-            script.AppendLine("    abp.multiTenancy.isEnabled = " + _multiTenancyConfig.IsEnabled.ToString().ToLower(CultureInfo.InvariantCulture) + ";");
+            script.AppendLine("    abp.multiTenancy.isEnabled = " +
+                              _multiTenancyConfig.IsEnabled.ToString().ToLower(CultureInfo.InvariantCulture) + ";");
 
             var sideNames = Enum.GetNames(typeof(MultiTenancySides));
 
             script.AppendLine("    abp.multiTenancy.sides = {");
-            for (int i = 0; i < sideNames.Length; i++)
+            for (var i = 0; i < sideNames.Length; i++)
             {
                 var sideName = sideNames[i];
-                script.Append("        " + sideName.ToCamelCase() + ": " + ((int)sideName.ToEnum<MultiTenancySides>()));
+                script.Append("        " + sideName.ToCamelCase() + ": " + (int) sideName.ToEnum<MultiTenancySides>());
                 if (i == sideNames.Length - 1)
                 {
                     script.AppendLine();

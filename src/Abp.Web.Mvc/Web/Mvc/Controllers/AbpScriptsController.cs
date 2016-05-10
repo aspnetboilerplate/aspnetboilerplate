@@ -1,4 +1,9 @@
-﻿using Abp.Auditing;
+﻿using System.Globalization;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Abp.Auditing;
 using Abp.Extensions;
 using Abp.Web.Authorization;
 using Abp.Web.Features;
@@ -7,30 +12,27 @@ using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
 using Abp.Web.Settings;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+using Abp.Web.Timing;
 
 namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
-    /// This controller is used to create client side scripts
-    /// to work with ABP.
+    ///     This controller is used to create client side scripts
+    ///     to work with ABP.
     /// </summary>
     public class AbpScriptsController : AbpController
     {
-        private readonly IMultiTenancyScriptManager _multiTenancyScriptManager;
-        private readonly ISettingScriptManager _settingScriptManager;
-        private readonly INavigationScriptManager _navigationScriptManager;
-        private readonly ILocalizationScriptManager _localizationScriptManager;
         private readonly IAuthorizationScriptManager _authorizationScriptManager;
         private readonly IFeaturesScriptManager _featuresScriptManager;
+        private readonly ILocalizationScriptManager _localizationScriptManager;
+        private readonly IMultiTenancyScriptManager _multiTenancyScriptManager;
+        private readonly INavigationScriptManager _navigationScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
+        private readonly ISettingScriptManager _settingScriptManager;
+        private readonly ITimingScriptManager _timingScriptManager;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public AbpScriptsController(
             IMultiTenancyScriptManager multiTenancyScriptManager,
@@ -39,7 +41,8 @@ namespace Abp.Web.Mvc.Controllers
             ILocalizationScriptManager localizationScriptManager,
             IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
-            ISessionScriptManager sessionScriptManager)
+            ISessionScriptManager sessionScriptManager,
+            ITimingScriptManager timingScriptManager)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
@@ -48,10 +51,11 @@ namespace Abp.Web.Mvc.Controllers
             _authorizationScriptManager = authorizationScriptManager;
             _featuresScriptManager = featuresScriptManager;
             _sessionScriptManager = sessionScriptManager;
+            _timingScriptManager = timingScriptManager;
         }
 
         /// <summary>
-        /// Gets all needed scripts.
+        ///     Gets all needed scripts.
         /// </summary>
         [DisableAuditing]
         public async Task<ActionResult> GetScripts(string culture = "")
@@ -82,6 +86,10 @@ namespace Abp.Web.Mvc.Controllers
             sb.AppendLine();
 
             sb.AppendLine(await _settingScriptManager.GetScriptAsync());
+            sb.AppendLine();
+
+            sb.AppendLine(await _timingScriptManager.GetScriptAsync());
+            sb.AppendLine();
 
             sb.AppendLine(GetTriggerScript());
 

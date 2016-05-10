@@ -1,13 +1,19 @@
-﻿using Abp.Extensions;
-using Shouldly;
-using System;
+﻿using System;
 using System.Globalization;
+using Abp.Extensions;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Extensions
 {
     public class StringExtensions_Tests
     {
+        private enum MyEnum
+        {
+            MyValue1,
+            MyValue2
+        }
+
         [Fact]
         public void EnsureEndsWith_Test()
         {
@@ -43,33 +49,6 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
-        public void ToPascalCase_Test()
-        {
-            "helloWorld".ToPascalCase().ShouldBe("HelloWorld");
-            "istanbul".ToPascalCase().ShouldBe("Istanbul");
-            "istanbul".ToPascalCase(new CultureInfo("tr-TR")).ShouldBe("İstanbul");
-        }
-
-        [Fact]
-        public void ToCamelCase_Test()
-        {
-            "HelloWorld".ToCamelCase().ShouldBe("helloWorld");
-            "Istanbul".ToCamelCase().ShouldBe("istanbul");
-            "Istanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("ıstanbul");
-            "İstanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("istanbul");
-        }
-
-        [Fact]
-        public void Right_Test()
-        {
-            const string str = "This is a test string";
-
-            str.Right(3).ShouldBe("ing");
-            str.Right(0).ShouldBe("");
-            str.Right(str.Length).ShouldBe(str);
-        }
-
-        [Fact]
         public void Left_Test()
         {
             const string str = "This is a test string";
@@ -98,6 +77,40 @@ namespace Abp.Tests.Extensions
             str.NthIndexOf('i', 2).ShouldBe(5);
             str.NthIndexOf('i', 3).ShouldBe(18);
             str.NthIndexOf('i', 4).ShouldBe(-1);
+        }
+
+        [Fact]
+        public void Right_Test()
+        {
+            const string str = "This is a test string";
+
+            str.Right(3).ShouldBe("ing");
+            str.Right(0).ShouldBe("");
+            str.Right(str.Length).ShouldBe(str);
+        }
+
+        [Fact]
+        public void ToCamelCase_Test()
+        {
+            "HelloWorld".ToCamelCase().ShouldBe("helloWorld");
+            "Istanbul".ToCamelCase().ShouldBe("istanbul");
+            "Istanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("ıstanbul");
+            "İstanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("istanbul");
+        }
+
+        [Fact]
+        public void ToEnum_Test()
+        {
+            "MyValue1".ToEnum<MyEnum>().ShouldBe(MyEnum.MyValue1);
+            "MyValue2".ToEnum<MyEnum>().ShouldBe(MyEnum.MyValue2);
+        }
+
+        [Fact]
+        public void ToPascalCase_Test()
+        {
+            "helloWorld".ToPascalCase().ShouldBe("HelloWorld");
+            "istanbul".ToPascalCase().ShouldBe("Istanbul");
+            "istanbul".ToPascalCase(new CultureInfo("tr-TR")).ShouldBe("İstanbul");
         }
 
         [Fact]
@@ -132,19 +145,6 @@ namespace Abp.Tests.Extensions
             str.TruncateWithPostfix(100, "~").ShouldBe(str);
 
             nullValue.TruncateWithPostfix(5, "~").ShouldBe(null);
-        }
-
-        [Fact]
-        public void ToEnum_Test()
-        {
-            "MyValue1".ToEnum<MyEnum>().ShouldBe(MyEnum.MyValue1);
-            "MyValue2".ToEnum<MyEnum>().ShouldBe(MyEnum.MyValue2);
-        }
-
-        private enum MyEnum
-        {
-            MyValue1,
-            MyValue2
         }
     }
 }

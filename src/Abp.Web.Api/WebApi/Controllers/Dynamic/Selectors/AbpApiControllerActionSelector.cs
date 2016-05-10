@@ -1,23 +1,25 @@
-using Abp.WebApi.Controllers.Dynamic.Builders;
 using System.Linq;
 using System.Web.Http.Controllers;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
-    /// This class overrides ApiControllerActionSelector to select actions of dynamic ApiControllers.
+    ///     This class overrides ApiControllerActionSelector to select actions of dynamic ApiControllers.
     /// </summary>
     public class AbpApiControllerActionSelector : ApiControllerActionSelector
     {
         /// <summary>
-        /// This class is called by Web API system to select action method from given controller.
+        ///     This class is called by Web API system to select action method from given controller.
         /// </summary>
         /// <param name="controllerContext">Controller context</param>
         /// <returns>Action to be used</returns>
         public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
             object controllerInfoObj;
-            if (!controllerContext.ControllerDescriptor.Properties.TryGetValue("__AbpDynamicApiControllerInfo", out controllerInfoObj))
+            if (
+                !controllerContext.ControllerDescriptor.Properties.TryGetValue("__AbpDynamicApiControllerInfo",
+                    out controllerInfoObj))
             {
                 return GetDefaultActionDescriptor(controllerContext);
             }
@@ -26,18 +28,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var controllerInfo = controllerInfoObj as DynamicApiControllerInfo;
             if (controllerInfo == null)
             {
-                throw new AbpException("__AbpDynamicApiControllerInfo in ControllerDescriptor.Properties is not a " + typeof(DynamicApiControllerInfo).FullName + " class.");
+                throw new AbpException("__AbpDynamicApiControllerInfo in ControllerDescriptor.Properties is not a " +
+                                       typeof(DynamicApiControllerInfo).FullName + " class.");
             }
 
             //No action name case
-            var hasActionName = (bool)controllerContext.ControllerDescriptor.Properties["__AbpDynamicApiHasActionName"];
+            var hasActionName = (bool) controllerContext.ControllerDescriptor.Properties["__AbpDynamicApiHasActionName"];
             if (!hasActionName)
             {
                 return GetActionDescriptorByCurrentHttpVerb(controllerContext, controllerInfo);
             }
 
             //Get action name from route
-            var serviceNameWithAction = (controllerContext.RouteData.Values["serviceNameWithAction"] as string);
+            var serviceNameWithAction = controllerContext.RouteData.Values["serviceNameWithAction"] as string;
             if (serviceNameWithAction == null)
             {
                 return GetDefaultActionDescriptor(controllerContext);
@@ -52,7 +55,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 );
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
+        private static HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(
+            HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
         {
             //Check if there is only one action with the current http verb
             var actionsByVerb = controllerInfo.Actions.Values
@@ -78,16 +82,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             //Return the single action by the current http verb
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionsByVerb[0].Method, actionsByVerb[0].Filters);
+            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionsByVerb[0].Method,
+                actionsByVerb[0].Filters);
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
+        private static HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext,
+            DynamicApiControllerInfo controllerInfo, string actionName)
         {
             //Get action information by action name
             DynamicApiActionInfo actionInfo;
             if (!controllerInfo.Actions.TryGetValue(actionName, out actionInfo))
             {
-                throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
+                throw new AbpException("There is no action " + actionName + " defined for api controller " +
+                                       controllerInfo.ServiceName);
             }
 
             if (!actionInfo.Verb.IsEqualTo(controllerContext.Request.Method))
@@ -99,7 +106,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     ". It should be " + actionInfo.Verb);
             }
 
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionInfo.Method, actionInfo.Filters);
+            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionInfo.Method,
+                actionInfo.Filters);
         }
 
         private HttpActionDescriptor GetDefaultActionDescriptor(HttpControllerContext controllerContext)

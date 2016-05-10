@@ -1,21 +1,15 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Collections.Generic;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
-using System.Collections.Generic;
 
 namespace Abp.Application.Navigation
 {
     internal class NavigationManager : INavigationManager, ISingletonDependency
     {
-        public IDictionary<string, MenuDefinition> Menus { get; private set; }
-
-        public MenuDefinition MainMenu
-        {
-            get { return Menus["MainMenu"]; }
-        }
+        private readonly INavigationConfiguration _configuration;
 
         private readonly IIocResolver _iocResolver;
-        private readonly INavigationConfiguration _configuration;
 
         public NavigationManager(IIocResolver iocResolver, INavigationConfiguration configuration)
         {
@@ -23,9 +17,17 @@ namespace Abp.Application.Navigation
             _configuration = configuration;
 
             Menus = new Dictionary<string, MenuDefinition>
-                    {
-                        {"MainMenu", new MenuDefinition("MainMenu", new FixedLocalizableString("Main menu"))} //TODO: Localization for "Main menu"
-                    };
+            {
+                {"MainMenu", new MenuDefinition("MainMenu", new FixedLocalizableString("Main menu"))}
+                //TODO: Localization for "Main menu"
+            };
+        }
+
+        public IDictionary<string, MenuDefinition> Menus { get; }
+
+        public MenuDefinition MainMenu
+        {
+            get { return Menus["MainMenu"]; }
         }
 
         public void Initialize()
@@ -34,7 +36,7 @@ namespace Abp.Application.Navigation
 
             foreach (var providerType in _configuration.Providers)
             {
-                var provider = (NavigationProvider)_iocResolver.Resolve(providerType);
+                var provider = (NavigationProvider) _iocResolver.Resolve(providerType);
                 provider.SetNavigation(context);
             }
         }

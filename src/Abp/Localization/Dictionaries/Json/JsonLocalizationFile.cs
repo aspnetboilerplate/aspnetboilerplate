@@ -3,12 +3,12 @@
 namespace Abp.Localization.Dictionaries.Json
 {
     /// <summary>
-    /// Use it to serialize json file
+    ///     Use it to serialize json file
     /// </summary>
     public class JsonLocalizationFile
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public JsonLocalizationFile()
         {
@@ -16,12 +16,12 @@ namespace Abp.Localization.Dictionaries.Json
         }
 
         /// <summary>
-        /// get or set the culture name; eg : en , en-us, zh-CN
+        ///     get or set the culture name; eg : en , en-us, zh-CN
         /// </summary>
         public string Culture { get; set; }
 
         /// <summary>
-        ///  Key value pairs
+        ///     Key value pairs
         /// </summary>
         public Dictionary<string, string> Texts { get; private set; }
     }

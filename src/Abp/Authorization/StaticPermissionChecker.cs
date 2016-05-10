@@ -1,11 +1,10 @@
-using Abp.Dependency;
 using System;
+using Abp.Dependency;
 
 namespace Abp.Authorization
 {
     internal static class StaticPermissionChecker
     {
-        public static IPermissionChecker Instance { get { return LazyInstance.Value; } }
         private static readonly Lazy<IPermissionChecker> LazyInstance;
 
         static StaticPermissionChecker()
@@ -15,6 +14,11 @@ namespace Abp.Authorization
                     ? IocManager.Instance.Resolve<IPermissionChecker>()
                     : NullPermissionChecker.Instance
                 );
+        }
+
+        public static IPermissionChecker Instance
+        {
+            get { return LazyInstance.Value; }
         }
     }
 }

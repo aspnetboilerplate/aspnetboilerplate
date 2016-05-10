@@ -1,31 +1,32 @@
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.MongoDb.Configuration;
 using MongoDB.Driver;
-using System.Threading.Tasks;
 
 namespace Abp.MongoDb.Uow
 {
     /// <summary>
-    /// Implements Unit of work for MongoDB.
+    ///     Implements Unit of work for MongoDB.
     /// </summary>
     public class MongoDbUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        /// <summary>
-        /// Gets a reference to MongoDB Database.
-        /// </summary>
-        public MongoDatabase Database { get; private set; }
-
         private readonly IAbpMongoDbModuleConfiguration _configuration;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
-        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public MongoDbUnitOfWork(IAbpMongoDbModuleConfiguration configuration,
+            IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             _configuration = configuration;
         }
+
+        /// <summary>
+        ///     Gets a reference to MongoDB Database.
+        /// </summary>
+        public MongoDatabase Database { get; private set; }
 
         protected override void BeginUow()
         {

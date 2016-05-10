@@ -1,12 +1,26 @@
-﻿using Abp.Domain.Uow;
+﻿using System;
+using Abp.Domain.Uow;
 using Shouldly;
-using System;
 using Xunit;
 
 namespace Abp.Tests.Domain.Uow
 {
     public class InnerUnitOfWorkCompleteHandle_Test
     {
+        [Fact]
+        public void Should_Not_Override_Exception_If_Exception_Is_Thrown_By_User()
+        {
+            Assert.Throws<Exception>(
+                new Action(() =>
+                {
+                    using (var uow = new InnerUnitOfWorkCompleteHandle())
+                    {
+                        throw new Exception("My inner exception!");
+                        uow.Complete();
+                    }
+                })).Message.ShouldBe("My inner exception!");
+        }
+
         [Fact]
         public void Should_Not_Throw_Exception_If_Complete_Called()
         {
@@ -25,20 +39,6 @@ namespace Abp.Tests.Domain.Uow
                 {
                 }
             }).Message.ShouldBe(InnerUnitOfWorkCompleteHandle.DidNotCallCompleteMethodExceptionMessage);
-        }
-
-        [Fact]
-        public void Should_Not_Override_Exception_If_Exception_Is_Thrown_By_User()
-        {
-            Assert.Throws<Exception>(
-                new Action(() =>
-                           {
-                               using (var uow = new InnerUnitOfWorkCompleteHandle())
-                               {
-                                   throw new Exception("My inner exception!");
-                                   uow.Complete();
-                               }
-                           })).Message.ShouldBe("My inner exception!");
         }
     }
 }

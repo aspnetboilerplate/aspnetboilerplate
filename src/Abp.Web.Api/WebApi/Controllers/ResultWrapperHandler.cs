@@ -1,15 +1,15 @@
-using Abp.Dependency;
-using Abp.Web.Models;
-using Abp.WebApi.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Dependency;
+using Abp.Web.Models;
+using Abp.WebApi.Configuration;
 
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Wrapps Web API return values by <see cref="AjaxResponse"/>.
+    ///     Wrapps Web API return values by <see cref="AjaxResponse" />.
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
@@ -20,7 +20,8 @@ namespace Abp.WebApi.Controllers
             _webApiModuleConfiguration = webApiModuleConfiguration;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             return base.SendAsync(request, cancellationToken).ContinueWith(
                 task =>

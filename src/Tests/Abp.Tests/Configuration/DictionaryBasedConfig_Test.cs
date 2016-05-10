@@ -6,17 +6,35 @@ namespace Abp.Tests.Configuration
 {
     public class DictionaryBasedConfig_Test
     {
-        private readonly MyConfig _config;
-
         public DictionaryBasedConfig_Test()
         {
             _config = new MyConfig();
         }
 
+        private readonly MyConfig _config;
+
+        private class MyConfig : DictionaryBasedConfig
+        {
+        }
+
+        private class TestClass
+        {
+            public int Value { get; set; }
+        }
+
+        [Fact]
+        public void Should_Get_Default_If_No_Value()
+        {
+            _config["MyUndefinedName"].ShouldBe(null);
+            _config.Get<string>("MyUndefinedName").ShouldBe(null);
+            _config.Get<MyConfig>("MyUndefinedName").ShouldBe(null);
+            _config.Get<int>("MyUndefinedName").ShouldBe(0);
+        }
+
         [Fact]
         public void Should_Get_Value()
         {
-            var testObject = new TestClass { Value = 42 };
+            var testObject = new TestClass {Value = 42};
 
             _config["IntValue"] = 42;
             _config["StringValue"] = "Test string";
@@ -31,24 +49,6 @@ namespace Abp.Tests.Configuration
             _config["ObjectValue"].ShouldBeSameAs(testObject);
             _config.Get<TestClass>("ObjectValue").ShouldBeSameAs(testObject);
             _config.Get<TestClass>("ObjectValue").Value.ShouldBe(42);
-        }
-
-        [Fact]
-        public void Should_Get_Default_If_No_Value()
-        {
-            _config["MyUndefinedName"].ShouldBe(null);
-            _config.Get<string>("MyUndefinedName").ShouldBe(null);
-            _config.Get<MyConfig>("MyUndefinedName").ShouldBe(null);
-            _config.Get<int>("MyUndefinedName").ShouldBe(0);
-        }
-
-        private class MyConfig : DictionaryBasedConfig
-        {
-        }
-
-        private class TestClass
-        {
-            public int Value { get; set; }
         }
     }
 }

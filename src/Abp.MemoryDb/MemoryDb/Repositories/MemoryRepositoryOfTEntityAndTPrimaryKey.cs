@@ -1,7 +1,7 @@
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
 
 namespace Abp.MemoryDb.Repositories
 {
@@ -9,10 +9,6 @@ namespace Abp.MemoryDb.Repositories
     public class MemoryRepository<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual MemoryDatabase Database { get { return _databaseProvider.Database; } }
-
-        public virtual List<TEntity> Table { get { return Database.Set<TEntity>(); } }
-
         private readonly IMemoryDatabaseProvider _databaseProvider;
         private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
 
@@ -20,6 +16,16 @@ namespace Abp.MemoryDb.Repositories
         {
             _databaseProvider = databaseProvider;
             _primaryKeyGenerator = new MemoryPrimaryKeyGenerator<TPrimaryKey>();
+        }
+
+        public virtual MemoryDatabase Database
+        {
+            get { return _databaseProvider.Database; }
+        }
+
+        public virtual List<TEntity> Table
+        {
+            get { return Database.Set<TEntity>(); }
         }
 
         public override IQueryable<TEntity> GetAll()

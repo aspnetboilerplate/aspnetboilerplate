@@ -1,22 +1,23 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Globalization;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization.Sources.Resource;
 using Abp.Tests.Localization.TestResourceFiles;
 using Shouldly;
-using System.Globalization;
 using Xunit;
 
 namespace Abp.Tests.Localization
 {
     public class ResourceFileLocalizationSource_Tests
     {
-        private readonly ResourceFileLocalizationSource _resourceFileLocalizationSource;
-
         public ResourceFileLocalizationSource_Tests()
         {
-            _resourceFileLocalizationSource = new ResourceFileLocalizationSource("MyTestResource", MyTestResource.ResourceManager);
+            _resourceFileLocalizationSource = new ResourceFileLocalizationSource("MyTestResource",
+                MyTestResource.ResourceManager);
             _resourceFileLocalizationSource.Initialize(new LocalizationConfiguration(), new IocManager());
         }
+
+        private readonly ResourceFileLocalizationSource _resourceFileLocalizationSource;
 
         [Fact]
         public void Test_GetString()

@@ -1,20 +1,11 @@
-﻿using Abp.Collections;
-using System;
+﻿using System;
+using Abp.Collections;
 using Xunit;
 
 namespace Abp.Tests.Collections
 {
     public class TypeList_Test
     {
-        [Fact]
-        public void Should_Only_Add_True_Types()
-        {
-            var list = new TypeList<IMyInterface>();
-            list.Add<MyClass1>();
-            list.Add(typeof(MyClass2));
-            Assert.Throws<ArgumentException>(() => list.Add(typeof(MyClass3)));
-        }
-
         public interface IMyInterface
         {
         }
@@ -29,6 +20,15 @@ namespace Abp.Tests.Collections
 
         public class MyClass3
         {
+        }
+
+        [Fact]
+        public void Should_Only_Add_True_Types()
+        {
+            var list = new TypeList<IMyInterface>();
+            list.Add<MyClass1>();
+            list.Add(typeof(MyClass2));
+            Assert.Throws<ArgumentException>(() => list.Add(typeof(MyClass3)));
         }
     }
 }

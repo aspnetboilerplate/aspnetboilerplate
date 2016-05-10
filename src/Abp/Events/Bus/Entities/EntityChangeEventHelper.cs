@@ -1,16 +1,14 @@
+using System;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using System;
 
 namespace Abp.Events.Bus.Entities
 {
     /// <summary>
-    /// Used to trigger entity change events.
+    ///     Used to trigger entity change events.
     /// </summary>
     public class EntityChangeEventHelper : ITransientDependency, IEntityChangeEventHelper
     {
-        public IEventBus EventBus { get; set; }
-
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public EntityChangeEventHelper(IUnitOfWorkManager unitOfWorkManager)
@@ -18,6 +16,8 @@ namespace Abp.Events.Bus.Entities
             _unitOfWorkManager = unitOfWorkManager;
             EventBus = NullEventBus.Instance;
         }
+
+        public IEventBus EventBus { get; set; }
 
         public void TriggerEntityCreatingEvent(object entity)
         {
@@ -56,11 +56,12 @@ namespace Abp.Events.Bus.Entities
 
             if (triggerImmediately || _unitOfWorkManager.Current == null)
             {
-                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
+                EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
                 return;
             }
 
-            _unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
+            _unitOfWorkManager.Current.Completed +=
+                (sender, args) => EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="zh-CN">
   <texts>
     <text name="InternalServerError" value="对不起,在处理您的请求期间,产生了一个服务器内部错误!" />

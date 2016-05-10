@@ -1,8 +1,8 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Linq;
+using Abp.Dependency;
 using Castle.Core;
 using Castle.MicroKernel;
-using System;
-using System.Linq;
 
 namespace Abp.Auditing
 {

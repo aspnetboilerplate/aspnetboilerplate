@@ -3,18 +3,18 @@
 namespace Abp.MultiTenancy
 {
     /// <summary>
-    /// Represents sides in a multi tenancy application.
+    ///     Represents sides in a multi tenancy application.
     /// </summary>
     [Flags]
     public enum MultiTenancySides
     {
         /// <summary>
-        /// Tenant side.
+        ///     Tenant side.
         /// </summary>
         Tenant = 1,
 
         /// <summary>
-        /// Host (tenancy owner) side.
+        ///     Host (tenancy owner) side.
         /// </summary>
         Host = 2
     }

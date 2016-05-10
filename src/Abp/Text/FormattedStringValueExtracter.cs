@@ -1,24 +1,24 @@
-using Abp.Collections.Extensions;
-using Abp.Text.Formatting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Abp.Collections.Extensions;
+using Abp.Text.Formatting;
 
 namespace Abp.Text
 {
     /// <summary>
-    /// This class is used to extract dynamic values from a formatted string.
-    /// It works as reverse of <see cref="string.Format(string,object)"/>
+    ///     This class is used to extract dynamic values from a formatted string.
+    ///     It works as reverse of <see cref="string.Format(string,object)" />
     /// </summary>
     /// <example>
-    /// Say that str is "My name is Neo." and format is "My name is {name}.".
-    /// Then Extract method gets "Neo" as "name".
+    ///     Say that str is "My name is Neo." and format is "My name is {name}.".
+    ///     Then Extract method gets "Neo" as "name".
     /// </example>
     public class FormattedStringValueExtracter
     {
         /// <summary>
-        /// Extracts dynamic values from a formatted string.
+        ///     Extracts dynamic values from a formatted string.
         /// </summary>
         /// <param name="str">String including dynamic values</param>
         /// <param name="format">Format of the string</param>
@@ -86,8 +86,8 @@ namespace Abp.Text
         }
 
         /// <summary>
-        /// Checks if given <see cref="str"/> fits to given <see cref="format"/>.
-        /// Also gets extracted values.
+        ///     Checks if given <see cref="str" /> fits to given <see cref="format" />.
+        ///     Also gets extracted values.
         /// </summary>
         /// <param name="str">String including dynamic values</param>
         /// <param name="format">Format of the string</param>
@@ -108,25 +108,25 @@ namespace Abp.Text
         }
 
         /// <summary>
-        /// Used as return value of <see cref="Extract"/> method.
+        ///     Used as return value of <see cref="Extract" /> method.
         /// </summary>
         public class ExtractionResult
         {
-            /// <summary>
-            /// Is fully matched.
-            /// </summary>
-            public bool IsMatch { get; set; }
-
-            /// <summary>
-            /// List of matched dynamic values.
-            /// </summary>
-            public List<NameValue> Matches { get; private set; }
-
             internal ExtractionResult(bool isMatch)
             {
                 IsMatch = isMatch;
                 Matches = new List<NameValue>();
             }
+
+            /// <summary>
+            ///     Is fully matched.
+            /// </summary>
+            public bool IsMatch { get; set; }
+
+            /// <summary>
+            ///     List of matched dynamic values.
+            /// </summary>
+            public List<NameValue> Matches { get; }
         }
     }
 }

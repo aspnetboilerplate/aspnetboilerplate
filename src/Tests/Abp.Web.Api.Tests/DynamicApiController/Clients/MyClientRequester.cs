@@ -8,11 +8,6 @@ namespace Abp.Web.Api.Tests.DynamicApiController.Clients
 
     public class DynamicApiClient_Tests
     {
-        static DynamicApiClient_Tests()
-        {
-            //AbpWebApiTests.Initialize();
-        }
-
         [Fact]
         public void Should_Call_Service()
         {
@@ -41,7 +36,7 @@ namespace Abp.Web.Api.Tests.DynamicApiController.Clients
     {
         public MyMethodOutput MyMethod(MyMethodInput input)
         {
-            return new MyMethodOutput { TestProperty1 = input.TestProperty1 + " output!" };
+            return new MyMethodOutput {TestProperty1 = input.TestProperty1 + " output!"};
         }
     }
 }

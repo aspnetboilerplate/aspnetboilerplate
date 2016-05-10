@@ -1,15 +1,13 @@
-﻿using Abp.Localization.Dictionaries.Json;
-using Shouldly;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
+using Abp.Localization.Dictionaries.Json;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Localization.Json
 {
     public class JsonEmbeddedFileLocalizationDictionaryProvider_Tests
     {
-        private readonly JsonEmbeddedFileLocalizationDictionaryProvider _dictionaryProvider;
-
         public JsonEmbeddedFileLocalizationDictionaryProvider_Tests()
         {
             _dictionaryProvider = new JsonEmbeddedFileLocalizationDictionaryProvider(
@@ -19,6 +17,8 @@ namespace Abp.Tests.Localization.Json
 
             _dictionaryProvider.Initialize("Lang");
         }
+
+        private readonly JsonEmbeddedFileLocalizationDictionaryProvider _dictionaryProvider;
 
         [Fact]
         public void Should_Get_Dictionaries()

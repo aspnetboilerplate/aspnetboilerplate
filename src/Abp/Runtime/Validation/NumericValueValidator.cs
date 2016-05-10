@@ -1,5 +1,5 @@
-﻿using Abp.Extensions;
-using System;
+﻿using System;
+using Abp.Extensions;
 
 namespace Abp.Runtime.Validation
 {
@@ -7,6 +7,16 @@ namespace Abp.Runtime.Validation
     [Validator("NUMERIC")]
     public class NumericValueValidator : ValueValidatorBase
     {
+        public NumericValueValidator()
+        {
+        }
+
+        public NumericValueValidator(int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+
         public int MinValue
         {
             get { return (this["MinValue"] ?? "0").To<int>(); }
@@ -19,16 +29,6 @@ namespace Abp.Runtime.Validation
             set { this["MaxValue"] = value; }
         }
 
-        public NumericValueValidator()
-        {
-        }
-
-        public NumericValueValidator(int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            MinValue = minValue;
-            MaxValue = maxValue;
-        }
-
         public override bool IsValid(object value)
         {
             if (value == null)
@@ -38,7 +38,7 @@ namespace Abp.Runtime.Validation
 
             if (value is int)
             {
-                return IsValidInternal((int)value);
+                return IsValidInternal((int) value);
             }
 
             if (value is string)

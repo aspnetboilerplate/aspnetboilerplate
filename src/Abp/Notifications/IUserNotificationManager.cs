@@ -5,56 +5,58 @@ using System.Threading.Tasks;
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Used to manage user notifications.
+    ///     Used to manage user notifications.
     /// </summary>
     public interface IUserNotificationManager
     {
         /// <summary>
-        /// Gets notifications for a user.
+        ///     Gets notifications for a user.
         /// </summary>
-        /// <param name="userId">The user id.</param>
+        /// <param name="user">User.</param>
         /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        Task<List<UserNotification>> GetUserNotificationsAsync(Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue);
+        Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null,
+            int skipCount = 0, int maxResultCount = int.MaxValue);
 
         /// <summary>
-        /// Gets user notification count.
+        ///     Gets user notification count.
         /// </summary>
-        /// <param name="userId">The user id.</param>
+        /// <param name="user">User.</param>
         /// <param name="state">State.</param>
-        Task<int> GetUserNotificationCountAsync(Guid userId, UserNotificationState? state = null);
+        Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null);
 
         /// <summary>
-        /// Gets a user notification by given id.
+        ///     Gets a user notification by given id.
         /// </summary>
+        /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task<UserNotification> GetUserNotificationAsync(Guid userNotificationId);
+        Task<UserNotification> GetUserNotificationAsync(Guid? tenantId, Guid userNotificationId);
 
         /// <summary>
-        /// Updates a user notification state.
+        ///     Updates a user notification state.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
         /// <param name="state">New state.</param>
-        Task UpdateUserNotificationStateAsync(Guid userNotificationId, UserNotificationState state);
+        Task UpdateUserNotificationStateAsync(Guid? tenantId, Guid userNotificationId, UserNotificationState state);
 
         /// <summary>
-        /// Updates all notification states for a user.
+        ///     Updates all notification states for a user.
         /// </summary>
-        /// <param name="userId">The user id.</param>
+        /// <param name="user">User.</param>
         /// <param name="state">New state.</param>
-        Task UpdateAllUserNotificationStatesAsync(Guid userId, UserNotificationState state);
+        Task UpdateAllUserNotificationStatesAsync(UserIdentifier user, UserNotificationState state);
 
         /// <summary>
-        /// Deletes a user notification.
+        ///     Deletes a user notification.
         /// </summary>
         /// <param name="userNotificationId">The user notification id.</param>
-        Task DeleteUserNotificationAsync(Guid userNotificationId);
+        Task DeleteUserNotificationAsync(Guid? tenantId, Guid userNotificationId);
 
         /// <summary>
-        /// Deletes all notifications of a user.
+        ///     Deletes all notifications of a user.
         /// </summary>
-        /// <param name="userId">The user id.</param>
-        Task DeleteAllUserNotificationsAsync(Guid userId);
+        /// <param name="user">User.</param>
+        Task DeleteAllUserNotificationsAsync(UserIdentifier user);
     }
 }

@@ -1,27 +1,26 @@
-﻿using Abp.Application.Features;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 
 namespace Abp.Authorization
 {
     /// <summary>
-    /// Permission manager.
+    ///     Permission manager.
     /// </summary>
     internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
-        public IAbpSession AbpSession { get; set; }
-
-        private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
+        private readonly IIocManager _iocManager;
+
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public PermissionManager(
             IIocManager iocManager,
@@ -33,19 +32,7 @@ namespace Abp.Authorization
             AbpSession = NullAbpSession.Instance;
         }
 
-        public void Initialize()
-        {
-            foreach (var providerType in _authorizationConfiguration.Providers)
-            {
-                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
-                using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
-                {
-                    provider.Object.SetPermissions(this);
-                }
-            }
-
-            Permissions.AddAllPermissions();
-        }
+        public IAbpSession AbpSession { get; set; }
 
         public Permission GetPermission(string name)
         {
@@ -88,6 +75,20 @@ namespace Abp.Authorization
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
+        }
+
+        public void Initialize()
+        {
+            foreach (var providerType in _authorizationConfiguration.Providers)
+            {
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
+                using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
+                {
+                    provider.Object.SetPermissions(this);
+                }
+            }
+
+            Permissions.AddAllPermissions();
         }
     }
 }

@@ -1,17 +1,17 @@
-using Abp.Threading.Timers;
 using System;
+using Abp.Threading.Timers;
 
 namespace Abp.Threading.BackgroundWorkers
 {
     /// <summary>
-    /// Extends <see cref="BackgroundWorkerBase"/> to add a periodic running Timer.
+    ///     Extends <see cref="BackgroundWorkerBase" /> to add a periodic running Timer.
     /// </summary>
     public abstract class PeriodicBackgroundWorkerBase : BackgroundWorkerBase
     {
         protected readonly AbpTimer Timer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeriodicBackgroundWorkerBase"/> class.
+        ///     Initializes a new instance of the <see cref="PeriodicBackgroundWorkerBase" /> class.
         /// </summary>
         /// <param name="timer">A timer.</param>
         protected PeriodicBackgroundWorkerBase(AbpTimer timer)
@@ -39,9 +39,9 @@ namespace Abp.Threading.BackgroundWorkers
         }
 
         /// <summary>
-        /// Handles the Elapsed event of the Timer.
+        ///     Handles the Elapsed event of the Timer.
         /// </summary>
-        private void Timer_Elapsed(object sender, System.EventArgs e)
+        private void Timer_Elapsed(object sender, EventArgs e)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Abp.Threading.BackgroundWorkers
         }
 
         /// <summary>
-        /// Periodic works should be done by implementing this method.
+        ///     Periodic works should be done by implementing this method.
         /// </summary>
         protected abstract void DoWork();
     }

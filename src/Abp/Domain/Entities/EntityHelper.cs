@@ -1,10 +1,10 @@
-using Abp.Reflection;
 using System;
+using Abp.Reflection;
 
 namespace Abp.Domain.Entities
 {
     /// <summary>
-    /// Some helper methods for entities.
+    ///     Some helper methods for entities.
     /// </summary>
     public static class EntityHelper
     {
@@ -19,7 +19,7 @@ namespace Abp.Domain.Entities
         }
 
         /// <summary>
-        /// Gets primary key type of given entity type
+        ///     Gets primary key type of given entity type
         /// </summary>
         public static Type GetPrimaryKeyType(Type entityType)
         {
@@ -31,7 +31,8 @@ namespace Abp.Domain.Entities
                 }
             }
 
-            throw new AbpException("Can not find primary key type of given entity type: " + entityType + ". Be sure that this entity type implements IEntity<TPrimaryKey> interface");
+            throw new AbpException("Can not find primary key type of given entity type: " + entityType +
+                                   ". Be sure that this entity type implements IEntity<TPrimaryKey> interface");
         }
     }
 }

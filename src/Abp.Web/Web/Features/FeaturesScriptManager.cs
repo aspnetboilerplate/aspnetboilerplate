@@ -1,19 +1,18 @@
-using Abp.Application.Features;
-using Abp.Dependency;
-using Abp.Runtime.Session;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Application.Features;
+using Abp.Dependency;
+using Abp.Runtime.Session;
 
 namespace Abp.Web.Features
 {
     public class FeaturesScriptManager : IFeaturesScriptManager, ITransientDependency
     {
-        public IAbpSession AbpSession { get; set; }
+        private readonly IFeatureChecker _featureChecker;
 
         private readonly IFeatureManager _featureManager;
-        private readonly IFeatureChecker _featureChecker;
 
         public FeaturesScriptManager(IFeatureManager featureManager, IFeatureChecker featureChecker)
         {
@@ -22,6 +21,8 @@ namespace Abp.Web.Features
 
             AbpSession = NullAbpSession.Instance;
         }
+
+        public IAbpSession AbpSession { get; set; }
 
         public async Task<string> GetScriptAsync()
         {
@@ -60,7 +61,8 @@ namespace Abp.Web.Features
             {
                 var feature = allFeatures[i];
                 script.AppendLine("        '" + feature.Name.Replace("'", @"\'") + "': {");
-                script.AppendLine("             value: '" + currentValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "'");
+                script.AppendLine("             value: '" +
+                                  currentValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "'");
                 script.Append("        }");
 
                 if (i < allFeatures.Count - 1)

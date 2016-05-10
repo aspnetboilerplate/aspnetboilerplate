@@ -1,21 +1,22 @@
-using Abp.Collections.Extensions;
-using Abp.Reflection;
-using Abp.Web.Models;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Abp.Collections.Extensions;
+using Abp.Reflection;
+using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {
         /// <summary>
-        /// The Action filters for the Action Descriptor.
+        ///     The Action filters for the Action Descriptor.
         /// </summary>
         private readonly IFilter[] _filters;
 
-        public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
+        public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo,
+            IFilter[] filters = null)
             : base(controllerDescriptor, methodInfo)
         {
             _filters = filters;
@@ -26,7 +27,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         }
 
         /// <summary>
-        /// Overrides the GetFilters for the action and adds the Dynamic Action filters.
+        ///     Overrides the GetFilters for the action and adds the Dynamic Action filters.
         /// </summary>
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()

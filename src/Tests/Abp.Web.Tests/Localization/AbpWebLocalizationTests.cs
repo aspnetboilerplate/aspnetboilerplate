@@ -1,22 +1,22 @@
-﻿using Abp.Collections;
+﻿using System.Globalization;
+using Abp.Collections;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Web.Localization;
 using Shouldly;
-using System.Globalization;
 using Xunit;
 
 namespace Abp.Web.Tests.Localization
 {
     public class AbpWebLocalizationTests : AbpIntegratedTestBase
     {
-        private readonly ILocalizationManager _localizationManager;
-
         public AbpWebLocalizationTests()
         {
             _localizationManager = Resolve<ILocalizationManager>();
         }
+
+        private readonly ILocalizationManager _localizationManager;
 
         protected override void AddModules(ITypeList<AbpModule> modules)
         {

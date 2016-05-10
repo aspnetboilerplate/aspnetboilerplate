@@ -1,18 +1,18 @@
-﻿using Abp.Dependency;
-using Abp.Json;
-using Abp.Localization;
-using Abp.Runtime.Caching;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Abp.Dependency;
+using Abp.Json;
+using Abp.Localization;
+using Abp.Runtime.Caching;
 
 namespace Abp.Web.Localization
 {
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
-        private readonly ILocalizationManager _localizationManager;
         private readonly ICacheManager _cacheManager;
+        private readonly ILocalizationManager _localizationManager;
 
         public LocalizationScriptManager(ILocalizationManager localizationManager, ICacheManager cacheManager)
         {
@@ -20,13 +20,13 @@ namespace Abp.Web.Localization
             _cacheManager = cacheManager;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string GetScript()
         {
             return GetScript(Thread.CurrentThread.CurrentUICulture);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string GetScript(CultureInfo cultureInfo)
         {
             //NOTE: Disabled caching since it's not true (localization script is changed per user, per tenant, per culture...)
@@ -86,13 +86,13 @@ namespace Abp.Web.Localization
             script.AppendLine();
             script.AppendLine("    abp.localization.sources = [");
 
-            for (int i = 0; i < sources.Length; i++)
+            for (var i = 0; i < sources.Length; i++)
             {
                 var source = sources[i];
                 script.AppendLine("        {");
                 script.AppendLine("            name: '" + source.Name + "',");
                 script.AppendLine("            type: '" + source.GetType().Name + "'");
-                script.AppendLine("        }" + (i < (sources.Length - 1) ? "," : ""));
+                script.AppendLine("        }" + (i < sources.Length - 1 ? "," : ""));
             }
 
             script.AppendLine("    ];");

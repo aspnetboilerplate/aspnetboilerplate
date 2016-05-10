@@ -1,15 +1,26 @@
-using Abp.Collections.Extensions;
-using Abp.Runtime.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Abp.Collections.Extensions;
+using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
     [Serializable]
     public abstract class InputTypeBase : IInputType
     {
+        protected InputTypeBase()
+            : this(new AlwaysValidValueValidator())
+        {
+        }
+
+        protected InputTypeBase(IValueValidator validator)
+        {
+            Attributes = new Dictionary<string, object>();
+            Validator = validator;
+        }
+
         public virtual string Name
         {
             get
@@ -25,8 +36,8 @@ namespace Abp.UI.Inputs
         }
 
         /// <summary>
-        /// Gets/sets arbitrary objects related to this object.
-        /// Gets null if given key does not exists.
+        ///     Gets/sets arbitrary objects related to this object.
+        ///     Gets null if given key does not exists.
         /// </summary>
         /// <param name="key">Key</param>
         public object this[string key]
@@ -36,21 +47,10 @@ namespace Abp.UI.Inputs
         }
 
         /// <summary>
-        /// Arbitrary objects related to this object.
+        ///     Arbitrary objects related to this object.
         /// </summary>
-        public IDictionary<string, object> Attributes { get; private set; }
+        public IDictionary<string, object> Attributes { get; }
 
         public IValueValidator Validator { get; set; }
-
-        protected InputTypeBase()
-            : this(new AlwaysValidValueValidator())
-        {
-        }
-
-        protected InputTypeBase(IValueValidator validator)
-        {
-            Attributes = new Dictionary<string, object>();
-            Validator = validator;
-        }
     }
 }

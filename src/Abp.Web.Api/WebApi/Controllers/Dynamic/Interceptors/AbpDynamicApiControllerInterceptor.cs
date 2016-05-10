@@ -1,25 +1,25 @@
+using System.Reflection;
 using Abp.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Castle.DynamicProxy;
-using System.Reflection;
 
 namespace Abp.WebApi.Controllers.Dynamic.Interceptors
 {
     /// <summary>
-    /// Interceptor dynamic controllers.
-    /// It handles method calls to a dynmaic generated api controller and
-    /// calls underlying proxied object.
+    ///     Interceptor dynamic controllers.
+    ///     It handles method calls to a dynmaic generated api controller and
+    ///     calls underlying proxied object.
     /// </summary>
     /// <typeparam name="T">Type of the proxied object</typeparam>
     public class AbpDynamicApiControllerInterceptor<T> : IInterceptor
     {
         /// <summary>
-        /// Real object instance to call it's methods when dynamic controller's methods are called.
+        ///     Real object instance to call it's methods when dynamic controller's methods are called.
         /// </summary>
         private readonly T _proxiedObject;
 
         /// <summary>
-        /// Creates a new AbpDynamicApiControllerInterceptor object.
+        ///     Creates a new AbpDynamicApiControllerInterceptor object.
         /// </summary>
         /// <param name="proxiedObject">Real object instance to call it's methods when dynamic controller's methods are called</param>
         public AbpDynamicApiControllerInterceptor(T proxiedObject)
@@ -28,7 +28,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
         }
 
         /// <summary>
-        /// Intercepts method calls of dynamic api controller
+        ///     Intercepts method calls of dynamic api controller
         /// </summary>
         /// <param name="invocation">Method invocation information</param>
         public void Intercept(IInvocation invocation)

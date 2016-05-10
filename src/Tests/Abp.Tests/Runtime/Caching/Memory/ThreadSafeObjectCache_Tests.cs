@@ -1,6 +1,6 @@
-﻿using Abp.Runtime.Caching.Memory;
+﻿using System.Runtime.Caching;
+using Abp.Runtime.Caching.Memory;
 using Shouldly;
-using System.Runtime.Caching;
 using Xunit;
 
 namespace Abp.Tests.Runtime.Caching.Memory

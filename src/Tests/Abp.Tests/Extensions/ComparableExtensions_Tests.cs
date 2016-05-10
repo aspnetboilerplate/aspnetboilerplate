@@ -1,6 +1,6 @@
-﻿using Abp.Extensions;
+﻿using System;
+using Abp.Extensions;
 using Shouldly;
-using System;
 using Xunit;
 
 namespace Abp.Tests.Extensions

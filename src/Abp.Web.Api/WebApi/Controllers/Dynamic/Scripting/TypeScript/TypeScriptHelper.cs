@@ -1,9 +1,9 @@
-﻿using Abp.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
@@ -12,28 +12,26 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private static readonly string[] _basicTypes =
         {
             "guid", "string", "bool",
-            "datetime", "int16", "int32", "int64", "single", "double", "boolean", "void","byte"
+            "datetime", "int16", "int32", "int64", "single", "double", "boolean", "void", "byte"
         };
 
         private static readonly string[] _typesToIgnore =
         {
-            "exception", "aggregateexception","module","object"
+            "exception", "aggregateexception", "module", "object"
         };
 
         public static bool IsBasicType(Type type)
         {
             if (_basicTypes.Contains(type.Name.ToLowerInvariant()))
                 return true;
-            else
-                return false;
+            return false;
         }
 
         public static bool IsIgnorantType(Type type)
         {
             if (_typesToIgnore.Contains(type.Name.ToLowerInvariant()))
                 return true;
-            else
-                return false;
+            return false;
         }
 
         public static string GetTypeContractName(Type type, List<Type> newTypesToAdd)
@@ -107,8 +105,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         public static string GenericSpecificName(Type type)
         {
             //todo: update for Typescript's generic syntax once invented
-            string name = type.Name;
-            int index = name.IndexOf('`');
+            var name = type.Name;
+            var index = name.IndexOf('`');
             name = index == -1 ? name : name.Substring(0, index);
             if (type.IsGenericType)
             {

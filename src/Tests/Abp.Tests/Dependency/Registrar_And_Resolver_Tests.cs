@@ -6,34 +6,21 @@ namespace Abp.Tests.Dependency
 {
     public class Registrar_And_Resolver_Tests : TestBaseWithLocalIocManager
     {
-        private readonly IIocRegistrar _registrar;
-        private readonly IIocResolver _resolver;
-
         public Registrar_And_Resolver_Tests()
         {
             _registrar = LocalIocManager.Resolve<IIocRegistrar>();
             _resolver = LocalIocManager.Resolve<IIocResolver>();
         }
 
-        [Fact]
-        public void Should_Resolve_Self_Registered_Types()
+        private readonly IIocRegistrar _registrar;
+        private readonly IIocResolver _resolver;
+
+        public class MyClass : IMyInterface
         {
-            _registrar.Register<MyClass>();
-            _resolver.Resolve<MyClass>();
         }
 
-        [Fact]
-        public void Should_Resolve_Registered_By_Interface_Types()
+        public interface IMyInterface
         {
-            _registrar.Register<IMyInterface, MyClass>();
-            _resolver.Resolve<IMyInterface>();
-
-            try
-            {
-                _resolver.Resolve<MyClass>();
-                Assert.False(true, "Should not resolve by class that is registered by interface");
-            }
-            catch { }
         }
 
         [Fact]
@@ -58,12 +45,27 @@ namespace Abp.Tests.Dependency
             obj1.ShouldBeSameAs(obj2);
         }
 
-        public class MyClass : IMyInterface
+        [Fact]
+        public void Should_Resolve_Registered_By_Interface_Types()
         {
+            _registrar.Register<IMyInterface, MyClass>();
+            _resolver.Resolve<IMyInterface>();
+
+            try
+            {
+                _resolver.Resolve<MyClass>();
+                Assert.False(true, "Should not resolve by class that is registered by interface");
+            }
+            catch
+            {
+            }
         }
 
-        public interface IMyInterface
+        [Fact]
+        public void Should_Resolve_Self_Registered_Types()
         {
+            _registrar.Register<MyClass>();
+            _resolver.Resolve<MyClass>();
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Web.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
@@ -11,23 +6,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Web.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Abp.WebApi.Client
 {
     public class AbpWebApiClient : ITransientDependency, IAbpWebApiClient
     {
-        public static TimeSpan DefaultTimeout { get; set; }
-
-        public string BaseUrl { get; set; }
-
-        public TimeSpan Timeout { get; set; }
-
-        public Collection<Cookie> Cookies { get; private set; }
-
-        public ICollection<NameValue> RequestHeaders { get; set; }
-
-        public ICollection<NameValue> ResponseHeaders { get; set; }
-
         static AbpWebApiClient()
         {
             DefaultTimeout = TimeSpan.FromSeconds(90);
@@ -40,6 +28,18 @@ namespace Abp.WebApi.Client
             RequestHeaders = new List<NameValue>();
             ResponseHeaders = new List<NameValue>();
         }
+
+        public static TimeSpan DefaultTimeout { get; set; }
+
+        public string BaseUrl { get; set; }
+
+        public TimeSpan Timeout { get; set; }
+
+        public Collection<Cookie> Cookies { get; }
+
+        public ICollection<NameValue> RequestHeaders { get; set; }
+
+        public ICollection<NameValue> ResponseHeaders { get; set; }
 
         public virtual async Task PostAsync(string url, int? timeout = null)
         {
@@ -61,7 +61,7 @@ namespace Abp.WebApi.Client
             where TResult : class
         {
             var cookieContainer = new CookieContainer();
-            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var handler = new HttpClientHandler {CookieContainer = cookieContainer})
             {
                 using (var client = new HttpClient(handler))
                 {
@@ -78,7 +78,9 @@ namespace Abp.WebApi.Client
                         client.DefaultRequestHeaders.Add(header.Name, header.Value);
                     }
 
-                    using (var requestContent = new StringContent(Object2JsonString(input), Encoding.UTF8, "application/json"))
+                    using (
+                        var requestContent = new StringContent(Object2JsonString(input), Encoding.UTF8,
+                            "application/json"))
                     {
                         foreach (var cookie in Cookies)
                         {
@@ -98,10 +100,12 @@ namespace Abp.WebApi.Client
 
                             if (!response.IsSuccessStatusCode)
                             {
-                                throw new AbpException("Could not made request to " + url + "! StatusCode: " + response.StatusCode + ", ReasonPhrase: " + response.ReasonPhrase);
+                                throw new AbpException("Could not made request to " + url + "! StatusCode: " +
+                                                       response.StatusCode + ", ReasonPhrase: " + response.ReasonPhrase);
                             }
 
-                            var ajaxResponse = JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
+                            var ajaxResponse =
+                                JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
                             if (!ajaxResponse.Success)
                             {
                                 throw new AbpRemoteCallException(ajaxResponse.Error);

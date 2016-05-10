@@ -1,5 +1,5 @@
-﻿using Abp.Auditing;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Abp.Auditing;
 
 namespace Abp.Web.Mvc.Controllers
 {

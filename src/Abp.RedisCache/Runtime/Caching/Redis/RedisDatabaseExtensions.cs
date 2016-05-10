@@ -1,10 +1,10 @@
-﻿using StackExchange.Redis;
-using System;
+﻿using System;
+using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
-    /// Extension methods for <see cref="IDatabase"/>.
+    ///     Extension methods for <see cref="IDatabase" />.
     /// </summary>
     internal static class RedisDatabaseExtensions
     {
@@ -24,7 +24,7 @@ namespace Abp.Runtime.Caching.Redis
                 local keys = redis.call('keys', ARGV[1])
                 for i=1,#keys,5000 do
                 redis.call('del', unpack(keys, i, math.min(i+4999, #keys)))
-                end", values: new RedisValue[] { prefix });
+                end", values: new RedisValue[] {prefix});
         }
 
         public static int KeyCount(this IDatabase database, string prefix)
@@ -39,14 +39,15 @@ namespace Abp.Runtime.Caching.Redis
                 throw new ArgumentException("Prefix cannot be empty", "database");
             }
 
-            var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))", values: new RedisValue[] { prefix });
+            var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))",
+                values: new RedisValue[] {prefix});
 
             if (retVal.IsNull)
             {
                 return 0;
             }
 
-            return (int)retVal;
+            return (int) retVal;
         }
     }
 }

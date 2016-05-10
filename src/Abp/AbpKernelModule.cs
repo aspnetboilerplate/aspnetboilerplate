@@ -1,4 +1,6 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using System.Reflection;
+using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
@@ -6,6 +8,7 @@ using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -21,14 +24,13 @@ using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
-using System;
-using System.Reflection;
+using Abp.Timing;
 
 namespace Abp
 {
     /// <summary>
-    /// Kernel (core) module of the ABP system.
-    /// No need to depend on this, it's automatically the first module always.
+    ///     Kernel (core) module of the ABP system.
+    ///     No need to depend on this, it's automatically the first module always.
     /// </summary>
     public sealed class AbpKernelModule : AbpModule
     {
@@ -62,6 +64,7 @@ namespace Abp
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
             Configuration.Settings.Providers.Add<NotificationSettingProvider>();
+            Configuration.Settings.Providers.Add<TimingSettingProvider>();
 
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
@@ -72,7 +75,10 @@ namespace Abp
 
         public override void Initialize()
         {
-            base.Initialize();
+            foreach (var replaceAction in ((AbpStartupConfiguration) Configuration).ServiceReplaceActions.Values)
+            {
+                replaceAction();
+            }
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
@@ -112,20 +118,14 @@ namespace Abp
 
         private void ConfigureCaches()
         {
-            Configuration.Caching.Configure(AbpCacheNames.ApplicationSettings, cache =>
-            {
-                cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
-            });
+            Configuration.Caching.Configure(AbpCacheNames.ApplicationSettings,
+                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8); });
 
-            Configuration.Caching.Configure(AbpCacheNames.TenantSettings, cache =>
-            {
-                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
-            });
+            Configuration.Caching.Configure(AbpCacheNames.TenantSettings,
+                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60); });
 
-            Configuration.Caching.Configure(AbpCacheNames.UserSettings, cache =>
-            {
-                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
-            });
+            Configuration.Caching.Configure(AbpCacheNames.UserSettings,
+                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20); });
         }
 
         private void RegisterMissingComponents()

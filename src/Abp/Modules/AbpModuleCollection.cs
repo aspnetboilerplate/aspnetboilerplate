@@ -1,16 +1,16 @@
-using Abp.Collections.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 
 namespace Abp.Modules
 {
     /// <summary>
-    /// Used to store AbpModuleInfo objects as a dictionary.
+    ///     Used to store AbpModuleInfo objects as a dictionary.
     /// </summary>
     internal class AbpModuleCollection : List<AbpModuleInfo>
     {
         /// <summary>
-        /// Gets a reference to a module instance.
+        ///     Gets a reference to a module instance.
         /// </summary>
         /// <typeparam name="TModule">Module type</typeparam>
         /// <returns>Reference to the module instance</returns>
@@ -22,12 +22,12 @@ namespace Abp.Modules
                 throw new AbpException("Can not find module for " + typeof(TModule).FullName);
             }
 
-            return (TModule)module.Instance;
+            return (TModule) module.Instance;
         }
 
         /// <summary>
-        /// Sorts modules according to dependencies.
-        /// If module A depends on module B, A comes after B in the returned List.
+        ///     Sorts modules according to dependencies.
+        ///     If module A depends on module B, A comes after B in the returned List.
         /// </summary>
         /// <returns>Sorted list</returns>
         public List<AbpModuleInfo> GetSortedModuleListByDependency()

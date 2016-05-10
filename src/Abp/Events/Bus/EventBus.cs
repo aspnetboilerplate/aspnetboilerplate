@@ -1,44 +1,28 @@
-using Abp.Events.Bus.Factories;
-using Abp.Events.Bus.Factories.Internals;
-using Abp.Events.Bus.Handlers;
-using Abp.Events.Bus.Handlers.Internals;
-using Castle.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Events.Bus.Factories;
+using Abp.Events.Bus.Factories.Internals;
+using Abp.Events.Bus.Handlers;
+using Abp.Events.Bus.Handlers.Internals;
+using Castle.Core.Logging;
 
 namespace Abp.Events.Bus
 {
     /// <summary>
-    /// Implements EventBus as Singleton pattern.
+    ///     Implements EventBus as Singleton pattern.
     /// </summary>
     public class EventBus : IEventBus
     {
-        #region Public properties
-
-        /// <summary>
-        /// Gets the default <see cref="EventBus"/> instance.
-        /// </summary>
-        public static EventBus Default { get { return DefaultInstance; } }
-
-        private static readonly EventBus DefaultInstance = new EventBus();
-
-        /// <summary>
-        /// Reference to the Logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        #endregion Public properties
-
         #region Private fields
 
         /// <summary>
-        /// All registered handler factories.
-        /// Key: Type of the event
-        /// Value: List of handler factories
+        ///     All registered handler factories.
+        ///     Key: Type of the event
+        ///     Value: List of handler factories
         /// </summary>
         private readonly Dictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
 
@@ -47,8 +31,8 @@ namespace Abp.Events.Bus
         #region Constructor
 
         /// <summary>
-        /// Creates a new <see cref="EventBus"/> instance.
-        /// Instead of creating a new instace, you can use <see cref="Default"/> to use Global <see cref="EventBus"/>.
+        ///     Creates a new <see cref="EventBus" /> instance.
+        ///     Instead of creating a new instace, you can use <see cref="Default" /> to use Global <see cref="EventBus" />.
         /// </summary>
         public EventBus()
         {
@@ -58,23 +42,52 @@ namespace Abp.Events.Bus
 
         #endregion Constructor
 
+        #region Private methods
+
+        private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
+        {
+            List<IEventHandlerFactory> handlers;
+            if (!_handlerFactories.TryGetValue(eventType, out handlers))
+            {
+                _handlerFactories[eventType] = handlers = new List<IEventHandlerFactory>();
+            }
+
+            return handlers;
+        }
+
+        #endregion Private methods
+
+        #region Public properties
+
+        /// <summary>
+        ///     Gets the default <see cref="EventBus" /> instance.
+        /// </summary>
+        public static EventBus Default { get; } = new EventBus();
+
+        /// <summary>
+        ///     Reference to the Logger.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        #endregion Public properties
+
         #region Public methods
 
         #region Register
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             return Register(typeof(TEventData), new ActionEventHandler<TEventData>(action));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handler);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
             where THandler : IEventHandler<TEventData>, new()
@@ -82,19 +95,19 @@ namespace Abp.Events.Bus
             return Register(typeof(TEventData), new TransientEventHandlerFactory<THandler>());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register(Type eventType, IEventHandler handler)
         {
             return Register(eventType, new SingleInstanceHandlerFactory(handler));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handlerFactory);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
             lock (_handlerFactories)
@@ -108,7 +121,7 @@ namespace Abp.Events.Bus
 
         #region Unregister
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             lock (_handlerFactories)
@@ -122,7 +135,8 @@ namespace Abp.Events.Bus
                                 var singleInstanceFactoru = factory as SingleInstanceHandlerFactory;
                                 if (singleInstanceFactoru.HandlerInstance is ActionEventHandler<TEventData>)
                                 {
-                                    var actionHandler = singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
+                                    var actionHandler =
+                                        singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
                                     if (actionHandler.Action == action)
                                     {
                                         return true;
@@ -135,13 +149,13 @@ namespace Abp.Events.Bus
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), handler);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister(Type eventType, IEventHandler handler)
         {
             lock (_handlerFactories)
@@ -149,18 +163,19 @@ namespace Abp.Events.Bus
                 GetOrCreateHandlerFactories(eventType)
                     .RemoveAll(
                         factory =>
-                        factory is SingleInstanceHandlerFactory && (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
+                            factory is SingleInstanceHandlerFactory &&
+                            (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
                     );
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), factory);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
             lock (_handlerFactories)
@@ -169,13 +184,13 @@ namespace Abp.Events.Bus
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void UnregisterAll<TEventData>() where TEventData : IEventData
         {
             UnregisterAll(typeof(TEventData));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void UnregisterAll(Type eventType)
         {
             lock (_handlerFactories)
@@ -188,25 +203,25 @@ namespace Abp.Events.Bus
 
         #region Trigger
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            Trigger((object)null, eventData);
+            Trigger((object) null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             Trigger(typeof(TEventData), eventSource, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger(Type eventType, IEventData eventData)
         {
             Trigger(eventType, null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
             //TODO: This method can be optimized by adding all possibilities to a dictionary.
@@ -218,7 +233,8 @@ namespace Abp.Events.Bus
                 var eventHandler = factoryToTrigger.GetHandler();
                 if (eventHandler == null)
                 {
-                    throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
+                    throw new Exception("Registered event handler for event type " + eventType.Name +
+                                        " does not implement IEventHandler<" + eventType.Name + "> interface!");
                 }
 
                 var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
@@ -226,8 +242,9 @@ namespace Abp.Events.Bus
                 try
                 {
                     handlerType
-                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] { eventType }, null)
-                        .Invoke(eventHandler, new object[] { eventData });
+                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] {eventType},
+                            null)
+                        .Invoke(eventHandler, new object[] {eventData});
                 }
                 finally
                 {
@@ -245,8 +262,8 @@ namespace Abp.Events.Bus
                 if (baseArg != null)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
-                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument) eventData).GetConstructorArgs();
+                    var baseEventData = (IEventData) Activator.CreateInstance(baseEventType, constructorArgs);
                     baseEventData.EventTime = eventData.EventTime;
                     Trigger(baseEventType, eventData.EventSource, baseEventData);
                 }
@@ -259,7 +276,9 @@ namespace Abp.Events.Bus
 
             lock (_handlerFactories)
             {
-                foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
+                foreach (
+                    var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key))
+                    )
                 {
                     handlerFactoryList.AddRange(handlerFactory.Value);
                 }
@@ -285,13 +304,13 @@ namespace Abp.Events.Bus
             return false;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            return TriggerAsync((object)null, eventData);
+            return TriggerAsync((object) null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             ExecutionContext.SuppressFlow();
@@ -314,13 +333,13 @@ namespace Abp.Events.Bus
             return task;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync(Type eventType, IEventData eventData)
         {
             return TriggerAsync(eventType, null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
             ExecutionContext.SuppressFlow();
@@ -346,20 +365,5 @@ namespace Abp.Events.Bus
         #endregion Trigger
 
         #endregion Public methods
-
-        #region Private methods
-
-        private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
-        {
-            List<IEventHandlerFactory> handlers;
-            if (!_handlerFactories.TryGetValue(eventType, out handlers))
-            {
-                _handlerFactories[eventType] = handlers = new List<IEventHandlerFactory>();
-            }
-
-            return handlers;
-        }
-
-        #endregion Private methods
     }
 }

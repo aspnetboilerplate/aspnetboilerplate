@@ -1,26 +1,20 @@
-﻿using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Runtime.Session;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Authorization;
+using Abp.Dependency;
+using Abp.Runtime.Session;
 
 namespace Abp.Web.Authorization
 {
     /// <summary>
-    ///
     /// </summary>
     public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
     {
-        /// <inheritdoc/>
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IPermissionManager _permissionManager;
 
-        public IPermissionChecker PermissionChecker { get; set; }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public AuthorizationScriptManager(IPermissionManager permissionManager)
         {
             AbpSession = NullAbpSession.Instance;
@@ -29,7 +23,12 @@ namespace Abp.Web.Authorization
             _permissionManager = permissionManager;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
+        public IAbpSession AbpSession { get; set; }
+
+        public IPermissionChecker PermissionChecker { get; set; }
+
+        /// <inheritdoc />
         public async Task<string> GetScriptAsync()
         {
             var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
@@ -39,7 +38,7 @@ namespace Abp.Web.Authorization
             {
                 foreach (var permissionName in allPermissionNames)
                 {
-                    if (await PermissionChecker.IsGrantedAsync(AbpSession.UserId.Value, permissionName))
+                    if (await PermissionChecker.IsGrantedAsync(permissionName))
                     {
                         grantedPermissionNames.Add(permissionName);
                     }

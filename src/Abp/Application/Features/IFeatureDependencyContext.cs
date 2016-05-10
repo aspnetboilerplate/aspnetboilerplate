@@ -1,32 +1,32 @@
-using Abp.Dependency;
 using System;
+using Abp.Dependency;
 
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Used in <see cref="IFeatureDependency.IsSatisfiedAsync"/> method.
+    ///     Used in <see cref="IFeatureDependency.IsSatisfiedAsync" /> method.
     /// </summary>
     public interface IFeatureDependencyContext
     {
         /// <summary>
-        /// Tenant id which required the feature.
-        /// Null for current tenant.
+        ///     Tenant id which required the feature.
+        ///     Null for current tenant.
         /// </summary>
         Guid? TenantId { get; }
 
         /// <summary>
-        /// Gets the <see cref="IIocResolver"/>.
+        ///     Gets the <see cref="IIocResolver" />.
         /// </summary>
         /// <value>
-        /// The ioc resolver.
+        ///     The ioc resolver.
         /// </value>
         IIocResolver IocResolver { get; }
 
         /// <summary>
-        /// Gets the <see cref="IFeatureChecker"/>.
+        ///     Gets the <see cref="IFeatureChecker" />.
         /// </summary>
         /// <value>
-        /// The feature checker.
+        ///     The feature checker.
         /// </value>
         IFeatureChecker FeatureChecker { get; }
     }

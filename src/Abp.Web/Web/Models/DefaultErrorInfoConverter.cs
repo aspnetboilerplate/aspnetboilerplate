@@ -1,13 +1,14 @@
-﻿using Abp.Collections.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Web.Configuration;
 using Abp.Web.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Abp.Web.Models
 {
@@ -16,20 +17,17 @@ namespace Abp.Web.Models
     {
         private readonly IAbpWebModuleConfiguration _configuration;
 
-        public IExceptionToErrorInfoConverter Next { set; private get; }
-
-        private bool SendAllExceptionsToClients
-        {
-            get
-            {
-                return _configuration.SendAllExceptionsToClients;
-            }
-        }
-
         public DefaultErrorInfoConverter(IAbpWebModuleConfiguration configuration)
         {
             _configuration = configuration;
         }
+
+        private bool SendAllExceptionsToClients
+        {
+            get { return _configuration.SendAllExceptionsToClients; }
+        }
+
+        public IExceptionToErrorInfoConverter Next { set; private get; }
 
         public ErrorInfo Convert(Exception exception)
         {
@@ -41,7 +39,8 @@ namespace Abp.Web.Models
             if (exception is AggregateException && exception.InnerException != null)
             {
                 var aggException = exception as AggregateException;
-                if (aggException.InnerException is UserFriendlyException || aggException.InnerException is AbpValidationException)
+                if (aggException.InnerException is UserFriendlyException ||
+                    aggException.InnerException is AbpValidationException)
                 {
                     exception = aggException.InnerException;
                 }
@@ -50,7 +49,8 @@ namespace Abp.Web.Models
             if (exception is UserFriendlyException)
             {
                 var userFriendlyException = exception as UserFriendlyException;
-                return new ErrorInfo(userFriendlyException.Code, userFriendlyException.Message, userFriendlyException.Details);
+                return new ErrorInfo(userFriendlyException.Code, userFriendlyException.Message,
+                    userFriendlyException.Details);
             }
 
             if (exception is AbpValidationException)
@@ -62,9 +62,9 @@ namespace Abp.Web.Models
                 };
             }
 
-            if (exception is Abp.Authorization.AbpAuthorizationException)
+            if (exception is AbpAuthorizationException)
             {
-                var authorizationException = exception as Abp.Authorization.AbpAuthorizationException;
+                var authorizationException = exception as AbpAuthorizationException;
                 return new ErrorInfo(authorizationException.Message);
             }
 

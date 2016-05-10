@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="fr">
   <texts>
     <text name="InternalServerError" value="Une erreur interne s'est produite !" />
@@ -6,6 +7,7 @@
     <text name="AreYouSure" value="Confirmez vous cette action ?" />
     <text name="Cancel" value="Annuler" />
     <text name="Yes" value="Oui" />
-    <text name="ValidationNarrativeTitle" value="Les erreurs suivantes ont été détectées après vérification de votre saisie." />
+    <text name="ValidationNarrativeTitle"
+          value="Les erreurs suivantes ont été détectées après vérification de votre saisie." />
   </texts>
 </localizationDictionary>

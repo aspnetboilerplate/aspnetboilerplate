@@ -19,7 +19,9 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>()))
+                Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
+                    .UsingFactoryMethod(
+                        () => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>()))
                 );
 
             var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
@@ -31,7 +33,8 @@ namespace Abp.Tests.Authorization
             userManagement.ShouldNotBe(null);
             userManagement.Children.Count.ShouldBe(1);
 
-            var changePermissions = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
+            var changePermissions =
+                permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
             changePermissions.ShouldNotBe(null);
             changePermissions.Parent.ShouldBeSameAs(userManagement);
 
@@ -44,13 +47,16 @@ namespace Abp.Tests.Authorization
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
-            var administration = context.CreatePermission("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
+            var administration = context.CreatePermission("Abp.Zero.Administration",
+                new FixedLocalizableString("Administration"));
 
             //Create 'User management' permission under 'Administration' group
-            var userManagement = administration.CreateChildPermission("Abp.Zero.Administration.UserManagement", new FixedLocalizableString("User management"));
+            var userManagement = administration.CreateChildPermission("Abp.Zero.Administration.UserManagement",
+                new FixedLocalizableString("User management"));
 
             //Create 'Change permissions' (to be able to change permissions of a user) permission as child of 'User management' permission.
-            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions", new FixedLocalizableString("Change permissions"));
+            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions",
+                new FixedLocalizableString("Change permissions"));
         }
     }
 
@@ -63,10 +69,12 @@ namespace Abp.Tests.Authorization
             administration.ShouldNotBe(null);
 
             //Create 'Role management' permission under 'Administration' group
-            var roleManegement = administration.CreateChildPermission("Abp.Zero.Administration.RoleManagement", new FixedLocalizableString("Role management"));
+            var roleManegement = administration.CreateChildPermission("Abp.Zero.Administration.RoleManagement",
+                new FixedLocalizableString("Role management"));
 
             //Create 'Create role' (to be able to create a new role) permission  as child of 'Role management' permission.
-            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new FixedLocalizableString("Create role"));
+            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole",
+                new FixedLocalizableString("Create role"));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
 
-            using (var wrapper = LocalIocManager.ResolveAsDisposable<SimpleDisposableObject>(new { myData = 42 }))
+            using (var wrapper = LocalIocManager.ResolveAsDisposable<SimpleDisposableObject>(new {myData = 42}))
             {
                 wrapper.Object.MyData.ShouldBe(42);
             }

@@ -5,12 +5,12 @@ using System.Xml;
 namespace Abp.Xml.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="XmlNode"/> class.
+    ///     Extension methods for <see cref="XmlNode" /> class.
     /// </summary>
     public static class XmlNodeExtensions
     {
         /// <summary>
-        /// Gets an attribute's value from an Xml node.
+        ///     Gets an attribute's value from an Xml node.
         /// </summary>
         /// <param name="node">The Xml node</param>
         /// <param name="attributeName">Attribute name</param>

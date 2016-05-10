@@ -4,10 +4,6 @@ namespace Abp.Runtime.Caching.Configuration
 {
     internal class CacheConfigurator : ICacheConfigurator
     {
-        public string CacheName { get; private set; }
-
-        public Action<ICache> InitAction { get; private set; }
-
         public CacheConfigurator(Action<ICache> initAction)
         {
             InitAction = initAction;
@@ -18,5 +14,9 @@ namespace Abp.Runtime.Caching.Configuration
             CacheName = cacheName;
             InitAction = initAction;
         }
+
+        public string CacheName { get; }
+
+        public Action<ICache> InitAction { get; }
     }
 }

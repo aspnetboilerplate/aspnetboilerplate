@@ -5,8 +5,6 @@ namespace Abp.UI.Inputs
 {
     public class StaticLocalizableComboboxItemSource : ILocalizableComboboxItemSource
     {
-        public ICollection<ILocalizableComboboxItem> Items { get; private set; }
-
         public StaticLocalizableComboboxItemSource(params ILocalizableComboboxItem[] items)
         {
             if (items == null)
@@ -21,5 +19,7 @@ namespace Abp.UI.Inputs
 
             Items = items;
         }
+
+        public ICollection<ILocalizableComboboxItem> Items { get; }
     }
 }

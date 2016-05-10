@@ -1,27 +1,27 @@
-﻿using Abp.Localization;
+﻿using System.Reflection;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.Core.Logging;
-using System.Reflection;
 
 namespace Abp.AutoMapper
 {
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule
     {
-        public ILogger Logger { get; set; }
-
-        private readonly ITypeFinder _typeFinder;
-
         private static bool _createdMappingsBefore;
         private static readonly object _syncObj = new object();
+
+        private readonly ITypeFinder _typeFinder;
 
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public override void PostInitialize()
         {

@@ -1,6 +1,6 @@
+using System;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
-using System;
 
 namespace Abp.Tests.Configuration
 {
@@ -12,10 +12,7 @@ namespace Abp.Tests.Configuration
 
         public MultiTenancySides MultiTenancySide
         {
-            get
-            {
-                return !TenantId.HasValue ? MultiTenancySides.Host : MultiTenancySides.Tenant;
-            }
+            get { return !TenantId.HasValue ? MultiTenancySides.Host : MultiTenancySides.Tenant; }
         }
 
         public Guid? ImpersonatorUserId { get; set; }

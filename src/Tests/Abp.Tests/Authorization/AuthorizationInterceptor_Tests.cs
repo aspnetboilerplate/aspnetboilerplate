@@ -1,29 +1,30 @@
-﻿using Abp.Authorization;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.Authorization
 {
     public class AuthorizationInterceptor_Tests : TestBaseWithLocalIocManager
     {
-        private readonly MyTestClassToBeAuthorized_Sync _syncObj;
-        private readonly MyTestClassToBeAuthorized_Async _asyncObj;
-
         public AuthorizationInterceptor_Tests()
         {
             //SUT: AuthorizationInterceptor and AuthorizeAttributeHelper
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizeAttributeHelper, AuthorizeAttributeHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
-                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
+                Component.For<MyTestClassToBeAuthorized_Sync>()
+                    .Interceptors<AuthorizationInterceptor>()
+                    .LifestyleTransient(),
+                Component.For<MyTestClassToBeAuthorized_Async>()
+                    .Interceptors<AuthorizationInterceptor>()
+                    .LifestyleTransient()
                 );
 
             //Mock session
@@ -36,64 +37,17 @@ namespace Abp.Tests.Authorization
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync("Permission1").Returns(Task.FromResult(true));
             permissionChecker.IsGrantedAsync("Permission2").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync("Permission3").Returns(Task.FromResult(false)); //Permission3 is not granted
-            LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker));
+            permissionChecker.IsGrantedAsync("Permission3").Returns(Task.FromResult(false));
+                //Permission3 is not granted
+            LocalIocManager.IocContainer.Register(
+                Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();
             _asyncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Async>();
         }
 
-        [Fact]
-        public void Test_Authorization_Sync()
-        {
-            //Authorized methods
-
-            _syncObj.MethodWithoutPermission();
-            _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
-
-            _syncObj.MethodWithPermission1().ShouldBe(42);
-            _syncObj.Called_MethodWithPermission1.ShouldBe(true);
-
-            _syncObj.MethodWithPermission1AndPermission2();
-            _syncObj.Called_MethodWithPermission1AndPermission2.ShouldBe(true);
-
-            _syncObj.MethodWithPermission1AndPermission3();
-            _syncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
-
-            //Non authorized methods
-
-            Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
-            _syncObj.Called_MethodWithPermission3.ShouldBe(false);
-
-            Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission1AndPermission3WithRequireAll());
-            _syncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
-        }
-
-        [Fact]
-        public async Task Test_Authorization_Async()
-        {
-            //Authorized methods
-
-            await _asyncObj.MethodWithoutPermission();
-            _asyncObj.Called_MethodWithoutPermission.ShouldBe(true);
-
-            (await _asyncObj.MethodWithPermission1Async()).ShouldBe(42);
-            _asyncObj.Called_MethodWithPermission1.ShouldBe(true);
-
-            await _asyncObj.MethodWithPermission1AndPermission2Async();
-            _asyncObj.Called_MethodWithPermission1AndPermission2.ShouldBe(true);
-
-            await _asyncObj.MethodWithPermission1AndPermission3Async();
-            _asyncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
-
-            //Non authorized methods
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
-            _asyncObj.Called_MethodWithPermission3.ShouldBe(false);
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
-            _asyncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
-        }
+        private readonly MyTestClassToBeAuthorized_Sync _syncObj;
+        private readonly MyTestClassToBeAuthorized_Async _asyncObj;
 
         public class MyTestClassToBeAuthorized_Sync
         {
@@ -209,6 +163,61 @@ namespace Abp.Tests.Authorization
                 Called_MethodWithPermission1AndPermission3WithRequireAll = true;
                 await Task.Delay(1);
             }
+        }
+
+        [Fact]
+        public async Task Test_Authorization_Async()
+        {
+            //Authorized methods
+
+            await _asyncObj.MethodWithoutPermission();
+            _asyncObj.Called_MethodWithoutPermission.ShouldBe(true);
+
+            (await _asyncObj.MethodWithPermission1Async()).ShouldBe(42);
+            _asyncObj.Called_MethodWithPermission1.ShouldBe(true);
+
+            await _asyncObj.MethodWithPermission1AndPermission2Async();
+            _asyncObj.Called_MethodWithPermission1AndPermission2.ShouldBe(true);
+
+            await _asyncObj.MethodWithPermission1AndPermission3Async();
+            _asyncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
+
+            //Non authorized methods
+
+            await
+                Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
+            _asyncObj.Called_MethodWithPermission3.ShouldBe(false);
+
+            await
+                Assert.ThrowsAsync<AbpAuthorizationException>(
+                    async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
+            _asyncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
+        }
+
+        [Fact]
+        public void Test_Authorization_Sync()
+        {
+            //Authorized methods
+
+            _syncObj.MethodWithoutPermission();
+            _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
+
+            _syncObj.MethodWithPermission1().ShouldBe(42);
+            _syncObj.Called_MethodWithPermission1.ShouldBe(true);
+
+            _syncObj.MethodWithPermission1AndPermission2();
+            _syncObj.Called_MethodWithPermission1AndPermission2.ShouldBe(true);
+
+            _syncObj.MethodWithPermission1AndPermission3();
+            _syncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
+
+            //Non authorized methods
+
+            Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
+            _syncObj.Called_MethodWithPermission3.ShouldBe(false);
+
+            Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission1AndPermission3WithRequireAll());
+            _syncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Abp;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using Abp;
 
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Redis cache implementation")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Redis cache implementation")]

@@ -1,12 +1,34 @@
-﻿using Abp.Collections.Extensions;
+﻿using System.Collections.Generic;
+using Abp.Collections.Extensions;
 using Shouldly;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Collections.Extensions
 {
     public class ListExtensions_SortByDependencies_Tests
     {
+        private static void ShouldSortedCorrectly(List<DependedObject> dependedObjects)
+        {
+            var sorted = dependedObjects.SortByDependencies(o => o.Dependencies);
+            sorted[0].Name.ShouldBe("A");
+            sorted[1].Name.ShouldBe("B");
+            sorted[2].Name.ShouldBe("D");
+            sorted[3].Name.ShouldBe("C");
+        }
+
+        private class DependedObject
+        {
+            public DependedObject(string name)
+            {
+                Name = name;
+                Dependencies = new List<DependedObject>();
+            }
+
+            public string Name { get; }
+
+            public List<DependedObject> Dependencies { get; }
+        }
+
         [Fact]
         public void Should_SortByDependencies()
         {
@@ -20,32 +42,10 @@ namespace Abp.Tests.Collections.Extensions
             c.Dependencies.Add(d);
             d.Dependencies.Add(b);
 
-            ShouldSortedCorrectly(new List<DependedObject> { a, b, c, d });
-            ShouldSortedCorrectly(new List<DependedObject> { d, c, b, a });
-            ShouldSortedCorrectly(new List<DependedObject> { a, c, d, b });
-            ShouldSortedCorrectly(new List<DependedObject> { c, a, d, b });
-        }
-
-        private static void ShouldSortedCorrectly(List<DependedObject> dependedObjects)
-        {
-            var sorted = dependedObjects.SortByDependencies(o => o.Dependencies);
-            sorted[0].Name.ShouldBe("A");
-            sorted[1].Name.ShouldBe("B");
-            sorted[2].Name.ShouldBe("D");
-            sorted[3].Name.ShouldBe("C");
-        }
-
-        private class DependedObject
-        {
-            public string Name { get; private set; }
-
-            public List<DependedObject> Dependencies { get; private set; }
-
-            public DependedObject(string name)
-            {
-                Name = name;
-                Dependencies = new List<DependedObject>();
-            }
+            ShouldSortedCorrectly(new List<DependedObject> {a, b, c, d});
+            ShouldSortedCorrectly(new List<DependedObject> {d, c, b, a});
+            ShouldSortedCorrectly(new List<DependedObject> {a, c, d, b});
+            ShouldSortedCorrectly(new List<DependedObject> {c, a, d, b});
         }
     }
 }

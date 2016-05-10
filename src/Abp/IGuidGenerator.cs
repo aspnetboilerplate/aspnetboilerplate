@@ -3,12 +3,12 @@
 namespace Abp
 {
     /// <summary>
-    /// Used to generate Ids.
+    ///     Used to generate Ids.
     /// </summary>
     public interface IGuidGenerator
     {
         /// <summary>
-        /// Creates a GUID.
+        ///     Creates a GUID.
         /// </summary>
         Guid Create();
     }

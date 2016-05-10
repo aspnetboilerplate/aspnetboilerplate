@@ -1,19 +1,19 @@
-using Abp.Extensions;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Extensions;
 
 namespace Abp.Net.Mail
 {
     /// <summary>
-    /// This class can be used as base to implement <see cref="IEmailSender"/>.
+    ///     This class can be used as base to implement <see cref="IEmailSender" />.
     /// </summary>
     public abstract class EmailSenderBase : IEmailSender
     {
         private readonly IEmailSenderConfiguration _configuration;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="configuration">Configuration</param>
         protected EmailSenderBase(IEmailSenderConfiguration configuration)
@@ -33,12 +33,12 @@ namespace Abp.Net.Mail
 
         public async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
-            await SendAsync(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
+            await SendAsync(new MailMessage(from, to, subject, body) {IsBodyHtml = isBodyHtml});
         }
 
         public void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
-            Send(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
+            Send(new MailMessage(from, to, subject, body) {IsBodyHtml = isBodyHtml});
         }
 
         public async Task SendAsync(MailMessage mail, bool normalize = true)
@@ -62,21 +62,21 @@ namespace Abp.Net.Mail
         }
 
         /// <summary>
-        /// Should implement this method to send email in derived classes.
+        ///     Should implement this method to send email in derived classes.
         /// </summary>
         /// <param name="mail">Mail to be sent</param>
         protected abstract Task SendEmailAsync(MailMessage mail);
 
         /// <summary>
-        /// Should implement this method to send email in derived classes.
+        ///     Should implement this method to send email in derived classes.
         /// </summary>
         /// <param name="mail">Mail to be sent</param>
         protected abstract void SendEmail(MailMessage mail);
 
         /// <summary>
-        /// Normalizes given email.
-        /// Fills <see cref="MailMessage.From"/> if it's not filled before.
-        /// Sets encodings to UTF8 if they are not set before.
+        ///     Normalizes given email.
+        ///     Fills <see cref="MailMessage.From" /> if it's not filled before.
+        ///     Sets encodings to UTF8 if they are not set before.
         /// </summary>
         /// <param name="mail">Mail to be normalized</param>
         protected virtual void NormalizeMail(MailMessage mail)

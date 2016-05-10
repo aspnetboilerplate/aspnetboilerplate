@@ -3,12 +3,12 @@
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Used to configure notification system.
+    ///     Used to configure notification system.
     /// </summary>
     public interface INotificationConfiguration
     {
         /// <summary>
-        /// Notification providers.
+        ///     Notification providers.
         /// </summary>
         ITypeList<NotificationProvider> Providers { get; }
     }

@@ -1,29 +1,29 @@
-﻿using Abp.Dependency;
-using Castle.Core.Logging;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Web;
+using Abp.Dependency;
+using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {
     /// <summary>
-    /// Implements <see cref="IAuditInfoProvider"/> to fill web specific audit informations.
+    ///     Implements <see cref="IAuditInfoProvider" /> to fill web specific audit informations.
     /// </summary>
     public class WebAuditInfoProvider : IAuditInfoProvider, ITransientDependency
     {
-        public ILogger Logger { get; set; }
-
         private readonly HttpContext _httpContext;
 
         /// <summary>
-        /// Creates a new <see cref="WebAuditInfoProvider"/>.
+        ///     Creates a new <see cref="WebAuditInfoProvider" />.
         /// </summary>
         public WebAuditInfoProvider()
         {
             _httpContext = HttpContext.Current;
             Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public void Fill(AuditInfo auditInfo)
         {
@@ -46,38 +46,45 @@ namespace Abp.Auditing
             }
         }
 
-        private static string GetBrowserInfo(HttpContext httpContext)
+        protected virtual string GetBrowserInfo(HttpContext httpContext)
         {
             return httpContext.Request.Browser.Browser + " / " +
                    httpContext.Request.Browser.Version + " / " +
                    httpContext.Request.Browser.Platform;
         }
 
-        private static string GetClientIpAddress(HttpContext httpContext)
+        protected virtual string GetClientIpAddress(HttpContext httpContext)
         {
             var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
                            httpContext.Request.ServerVariables["REMOTE_ADDR"];
 
-            foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
+            try
             {
-                if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
                 {
-                    return hostAddress.ToString();
+                    if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return hostAddress.ToString();
+                    }
+                }
+
+                foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
+                {
+                    if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return hostAddress.ToString();
+                    }
                 }
             }
-
-            foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
+            catch (Exception ex)
             {
-                if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return hostAddress.ToString();
-                }
+                Logger.Debug(ex.ToString());
             }
 
-            return null;
+            return clientIp;
         }
 
-        private static string GetComputerName(HttpContext httpContext)
+        protected virtual string GetComputerName(HttpContext httpContext)
         {
             if (!httpContext.Request.IsLocal)
             {

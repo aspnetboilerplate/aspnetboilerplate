@@ -1,7 +1,7 @@
-﻿using Abp.Hangfire.Configuration;
+﻿using System.Reflection;
+using Abp.Hangfire.Configuration;
 using Abp.Modules;
 using Hangfire;
-using System.Reflection;
 
 namespace Abp.Hangfire
 {

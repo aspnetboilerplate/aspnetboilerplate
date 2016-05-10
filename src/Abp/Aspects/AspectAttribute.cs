@@ -7,12 +7,12 @@ namespace Abp.Aspects
 
     internal abstract class AspectAttribute : Attribute
     {
-        public Type InterceptorType { get; set; }
-
         protected AspectAttribute(Type interceptorType)
         {
             InterceptorType = interceptorType;
         }
+
+        public Type InterceptorType { get; set; }
     }
 
     internal interface IAbpInterceptionContext
@@ -63,12 +63,12 @@ namespace Abp.Aspects
     {
         internal class MyAspectAttribute : AspectAttribute
         {
-            public int TestValue { get; set; }
-
             public MyAspectAttribute()
                 : base(typeof(MyInterceptor))
             {
             }
+
+            public int TestValue { get; set; }
         }
 
         internal class MyInterceptor : AbpInterceptorBase<MyAspectAttribute>

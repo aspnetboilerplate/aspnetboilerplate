@@ -1,8 +1,8 @@
-﻿using Abp.Modules;
+﻿using System.Reflection;
+using Abp.Modules;
 using Abp.Web.Api.Tests.DynamicApiController.Clients;
 using Abp.WebApi;
 using Abp.WebApi.Controllers.Dynamic.Clients;
-using System.Reflection;
 
 namespace Abp.Web.Api.Tests
 {

@@ -1,21 +1,23 @@
-﻿using Abp.Dependency;
-using Abp.IO.Extensions;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Reflection;
+using Abp.Dependency;
+using Abp.IO.Extensions;
 
 namespace Abp.Resources.Embedded
 {
     /// <summary>
-    ///
     /// </summary>
     public class EmbeddedResourceManager : IEmbeddedResourceManager, ISingletonDependency
     {
-        private readonly ConcurrentDictionary<string, EmbeddedResourcePathInfo> _resourcePaths; //Key: Root path of the resource
-        private readonly ConcurrentDictionary<string, EmbeddedResourceInfo> _resourceCache; //Key: Root path of the resource
+        private readonly ConcurrentDictionary<string, EmbeddedResourceInfo> _resourceCache;
+            //Key: Root path of the resource
+
+        private readonly ConcurrentDictionary<string, EmbeddedResourcePathInfo> _resourcePaths;
+            //Key: Root path of the resource
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public EmbeddedResourceManager()
         {
@@ -23,7 +25,7 @@ namespace Abp.Resources.Embedded
             _resourceCache = new ConcurrentDictionary<string, EmbeddedResourceInfo>();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void ExposeResources(string rootPath, Assembly assembly, string resourceNamespace)
         {
             if (_resourcePaths.ContainsKey(rootPath))
@@ -34,7 +36,7 @@ namespace Abp.Resources.Embedded
             _resourcePaths[rootPath] = new EmbeddedResourcePathInfo(rootPath, assembly, resourceNamespace);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public EmbeddedResourceInfo GetResource(string fullPath)
         {
             //Get from cache if exists!
@@ -58,7 +60,8 @@ namespace Abp.Resources.Embedded
 
         private EmbeddedResourcePathInfo GetPathInfoForFullPath(string fullPath)
         {
-            foreach (var resourcePathInfo in _resourcePaths.Values.ToImmutableList()) //TODO@hikalkan: Test for multi-threading (possible multiple enumeration problem).
+            foreach (var resourcePathInfo in _resourcePaths.Values.ToImmutableList())
+                //TODO@hikalkan: Test for multi-threading (possible multiple enumeration problem).
             {
                 if (fullPath.StartsWith(resourcePathInfo.Path))
                 {

@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function ($) {
+(function($) {
     if (!$) {
         return;
     }
@@ -8,40 +8,42 @@
 
     // abp.ajax -> uses $.ajax ------------------------------------------------
 
-    abp.ajax = function (userOptions) {
+    abp.ajax = function(userOptions) {
         userOptions = userOptions || {};
 
         var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
         options.success = undefined;
         options.error = undefined;
 
-        return $.Deferred(function ($dfd) {
+        return $.Deferred(function($dfd) {
             $.ajax(options)
-                .done(function (data) {
+                .done(function(data) {
                     abp.ajax.handleResponse(data, userOptions, $dfd);
-                }).fail(function () {
+                })
+                .fail(function() {
                     $dfd.reject.apply(this, arguments);
                 });
         });
     };
 
-    $.extend(abp.ajax, {
+    $.extend(abp.ajax,
+    {
         defaultOpts: {
-            dataType: 'json',
-            type: 'POST',
-            contentType: 'application/json'
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json"
         },
 
         defaultError: {
-            message: 'Ajax request did not succeed!',
-            details: 'Error detail not sent by server.'
+            message: "Ajax request did not succeed!",
+            details: "Error detail not sent by server."
         },
 
-        logError: function (error) {
+        logError: function(error) {
             abp.log.error(error);
         },
 
-        showError: function (error) {
+        showError: function(error) {
             if (error.details) {
                 return abp.message.error(error.details, error.message);
             } else {
@@ -49,7 +51,7 @@
             }
         },
 
-        handleTargetUrl: function (targetUrl) {
+        handleTargetUrl: function(targetUrl) {
             if (!targetUrl) {
                 location.reload();
             } else {
@@ -57,9 +59,9 @@
             }
         },
 
-        handleUnAuthorizedRequest: function (messagePromise, targetUrl) {
+        handleUnAuthorizedRequest: function(messagePromise, targetUrl) {
             if (messagePromise) {
-                messagePromise.done(function () {
+                messagePromise.done(function() {
                     abp.ajax.handleTargetUrl(targetUrl);
                 });
             } else {
@@ -67,7 +69,7 @@
             }
         },
 
-        handleResponse: function (data, userOptions, $dfd) {
+        handleResponse: function(data, userOptions, $dfd) {
             if (data) {
                 if (data.success === true) {
                     $dfd && $dfd.resolve(data.result, data);
@@ -103,7 +105,7 @@
             }
         },
 
-        blockUI: function (options) {
+        blockUI: function(options) {
             if (options.blockUI) {
                 if (options.blockUI === true) { //block whole page
                     abp.ui.setBusy();
@@ -113,7 +115,7 @@
             }
         },
 
-        unblockUI: function (options) {
+        unblockUI: function(options) {
             if (options.blockUI) {
                 if (options.blockUI === true) { //unblock whole page
                     abp.ui.clearBusy();
@@ -133,23 +135,23 @@
     // abpAjaxForm -> uses ajaxForm ------------------------------------------
 
     if ($.fn.ajaxForm) {
-        $.fn.abpAjaxForm = function (userOptions) {
+        $.fn.abpAjaxForm = function(userOptions) {
             userOptions = userOptions || {};
 
             var options = $.extend({}, $.fn.abpAjaxForm.defaults, userOptions);
 
-            options.beforeSubmit = function () {
+            options.beforeSubmit = function() {
                 abp.ajax.blockUI(options);
                 userOptions.beforeSubmit && userOptions.beforeSubmit.apply(this, arguments);
             };
 
-            options.success = function (data) {
+            options.success = function(data) {
                 abp.ajax.handleResponse(data, userOptions);
             };
 
             //TODO: Error?
 
-            options.complete = function () {
+            options.complete = function() {
                 abp.ajax.unblockUI(options);
                 userOptions.complete && userOptions.complete.apply(this, arguments);
             };
@@ -158,7 +160,7 @@
         };
 
         $.fn.abpAjaxForm.defaults = {
-            method: 'POST'
+            method: "POST"
         };
     }
 })(jQuery);

@@ -1,12 +1,12 @@
-﻿using Abp.Web.Localization;
-using Abp.Web.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Abp.Web.Localization;
+using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Models
 {
     /// <summary>
-    /// TODO: THIS CLASS IS NOT FINISHED AND TESTED YET!
+    ///     TODO: THIS CLASS IS NOT FINISHED AND TESTED YET!
     /// </summary>
     public static class ModelStateExtensions
     {

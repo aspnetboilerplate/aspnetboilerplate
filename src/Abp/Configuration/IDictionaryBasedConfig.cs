@@ -3,28 +3,28 @@ using System;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// Defines interface to use a dictionary to make configurations.
+    ///     Defines interface to use a dictionary to make configurations.
     /// </summary>
     public interface IDictionaryBasedConfig
     {
         /// <summary>
-        /// Used to set a string named configuration.
-        /// If there is already a configuration with same <paramref name="name"/>, it's overwritten.
+        ///     Used to set a string named configuration.
+        ///     If there is already a configuration with same <paramref name="name" />, it's overwritten.
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="value">Value of the configuration</param>
-        /// <returns>Returns the passed <paramref name="value"/></returns>
+        /// <returns>Returns the passed <paramref name="value" /></returns>
         void Set<T>(string name, T value);
 
         /// <summary>
-        /// Gets a configuration object with given name.
+        ///     Gets a configuration object with given name.
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <returns>Value of the configuration or null if not found</returns>
         object Get(string name);
 
         /// <summary>
-        /// Gets a configuration object with given name.
+        ///     Gets a configuration object with given name.
         /// </summary>
         /// <typeparam name="T">Type of the object</typeparam>
         /// <param name="name">Unique name of the configuration</param>
@@ -32,7 +32,7 @@ namespace Abp.Configuration
         T Get<T>(string name);
 
         /// <summary>
-        /// Gets a configuration object with given name.
+        ///     Gets a configuration object with given name.
         /// </summary>
         /// <param name="name">Unique name of the configuration</param>
         /// <param name="defaultValue">Default value of the object if can not found given configuration</param>
@@ -40,7 +40,7 @@ namespace Abp.Configuration
         object Get(string name, object defaultValue);
 
         /// <summary>
-        /// Gets a configuration object with given name.
+        ///     Gets a configuration object with given name.
         /// </summary>
         /// <typeparam name="T">Type of the object</typeparam>
         /// <param name="name">Unique name of the configuration</param>
@@ -49,7 +49,7 @@ namespace Abp.Configuration
         T Get<T>(string name, T defaultValue);
 
         /// <summary>
-        /// Gets a configuration object with given name.
+        ///     Gets a configuration object with given name.
         /// </summary>
         /// <typeparam name="T">Type of the object</typeparam>
         /// <param name="name">Unique name of the configuration</param>

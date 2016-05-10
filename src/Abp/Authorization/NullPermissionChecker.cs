@@ -4,16 +4,18 @@ using System.Threading.Tasks;
 namespace Abp.Authorization
 {
     /// <summary>
-    /// Null (and default) implementation of <see cref="IPermissionChecker"/>.
+    ///     Null (and default) implementation of <see cref="IPermissionChecker" />.
     /// </summary>
     public sealed class NullPermissionChecker : IPermissionChecker
     {
-        /// <summary>
-        /// Singleton instance.
-        /// </summary>
-        public static NullPermissionChecker Instance { get { return SingletonInstance; } }
+        private NullPermissionChecker()
+        {
+        }
 
-        private static readonly NullPermissionChecker SingletonInstance = new NullPermissionChecker();
+        /// <summary>
+        ///     Singleton instance.
+        /// </summary>
+        public static NullPermissionChecker Instance { get; } = new NullPermissionChecker();
 
         public Task<bool> IsGrantedAsync(string permissionName)
         {
@@ -21,7 +23,7 @@ namespace Abp.Authorization
         }
 
         /// <summary>
-        /// Checks if a user is granted for a permission.
+        ///     Checks if a user is granted for a permission.
         /// </summary>
         /// <param name="userId">Id of the user to check</param>
         /// <param name="permissionName">Name of the permission</param>
@@ -31,8 +33,9 @@ namespace Abp.Authorization
             return Task.FromResult(true);
         }
 
-        private NullPermissionChecker()
+        public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
+            return Task.FromResult(true);
         }
     }
 }

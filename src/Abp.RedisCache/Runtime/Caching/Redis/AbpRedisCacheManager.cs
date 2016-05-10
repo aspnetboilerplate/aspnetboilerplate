@@ -4,12 +4,12 @@ using Abp.Runtime.Caching.Configuration;
 namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
-    /// Used to create <see cref="AbpRedisCache"/> instances.
+    ///     Used to create <see cref="AbpRedisCache" /> instances.
     /// </summary>
     public class AbpRedisCacheManager : CacheManagerBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpRedisCacheManager"/> class.
+        ///     Initializes a new instance of the <see cref="AbpRedisCacheManager" /> class.
         /// </summary>
         public AbpRedisCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
             : base(iocManager, configuration)
@@ -19,7 +19,7 @@ namespace Abp.Runtime.Caching.Redis
 
         protected override ICache CreateCacheImplementation(string name)
         {
-            return IocManager.Resolve<AbpRedisCache>(new { name });
+            return IocManager.Resolve<AbpRedisCache>(new {name});
         }
     }
 }

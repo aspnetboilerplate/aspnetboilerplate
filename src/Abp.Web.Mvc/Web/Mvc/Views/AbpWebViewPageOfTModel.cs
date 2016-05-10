@@ -1,24 +1,36 @@
-﻿using Abp.Application.Features;
+﻿using System.Globalization;
+using System.Web;
+using System.Web.Mvc;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
-using System.Globalization;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Views
 {
     /// <summary>
-    /// Base class for all views in Abp system.
+    ///     Base class for all views in Abp system.
     /// </summary>
     /// <typeparam name="TModel">Type of the View Model</typeparam>
     public abstract class AbpWebViewPage<TModel> : WebViewPage<TModel>
     {
+        private ILocalizationSource _localizationSource;
+
         /// <summary>
-        /// Gets the root path of the application.
+        ///     Constructor.
+        /// </summary>
+        protected AbpWebViewPage()
+        {
+            _localizationSource = NullLocalizationSource.Instance;
+
+            SettingManager = IocManager.Instance.Resolve<ISettingManager>();
+        }
+
+        /// <summary>
+        ///     Gets the root path of the application.
         /// </summary>
         public string ApplicationPath
         {
@@ -37,13 +49,13 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Reference to the setting manager.
+        ///     Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
 
         /// <summary>
-        /// Gets/sets name of the localization source that is used in this controller.
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        ///     Gets/sets name of the localization source that is used in this controller.
+        ///     It must be set in order to use <see cref="L(string)" /> and <see cref="L(string,CultureInfo)" /> methods.
         /// </summary>
         protected string LocalizationSourceName
         {
@@ -51,20 +63,8 @@ namespace Abp.Web.Mvc.Views
             set { _localizationSource = LocalizationHelper.GetSource(value); }
         }
 
-        private ILocalizationSource _localizationSource;
-
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected AbpWebViewPage()
-        {
-            _localizationSource = NullLocalizationSource.Instance;
-
-            SettingManager = IocManager.Instance.Resolve<ISettingManager>();
-        }
-
-        /// <summary>
-        /// Gets localized string for given key name and current language.
+        ///     Gets localized string for given key name and current language.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
@@ -74,7 +74,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
+        ///     Gets localized string for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
@@ -85,7 +85,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
+        ///     Gets localized string for given key name and specified culture information.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
@@ -96,7 +96,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
+        ///     Gets localized string for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
@@ -108,7 +108,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string from given source for given key name and current language.
+        ///     Gets localized string from given source for given key name and current language.
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="name">Key name</param>
@@ -119,7 +119,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string from given source  for given key name and current language with formatting strings.
+        ///     Gets localized string from given source  for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="name">Key name</param>
@@ -131,7 +131,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string from given source  for given key name and specified culture information.
+        ///     Gets localized string from given source  for given key name and specified culture information.
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="name">Key name</param>
@@ -143,7 +143,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string from given source  for given key name and current language with formatting strings.
+        ///     Gets localized string from given source  for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="sourceName">Source name</param>
         /// <param name="name">Key name</param>
@@ -156,7 +156,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected virtual bool IsGranted(string permissionName)
@@ -165,7 +165,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Determines whether is given feature enabled.
+        ///     Determines whether is given feature enabled.
         /// </summary>
         /// <param name="featureName">Name of the feature.</param>
         /// <returns>True, if enabled; False if not.</returns>
@@ -175,7 +175,7 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets current value of a feature.
+        ///     Gets current value of a feature.
         /// </summary>
         /// <param name="featureName">Feature name</param>
         /// <returns>Value of the feature</returns>

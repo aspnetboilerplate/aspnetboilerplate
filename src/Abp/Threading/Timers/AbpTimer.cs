@@ -1,49 +1,34 @@
-using Abp.Dependency;
 using System;
 using System.Threading;
+using Abp.Dependency;
 
 namespace Abp.Threading.Timers
 {
     /// <summary>
-    /// A roboust timer implementation that ensures no overlapping occurs. It waits exactly specified <see cref="Period"/> between ticks.
+    ///     A roboust timer implementation that ensures no overlapping occurs. It waits exactly specified <see cref="Period" />
+    ///     between ticks.
     /// </summary>
     //TODO: Extract interface or make all members virtual to make testing easier.
     public class AbpTimer : RunnableBase, ITransientDependency
     {
         /// <summary>
-        /// This event is raised periodically according to Period of Timer.
-        /// </summary>
-        public event EventHandler Elapsed;
-
-        /// <summary>
-        /// Task period of timer (as milliseconds).
-        /// </summary>
-        public int Period { get; set; }
-
-        /// <summary>
-        /// Indicates whether timer raises Elapsed event on Start method of Timer for once.
-        /// Default: False.
-        /// </summary>
-        public bool RunOnStart { get; set; }
-
-        /// <summary>
-        /// This timer is used to perfom the task at spesified intervals.
+        ///     This timer is used to perfom the task at spesified intervals.
         /// </summary>
         private readonly Timer _taskTimer;
 
         /// <summary>
-        /// Indicates that whether timer is running or stopped.
-        /// </summary>
-        private volatile bool _running;
-
-        /// <summary>
-        /// Indicates that whether performing the task or _taskTimer is in sleep mode.
-        /// This field is used to wait executing tasks when stopping Timer.
+        ///     Indicates that whether performing the task or _taskTimer is in sleep mode.
+        ///     This field is used to wait executing tasks when stopping Timer.
         /// </summary>
         private volatile bool _performingTasks;
 
         /// <summary>
-        /// Creates a new Timer.
+        ///     Indicates that whether timer is running or stopped.
+        /// </summary>
+        private volatile bool _running;
+
+        /// <summary>
+        ///     Creates a new Timer.
         /// </summary>
         public AbpTimer()
         {
@@ -51,7 +36,7 @@ namespace Abp.Threading.Timers
         }
 
         /// <summary>
-        /// Creates a new Timer.
+        ///     Creates a new Timer.
         /// </summary>
         /// <param name="period">Task period of timer (as milliseconds)</param>
         /// <param name="runOnStart">Indicates whether timer raises Elapsed event on Start method of Timer for once</param>
@@ -63,7 +48,23 @@ namespace Abp.Threading.Timers
         }
 
         /// <summary>
-        /// Starts the timer.
+        ///     Task period of timer (as milliseconds).
+        /// </summary>
+        public int Period { get; set; }
+
+        /// <summary>
+        ///     Indicates whether timer raises Elapsed event on Start method of Timer for once.
+        ///     Default: False.
+        /// </summary>
+        public bool RunOnStart { get; set; }
+
+        /// <summary>
+        ///     This event is raised periodically according to Period of Timer.
+        /// </summary>
+        public event EventHandler Elapsed;
+
+        /// <summary>
+        ///     Starts the timer.
         /// </summary>
         public override void Start()
         {
@@ -79,7 +80,7 @@ namespace Abp.Threading.Timers
         }
 
         /// <summary>
-        /// Stops the timer.
+        ///     Stops the timer.
         /// </summary>
         public override void Stop()
         {
@@ -93,7 +94,7 @@ namespace Abp.Threading.Timers
         }
 
         /// <summary>
-        /// Waits the service to stop.
+        ///     Waits the service to stop.
         /// </summary>
         public override void WaitToStop()
         {
@@ -109,7 +110,7 @@ namespace Abp.Threading.Timers
         }
 
         /// <summary>
-        /// This method is called by _taskTimer.
+        ///     This method is called by _taskTimer.
         /// </summary>
         /// <param name="state">Not used argument</param>
         private void TimerCallBack(object state)

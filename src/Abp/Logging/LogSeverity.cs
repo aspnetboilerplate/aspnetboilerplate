@@ -1,32 +1,32 @@
 namespace Abp.Logging
 {
     /// <summary>
-    /// Indicates severity for log.
+    ///     Indicates severity for log.
     /// </summary>
     public enum LogSeverity
     {
         /// <summary>
-        /// Debug.
+        ///     Debug.
         /// </summary>
         Debug,
 
         /// <summary>
-        /// Info.
+        ///     Info.
         /// </summary>
         Info,
 
         /// <summary>
-        /// Warn.
+        ///     Warn.
         /// </summary>
         Warn,
 
         /// <summary>
-        /// Error.
+        ///     Error.
         /// </summary>
         Error,
 
         /// <summary>
-        /// Fatal.
+        ///     Fatal.
         /// </summary>
         Fatal
     }

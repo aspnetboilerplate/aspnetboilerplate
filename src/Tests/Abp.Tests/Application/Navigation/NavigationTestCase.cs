@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Authorization;
@@ -6,17 +8,11 @@ using Abp.Dependency;
 using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
-using System;
-using System.Threading.Tasks;
 
 namespace Abp.Tests.Application.Navigation
 {
     internal class NavigationTestCase
     {
-        public NavigationManager NavigationManager { get; private set; }
-
-        public UserNavigationManager UserNavigationManager { get; private set; }
-
         private readonly IIocManager _iocManager;
 
         public NavigationTestCase()
@@ -29,6 +25,10 @@ namespace Abp.Tests.Application.Navigation
             _iocManager = iocManager;
             Initialize();
         }
+
+        public NavigationManager NavigationManager { get; private set; }
+
+        public UserNavigationManager UserNavigationManager { get; private set; }
 
         private void Initialize()
         {
@@ -52,7 +52,8 @@ namespace Abp.Tests.Application.Navigation
                 );
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager)
+            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(),
+                _iocManager)
             {
                 PermissionChecker = CreateMockPermissionChecker()
             };
@@ -61,8 +62,14 @@ namespace Abp.Tests.Application.Navigation
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"), "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"), "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(
+                new UserIdentifier(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"),
+                    Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001")), "Abp.Zero.UserManagement")
+                .Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(
+                new UserIdentifier(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"),
+                    Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001")), "Abp.Zero.RoleManagement")
+                .Returns(Task.FromResult(false));
             return permissionChecker;
         }
 
@@ -107,9 +114,9 @@ namespace Abp.Tests.Application.Navigation
                     new MenuItemDefinition(
                         "Abp.Zero.Administration.Setting",
                         new FixedLocalizableString("Setting management"),
-                        icon: "fa fa-cog",
-                        url: "#/admin/settings",
-                        customData: new MyCustomDataClass { Data1 = 42, Data2 = "FortyTwo" }
+                        "fa fa-cog",
+                        "#/admin/settings",
+                        customData: new MyCustomDataClass {Data1 = 42, Data2 = "FortyTwo"}
                         )
                     );
             }

@@ -1,77 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Castle.Core.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
     /// <summary>
-    /// Used to distribute notifications to users.
+    ///     Used to distribute notifications to users.
     /// </summary>
     public class NotificationDistributer : DomainService, INotificationDistributer
     {
-        /// <summary>
-        /// Referece to <see cref="IRealTimeNotifier"/>.
-        /// </summary>
-        public IRealTimeNotifier RealTimeNotifier { get; set; }
-
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
+        ///     Initializes a new instance of the <see cref="NotificationDistributionJob" /> class.
         /// </summary>
         public NotificationDistributer(
             INotificationDefinitionManager notificationDefinitionManager,
-            INotificationStore notificationStore)
+            INotificationStore notificationStore,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
+            _unitOfWorkManager = unitOfWorkManager;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
+
+        public IRealTimeNotifier RealTimeNotifier { get; set; }
 
         public async Task DistributeAsync(Guid notificationId)
         {
             var notificationInfo = await _notificationStore.GetNotificationOrNullAsync(notificationId);
             if (notificationInfo == null)
             {
-                Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " + notificationId);
+                Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " +
+                            notificationId);
                 return;
             }
 
-            Notification notification;
+            var users = await GetUsers(notificationInfo);
+
+            var userNotifications = await SaveUserNotifications(users, notificationInfo);
+
+            await _notificationStore.DeleteNotificationAsync(notificationInfo);
 
             try
             {
-                notification = notificationInfo.ToNotification();
-            }
-            catch (Exception)
-            {
-                Logger.Warn("NotificationDistributionJob can not continue since could not convert NotificationInfo to Notification for NotificationId: " + notificationId);
-                return;
-            }
-
-            var userIds = await GetUserIds(notificationInfo);
-
-            var userNotificationInfos = userIds
-                .Select(userId => new UserNotificationInfo(userId, notificationInfo.Id))
-                .ToList();
-
-            await SaveUserNotifications(userNotificationInfos);
-
-            try
-            {
-                var userNotifications = userNotificationInfos
-                    .Select(uni => uni.ToUserNotification(notification))
-                    .ToArray();
-
-                await RealTimeNotifier.SendNotificationsAsync(userNotifications);
+                await RealTimeNotifier.SendNotificationsAsync(userNotifications.ToArray());
             }
             catch (Exception ex)
             {
@@ -80,9 +63,9 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        protected virtual async Task<Guid[]> GetUserIds(NotificationInfo notificationInfo)
+        protected virtual async Task<UserIdentifier[]> GetUsers(NotificationInfo notificationInfo)
         {
-            List<Guid> userIds;
+            List<UserIdentifier> userIds;
 
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
@@ -90,8 +73,11 @@ namespace Abp.Notifications
                 userIds = notificationInfo
                     .UserIds
                     .Split(",")
-                    .Select(uidAsStr => Guid.Parse(uidAsStr))
-                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, null, uid))
+                    .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
+                    .Where(
+                        uid =>
+                            SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
+                                uid.TenantId, uid.UserId))
                     .ToList();
             }
             else
@@ -102,7 +88,8 @@ namespace Abp.Notifications
 
                 List<NotificationSubscriptionInfo> subscriptions;
 
-                if (tenantIds.IsNullOrEmpty())
+                if (tenantIds.IsNullOrEmpty() ||
+                    (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<Guid>()))
                 {
                     //Get all subscribed users of all tenants
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
@@ -125,12 +112,16 @@ namespace Abp.Notifications
                 //Remove invalid subscriptions
                 var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+                foreach (var subscription in subscriptions)
                 {
-                    foreach (var subscription in subscriptions)
+                    using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
-                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, subscription.TenantId, subscription.UserId) ||
-                            !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
+                        if (
+                            !await
+                                _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName,
+                                    new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
+                            !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
+                                subscription.TenantId, subscription.UserId))
                         {
                             invalidSubscriptions[subscription.Id] = subscription;
                         }
@@ -141,7 +132,7 @@ namespace Abp.Notifications
 
                 //Get user ids
                 userIds = subscriptions
-                    .Select(s => s.UserId)
+                    .Select(s => new UserIdentifier(s.TenantId, s.UserId))
                     .ToList();
             }
 
@@ -151,10 +142,10 @@ namespace Abp.Notifications
                 var excludedUserIds = notificationInfo
                     .ExcludedUserIds
                     .Split(",")
-                    .Select(uidAsStr => uidAsStr.To<Guid>())
+                    .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
                     .ToList();
 
-                userIds.RemoveAll(uid => excludedUserIds.Contains(uid));
+                userIds.RemoveAll(uid => excludedUserIds.Any(euid => euid.Equals(uid)));
             }
 
             return userIds.ToArray();
@@ -170,19 +161,45 @@ namespace Abp.Notifications
             return notificationInfo
                 .TenantIds
                 .Split(",")
-                .Select(uidAsStr => uidAsStr == "null" ? (Guid?)null : (Guid?)uidAsStr.To<Guid>())
+                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (Guid?) null : (Guid?) tenantIdAsStr.To<Guid>())
                 .ToArray();
         }
 
         [UnitOfWork]
-        protected virtual async Task SaveUserNotifications(IEnumerable<UserNotificationInfo> userNotifications)
+        protected virtual async Task<List<UserNotification>> SaveUserNotifications(UserIdentifier[] users,
+            NotificationInfo notificationInfo)
         {
-            foreach (var userNotification in userNotifications)
+            var userNotifications = new List<UserNotification>();
+
+            var tenantGroups = users.GroupBy(user => user.TenantId);
+            foreach (var tenantGroup in tenantGroups)
             {
-                await _notificationStore.InsertUserNotificationAsync(userNotification);
+                using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
+                {
+                    var tenantNotificationInfo = new TenantNotificationInfo(tenantGroup.Key, notificationInfo);
+                    await _notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
+                    await _unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
+
+                    var tenantNotification = tenantNotificationInfo.ToTenantNotification();
+
+                    foreach (var user in tenantGroup)
+                    {
+                        var userNotification = new UserNotificationInfo
+                        {
+                            TenantId = tenantGroup.Key,
+                            UserId = user.UserId,
+                            TenantNotificationId = tenantNotificationInfo.Id
+                        };
+
+                        await _notificationStore.InsertUserNotificationAsync(userNotification);
+                        userNotifications.Add(userNotification.ToUserNotification(tenantNotification));
+                    }
+
+                    await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
+                }
             }
 
-            await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
+            return userNotifications;
         }
     }
 }

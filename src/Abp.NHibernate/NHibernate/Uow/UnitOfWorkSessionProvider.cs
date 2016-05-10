@@ -6,16 +6,16 @@ namespace Abp.NHibernate.Uow
 {
     public class UnitOfWorkSessionProvider : ISessionProvider, ITransientDependency
     {
-        public ISession Session
-        {
-            get { return _unitOfWorkProvider.Current.GetSession(); }
-        }
-
         private readonly ICurrentUnitOfWorkProvider _unitOfWorkProvider;
 
         public UnitOfWorkSessionProvider(ICurrentUnitOfWorkProvider unitOfWorkProvider)
         {
             _unitOfWorkProvider = unitOfWorkProvider;
+        }
+
+        public ISession Session
+        {
+            get { return _unitOfWorkProvider.Current.GetSession(); }
         }
     }
 }

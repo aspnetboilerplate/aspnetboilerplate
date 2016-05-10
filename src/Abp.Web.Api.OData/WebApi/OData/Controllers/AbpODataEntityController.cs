@@ -1,7 +1,4 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +7,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.OData;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 
 namespace Abp.WebApi.OData.Controllers
 {
@@ -26,20 +26,21 @@ namespace Abp.WebApi.OData.Controllers
         where TPrimaryKey : IEquatable<TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
-
-        protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
+        private bool _disposed;
 
         private IUnitOfWorkCompleteHandle _unitOfWorkCompleteHandler;
-
-        private bool _disposed;
 
         protected AbpODataEntityController(IRepository<TEntity, TPrimaryKey> repository)
         {
             Repository = repository;
         }
 
-        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
+        protected IRepository<TEntity, TPrimaryKey> Repository { get; }
+
+        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext,
+            CancellationToken cancellationToken)
         {
             _unitOfWorkCompleteHandler = UnitOfWorkManager.Begin();
 

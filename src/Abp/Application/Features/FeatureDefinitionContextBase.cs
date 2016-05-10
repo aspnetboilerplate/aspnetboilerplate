@@ -5,14 +5,14 @@ using Abp.UI.Inputs;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Base for implementing <see cref="IFeatureDefinitionContext"/>.
+    ///     Base for implementing <see cref="IFeatureDefinitionContext" />.
     /// </summary>
     public abstract class FeatureDefinitionContextBase : IFeatureDefinitionContext
     {
         protected readonly FeatureDictionary Features;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeatureDefinitionContextBase"/> class.
+        ///     Initializes a new instance of the <see cref="FeatureDefinitionContextBase" /> class.
         /// </summary>
         protected FeatureDefinitionContextBase()
         {
@@ -20,7 +20,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Creates a new feature.
+        ///     Creates a new feature.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
         /// <param name="defaultValue">Default value</param>
@@ -42,11 +42,11 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Gets a feature with given name or null if can not find.
+        ///     Gets a feature with given name or null if can not find.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
         /// <returns>
-        ///   <see cref="Feature" /> object or null
+        ///     <see cref="Feature" /> object or null
         /// </returns>
         public Feature GetOrNull(string name)
         {

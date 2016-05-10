@@ -1,10 +1,10 @@
-using Castle.Core.Logging;
 using System;
+using Castle.Core.Logging;
 
 namespace Abp.Logging
 {
     /// <summary>
-    /// Extensions for <see cref="ILogger"/>.
+    ///     Extensions for <see cref="ILogger" />.
     /// </summary>
     public static class LoggerExtensions
     {

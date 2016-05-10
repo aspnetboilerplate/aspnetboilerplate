@@ -1,19 +1,19 @@
-﻿using Abp.Domain.Entities;
+﻿using System;
+using Abp.Domain.Entities;
 using Abp.Json;
 using StackExchange.Redis;
-using System;
 
 namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
-    /// Used to store cache in a Redis server.
+    ///     Used to store cache in a Redis server.
     /// </summary>
     public class AbpRedisCache : CacheBase
     {
         private readonly IDatabase _database;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider)
             : base(name)

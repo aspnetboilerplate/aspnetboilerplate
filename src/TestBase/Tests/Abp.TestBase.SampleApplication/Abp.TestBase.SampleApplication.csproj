@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crm\Address.cs" />
+    <Compile Include="Crm\Branch.cs" />
+    <Compile Include="Crm\Company.cs" />
     <Compile Include="ContacLists\ContactList.cs" />
     <Compile Include="ContacLists\ContactListAppService.cs" />
     <Compile Include="ContacLists\IContactListAppService.cs" />

@@ -1,6 +1,6 @@
-﻿using Abp.Domain.Entities;
+﻿using System;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using System;
 
 namespace Abp.MemoryDb.Repositories
 {

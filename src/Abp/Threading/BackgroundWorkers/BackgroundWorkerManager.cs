@@ -1,19 +1,21 @@
-﻿using Abp.Dependency;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Abp.Dependency;
 
 namespace Abp.Threading.BackgroundWorkers
 {
     /// <summary>
-    /// Implements <see cref="IBackgroundWorkerManager"/>.
+    ///     Implements <see cref="IBackgroundWorkerManager" />.
     /// </summary>
     public class BackgroundWorkerManager : RunnableBase, IBackgroundWorkerManager, ISingletonDependency, IDisposable
     {
-        private readonly IIocResolver _iocResolver;
         private readonly List<IBackgroundWorker> _backgroundJobs;
+        private readonly IIocResolver _iocResolver;
+
+        private bool _isDisposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackgroundWorkerManager"/> class.
+        ///     Initializes a new instance of the <see cref="BackgroundWorkerManager" /> class.
         /// </summary>
         public BackgroundWorkerManager(IIocResolver iocResolver)
         {
@@ -51,8 +53,6 @@ namespace Abp.Threading.BackgroundWorkers
                 worker.Start();
             }
         }
-
-        private bool _isDisposed;
 
         public void Dispose()
         {

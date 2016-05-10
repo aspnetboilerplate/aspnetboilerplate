@@ -1,20 +1,14 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Threading;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Abp.Authorization
 {
     internal class AuthorizeAttributeHelper : IAuthorizeAttributeHelper, ITransientDependency
     {
-        public IAbpSession AbpSession { get; set; }
-
-        public IPermissionChecker PermissionChecker { get; set; }
-
-        public ILocalizationManager LocalizationManager { get; set; }
-
         public AuthorizeAttributeHelper()
         {
             AbpSession = NullAbpSession.Instance;
@@ -22,22 +16,31 @@ namespace Abp.Authorization
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
+        public IAbpSession AbpSession { get; set; }
+
+        public IPermissionChecker PermissionChecker { get; set; }
+
+        public ILocalizationManager LocalizationManager { get; set; }
+
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
             if (!AbpSession.UserId.HasValue)
             {
-                throw new AbpAuthorizationException(LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication"));
+                throw new AbpAuthorizationException(LocalizationManager.GetString(AbpConsts.LocalizationSourceName,
+                    "CurrentUserDidNotLoginToTheApplication"));
             }
 
             foreach (var authorizeAttribute in authorizeAttributes)
             {
-                await PermissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions, authorizeAttribute.Permissions);
+                await
+                    PermissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions,
+                        authorizeAttribute.Permissions);
             }
         }
 
         public async Task AuthorizeAsync(IAbpAuthorizeAttribute authorizeAttribute)
         {
-            await AuthorizeAsync(new[] { authorizeAttribute });
+            await AuthorizeAsync(new[] {authorizeAttribute});
         }
 
         public void Authorize(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
@@ -47,7 +50,7 @@ namespace Abp.Authorization
 
         public void Authorize(IAbpAuthorizeAttribute authorizeAttribute)
         {
-            Authorize(new[] { authorizeAttribute });
+            Authorize(new[] {authorizeAttribute});
         }
     }
 }

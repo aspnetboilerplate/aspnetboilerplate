@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace Abp.Collections.Extensions
 {
     /// <summary>
-    /// Extension methods for Collections.
+    ///     Extension methods for Collections.
     /// </summary>
     public static class CollectionExtensions
     {
         /// <summary>
-        /// Checks whatever given collection object is null or has no item.
+        ///     Checks whatever given collection object is null or has no item.
         /// </summary>
         public static bool IsNullOrEmpty<T>(this ICollection<T> source)
         {
@@ -17,7 +17,7 @@ namespace Abp.Collections.Extensions
         }
 
         /// <summary>
-        /// Adds an item to the collection if it's not already in the collection.
+        ///     Adds an item to the collection if it's not already in the collection.
         /// </summary>
         /// <param name="source">Collection</param>
         /// <param name="item">Item to check and add</param>

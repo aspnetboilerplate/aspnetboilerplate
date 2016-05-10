@@ -1,7 +1,7 @@
-﻿using Abp.Dependency;
-using Hangfire;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Abp.Dependency;
+using Hangfire;
 
 namespace Abp.Hangfire
 {

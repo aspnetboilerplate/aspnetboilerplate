@@ -1,7 +1,7 @@
-using Abp.Collections.Extensions;
-using Abp.Web.Models;
 using System.Linq;
 using System.Web.Http.Controllers;
+using Abp.Collections.Extensions;
+using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers
 {
@@ -15,7 +15,9 @@ namespace Abp.WebApi.Controllers
             }
 
             //Try to get for dynamic APIs (dynamic web api actions always define __AbpDynamicApiDontWrapResultAttribute)
-            var wrapAttr = actionDescriptor.Properties.GetOrDefault("__AbpDynamicApiDontWrapResultAttribute") as WrapResultAttribute;
+            var wrapAttr =
+                actionDescriptor.Properties.GetOrDefault("__AbpDynamicApiDontWrapResultAttribute") as
+                    WrapResultAttribute;
             if (wrapAttr != null)
             {
                 return wrapAttr;

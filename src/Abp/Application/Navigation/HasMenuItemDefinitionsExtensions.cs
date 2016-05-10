@@ -1,16 +1,16 @@
-using Abp.Collections.Extensions;
 using System;
+using Abp.Collections.Extensions;
 
 namespace Abp.Application.Navigation
 {
     /// <summary>
-    /// Defines extension methods for <see cref="IHasMenuItemDefinitions"/>.
+    ///     Defines extension methods for <see cref="IHasMenuItemDefinitions" />.
     /// </summary>
     public static class HasMenuItemDefinitionsExtensions
     {
         /// <summary>
-        /// Searches and gets a <see cref="MenuItemDefinition"/> by it's unique name.
-        /// Throws exception if can not find.
+        ///     Searches and gets a <see cref="MenuItemDefinition" /> by it's unique name.
+        ///     Throws exception if can not find.
         /// </summary>
         /// <param name="source">Source object</param>
         /// <param name="name">Unique name of the source</param>
@@ -26,8 +26,9 @@ namespace Abp.Application.Navigation
         }
 
         /// <summary>
-        /// Searches all menu items (recursively) in the source and gets a <see cref="MenuItemDefinition"/> by it's unique name.
-        /// Returns null if can not find.
+        ///     Searches all menu items (recursively) in the source and gets a <see cref="MenuItemDefinition" /> by it's unique
+        ///     name.
+        ///     Returns null if can not find.
         /// </summary>
         /// <param name="source">Source object</param>
         /// <param name="name">Unique name of the source</param>

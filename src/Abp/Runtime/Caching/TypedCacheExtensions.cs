@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Abp.Runtime.Caching
 {
     /// <summary>
-    /// Extension methods for <see cref="ITypedCache{TKey,TValue}"/>.
+    ///     Extension methods for <see cref="ITypedCache{TKey,TValue}" />.
     /// </summary>
     public static class TypedCacheExtensions
     {
@@ -13,7 +13,8 @@ namespace Abp.Runtime.Caching
             return cache.Get(key, k => factory());
         }
 
-        public static Task<TValue> GetAsync<TKey, TValue>(this ITypedCache<TKey, TValue> cache, TKey key, Func<Task<TValue>> factory)
+        public static Task<TValue> GetAsync<TKey, TValue>(this ITypedCache<TKey, TValue> cache, TKey key,
+            Func<Task<TValue>> factory)
         {
             return cache.GetAsync(key, k => factory());
         }

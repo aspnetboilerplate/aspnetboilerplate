@@ -1,14 +1,14 @@
-﻿using Abp.Dependency;
-using Castle.Core;
-using Castle.MicroKernel;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using Abp.Dependency;
+using Castle.Core;
+using Castle.MicroKernel;
 
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Used to register <see cref="FeatureInterceptor"/> for needed classes.
+    ///     Used to register <see cref="FeatureInterceptor" /> for needed classes.
     /// </summary>
     internal static class FeatureInterceptorRegistrar
     {
@@ -32,7 +32,9 @@ namespace Abp.Application.Features
                 return true;
             }
 
-            if (type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(m => m.IsDefined(typeof(RequiresFeatureAttribute), true)))
+            if (
+                type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Any(m => m.IsDefined(typeof(RequiresFeatureAttribute), true)))
             {
                 return true;
             }

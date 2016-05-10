@@ -1,22 +1,22 @@
-﻿using Abp.Dependency;
-using System;
+﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Abp.Dependency;
 
 namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
-    /// This class is used to allow MVC to use dependency injection system while creating MVC controllers.
+    ///     This class is used to allow MVC to use dependency injection system while creating MVC controllers.
     /// </summary>
     public class WindsorControllerFactory : DefaultControllerFactory
     {
         /// <summary>
-        /// Reference to DI kernel.
+        ///     Reference to DI kernel.
         /// </summary>
         private readonly IIocResolver _iocManager;
 
         /// <summary>
-        /// Creates a new instance of WindsorControllerFactory.
+        ///     Creates a new instance of WindsorControllerFactory.
         /// </summary>
         /// <param name="iocManager">Reference to DI kernel</param>
         public WindsorControllerFactory(IIocResolver iocManager)
@@ -25,7 +25,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Called by MVC system and releases/disposes given controller instance.
+        ///     Called by MVC system and releases/disposes given controller instance.
         /// </summary>
         /// <param name="controller">Controller instance</param>
         public override void ReleaseController(IController controller)
@@ -34,7 +34,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Called by MVC system and creates controller instance for given controller type.
+        ///     Called by MVC system and creates controller instance for given controller type.
         /// </summary>
         /// <param name="requestContext">Request context</param>
         /// <param name="controllerType">Controller type</param>

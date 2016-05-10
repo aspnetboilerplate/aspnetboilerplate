@@ -5,7 +5,7 @@ namespace Abp.Transactions.Extensions
     internal static class IsolationLevelExtensions
     {
         /// <summary>
-        /// Converts <see cref="System.Transactions.IsolationLevel"/> to <see cref="IsolationLevel"/>.
+        ///     Converts <see cref="System.Transactions.IsolationLevel" /> to <see cref="IsolationLevel" />.
         /// </summary>
         public static IsolationLevel ToSystemDataIsolationLevel(this System.Transactions.IsolationLevel isolationLevel)
         {

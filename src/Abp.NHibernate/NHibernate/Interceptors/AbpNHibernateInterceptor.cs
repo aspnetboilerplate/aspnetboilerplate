@@ -1,4 +1,6 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus.Entities;
@@ -7,17 +9,15 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using NHibernate;
 using NHibernate.Type;
-using System;
 
 namespace Abp.NHibernate.Interceptors
 {
     internal class AbpNHibernateInterceptor : EmptyInterceptor
     {
-        public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
-
-        private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
         private readonly Lazy<IGuidGenerator> _guidGenerator;
+
+        private readonly IIocManager _iocManager;
 
         public AbpNHibernateInterceptor(IIocManager iocManager)
         {
@@ -35,6 +35,8 @@ namespace Abp.NHibernate.Interceptors
                         : SequentialGuidGenerator.Instance
                     );
         }
+
+        public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
 
         public override bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
@@ -78,33 +80,9 @@ namespace Abp.NHibernate.Interceptors
             return base.OnSave(entity, id, state, propertyNames, types);
         }
 
-        public override bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+        public override bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState,
+            string[] propertyNames, IType[] types)
         {
-            //TODO@Halil: Implement this when tested well (Issue #49)
-            ////Prevent changing CreationTime on update
-            //if (entity is IHasCreationTime)
-            //{
-            //    for (var i = 0; i < propertyNames.Length; i++)
-            //    {
-            //        if (propertyNames[i] == "CreationTime" && previousState[i] != currentState[i])
-            //        {
-            //            throw new AbpException(string.Format("Can not change CreationTime on a modified entity {0}", entity.GetType().FullName));
-            //        }
-            //    }
-            //}
-
-            //Prevent changing CreatorUserId on update
-            //if (entity is ICreationAudited)
-            //{
-            //    for (var i = 0; i < propertyNames.Length; i++)
-            //    {
-            //        if (propertyNames[i] == "CreatorUserId" && previousState[i] != currentState[i])
-            //        {
-            //            throw new AbpException(string.Format("Can not change CreatorUserId on a modified entity {0}", entity.GetType().FullName));
-            //        }
-            //    }
-            //}
-
             //Set modification audits
             if (entity is IHasModificationTime)
             {
@@ -136,7 +114,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "IsDeleted")
                     {
-                        previousIsDeleted = (bool)previousState[i];
+                        previousIsDeleted = (bool) previousState[i];
                         break;
                     }
                 }
@@ -191,6 +169,72 @@ namespace Abp.NHibernate.Interceptors
             EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
 
             base.OnDelete(entity, id, state, propertyNames, types);
+        }
+
+        public override bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
+            NormalizeDateTimePropertiesForEntity(state, types);
+            return true;
+        }
+
+        private static void NormalizeDateTimePropertiesForEntity(object[] state, IList<IType> types)
+        {
+            for (var i = 0; i < types.Count; i++)
+            {
+                if (types[i].IsComponentType)
+                {
+                    NormalizeDateTimePropertiesForComponentType(state[i], types[i]);
+                }
+
+                if (types[i].ReturnedClass != typeof(DateTime) && types[i].ReturnedClass != typeof(DateTime?))
+                {
+                    continue;
+                }
+
+                var dateTime = state[i] as DateTime?;
+
+                if (!dateTime.HasValue)
+                {
+                    continue;
+                }
+
+                state[i] = Clock.Normalize(dateTime.Value);
+            }
+        }
+
+        private static void NormalizeDateTimePropertiesForComponentType(object componentObject, IType type)
+        {
+            var componentType = type as ComponentType;
+            if (componentType != null)
+            {
+                for (var i = 0; i < componentType.PropertyNames.Length; i++)
+                {
+                    var propertyName = componentType.PropertyNames[i];
+                    if (componentType.Subtypes[i].IsComponentType)
+                    {
+                        var value = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject, null);
+                        NormalizeDateTimePropertiesForComponentType(value, componentType.Subtypes[i]);
+                    }
+
+                    if (componentType.Subtypes[i].ReturnedClass != typeof(DateTime) &&
+                        componentType.Subtypes[i].ReturnedClass != typeof(DateTime?))
+                    {
+                        continue;
+                    }
+
+                    var dateTime =
+                        componentObject.GetType().GetProperty(propertyName).GetValue(componentObject) as DateTime?;
+
+                    if (!dateTime.HasValue)
+                    {
+                        continue;
+                    }
+
+                    componentObject.GetType()
+                        .GetProperty(propertyName)
+                        .SetValue(componentObject, Clock.Normalize(dateTime.Value));
+                }
+            }
         }
     }
 }

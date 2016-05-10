@@ -1,13 +1,14 @@
-using Abp.Runtime.Session;
-using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
+using Abp.Runtime.Session;
+using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
     public static class AuditingHelper
     {
-        public static bool ShouldSaveAudit(MethodInfo methodInfo, IAuditingConfiguration configuration, IAbpSession abpSession, bool defaultValue = false)
+        public static bool ShouldSaveAudit(MethodInfo methodInfo, IAuditingConfiguration configuration,
+            IAbpSession abpSession, bool defaultValue = false)
         {
             if (configuration == null || !configuration.IsEnabled)
             {

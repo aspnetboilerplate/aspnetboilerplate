@@ -10,12 +10,12 @@ using Castle.Windsor;
 namespace Abp.Events.Bus
 {
     /// <summary>
-    /// Installs event bus system and registers all handlers automatically.
+    ///     Installs event bus system and registers all handlers automatically.
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
-        private readonly IIocResolver _iocResolver;
         private readonly IEventBusConfiguration _eventBusConfiguration;
+        private readonly IIocResolver _iocResolver;
         private IEventBus _eventBus;
 
         public EventBusInstaller(IIocResolver iocResolver)
@@ -65,7 +65,8 @@ namespace Abp.Events.Bus
                 var genericArgs = @interface.GetGenericArguments();
                 if (genericArgs.Length == 1)
                 {
-                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(_iocResolver, handler.ComponentModel.Implementation));
+                    _eventBus.Register(genericArgs[0],
+                        new IocHandlerFactory(_iocResolver, handler.ComponentModel.Implementation));
                 }
             }
         }

@@ -5,16 +5,6 @@ namespace Abp.Tests.Dependency
 {
     public class Circular_Constructor_Dependency_Tests : TestBaseWithLocalIocManager
     {
-        [Fact]
-        public void Should_Fail_Circular_Constructor_Dependency()
-        {
-            LocalIocManager.Register<MyClass1>();
-            LocalIocManager.Register<MyClass2>();
-            LocalIocManager.Register<MyClass3>();
-
-            Assert.Throws<CircularDependencyException>(() => LocalIocManager.Resolve<MyClass1>());
-        }
-
         public class MyClass1
         {
             public MyClass1(MyClass2 obj)
@@ -34,6 +24,16 @@ namespace Abp.Tests.Dependency
             public MyClass3(MyClass1 obj)
             {
             }
+        }
+
+        [Fact]
+        public void Should_Fail_Circular_Constructor_Dependency()
+        {
+            LocalIocManager.Register<MyClass1>();
+            LocalIocManager.Register<MyClass2>();
+            LocalIocManager.Register<MyClass3>();
+
+            Assert.Throws<CircularDependencyException>(() => LocalIocManager.Resolve<MyClass1>());
         }
     }
 }

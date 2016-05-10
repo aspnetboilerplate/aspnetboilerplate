@@ -4,12 +4,12 @@ using System.Globalization;
 namespace Abp.Extensions
 {
     /// <summary>
-    /// Extension methods for String class.
+    ///     Extension methods for String class.
     /// </summary>
     public static class StringExtensions
     {
         /// <summary>
-        /// Adds a char to end of given string if it does not ends with the char.
+        ///     Adds a char to end of given string if it does not ends with the char.
         /// </summary>
         public static string EnsureEndsWith(this string str, char c)
         {
@@ -17,7 +17,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Adds a char to end of given string if it does not ends with the char.
+        ///     Adds a char to end of given string if it does not ends with the char.
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
         {
@@ -35,7 +35,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Adds a char to end of given string if it does not ends with the char.
+        ///     Adds a char to end of given string if it does not ends with the char.
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
@@ -53,7 +53,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Adds a char to beginning of given string if it does not starts with the char.
+        ///     Adds a char to beginning of given string if it does not starts with the char.
         /// </summary>
         public static string EnsureStartsWith(this string str, char c)
         {
@@ -61,7 +61,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Adds a char to beginning of given string if it does not starts with the char.
+        ///     Adds a char to beginning of given string if it does not starts with the char.
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
         {
@@ -79,7 +79,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Adds a char to beginning of given string if it does not starts with the char.
+        ///     Adds a char to beginning of given string if it does not starts with the char.
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
@@ -97,7 +97,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Indicates whether this string is null or an System.String.Empty string.
+        ///     Indicates whether this string is null or an System.String.Empty string.
         /// </summary>
         public static bool IsNullOrEmpty(this string str)
         {
@@ -105,7 +105,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// indicates whether this string is null, empty, or consists only of white-space characters.
+        ///     indicates whether this string is null, empty, or consists only of white-space characters.
         /// </summary>
         public static bool IsNullOrWhiteSpace(this string str)
         {
@@ -113,10 +113,10 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets a substring of a string from beginning of the string.
+        ///     Gets a substring of a string from beginning of the string.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str" /> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="len" /> is bigger that string's length</exception>
         public static string Left(this string str, int len)
         {
             if (str == null)
@@ -133,7 +133,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
+        ///     Converts line endings in the string to <see cref="Environment.NewLine" />.
         /// </summary>
         public static string NormalizeLineEndings(this string str)
         {
@@ -141,10 +141,10 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets index of nth occurence of a char in a string.
+        ///     Gets index of nth occurence of a char in a string.
         /// </summary>
         /// <param name="str">source string to be searched</param>
-        /// <param name="c">Char to search in <see cref="str"/></param>
+        /// <param name="c">Char to search in <see cref="str" /></param>
         /// <param name="n">Count of the occurence</param>
         public static int NthIndexOf(this string str, char c, int n)
         {
@@ -161,7 +161,7 @@ namespace Abp.Extensions
                     continue;
                 }
 
-                if ((++count) == n)
+                if (++count == n)
                 {
                     return i;
                 }
@@ -171,10 +171,10 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets a substring of a string from end of the string.
+        ///     Gets a substring of a string from end of the string.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str" /> is null</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="len" /> is bigger that string's length</exception>
         public static string Right(this string str, int len)
         {
             if (str == null)
@@ -191,23 +191,23 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Uses string.Split method to split given string by given separator.
+        ///     Uses string.Split method to split given string by given separator.
         /// </summary>
         public static string[] Split(this string str, string separator)
         {
-            return str.Split(new[] { separator }, StringSplitOptions.None);
+            return str.Split(new[] {separator}, StringSplitOptions.None);
         }
 
         /// <summary>
-        /// Uses string.Split method to split given string by given separator.
+        ///     Uses string.Split method to split given string by given separator.
         /// </summary>
         public static string[] Split(this string str, string separator, StringSplitOptions options)
         {
-            return str.Split(new[] { separator }, options);
+            return str.Split(new[] {separator}, options);
         }
 
         /// <summary>
-        /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+        ///     Uses string.Split method to split given string by <see cref="Environment.NewLine" />.
         /// </summary>
         public static string[] SplitToLines(this string str)
         {
@@ -215,7 +215,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Uses string.Split method to split given string by <see cref="Environment.NewLine"/>.
+        ///     Uses string.Split method to split given string by <see cref="Environment.NewLine" />.
         /// </summary>
         public static string[] SplitToLines(this string str, StringSplitOptions options)
         {
@@ -223,7 +223,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts PascalCase string to camelCase string.
+        ///     Converts PascalCase string to camelCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>camelCase of the string</returns>
@@ -233,7 +233,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts PascalCase string to camelCase string in specified culture.
+        ///     Converts PascalCase string to camelCase string in specified culture.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>
@@ -254,7 +254,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts string to enum value.
+        ///     Converts string to enum value.
         /// </summary>
         /// <typeparam name="T">Type of enum</typeparam>
         /// <param name="value">String value to convert</param>
@@ -267,11 +267,11 @@ namespace Abp.Extensions
                 throw new ArgumentNullException("value");
             }
 
-            return (T)Enum.Parse(typeof(T), value);
+            return (T) Enum.Parse(typeof(T), value);
         }
 
         /// <summary>
-        /// Converts string to enum value.
+        ///     Converts string to enum value.
         /// </summary>
         /// <typeparam name="T">Type of enum</typeparam>
         /// <param name="value">String value to convert</param>
@@ -285,11 +285,11 @@ namespace Abp.Extensions
                 throw new ArgumentNullException("value");
             }
 
-            return (T)Enum.Parse(typeof(T), value, ignoreCase);
+            return (T) Enum.Parse(typeof(T), value, ignoreCase);
         }
 
         /// <summary>
-        /// Converts camelCase string to PascalCase string.
+        ///     Converts camelCase string to PascalCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>PascalCase of the string</returns>
@@ -299,7 +299,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts camelCase string to PascalCase string in specified culture.
+        ///     Converts camelCase string to PascalCase string in specified culture.
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>
@@ -320,9 +320,9 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
+        ///     Gets a substring of a string from beginning of the string if it exceeds maximum length.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str" /> is null</exception>
         public static string Truncate(this string str, int maxLength)
         {
             if (str == null)
@@ -339,22 +339,22 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
-        /// It adds a "..." postfix to end of the string if it's truncated.
-        /// Returning string can not be longer than maxLength.
+        ///     Gets a substring of a string from beginning of the string if it exceeds maximum length.
+        ///     It adds a "..." postfix to end of the string if it's truncated.
+        ///     Returning string can not be longer than maxLength.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str" /> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength)
         {
             return TruncateWithPostfix(str, maxLength, "...");
         }
 
         /// <summary>
-        /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
-        /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
-        /// Returning string can not be longer than maxLength.
+        ///     Gets a substring of a string from beginning of the string if it exceeds maximum length.
+        ///     It adds given <paramref name="postfix" /> to end of the string if it's truncated.
+        ///     Returning string can not be longer than maxLength.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str" /> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
         {
             if (str == null)

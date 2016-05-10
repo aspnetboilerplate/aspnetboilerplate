@@ -1,24 +1,24 @@
-﻿using Abp.Modules;
-using Shouldly;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Abp.Modules;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.Startup
 {
     public class AbpBootstraper_Tester : TestBaseWithLocalIocManager
     {
-        private readonly AbpBootstrapper _bootstrapper;
-
         public AbpBootstraper_Tester()
         {
             _bootstrapper = new AbpBootstrapper(LocalIocManager);
         }
 
-        [Fact]
-        public void Should_Initialize_Bootstrapper()
+        private readonly AbpBootstrapper _bootstrapper;
+
+        public override void Dispose()
         {
-            _bootstrapper.Initialize();
+            _bootstrapper.Dispose();
+            base.Dispose();
         }
 
         [Fact]
@@ -50,10 +50,10 @@ namespace Abp.Tests.Startup
             anotherModule.ShutdownCount.ShouldBe(1);
         }
 
-        public override void Dispose()
+        [Fact]
+        public void Should_Initialize_Bootstrapper()
         {
-            _bootstrapper.Dispose();
-            base.Dispose();
+            _bootstrapper.Initialize();
         }
     }
 
@@ -62,11 +62,11 @@ namespace Abp.Tests.Startup
         public ICollection<Type> FindAll()
         {
             return new List<Type>
-                   {
-                       typeof (MyOtherModule),
-                       typeof (MyTestModule),
-                       typeof (MyAnotherModule)
-                   };
+            {
+                typeof(MyOtherModule),
+                typeof(MyTestModule),
+                typeof(MyAnotherModule)
+            };
         }
     }
 

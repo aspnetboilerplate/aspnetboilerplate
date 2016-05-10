@@ -1,32 +1,33 @@
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.MemoryDb.Configuration;
-using System.Threading.Tasks;
 
 namespace Abp.MemoryDb.Uow
 {
     /// <summary>
-    /// Implements Unit of work for MemoryDb.
+    ///     Implements Unit of work for MemoryDb.
     /// </summary>
     public class MemoryDbUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        /// <summary>
-        /// Gets a reference to Memory Database.
-        /// </summary>
-        public MemoryDatabase Database { get; private set; }
-
         private readonly IAbpMemoryDbModuleConfiguration _configuration;
         private readonly MemoryDatabase _memoryDatabase;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
-        public MemoryDbUnitOfWork(IAbpMemoryDbModuleConfiguration configuration, MemoryDatabase memoryDatabase, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public MemoryDbUnitOfWork(IAbpMemoryDbModuleConfiguration configuration, MemoryDatabase memoryDatabase,
+            IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             _configuration = configuration;
             _memoryDatabase = memoryDatabase;
         }
+
+        /// <summary>
+        ///     Gets a reference to Memory Database.
+        /// </summary>
+        public MemoryDatabase Database { get; private set; }
 
         protected override void BeginUow()
         {

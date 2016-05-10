@@ -1,33 +1,17 @@
-using Abp.Logging;
 using System;
 using System.Runtime.Serialization;
+using Abp.Logging;
 
 namespace Abp.UI
 {
     /// <summary>
-    /// This exception type is directly shown to the user.
+    ///     This exception type is directly shown to the user.
     /// </summary>
     [Serializable]
     public class UserFriendlyException : AbpException, IHasLogSeverity
     {
         /// <summary>
-        /// Additional information about the exception.
-        /// </summary>
-        public string Details { get; private set; }
-
-        /// <summary>
-        /// An arbitrary error code.
-        /// </summary>
-        public int Code { get; set; }
-
-        /// <summary>
-        /// Severity of the exception.
-        /// Default: Warn.
-        /// </summary>
-        public LogSeverity Severity { get; set; }
-
-        /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public UserFriendlyException()
         {
@@ -35,7 +19,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor for serializing.
+        ///     Constructor for serializing.
         /// </summary>
         public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -43,7 +27,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         public UserFriendlyException(string message)
@@ -53,7 +37,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="severity">Exception severity</param>
@@ -64,7 +48,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="code">Error code</param>
         /// <param name="message">Exception message</param>
@@ -75,7 +59,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>
@@ -86,7 +70,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="code">Error code</param>
         /// <param name="message">Exception message</param>
@@ -98,7 +82,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
@@ -109,7 +93,7 @@ namespace Abp.UI
         }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="details">Additional information about the exception</param>
@@ -119,5 +103,21 @@ namespace Abp.UI
         {
             Details = details;
         }
+
+        /// <summary>
+        ///     Additional information about the exception.
+        /// </summary>
+        public string Details { get; private set; }
+
+        /// <summary>
+        ///     An arbitrary error code.
+        /// </summary>
+        public int Code { get; set; }
+
+        /// <summary>
+        ///     Severity of the exception.
+        ///     Default: Warn.
+        /// </summary>
+        public LogSeverity Severity { get; set; }
     }
 }

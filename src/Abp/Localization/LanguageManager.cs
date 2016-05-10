@@ -1,19 +1,22 @@
-using Abp.Dependency;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Abp.Dependency;
 
 namespace Abp.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {
-        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
-
         private readonly ILanguageProvider _languageProvider;
 
         public LanguageManager(ILanguageProvider languageProvider)
         {
             _languageProvider = languageProvider;
+        }
+
+        public LanguageInfo CurrentLanguage
+        {
+            get { return GetCurrentLanguage(); }
         }
 
         public IReadOnlyList<LanguageInfo> GetLanguages()

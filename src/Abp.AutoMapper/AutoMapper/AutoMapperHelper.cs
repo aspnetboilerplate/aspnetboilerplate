@@ -1,7 +1,7 @@
-﻿using Abp.Collections.Extensions;
-using AutoMapper;
-using System;
+﻿using System;
 using System.Reflection;
+using Abp.Collections.Extensions;
+using AutoMapper;
 
 namespace Abp.AutoMapper
 {

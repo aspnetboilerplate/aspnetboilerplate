@@ -1,11 +1,11 @@
-﻿using Abp.Dependency;
+﻿using System.Web.Http;
+using Abp.Dependency;
 using Castle.MicroKernel.Registration;
-using System.Web.Http;
 
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Registers all Web API Controllers derived from <see cref="ApiController"/>.
+    ///     Registers all Web API Controllers derived from <see cref="ApiController" />.
     /// </summary>
     public class ApiControllerConventionalRegistrar : IConventionalDependencyRegistrar
     {

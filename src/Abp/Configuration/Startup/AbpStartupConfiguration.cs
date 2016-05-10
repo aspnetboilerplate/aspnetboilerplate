@@ -1,4 +1,6 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
@@ -10,87 +12,97 @@ using Abp.Runtime.Caching.Configuration;
 namespace Abp.Configuration.Startup
 {
     /// <summary>
-    /// This class is used to configure ABP and modules on startup.
+    ///     This class is used to configure ABP and modules on startup.
     /// </summary>
     internal class AbpStartupConfiguration : DictionaryBasedConfig, IAbpStartupConfiguration
     {
-        public IIocManager IocManager { get; private set; }
+        /// <summary>
+        ///     Private constructor for singleton pattern.
+        /// </summary>
+        public AbpStartupConfiguration(IIocManager iocManager)
+        {
+            IocManager = iocManager;
+        }
+
+        public Dictionary<Type, Action> ServiceReplaceActions { get; private set; }
 
         /// <summary>
-        /// Used to set localization configuration.
+        ///     Reference to the IocManager.
+        /// </summary>
+        public IIocManager IocManager { get; }
+
+        /// <summary>
+        ///     Used to set localization configuration.
         /// </summary>
         public ILocalizationConfiguration Localization { get; private set; }
 
         /// <summary>
-        /// Used to configure authorization.
+        ///     Used to configure authorization.
         /// </summary>
         public IAuthorizationConfiguration Authorization { get; private set; }
 
         /// <summary>
-        /// Used to configure settings.
+        ///     Used to configure settings.
         /// </summary>
         public ISettingsConfiguration Settings { get; private set; }
 
         /// <summary>
-        /// Gets/sets default connection string used by ORM module.
-        /// It can be name of a connection string in application's config file or can be full connection string.
+        ///     Gets/sets default connection string used by ORM module.
+        ///     It can be name of a connection string in application's config file or can be full connection string.
         /// </summary>
         public string DefaultNameOrConnectionString { get; set; }
 
         /// <summary>
-        /// Used to configure modules.
-        /// Modules can write extension methods to <see cref="ModuleConfigurations"/> to add module specific configurations.
+        ///     Used to configure modules.
+        ///     Modules can write extension methods to <see cref="ModuleConfigurations" /> to add module specific configurations.
         /// </summary>
         public IModuleConfigurations Modules { get; private set; }
 
         /// <summary>
-        /// Used to configure unit of work defaults.
+        ///     Used to configure unit of work defaults.
         /// </summary>
         public IUnitOfWorkDefaultOptions UnitOfWork { get; private set; }
 
         /// <summary>
-        /// Used to configure features.
+        ///     Used to configure features.
         /// </summary>
         public IFeatureConfiguration Features { get; private set; }
 
         /// <summary>
-        /// Used to configure background job system.
+        ///     Used to configure background job system.
         /// </summary>
         public IBackgroundJobConfiguration BackgroundJobs { get; private set; }
 
         /// <summary>
-        /// Used to configure notification system.
+        ///     Used to configure notification system.
         /// </summary>
         public INotificationConfiguration Notifications { get; private set; }
 
         /// <summary>
-        /// Used to configure navigation.
+        ///     Used to configure navigation.
         /// </summary>
         public INavigationConfiguration Navigation { get; private set; }
 
         /// <summary>
-        /// Used to configure <see cref="IEventBus"/>.
+        ///     Used to configure <see cref="IEventBus" />.
         /// </summary>
         public IEventBusConfiguration EventBus { get; private set; }
 
         /// <summary>
-        /// Used to configure auditing.
+        ///     Used to configure auditing.
         /// </summary>
         public IAuditingConfiguration Auditing { get; private set; }
 
         public ICachingConfiguration Caching { get; private set; }
 
         /// <summary>
-        /// Used to configure multi-tenancy.
+        ///     Used to configure multi-tenancy.
         /// </summary>
         public IMultiTenancyConfig MultiTenancy { get; private set; }
 
-        /// <summary>
-        /// Private constructor for singleton pattern.
-        /// </summary>
-        public AbpStartupConfiguration(IIocManager iocManager)
+        public void ReplaceService(Type type, Action replaceAction)
         {
-            IocManager = iocManager;
+            ServiceReplaceActions[type] = replaceAction;
         }
 
         public void Initialize()
@@ -108,6 +120,7 @@ namespace Abp.Configuration.Startup
             Caching = IocManager.Resolve<ICachingConfiguration>();
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
             Notifications = IocManager.Resolve<INotificationConfiguration>();
+            ServiceReplaceActions = new Dictionary<Type, Action>();
         }
     }
 }

@@ -1,32 +1,22 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR;
-using System;
-using System.Threading.Tasks;
 
 namespace Abp.Web.SignalR.Hubs
 {
     /// <summary>
-    /// Common Hub of ABP.
+    ///     Common Hub of ABP.
     /// </summary>
     public class AbpCommonHub : Hub, ITransientDependency
     {
-        /// <summary>
-        /// Reference to the logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Reference to the session.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IOnlineClientManager _onlineClientManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
+        ///     Initializes a new instance of the <see cref="AbpCommonHub" /> class.
         /// </summary>
         public AbpCommonHub(IOnlineClientManager onlineClientManager)
         {
@@ -36,12 +26,22 @@ namespace Abp.Web.SignalR.Hubs
             AbpSession = NullAbpSession.Instance;
         }
 
+        /// <summary>
+        ///     Reference to the logger.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        ///     Reference to the session.
+        /// </summary>
+        public IAbpSession AbpSession { get; set; }
+
         public void Register()
         {
             Logger.Debug("A client is registered: " + Context.ConnectionId);
         }
 
-        public async override Task OnConnected()
+        public override async Task OnConnected()
         {
             await base.OnConnected();
 
@@ -57,7 +57,7 @@ namespace Abp.Web.SignalR.Hubs
             _onlineClientManager.Add(client);
         }
 
-        public async override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnected(bool stopCalled)
         {
             await base.OnDisconnected(stopCalled);
 

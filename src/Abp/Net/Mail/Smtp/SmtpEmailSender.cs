@@ -1,20 +1,20 @@
-using Abp.Dependency;
-using Abp.Extensions;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.Net.Mail.Smtp
 {
     /// <summary>
-    /// Used to send emails over SMTP.
+    ///     Used to send emails over SMTP.
     /// </summary>
     public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender, ITransientDependency
     {
         private readonly ISmtpEmailSenderConfiguration _configuration;
 
         /// <summary>
-        /// Creates a new <see cref="SmtpEmailSender"/>.
+        ///     Creates a new <see cref="SmtpEmailSender" />.
         /// </summary>
         /// <param name="configuration">Configuration</param>
         public SmtpEmailSender(ISmtpEmailSenderConfiguration configuration)

@@ -1,11 +1,11 @@
+using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
-using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// This interceptor is used to manage database connection and transactions.
+    ///     This interceptor is used to manage database connection and transactions.
     /// </summary>
     internal class UnitOfWorkInterceptor : IInterceptor
     {
@@ -17,18 +17,11 @@ namespace Abp.Domain.Uow
         }
 
         /// <summary>
-        /// Intercepts a method.
+        ///     Intercepts a method.
         /// </summary>
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                //Continue with current uow
-                invocation.Proceed();
-                return;
-            }
-
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
@@ -71,7 +64,7 @@ namespace Abp.Domain.Uow
             if (invocation.Method.ReturnType == typeof(Task))
             {
                 invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
-                    (Task)invocation.ReturnValue,
+                    (Task) invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
                     exception => uow.Dispose()
                     );
@@ -82,7 +75,7 @@ namespace Abp.Domain.Uow
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
-                    (exception) => uow.Dispose()
+                    exception => uow.Dispose()
                     );
             }
         }

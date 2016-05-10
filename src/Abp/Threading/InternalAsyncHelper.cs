@@ -25,7 +25,8 @@ namespace Abp.Threading
             }
         }
 
-        public static async Task AwaitTaskWithPostActionAndFinally(Task actualReturnValue, Func<Task> postAction, Action<Exception> finalAction)
+        public static async Task AwaitTaskWithPostActionAndFinally(Task actualReturnValue, Func<Task> postAction,
+            Action<Exception> finalAction)
         {
             Exception exception = null;
 
@@ -45,7 +46,8 @@ namespace Abp.Threading
             }
         }
 
-        public static async Task AwaitTaskWithPreActionAndPostActionAndFinally(Func<Task> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        public static async Task AwaitTaskWithPreActionAndPostActionAndFinally(Func<Task> actualReturnValue,
+            Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
         {
             Exception exception = null;
 
@@ -77,7 +79,8 @@ namespace Abp.Threading
             }
         }
 
-        public static async Task<T> AwaitTaskWithFinallyAndGetResult<T>(Task<T> actualReturnValue, Action<Exception> finalAction)
+        public static async Task<T> AwaitTaskWithFinallyAndGetResult<T>(Task<T> actualReturnValue,
+            Action<Exception> finalAction)
         {
             Exception exception = null;
 
@@ -96,15 +99,17 @@ namespace Abp.Threading
             }
         }
 
-        public static object CallAwaitTaskWithFinallyAndGetResult(Type taskReturnType, object actualReturnValue, Action<Exception> finalAction)
+        public static object CallAwaitTaskWithFinallyAndGetResult(Type taskReturnType, object actualReturnValue,
+            Action<Exception> finalAction)
         {
             return typeof(InternalAsyncHelper)
                 .GetMethod("AwaitTaskWithFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
-                .Invoke(null, new object[] { actualReturnValue, finalAction });
+                .Invoke(null, new[] {actualReturnValue, finalAction});
         }
 
-        public static async Task<T> AwaitTaskWithPostActionAndFinallyAndGetResult<T>(Task<T> actualReturnValue, Func<Task> postAction, Action<Exception> finalAction)
+        public static async Task<T> AwaitTaskWithPostActionAndFinallyAndGetResult<T>(Task<T> actualReturnValue,
+            Func<Task> postAction, Action<Exception> finalAction)
         {
             Exception exception = null;
 
@@ -125,15 +130,18 @@ namespace Abp.Threading
             }
         }
 
-        public static object CallAwaitTaskWithPostActionAndFinallyAndGetResult(Type taskReturnType, object actualReturnValue, Func<Task> action, Action<Exception> finalAction)
+        public static object CallAwaitTaskWithPostActionAndFinallyAndGetResult(Type taskReturnType,
+            object actualReturnValue, Func<Task> action, Action<Exception> finalAction)
         {
             return typeof(InternalAsyncHelper)
                 .GetMethod("AwaitTaskWithPostActionAndFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
-                .Invoke(null, new object[] { actualReturnValue, action, finalAction });
+                .Invoke(null, new[] {actualReturnValue, action, finalAction});
         }
 
-        public static async Task<T> AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult<T>(Func<Task<T>> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        public static async Task<T> AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult<T>(
+            Func<Task<T>> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null,
+            Action<Exception> finalAction = null)
         {
             Exception exception = null;
 
@@ -167,12 +175,15 @@ namespace Abp.Threading
             }
         }
 
-        public static object CallAwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult(Type taskReturnType, Func<object> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null, Action<Exception> finalAction = null)
+        public static object CallAwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult(Type taskReturnType,
+            Func<object> actualReturnValue, Func<Task> preAction = null, Func<Task> postAction = null,
+            Action<Exception> finalAction = null)
         {
             return typeof(InternalAsyncHelper)
-                .GetMethod("AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
+                .GetMethod("AwaitTaskWithPreActionAndPostActionAndFinallyAndGetResult",
+                    BindingFlags.Public | BindingFlags.Static)
                 .MakeGenericMethod(taskReturnType)
-                .Invoke(null, new object[] { actualReturnValue, preAction, postAction, finalAction });
+                .Invoke(null, new object[] {actualReturnValue, preAction, postAction, finalAction});
         }
     }
 }

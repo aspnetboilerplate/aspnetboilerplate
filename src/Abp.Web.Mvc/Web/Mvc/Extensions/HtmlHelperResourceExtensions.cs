@@ -1,16 +1,16 @@
-﻿using Abp.Logging;
-using Abp.Web.Mvc.Resources;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Logging;
+using Abp.Web.Mvc.Resources;
 
 namespace Abp.Web.Mvc.Extensions
 {
     /// <summary>
-    /// TODO: What if resource changes? How to update cache?
+    ///     TODO: What if resource changes? How to update cache?
     /// </summary>
     public static class HtmlHelperResourceExtensions
     {
@@ -23,7 +23,7 @@ namespace Abp.Web.Mvc.Extensions
         }
 
         /// <summary>
-        /// Includes a script to the page with versioning.
+        ///     Includes a script to the page with versioning.
         /// </summary>
         /// <param name="html">Reference to the HtmlHelper object</param>
         /// <param name="url">URL of the script file</param>
@@ -33,7 +33,7 @@ namespace Abp.Web.Mvc.Extensions
         }
 
         /// <summary>
-        /// Includes a style to the page with versioning.
+        ///     Includes a style to the page with versioning.
         /// </summary>
         /// <param name="html">Reference to the HtmlHelper object</param>
         /// <param name="url">URL of the style file</param>
@@ -60,7 +60,8 @@ namespace Abp.Web.Mvc.Extensions
                 try
                 {
                     // CDN resource
-                    if (path.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) || path.StartsWith("//", StringComparison.CurrentCultureIgnoreCase))
+                    if (path.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) ||
+                        path.StartsWith("//", StringComparison.CurrentCultureIgnoreCase))
                     {
                         //Replace "http://" from beginning
                         result = Regex.Replace(path, @"^http://", "//", RegexOptions.IgnoreCase);
@@ -76,7 +77,7 @@ namespace Abp.Web.Mvc.Extensions
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.Logger.Error("Can not find file for: " + path + "! " + ex.ToString());
+                    LogHelper.Logger.Error("Can not find file for: " + path + "! " + ex);
                     result = path;
                 }
 

@@ -6,7 +6,7 @@ using Castle.MicroKernel;
 namespace Abp.Authorization.Interceptors
 {
     /// <summary>
-    /// This class is used to register interceptors on the Application Layer.
+    ///     This class is used to register interceptors on the Application Layer.
     /// </summary>
     internal static class AuthorizationInterceptorRegistrar
     {

@@ -2,13 +2,13 @@
 {
     internal class MvcControllersAuditingConfiguration : IMvcControllersAuditingConfiguration
     {
-        public bool IsEnabled { get; set; }
-
-        public bool IsEnabledForChildActions { get; set; }
-
         public MvcControllersAuditingConfiguration()
         {
             IsEnabled = true;
         }
+
+        public bool IsEnabled { get; set; }
+
+        public bool IsEnabledForChildActions { get; set; }
     }
 }

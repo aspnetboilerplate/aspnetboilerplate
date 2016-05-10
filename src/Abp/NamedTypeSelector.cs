@@ -3,22 +3,12 @@ using System;
 namespace Abp
 {
     /// <summary>
-    /// Used to represent a named type selector.
+    ///     Used to represent a named type selector.
     /// </summary>
     public class NamedTypeSelector
     {
         /// <summary>
-        /// Name of the selector.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Predicate.
-        /// </summary>
-        public Func<Type, bool> Predicate { get; set; }
-
-        /// <summary>
-        /// Creates new <see cref="NamedTypeSelector"/> object.
+        ///     Creates new <see cref="NamedTypeSelector" /> object.
         /// </summary>
         /// <param name="name">Name</param>
         /// <param name="predicate">Predicate</param>
@@ -27,5 +17,15 @@ namespace Abp
             Name = name;
             Predicate = predicate;
         }
+
+        /// <summary>
+        ///     Name of the selector.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Predicate.
+        /// </summary>
+        public Func<Type, bool> Predicate { get; set; }
     }
 }

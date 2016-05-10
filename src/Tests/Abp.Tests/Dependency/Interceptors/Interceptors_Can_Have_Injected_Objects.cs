@@ -7,19 +7,6 @@ namespace Abp.Tests.Dependency.Interceptors
 {
     public class Interceptors_Tests : TestBaseWithLocalIocManager
     {
-        [Fact]
-        public void Interceptors_Should_Work()
-        {
-            LocalIocManager.IocContainer.Register(
-                Component.For<BracketInterceptor>().LifestyleTransient(),
-                Component.For<MyGreetingClass>().Interceptors<BracketInterceptor>().LifestyleTransient()
-                );
-
-            var greetingObj = LocalIocManager.Resolve<MyGreetingClass>();
-
-            greetingObj.SayHello("Halil").ShouldBe("(Hello Halil)");
-        }
-
         public class MyGreetingClass
         {
             public virtual string SayHello(string name)
@@ -35,6 +22,19 @@ namespace Abp.Tests.Dependency.Interceptors
                 invocation.Proceed();
                 invocation.ReturnValue = "(" + invocation.ReturnValue + ")";
             }
+        }
+
+        [Fact]
+        public void Interceptors_Should_Work()
+        {
+            LocalIocManager.IocContainer.Register(
+                Component.For<BracketInterceptor>().LifestyleTransient(),
+                Component.For<MyGreetingClass>().Interceptors<BracketInterceptor>().LifestyleTransient()
+                );
+
+            var greetingObj = LocalIocManager.Resolve<MyGreetingClass>();
+
+            greetingObj.SayHello("Halil").ShouldBe("(Hello Halil)");
         }
     }
 }

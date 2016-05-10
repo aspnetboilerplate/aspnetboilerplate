@@ -1,11 +1,11 @@
-﻿using Abp.IO.Extensions;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
+using Abp.IO.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
     /// <summary>
-    /// Provides localization dictionaries from XML files embedded into an <see cref="Assembly"/>.
+    ///     Provides localization dictionaries from XML files embedded into an <see cref="Assembly" />.
     /// </summary>
     public class XmlEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
@@ -13,7 +13,7 @@ namespace Abp.Localization.Dictionaries.Xml
         private readonly string _rootNamespace;
 
         /// <summary>
-        /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
+        ///     Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider" /> object.
         /// </summary>
         /// <param name="assembly">Assembly that contains embedded xml files</param>
         /// <param name="rootNamespace">Namespace of the embedded xml dictionary files</param>
@@ -38,7 +38,9 @@ namespace Abp.Localization.Dictionaries.Xml
                         var dictionary = CreateXmlLocalizationDictionary(xmlString);
                         if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                         {
-                            throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+                            throw new AbpInitializationException(sourceName +
+                                                                 " source contains more than one dictionary for the culture: " +
+                                                                 dictionary.CultureInfo.Name);
                         }
 
                         Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -47,7 +49,8 @@ namespace Abp.Localization.Dictionaries.Xml
                         {
                             if (DefaultDictionary != null)
                             {
-                                throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
+                                throw new AbpInitializationException(
+                                    "Only one default localization dictionary can be for source: " + sourceName);
                             }
 
                             DefaultDictionary = dictionary;

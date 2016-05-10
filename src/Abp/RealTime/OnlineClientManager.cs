@@ -1,25 +1,24 @@
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Abp.Collections.Extensions;
+using Abp.Dependency;
 
 namespace Abp.RealTime
 {
     /// <summary>
-    /// Implements <see cref="IOnlineClientManager"/>.
+    ///     Implements <see cref="IOnlineClientManager" />.
     /// </summary>
     public class OnlineClientManager : IOnlineClientManager, ISingletonDependency
     {
         /// <summary>
-        /// Online clients.
+        ///     Online clients.
         /// </summary>
         private readonly ConcurrentDictionary<string, IOnlineClient> _clients;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
+        ///     Initializes a new instance of the <see cref="OnlineClientManager" /> class.
         /// </summary>
         public OnlineClientManager()
         {
@@ -47,10 +46,10 @@ namespace Abp.RealTime
             return _clients.GetOrDefault(connectionId);
         }
 
-        public IOnlineClient GetByUserIdOrNull(Guid userId)
+        public IOnlineClient GetByUserIdOrNull(IUserIdentifier user)
         {
             //TODO: We can create a dictionary for a faster lookup.
-            return GetAllClients().FirstOrDefault(c => c.UserId == userId);
+            return GetAllClients().FirstOrDefault(c => c.UserId == user.UserId && c.TenantId == user.TenantId);
         }
 
         public IReadOnlyList<IOnlineClient> GetAllClients()

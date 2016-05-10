@@ -1,18 +1,18 @@
-﻿using Abp.Threading.Extensions;
+﻿using System.Collections.Generic;
+using Abp.Threading.Extensions;
 using Shouldly;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.Tests.Threading
 {
     public class LockExtensions_Tests
     {
-        private readonly List<int> _list;
-
         public LockExtensions_Tests()
         {
-            _list = new List<int> { 1 };
+            _list = new List<int> {1};
         }
+
+        private readonly List<int> _list;
 
         [Fact]
         public void Test_Locking()

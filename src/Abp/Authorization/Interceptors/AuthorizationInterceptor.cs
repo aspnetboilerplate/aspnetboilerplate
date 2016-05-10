@@ -1,14 +1,15 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Reflection;
 using Abp.Threading;
 using Castle.DynamicProxy;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Abp.Authorization.Interceptors
 {
     /// <summary>
-    /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
+    ///     This class is used to intercept methods to make authorization if the method defined
+    ///     <see cref="AbpAuthorizeAttribute" />.
     /// </summary>
     public class AuthorizationInterceptor : IInterceptor
     {
@@ -53,9 +54,9 @@ namespace Abp.Authorization.Interceptors
                         () =>
                         {
                             invocation.Proceed();
-                            return (Task)invocation.ReturnValue;
+                            return (Task) invocation.ReturnValue;
                         },
-                        preAction: () => AuthorizeAsync(authorizeAttributes)
+                        () => AuthorizeAsync(authorizeAttributes)
                     );
             }
             else //Task<TResult>
@@ -68,7 +69,7 @@ namespace Abp.Authorization.Interceptors
                             invocation.Proceed();
                             return invocation.ReturnValue;
                         },
-                        preAction: async () => await AuthorizeAsync(authorizeAttributes)
+                        async () => await AuthorizeAsync(authorizeAttributes)
                     );
             }
         }

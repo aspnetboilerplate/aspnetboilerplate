@@ -1,3 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -17,74 +27,99 @@ using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Controllers
 {
     /// <summary>
-    /// Base class for all MVC Controllers in Abp system.
+    ///     Base class for all MVC Controllers in Abp system.
     /// </summary>
     public abstract class AbpController : Controller
     {
+        private static readonly Type[] _ignoredTypesForSerialization = {typeof(HttpPostedFileBase)};
+
         /// <summary>
-        /// Gets current session information.
+        ///     This object is used to measure an action execute duration.
+        /// </summary>
+        private Stopwatch _actionStopwatch;
+
+        private AuditInfo _auditInfo;
+
+        /// <summary>
+        ///     MethodInfo for currently executing action.
+        /// </summary>
+        private MethodInfo _currentMethodInfo;
+
+        private ILocalizationSource _localizationSource;
+
+        private IUnitOfWorkManager _unitOfWorkManager;
+
+        /// <summary>
+        ///     WrapResultAttribute for currently executing action.
+        /// </summary>
+        private WrapResultAttribute _wrapResultAttribute;
+
+        /// <summary>
+        ///     Constructor.
+        /// </summary>
+        protected AbpController()
+        {
+            AbpSession = NullAbpSession.Instance;
+            Logger = NullLogger.Instance;
+            LocalizationManager = NullLocalizationManager.Instance;
+            PermissionChecker = NullPermissionChecker.Instance;
+            AuditingStore = SimpleLogAuditingStore.Instance;
+            EventBus = NullEventBus.Instance;
+        }
+
+        /// <summary>
+        ///     Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
 
         /// <summary>
-        /// Gets the event bus.
+        ///     Gets the event bus.
         /// </summary>
         public IEventBus EventBus { get; set; }
 
         /// <summary>
-        /// Reference to the permission manager.
+        ///     Reference to the permission manager.
         /// </summary>
         public IPermissionManager PermissionManager { get; set; }
 
         /// <summary>
-        /// Reference to the setting manager.
+        ///     Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
 
         /// <summary>
-        /// Reference to the permission checker.
+        ///     Reference to the permission checker.
         /// </summary>
         public IPermissionChecker PermissionChecker { protected get; set; }
 
         /// <summary>
-        /// Reference to the feature manager.
+        ///     Reference to the feature manager.
         /// </summary>
         public IFeatureManager FeatureManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the permission checker.
+        ///     Reference to the permission checker.
         /// </summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
-        /// Reference to the localization manager.
+        ///     Reference to the localization manager.
         /// </summary>
         public ILocalizationManager LocalizationManager { protected get; set; }
 
         /// <summary>
-        /// Gets/sets name of the localization source that is used in this application service.
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        ///     Gets/sets name of the localization source that is used in this application service.
+        ///     It must be set in order to use <see cref="L(string)" /> and <see cref="L(string,CultureInfo)" /> methods.
         /// </summary>
         protected string LocalizationSourceName { get; set; }
 
         /// <summary>
-        /// Gets localization source.
-        /// It's valid if <see cref="LocalizationSourceName"/> is set.
+        ///     Gets localization source.
+        ///     It's valid if <see cref="LocalizationSourceName" /> is set.
         /// </summary>
         protected ILocalizationSource LocalizationSource
         {
@@ -104,21 +139,22 @@ namespace Abp.Web.Mvc.Controllers
             }
         }
 
-        private ILocalizationSource _localizationSource;
-
         /// <summary>
-        /// Reference to the logger to write logs.
+        ///     Reference to the logger to write logs.
         /// </summary>
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets current session information.
+        ///     Gets current session information.
         /// </summary>
         [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
+        protected IAbpSession CurrentSession
+        {
+            get { return AbpSession; }
+        }
 
         /// <summary>
-        /// Reference to <see cref="IUnitOfWorkManager"/>.
+        ///     Reference to <see cref="IUnitOfWorkManager" />.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager
         {
@@ -134,12 +170,13 @@ namespace Abp.Web.Mvc.Controllers
             set { _unitOfWorkManager = value; }
         }
 
-        private IUnitOfWorkManager _unitOfWorkManager;
-
         /// <summary>
-        /// Gets current unit of work.
+        ///     Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+        protected IActiveUnitOfWork CurrentUnitOfWork
+        {
+            get { return UnitOfWorkManager.Current; }
+        }
 
         public IAuditingConfiguration AuditingConfiguration { get; set; }
 
@@ -148,39 +185,7 @@ namespace Abp.Web.Mvc.Controllers
         public IAuditingStore AuditingStore { get; set; }
 
         /// <summary>
-        /// This object is used to measure an action execute duration.
-        /// </summary>
-        private Stopwatch _actionStopwatch;
-
-        private AuditInfo _auditInfo;
-
-        /// <summary>
-        /// MethodInfo for currently executing action.
-        /// </summary>
-        private MethodInfo _currentMethodInfo;
-
-        /// <summary>
-        /// WrapResultAttribute for currently executing action.
-        /// </summary>
-        private WrapResultAttribute _wrapResultAttribute;
-
-        private static Type[] _ignoredTypesForSerialization = { typeof(HttpPostedFileBase) };
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected AbpController()
-        {
-            AbpSession = NullAbpSession.Instance;
-            Logger = NullLogger.Instance;
-            LocalizationManager = NullLocalizationManager.Instance;
-            PermissionChecker = NullPermissionChecker.Instance;
-            AuditingStore = SimpleLogAuditingStore.Instance;
-            EventBus = NullEventBus.Instance;
-        }
-
-        /// <summary>
-        /// Gets localized string for given key name and current language.
+        ///     Gets localized string for given key name and current language.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <returns>Localized string</returns>
@@ -190,7 +195,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
+        ///     Gets localized string for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
@@ -201,7 +206,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
+        ///     Gets localized string for given key name and specified culture information.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
@@ -212,7 +217,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
+        ///     Gets localized string for given key name and current language with formatting strings.
         /// </summary>
         /// <param name="name">Key name</param>
         /// <param name="culture">culture information</param>
@@ -224,7 +229,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected Task<bool> IsGrantedAsync(string permissionName)
@@ -233,7 +238,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected bool IsGranted(string permissionName)
@@ -242,7 +247,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>
@@ -252,7 +257,7 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>
@@ -262,13 +267,14 @@ namespace Abp.Web.Mvc.Controllers
         }
 
         /// <summary>
-        /// Json the specified data, contentType, contentEncoding and behavior.
+        ///     Json the specified data, contentType, contentEncoding and behavior.
         /// </summary>
         /// <param name="data">Data.</param>
         /// <param name="contentType">Content type.</param>
         /// <param name="contentEncoding">Content encoding.</param>
         /// <param name="behavior">Behavior.</param>
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding,
+            JsonRequestBehavior behavior)
         {
             if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
             {
@@ -434,8 +440,8 @@ namespace Abp.Web.Mvc.Controllers
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ServiceName = _currentMethodInfo.DeclaringType != null
-                                ? _currentMethodInfo.DeclaringType.FullName
-                                : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
+                    ? _currentMethodInfo.DeclaringType.FullName
+                    : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                 MethodName = _currentMethodInfo.Name,
                 Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
                 ExecutionTime = Clock.Now
@@ -500,7 +506,8 @@ namespace Abp.Web.Mvc.Controllers
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value != null && _ignoredTypesForSerialization.Any(t => t.IsInstanceOfType(argument.Value)))
+                    if (argument.Value != null &&
+                        _ignoredTypesForSerialization.Any(t => t.IsInstanceOfType(argument.Value)))
                     {
                         dictionary[argument.Key] = null;
                     }
@@ -514,12 +521,13 @@ namespace Abp.Web.Mvc.Controllers
                     dictionary,
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        ContractResolver = new AuditingContractResolver()
                     });
             }
             catch (Exception ex)
             {
-                Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." + _auditInfo.MethodName);
+                Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." +
+                            _auditInfo.MethodName);
                 Logger.Warn(ex.ToString(), ex);
                 return "{}";
             }

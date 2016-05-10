@@ -1,26 +1,26 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.NHibernate.Filters;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
 using NHibernate;
-using System.Reflection;
 
 namespace Abp.NHibernate
 {
     /// <summary>
-    /// This module is used to implement "Data Access Layer" in NHibernate.
+    ///     This module is used to implement "Data Access Layer" in NHibernate.
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpNHibernateModule : AbpModule
     {
         /// <summary>
-        /// NHibernate session factory object.
+        ///     NHibernate session factory object.
         /// </summary>
         private ISessionFactory _sessionFactory;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Initialize()
         {
             IocManager.Register<AbpNHibernateInterceptor>(DependencyLifeStyle.Transient);
@@ -35,7 +35,7 @@ namespace Abp.NHibernate
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Shutdown()
         {
             _sessionFactory.Dispose();

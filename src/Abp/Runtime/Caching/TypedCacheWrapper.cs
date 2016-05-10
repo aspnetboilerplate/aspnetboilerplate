@@ -4,12 +4,21 @@ using System.Threading.Tasks;
 namespace Abp.Runtime.Caching
 {
     /// <summary>
-    /// Implements <see cref="ITypedCache{TKey,TValue}"/> to wrap a <see cref="ICache"/>.
+    ///     Implements <see cref="ITypedCache{TKey,TValue}" /> to wrap a <see cref="ICache" />.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     public class TypedCacheWrapper<TKey, TValue> : ITypedCache<TKey, TValue>
     {
+        /// <summary>
+        ///     Creates a new <see cref="TypedCacheWrapper{TKey,TValue}" /> object.
+        /// </summary>
+        /// <param name="internalCache">The actual internal cache</param>
+        public TypedCacheWrapper(ICache internalCache)
+        {
+            InternalCache = internalCache;
+        }
+
         public string Name
         {
             get { return InternalCache.Name; }
@@ -21,16 +30,7 @@ namespace Abp.Runtime.Caching
             set { InternalCache.DefaultSlidingExpireTime = value; }
         }
 
-        public ICache InternalCache { get; private set; }
-
-        /// <summary>
-        /// Creates a new <see cref="TypedCacheWrapper{TKey,TValue}"/> object.
-        /// </summary>
-        /// <param name="internalCache">The actual internal cache</param>
-        public TypedCacheWrapper(ICache internalCache)
-        {
-            InternalCache = internalCache;
-        }
+        public ICache InternalCache { get; }
 
         public void Dispose()
         {

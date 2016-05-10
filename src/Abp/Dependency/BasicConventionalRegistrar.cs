@@ -4,7 +4,8 @@ using Castle.MicroKernel.Registration;
 namespace Abp.Dependency
 {
     /// <summary>
-    /// This class is used to register basic dependency implementations such as <see cref="ITransientDependency"/> and <see cref="ISingletonDependency"/>.
+    ///     This class is used to register basic dependency implementations such as <see cref="ITransientDependency" /> and
+    ///     <see cref="ISingletonDependency" />.
     /// </summary>
     public class BasicConventionalRegistrar : IConventionalDependencyRegistrar
     {

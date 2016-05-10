@@ -1,24 +1,19 @@
-﻿using Abp.Authorization;
+﻿using System.Web;
+using System.Web.Mvc;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
-using System.Web.Mvc;
 
 namespace Abp.Web.Mvc.Authorization
 {
     /// <summary>
-    /// This attribute is used on an action of an MVC <see cref="Controller"/>
-    /// to make that action usable only by authorized users.
+    ///     This attribute is used on an action of an MVC <see cref="Controller" />
+    ///     to make that action usable only by authorized users.
     /// </summary>
     public class AbpMvcAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
-        /// <inheritdoc/>
-        public string[] Permissions { get; set; }
-
-        /// <inheritdoc/>
-        public bool RequireAllPermissions { get; set; }
-
         /// <summary>
-        /// Creates a new instance of <see cref="AbpMvcAuthorizeAttribute"/> class.
+        ///     Creates a new instance of <see cref="AbpMvcAuthorizeAttribute" /> class.
         /// </summary>
         /// <param name="permissions">A list of permissions to authorize</param>
         public AbpMvcAuthorizeAttribute(params string[] permissions)
@@ -26,8 +21,14 @@ namespace Abp.Web.Mvc.Authorization
             Permissions = permissions;
         }
 
-        /// <inheritdoc/>
-        protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
+        /// <inheritdoc />
+        public string[] Permissions { get; set; }
+
+        /// <inheritdoc />
+        public bool RequireAllPermissions { get; set; }
+
+        /// <inheritdoc />
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             if (!base.AuthorizeCore(httpContext))
             {
@@ -36,7 +37,9 @@ namespace Abp.Web.Mvc.Authorization
 
             try
             {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
+                using (
+                    var authorizationAttributeHelper =
+                        IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
                 {
                     authorizationAttributeHelper.Object.Authorize(this);
                 }

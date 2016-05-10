@@ -11,21 +11,16 @@ namespace Abp.WebApi.Controllers.ApiExplorer
     {
         public override string ActionName
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override Type ReturnType
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
-        public override Task<object> ExecuteAsync(HttpControllerContext controllerContext, IDictionary<string, object> arguments, CancellationToken cancellationToken)
+        public override Task<object> ExecuteAsync(HttpControllerContext controllerContext,
+            IDictionary<string, object> arguments, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

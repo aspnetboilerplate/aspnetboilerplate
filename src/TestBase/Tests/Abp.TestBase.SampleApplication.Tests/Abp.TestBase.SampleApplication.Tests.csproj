@@ -101,11 +101,13 @@
     <Compile Include="Auditing\SimpleAuditing_Test.cs" />
     <Compile Include="ContactLists\ContactList_MultiTenancy_Tests.cs" />
     <Compile Include="ContactLists\Messages_MultiTenancy_Tests.cs" />
+    <Compile Include="EntityFramework\ObjectMaterialize_Tests.cs" />
     <Compile Include="Features\FeatureSystem_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Resolve_Test.cs" />
     <Compile Include="People\PersonRepository_General_Tests.cs" />
     <Compile Include="People\PersonRepository_SoftDelete_Tests.cs" />
     <Compile Include="People\PersonRepository_Tests_For_EntityChangeEvents.cs" />
+    <Compile Include="SampleApplicationTestModule.cs" />
     <Compile Include="Uow\UnitOfWork_Event_Tests.cs" />
     <Compile Include="People\PersonAppService_Tests.cs" />
     <Compile Include="SampleApplicationTestBase.cs" />
@@ -136,6 +138,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

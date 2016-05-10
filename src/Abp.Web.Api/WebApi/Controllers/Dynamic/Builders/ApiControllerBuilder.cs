@@ -1,35 +1,36 @@
-using Abp.WebApi.Controllers.Dynamic.Interceptors;
 using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
+using Abp.Application.Services;
+using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
-    /// Used to build <see cref="DynamicApiControllerInfo"/> object.
+    ///     Used to build <see cref="DynamicApiControllerInfo" /> object.
     /// </summary>
     /// <typeparam name="T">The of the proxied object</typeparam>
     internal class ApiControllerBuilder<T> : IApiControllerBuilder<T>
     {
         /// <summary>
-        /// Name of the controller.
-        /// </summary>
-        private readonly string _serviceName;
-
-        /// <summary>
-        /// List of all action builders for this controller.
+        ///     List of all action builders for this controller.
         /// </summary>
         private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
 
         /// <summary>
-        /// Action Filters to apply to the whole Dynamic Controller.
+        ///     Name of the controller.
         /// </summary>
-        private IFilter[] _filters;
+        private readonly string _serviceName;
 
         private bool _conventionalVerbs;
 
         /// <summary>
-        /// Creates a new instance of ApiControllerInfoBuilder.
+        ///     Action Filters to apply to the whole Dynamic Controller.
+        /// </summary>
+        private IFilter[] _filters;
+
+        /// <summary>
+        ///     Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
         /// <param name="serviceName">Name of the controller</param>
         public ApiControllerBuilder(string serviceName)
@@ -41,20 +42,30 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             if (!DynamicApiServiceNameHelper.IsValidServiceName(serviceName))
             {
-                throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
+                throw new ArgumentException(
+                    "serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.",
+                    "serviceName");
             }
 
             _serviceName = serviceName;
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
+
             foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
-                _actionBuilders[methodInfo.Name] = new ApiControllerActionBuilder<T>(this, methodInfo);
+                var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
+
+                if (methodInfo.IsDefined(typeof(DisableDynamicWebApiAttribute), true))
+                {
+                    actionBuilder.DontCreateAction();
+                }
+
+                _actionBuilders[methodInfo.Name] = actionBuilder;
             }
         }
 
         /// <summary>
-        /// The adds Action filters for the whole Dynamic Controller
+        ///     The adds Action filters for the whole Dynamic Controller
         /// </summary>
         /// <param name="filters"> The filters. </param>
         /// <returns>The current Controller Builder </returns>
@@ -65,7 +76,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Used to specify a method definition.
+        ///     Used to specify a method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
@@ -86,8 +97,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Builds the controller.
-        /// This method must be called at last of the build operation.
+        ///     Builds the controller.
+        ///     This method must be called at last of the build operation.
         /// </summary>
         public void Build()
         {

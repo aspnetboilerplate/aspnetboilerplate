@@ -3,44 +3,44 @@ using System;
 namespace Abp.Web
 {
     /// <summary>
-    /// Represents an HTTP verb.
+    ///     Represents an HTTP verb.
     /// </summary>
     [Flags]
     public enum HttpVerb
     {
         /// <summary>
-        /// GET
+        ///     GET
         /// </summary>
         Get,
 
         /// <summary>
-        /// POST
+        ///     POST
         /// </summary>
         Post,
 
         /// <summary>
-        /// PUT
+        ///     PUT
         /// </summary>
         Put,
 
         /// <summary>
-        /// DELETE
+        ///     DELETE
         /// </summary>
         Delete,
 
         /// <summary>
-        /// OPTIONS
+        ///     OPTIONS
         /// </summary>
         Options,
 
         /// <summary>
-        /// TRACE
+        ///     TRACE
         /// </summary>
         Trace,
 
         /// <summary>
-        /// HEAD
+        ///     HEAD
         /// </summary>
-        Head,
+        Head
     }
 }

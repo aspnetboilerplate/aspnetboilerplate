@@ -1,15 +1,24 @@
 ﻿using Abp.Configuration;
 using Abp.Extensions;
-using System;
 
 namespace Abp.Net.Mail
 {
     /// <summary>
-    /// Implementation of <see cref="IEmailSenderConfiguration"/> that reads settings
-    /// from <see cref="ISettingManager"/>.
+    ///     Implementation of <see cref="IEmailSenderConfiguration" /> that reads settings
+    ///     from <see cref="ISettingManager" />.
     /// </summary>
     public abstract class EmailSenderConfiguration : IEmailSenderConfiguration
     {
+        protected readonly ISettingManager SettingManager;
+
+        /// <summary>
+        ///     Creates a new <see cref="EmailSenderConfiguration" />.
+        /// </summary>
+        protected EmailSenderConfiguration(ISettingManager settingManager)
+        {
+            SettingManager = settingManager;
+        }
+
         public string DefaultFromAddress
         {
             get { return GetNotEmptySettingValue(EmailSettingNames.DefaultFromAddress); }
@@ -20,18 +29,8 @@ namespace Abp.Net.Mail
             get { return SettingManager.GetSettingValue(EmailSettingNames.DefaultFromDisplayName); }
         }
 
-        protected readonly ISettingManager SettingManager;
-
         /// <summary>
-        /// Creates a new <see cref="EmailSenderConfiguration"/>.
-        /// </summary>
-        protected EmailSenderConfiguration(ISettingManager settingManager)
-        {
-            SettingManager = settingManager;
-        }
-
-        /// <summary>
-        /// Gets a setting value by checking. Throws <see cref="AbpException"/> if it's null or empty.
+        ///     Gets a setting value by checking. Throws <see cref="AbpException" /> if it's null or empty.
         /// </summary>
         /// <param name="name">Name of the setting</param>
         /// <returns>Value of the setting</returns>
@@ -40,7 +39,7 @@ namespace Abp.Net.Mail
             var value = SettingManager.GetSettingValue(name);
             if (value.IsNullOrEmpty())
             {
-                throw new AbpException(String.Format("Setting value for '{0}' is null or empty!", name));
+                throw new AbpException(string.Format("Setting value for '{0}' is null or empty!", name));
             }
 
             return value;

@@ -3,13 +3,18 @@ using System;
 namespace Abp.Timing
 {
     /// <summary>
-    /// Implements <see cref="IClockProvider"/> to work with UTC times.
+    ///     Implements <see cref="IClockProvider" /> to work with UTC times.
     /// </summary>
     public class UtcClockProvider : IClockProvider
     {
         public DateTime Now
         {
             get { return DateTime.UtcNow; }
+        }
+
+        public DateTimeKind Kind
+        {
+            get { return DateTimeKind.Utc; }
         }
 
         public DateTime Normalize(DateTime dateTime)
@@ -25,6 +30,11 @@ namespace Abp.Timing
             }
 
             return dateTime;
+        }
+
+        public bool SupportsMultipleTimezone()
+        {
+            return true;
         }
     }
 }

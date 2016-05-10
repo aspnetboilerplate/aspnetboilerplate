@@ -3,12 +3,12 @@
 namespace Abp.Collections.Extensions
 {
     /// <summary>
-    /// Extension methods for Dictionary.
+    ///     Extension methods for Dictionary.
     /// </summary>
     public static class DictionaryExtensions
     {
         /// <summary>
-        /// This method is used to try to get a value in a dictionary if it does exists.
+        ///     This method is used to try to get a value in a dictionary if it does exists.
         /// </summary>
         /// <typeparam name="T">Type of the value</typeparam>
         /// <param name="dictionary">The collection object</param>
@@ -20,7 +20,7 @@ namespace Abp.Collections.Extensions
             object valueObj;
             if (dictionary.TryGetValue(key, out valueObj) && valueObj is T)
             {
-                value = (T)valueObj;
+                value = (T) valueObj;
                 return true;
             }
 
@@ -29,7 +29,7 @@ namespace Abp.Collections.Extensions
         }
 
         /// <summary>
-        /// Gets a value from the dictionary with given key. Returns default value if can not find.
+        ///     Gets a value from the dictionary with given key. Returns default value if can not find.
         /// </summary>
         /// <param name="dictionary">Dictionary to check and get</param>
         /// <param name="key">Key to find the value</param>

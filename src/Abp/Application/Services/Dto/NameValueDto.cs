@@ -3,20 +3,20 @@ using System;
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// Can be used to send/receive Name/Value (or Key/Value) pairs.
+    ///     Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
     [Serializable]
     public class NameValueDto : NameValueDto<string>
     {
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
         public NameValueDto()
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
         public NameValueDto(string name, string value)
             : base(name, value)
@@ -24,9 +24,9 @@ namespace Abp.Application.Services.Dto
         }
 
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
-        /// <param name="nameValue">A <see cref="NameValue"/> object to get it's name and value</param>
+        /// <param name="nameValue">A <see cref="NameValue" /> object to get it's name and value</param>
         public NameValueDto(NameValue nameValue)
             : this(nameValue.Name, nameValue.Value)
         {
@@ -34,20 +34,20 @@ namespace Abp.Application.Services.Dto
     }
 
     /// <summary>
-    /// Can be used to send/receive Name/Value (or Key/Value) pairs.
+    ///     Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
     [Serializable]
     public class NameValueDto<T> : NameValue<T>, IDto
     {
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
         public NameValueDto()
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
         public NameValueDto(string name, T value)
             : base(name, value)
@@ -55,9 +55,9 @@ namespace Abp.Application.Services.Dto
         }
 
         /// <summary>
-        /// Creates a new <see cref="NameValueDto"/>.
+        ///     Creates a new <see cref="NameValueDto" />.
         /// </summary>
-        /// <param name="nameValue">A <see cref="NameValue"/> object to get it's name and value</param>
+        /// <param name="nameValue">A <see cref="NameValue" /> object to get it's name and value</param>
         public NameValueDto(NameValue<T> nameValue)
             : this(nameValue.Name, nameValue.Value)
         {

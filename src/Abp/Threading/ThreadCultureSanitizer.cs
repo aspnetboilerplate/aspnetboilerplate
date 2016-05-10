@@ -4,9 +4,9 @@ using System.Threading;
 namespace Abp.Threading
 {
     /// <summary>
-    /// This class is copied from here:
-    /// http://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
-    /// It's a workaround for application startup problem.
+    ///     This class is copied from here:
+    ///     http://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
+    ///     It's a workaround for application startup problem.
     /// </summary>
     public static class ThreadCultureSanitizer
     {

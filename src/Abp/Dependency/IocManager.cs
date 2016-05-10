@@ -8,22 +8,12 @@ using System.Reflection;
 namespace Abp.Dependency
 {
     /// <summary>
-    /// This class is used to directly perform dependency injection tasks.
+    ///     This class is used to directly perform dependency injection tasks.
     /// </summary>
     public class IocManager : IIocManager
     {
         /// <summary>
-        /// The Singleton instance.
-        /// </summary>
-        public static IocManager Instance { get; private set; }
-
-        /// <summary>
-        /// Reference to the Castle Windsor Container.
-        /// </summary>
-        public IWindsorContainer IocContainer { get; private set; }
-
-        /// <summary>
-        /// List of all registered conventional registrars.
+        ///     List of all registered conventional registrars.
         /// </summary>
         private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
 
@@ -33,9 +23,9 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Creates a new <see cref="IocManager"/> object.
-        /// Normally, you don't directly instantiate an <see cref="IocManager"/>.
-        /// This may be useful for test purposes.
+        ///     Creates a new <see cref="IocManager" /> object.
+        ///     Normally, you don't directly instantiate an <see cref="IocManager" />.
+        ///     This may be useful for test purposes.
         /// </summary>
         public IocManager()
         {
@@ -49,7 +39,17 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Adds a dependency registrar for conventional registration.
+        ///     The Singleton instance.
+        /// </summary>
+        public static IocManager Instance { get; private set; }
+
+        /// <summary>
+        ///     Reference to the Castle Windsor Container.
+        /// </summary>
+        public IWindsorContainer IocContainer { get; }
+
+        /// <summary>
+        ///     Adds a dependency registrar for conventional registration.
         /// </summary>
         /// <param name="registrar">dependency registrar</param>
         public void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar)
@@ -58,7 +58,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
+        ///     Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar" />
+        ///     method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         public void RegisterAssemblyByConvention(Assembly assembly)
@@ -67,7 +68,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
+        ///     Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar" />
+        ///     method.
         /// </summary>
         /// <param name="assembly">Assembly to register</param>
         /// <param name="config">Additional configuration</param>
@@ -87,7 +89,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a type as self registration.
+        ///     Registers a type as self registration.
         /// </summary>
         /// <typeparam name="TType">Type of the class</typeparam>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
@@ -97,7 +99,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a type as self registration.
+        ///     Registers a type as self registration.
         /// </summary>
         /// <param name="type">Type of the class</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
@@ -107,10 +109,10 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a type with it's implementation.
+        ///     Registers a type with it's implementation.
         /// </summary>
         /// <typeparam name="TType">Registering type</typeparam>
-        /// <typeparam name="TImpl">The type that implements <see cref="TType"/></typeparam>
+        /// <typeparam name="TImpl">The type that implements <see cref="TType" /></typeparam>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register<TType, TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
             where TType : class
@@ -120,10 +122,10 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a type with it's implementation.
+        ///     Registers a type with it's implementation.
         /// </summary>
         /// <param name="type">Type of the class</param>
-        /// <param name="impl">The type that implements <paramref name="type"/></param>
+        /// <param name="impl">The type that implements <paramref name="type" /></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
@@ -131,7 +133,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Checks whether given type is registered before.
+        ///     Checks whether given type is registered before.
         /// </summary>
         /// <param name="type">Type to check</param>
         public bool IsRegistered(Type type)
@@ -140,7 +142,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Checks whether given type is registered before.
+        ///     Checks whether given type is registered before.
         /// </summary>
         /// <typeparam name="TType">Type to check</typeparam>
         public bool IsRegistered<TType>()
@@ -149,8 +151,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        ///     Gets an object from IOC container.
+        ///     Returning object must be Released (see <see cref="IIocResolver.Release" />) after usage.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The instance object</returns>
@@ -160,8 +162,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="Release"/>) after usage.
+        ///     Gets an object from IOC container.
+        ///     Returning object must be Released (see <see cref="Release" />) after usage.
         /// </summary>
         /// <typeparam name="T">Type of the object to cast</typeparam>
         /// <param name="type">Type of the object to resolve</param>
@@ -172,8 +174,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        ///     Gets an object from IOC container.
+        ///     Returning object must be Released (see <see cref="IIocResolver.Release" />) after usage.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -184,8 +186,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        ///     Gets an object from IOC container.
+        ///     Returning object must be Released (see <see cref="IIocResolver.Release" />) after usage.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <returns>The instance object</returns>
@@ -195,8 +197,8 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        ///     Gets an object from IOC container.
+        ///     Returning object must be Released (see <see cref="IIocResolver.Release" />) after usage.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -207,7 +209,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Releases a pre-resolved object. See Resolve methods.
+        ///     Releases a pre-resolved object. See Resolve methods.
         /// </summary>
         /// <param name="obj">Object to be released</param>
         public void Release(object obj)
@@ -215,13 +217,14 @@ namespace Abp.Dependency
             IocContainer.Release(obj);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Dispose()
         {
             IocContainer.Dispose();
         }
 
-        private static ComponentRegistration<T> ApplyLifestyle<T>(ComponentRegistration<T> registration, DependencyLifeStyle lifeStyle)
+        private static ComponentRegistration<T> ApplyLifestyle<T>(ComponentRegistration<T> registration,
+            DependencyLifeStyle lifeStyle)
             where T : class
         {
             switch (lifeStyle)

@@ -3,14 +3,14 @@ using System;
 namespace Abp.Domain.Entities.Auditing
 {
     /// <summary>
-    /// Adds navigation properties to <see cref="ICreationAudited"/> interface for user.
+    ///     Adds navigation properties to <see cref="ICreationAudited" /> interface for user.
     /// </summary>
     /// <typeparam name="TUser">Type of the user</typeparam>
     public interface ICreationAudited<TUser> : ICreationAudited
         where TUser : IEntity<Guid>
     {
         /// <summary>
-        /// Reference to the creator user of this entity.
+        ///     Reference to the creator user of this entity.
         /// </summary>
         TUser CreatorUser { get; set; }
     }

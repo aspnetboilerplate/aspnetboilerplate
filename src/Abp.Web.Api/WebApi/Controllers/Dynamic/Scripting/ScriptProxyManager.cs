@@ -1,12 +1,12 @@
-﻿using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
-using Abp.WebApi.Controllers.Dynamic.Scripting.jQuery;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Abp.Collections.Extensions;
+using Abp.Dependency;
+using Abp.WebApi.Controllers.Dynamic.Scripting.Angular;
+using Abp.WebApi.Controllers.Dynamic.Scripting.jQuery;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
@@ -34,7 +34,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 var cachedScript = CachedScripts.GetOrDefault(cacheKey);
                 if (cachedScript == null)
                 {
-                    var dynamicController = DynamicApiControllerManager.GetAll().FirstOrDefault(ci => ci.ServiceName == name);
+                    var dynamicController =
+                        DynamicApiControllerManager.GetAll().FirstOrDefault(ci => ci.ServiceName == name);
                     if (dynamicController == null)
                     {
                         throw new HttpException(404, "There is no such a service: " + cacheKey);
@@ -72,7 +73,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             }
         }
 
-        private static IScriptProxyGenerator CreateProxyGenerator(ProxyScriptType type, DynamicApiControllerInfo controllerInfo, bool amdModule)
+        private static IScriptProxyGenerator CreateProxyGenerator(ProxyScriptType type,
+            DynamicApiControllerInfo controllerInfo, bool amdModule)
         {
             switch (type)
             {
@@ -89,12 +91,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
         private class ScriptInfo
         {
-            public string Script { get; private set; }
-
             public ScriptInfo(string script)
             {
                 Script = script;
             }
+
+            public string Script { get; }
         }
     }
 }

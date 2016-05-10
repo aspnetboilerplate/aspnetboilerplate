@@ -1,11 +1,12 @@
-using Newtonsoft.Json;
 using System;
+using Newtonsoft.Json;
 
 namespace Abp.Localization
 {
     /// <summary>
-    /// This class can be used to serialize <see cref="ILocalizableString"/> to <see cref="string"/> during serialization.
-    /// It does not work for deserialization.
+    ///     This class can be used to serialize <see cref="ILocalizableString" /> to <see cref="string" /> during
+    ///     serialization.
+    ///     It does not work for deserialization.
     /// </summary>
     public class LocalizableStringToStringJsonConverter : JsonConverter
     {
@@ -17,11 +18,12 @@ namespace Abp.Localization
                 return;
             }
 
-            var localizableString = (ILocalizableString)value;
+            var localizableString = (ILocalizableString) value;
             writer.WriteValue(localizableString.Localize(new LocalizationContext(LocalizationHelper.Manager)));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

@@ -1,26 +1,20 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Json;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace Abp.BackgroundJobs
 {
     /// <summary>
-    /// Default implementation of <see cref="IBackgroundJobManager"/>.
+    ///     Default implementation of <see cref="IBackgroundJobManager" />.
     /// </summary>
     public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager
     {
-        /// <summary>
-        /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.
-        /// Default value: 5000 (5 seconds).
-        /// </summary>
-        public static int JobPollPeriod { get; set; }
-
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
 
@@ -30,7 +24,7 @@ namespace Abp.BackgroundJobs
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackgroundJobManager"/> class.
+        ///     Initializes a new instance of the <see cref="BackgroundJobManager" /> class.
         /// </summary>
         public BackgroundJobManager(
             IIocResolver iocResolver,
@@ -44,7 +38,14 @@ namespace Abp.BackgroundJobs
             Timer.Period = JobPollPeriod;
         }
 
-        public async Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+        /// <summary>
+        ///     Interval between polling jobs from <see cref="IBackgroundJobStore" />.
+        ///     Default value: 5000 (5 seconds).
+        /// </summary>
+        public static int JobPollPeriod { get; set; }
+
+        public async Task EnqueueAsync<TJob, TArgs>(TArgs args,
+            BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
@@ -88,7 +89,7 @@ namespace Abp.BackgroundJobs
                         var argsType = jobExecuteMethod.GetParameters()[0].ParameterType;
                         var argsObj = JsonConvert.DeserializeObject(jobInfo.JobArgs, argsType);
 
-                        jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
+                        jobExecuteMethod.Invoke(job.Object, new[] {argsObj});
 
                         AsyncHelper.RunSync(() => _store.DeleteAsync(jobInfo));
                     }

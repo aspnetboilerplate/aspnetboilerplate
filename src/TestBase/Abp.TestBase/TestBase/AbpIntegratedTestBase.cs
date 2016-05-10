@@ -1,28 +1,18 @@
-﻿using Abp.Collections;
+﻿using System;
+using Abp.Collections;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
 using Abp.TestBase.Modules;
 using Abp.TestBase.Runtime.Session;
-using System;
 
 namespace Abp.TestBase
 {
     /// <summary>
-    /// This is the base class for all tests integrated to ABP.
+    ///     This is the base class for all tests integrated to ABP.
     /// </summary>
     public abstract class AbpIntegratedTestBase : IDisposable
     {
-        /// <summary>
-        /// A reference to the <see cref="IIocManager"/> used for this test.
-        /// </summary>
-        protected IIocManager LocalIocManager { get; private set; }
-
-        /// <summary>
-        /// Gets Session object. Can be used to change current user and tenant in tests.
-        /// </summary>
-        protected TestAbpSession AbpSession { get; private set; }
-
         private readonly AbpBootstrapper _bootstrapper;
 
         protected AbpIntegratedTestBase()
@@ -42,17 +32,15 @@ namespace Abp.TestBase
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
 
-        protected virtual void AddModules(ITypeList<AbpModule> modules)
-        {
-            modules.Add<TestBaseModule>();
-        }
+        /// <summary>
+        ///     A reference to the <see cref="IIocManager" /> used for this test.
+        /// </summary>
+        protected IIocManager LocalIocManager { get; }
 
         /// <summary>
-        /// This method can be overrided to replace some services with fakes.
+        ///     Gets Session object. Can be used to change current user and tenant in tests.
         /// </summary>
-        protected virtual void PreInitialize()
-        {
-        }
+        protected TestAbpSession AbpSession { get; private set; }
 
         public virtual void Dispose()
         {
@@ -60,9 +48,21 @@ namespace Abp.TestBase
             LocalIocManager.Dispose();
         }
 
+        protected virtual void AddModules(ITypeList<AbpModule> modules)
+        {
+            modules.Add<TestBaseModule>();
+        }
+
         /// <summary>
-        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="T"/> as transient if it's not registered before.
+        ///     This method can be overrided to replace some services with fakes.
+        /// </summary>
+        protected virtual void PreInitialize()
+        {
+        }
+
+        /// <summary>
+        ///     A shortcut to resolve an object from <see cref="LocalIocManager" />.
+        ///     Also registers <see cref="T" /> as transient if it's not registered before.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The object instance</returns>
@@ -73,8 +73,8 @@ namespace Abp.TestBase
         }
 
         /// <summary>
-        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="T"/> as transient if it's not registered before.
+        ///     A shortcut to resolve an object from <see cref="LocalIocManager" />.
+        ///     Also registers <see cref="T" /> as transient if it's not registered before.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -86,8 +86,8 @@ namespace Abp.TestBase
         }
 
         /// <summary>
-        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="type"/> as transient if it's not registered before.
+        ///     A shortcut to resolve an object from <see cref="LocalIocManager" />.
+        ///     Also registers <see cref="type" /> as transient if it's not registered before.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <returns>The object instance</returns>
@@ -98,8 +98,8 @@ namespace Abp.TestBase
         }
 
         /// <summary>
-        /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="type"/> as transient if it's not registered before.
+        ///     A shortcut to resolve an object from <see cref="LocalIocManager" />.
+        ///     Also registers <see cref="type" /> as transient if it's not registered before.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -111,7 +111,7 @@ namespace Abp.TestBase
         }
 
         /// <summary>
-        /// Registers given type if it's not registered before.
+        ///     Registers given type if it's not registered before.
         /// </summary>
         /// <param name="type">Type to check and register</param>
         /// <param name="lifeStyle">Lifestyle</param>
@@ -121,7 +121,8 @@ namespace Abp.TestBase
             {
                 if (!type.IsClass || type.IsAbstract)
                 {
-                    throw new AbpException("Can not register " + type.Name + ". It should be a non-abstract class. If not, it should be registered before.");
+                    throw new AbpException("Can not register " + type.Name +
+                                           ". It should be a non-abstract class. If not, it should be registered before.");
                 }
 
                 LocalIocManager.Register(type, lifeStyle);

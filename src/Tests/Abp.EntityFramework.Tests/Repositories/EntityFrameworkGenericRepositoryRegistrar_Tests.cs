@@ -1,8 +1,10 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
 using Abp.Tests;
 using Castle.MicroKernel.Registration;
+using NSubstitute;
 using Shouldly;
 using System;
 using System.Data.Entity;
@@ -14,40 +16,25 @@ namespace Abp.EntityFramework.Tests.Repositories
     {
         public EntityFrameworkGenericRepositoryRegistrar_Tests()
         {
-            var fakeMainDbContextProvider = NSubstitute.Substitute.For<IDbContextProvider<MyMainDbContext>>();
-            var fakeModuleDbContextProvider = NSubstitute.Substitute.For<IDbContextProvider<MyModuleDbContext>>();
+            var fakeBaseDbContextProvider = Substitute.For<IDbContextProvider<MyBaseDbContext>>();
+            var fakeMainDbContextProvider = Substitute.For<IDbContextProvider<MyMainDbContext>>();
+            var fakeModuleDbContextProvider = Substitute.For<IDbContextProvider<MyModuleDbContext>>();
 
             LocalIocManager.IocContainer.Register(
+                Component.For<IDbContextProvider<MyBaseDbContext>>().UsingFactoryMethod(() => fakeBaseDbContextProvider),
                 Component.For<IDbContextProvider<MyMainDbContext>>().UsingFactoryMethod(() => fakeMainDbContextProvider),
-                Component.For<IDbContextProvider<MyModuleDbContext>>().UsingFactoryMethod(() => fakeModuleDbContextProvider)
+                Component.For<IDbContextProvider<MyModuleDbContext>>()
+                    .UsingFactoryMethod(() => fakeModuleDbContextProvider),
+                Component.For<EntityFrameworkGenericRepositoryRegistrar>().LifestyleTransient()
                 );
 
-            EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager);
-            EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager);
-        }
-
-        [Fact]
-        public void Should_Resolve_Generic_Repositories()
-        {
-            //Entity 1 (with default PK)
-            var entity1Repository = LocalIocManager.Resolve<IRepository<MyEntity1>>();
-            entity1Repository.ShouldNotBe(null);
-            (entity1Repository is EfRepositoryBase<MyMainDbContext, MyEntity1>).ShouldBe(true);
-
-            //Entity 1 (with specified PK)
-            var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1>>();
-            entity1RepositoryWithPk.ShouldNotBe(null);
-            (entity1RepositoryWithPk is EfRepositoryBase<MyMainDbContext, MyEntity1>).ShouldBe(true);
-
-            //Entity 2
-            var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2>>();
-            (entity2Repository is EfRepositoryBase<MyMainDbContext, MyEntity2>).ShouldBe(true);
-            entity2Repository.ShouldNotBe(null);
-
-            //Entity 3
-            var entity3Repository = LocalIocManager.Resolve<IMyModuleRepository<MyEntity3, Guid>>();
-            (entity3Repository is EfRepositoryBase<MyModuleDbContext, MyEntity3, Guid>).ShouldBe(true);
-            entity3Repository.ShouldNotBe(null);
+            using (
+                var repositoryRegistrar =
+                    LocalIocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
+            {
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager);
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager);
+            }
         }
 
         public class MyMainDbContext : MyBaseDbContext
@@ -99,7 +86,8 @@ namespace Abp.EntityFramework.Tests.Repositories
         {
         }
 
-        public class MyModuleRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
+        public class MyModuleRepositoryBase<TEntity, TPrimaryKey> :
+            EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {
             public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
@@ -108,13 +96,38 @@ namespace Abp.EntityFramework.Tests.Repositories
             }
         }
 
-        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, Guid>, IMyModuleRepository<TEntity>
+        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, Guid>,
+            IMyModuleRepository<TEntity>
             where TEntity : class, IEntity<Guid>
         {
             public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
                 : base(dbContextProvider)
             {
             }
+        }
+
+        [Fact]
+        public void Should_Resolve_Generic_Repositories()
+        {
+            //Entity 1 (with default PK)
+            var entity1Repository = LocalIocManager.Resolve<IRepository<MyEntity1, Guid>>();
+            entity1Repository.ShouldNotBe(null);
+            (entity1Repository is EfRepositoryBase<MyBaseDbContext, MyEntity1, Guid>).ShouldBe(true);
+
+            //Entity 1 (with specified PK)
+            var entity1RepositoryWithPk = LocalIocManager.Resolve<IRepository<MyEntity1, Guid>>();
+            entity1RepositoryWithPk.ShouldNotBe(null);
+            (entity1RepositoryWithPk is EfRepositoryBase<MyBaseDbContext, MyEntity1, Guid>).ShouldBe(true);
+
+            //Entity 2
+            var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2, Guid>>();
+            (entity2Repository is EfRepositoryBase<MyMainDbContext, MyEntity2, Guid>).ShouldBe(true);
+            entity2Repository.ShouldNotBe(null);
+
+            //Entity 3
+            var entity3Repository = LocalIocManager.Resolve<IMyModuleRepository<MyEntity3, Guid>>();
+            (entity3Repository is EfRepositoryBase<MyModuleDbContext, MyEntity3, Guid>).ShouldBe(true);
+            entity3Repository.ShouldNotBe(null);
         }
     }
 }

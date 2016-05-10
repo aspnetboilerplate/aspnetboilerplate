@@ -1,18 +1,18 @@
-﻿using Abp.BackgroundJobs;
+﻿using System.Threading.Tasks;
+using Abp.BackgroundJobs;
 using Shouldly;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.BackgroundJobs
 {
     public class InMemoryBackgroundJobStore_Tests
     {
-        private readonly InMemoryBackgroundJobStore _store;
-
         public InMemoryBackgroundJobStore_Tests()
         {
             _store = new InMemoryBackgroundJobStore();
         }
+
+        private readonly InMemoryBackgroundJobStore _store;
 
         [Fact]
         public async Task Test_All()

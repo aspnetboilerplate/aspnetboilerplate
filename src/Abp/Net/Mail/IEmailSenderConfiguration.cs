@@ -1,17 +1,17 @@
 ﻿namespace Abp.Net.Mail
 {
     /// <summary>
-    /// Defines configurations used while sending emails.
+    ///     Defines configurations used while sending emails.
     /// </summary>
     public interface IEmailSenderConfiguration
     {
         /// <summary>
-        /// Default from address.
+        ///     Default from address.
         /// </summary>
         string DefaultFromAddress { get; }
 
         /// <summary>
-        /// Default display name.
+        ///     Default display name.
         /// </summary>
         string DefaultFromDisplayName { get; }
     }

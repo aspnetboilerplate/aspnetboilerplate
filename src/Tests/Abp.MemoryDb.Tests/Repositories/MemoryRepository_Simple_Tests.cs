@@ -9,9 +9,6 @@ namespace Abp.MemoryDb.Tests.Repositories
 {
     public class MemoryRepository_Simple_Tests
     {
-        private readonly MemoryDatabase _database;
-        private readonly IRepository<MyEntity> _repository;
-
         public MemoryRepository_Simple_Tests()
         {
             _database = new MemoryDatabase();
@@ -25,6 +22,23 @@ namespace Abp.MemoryDb.Tests.Repositories
             _repository.Insert(new MyEntity("test-1"));
             _repository.Insert(new MyEntity("test-2"));
             _database.Set<MyEntity>().Count.ShouldBe(2);
+        }
+
+        private readonly MemoryDatabase _database;
+        private readonly IRepository<MyEntity> _repository;
+
+        public class MyEntity : Entity
+        {
+            public MyEntity()
+            {
+            }
+
+            public MyEntity(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; set; }
         }
 
         [Fact]
@@ -43,20 +57,6 @@ namespace Abp.MemoryDb.Tests.Repositories
 
             test1 = _repository.FirstOrDefault(e => e.Name == "test-1");
             test1.ShouldBe(null);
-        }
-
-        public class MyEntity : Entity
-        {
-            public string Name { get; set; }
-
-            public MyEntity()
-            {
-            }
-
-            public MyEntity(string name)
-            {
-                Name = name;
-            }
         }
     }
 }

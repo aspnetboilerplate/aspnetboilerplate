@@ -1,6 +1,6 @@
-﻿using Abp.Localization.Dictionaries.Xml;
+﻿using System.IO;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources.Xml;
-using System.IO;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -34,7 +34,9 @@ namespace Abp.Localization.Dictionaries.Json
                 var dictionary = CreateJsonLocalizationDictionary(fileName);
                 if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                 {
-                    throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+                    throw new AbpInitializationException(sourceName +
+                                                         " source contains more than one dictionary for the culture: " +
+                                                         dictionary.CultureInfo.Name);
                 }
 
                 Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -43,7 +45,8 @@ namespace Abp.Localization.Dictionaries.Json
                 {
                     if (DefaultDictionary != null)
                     {
-                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
+                        throw new AbpInitializationException(
+                            "Only one default localization dictionary can be for source: " + sourceName);
                     }
 
                     DefaultDictionary = dictionary;

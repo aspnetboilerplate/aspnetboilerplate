@@ -5,12 +5,12 @@ namespace Abp.NHibernate.Tests
 {
     public class SessionFactory_Test : NHibernateTestBase
     {
-        private readonly ISessionFactory _sessionFactory;
-
         public SessionFactory_Test()
         {
             _sessionFactory = Resolve<ISessionFactory>();
         }
+
+        private readonly ISessionFactory _sessionFactory;
 
         [Fact]
         public void Should_OpenSession_Work()

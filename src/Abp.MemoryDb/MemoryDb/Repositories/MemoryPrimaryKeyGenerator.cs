@@ -31,11 +31,11 @@ namespace Abp.MemoryDb.Repositories
             }
             else if (typeof(TPrimaryKey) == typeof(short))
             {
-                _lastPk = (short)0;
+                _lastPk = (short) 0;
             }
             else if (typeof(TPrimaryKey) == typeof(byte))
             {
-                _lastPk = (byte)0;
+                _lastPk = (byte) 0;
             }
             else if (typeof(TPrimaryKey) == typeof(Guid))
             {
@@ -51,19 +51,19 @@ namespace Abp.MemoryDb.Repositories
         {
             if (typeof(TPrimaryKey) == typeof(int))
             {
-                _lastPk = ((int)_lastPk) + 1;
+                _lastPk = (int) _lastPk + 1;
             }
             else if (typeof(TPrimaryKey) == typeof(long))
             {
-                _lastPk = ((long)_lastPk) + 1L;
+                _lastPk = (long) _lastPk + 1L;
             }
             else if (typeof(TPrimaryKey) == typeof(short))
             {
-                _lastPk = (short)(((short)_lastPk) + 1);
+                _lastPk = (short) ((short) _lastPk + 1);
             }
             else if (typeof(TPrimaryKey) == typeof(byte))
             {
-                _lastPk = (byte)(((byte)_lastPk) + 1);
+                _lastPk = (byte) ((byte) _lastPk + 1);
             }
             else if (typeof(TPrimaryKey) == typeof(Guid))
             {
@@ -74,7 +74,7 @@ namespace Abp.MemoryDb.Repositories
                 throw new AbpException("Unsupported primary key type: " + typeof(TPrimaryKey));
             }
 
-            return (TPrimaryKey)_lastPk;
+            return (TPrimaryKey) _lastPk;
         }
     }
 }

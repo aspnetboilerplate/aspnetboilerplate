@@ -1,10 +1,10 @@
-﻿using Abp.Configuration.Startup;
+﻿using System;
+using System.Data;
+using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Modules;
 using FluentNHibernate.Cfg.Db;
 using NHibernate.Tool.hbm2ddl;
-using System;
-using System.Data;
-using System.Reflection;
 
 namespace Abp.NHibernate.Tests
 {
@@ -16,7 +16,10 @@ namespace Abp.NHibernate.Tests
             Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .Database(SQLiteConfiguration.Standard.InMemory())
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
-                .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<IDbConnection>(), Console.Out));
+                .ExposeConfiguration(
+                    cfg =>
+                        new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<IDbConnection>(),
+                            Console.Out));
         }
     }
 }

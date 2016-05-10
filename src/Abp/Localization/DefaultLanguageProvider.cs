@@ -1,7 +1,7 @@
-using Abp.Configuration.Startup;
-using Abp.Dependency;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 
 namespace Abp.Localization
 {

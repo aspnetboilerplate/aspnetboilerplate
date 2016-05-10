@@ -3,7 +3,7 @@
 namespace Abp.Reflection
 {
     /// <summary>
-    /// Some simple type-checking methods used internally.
+    ///     Some simple type-checking methods used internally.
     /// </summary>
     internal static class TypeHelper
     {

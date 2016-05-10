@@ -1,34 +1,37 @@
-﻿using Abp.Domain.Entities;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using NHibernate;
 using NHibernate.Linq;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Repositories
 {
     /// <summary>
-    /// Base class for all repositories those uses NHibernate.
+    ///     Base class for all repositories those uses NHibernate.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
     public class NhRepositoryBase<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        /// <summary>
-        /// Gets the NHibernate session object to perform database operations.
-        /// </summary>
-        public virtual ISession Session { get { return _sessionProvider.Session; } }
-
         private readonly ISessionProvider _sessionProvider;
 
         /// <summary>
-        /// Creates a new <see cref="NhRepositoryBase{TEntity,TPrimaryKey}"/> object.
+        ///     Creates a new <see cref="NhRepositoryBase{TEntity,TPrimaryKey}" /> object.
         /// </summary>
         /// <param name="sessionProvider">A session provider to obtain session for database operations</param>
         public NhRepositoryBase(ISessionProvider sessionProvider)
         {
             _sessionProvider = sessionProvider;
+        }
+
+        /// <summary>
+        ///     Gets the NHibernate session object to perform database operations.
+        /// </summary>
+        public virtual ISession Session
+        {
+            get { return _sessionProvider.Session; }
         }
 
         public override IQueryable<TEntity> GetAll()

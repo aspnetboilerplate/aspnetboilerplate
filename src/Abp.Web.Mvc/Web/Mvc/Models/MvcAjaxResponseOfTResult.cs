@@ -1,29 +1,24 @@
-﻿using Abp.Web.Models;
-using System;
+﻿using System;
+using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Models
 {
     /// <summary>
-    /// This class is used to create standard responses for ajax requests.
+    ///     This class is used to create standard responses for ajax requests.
     /// </summary>
     [Serializable]
     public class MvcAjaxResponse<TResult> : AjaxResponse<TResult>
     {
         /// <summary>
-        /// This property can be used to redirect user to a specified URL.
-        /// </summary>
-        public string TargetUrl { get; set; }
-
-        /// <summary>
-        /// Creates an <see cref="MvcAjaxResponse"/> object.
-        /// <see cref="AjaxResponse.Success"/> is set as true.
+        ///     Creates an <see cref="MvcAjaxResponse" /> object.
+        ///     <see cref="AjaxResponse.Success" /> is set as true.
         /// </summary>
         public MvcAjaxResponse()
         {
         }
 
         /// <summary>
-        /// Creates an <see cref="MvcAjaxResponse"/> object with <see cref="AjaxResponse.Success"/> specified.
+        ///     Creates an <see cref="MvcAjaxResponse" /> object with <see cref="AjaxResponse.Success" /> specified.
         /// </summary>
         /// <param name="success">Indicates success status of the result</param>
         public MvcAjaxResponse(bool success)
@@ -32,8 +27,8 @@ namespace Abp.Web.Mvc.Models
         }
 
         /// <summary>
-        /// Creates an <see cref="MvcAjaxResponse"/> object with <see cref="AjaxResponse.Result"/> specified.
-        /// <see cref="AjaxResponse.Success"/> is set as true.
+        ///     Creates an <see cref="MvcAjaxResponse" /> object with <see cref="AjaxResponse.Result" /> specified.
+        ///     <see cref="AjaxResponse.Success" /> is set as true.
         /// </summary>
         /// <param name="result">The actual result object of ajax request</param>
         public MvcAjaxResponse(TResult result)
@@ -42,8 +37,8 @@ namespace Abp.Web.Mvc.Models
         }
 
         /// <summary>
-        /// Creates an <see cref="MvcAjaxResponse"/> object with <see cref="AjaxResponse.Error"/> specified.
-        /// <see cref="AjaxResponse.Success"/> is set as false.
+        ///     Creates an <see cref="MvcAjaxResponse" /> object with <see cref="AjaxResponse.Error" /> specified.
+        ///     <see cref="AjaxResponse.Success" /> is set as false.
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>
@@ -51,5 +46,10 @@ namespace Abp.Web.Mvc.Models
             : base(error, unAuthorizedRequest)
         {
         }
+
+        /// <summary>
+        ///     This property can be used to redirect user to a specified URL.
+        /// </summary>
+        public string TargetUrl { get; set; }
     }
 }

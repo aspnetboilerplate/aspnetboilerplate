@@ -1,24 +1,22 @@
-﻿using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Castle.Core.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Castle.Core.Logging;
 
 namespace Abp.Modules
 {
     /// <summary>
-    /// This class is used to manage modules.
+    ///     This class is used to manage modules.
     /// </summary>
     internal class AbpModuleManager : IAbpModuleManager
     {
-        public ILogger Logger { get; set; }
-
-        private readonly AbpModuleCollection _modules;
-
         private readonly IIocManager _iocManager;
         private readonly IModuleFinder _moduleFinder;
+
+        private readonly AbpModuleCollection _modules;
 
         public AbpModuleManager(IIocManager iocManager, IModuleFinder moduleFinder)
         {
@@ -27,6 +25,8 @@ namespace Abp.Modules
             _moduleFinder = moduleFinder;
             Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public virtual void InitializeModules()
         {
@@ -58,7 +58,8 @@ namespace Abp.Modules
             {
                 if (!AbpModule.IsAbpModule(moduleType))
                 {
-                    throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+                    throw new AbpInitializationException("This type is not an ABP module: " +
+                                                         moduleType.AssemblyQualifiedName);
                 }
 
                 if (!_iocManager.IsRegistered(moduleType))
@@ -70,7 +71,7 @@ namespace Abp.Modules
             //Add to module collection
             foreach (var moduleType in moduleTypes)
             {
-                var moduleObject = (AbpModule)_iocManager.Resolve(moduleType);
+                var moduleObject = (AbpModule) _iocManager.Resolve(moduleType);
 
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
@@ -119,10 +120,12 @@ namespace Abp.Modules
                     var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
                     if (dependedModuleInfo == null)
                     {
-                        throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                        throw new AbpInitializationException("Could not find a depended module " +
+                                                             dependedModuleType.AssemblyQualifiedName + " for " +
+                                                             moduleInfo.Type.AssemblyQualifiedName);
                     }
 
-                    if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                    if (moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null)
                     {
                         moduleInfo.Dependencies.Add(dependedModuleInfo);
                     }

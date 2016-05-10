@@ -44,10 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Ninetowns\CBB\ECommerce\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\Ninetowns\CBB\ECommerce\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
@@ -61,24 +57,12 @@
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.assert.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.assert.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.extensibility.core.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -139,9 +123,11 @@
       <DependentUpon>MyTestResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Notifications\NotificationPublisher_Tests.cs" />
+    <Compile Include="Reflection\Extensions\MemberInfoExtensions_Tests.cs" />
     <Compile Include="Reflection\TypeHelper_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\MemoryCacheManager_Tests.cs" />
     <Compile Include="Runtime\Caching\Memory\ThreadSafeObjectCache_Tests.cs" />
+    <Compile Include="Runtime\Security\SimpleStringCipher_Tests.cs" />
     <Compile Include="Text\Formatting\FormattedStringValueExtracter_Tests.cs" />
     <Compile Include="Localization\XmlEmbeddedFileLocalizationDictionaryProvider_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Tests.cs" />
@@ -157,6 +143,7 @@
     <Compile Include="Startup\AbpBootstraper_Tester.cs" />
     <Compile Include="TestBaseWithLocalIocManager.cs" />
     <Compile Include="Threading\LockExtensions_Tests.cs" />
+    <Compile Include="Timing\TimezoneHelper_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

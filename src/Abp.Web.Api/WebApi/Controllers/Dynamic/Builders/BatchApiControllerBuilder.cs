@@ -1,24 +1,25 @@
-﻿using Abp.Dependency;
-using Abp.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http.Filters;
+using Abp.Application.Services;
+using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
-    /// This interface is used to define a dynamic api controllers.
+    ///     This interface is used to define a dynamic api controllers.
     /// </summary>
     /// <typeparam name="T">Type of the proxied object</typeparam>
     internal class BatchApiControllerBuilder<T> : IBatchApiControllerBuilder<T>
     {
-        private readonly string _servicePrefix;
         private readonly Assembly _assembly;
+        private readonly string _servicePrefix;
+        private bool _conventionalVerbs;
         private IFilter[] _filters;
         private Func<Type, string> _serviceNameSelector;
         private Func<Type, bool> _typePredicate;
-        private bool _conventionalVerbs;
 
         public BatchApiControllerBuilder(Assembly assembly, string servicePrefix)
         {
@@ -56,7 +57,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    type.IsPublic && type.IsInterface && typeof(T).IsAssignableFrom(type) && IocManager.Instance.IsRegistered(type)
+                    type.IsPublic &&
+                    type.IsInterface &&
+                    typeof(T).IsAssignableFrom(type) &&
+                    IocManager.Instance.IsRegistered(type) &&
+                    !type.IsDefined(typeof(DisableDynamicWebApiAttribute), true)
                 select
                     type;
 
@@ -79,25 +84,25 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 var builder = typeof(DynamicApiControllerBuilder)
                     .GetMethod("For", BindingFlags.Public | BindingFlags.Static)
                     .MakeGenericMethod(type)
-                    .Invoke(null, new object[] { serviceName });
+                    .Invoke(null, new object[] {serviceName});
 
                 if (_filters != null)
                 {
                     builder.GetType()
                         .GetMethod("WithFilters", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[] { _filters });
+                        .Invoke(builder, new object[] {_filters});
                 }
 
                 if (_conventionalVerbs)
                 {
                     builder.GetType()
-                       .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
-                       .Invoke(builder, new object[0]);
+                        .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
+                        .Invoke(builder, new object[0]);
                 }
 
                 builder.GetType()
-                        .GetMethod("Build", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[0]);
+                    .GetMethod("Build", BindingFlags.Public | BindingFlags.Instance)
+                    .Invoke(builder, new object[0]);
             }
         }
 

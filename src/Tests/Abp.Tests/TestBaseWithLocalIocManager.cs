@@ -1,5 +1,5 @@
-﻿using Abp.Dependency;
-using System;
+﻿using System;
+using Abp.Dependency;
 
 namespace Abp.Tests
 {

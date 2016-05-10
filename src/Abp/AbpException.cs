@@ -4,20 +4,20 @@ using System.Runtime.Serialization;
 namespace Abp
 {
     /// <summary>
-    /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
+    ///     Base exception type for those are thrown by Abp system for Abp specific exceptions.
     /// </summary>
     [Serializable]
     public class AbpException : Exception
     {
         /// <summary>
-        /// Creates a new <see cref="AbpException"/> object.
+        ///     Creates a new <see cref="AbpException" /> object.
         /// </summary>
         public AbpException()
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="AbpException"/> object.
+        ///     Creates a new <see cref="AbpException" /> object.
         /// </summary>
         public AbpException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
@@ -25,7 +25,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Creates a new <see cref="AbpException"/> object.
+        ///     Creates a new <see cref="AbpException" /> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         public AbpException(string message)
@@ -34,7 +34,7 @@ namespace Abp
         }
 
         /// <summary>
-        /// Creates a new <see cref="AbpException"/> object.
+        ///     Creates a new <see cref="AbpException" /> object.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>

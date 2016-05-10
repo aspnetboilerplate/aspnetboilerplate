@@ -31,6 +31,9 @@ namespace Abp.Web.Mvc.Resources.Embedded.Handlers
             context.Response.OutputStream.Write(resource.Content, 0, resource.Content.Length);
         }
 
-        public bool IsReusable { get { return false; } }
+        public bool IsReusable
+        {
+            get { return false; }
+        }
     }
 }

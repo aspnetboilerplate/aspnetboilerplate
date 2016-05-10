@@ -1,21 +1,21 @@
-﻿using Abp.Localization.Dictionaries;
+﻿using System.Reflection;
+using System.Web;
+using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Web.Configuration;
 using Abp.Web.Localization;
-using System.Reflection;
-using System.Web;
 
 namespace Abp.Web
 {
     /// <summary>
-    /// This module is used to use ABP in ASP.NET web applications.
+    ///     This module is used to use ABP in ASP.NET web applications.
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpWebModule : AbpModule
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void PreInitialize()
         {
             if (HttpContext.Current != null)
@@ -33,7 +33,7 @@ namespace Abp.Web
                         )));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

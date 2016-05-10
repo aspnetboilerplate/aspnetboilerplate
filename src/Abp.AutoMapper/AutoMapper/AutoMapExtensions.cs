@@ -5,8 +5,8 @@ namespace Abp.AutoMapper
     public static class AutoMapExtensions
     {
         /// <summary>
-        /// Converts an object to another using AutoMapper library. Creates a new object of <see cref="TDestination"/>.
-        /// There must be a mapping between objects before calling this method.
+        ///     Converts an object to another using AutoMapper library. Creates a new object of <see cref="TDestination" />.
+        ///     There must be a mapping between objects before calling this method.
         /// </summary>
         /// <typeparam name="TDestination">Type of the destination object</typeparam>
         /// <param name="source">Source object</param>
@@ -16,8 +16,8 @@ namespace Abp.AutoMapper
         }
 
         /// <summary>
-        /// Execute a mapping from the source object to the existing destination object
-        /// There must be a mapping between objects before calling this method.
+        ///     Execute a mapping from the source object to the existing destination object
+        ///     There must be a mapping between objects before calling this method.
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TDestination">Destination type</typeparam>

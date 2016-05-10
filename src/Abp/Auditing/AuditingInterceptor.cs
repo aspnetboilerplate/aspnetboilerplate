@@ -1,32 +1,27 @@
-﻿using Abp.Collections.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Transactions;
+using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Castle.DynamicProxy;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Abp.Auditing
 {
     internal class AuditingInterceptor : IInterceptor
     {
-        public IAbpSession AbpSession { get; set; }
-
-        public ILogger Logger { get; set; }
-
-        public IAuditingStore AuditingStore { get; set; }
+        private readonly IAuditInfoProvider _auditInfoProvider;
 
         private readonly IAuditingConfiguration _configuration;
-
-        private readonly IAuditInfoProvider _auditInfoProvider;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider, IUnitOfWorkManager unitOfWorkManager)
+        public AuditingInterceptor(IAuditingConfiguration configuration, IAuditInfoProvider auditInfoProvider,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _configuration = configuration;
             _auditInfoProvider = auditInfoProvider;
@@ -36,6 +31,12 @@ namespace Abp.Auditing
             Logger = NullLogger.Instance;
             AuditingStore = SimpleLogAuditingStore.Instance;
         }
+
+        public IAbpSession AbpSession { get; set; }
+
+        public ILogger Logger { get; set; }
+
+        public IAuditingStore AuditingStore { get; set; }
 
         public void Intercept(IInvocation invocation)
         {
@@ -108,7 +109,7 @@ namespace Abp.Auditing
             if (invocation.Method.ReturnType == typeof(Task))
             {
                 invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithFinally(
-                    (Task)invocation.ReturnValue,
+                    (Task) invocation.ReturnValue,
                     exception => SaveAuditInfo(auditInfo, stopwatch, exception)
                     );
             }
@@ -133,7 +134,7 @@ namespace Abp.Auditing
                 }
 
                 var dictionary = new Dictionary<string, object>();
-                for (int i = 0; i < parameters.Length; i++)
+                for (var i = 0; i < parameters.Length; i++)
                 {
                     var parameter = parameters[i];
                     var argument = invocation.Arguments[i];

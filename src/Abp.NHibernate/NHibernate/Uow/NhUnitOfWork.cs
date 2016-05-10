@@ -1,46 +1,47 @@
+using System.Data;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Transactions.Extensions;
 using NHibernate;
-using System.Data;
-using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Uow
 {
     /// <summary>
-    /// Implements Unit of work for NHibernate.
+    ///     Implements Unit of work for NHibernate.
     /// </summary>
     public class NhUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        /// <summary>
-        /// Used to get current session values.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-
-        /// <summary>
-        /// Gets NHibernate session object to perform queries.
-        /// </summary>
-        public ISession Session { get; private set; }
-
-        /// <summary>
-        /// <see cref="NhUnitOfWork"/> uses this DbConnection if it's set.
-        /// This is usually set in tests.
-        /// </summary>
-        public IDbConnection DbConnection { get; set; }
-
         private readonly ISessionFactory _sessionFactory;
         private ITransaction _transaction;
 
         /// <summary>
-        /// Creates a new instance of <see cref="NhUnitOfWork"/>.
+        ///     Creates a new instance of <see cref="NhUnitOfWork" />.
         /// </summary>
-        public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NhUnitOfWork(ISessionFactory sessionFactory, IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
         }
+
+        /// <summary>
+        ///     Used to get current session values.
+        /// </summary>
+        public IAbpSession AbpSession { get; set; }
+
+        /// <summary>
+        ///     Gets NHibernate session object to perform queries.
+        /// </summary>
+        public ISession Session { get; private set; }
+
+        /// <summary>
+        ///     <see cref="NhUnitOfWork" /> uses this DbConnection if it's set.
+        ///     This is usually set in tests.
+        /// </summary>
+        public IDbConnection DbConnection { get; set; }
 
         protected override void BeginUow()
         {
@@ -55,13 +56,13 @@ namespace Abp.NHibernate.Uow
                     : Session.BeginTransaction();
             }
 
-            this.CheckAndSetMayHaveTenant();
-            this.CheckAndSetMustHaveTenant();
+            CheckAndSetMayHaveTenant();
+            CheckAndSetMustHaveTenant();
         }
 
         protected virtual void CheckAndSetMustHaveTenant()
         {
-            if (this.IsFilterEnabled(AbpDataFilters.MustHaveTenant)) return;
+            if (IsFilterEnabled(AbpDataFilters.MustHaveTenant)) return;
             if (AbpSession.TenantId == null) return;
             ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
             ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant,
@@ -71,7 +72,7 @@ namespace Abp.NHibernate.Uow
 
         protected virtual void CheckAndSetMayHaveTenant()
         {
-            if (this.IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
+            if (IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
             if (AbpSession.TenantId == null) return;
             ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
             ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant,
@@ -91,7 +92,7 @@ namespace Abp.NHibernate.Uow
         }
 
         /// <summary>
-        /// Commits transaction and closes database connection.
+        ///     Commits transaction and closes database connection.
         /// </summary>
         protected override void CompleteUow()
         {
@@ -109,7 +110,7 @@ namespace Abp.NHibernate.Uow
         }
 
         /// <summary>
-        /// Rollbacks transaction and closes database connection.
+        ///     Rollbacks transaction and closes database connection.
         /// </summary>
         protected override void DisposeUow()
         {
@@ -136,8 +137,16 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            Session.GetEnabledFilter(filterName)
-                .SetParameter(parameterName, value);
+            if (Session == null)
+            {
+                return;
+            }
+
+            var filter = Session.GetEnabledFilter(filterName);
+            if (filter != null)
+            {
+                filter.SetParameter(parameterName, value);
+            }
         }
     }
 }

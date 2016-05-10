@@ -1,21 +1,16 @@
-﻿using Abp.Dependency;
-using System.Transactions;
+﻿using System.Transactions;
+using Abp.Dependency;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// Unit of work manager.
+    ///     Unit of work manager.
     /// </summary>
     internal class UnitOfWorkManager : IUnitOfWorkManager, ITransientDependency
     {
-        private readonly IIocResolver _iocResolver;
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
         private readonly IUnitOfWorkDefaultOptions _defaultOptions;
-
-        public IActiveUnitOfWork Current
-        {
-            get { return _currentUnitOfWorkProvider.Current; }
-        }
+        private readonly IIocResolver _iocResolver;
 
         public UnitOfWorkManager(
             IIocResolver iocResolver,
@@ -27,6 +22,11 @@ namespace Abp.Domain.Uow
             _defaultOptions = defaultOptions;
         }
 
+        public IActiveUnitOfWork Current
+        {
+            get { return _currentUnitOfWorkProvider.Current; }
+        }
+
         public IUnitOfWorkCompleteHandle Begin()
         {
             return Begin(new UnitOfWorkOptions());
@@ -34,7 +34,7 @@ namespace Abp.Domain.Uow
 
         public IUnitOfWorkCompleteHandle Begin(TransactionScopeOption scope)
         {
-            return Begin(new UnitOfWorkOptions { Scope = scope });
+            return Begin(new UnitOfWorkOptions {Scope = scope});
         }
 
         public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options)
@@ -48,20 +48,11 @@ namespace Abp.Domain.Uow
 
             var uow = _iocResolver.Resolve<IUnitOfWork>();
 
-            uow.Completed += (sender, args) =>
-            {
-                _currentUnitOfWorkProvider.Current = null;
-            };
+            uow.Completed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
 
-            uow.Failed += (sender, args) =>
-            {
-                _currentUnitOfWorkProvider.Current = null;
-            };
+            uow.Failed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
 
-            uow.Disposed += (sender, args) =>
-            {
-                _iocResolver.Release(uow);
-            };
+            uow.Disposed += (sender, args) => { _iocResolver.Release(uow); };
 
             uow.Begin(options);
 

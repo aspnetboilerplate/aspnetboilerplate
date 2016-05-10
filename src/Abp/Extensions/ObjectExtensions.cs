@@ -5,12 +5,12 @@ using System.Linq;
 namespace Abp.Extensions
 {
     /// <summary>
-    /// Extension methods for all objects.
+    ///     Extension methods for all objects.
     /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>
-        /// Used to simplify and beautify casting an object to a type.
+        ///     Used to simplify and beautify casting an object to a type.
         /// </summary>
         /// <typeparam name="T">Type to be casted</typeparam>
         /// <param name="obj">Object to cast</param>
@@ -18,11 +18,11 @@ namespace Abp.Extensions
         public static T As<T>(this object obj)
             where T : class
         {
-            return (T)obj;
+            return (T) obj;
         }
 
         /// <summary>
-        /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
+        ///     Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)" /> method.
         /// </summary>
         /// <param name="obj">Object to be converted</param>
         /// <typeparam name="T">Type of the target object</typeparam>
@@ -30,11 +30,11 @@ namespace Abp.Extensions
         public static T To<T>(this object obj)
             where T : struct
         {
-            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
+            return (T) Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        /// Check if an item is in a list.
+        ///     Check if an item is in a list.
         /// </summary>
         /// <param name="item">Item to check</param>
         /// <param name="list">List of items</param>

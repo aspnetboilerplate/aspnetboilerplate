@@ -1,43 +1,49 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
 
 namespace Abp.EntityFramework.Repositories
 {
     /// <summary>
-    /// Implements IRepository for Entity Framework.
+    ///     Implements IRepository for Entity Framework.
     /// </summary>
-    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
+    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity" />.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
-        /// <summary>
-        /// Gets EF DbContext object.
-        /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.DbContext; } }
-
-        /// <summary>
-        /// Gets DbSet for given entity.
-        /// </summary>
-        public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
-
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="dbContextProvider"></param>
         public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
+        }
+
+        /// <summary>
+        ///     Gets EF DbContext object.
+        /// </summary>
+        public virtual TDbContext Context
+        {
+            get { return _dbContextProvider.GetDbContext(MultiTenancySide); }
+        }
+
+        /// <summary>
+        ///     Gets DbSet for given entity.
+        /// </summary>
+        public virtual DbSet<TEntity> Table
+        {
+            get { return Context.Set<TEntity>(); }
         }
 
         public override IQueryable<TEntity> GetAll()
@@ -145,15 +151,7 @@ namespace Abp.EntityFramework.Repositories
         public override void Delete(TEntity entity)
         {
             AttachIfNot(entity);
-
-            if (entity is ISoftDelete)
-            {
-                (entity as ISoftDelete).IsDeleted = true;
-            }
-            else
-            {
-                Table.Remove(entity);
-            }
+            Table.Remove(entity);
         }
 
         public override void Delete(TPrimaryKey id)

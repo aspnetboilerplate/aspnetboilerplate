@@ -39,20 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auditing\WebAuditInfoProvider.cs" />
@@ -71,6 +61,8 @@
     <Compile Include="Web\MultiTenancy\IMultiTenancyScriptManager.cs" />
     <Compile Include="Web\Sessions\ISessionScriptManager.cs" />
     <Compile Include="Web\Sessions\SessionScriptManager.cs" />
+    <Compile Include="Web\Timing\ITimingScriptManager.cs" />
+    <Compile Include="Web\Timing\TimingScriptManager.cs" />
     <Compile Include="Web\WebAssemblyFinder.cs" />
     <Compile Include="Web\Authorization\AuthorizationScriptManager.cs" />
     <Compile Include="Web\Authorization\IAuthorizationScriptManager.cs" />

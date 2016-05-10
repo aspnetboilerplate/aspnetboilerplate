@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="it">
   <texts>
     <text name="InternalServerError" value="E' success un errore interno durante la richiesta!" />

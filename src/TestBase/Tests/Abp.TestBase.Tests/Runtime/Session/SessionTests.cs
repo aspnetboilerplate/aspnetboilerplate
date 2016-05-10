@@ -1,27 +1,13 @@
-﻿using Abp.Configuration.Startup;
+﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Runtime.Session;
 using Shouldly;
-using System;
 using Xunit;
 
 namespace Abp.TestBase.Tests.Runtime.Session
 {
     public class SessionTests : AbpIntegratedTestBase
     {
-        [Fact]
-        public void Should_Be_Default_On_Startup()
-        {
-            Resolve<IMultiTenancyConfig>().IsEnabled = false;
-
-            AbpSession.UserId.ShouldBe(null);
-            AbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
-
-            Resolve<IMultiTenancyConfig>().IsEnabled = true;
-
-            AbpSession.UserId.ShouldBe(null);
-            AbpSession.TenantId.ShouldBe(null);
-        }
-
         [Fact]
         public void Can_Change_Session_Variables()
         {
@@ -39,6 +25,20 @@ namespace Abp.TestBase.Tests.Runtime.Session
 
             AbpSession.UserId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
             AbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
+        }
+
+        [Fact]
+        public void Should_Be_Default_On_Startup()
+        {
+            Resolve<IMultiTenancyConfig>().IsEnabled = false;
+
+            AbpSession.UserId.ShouldBe(null);
+            AbpSession.TenantId.ShouldBe(Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-000000000001"));
+
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
+
+            AbpSession.UserId.ShouldBe(null);
+            AbpSession.TenantId.ShouldBe(null);
         }
     }
 }

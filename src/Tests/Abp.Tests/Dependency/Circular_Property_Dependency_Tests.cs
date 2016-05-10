@@ -6,24 +6,53 @@ namespace Abp.Tests.Dependency
 {
     public class Circular_Property_Dependency_Tests : TestBaseWithLocalIocManager
     {
-        [Fact]
-        public void Should_Success_Circular_Property_Injection_Transient()
+        private void Initialize_Test(DependencyLifeStyle lifeStyle)
         {
-            Initialize_Test(DependencyLifeStyle.Transient);
+            MyClass1.CreateCount = 0;
+            MyClass2.CreateCount = 0;
+            MyClass3.CreateCount = 0;
 
-            var obj1 = LocalIocManager.Resolve<MyClass1>();
-            obj1.Obj2.ShouldNotBe(null);
-            obj1.Obj3.ShouldNotBe(null);
-            obj1.Obj2.Obj3.ShouldNotBe(null);
+            LocalIocManager.Register<MyClass1>(lifeStyle);
+            LocalIocManager.Register<MyClass2>(lifeStyle);
+            LocalIocManager.Register<MyClass3>(lifeStyle);
+        }
 
-            var obj2 = LocalIocManager.Resolve<MyClass2>();
-            obj2.Obj1.ShouldNotBe(null);
-            obj2.Obj3.ShouldNotBe(null);
-            obj2.Obj1.Obj3.ShouldNotBe(null);
+        public class MyClass1
+        {
+            public MyClass1()
+            {
+                CreateCount++;
+            }
 
-            MyClass1.CreateCount.ShouldBe(2);
-            MyClass2.CreateCount.ShouldBe(2);
-            MyClass3.CreateCount.ShouldBe(4);
+            public static int CreateCount { get; set; }
+
+            public MyClass2 Obj2 { get; set; }
+
+            public MyClass3 Obj3 { get; set; }
+        }
+
+        public class MyClass2
+        {
+            public MyClass2()
+            {
+                CreateCount++;
+            }
+
+            public static int CreateCount { get; set; }
+
+            public MyClass1 Obj1 { get; set; }
+
+            public MyClass3 Obj3 { get; set; }
+        }
+
+        public class MyClass3
+        {
+            public MyClass3()
+            {
+                CreateCount++;
+            }
+
+            public static int CreateCount { get; set; }
         }
 
         [Fact]
@@ -45,53 +74,24 @@ namespace Abp.Tests.Dependency
             MyClass3.CreateCount.ShouldBe(1);
         }
 
-        private void Initialize_Test(DependencyLifeStyle lifeStyle)
+        [Fact]
+        public void Should_Success_Circular_Property_Injection_Transient()
         {
-            MyClass1.CreateCount = 0;
-            MyClass2.CreateCount = 0;
-            MyClass3.CreateCount = 0;
+            Initialize_Test(DependencyLifeStyle.Transient);
 
-            LocalIocManager.Register<MyClass1>(lifeStyle);
-            LocalIocManager.Register<MyClass2>(lifeStyle);
-            LocalIocManager.Register<MyClass3>(lifeStyle);
-        }
+            var obj1 = LocalIocManager.Resolve<MyClass1>();
+            obj1.Obj2.ShouldNotBe(null);
+            obj1.Obj3.ShouldNotBe(null);
+            obj1.Obj2.Obj3.ShouldNotBe(null);
 
-        public class MyClass1
-        {
-            public static int CreateCount { get; set; }
+            var obj2 = LocalIocManager.Resolve<MyClass2>();
+            obj2.Obj1.ShouldNotBe(null);
+            obj2.Obj3.ShouldNotBe(null);
+            obj2.Obj1.Obj3.ShouldNotBe(null);
 
-            public MyClass2 Obj2 { get; set; }
-
-            public MyClass3 Obj3 { get; set; }
-
-            public MyClass1()
-            {
-                CreateCount++;
-            }
-        }
-
-        public class MyClass2
-        {
-            public static int CreateCount { get; set; }
-
-            public MyClass1 Obj1 { get; set; }
-
-            public MyClass3 Obj3 { get; set; }
-
-            public MyClass2()
-            {
-                CreateCount++;
-            }
-        }
-
-        public class MyClass3
-        {
-            public static int CreateCount { get; set; }
-
-            public MyClass3()
-            {
-                CreateCount++;
-            }
+            MyClass1.CreateCount.ShouldBe(2);
+            MyClass2.CreateCount.ShouldBe(2);
+            MyClass3.CreateCount.ShouldBe(4);
         }
     }
 }

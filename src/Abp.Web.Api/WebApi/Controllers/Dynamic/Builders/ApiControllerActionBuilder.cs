@@ -1,52 +1,37 @@
-using Abp.Reflection;
-using Abp.Web;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using Abp.Reflection;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
     /// <summary>
-    /// Used to build <see cref="DynamicApiActionInfo"/> object.
+    ///     Used to build <see cref="DynamicApiActionInfo" /> object.
     /// </summary>
     /// <typeparam name="T">Type of the proxied object</typeparam>
     internal class ApiControllerActionBuilder<T> : IApiControllerActionBuilder<T>
     {
         /// <summary>
-        /// Selected action name.
-        /// </summary>
-        public string ActionName { get; private set; }
-
-        /// <summary>
-        /// Selected Http verb.
-        /// </summary>
-        public HttpVerb? Verb { get; private set; }
-
-        /// <summary>
-        /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
+        ///     Reference to the <see cref="ApiControllerBuilder{T}" /> which created this object.
         /// </summary>
         private readonly ApiControllerBuilder<T> _controllerBuilder;
 
         /// <summary>
-        /// Underlying proxying method.
+        ///     Underlying proxying method.
         /// </summary>
         private readonly MethodInfo _methodInfo;
 
         /// <summary>
-        /// Action Filters for dynamic controller method.
+        ///     Action Filters for dynamic controller method.
         /// </summary>
         private IFilter[] _filters;
 
         /// <summary>
-        /// A flag to set if no action will be created for this method.
+        ///     Creates a new <see cref="ApiControllerActionBuilder{T}" /> object.
         /// </summary>
-        public bool DontCreate { get; private set; }
-
-        /// <summary>
-        /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
-        /// </summary>
-        /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
+        /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}" /> which created this object</param>
         /// <param name="methodInfo"> </param>
         public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
         {
@@ -56,7 +41,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Used to specify Http verb of the action.
+        ///     Selected action name.
+        /// </summary>
+        public string ActionName { get; }
+
+        /// <summary>
+        ///     Selected Http verb.
+        /// </summary>
+        public HttpVerb? Verb { get; private set; }
+
+        /// <summary>
+        ///     A flag to set if no action will be created for this method.
+        /// </summary>
+        public bool DontCreate { get; private set; }
+
+        /// <summary>
+        ///     Used to specify Http verb of the action.
         /// </summary>
         /// <param name="verb">Http very</param>
         /// <returns>Action builder</returns>
@@ -67,7 +67,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Used to specify another method definition.
+        ///     Used to specify another method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
@@ -77,7 +77,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Used to add action filters to apply to this method.
+        ///     Used to add action filters to apply to this method.
         /// </summary>
         /// <param name="filters"> Action Filters to apply.</param>
         public IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters)
@@ -87,7 +87,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Tells builder to not create action for this method.
+        ///     Tells builder to not create action for this method.
         /// </summary>
         /// <returns>Controller builder</returns>
         public IApiControllerBuilder<T> DontCreateAction()
@@ -97,8 +97,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Builds the controller.
-        /// This method must be called at last of the build operation.
+        ///     Builds the controller.
+        ///     This method must be called at last of the build operation.
         /// </summary>
         public void Build()
         {
@@ -106,7 +106,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
-        /// Builds <see cref="DynamicApiActionInfo"/> object for this configuration.
+        ///     Builds <see cref="DynamicApiActionInfo" /> object for this configuration.
         /// </summary>
         /// <param name="conventionalVerbs"></param>
         /// <returns></returns>
@@ -168,7 +168,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
         {
-            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof(FromUriAttribute)));
+            return
+                methodInfo.GetParameters()
+                    .All(
+                        p =>
+                            TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) ||
+                            p.IsDefined(typeof(FromUriAttribute)));
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Abp.Domain.Uow;
+﻿using System.Transactions;
+using Abp.Domain.Uow;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
-using System.Transactions;
 using Xunit;
 
 namespace Abp.Tests.Domain.Uow
@@ -14,8 +14,12 @@ namespace Abp.Tests.Domain.Uow
             var fakeUow = Substitute.For<IUnitOfWork>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
-                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<CallContextCurrentUnitOfWorkProvider>().LifestyleSingleton(),
+                Component.For<IUnitOfWorkDefaultOptions>()
+                    .ImplementedBy<UnitOfWorkDefaultOptions>()
+                    .LifestyleSingleton(),
+                Component.For<ICurrentUnitOfWorkProvider>()
+                    .ImplementedBy<CallContextCurrentUnitOfWorkProvider>()
+                    .LifestyleSingleton(),
                 Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleSingleton()
                 );

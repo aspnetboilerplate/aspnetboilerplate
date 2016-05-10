@@ -1,12 +1,12 @@
 namespace Abp.Threading
 {
     /// <summary>
-    /// Some extension methods for <see cref="IRunnable"/>.
+    ///     Some extension methods for <see cref="IRunnable" />.
     /// </summary>
     public static class RunnableExtensions
     {
         /// <summary>
-        /// Calls <see cref="IRunnable.Stop"/> and then <see cref="IRunnable.WaitToStop"/>.
+        ///     Calls <see cref="IRunnable.Stop" /> and then <see cref="IRunnable.WaitToStop" />.
         /// </summary>
         public static void StopAndWaitToStop(this IRunnable runnable)
         {

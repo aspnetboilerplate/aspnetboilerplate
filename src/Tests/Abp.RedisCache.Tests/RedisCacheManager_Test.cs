@@ -20,13 +20,13 @@ namespace Abp.RedisCache.Tests
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(
+                Component.For<IAbpStartupConfiguration>()
+                    .UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
-            LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache =>
-            {
-                cache.DefaultSlidingExpireTime = defaultSlidingExpireTime;
-            });
+            LocalIocManager.Resolve<ICachingConfiguration>()
+                .Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = defaultSlidingExpireTime; });
 
             _cache = LocalIocManager.Resolve<ICacheManager>().GetCache<string, MyCacheItem>("MyTestCacheItems");
             _cache.DefaultSlidingExpireTime.ShouldBe(defaultSlidingExpireTime);

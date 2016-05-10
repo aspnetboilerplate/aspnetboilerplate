@@ -3,42 +3,20 @@
 namespace Abp.Configuration
 {
     /// <summary>
-    /// Represents a setting information.
+    ///     Represents a setting information.
     /// </summary>
     [Serializable]
     public class SettingInfo
     {
         /// <summary>
-        /// TenantId for this setting.
-        /// TenantId is null if this setting is not Tenant level.
-        /// </summary>
-        public Guid? TenantId { get; set; }
-
-        /// <summary>
-        /// UserId for this setting.
-        /// UserId is null if this setting is not user level.
-        /// </summary>
-        public Guid? UserId { get; set; }
-
-        /// <summary>
-        /// Unique name of the setting.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Value of the setting.
-        /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
-        /// Creates a new <see cref="SettingInfo"/> object.
+        ///     Creates a new <see cref="SettingInfo" /> object.
         /// </summary>
         public SettingInfo()
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="SettingInfo"/> object.
+        ///     Creates a new <see cref="SettingInfo" /> object.
         /// </summary>
         /// <param name="tenantId">TenantId for this setting. TenantId is null if this setting is not Tenant level.</param>
         /// <param name="userId">UserId for this setting. UserId is null if this setting is not user level.</param>
@@ -51,5 +29,27 @@ namespace Abp.Configuration
             Name = name;
             Value = value;
         }
+
+        /// <summary>
+        ///     TenantId for this setting.
+        ///     TenantId is null if this setting is not Tenant level.
+        /// </summary>
+        public Guid? TenantId { get; set; }
+
+        /// <summary>
+        ///     UserId for this setting.
+        ///     UserId is null if this setting is not user level.
+        /// </summary>
+        public Guid? UserId { get; set; }
+
+        /// <summary>
+        ///     Unique name of the setting.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Value of the setting.
+        /// </summary>
+        public string Value { get; set; }
     }
 }

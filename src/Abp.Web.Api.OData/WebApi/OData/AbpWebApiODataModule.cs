@@ -1,10 +1,10 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Reflection;
+using System.Web.OData;
+using System.Web.OData.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.WebApi.OData.Configuration;
-using System.Reflection;
-using System.Web.OData;
-using System.Web.OData.Extensions;
 
 namespace Abp.WebApi.OData
 {
@@ -22,9 +22,9 @@ namespace Abp.WebApi.OData
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             Configuration.Modules.AbpWebApi().HttpConfiguration.MapODataServiceRoute(
-                    routeName: "ODataRoute",
-                    routePrefix: "odata",
-                    model: Configuration.Modules.AbpWebApiOData().ODataModelBuilder.GetEdmModel()
+                "ODataRoute",
+                "odata",
+                Configuration.Modules.AbpWebApiOData().ODataModelBuilder.GetEdmModel()
                 );
         }
     }

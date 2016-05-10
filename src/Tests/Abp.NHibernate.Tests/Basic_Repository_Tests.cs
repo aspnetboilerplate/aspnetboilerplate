@@ -1,23 +1,23 @@
-﻿using Abp.Domain.Repositories;
+﻿using System.Linq;
+using Abp.Domain.Repositories;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
+using Abp.NHibernate.Tests.Entities;
 using NHibernate.Linq;
 using Shouldly;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace Abp.NHibernate.Tests
 {
     public class Basic_Repository_Tests : NHibernateTestBase
     {
-        private readonly IRepository<Person> _personRepository;
-
         public Basic_Repository_Tests()
         {
             _personRepository = Resolve<IRepository<Person>>();
-            UsingSession(session => session.Save(new Person() { Name = "emre" }));
+            UsingSession(session => session.Save(new Person {Name = "emre"}));
         }
+
+        private readonly IRepository<Person> _personRepository;
 
         [Fact]
         public void Should_Get_All_People()
@@ -28,7 +28,7 @@ namespace Abp.NHibernate.Tests
         [Fact]
         public void Should_Insert_People()
         {
-            _personRepository.Insert(new Person() { Name = "halil" });
+            _personRepository.Insert(new Person {Name = "halil"});
 
             var insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
             insertedPerson.ShouldNotBe(null);
@@ -37,16 +37,22 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
-        public void Update_With_Action_Test()
+        public void Should_Trigger_Event_On_Delete()
         {
-            var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
+            var triggerCount = 0;
 
-            var updatedUser = _personRepository.Update(userBefore.Id, user => user.Name = "yunus");
-            updatedUser.Id.ShouldBe(userBefore.Id);
-            updatedUser.Name.ShouldBe("yunus");
+            Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre");
+                    triggerCount++;
+                });
 
-            var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
-            userAfter.Name.ShouldBe("yunus");
+            var emrePeson = _personRepository.Single(p => p.Name == "emre");
+            _personRepository.Delete(emrePeson.Id);
+
+            triggerCount.ShouldBe(1);
+            _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
         }
 
         [Fact]
@@ -62,7 +68,7 @@ namespace Abp.NHibernate.Tests
                     triggerCount++;
                 });
 
-            _personRepository.Insert(new Person { Name = "halil" });
+            _personRepository.Insert(new Person {Name = "halil"});
 
             triggerCount.ShouldBe(1);
         }
@@ -87,22 +93,16 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
-        public void Should_Trigger_Event_On_Delete()
+        public void Update_With_Action_Test()
         {
-            var triggerCount = 0;
+            var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
 
-            Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
-                eventData =>
-                {
-                    eventData.Entity.Name.ShouldBe("emre");
-                    triggerCount++;
-                });
+            var updatedUser = _personRepository.Update(userBefore.Id, user => user.Name = "yunus");
+            updatedUser.Id.ShouldBe(userBefore.Id);
+            updatedUser.Name.ShouldBe("yunus");
 
-            var emrePeson = _personRepository.Single(p => p.Name == "emre");
-            _personRepository.Delete(emrePeson.Id);
-
-            triggerCount.ShouldBe(1);
-            _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
+            var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
+            userAfter.Name.ShouldBe("yunus");
         }
     }
 }

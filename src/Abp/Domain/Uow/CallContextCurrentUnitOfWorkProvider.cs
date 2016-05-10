@@ -1,27 +1,36 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Concurrent;
+using System.Runtime.Remoting.Messaging;
+using Abp.Dependency;
 using Castle.Core;
 using Castle.Core.Logging;
-using System.Collections.Concurrent;
-using System.Runtime.Remoting.Messaging;
 
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>.
-    /// This is the default implementation.
+    ///     CallContext implementation of <see cref="ICurrentUnitOfWorkProvider" />.
+    ///     This is the default implementation.
     /// </summary>
     public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ITransientDependency
     {
-        public ILogger Logger { get; set; }
-
         private const string ContextKey = "Abp.UnitOfWork.Current";
 
         //TODO: Clear periodically..?
-        private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary = new ConcurrentDictionary<string, IUnitOfWork>();
+        private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary =
+            new ConcurrentDictionary<string, IUnitOfWork>();
 
         public CallContextCurrentUnitOfWorkProvider()
         {
             Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; set; }
+
+        /// <inheritdoc />
+        [DoNotWire]
+        public IUnitOfWork Current
+        {
+            get { return GetCurrentUow(Logger); }
+            set { SetCurrentUow(value, Logger); }
         }
 
         private static IUnitOfWork GetCurrentUow(ILogger logger)
@@ -73,10 +82,6 @@ namespace Abp.Domain.Uow
 
                     value.Outer = outer;
                 }
-                else
-                {
-                    //logger.Warn("There is a unitOfWorkKey in CallContext but not in UnitOfWorkDictionary (on SetCurrentUow)! UnitOfWork key: " + unitOfWorkKey);
-                }
             }
 
             unitOfWorkKey = value.Id;
@@ -124,14 +129,6 @@ namespace Abp.Domain.Uow
             }
 
             CallContext.LogicalSetData(ContextKey, outerUnitOfWorkKey);
-        }
-
-        /// <inheritdoc />
-        [DoNotWire]
-        public IUnitOfWork Current
-        {
-            get { return GetCurrentUow(Logger); }
-            set { SetCurrentUow(value, Logger); }
         }
     }
 }

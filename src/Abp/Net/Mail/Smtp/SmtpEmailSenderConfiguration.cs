@@ -4,13 +4,23 @@ using Abp.Dependency;
 namespace Abp.Net.Mail.Smtp
 {
     /// <summary>
-    /// Implementation of <see cref="ISmtpEmailSenderConfiguration"/> that reads settings
-    /// from <see cref="ISettingManager"/>.
+    ///     Implementation of <see cref="ISmtpEmailSenderConfiguration" /> that reads settings
+    ///     from <see cref="ISettingManager" />.
     /// </summary>
-    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration, ITransientDependency
+    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration,
+        ITransientDependency
     {
         /// <summary>
-        /// SMTP Host name/IP.
+        ///     Creates a new <see cref="SmtpEmailSenderConfiguration" />.
+        /// </summary>
+        /// <param name="settingManager">Setting manager</param>
+        public SmtpEmailSenderConfiguration(ISettingManager settingManager)
+            : base(settingManager)
+        {
+        }
+
+        /// <summary>
+        ///     SMTP Host name/IP.
         /// </summary>
         public string Host
         {
@@ -18,7 +28,7 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// SMTP Port.
+        ///     SMTP Port.
         /// </summary>
         public int Port
         {
@@ -26,7 +36,7 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// User name to login to SMTP server.
+        ///     User name to login to SMTP server.
         /// </summary>
         public string UserName
         {
@@ -34,7 +44,7 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Password to login to SMTP server.
+        ///     Password to login to SMTP server.
         /// </summary>
         public string Password
         {
@@ -42,7 +52,7 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Domain name to login to SMTP server.
+        ///     Domain name to login to SMTP server.
         /// </summary>
         public string Domain
         {
@@ -50,7 +60,7 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Is SSL enabled?
+        ///     Is SSL enabled?
         /// </summary>
         public bool EnableSsl
         {
@@ -58,20 +68,11 @@ namespace Abp.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Use default credentials?
+        ///     Use default credentials?
         /// </summary>
         public bool UseDefaultCredentials
         {
             get { return SettingManager.GetSettingValue<bool>(EmailSettingNames.Smtp.UseDefaultCredentials); }
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="SmtpEmailSenderConfiguration"/>.
-        /// </summary>
-        /// <param name="settingManager">Setting manager</param>
-        public SmtpEmailSenderConfiguration(ISettingManager settingManager)
-            : base(settingManager)
-        {
         }
     }
 }

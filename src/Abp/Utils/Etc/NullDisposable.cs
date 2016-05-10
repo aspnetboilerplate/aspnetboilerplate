@@ -3,16 +3,15 @@ using System;
 namespace Abp.Utils.Etc
 {
     /// <summary>
-    /// This class is used to simulate a Disposable that does nothing.
+    ///     This class is used to simulate a Disposable that does nothing.
     /// </summary>
     internal sealed class NullDisposable : IDisposable
     {
-        public static NullDisposable Instance { get { return SingletonInstance; } }
-        private static readonly NullDisposable SingletonInstance = new NullDisposable();
-
         private NullDisposable()
         {
         }
+
+        public static NullDisposable Instance { get; } = new NullDisposable();
 
         public void Dispose()
         {

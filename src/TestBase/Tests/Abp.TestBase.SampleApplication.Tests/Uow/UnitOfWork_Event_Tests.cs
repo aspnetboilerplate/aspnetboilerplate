@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
@@ -121,6 +123,34 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
 
             failedCount.ShouldBe(1);
             disposeCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public async Task Should_Return_Back_To_Outer_Uow_On_Nested_Uows()
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var outerUow = _unitOfWorkManager.Current;
+
+                outerUow.Completed += (sender, args) =>
+                {
+                    _unitOfWorkManager.Current.ShouldBe(null);
+                };
+
+                using (var uowInner = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+                {
+                    var innerUow = _unitOfWorkManager.Current;
+
+                    innerUow.Completed += (sender, args) =>
+                    {
+                        _unitOfWorkManager.Current.ShouldBe(outerUow);
+                    };
+
+                    await uowInner.CompleteAsync();
+                }
+
+                await uow.CompleteAsync();
+            }
         }
     }
 }

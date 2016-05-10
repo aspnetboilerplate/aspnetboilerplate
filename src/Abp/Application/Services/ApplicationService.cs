@@ -1,49 +1,18 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Runtime.Session;
-using System;
-using System.Threading.Tasks;
 
 namespace Abp.Application.Services
 {
     /// <summary>
-    /// This class can be used as a base class for application services.
+    ///     This class can be used as a base class for application services.
     /// </summary>
     public abstract class ApplicationService : AbpServiceBase, IApplicationService
     {
         /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-
-        /// <summary>
-        /// Reference to the permission manager.
-        /// </summary>
-        public IPermissionManager PermissionManager { protected get; set; }
-
-        /// <summary>
-        /// Reference to the permission checker.
-        /// </summary>
-        public IPermissionChecker PermissionChecker { protected get; set; }
-
-        /// <summary>
-        /// Reference to the feature manager.
-        /// </summary>
-        public IFeatureManager FeatureManager { protected get; set; }
-
-        /// <summary>
-        /// Reference to the feature checker.
-        /// </summary>
-        public IFeatureChecker FeatureChecker { protected get; set; }
-
-        /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
-
-        /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         protected ApplicationService()
         {
@@ -52,7 +21,41 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Gets current session information.
+        /// </summary>
+        public IAbpSession AbpSession { get; set; }
+
+        /// <summary>
+        ///     Reference to the permission manager.
+        /// </summary>
+        public IPermissionManager PermissionManager { protected get; set; }
+
+        /// <summary>
+        ///     Reference to the permission checker.
+        /// </summary>
+        public IPermissionChecker PermissionChecker { protected get; set; }
+
+        /// <summary>
+        ///     Reference to the feature manager.
+        /// </summary>
+        public IFeatureManager FeatureManager { protected get; set; }
+
+        /// <summary>
+        ///     Reference to the feature checker.
+        /// </summary>
+        public IFeatureChecker FeatureChecker { protected get; set; }
+
+        /// <summary>
+        ///     Gets current session information.
+        /// </summary>
+        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        protected IAbpSession CurrentSession
+        {
+            get { return AbpSession; }
+        }
+
+        /// <summary>
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected virtual Task<bool> IsGrantedAsync(string permissionName)
@@ -61,7 +64,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected virtual bool IsGranted(string permissionName)
@@ -70,7 +73,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>
@@ -80,7 +83,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>

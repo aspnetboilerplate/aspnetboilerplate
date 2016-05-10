@@ -4,12 +4,12 @@ using System.Linq;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Used to store <see cref="Feature"/>s.
+    ///     Used to store <see cref="Feature" />s.
     /// </summary>
     public class FeatureDictionary : Dictionary<string, Feature>
     {
         /// <summary>
-        /// Adds all child features of current features recursively.
+        ///     Adds all child features of current features recursively.
         /// </summary>
         public void AddAllFeatures()
         {

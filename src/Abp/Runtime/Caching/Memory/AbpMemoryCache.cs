@@ -4,14 +4,14 @@ using System.Runtime.Caching;
 namespace Abp.Runtime.Caching.Memory
 {
     /// <summary>
-    /// Implements <see cref="ICache"/> to work with <see cref="MemoryCache"/>.
+    ///     Implements <see cref="ICache" /> to work with <see cref="MemoryCache" />.
     /// </summary>
     public class AbpMemoryCache : CacheBase
     {
         private MemoryCache _memoryCache;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="name">Unique name of the cache</param>
         public AbpMemoryCache(string name)

@@ -1,18 +1,16 @@
-﻿using Abp.Configuration.Startup;
+﻿using System;
+using Abp.Configuration.Startup;
 using Abp.Dependency.Installers;
 using Abp.Tests;
 using Abp.UI;
 using Abp.Web.Configuration;
 using Abp.Web.Models;
-using System;
 using Xunit;
 
 namespace Abp.Web.Tests
 {
     public class ErrorInfoBuilder_Tests : TestBaseWithLocalIocManager
     {
-        private readonly IErrorInfoBuilder _errorInfoBuilder;
-
         public ErrorInfoBuilder_Tests()
         {
             LocalIocManager.IocContainer.Install(new AbpCoreInstaller());
@@ -25,22 +23,7 @@ namespace Abp.Web.Tests
             _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 
-        [Fact]
-        public void Should_Convert_Specific_Exception()
-        {
-            var errorInfo = _errorInfoBuilder.BuildForException(new MySpecificException());
-            Assert.Equal(42, errorInfo.Code);
-            Assert.Equal("MySpecificMessage", errorInfo.Message);
-            Assert.Equal("MySpecificMessageDetails", errorInfo.Details);
-        }
-
-        [Fact]
-        public void Should_Convert_UserFriendlyException()
-        {
-            var errorInfo = _errorInfoBuilder.BuildForException(new UserFriendlyException("Test message"));
-            Assert.Equal(0, errorInfo.Code);
-            Assert.Equal("Test message", errorInfo.Message);
-        }
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
 
         //[Fact]
         //public void Should_Not_Convert_Other_Exceptions()
@@ -67,6 +50,23 @@ namespace Abp.Web.Tests
 
                 return Next.Convert(exception);
             }
+        }
+
+        [Fact]
+        public void Should_Convert_Specific_Exception()
+        {
+            var errorInfo = _errorInfoBuilder.BuildForException(new MySpecificException());
+            Assert.Equal(42, errorInfo.Code);
+            Assert.Equal("MySpecificMessage", errorInfo.Message);
+            Assert.Equal("MySpecificMessageDetails", errorInfo.Details);
+        }
+
+        [Fact]
+        public void Should_Convert_UserFriendlyException()
+        {
+            var errorInfo = _errorInfoBuilder.BuildForException(new UserFriendlyException("Test message"));
+            Assert.Equal(0, errorInfo.Code);
+            Assert.Equal("Test message", errorInfo.Message);
         }
     }
 }

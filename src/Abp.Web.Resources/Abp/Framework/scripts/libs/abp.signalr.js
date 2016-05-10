@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function ($) {
+(function($) {
     //Check if SignalR is defined
     if (!$ || !$.connection) {
         return;
@@ -18,19 +18,21 @@
     }
 
     //Register to get notifications
-    commonHub.client.getNotification = function (notification) {
-        abp.event.trigger('abp.notifications.received', notification);
+    commonHub.client.getNotification = function(notification) {
+        abp.event.trigger("abp.notifications.received", notification);
     };
 
     //Connect to the server
     abp.signalr.connect = function() {
-        $.connection.hub.start().done(function () {
-            abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
-            abp.event.trigger('abp.signalr.connected');
-            commonHub.server.register().done(function () {
-                abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+        $.connection.hub.start()
+            .done(function() {
+                abp.log.debug("Connected to SignalR server!"); //TODO: Remove log
+                abp.event.trigger("abp.signalr.connected");
+                commonHub.server.register()
+                    .done(function() {
+                        abp.log.debug("Registered to the SignalR server!"); //TODO: Remove log
+                    });
             });
-        });
     };
 
     if (abp.signalr.autoConnect === undefined) {

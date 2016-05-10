@@ -1,33 +1,21 @@
-using Abp.Configuration.Startup;
-using Abp.Dependency;
-using Abp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Threading;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.Localization.Dictionaries
 {
     /// <summary>
-    /// This class is used to build a localization source
-    /// which works on memory based dictionaries to find strings.
+    ///     This class is used to build a localization source
+    ///     which works on memory based dictionaries to find strings.
     /// </summary>
     public class DictionaryBasedLocalizationSource : IDictionaryBasedLocalizationSource
     {
         /// <summary>
-        /// Unique Name of the source.
-        /// </summary>
-        public string Name { get; private set; }
-
-        public ILocalizationDictionaryProvider DictionaryProvider { get { return _dictionaryProvider; } }
-
-        protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
-
-        private readonly ILocalizationDictionaryProvider _dictionaryProvider;
-
-        /// <summary>
-        ///
         /// </summary>
         /// <param name="name"></param>
         /// <param name="dictionaryProvider"></param>
@@ -45,23 +33,32 @@ namespace Abp.Localization.Dictionaries
                 throw new ArgumentNullException("dictionaryProvider");
             }
 
-            _dictionaryProvider = dictionaryProvider;
+            DictionaryProvider = dictionaryProvider;
         }
 
-        /// <inheritdoc/>
+        protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
+
+        /// <summary>
+        ///     Unique Name of the source.
+        /// </summary>
+        public string Name { get; }
+
+        public ILocalizationDictionaryProvider DictionaryProvider { get; }
+
+        /// <inheritdoc />
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             LocalizationConfiguration = configuration;
             DictionaryProvider.Initialize(Name);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string GetString(string name)
         {
             return GetString(name, Thread.CurrentThread.CurrentUICulture);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string GetString(string name, CultureInfo culture)
         {
             var value = GetStringOrNull(name, culture);
@@ -130,13 +127,13 @@ namespace Abp.Localization.Dictionaries
             return strDefault.Value;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
             return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
             //TODO: Can be optimized (example: if it's already default dictionary, skip overriding)
@@ -186,7 +183,7 @@ namespace Abp.Localization.Dictionaries
         }
 
         /// <summary>
-        /// Extends the source with given dictionary.
+        ///     Extends the source with given dictionary.
         /// </summary>
         /// <param name="dictionary">Dictionary to extend the source</param>
         public virtual void Extend(ILocalizationDictionary dictionary)

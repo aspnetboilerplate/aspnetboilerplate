@@ -1,5 +1,5 @@
-using Abp.Configuration;
 using System.Collections.Generic;
+using Abp.Configuration;
 
 namespace Abp.Localization
 {
@@ -9,7 +9,9 @@ namespace Abp.Localization
         {
             return new[]
             {
-                new SettingDefinition(LocalizationSettingNames.DefaultLanguage, null, L("DefaultLanguage"), scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true)
+                new SettingDefinition(LocalizationSettingNames.DefaultLanguage, null, L("DefaultLanguage"),
+                    scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User,
+                    isVisibleToClients: true)
             };
         }
 

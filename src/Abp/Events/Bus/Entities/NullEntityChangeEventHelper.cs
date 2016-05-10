@@ -1,20 +1,18 @@
 namespace Abp.Events.Bus.Entities
 {
     /// <summary>
-    /// Null-object implementation of <see cref="IEntityChangeEventHelper"/>.
+    ///     Null-object implementation of <see cref="IEntityChangeEventHelper" />.
     /// </summary>
     public class NullEntityChangeEventHelper : IEntityChangeEventHelper
     {
-        /// <summary>
-        /// Gets single instance of <see cref="NullEventBus"/> class.
-        /// </summary>
-        public static NullEntityChangeEventHelper Instance { get { return SingletonInstance; } }
-
-        private static readonly NullEntityChangeEventHelper SingletonInstance = new NullEntityChangeEventHelper();
-
         private NullEntityChangeEventHelper()
         {
         }
+
+        /// <summary>
+        ///     Gets single instance of <see cref="NullEventBus" /> class.
+        /// </summary>
+        public static NullEntityChangeEventHelper Instance { get; } = new NullEntityChangeEventHelper();
 
         public void TriggerEntityCreatingEvent(object entity)
         {

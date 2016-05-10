@@ -3,77 +3,77 @@
 namespace Abp.Auditing
 {
     /// <summary>
-    /// This informations are collected for an <see cref="AuditedAttribute"/> method.
+    ///     This informations are collected for an <see cref="AuditedAttribute" /> method.
     /// </summary>
     public class AuditInfo
     {
         /// <summary>
-        /// TenantId.
+        ///     TenantId.
         /// </summary>
         public Guid? TenantId { get; set; }
 
         /// <summary>
-        /// UserId.
+        ///     UserId.
         /// </summary>
         public Guid? UserId { get; set; }
 
         /// <summary>
-        /// ImpersonatorUserId.
+        ///     ImpersonatorUserId.
         /// </summary>
         public Guid? ImpersonatorUserId { get; set; }
 
         /// <summary>
-        /// ImpersonatorTenantId.
+        ///     ImpersonatorTenantId.
         /// </summary>
         public Guid? ImpersonatorTenantId { get; set; }
 
         /// <summary>
-        /// Service (class/interface) name.
+        ///     Service (class/interface) name.
         /// </summary>
         public string ServiceName { get; set; }
 
         /// <summary>
-        /// Executed method name.
+        ///     Executed method name.
         /// </summary>
         public string MethodName { get; set; }
 
         /// <summary>
-        /// Calling parameters.
+        ///     Calling parameters.
         /// </summary>
         public string Parameters { get; set; }
 
         /// <summary>
-        /// Start time of the method execution.
+        ///     Start time of the method execution.
         /// </summary>
         public DateTime ExecutionTime { get; set; }
 
         /// <summary>
-        /// Total duration of the method call.
+        ///     Total duration of the method call.
         /// </summary>
         public int ExecutionDuration { get; set; }
 
         /// <summary>
-        /// IP address of the client.
+        ///     IP address of the client.
         /// </summary>
         public string ClientIpAddress { get; set; }
 
         /// <summary>
-        /// Name (generally computer name) of the client.
+        ///     Name (generally computer name) of the client.
         /// </summary>
         public string ClientName { get; set; }
 
         /// <summary>
-        /// Browser information if this method is called in a web request.
+        ///     Browser information if this method is called in a web request.
         /// </summary>
         public string BrowserInfo { get; set; }
 
         /// <summary>
-        /// Optional custom data that can be filled and used.
+        ///     Optional custom data that can be filled and used.
         /// </summary>
         public string CustomData { get; set; }
 
         /// <summary>
-        /// Exception object, if an exception occured during execution of the method.
+        ///     Exception object, if an exception occured during execution of the method.
         /// </summary>
         public Exception Exception { get; set; }
 

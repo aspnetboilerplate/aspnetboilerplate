@@ -1,5 +1,5 @@
-using Abp.Events.Bus.Handlers;
 using System;
+using Abp.Events.Bus.Handlers;
 
 namespace Abp.Tests.Events.Bus
 {
@@ -9,14 +9,14 @@ namespace Abp.Tests.Events.Bus
 
         public static int DisposeCount { get; set; }
 
-        public void HandleEvent(MySimpleEventData eventData)
-        {
-            ++HandleCount;
-        }
-
         public void Dispose()
         {
             ++DisposeCount;
+        }
+
+        public void HandleEvent(MySimpleEventData eventData)
+        {
+            ++HandleCount;
         }
     }
 }

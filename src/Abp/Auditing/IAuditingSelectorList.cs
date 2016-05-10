@@ -3,12 +3,12 @@
 namespace Abp.Auditing
 {
     /// <summary>
-    /// List of selector functions to select classes/interfaces to be audited.
+    ///     List of selector functions to select classes/interfaces to be audited.
     /// </summary>
     public interface IAuditingSelectorList : IList<NamedTypeSelector>
     {
         /// <summary>
-        /// Removes a selector by name.
+        ///     Removes a selector by name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

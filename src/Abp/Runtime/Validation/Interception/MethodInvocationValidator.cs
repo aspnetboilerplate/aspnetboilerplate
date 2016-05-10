@@ -1,5 +1,3 @@
-using Abp.Collections.Extensions;
-using Abp.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,24 +5,26 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using Abp.Collections.Extensions;
+using Abp.Reflection;
 
 namespace Abp.Runtime.Validation.Interception
 {
     /// <summary>
-    /// This class is used to validate a method call (invocation) for method arguments.
+    ///     This class is used to validate a method call (invocation) for method arguments.
     /// </summary>
     internal class MethodInvocationValidator
     {
         private readonly MethodInfo _method;
-        private readonly object[] _parameterValues;
         private readonly ParameterInfo[] _parameters;
+        private readonly object[] _parameterValues;
         private readonly List<ValidationResult> _validationErrors;
 
         /// <summary>
-        /// Creates a new <see cref="MethodInvocationValidator"/> instance.
+        ///     Creates a new <see cref="MethodInvocationValidator" /> instance.
         /// </summary>
         /// <param name="method">Method to be validated</param>
-        /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
+        /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method" />.</param>
         public MethodInvocationValidator(MethodInfo method, object[] parameterValues)
         {
             _method = method;
@@ -34,7 +34,7 @@ namespace Abp.Runtime.Validation.Interception
         }
 
         /// <summary>
-        /// Validates the method invocation.
+        ///     Validates the method invocation.
         /// </summary>
         public void Validate()
         {
@@ -82,7 +82,7 @@ namespace Abp.Runtime.Validation.Interception
         }
 
         /// <summary>
-        /// Validates given parameter for given value.
+        ///     Validates given parameter for given value.
         /// </summary>
         /// <param name="parameterInfo">Parameter of the method to validate</param>
         /// <param name="parameterValue">Value to validate</param>
@@ -90,9 +90,11 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                if (!parameterInfo.IsOptional && !parameterInfo.IsOut &&
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
-                    _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
+                    _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!",
+                        new[] {parameterInfo.Name}));
                 }
 
                 return;
@@ -105,7 +107,7 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
             {
-                foreach (var item in (validatingObject as IEnumerable))
+                foreach (var item in validatingObject as IEnumerable)
                 {
                     ValidateObjectRecursively(item);
                 }
@@ -131,7 +133,7 @@ namespace Abp.Runtime.Validation.Interception
         }
 
         /// <summary>
-        /// Checks all properties for DataAnnotations attributes.
+        ///     Checks all properties for DataAnnotations attributes.
         /// </summary>
         private void SetValidationAttributeErrors(object validatingObject)
         {

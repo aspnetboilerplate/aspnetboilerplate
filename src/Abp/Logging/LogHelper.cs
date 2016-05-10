@@ -1,29 +1,30 @@
-﻿using Abp.Collections.Extensions;
+﻿using System;
+using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
 using Castle.Core.Logging;
-using System;
-using System.Linq;
 
 namespace Abp.Logging
 {
     /// <summary>
-    /// This class can be used to write logs from somewhere where it's a hard to get a reference to the <see cref="ILogger"/>.
-    /// Normally, use <see cref="ILogger"/> with property injection wherever it's possible.
+    ///     This class can be used to write logs from somewhere where it's a hard to get a reference to the
+    ///     <see cref="ILogger" />.
+    ///     Normally, use <see cref="ILogger" /> with property injection wherever it's possible.
     /// </summary>
     public static class LogHelper
     {
-        /// <summary>
-        /// A reference to the logger.
-        /// </summary>
-        public static ILogger Logger { get; private set; }
-
         static LogHelper()
         {
             Logger = IocManager.Instance.IsRegistered(typeof(ILoggerFactory))
                 ? IocManager.Instance.Resolve<ILoggerFactory>().Create(typeof(LogHelper))
                 : NullLogger.Instance;
         }
+
+        /// <summary>
+        ///     A reference to the logger.
+        /// </summary>
+        public static ILogger Logger { get; }
 
         public static void LogException(Exception ex)
         {
@@ -32,9 +33,9 @@ namespace Abp.Logging
 
         public static void LogException(ILogger logger, Exception ex)
         {
-            var severity = (ex is IHasLogSeverity)
-                    ? (ex as IHasLogSeverity).Severity
-                    : LogSeverity.Error;
+            var severity = ex is IHasLogSeverity
+                ? (ex as IHasLogSeverity).Severity
+                : LogSeverity.Error;
 
             logger.Log(severity, ex.Message, ex);
 
@@ -64,7 +65,8 @@ namespace Abp.Logging
                 return;
             }
 
-            logger.Log(validationException.Severity, "There are " + validationException.ValidationErrors.Count + " validation errors:");
+            logger.Log(validationException.Severity,
+                "There are " + validationException.ValidationErrors.Count + " validation errors:");
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 var memberNames = "";

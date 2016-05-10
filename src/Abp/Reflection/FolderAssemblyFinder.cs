@@ -6,19 +6,19 @@ namespace Abp.Reflection
 {
     public class FolderAssemblyFinder : IAssemblyFinder
     {
-        public string FolderPath { get; private set; }
-
-        public SearchOption SearchOption { get; private set; }
+        private readonly object _syncLock = new object();
 
         private List<Assembly> _assemblies;
-
-        private readonly object _syncLock = new object();
 
         public FolderAssemblyFinder(string folderPath, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             FolderPath = folderPath;
             SearchOption = searchOption;
         }
+
+        public string FolderPath { get; }
+
+        public SearchOption SearchOption { get; }
 
         public List<Assembly> GetAllAssemblies()
         {
@@ -41,7 +41,7 @@ namespace Abp.Reflection
             var assemblies = new List<Assembly>();
             var dllFiles = Directory.GetFiles(FolderPath, "*.dll", SearchOption);
 
-            foreach (string dllFile in dllFiles)
+            foreach (var dllFile in dllFiles)
             {
                 assemblies.Add(Assembly.LoadFile(dllFile));
             }

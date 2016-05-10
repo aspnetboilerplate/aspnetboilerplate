@@ -5,7 +5,8 @@ namespace Abp.Localization
 {
     public static class LocalizationSourceHelper
     {
-        public static string ReturnGivenNameOrThrowException(ILocalizationConfiguration configuration, string sourceName, string name)
+        public static string ReturnGivenNameOrThrowException(ILocalizationConfiguration configuration, string sourceName,
+            string name)
         {
             var exceptionMessage = string.Format(
                 "Can not find '{0}' in localization source '{1}'!",

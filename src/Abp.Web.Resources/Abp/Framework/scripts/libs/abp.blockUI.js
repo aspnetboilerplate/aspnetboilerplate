@@ -1,20 +1,21 @@
 ﻿var abp = abp || {};
-(function () {
+(function() {
     if (!$.blockUI) {
         return;
     }
 
-    $.extend($.blockUI.defaults, {
-        message: ' ',
-        css: { },
+    $.extend($.blockUI.defaults,
+    {
+        message: " ",
+        css: {},
         overlayCSS: {
-            backgroundColor: '#AAA',
+            backgroundColor: "#AAA",
             opacity: 0.3,
-            cursor: 'wait'
+            cursor: "wait"
         }
     });
 
-    abp.ui.block = function (elm) {
+    abp.ui.block = function(elm) {
         if (!elm) {
             $.blockUI();
         } else {
@@ -22,7 +23,7 @@
         }
     };
 
-    abp.ui.unblock = function (elm) {
+    abp.ui.unblock = function(elm) {
         if (!elm) {
             $.unblockUI();
         } else {

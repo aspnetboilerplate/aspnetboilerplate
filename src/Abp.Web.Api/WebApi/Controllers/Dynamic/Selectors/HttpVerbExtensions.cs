@@ -1,15 +1,15 @@
-using Abp.Web;
 using System.Net.Http;
+using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     /// <summary>
-    /// Extension methods for <see cref="HttpVerb"/>.
+    ///     Extension methods for <see cref="HttpVerb" />.
     /// </summary>
     public static class HttpVerbExtensions
     {
         /// <summary>
-        /// Compares a <see cref="HttpVerb"/> with a <see cref="HttpMethod"/>.
+        ///     Compares a <see cref="HttpVerb" /> with a <see cref="HttpMethod" />.
         /// </summary>
         /// <param name="verb">The Http verb</param>
         /// <param name="method">The Http method</param>

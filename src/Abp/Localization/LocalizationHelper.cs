@@ -1,22 +1,15 @@
-using Abp.Dependency;
-using Abp.Localization.Sources;
 using System;
 using System.Globalization;
+using Abp.Dependency;
+using Abp.Localization.Sources;
 
 namespace Abp.Localization
 {
     /// <summary>
-    /// This static class is used to simplify getting localized strings.
+    ///     This static class is used to simplify getting localized strings.
     /// </summary>
     public static class LocalizationHelper
     {
-        /// <summary>
-        /// Gets a reference to the localization manager.
-        /// Inject and use <see cref="ILocalizationManager"/>
-        /// wherever it's possible, instead of this shortcut.
-        /// </summary>
-        public static ILocalizationManager Manager { get { return LocalizationManager.Value; } }
-
         private static readonly Lazy<ILocalizationManager> LocalizationManager;
 
         static LocalizationHelper()
@@ -29,7 +22,17 @@ namespace Abp.Localization
         }
 
         /// <summary>
-        /// Gets a pre-registered localization source.
+        ///     Gets a reference to the localization manager.
+        ///     Inject and use <see cref="ILocalizationManager" />
+        ///     wherever it's possible, instead of this shortcut.
+        /// </summary>
+        public static ILocalizationManager Manager
+        {
+            get { return LocalizationManager.Value; }
+        }
+
+        /// <summary>
+        ///     Gets a pre-registered localization source.
         /// </summary>
         public static ILocalizationSource GetSource(string name)
         {
@@ -37,7 +40,7 @@ namespace Abp.Localization
         }
 
         /// <summary>
-        /// Gets a localized string in current language.
+        ///     Gets a localized string in current language.
         /// </summary>
         /// <param name="sourceName">Name of the localization source</param>
         /// <param name="name">Key name to get localized string</param>
@@ -48,7 +51,7 @@ namespace Abp.Localization
         }
 
         /// <summary>
-        /// Gets a localized string in specified language.
+        ///     Gets a localized string in specified language.
         /// </summary>
         /// <param name="sourceName">Name of the localization source</param>
         /// <param name="name">Key name to get localized string</param>

@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function () {
+(function() {
     if (!$.fn.spin) {
         return;
     }
@@ -29,9 +29,9 @@
         }
     };
 
-    abp.ui.setBusy = function (elm, optionsOrPromise) {
+    abp.ui.setBusy = function(elm, optionsOrPromise) {
         optionsOrPromise = optionsOrPromise || {};
-        if (optionsOrPromise.always || optionsOrPromise['finally']) { //Check if it's promise
+        if (optionsOrPromise.always || optionsOrPromise["finally"]) { //Check if it's promise
             optionsOrPromise = {
                 promise: optionsOrPromise
             };
@@ -44,10 +44,12 @@
                 abp.ui.block();
             }
 
-            $('body').spin(abp.libs.spinjs.spinner_config);
+            $("body").spin(abp.libs.spinjs.spinner_config);
         } else {
             var $elm = $(elm);
-            var $busyIndicator = $elm.find('.abp-busy-indicator'); //TODO@Halil: What if  more than one element. What if there are nested elements?
+            var $busyIndicator = $elm
+                .find(".abp-busy-indicator");
+//TODO@Halil: What if  more than one element. What if there are nested elements?
             if ($busyIndicator.length) {
                 $busyIndicator.spin(abp.libs.spinjs.spinner_config_inner_busy_indicator);
             } else {
@@ -61,25 +63,25 @@
 
         if (options.promise) { //Supports Q and jQuery.Deferred
             if (options.promise.always) {
-                options.promise.always(function () {
+                options.promise.always(function() {
                     abp.ui.clearBusy(elm);
                 });
-            } else if (options.promise['finally']) {
-                options.promise['finally'](function () {
+            } else if (options.promise["finally"]) {
+                options.promise["finally"](function() {
                     abp.ui.clearBusy(elm);
                 });
             }
         }
     };
 
-    abp.ui.clearBusy = function (elm) {
+    abp.ui.clearBusy = function(elm) {
         //TODO@Halil: Maybe better to do not call unblock if it's not blocked by setBusy
         if (!elm) {
             abp.ui.unblock();
-            $('body').spin(false);
+            $("body").spin(false);
         } else {
             var $elm = $(elm);
-            var $busyIndicator = $elm.find('.abp-busy-indicator');
+            var $busyIndicator = $elm.find(".abp-busy-indicator");
             if ($busyIndicator.length) {
                 $busyIndicator.spin(false);
             } else {

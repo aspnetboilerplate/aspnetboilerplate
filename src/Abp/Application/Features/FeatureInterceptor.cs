@@ -1,19 +1,19 @@
-﻿using Abp.Dependency;
+﻿using System.Collections.Generic;
+using Abp.Dependency;
 using Abp.Reflection;
 using Castle.DynamicProxy;
-using System.Collections.Generic;
 
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Intercepts methods to apply <see cref="RequiresFeatureAttribute"/>.
+    ///     Intercepts methods to apply <see cref="RequiresFeatureAttribute" />.
     /// </summary>
     public class FeatureInterceptor : IInterceptor
     {
         private readonly IIocResolver _iocResolver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeatureInterceptor"/> class.
+        ///     Initializes a new instance of the <see cref="FeatureInterceptor" /> class.
         /// </summary>
         /// <param name="iocResolver">The ioc resolver.</param>
         public FeatureInterceptor(IIocResolver iocResolver)

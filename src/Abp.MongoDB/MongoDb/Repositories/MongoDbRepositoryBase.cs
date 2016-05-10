@@ -1,14 +1,14 @@
+using System;
+using System.Linq;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
-using System.Linq;
 
 namespace Abp.MongoDb.Repositories
 {
     /// <summary>
-    /// Implements IRepository for MongoDB.
+    ///     Implements IRepository for MongoDB.
     /// </summary>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, Guid>, IRepository<TEntity>
@@ -21,13 +21,20 @@ namespace Abp.MongoDb.Repositories
     }
 
     /// <summary>
-    /// Implements IRepository for MongoDB.
+    ///     Implements IRepository for MongoDB.
     /// </summary>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
+        private readonly IMongoDatabaseProvider _databaseProvider;
+
+        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
+        {
+            _databaseProvider = databaseProvider;
+        }
+
         public virtual MongoDatabase Database
         {
             get { return _databaseProvider.Database; }
@@ -35,17 +42,7 @@ namespace Abp.MongoDb.Repositories
 
         public virtual MongoCollection<TEntity> Collection
         {
-            get
-            {
-                return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
-            }
-        }
-
-        private readonly IMongoDatabaseProvider _databaseProvider;
-
-        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-        {
-            _databaseProvider = databaseProvider;
+            get { return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name); }
         }
 
         public override IQueryable<TEntity> GetAll()

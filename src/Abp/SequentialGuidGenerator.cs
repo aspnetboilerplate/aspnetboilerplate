@@ -4,27 +4,63 @@ using System.Security.Cryptography;
 namespace Abp
 {
     /// <summary>
-    /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids.
-    /// This code is taken from jhtodd/SequentialGuid
-    /// https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
+    ///     Implements <see cref="IGuidGenerator" /> by creating sequential Guids.
+    ///     This code is taken from jhtodd/SequentialGuid
+    ///     https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
     /// </summary>
     public class SequentialGuidGenerator : IGuidGenerator
     {
         /// <summary>
-        /// Gets the singleton <see cref="SequentialGuidGenerator"/> instance.
+        ///     Database type to generate GUIDs.
         /// </summary>
-        public static SequentialGuidGenerator Instance { get { return _instance; } }
+        public enum SequentialGuidDatabaseType
+        {
+            SqlServer,
 
-        private static readonly SequentialGuidGenerator _instance = new SequentialGuidGenerator();
+            Oracle,
+
+            MySql,
+
+            PostgreSql
+        }
+
+        /// <summary>
+        ///     Describes the type of a sequential GUID value.
+        /// </summary>
+        public enum SequentialGuidType
+        {
+            /// <summary>
+            ///     The GUID should be sequential when formatted using the
+            ///     <see cref="Guid.ToString()" /> method.
+            /// </summary>
+            SequentialAsString,
+
+            /// <summary>
+            ///     The GUID should be sequential when formatted using the
+            ///     <see cref="Guid.ToByteArray" /> method.
+            /// </summary>
+            SequentialAsBinary,
+
+            /// <summary>
+            ///     The sequential portion of the GUID should be located at the end
+            ///     of the Data4 block.
+            /// </summary>
+            SequentialAtEnd
+        }
 
         private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
-
-        public SequentialGuidDatabaseType DatabaseType { get; set; }
 
         public SequentialGuidGenerator()
         {
             DatabaseType = SequentialGuidDatabaseType.SqlServer;
         }
+
+        /// <summary>
+        ///     Gets the singleton <see cref="SequentialGuidGenerator" /> instance.
+        /// </summary>
+        public static SequentialGuidGenerator Instance { get; } = new SequentialGuidGenerator();
+
+        public SequentialGuidDatabaseType DatabaseType { get; set; }
 
         public Guid Create()
         {
@@ -35,18 +71,23 @@ namespace Abp
         {
             switch (databaseType)
             {
-                case SequentialGuidDatabaseType.SqlServer: return Create(SequentialGuidType.SequentialAtEnd);
-                case SequentialGuidDatabaseType.Oracle: return Create(SequentialGuidType.SequentialAsBinary);
-                case SequentialGuidDatabaseType.MySql: return Create(SequentialGuidType.SequentialAsString);
-                case SequentialGuidDatabaseType.PostgreSql: return Create(SequentialGuidType.SequentialAsString);
-                default: throw new InvalidOperationException();
+                case SequentialGuidDatabaseType.SqlServer:
+                    return Create(SequentialGuidType.SequentialAtEnd);
+                case SequentialGuidDatabaseType.Oracle:
+                    return Create(SequentialGuidType.SequentialAsBinary);
+                case SequentialGuidDatabaseType.MySql:
+                    return Create(SequentialGuidType.SequentialAsString);
+                case SequentialGuidDatabaseType.PostgreSql:
+                    return Create(SequentialGuidType.SequentialAsString);
+                default:
+                    throw new InvalidOperationException();
             }
         }
 
         public Guid Create(SequentialGuidType guidType)
         {
             // We start with 16 bytes of cryptographically strong random data.
-            byte[] randomBytes = new byte[10];
+            var randomBytes = new byte[10];
             _rng.GetBytes(randomBytes);
 
             // An alternate method: use a normally-created GUID to get our initial
@@ -68,10 +109,10 @@ namespace Abp
             // Using millisecond resolution for our 48-bit timestamp gives us
             // about 5900 years before the timestamp overflows and cycles.
             // Hopefully this should be sufficient for most purposes. :)
-            long timestamp = DateTime.UtcNow.Ticks / 10000L;
+            var timestamp = DateTime.UtcNow.Ticks/10000L;
 
             // Then get the bytes
-            byte[] timestampBytes = BitConverter.GetBytes(timestamp);
+            var timestampBytes = BitConverter.GetBytes(timestamp);
 
             // Since we're converting from an Int64, we have to reverse on
             // little-endian systems.
@@ -80,7 +121,7 @@ namespace Abp
                 Array.Reverse(timestampBytes);
             }
 
-            byte[] guidBytes = new byte[16];
+            var guidBytes = new byte[16];
 
             switch (guidType)
             {
@@ -114,44 +155,6 @@ namespace Abp
             }
 
             return new Guid(guidBytes);
-        }
-
-        /// <summary>
-        /// Database type to generate GUIDs.
-        /// </summary>
-        public enum SequentialGuidDatabaseType
-        {
-            SqlServer,
-
-            Oracle,
-
-            MySql,
-
-            PostgreSql,
-        }
-
-        /// <summary>
-        /// Describes the type of a sequential GUID value.
-        /// </summary>
-        public enum SequentialGuidType
-        {
-            /// <summary>
-            /// The GUID should be sequential when formatted using the
-            /// <see cref="Guid.ToString()" /> method.
-            /// </summary>
-            SequentialAsString,
-
-            /// <summary>
-            /// The GUID should be sequential when formatted using the
-            /// <see cref="Guid.ToByteArray" /> method.
-            /// </summary>
-            SequentialAsBinary,
-
-            /// <summary>
-            /// The sequential portion of the GUID should be located at the end
-            /// of the Data4 block.
-            /// </summary>
-            SequentialAtEnd
         }
     }
 }

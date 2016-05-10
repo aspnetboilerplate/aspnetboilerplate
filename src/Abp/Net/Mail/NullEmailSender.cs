@@ -1,20 +1,18 @@
-using Castle.Core.Logging;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 
 namespace Abp.Net.Mail
 {
     //TODO: Move this to Abp.TestBase?
     /// <summary>
-    /// This class is an implementation of <see cref="IEmailSender"/> as similar to null pattern.
-    /// It does not send emails but logs them.
+    ///     This class is an implementation of <see cref="IEmailSender" /> as similar to null pattern.
+    ///     It does not send emails but logs them.
     /// </summary>
     public class NullEmailSender : EmailSenderBase
     {
-        public ILogger Logger { get; set; }
-
         /// <summary>
-        /// Creates a new <see cref="NullEmailSender"/> object.
+        ///     Creates a new <see cref="NullEmailSender" /> object.
         /// </summary>
         /// <param name="configuration">Configuration</param>
         public NullEmailSender(IEmailSenderConfiguration configuration)
@@ -22,6 +20,8 @@ namespace Abp.Net.Mail
         {
             Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         protected override Task SendEmailAsync(MailMessage mail)
         {

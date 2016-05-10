@@ -3,12 +3,12 @@ using Abp.Threading;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Extension methods for <see cref="IFeatureDependency"/>.
+    ///     Extension methods for <see cref="IFeatureDependency" />.
     /// </summary>
     public static class FeatureDependencyExtensions
     {
         /// <summary>
-        /// Checks depended features and returns true if dependencies are satisfied.
+        ///     Checks depended features and returns true if dependencies are satisfied.
         /// </summary>
         /// <param name="featureDependency">The feature dependency.</param>
         /// <param name="context">The context.</param>

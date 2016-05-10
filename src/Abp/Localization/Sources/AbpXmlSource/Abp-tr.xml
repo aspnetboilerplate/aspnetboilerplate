@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="tr">
   <texts>
     <text name="SmtpHost">SMTP sunucusu</text>
@@ -13,5 +14,6 @@
     <text name="DefaultLanguage">Varsayılan dil</text>
     <text name="ReceiveNotifications">Bildirimleri al</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Kullanıcı girişi yapılmamış!</text>
+    <text name="TimeZone">Zaman dilimi</text>
   </texts>
 </localizationDictionary>

@@ -1,10 +1,11 @@
-using Abp.Dependency;
 using System;
+using Abp.Dependency;
 
 namespace Abp.Events.Bus.Handlers.Internals
 {
     /// <summary>
-    /// This event handler is an adapter to be able to use an action as <see cref="IEventHandler{TEventData}"/> implementation.
+    ///     This event handler is an adapter to be able to use an action as <see cref="IEventHandler{TEventData}" />
+    ///     implementation.
     /// </summary>
     /// <typeparam name="TEventData">Event type</typeparam>
     internal class ActionEventHandler<TEventData> :
@@ -12,12 +13,7 @@ namespace Abp.Events.Bus.Handlers.Internals
         ITransientDependency
     {
         /// <summary>
-        /// Action to handle the event.
-        /// </summary>
-        public Action<TEventData> Action { get; private set; }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ActionEventHandler{TEventData}"/>.
+        ///     Creates a new instance of <see cref="ActionEventHandler{TEventData}" />.
         /// </summary>
         /// <param name="handler">Action to handle the event</param>
         public ActionEventHandler(Action<TEventData> handler)
@@ -26,7 +22,12 @@ namespace Abp.Events.Bus.Handlers.Internals
         }
 
         /// <summary>
-        /// Handles the event.
+        ///     Action to handle the event.
+        /// </summary>
+        public Action<TEventData> Action { get; }
+
+        /// <summary>
+        ///     Handles the event.
         /// </summary>
         /// <param name="eventData"></param>
         public void HandleEvent(TEventData eventData)

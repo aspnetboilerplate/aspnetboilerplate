@@ -3,12 +3,12 @@ using System;
 namespace Abp.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="IComparable{T}"/>.
+    ///     Extension methods for <see cref="IComparable{T}" />.
     /// </summary>
     public static class ComparableExtensions
     {
         /// <summary>
-        /// Checks a value is between a minimum and maximum value.
+        ///     Checks a value is between a minimum and maximum value.
         /// </summary>
         /// <param name="value">The value to be checked</param>
         /// <param name="minInclusiveValue">Minimum (inclusive) value</param>

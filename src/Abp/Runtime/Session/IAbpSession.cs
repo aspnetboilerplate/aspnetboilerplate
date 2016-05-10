@@ -1,37 +1,41 @@
-﻿using Abp.MultiTenancy;
-using System;
+﻿using System;
+using Abp.MultiTenancy;
 
 namespace Abp.Runtime.Session
 {
     /// <summary>
-    /// Defines some session information that can be useful for applications.
+    ///     Defines some session information that can be useful for applications.
     /// </summary>
     public interface IAbpSession
     {
         /// <summary>
-        /// Gets current UserId or null.
+        ///     Gets current UserId or null.
+        ///     It can be null if no user logged in.
         /// </summary>
         Guid? UserId { get; }
 
         /// <summary>
-        /// Gets current TenantId or null.
+        ///     Gets current TenantId or null.
+        ///     This TenantId should be the TenantId of the <see cref="UserId" />.
+        ///     It can be null if given <see cref="UserId" /> is a host user or no user logged in.
         /// </summary>
         Guid? TenantId { get; }
 
         /// <summary>
-        /// Gets current multi-tenancy side.
+        ///     Gets current multi-tenancy side.
         /// </summary>
         MultiTenancySides MultiTenancySide { get; }
 
         /// <summary>
-        /// UserId of the impersonator.
-        /// This is filled if a user is performing actions behalf of the <see cref="UserId"/>.
+        ///     UserId of the impersonator.
+        ///     This is filled if a user is performing actions behalf of the <see cref="UserId" />.
         /// </summary>
         Guid? ImpersonatorUserId { get; }
 
         /// <summary>
-        /// TenantId of the impersonator.
-        /// This is filled if a user with <see cref="ImpersonatorUserId"/> performing actions behalf of the <see cref="UserId"/>.
+        ///     TenantId of the impersonator.
+        ///     This is filled if a user with <see cref="ImpersonatorUserId" /> performing actions behalf of the
+        ///     <see cref="UserId" />.
         /// </summary>
         Guid? ImpersonatorTenantId { get; }
     }
