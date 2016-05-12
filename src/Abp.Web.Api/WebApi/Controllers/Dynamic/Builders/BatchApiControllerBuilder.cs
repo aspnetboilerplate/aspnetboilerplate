@@ -20,6 +20,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private Func<Type, string> _serviceNameSelector;
         private Func<Type, bool> _typePredicate;
         private bool _conventionalVerbs;
+        private Action<IApiControllerActionBuilder<T>> _forMethodsAction;
 
         public BatchApiControllerBuilder(Assembly assembly, string servicePrefix)
         {
@@ -45,6 +46,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return this;
         }
 
+        public IBatchApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action)
+        {
+            _forMethodsAction = action;
+            return this;
+        }
+
         public IBatchApiControllerBuilder<T> WithConventionalVerbs()
         {
             _conventionalVerbs = true;
@@ -57,7 +64,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    type.IsPublic && 
+                    (type.IsPublic || type.IsNestedPublic) && 
                     type.IsInterface && 
                     typeof(T).IsAssignableFrom(type) && 
                     IocManager.Instance.IsRegistered(type) &&
@@ -98,6 +105,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     builder.GetType()
                        .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
                        .Invoke(builder, new object[0]);
+                }
+
+                if (_forMethodsAction != null)
+                {
+                    builder.GetType()
+                        .GetMethod("ForMethods", BindingFlags.Public | BindingFlags.Instance)
+                        .Invoke(builder, new object[] { _forMethodsAction });
                 }
 
                 builder.GetType()

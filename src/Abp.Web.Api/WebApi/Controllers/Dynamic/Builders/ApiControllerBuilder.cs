@@ -15,20 +15,28 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        private readonly string _serviceName;
+        public string ServiceName { get; private set; }
+
+        /// <summary>
+        /// Gets type of the service interface for this dynamic controller.
+        /// </summary>
+        public Type ServiceInterfaceType { get; private set; }
+
+        /// <summary>
+        /// Action Filters to apply to this dynamic controller.
+        /// </summary>
+        public IFilter[] Filters { get; private set; }
+
+        /// <summary>
+        /// True, if using conventional verbs for this dynamic controller.
+        /// </summary>
+        public bool ConventionalVerbs { get; private set; }
 
         /// <summary>
         /// List of all action builders for this controller.
         /// </summary>
         private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
-
-        /// <summary>
-        /// Action Filters to apply to the whole Dynamic Controller.
-        /// </summary>
-        private IFilter[] _filters;
-
-        private bool _conventionalVerbs;
-
+        
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
@@ -45,7 +53,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
             }
 
-            _serviceName = serviceName;
+            ServiceName = serviceName;
+            ServiceInterfaceType = typeof (T);
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
 
@@ -69,7 +78,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns>The current Controller Builder </returns>
         public IApiControllerBuilder<T> WithFilters(params IFilter[] filters)
         {
-            _filters = filters;
+            Filters = filters;
             return this;
         }
 
@@ -88,9 +97,19 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return _actionBuilders[methodName];
         }
 
+        public IApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action)
+        {
+            foreach (var actionBuilder in _actionBuilders.Values)
+            {
+                action(actionBuilder);
+            }
+
+            return this;
+        }
+
         public IApiControllerBuilder<T> WithConventionalVerbs()
         {
-            _conventionalVerbs = true;
+            ConventionalVerbs = true;
             return this;
         }
 
@@ -101,11 +120,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public void Build()
         {
             var controllerInfo = new DynamicApiControllerInfo(
-                _serviceName, 
-                typeof(T),
+                ServiceName,
+                ServiceInterfaceType,
                 typeof(DynamicApiController<T>),
                 typeof(AbpDynamicApiControllerInterceptor<T>),
-                _filters
+                Filters
                 );
             
             foreach (var actionBuilder in _actionBuilders.Values)
@@ -115,7 +134,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     continue;
                 }
 
-                controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(_conventionalVerbs);
+                controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(ConventionalVerbs);
             }
             
             DynamicApiControllerManager.Register(controllerInfo);
