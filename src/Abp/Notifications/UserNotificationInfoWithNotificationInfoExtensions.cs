@@ -11,7 +11,7 @@ namespace Abp.Notifications
         public static UserNotification ToUserNotification(this UserNotificationInfoWithNotificationInfo userNotificationInfoWithNotificationInfo)
         {
             return userNotificationInfoWithNotificationInfo.UserNotification.ToUserNotification(
-                userNotificationInfoWithNotificationInfo.Notification.ToNotification()
+                userNotificationInfoWithNotificationInfo.Notification.ToTenantNotification()
                 );
         }
     }

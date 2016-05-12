@@ -10,6 +10,11 @@ namespace Abp.Notifications
     public class NotificationSubscription : IHasCreationTime
     {
         /// <summary>
+        /// Tenant id of the subscribed user.
+        /// </summary>
+        public int? TenantId { get; set; }
+
+        /// <summary>
         /// User Id.
         /// </summary>
         public long UserId { get; set; }

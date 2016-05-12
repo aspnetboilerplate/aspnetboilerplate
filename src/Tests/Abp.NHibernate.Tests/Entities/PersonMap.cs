@@ -1,6 +1,6 @@
 using Abp.NHibernate.EntityMappings;
 
-namespace Abp.NHibernate.Tests
+namespace Abp.NHibernate.Tests.Entities
 {
     public class PersonMap : EntityMap<Person>
     {

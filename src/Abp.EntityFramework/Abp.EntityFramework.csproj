@@ -68,18 +68,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFramework\AbpDbContext.cs" />
-    <Compile Include="EntityFramework\Dependency\EntityFrameworkConventionalRegistrar.cs" />
+    <Compile Include="EntityFramework\DbContextHelper.cs" />
+    <Compile Include="EntityFramework\Utils\DateTimePropertyInfoHelper.cs" />
     <Compile Include="EntityFramework\Extensions\QueryableExtensions.cs" />
     <Compile Include="EntityFramework\Repositories\AutoRepositoryTypesAttribute.cs" />
     <Compile Include="EntityFramework\Repositories\EntityFrameworkGenericRepositoryRegistrar.cs" />
-    <Compile Include="EntityFramework\Extensions\DbContextExtensions.cs" />
+    <Compile Include="EntityFramework\EntityTypeInfo.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntity.cs" />
     <Compile Include="EntityFramework\Repositories\EfRepositoryBaseOfTEntityAndTPrimaryKey.cs" />
     <Compile Include="EntityFramework\IDbContextProvider.cs" />
     <Compile Include="EntityFramework\SimpleDbContextProvider.cs" />
+    <Compile Include="EntityFramework\DbContextTypeMatcher.cs" />
+    <Compile Include="EntityFramework\DefaultDbContextResolver.cs" />
+    <Compile Include="EntityFramework\IDbContextResolver.cs" />
+    <Compile Include="EntityFramework\IDbContextTypeMatcher.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="EntityFramework\Uow\EfUnitOfWork.cs" />
     <Compile Include="EntityFramework\Uow\UnitOfWorkExtensions.cs" />
+    <Compile Include="EntityFramework\Utils\EntityDateTimePropertiesInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityFramework\AbpEntityFrameworkModule.cs" />
   </ItemGroup>

@@ -23,6 +23,8 @@ namespace Abp.Json
                 options.Formatting = Formatting.Indented;
             }
 
+            options.Converters.Insert(0, new AbpDateTimeConverter());
+
             return JsonConvert.SerializeObject(obj, options);
         }
     }

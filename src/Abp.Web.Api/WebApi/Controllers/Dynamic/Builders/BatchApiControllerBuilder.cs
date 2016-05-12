@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Web.Http.Filters;
+using Abp.Application.Services;
 using Abp.Dependency;
 using Abp.Extensions;
 
@@ -56,7 +57,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    type.IsPublic && type.IsInterface && typeof(T).IsAssignableFrom(type) && IocManager.Instance.IsRegistered(type)
+                    type.IsPublic && 
+                    type.IsInterface && 
+                    typeof(T).IsAssignableFrom(type) && 
+                    IocManager.Instance.IsRegistered(type) &&
+                    !type.IsDefined(typeof(DisableDynamicWebApiAttribute), true)
                 select
                     type;
 

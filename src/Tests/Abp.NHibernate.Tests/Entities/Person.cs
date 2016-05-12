@@ -1,6 +1,6 @@
 using Abp.Domain.Entities;
 
-namespace Abp.NHibernate.Tests
+namespace Abp.NHibernate.Tests.Entities
 {
     public class Person : Entity
     {

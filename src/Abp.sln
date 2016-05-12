@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1434FA4-ED3F-4A7B-A0D3-8CBB900B1609}"
 	ProjectSection(SolutionItems) = preProject
@@ -69,6 +69,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.SignalR", "Abp.Web.SignalR\Abp.Web.SignalR.csproj", "{613D9120-C28D-4898-ACAA-1A3CFCF0DDD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Owin", "Abp.Owin\Abp.Owin.csproj", "{5D471C86-838F-4BDC-AF9F-C95E8FA4E977}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Mvc.Tests", "Tests\Abp.Web.Mvc.Tests\Abp.Web.Mvc.Tests.csproj", "{9E8BB913-BD85-4215-A1C0-0ED24251728B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Events.Producer", "Abp.Events.Producer\Abp.Events.Producer.csproj", "{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}"
 EndProject
@@ -192,6 +194,10 @@ Global
 		{5D471C86-838F-4BDC-AF9F-C95E8FA4E977}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D471C86-838F-4BDC-AF9F-C95E8FA4E977}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D471C86-838F-4BDC-AF9F-C95E8FA4E977}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -218,5 +224,6 @@ Global
 		{0CF3083B-364D-42C9-B6F2-552789FB6ED5} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{2322DD68-034A-44FD-8065-90030BE25C47} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 		{BE5D25B4-66A7-4A29-BA64-3D00A952BE9E} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
+		{9E8BB913-BD85-4215-A1C0-0ED24251728B} = {9E8F8E84-8335-48E4-988C-D0C9F37927D6}
 	EndGlobalSection
 EndGlobal

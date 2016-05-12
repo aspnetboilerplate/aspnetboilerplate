@@ -97,7 +97,7 @@
         return $.Deferred(function ($dfd) {
             sweetAlert(opts, function (isConfirmed) {
                 callback && callback(isConfirmed);
-                $dfd.resolve();
+                $dfd.resolve(isConfirmed);
             });
         });
     };

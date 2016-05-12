@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
+using Abp.MultiTenancy;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Domain.Repositories
 {
@@ -16,6 +18,20 @@ namespace Abp.Domain.Repositories
     public abstract class AbpRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
+        /// <summary>
+        /// The multi tenancy side
+        /// </summary>
+        public static MultiTenancySides? MultiTenancySide { get; private set; }
+
+        static AbpRepositoryBase()
+        {
+            var attr = typeof (TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
+            if (attr != null)
+            {
+                MultiTenancySide = attr.Side;
+            }
+        }
+
         public abstract IQueryable<TEntity> GetAll();
         
         public virtual List<TEntity> GetAllList()

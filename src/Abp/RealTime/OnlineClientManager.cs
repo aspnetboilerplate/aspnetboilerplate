@@ -46,10 +46,10 @@ namespace Abp.RealTime
             return _clients.GetOrDefault(connectionId);
         }
 
-        public IOnlineClient GetByUserIdOrNull(long userId)
+        public IOnlineClient GetByUserIdOrNull(IUserIdentifier user)
         {
             //TODO: We can create a dictionary for a faster lookup.
-            return GetAllClients().FirstOrDefault(c => c.UserId == userId);
+            return GetAllClients().FirstOrDefault(c => c.UserId == user.UserId && c.TenantId == user.TenantId);
         }
 
         public IReadOnlyList<IOnlineClient> GetAllClients()

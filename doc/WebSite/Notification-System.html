@@ -83,18 +83,18 @@ infrastructure.</p>
     <strong>//Subscribe to a general notification</strong>
     public async Task Subscribe_SentFrendshipRequest(int? tenantId, long userId)
     {
-        <strong>await _notificationSubscriptionManager.SubscribeAsync(tenantId, userId, &quot;SentFrendshipRequest&quot;);</strong>    
+        <strong>await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), &quot;SentFrendshipRequest&quot;);</strong>    
     }
 
     <strong>//Subscribe to an entity notification</strong>
     public async Task Subscribe_CommentPhoto(int? tenantId, long userId, Guid photoId)
     {
-        <strong>await _notificationSubscriptionManager.SubscribeAsync(tenantId, userId, &quot;CommentPhoto&quot;, new EntityIdentifier(typeof(Photo), photoId));</strong>   
+        <strong>await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), &quot;CommentPhoto&quot;, new EntityIdentifier(typeof(Photo), photoId));</strong>   
     }
 }</pre>
 			<p>First, we <a href="/Pages/Documents/Dependency-Injection">injected</a>
 				<strong>INotificationSubscriptionManager</strong>. 
-	First method subscribe to a <strong>general notification</strong>. User wants to get notified 
+	First method subscribes to a <strong>general notification</strong>. User wants to get notified 
 	when someone sends a friendship request. Second one subscribes to a 
 	notification related to a <strong>specific entity</strong> (Photo). User wants to get 
 	notified if anyone write comment to a specified photo.</p>
@@ -119,18 +119,18 @@ infrastructure.</p>
     }
 
     <strong>//Send a general notification to a specific user</strong>
-    public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, long targetUserId)
+    public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
     {
         <strong>await _notiticationPublisher.PublishAsync(&quot;SentFrendshipRequest&quot;, new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });</strong>
     }
 
     <strong>//Send an entity notification to a specific user</strong>
-    public async Task Publish_CommentPhoto(string commenterUserName, string comment, Guid photoId, long photoOwnerUserId)
+    public async Task Publish_CommentPhoto(string commenterUserName, string comment, Guid photoId, UserIdentifier photoOwnerUserId)
     {
         <strong>await _notiticationPublisher.PublishAsync(&quot;CommentPhoto&quot;, new CommentPhotoNotificationData(commenterUserName, comment), new EntityIdentifier(typeof(Photo), photoId), userIds: new[] { photoOwnerUserId });</strong>
     }
 
-    <strong>//Send a general notification to all subscribed users with a specified severity level</strong>
+    <strong>//Send a general notification to all subscribed users in current tenant (tenant in the session)</strong>
     public async Task Publish_LowDisk(int remainingDiskInMb)
     {
         //<span lang="tr">Example "</span>LowDiskWarningMessage<span lang="tr">" content for</span> English -&gt; &quot;Attention! Only {remainingDiskInMb} MBs left on the disk!&quot;
@@ -385,7 +385,9 @@ public class SentFrendshipRequestNotificationData : <strong>NotificationData</st
     //...
 }</pre>
 			<p>Finally, you can inject and use <strong>INotificationDefinitionManager</strong> 
-	in your application to get notification definitions.</p>
+	in your application to get notification definitions. Then you may want to 
+			prepare a automatic page to allow user to subscribe those 
+			notifications.</p>
 
 		</div>
 

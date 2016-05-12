@@ -8,6 +8,7 @@ using Abp.Authorization;
 using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -23,6 +24,7 @@ using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
+using Abp.Timing;
 
 namespace Abp
 {
@@ -62,6 +64,7 @@ namespace Abp
             Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
             Configuration.Settings.Providers.Add<EmailSettingProvider>();
             Configuration.Settings.Providers.Add<NotificationSettingProvider>();
+            Configuration.Settings.Providers.Add<TimingSettingProvider>();
 
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
@@ -72,7 +75,10 @@ namespace Abp
 
         public override void Initialize()
         {
-            base.Initialize();
+            foreach (var replaceAction in ((AbpStartupConfiguration)Configuration).ServiceReplaceActions.Values)
+            {
+                replaceAction();
+            }
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 

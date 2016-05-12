@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
@@ -18,7 +19,9 @@ using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
 using Abp.Configuration.Startup;
+using Abp.Json;
 using Abp.Web.Api.Description;
+using Abp.WebApi.Controllers.Dynamic.Binders;
 
 namespace Abp.WebApi
 {
@@ -48,8 +51,9 @@ namespace Abp.WebApi
             InitializeFilters(httpConfiguration);
             InitializeFormatters(httpConfiguration);
             InitializeRoutes(httpConfiguration);
+            InitializeModelBinders(httpConfiguration);
         }
-
+        
         public override void PostInitialize()
         {
             foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
@@ -89,11 +93,12 @@ namespace Abp.WebApi
             {
                 if (!(currentFormatter is JsonMediaTypeFormatter))
                 {
-                    httpConfiguration.Formatters.Remove(currentFormatter);                    
+                    httpConfiguration.Formatters.Remove(currentFormatter);
                 }
             }
 
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
             httpConfiguration.Formatters.Add(new PlainTextFormatter());
         }
 
@@ -119,6 +124,13 @@ namespace Abp.WebApi
                 routeTemplate: "api/AbpCache/ClearAll",
                 defaults: new { controller = "AbpCache", action = "ClearAll" }
                 );
+        }
+
+        private static void InitializeModelBinders(HttpConfiguration httpConfiguration)
+        {
+            var abpApiDateTimeBinder = new AbpApiDateTimeBinder();
+            httpConfiguration.BindParameter(typeof(DateTime), abpApiDateTimeBinder);
+            httpConfiguration.BindParameter(typeof(DateTime?), abpApiDateTimeBinder);
         }
     }
 }

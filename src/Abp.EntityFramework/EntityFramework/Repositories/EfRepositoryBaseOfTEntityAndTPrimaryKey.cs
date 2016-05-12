@@ -22,13 +22,13 @@ namespace Abp.EntityFramework.Repositories
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        protected virtual TDbContext Context { get { return _dbContextProvider.DbContext; } }
+        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
-        protected virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
-
+        public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
+        
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
         /// <summary>
@@ -145,15 +145,7 @@ namespace Abp.EntityFramework.Repositories
         public override void Delete(TEntity entity)
         {
             AttachIfNot(entity);
-
-            if (entity is ISoftDelete)
-            {
-                (entity as ISoftDelete).IsDeleted = true;
-            }
-            else
-            {
-                Table.Remove(entity);
-            }
+            Table.Remove(entity);
         }
 
         public override void Delete(TPrimaryKey id)

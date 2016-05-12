@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
@@ -90,5 +91,13 @@ namespace Abp.Configuration.Startup
         /// Used to configure notification system.
         /// </summary>
         INotificationConfiguration Notifications { get; }
+
+        /// <summary>
+        /// Used to replace a service type.
+        /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
+        /// </summary>
+        /// <param name="type">The type to be replaced.</param>
+        /// <param name="replaceAction">Replace action.</param>
+        void ReplaceService(Type type, Action replaceAction);
     }
 }
