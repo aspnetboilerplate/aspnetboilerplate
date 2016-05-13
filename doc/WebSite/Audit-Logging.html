@@ -5,6 +5,11 @@
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 		<title>Audit Logging</title>
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+		<style type="text/css">
+.auto-style1 {
+	font-weight: bold;
+}
+</style>
 	</head>
 
 	<body>
@@ -99,7 +104,7 @@ the selector in Selectors and remove it if you want).</p>
 			<h3 id="DocEnableDisableByAttrs">Enable/Disable by attributes</h3>
 			<p>While you can select auditing classes by configuration, you can use <strong>
 Audited</strong> and <strong>DisableAuditing</strong> attributes for a single 
-class or a single method. An example:</p>
+			<strong>class</strong>, a single <strong>method</strong>. An example:</p>
 			<pre lang="cs">[Audited]
 public class MyClass
 {
@@ -122,6 +127,10 @@ public class MyClass
 			<p>All methods of MyClass are audited except MyMethod2 since it's explicitly 
 disabled. Audited attribute can be used for a method to just save audits for the 
 desired method.</p>
+			<p><strong>DisableAuditing</strong> can also be used for or a single
+			<strong>property of a DTO</strong>. Thus, you can <strong>hide 
+			sensitive data</strong> in audit logs, such as passwords for 
+			example.</p>
 			<h3 id="DocNotes">Notes</h3>
 			<ul>
 				<li>A method must be <strong>public </strong>in order to saving audit logs. 

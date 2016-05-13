@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Collections;
 using Abp.Modules;
 using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
@@ -79,12 +80,84 @@ namespace Abp.TestBase.SampleApplication.Tests
                             Text = "tenant-1-message-2"
                         });
                 });
+
+            UsingDbContext(
+              context =>
+              {
+                  AddCompany(context, 
+                      "Volosoft",
+                      "Turkey",
+                      "Istanbul", 
+                      "Denizkoskler Mah. Avcilar", 
+                      "Halil",
+                      "Gumuspala Mah. Avcilar",
+                      "Ismail", 
+                      "Headquarter", 
+                      "Europe Headquarter");
+
+                  AddCompany(context,
+                      "Microsoft",
+                      "USA",
+                      "New York",
+                      "Herkimer St, Brooklyn, NY",
+                      "Neal",
+                      "Vinegar Hill, Brooklyn, NY",
+                      "Peter",
+                      "Main Office",
+                      "IT Office");
+              });
+        }
+
+        private void AddCompany(SampleApplicationDbContext context,string name,string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
+        {
+            context.Companies.Add(new Company
+            {
+                Name = name,
+                CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc),
+                BillingAddress = new Address
+                {
+                    Country = country,
+                    City = city,
+                    FullAddress = address1,
+                    CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Local),
+                    LastModifier = new Modifier
+                    {
+                        Name = modifier1,
+                        ModificationTime = new DateTime(2016, 03, 16, 0, 0, 0, DateTimeKind.Local)
+                    }
+                },
+                ShippingAddress = new Address
+                {
+                    Country = country,
+                    City = city,
+                    FullAddress = address2,
+                    CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc),
+                    LastModifier = new Modifier
+                    {
+                        Name = modifier2,
+                        ModificationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc)
+                    }
+                },
+                Branches = new List<Branch>
+                      {
+                          new Branch
+                          {
+                              Name = branchName1,
+                              CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Local),
+                          },
+                          new Branch()
+                          {
+                              Name = branchName2,
+                              CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc)
+                          }
+                      }
+            });
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)
         {
             base.AddModules(modules);
-            modules.Add<SampleApplicationModule>();
+            modules.Add<SampleApplicationTestModule>();
         }
 
         public void UsingDbContext(Action<SampleApplicationDbContext> action)

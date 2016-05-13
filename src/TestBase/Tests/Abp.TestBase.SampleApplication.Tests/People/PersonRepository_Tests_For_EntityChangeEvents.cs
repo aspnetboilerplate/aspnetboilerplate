@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
@@ -12,10 +16,12 @@ namespace Abp.TestBase.SampleApplication.Tests.People
     public class PersonRepository_Tests_For_EntityChangeEvents : SampleApplicationTestBase
     {
         private readonly IRepository<Person> _personRepository;
+        private readonly IRepository<Message> _messageRepository;
 
         public PersonRepository_Tests_For_EntityChangeEvents()
         {
             _personRepository = Resolve<IRepository<Person>>();
+            _messageRepository = Resolve<IRepository<Message>>();
         }
 
         [Fact]
@@ -154,6 +160,37 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             _personRepository
                 .FirstOrDefault(p => p.Name == "halil")
                 .ShouldNotBeNull(); //should not be changed since we throw exception to rollback the transaction
+        }
+
+        [Fact]
+        public async Task Should_Insert_A_New_Entity_On_EntityCreated_Event()
+        {
+            var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
+            person.IsTransient().ShouldBeFalse();
+
+            var text = string.Format("{0} is created with Id = {1}!", person.Name, person.Id);
+            UsingDbContext(context =>
+            {
+                var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
+                message.ShouldNotBeNull();
+            });
+        }
+
+        public class PersonHandler : IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
+        {
+            public const int FakeTenantId = 65910381;
+
+            private readonly IRepository<Message> _messageRepository;
+
+            public PersonHandler(IRepository<Message> messageRepository)
+            {
+                _messageRepository = messageRepository;
+            }
+
+            public void HandleEvent(EntityCreatedEventData<Person> eventData)
+            {
+                _messageRepository.Insert(new Message(FakeTenantId, string.Format("{0} is created with Id = {1}!", eventData.Entity.Name, eventData.Entity.Id)));
+            }
         }
     }
 }

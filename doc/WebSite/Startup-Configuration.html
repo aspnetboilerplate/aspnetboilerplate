@@ -35,7 +35,7 @@ module. Example configuration:</p>
             );
 
         //Configure navigation/menu
-        Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();
+        Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();        
     }
 
     public override void Initialize()
@@ -48,7 +48,18 @@ configure ASP.NET Boilerplate. For example, different modules can add navigation
 provider to add their own menu items to the main menu. See
 				<a href="/Pages/Documents/Localization">localization</a> and
 				<a href="/Pages/Documents/Navigation">navigation</a> documents for details.</p>
-
+			<h4>Replacing Built-In Services</h4>
+			<p><strong>Configuration.ReplaceService</strong> method can be used 
+			to <strong>override</strong> a built-in service. For example, you can replace 
+			IAbpSession service with your custom implementation as shown below:</p>
+			<pre lang="cs"><strong>Configuration.ReplaceService</strong>&lt;IAbpSession, MySession&gt;(DependencyLifeStyle.Transient);</pre>
+<p>ReplaceService method has an overload to pass an <strong>action</strong> to 
+make replacement in a custom way (for example, you can directly use Castle 
+Windsor for a detailed API).</p>
+			<p>Same service can be replaced multiple times (especially, in 
+			different modules). Last replaced will be valid (As you know, module 
+			PreInitialize methods are executed by <a href="Module-System.html">
+			dependency order</a>).</p>
 			<h3 id="DocConfigureModules">Configuring Modules</h3>
 
 			<p>Beside framework's own startup configuration, a module can extend 
@@ -67,7 +78,7 @@ clients.</p>
 			<p>Not every module should define this type of configuration. It's generally needed when a 
 module will be re-usable in different applications and needs to be configured on 
 startup.</p>
-			<h3 id="DocCreateModuleConfig">Creating configuration for a module</h3>
+			<h3 id="DocCreateModuleConfig">Creating Configuration For a Module</h3>
 			<p>Assume that we have a module named MyModule and it has some configuration 
 properties. First, we create a class for these cofigurable properties:</p>
 			<pre lang="cs">public class MyModuleConfig
@@ -76,14 +87,16 @@ properties. First, we create a class for these cofigurable properties:</p>
 
     public string SampleConfig2 { get; set; }
 }</pre>
-			<p>Then we register this class to DI on PreInitialize event of MyModule (Thus, 
+			<p>Then we register this class to 
+			<a href="Dependency-Injection.html">Dependency Injection</a> System on 
+			<strong>PreInitialize</strong> event of MyModule (Thus, 
 it will be injectable):</p>
 			<pre lang="cs">IocManager.Register&lt;MyModuleConfig&gt;();</pre>
-			<p>Finally, we create an extension method to IModuleConfigurations to get a 
+			<p>It should be registered as Singleton as in this sample. Finally, we create an extension method to IModuleConfigurations to get a 
 reference to the MyConfig:</p>
 			<pre lang="cs">public static class MyModuleConfigurationExtensions
 {
-    public static MyModuleConfig MyModule(this IModuleConfigurations moduleConfigurations)
+    <strong>public static MyModuleConfig MyModule(this IModuleConfigurations moduleConfigurations)</strong>
     {
         return moduleConfigurations.AbpConfiguration
             .GetOrCreate(&quot;MyModuleConfig&quot;,

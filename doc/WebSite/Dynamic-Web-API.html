@@ -76,7 +76,11 @@ DynamicApiControllerBuilder
 </pre>
 			<p>In this code, we created dynamic web api controllers for all application 
 services in an assembly. Then overrided configuration for a single application 
-service (ITaskAppService) to ignore CreateTask method.</p>
+service (ITaskAppService) to ignore CreateTask method. </p>
+			<h5>DisableDynamicWebApiAttribute</h5>
+			<p>You can also use DisableDynamicWebApiAttribute for any type or 
+			method definition to ignore this service or method while creating 
+			dynamic web api.</p>
 			<h4>Http Verbs</h4>
 			<p>By default, all methods are created as <strong>POST</strong>. So, a client should send post 
 requests in order to use created web api actions. We can change this behaviour 

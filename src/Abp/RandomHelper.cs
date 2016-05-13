@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Abp.Collections.Extensions;
 
 namespace Abp
@@ -63,7 +65,6 @@ namespace Abp
         /// </summary>
         /// <typeparam name="T">Type of the objects</typeparam>
         /// <param name="objs">List of object to select a random one</param>
-        /// <returns></returns>
         public static T GetRandomOf<T>(params T[] objs)
         {
             if (objs.IsNullOrEmpty())
@@ -72,6 +73,26 @@ namespace Abp
             }
 
             return objs[GetRandom(0, objs.Length)];
+        }
+
+        /// <summary>
+        /// Generates a randomized list from given enumerable.
+        /// </summary>
+        /// <typeparam name="T">Type of items in the list</typeparam>
+        /// <param name="items">items</param>
+        public static List<T> GenerateRandomizedList<T>(IEnumerable<T> items)
+        {
+            var currentList = new List<T>(items);
+            var randomList = new List<T>();
+
+            while (currentList.Any())
+            {
+                var randomIndex = RandomHelper.GetRandom(0, currentList.Count);
+                randomList.Add(currentList[randomIndex]);
+                currentList.RemoveAt(randomIndex);
+            }
+
+            return randomList;
         }
     }
 }

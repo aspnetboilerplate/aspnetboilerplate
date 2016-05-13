@@ -97,9 +97,9 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetAllSettingValuesForTenantAsync(2)).Count.ShouldBe(0);
             (await settingManager.GetAllSettingValuesForTenantAsync(3)).Count.ShouldBe(0);
 
-            (await settingManager.GetAllSettingValuesForUserAsync(1)).Count.ShouldBe(1);
-            (await settingManager.GetAllSettingValuesForUserAsync(2)).Count.ShouldBe(1);
-            (await settingManager.GetAllSettingValuesForUserAsync(3)).Count.ShouldBe(0);
+            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1,1))).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 2))).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 3))).Count.ShouldBe(0);
         }
 
         [Fact]
@@ -149,12 +149,12 @@ namespace Abp.Tests.Configuration
             session.UserId = 1;
 
             //We can get user's personal stored value
-            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await store.GetSettingOrNullAsync(1, 1, MyAllLevelsSetting)).ShouldNotBe(null);
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 stored value");
 
             //This will delete setting for the user since it's same as tenant's setting value
             await settingManager.ChangeSettingForUserAsync(1, MyAllLevelsSetting, "tenant 1 stored value");
-            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldBe(null);
+            (await store.GetSettingOrNullAsync(1, 1, MyAllLevelsSetting)).ShouldBe(null);
 
             //We can get tenant's setting value
             (await store.GetSettingOrNullAsync(1, null, MyAllLevelsSetting)).ShouldNotBe(null);
@@ -162,7 +162,7 @@ namespace Abp.Tests.Configuration
 
             //This will delete setting for tenant since it's same as application's setting value
             await settingManager.ChangeSettingForTenantAsync(1, MyAllLevelsSetting, "application level stored value");
-            (await store.GetSettingOrNullAsync(null, 1, MyAllLevelsSetting)).ShouldBe(null);
+            (await store.GetSettingOrNullAsync(1, 1, MyAllLevelsSetting)).ShouldBe(null);
 
             //We can get application's value
             (await store.GetSettingOrNullAsync(null, null, MyAllLevelsSetting)).ShouldNotBe(null);
@@ -205,8 +205,8 @@ namespace Abp.Tests.Configuration
                     new SettingInfo(null, null, MyAppLevelSetting, "48"),
                     new SettingInfo(null, null, MyAllLevelsSetting, "application level stored value"),
                     new SettingInfo(1, null, MyAllLevelsSetting, "tenant 1 stored value"),
-                    new SettingInfo(null, 1, MyAllLevelsSetting, "user 1 stored value"),
-                    new SettingInfo(null, 2, MyAllLevelsSetting, "user 2 stored value"),
+                    new SettingInfo(1, 1, MyAllLevelsSetting, "user 1 stored value"),
+                    new SettingInfo(1, 2, MyAllLevelsSetting, "user 2 stored value"),
                     new SettingInfo(null, null, MyNotInheritedSetting, "application value"),
                 };
             }

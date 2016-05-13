@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using Abp.Timing;
 
 namespace Abp.BackgroundJobs
@@ -10,6 +11,7 @@ namespace Abp.BackgroundJobs
     /// Represents a background job info that is used to persist jobs.
     /// </summary>
     [Table("AbpBackgroundJobs")]
+    [MultiTenancySide(MultiTenancySides.Host)]
     public class BackgroundJobInfo : CreationAuditedEntity<long>
     {
         /// <summary>

@@ -34,8 +34,8 @@ namespace Abp.NHibernate.Uow
         /// <summary>
         /// Creates a new instance of <see cref="NhUnitOfWork"/>.
         /// </summary>
-        public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NhUnitOfWork(ISessionFactory sessionFactory, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+            : base(connectionStringResolver, defaultOptions)
         {
             AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
@@ -137,8 +137,16 @@ namespace Abp.NHibernate.Uow
 
         protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            Session.GetEnabledFilter(filterName)
-                .SetParameter(parameterName, value);
+            if (Session == null)
+            {
+                return;
+            }
+
+            var filter = Session.GetEnabledFilter(filterName);
+            if (filter != null)
+            {
+                filter.SetParameter(parameterName, value);
+            }
         }
     }
 }

@@ -88,6 +88,7 @@
     <Compile Include="WebApi\Client\AbpRemoteCallException.cs" />
     <Compile Include="WebApi\Client\AbpWebApiClient.cs" />
     <Compile Include="WebApi\Client\IAbpWebApiClient.cs" />
+    <Compile Include="WebApi\Controllers\Dynamic\Binders\AbpApiDateTimeBinder.cs" />
     <Compile Include="WebApi\Controllers\AbpApiExplorer.cs" />
     <Compile Include="WebApi\Controllers\ApiExplorer\AbpHttpActionDescriptor.cs" />
     <Compile Include="WebApi\Controllers\Dynamic\Builders\BatchApiControllerBuilder.cs" />

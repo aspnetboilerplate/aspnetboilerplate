@@ -27,7 +27,6 @@ using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -513,7 +512,7 @@ namespace Abp.Web.Mvc.Controllers
                     dictionary,
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        ContractResolver = new AuditingContractResolver()
                     });
             }
             catch (Exception ex)

@@ -9,9 +9,9 @@ namespace Abp.Authorization
     public interface IPermissionDependencyContext
     {
         /// <summary>
-        /// The user which requires permission.
+        /// The user which requires permission. Can be null if no user.
         /// </summary>
-        long? UserId { get; }
+        UserIdentifier User { get; }
 
         /// <summary>
         /// Gets the <see cref="IIocResolver"/>.

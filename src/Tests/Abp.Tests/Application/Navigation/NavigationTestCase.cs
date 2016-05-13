@@ -49,19 +49,19 @@ namespace Abp.Tests.Application.Navigation
                     .UsingFactoryMethod(
                         () => new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                 );
-            
+
             //Create user navigation manager to test
             UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager)
-                                    {
-                                        PermissionChecker = CreateMockPermissionChecker()
-                                    };
+            {
+                PermissionChecker = CreateMockPermissionChecker()
+            };
         }
 
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(1, "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
             return permissionChecker;
         }
 

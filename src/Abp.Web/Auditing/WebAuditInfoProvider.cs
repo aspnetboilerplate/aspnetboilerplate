@@ -46,38 +46,45 @@ namespace Abp.Auditing
             }
         }
 
-        private static string GetBrowserInfo(HttpContext httpContext)
+        protected virtual string GetBrowserInfo(HttpContext httpContext)
         {
             return httpContext.Request.Browser.Browser + " / " +
                    httpContext.Request.Browser.Version + " / " +
                    httpContext.Request.Browser.Platform;
         }
 
-        private static string GetClientIpAddress(HttpContext httpContext)
+        protected virtual string GetClientIpAddress(HttpContext httpContext)
         {
             var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
                            httpContext.Request.ServerVariables["REMOTE_ADDR"];
 
-            foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
+            try
             {
-                if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
                 {
-                    return hostAddress.ToString();
+                    if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return hostAddress.ToString();
+                    }
+                }
+
+                foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
+                {
+                    if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return hostAddress.ToString();
+                    }
                 }
             }
-
-            foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
+            catch (Exception ex)
             {
-                if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return hostAddress.ToString();
-                }
+                Logger.Debug(ex.ToString());
             }
 
-            return null;
+            return clientIp;
         }
 
-        private static string GetComputerName(HttpContext httpContext)
+        protected virtual string GetComputerName(HttpContext httpContext)
         {
             if (!httpContext.Request.IsLocal)
             {

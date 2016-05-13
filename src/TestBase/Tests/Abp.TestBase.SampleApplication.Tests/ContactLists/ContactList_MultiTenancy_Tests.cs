@@ -57,7 +57,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                     _contactListRepository.GetAllList().Count.ShouldBe(0);
 
                     //We're overriding filter parameter's value
-                    unitOfWorkManager.Current.SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, 1);
+                    unitOfWorkManager.Current.SetTenantId(1);
 
                     //We should only get tenant 1's entities since we set tenantId to 1
                     var contactLists = _contactListRepository.GetAllList();

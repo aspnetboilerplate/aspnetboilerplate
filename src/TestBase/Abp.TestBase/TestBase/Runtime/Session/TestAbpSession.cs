@@ -22,7 +22,7 @@ namespace Abp.TestBase.Runtime.Session
             }
             set
             {
-                if (!_multiTenancy.IsEnabled && value != 1)
+                if (!_multiTenancy.IsEnabled && value != 1 && value != null)
                 {
                     throw new AbpException("Can not set TenantId since multi-tenancy is not enabled. Use IMultiTenancyConfig.IsEnabled to enable it.");
                 }

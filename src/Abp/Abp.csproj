@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="AbpConsts.cs" />
     <Compile Include="AbpServiceBase.cs" />
+    <Compile Include="Application\Services\DisableDynamicWebApiAttribute.cs" />
     <Compile Include="Auditing\AuditingContractResolver.cs" />
     <Compile Include="Authorization\PermissionDependencyContext.cs" />
     <Compile Include="Authorization\PermissionDependencyExtensions.cs" />
@@ -98,8 +99,15 @@
     <Compile Include="BackgroundJobs\NullBackgroundJobStore.cs" />
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
+    <Compile Include="Configuration\Startup\AbpStartupConfigurationExtensions.cs" />
+    <Compile Include="Domain\Uow\ConnectionStringResolveArgs.cs" />
+    <Compile Include="Domain\Uow\DefaultConnectionStringResolver.cs" />
+    <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
+    <Compile Include="IUserIdentifier.cs" />
+    <Compile Include="Json\AbpDateTimeConverter.cs" />
     <Compile Include="Json\JsonSerializationHelper.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
+    <Compile Include="MultiTenancy\MultiTenancySideAttribute.cs" />
     <Compile Include="Notifications\INotificationDefinitionContext.cs" />
     <Compile Include="Notifications\INotificationDefinitionManager.cs" />
     <Compile Include="Notifications\INotificationDistributer.cs" />
@@ -112,6 +120,7 @@
     <Compile Include="Notifications\NotificationProvider.cs" />
     <Compile Include="Notifications\NotificationSettingNames.cs" />
     <Compile Include="Notifications\NotificationSettingProvider.cs" />
+    <Compile Include="Notifications\TenantNotificationInfo.cs" />
     <Compile Include="Notifications\UserNotificationInfoWithNotificationInfoExtensions.cs" />
     <Compile Include="RealTime\OnlineClientManagerExtensions.cs" />
     <Compile Include="Reflection\FolderAssemblyFinder.cs" />
@@ -119,6 +128,7 @@
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\MessageNotificationData.cs" />
+    <Compile Include="Runtime\Security\SimpleStringCipher.cs" />
     <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
     <Compile Include="Domain\Entities\EntityIdentifier.cs" />
@@ -132,7 +142,7 @@
     <Compile Include="Notifications\NotificationData.cs" />
     <Compile Include="Notifications\NotificationDistributionJob.cs" />
     <Compile Include="Notifications\NotificationDistributionJobArgs.cs" />
-    <Compile Include="Notifications\NotificationInfoExtensions.cs" />
+    <Compile Include="Notifications\TenantNotificationInfoExtensions.cs" />
     <Compile Include="Notifications\NotificationPublisher.cs" />
     <Compile Include="Notifications\NotificationSubscription.cs" />
     <Compile Include="Notifications\NotificationSubscriptionInfo.cs" />
@@ -209,6 +219,11 @@
     <Compile Include="Threading\Timers\AbpTimer.cs" />
     <Compile Include="Threading\RunnableExtensions.cs" />
     <Compile Include="Logging\IHasLogSeverity.cs" />
+    <Compile Include="Timing\Timezone\ITimeZoneConverter.cs" />
+    <Compile Include="Timing\Timezone\TimezoneHelper.cs" />
+    <Compile Include="Timing\Timezone\TimeZoneConverter.cs" />
+    <Compile Include="Timing\TimingSettingNames.cs" />
+    <Compile Include="Timing\TimingSettingProvider.cs" />
     <Compile Include="UI\Inputs\LocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItem.cs" />
     <Compile Include="UI\Inputs\ILocalizableComboboxItemSource.cs" />
@@ -556,6 +571,8 @@
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="UserIdentifier.cs" />
+    <Compile Include="UserIdentifierExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />
     <Compile Include="Events\Bus\NullEventBus.cs" />
     <Compile Include="Events\Bus\IEventBus.cs" />
@@ -639,6 +656,9 @@
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\Abp-fr.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Timing\Timezone\Mapping\WindowsZones.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
