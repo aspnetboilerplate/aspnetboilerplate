@@ -29,6 +29,16 @@ namespace Abp.Localization
         public bool IsDefault { get; set; }
 
         /// <summary>
+        /// Is this language right to left?
+        /// </summary>
+        public bool Rtl { get; set; }
+
+        /// <summary>
+        /// specifies display order of languages
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="LanguageInfo"/> object.
         /// </summary>
         /// <param name="name">
