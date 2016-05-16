@@ -20,9 +20,7 @@ ren *.symbols.nupkg *.temp_nupkg
 del /a /f /q *.nupkg
 ren *.temp_nupkg *.nupkg
 
-cd GitLink
-GitLink.exe ..\..\ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
-cd ..
+GitLink.exe ..\ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp\Abp.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" -Properties Configuration=Release -IncludeReferencedProjects 

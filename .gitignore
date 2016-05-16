@@ -8,7 +8,6 @@ Logs/
 # Nuget packages
 nupkg/*.nupkg
 nupkg/push_abp_framework.bat
-nupkg/push_abp_testbase.bat
 
 # Profile images
 ProfileImages/
