@@ -134,10 +134,10 @@ namespace Abp.EntityFramework.Uow
             where TDbContext : DbContext
         {
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
-            connectionStringResolveArgs["DbContextType"] = typeof(DbContext);
+            connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof (DbContext).FullName + "#" + connectionString;
+            var dbContextKey = typeof (TDbContext).FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))

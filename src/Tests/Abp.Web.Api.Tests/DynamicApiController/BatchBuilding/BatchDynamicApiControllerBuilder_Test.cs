@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using Abp.Application.Services;
 using Abp.Dependency;
@@ -13,25 +15,51 @@ namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
         [Fact]
         public void Test1()
         {
-            //TODO: This test fails since it use static IocManager. We should use a local IocManager.
-            //IocManager.Instance.Register<IMyFirstAppService, MyFirstAppService>();
+            IocManager.Instance.Register<IMyFirstAppService, MyFirstAppService>();
 
-            //DynamicApiControllerBuilder
-            //    .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp/ns1")
-            //    .Build();
+            DynamicApiControllerBuilder
+                .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp")
+                .Where(type => type == typeof(IMyFirstAppService))
+                .ForMethods(builder =>
+                {
+                    if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute)))
+                    {
+                        builder.DontCreate = true;
+                    }
+                })
+                .Build();
 
-            //DynamicApiControllerManager.GetAll().Count.ShouldBe(1);
-            //DynamicApiControllerManager.FindOrNull("myapp/ns1/myFirst").ShouldNotBe(null);
+            var services = DynamicApiControllerManager.GetAll();
+            services.Count.ShouldBe(1);
+            services[0].ServiceName.ShouldBe("myapp/myFirst");
+            services[0].Actions.Count.ShouldBe(1);
+            services[0].Actions.ContainsKey("GetStr").ShouldBe(true);
         }
-    }
 
-    public interface IMyFirstAppService : IApplicationService
-    {
-        
-    }
+        public interface IMyFirstAppService : IApplicationService
+        {
+            string GetStr(int i);
 
-    public abstract class MyFirstAppService : IMyFirstAppService
-    {
-        
+            [MyIgnoreApi]
+            string GetStr2(int i);
+        }
+
+        public class MyFirstAppService : IMyFirstAppService
+        {
+            public string GetStr(int i)
+            {
+                return i.ToString();
+            }
+
+            public string GetStr2(int i)
+            {
+                return (i + 1).ToString();
+            }
+        }
+
+        public class MyIgnoreApiAttribute : Attribute
+        {
+
+        }
     }
 }

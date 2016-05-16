@@ -1,3 +1,4 @@
+using System;
 using System.Web.Http.Filters;
 using Abp.Web;
 
@@ -9,6 +10,27 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// <typeparam name="T">Type of the proxied object</typeparam>
     public interface IApiControllerBuilder<T>
     {
+        /// <summary>
+        /// Name of the controller.
+        /// </summary>
+        string ServiceName { get; }
+
+        /// <summary>
+        /// Gets type of the service interface for this dynamic controller.
+        /// It's typeof(T).
+        /// </summary>
+        Type ServiceInterfaceType { get; }
+
+        /// <summary>
+        /// Action Filters to apply to this dynamic controller.
+        /// </summary>
+        IFilter[] Filters { get; }
+
+        /// <summary>
+        /// True, if using conventional verbs for this dynamic controller.
+        /// </summary>
+        bool ConventionalVerbs { get; }
+
         /// <summary>
         /// To add Action filters for the Dynamic Controller.
         /// </summary>
@@ -22,6 +44,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
         IApiControllerActionBuilder<T> ForMethod(string methodName);
+
+        /// <summary>
+        /// Used to perform actions for each method.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The current Controller Builder</returns>
+        IApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action);
 
         /// <summary>
         /// Use conventional Http Verbs by method names.
