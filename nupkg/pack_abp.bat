@@ -19,8 +19,11 @@
 ren *.symbols.nupkg *.temp_nupkg
 del /a /f /q *.nupkg
 ren *.temp_nupkg *.nupkg
-::Require "Debugging Tools for Windows"
-@powershell GitLink.exe %cd%\../ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
+
+cd GitLink
+GitLink.exe ..\..\ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
+cd ..
+
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp\Abp.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.HangFire\Abp.HangFire.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
@@ -38,4 +41,5 @@ ren *.temp_nupkg *.nupkg
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Api.OData\Abp.Web.Api.OData.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
 "..\src\.nuget\NuGet.exe" "pack" "..\src\TestBase\Abp.TestBase\Abp.TestBase.csproj" -Properties Configuration=Release -IncludeReferencedProjects 
+
 pause
