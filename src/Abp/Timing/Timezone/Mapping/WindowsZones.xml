@@ -91,10 +91,8 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="SA Pacific Standard Time" territory="001" type="America/Bogota"/>
       <mapZone other="SA Pacific Standard Time" territory="BR" type="America/Rio_Branco America/Eirunepe"/>
       <mapZone other="SA Pacific Standard Time" territory="CA" type="America/Coral_Harbour"/>
-      <mapZone other="SA Pacific Standard Time" territory="CL" type="Pacific/Easter"/>
       <mapZone other="SA Pacific Standard Time" territory="CO" type="America/Bogota"/>
       <mapZone other="SA Pacific Standard Time" territory="EC" type="America/Guayaquil"/>
-      <mapZone other="SA Pacific Standard Time" territory="HT" type="America/Port-au-Prince"/>
       <mapZone other="SA Pacific Standard Time" territory="JM" type="America/Jamaica"/>
       <mapZone other="SA Pacific Standard Time" territory="KY" type="America/Cayman"/>
       <mapZone other="SA Pacific Standard Time" territory="PA" type="America/Panama"/>
@@ -684,6 +682,8 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Transbaikal Standard Time" territory="001" type="Asia/Chita"/>
       <mapZone other="Sakhalin Standard Time" territory="001" type="Asia/Sakhalin"/>
       <mapZone other="Kamchatka Standard Time" territory="001" type="Asia/Kamchatka"/>
+      <mapZone other="Easter Island Standard Time" territory="001" type="Pacific/Easter"/>
+      <mapZone other="Haiti Standard Time" territory="001" type="America/Port-au-Prince"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>
