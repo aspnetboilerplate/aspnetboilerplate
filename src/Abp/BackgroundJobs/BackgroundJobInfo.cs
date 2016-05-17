@@ -82,7 +82,7 @@ namespace Abp.BackgroundJobs
         /// </summary>
         //[Index("IX_IsAbandoned_NextTryTime", 1)]
         public virtual bool IsAbandoned { get; set; }
-        
+
         /// <summary>
         /// Priority of this job.
         /// </summary>
@@ -116,7 +116,7 @@ namespace Abp.BackgroundJobs
                 ? LastTryTime.Value.AddSeconds(nextWaitDuration)
                 : Clock.Now.AddSeconds(nextWaitDuration);
 
-            if (nextTryDate.Subtract(CreationTime).TotalDays > DefaultTimeout)
+            if (nextTryDate.Subtract(CreationTime).TotalSeconds > DefaultTimeout)
             {
                 return null;
             }
