@@ -8,6 +8,8 @@ using Abp.Domain.Uow;
 
 namespace Abp.Domain.Repositories
 {
+    using Abp.Domain.Specifications;
+
     /// <summary>
     /// This interface is implemented by all repositories to ensure implementation of fixed methods.
     /// </summary>
@@ -325,5 +327,54 @@ namespace Abp.Domain.Repositories
         Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
+
+        #region Specifications
+
+        /// <summary>
+        /// The get all with specification.
+        /// </summary>
+        /// <param name="specification">
+        /// The specification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IQueryable"/>.
+        /// </returns>
+        IQueryable<TEntity> GetAll(ISpecification<TEntity> specification);
+
+        /// <summary>
+        /// The exists.
+        /// </summary>
+        /// <param name="specification">
+        /// The specification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        bool Exists(ISpecification<TEntity> specification);
+
+        /// <summary>
+        /// The count.
+        /// </summary>
+        /// <param name="specification">
+        /// The specification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        int Count(ISpecification<TEntity> specification);
+
+        /// <summary>
+        /// The count async.
+        /// </summary>
+        /// <param name="specification">
+        /// The specification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<int> CountAsync(ISpecification<TEntity> specification);
+
+        #endregion
+
     }
 }
