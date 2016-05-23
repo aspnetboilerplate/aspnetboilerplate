@@ -18,8 +18,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         [Fact]
         public void Should_Write_Audit_Properties()
         {
-            Clock.Provider = new UtcClockProvider();
-
             //Arrange
             AbpSession.TenantId = 1;
             AbpSession.UserId = 2;

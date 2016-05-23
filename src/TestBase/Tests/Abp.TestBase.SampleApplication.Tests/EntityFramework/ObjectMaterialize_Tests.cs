@@ -35,7 +35,7 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
         [Fact]
         public void DateTime_Kind_Propert_Should_Be_Normalized_On_Ef_ObjectMaterialition()
         {
-            using (_unitOfWorkManager.Begin())
+            using (var uow = _unitOfWorkManager.Begin())
             {
                 var companies = _companyRepository.GetAll().Include(c => c.Branches).ToList();
 
@@ -54,8 +54,9 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
                         branch.CreationTime.Kind.ShouldBe(Clock.Kind);
                     });
                 }
+
+                uow.Complete();
             }
         }
-
     }
 }
