@@ -103,6 +103,7 @@
     <Compile Include="Auditing\SimpleAuditing_Test.cs" />
     <Compile Include="ContactLists\ContactList_MultiTenancy_Tests.cs" />
     <Compile Include="ContactLists\Messages_MultiTenancy_Tests.cs" />
+    <Compile Include="Domain\Entities\Caching\EntityCache_Tests.cs" />
     <Compile Include="EntityFramework\ObjectMaterialize_Tests.cs" />
     <Compile Include="Features\FeatureSystem_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Resolve_Test.cs" />
@@ -116,6 +117,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Abp.AutoMapper\Abp.AutoMapper.csproj">
+      <Project>{06eb5f7c-b974-4775-a305-f175d645f7c9}</Project>
+      <Name>Abp.AutoMapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Abp.EntityFramework\Abp.EntityFramework.csproj">
       <Project>{948F0CAF-3382-4E03-9A0F-0DDB206FE40D}</Project>
       <Name>Abp.EntityFramework</Name>
