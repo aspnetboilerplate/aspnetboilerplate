@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditing\AuditedEntity_Tests.cs" />
     <Compile Include="Auditing\SimpleAuditing_Test.cs" />
     <Compile Include="ContactLists\ContactList_MultiTenancy_Tests.cs" />
     <Compile Include="ContactLists\Messages_MultiTenancy_Tests.cs" />
