@@ -230,35 +230,7 @@ namespace Abp.Domain.Repositories
         {
             return Task.FromResult(LongCount(predicate));
         }
-
-
-        #region Specifications
-
-        public IQueryable<TEntity> GetAll(ISpecification<TEntity> specification)
-        {
-            var spec = specification ?? new AnySpecification<TEntity>();
-            return this.GetAll().Where(spec.GetExpression());
-        }
-
-        public bool Exists(ISpecification<TEntity> specification)
-        {
-            var spec = specification ?? new AnySpecification<TEntity>();
-            return this.GetAll().Any(spec.GetExpression());
-        }
-
-        public int Count(ISpecification<TEntity> specification)
-        {
-            var spec = specification ?? new AnySpecification<TEntity>();
-            return this.GetAll().Count(spec.GetExpression());
-        }
-
-        public Task<int> CountAsync(ISpecification<TEntity> specification)
-        {
-            return Task.FromResult(this.Count(specification));
-        }
-
-        #endregion
-
+        
         protected static Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
