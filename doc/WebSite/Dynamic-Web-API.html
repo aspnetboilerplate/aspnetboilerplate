@@ -37,7 +37,7 @@
 			<p>
 				<strong>ITaskAppService</strong> is the application service that we want to 
 wrap with an api controller. It is not restricted to application services but 
-this is the traditional and recommended way. "<strong>tasksystem/task</strong>" is name of the 
+this is the conventional and recommended way. "<strong>tasksystem/task</strong>" is name of the 
 api controller with an arbitrary namespace. You should define at least one-level 
 namespace but you can define more deep namespaces like 
 "myCompany/myApplication/myNamespace1/myNamespace2/myServiceName". '<strong>/api/services/</strong>' 
@@ -78,9 +78,26 @@ DynamicApiControllerBuilder
 services in an assembly. Then overrided configuration for a single application 
 service (ITaskAppService) to ignore CreateTask method. </p>
 			<h5>DisableDynamicWebApiAttribute</h5>
-			<p>You can also use DisableDynamicWebApiAttribute for any type or 
-			method definition to ignore this service or method while creating 
+			<p>You can also use DisableDynamicWebApiAttribute for any <strong>
+			interface</strong> or 
+			<strong>method</strong> definition to ignore this service or method while creating 
 			dynamic web api.</p>
+			<h5>ForMethods</h5>
+			<p>We can use <strong>ForMethods</strong> method to better adjust 
+			each method while using ForAll method. Example:</p>
+			<pre>DynamicApiControllerBuilder
+    .ForAll&lt;IApplicationService&gt;(Assembly.GetExecutingAssembly(), &quot;app&quot;)
+    .<strong>ForMethods</strong>(builder =&gt;
+    {
+        if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute)))
+        {
+            builder.<strong>DontCreate</strong> = true;
+        }
+    })
+    .Build();</pre>
+			<p>In this example, I used a custom attribute (MyIgnoreApiAttribute) 
+			to check for all methods and don't create dynamic web api controller 
+			actions for those methods marked with that attribute.</p>
 			<h4>Http Verbs</h4>
 			<p>By default, all methods are created as <strong>POST</strong>. So, a client should send post 
 requests in order to use created web api actions. We can change this behaviour 

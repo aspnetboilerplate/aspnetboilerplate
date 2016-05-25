@@ -508,12 +508,7 @@ namespace Abp.Web.Mvc.Controllers
                     }
                 }
 
-                return JsonConvert.SerializeObject(
-                    dictionary,
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new AuditingContractResolver()
-                    });
+                return AuditingHelper.Serialize(dictionary);
             }
             catch (Exception ex)
             {

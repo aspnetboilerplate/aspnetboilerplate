@@ -48,7 +48,7 @@
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -100,6 +100,7 @@
     <Compile Include="Authorization\IPermissionDependency.cs" />
     <Compile Include="Authorization\IPermissionDependencyContext.cs" />
     <Compile Include="Configuration\Startup\AbpStartupConfigurationExtensions.cs" />
+    <Compile Include="Domain\Entities\Caching\IEntityCache.cs" />
     <Compile Include="Domain\Uow\ConnectionStringResolveArgs.cs" />
     <Compile Include="Domain\Uow\DefaultConnectionStringResolver.cs" />
     <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="RegularGuidGenerator.cs" />
     <Compile Include="Notifications\LocalizableMessageNotificationData.cs" />
     <Compile Include="Notifications\MessageNotificationData.cs" />
+    <Compile Include="Domain\Entities\Caching\EntityCache.cs" />
     <Compile Include="Runtime\Security\SimpleStringCipher.cs" />
     <Compile Include="SequentialGuidGenerator.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />

@@ -31,9 +31,9 @@ namespace Abp.EntityFramework.Uow
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
         public EfUnitOfWork(
-            IIocResolver iocResolver, 
-            IConnectionStringResolver connectionStringResolver, 
-            IDbContextResolver dbContextResolver, 
+            IIocResolver iocResolver,
+            IConnectionStringResolver connectionStringResolver,
+            IDbContextResolver dbContextResolver,
             IUnitOfWorkDefaultOptions defaultOptions)
             : base(connectionStringResolver, defaultOptions)
         {
@@ -137,14 +137,18 @@ namespace Abp.EntityFramework.Uow
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof (TDbContext).FullName + "#" + connectionString;
+            var dbContextKey = typeof(TDbContext).FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+
+                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                {
+                    ObjectContext_ObjectMaterialized(dbContext, args);
+                };
 
                 foreach (var filter in Filters)
                 {
@@ -197,17 +201,21 @@ namespace Abp.EntityFramework.Uow
         {
             await dbContext.SaveChangesAsync();
         }
-        
+
         protected virtual void Release(DbContext dbContext)
         {
             dbContext.Dispose();
             IocResolver.Release(dbContext);
         }
 
-        private static void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
         {
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
-            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity,entityType);
+            var previousState = dbContext.Entry(e.Entity).State;
+
+            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
+
+            dbContext.Entry(e.Entity).State = previousState;
         }
     }
 }

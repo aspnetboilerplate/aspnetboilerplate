@@ -44,15 +44,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Effort">
-      <HintPath>..\..\..\packages\Effort.EF6.1.1.4\lib\net45\Effort.dll</HintPath>
+    <Reference Include="Effort, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Effort.EF6.1.1.5\lib\net45\Effort.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\EntityFramework.DynamicFilters.1.4.6\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+    <Reference Include="EntityFramework.DynamicFilters, Version=1.4.10.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.DynamicFilters.1.4.10.2\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -63,12 +64,12 @@
       <HintPath>..\..\..\packages\NMemory.1.1.2\lib\net45\NMemory.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
+    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Shouldly, Version=2.6.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Shouldly.2.6.0\lib\net40\Shouldly.dll</HintPath>
+    <Reference Include="Shouldly, Version=2.7.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Shouldly.2.7.0\lib\net40\Shouldly.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -98,9 +99,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditing\AuditedEntity_Tests.cs" />
     <Compile Include="Auditing\SimpleAuditing_Test.cs" />
     <Compile Include="ContactLists\ContactList_MultiTenancy_Tests.cs" />
     <Compile Include="ContactLists\Messages_MultiTenancy_Tests.cs" />
+    <Compile Include="Domain\Entities\Caching\EntityCache_Tests.cs" />
     <Compile Include="EntityFramework\ObjectMaterialize_Tests.cs" />
     <Compile Include="Features\FeatureSystem_Tests.cs" />
     <Compile Include="Net\Mail\SmtpEmailSender_Resolve_Test.cs" />
@@ -114,6 +117,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Abp.AutoMapper\Abp.AutoMapper.csproj">
+      <Project>{06eb5f7c-b974-4775-a305-f175d645f7c9}</Project>
+      <Name>Abp.AutoMapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Abp.EntityFramework\Abp.EntityFramework.csproj">
       <Project>{948F0CAF-3382-4E03-9A0F-0DDB206FE40D}</Project>
       <Name>Abp.EntityFramework</Name>
