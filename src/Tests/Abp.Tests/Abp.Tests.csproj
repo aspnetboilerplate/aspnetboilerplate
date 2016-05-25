@@ -88,6 +88,7 @@
     <Compile Include="Auditing\AuditingHelper_Tests.cs" />
     <Compile Include="BackgroundJobs\InMemoryBackgroundJobStore_Tests.cs" />
     <Compile Include="Collections\Extensions\ListExtensions_Tests.cs" />
+    <Compile Include="Dependency\IocManager_Override_Tests.cs" />
     <Compile Include="DisposeAction_Test.cs" />
     <Compile Include="Authorization\AuthorizationInterceptor_Tests.cs" />
     <Compile Include="Authorization\PermissionDefinitionTests.cs" />
