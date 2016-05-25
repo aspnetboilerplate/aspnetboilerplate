@@ -11,40 +11,40 @@ namespace Abp.EntityFramework
     public class DbContextTypeMatcher : IDbContextTypeMatcher, ISingletonDependency
     {
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
-        public Dictionary<Type, List<Type>> _types;
+        private readonly Dictionary<Type, List<Type>> _dbContextTypes;
 
         public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
-            _types = new Dictionary<Type, List<Type>>();
+            _dbContextTypes = new Dictionary<Type, List<Type>>();
         }
 
-        public void Add(Type sourceType, Type targetType)
+        public virtual void Add(Type sourceDbContextType, Type targetDbContextType)
         {
-            if (!_types.ContainsKey(sourceType))
+            if (!_dbContextTypes.ContainsKey(sourceDbContextType))
             {
-                _types[sourceType] = new List<Type>();
+                _dbContextTypes[sourceDbContextType] = new List<Type>();
             }
 
-            _types[sourceType].Add(targetType);
+            _dbContextTypes[sourceDbContextType].Add(targetDbContextType);
         }
 
-        public Type GetConcreteType(Type dbContextType)
+        public virtual Type GetConcreteType(Type sourceDbContextType)
         {
             //TODO: Can be optimized by extracting/caching MultiTenancySideAttribute attributes for DbContexes.
 
             //Get possible concrete types for given DbContext type
-            var targetList = _types.GetOrDefault(dbContextType);
+            var targetList = _dbContextTypes.GetOrDefault(sourceDbContextType);
 
             if (targetList.IsNullOrEmpty())
             {
                 //Not found any target type, return the given type if it's not abstract
-                if (dbContextType.IsAbstract)
+                if (sourceDbContextType.IsAbstract)
                 {
-                    throw new AbpException("Could not find a concrete implementation of given DbContext type: " + dbContextType.AssemblyQualifiedName);
+                    throw new AbpException("Could not find a concrete implementation of given DbContext type: " + sourceDbContextType.AssemblyQualifiedName);
                 }
 
-                return dbContextType;
+                return sourceDbContextType;
             }
 
             if (targetList.Count == 1)
@@ -78,7 +78,7 @@ namespace Abp.EntityFramework
             {
                 throw new AbpException(string.Format(
                     "Found more than one concrete type for given DbContext Type ({0}) but none of them defines MultiTenancySideAttribute with {1}",
-                    dbContextType,
+                    sourceDbContextType,
                     currentTenancySide
                     ));
             }
@@ -86,7 +86,7 @@ namespace Abp.EntityFramework
             {
                 throw new AbpException(string.Format(
                     "Found more than one concrete type for given DbContext Type ({0}) define MultiTenancySideAttribute with {1}",
-                    dbContextType,
+                    sourceDbContextType,
                     currentTenancySide
                     ));
             }

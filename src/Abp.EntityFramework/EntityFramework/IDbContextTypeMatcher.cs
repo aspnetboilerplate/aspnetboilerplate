@@ -4,7 +4,7 @@ namespace Abp.EntityFramework
 {
     public interface IDbContextTypeMatcher
     {
-        void Add(Type sourceType, Type targetType);
-        Type GetConcreteType(Type dbContextType);
+        void Add(Type sourceDbContextType, Type targetDbContextType);
+        Type GetConcreteType(Type sourceDbContextType);
     }
 }
