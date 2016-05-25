@@ -19,8 +19,6 @@ namespace Abp.Events.Bus
     /// </summary>
     public class EventBus : IEventBus
     {
-        #region Public properties
-
         /// <summary>
         /// Gets the default <see cref="EventBus"/> instance.
         /// </summary>
@@ -32,20 +30,12 @@ namespace Abp.Events.Bus
         /// </summary>
         public ILogger Logger { get; set; }
 
-        #endregion
-
-        #region Private fields
-
         /// <summary>
         /// All registered handler factories.
         /// Key: Type of the event
         /// Value: List of handler factories
         /// </summary>
         private readonly ConcurrentDictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Creates a new <see cref="EventBus"/> instance.
@@ -56,12 +46,6 @@ namespace Abp.Events.Bus
             _handlerFactories = new ConcurrentDictionary<Type, List<IEventHandlerFactory>>();
             Logger = NullLogger.Instance;
         }
-
-        #endregion
-
-        #region Public methods
-
-        #region Register
 
         /// <inheritdoc/>
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
@@ -103,10 +87,6 @@ namespace Abp.Events.Bus
 
             return new FactoryUnregistrar(this, eventType, handlerFactory);
         }
-
-        #endregion
-
-        #region Unregister
 
         /// <inheritdoc/>
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
@@ -179,10 +159,6 @@ namespace Abp.Events.Bus
         {
             GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Clear());
         }
-
-        #endregion
-
-        #region Trigger
 
         /// <inheritdoc/>
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
@@ -336,17 +312,9 @@ namespace Abp.Events.Bus
             return task;
         }
 
-        #endregion
-
-        #endregion
-
-        #region Private methods
-
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
             return _handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
         }
-
-        #endregion
     }
 }
