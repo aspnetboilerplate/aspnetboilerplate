@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +9,7 @@ using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
 using Abp.Events.Bus.Handlers.Internals;
+using Abp.Threading.Extensions;
 using Castle.Core.Logging;
 
 namespace Abp.Events.Bus
@@ -39,7 +41,7 @@ namespace Abp.Events.Bus
         /// Key: Type of the event
         /// Value: List of handler factories
         /// </summary>
-        private readonly Dictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
+        private readonly ConcurrentDictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
 
         #endregion
 
@@ -51,7 +53,7 @@ namespace Abp.Events.Bus
         /// </summary>
         public EventBus()
         {
-            _handlerFactories = new Dictionary<Type, List<IEventHandlerFactory>>();
+            _handlerFactories = new ConcurrentDictionary<Type, List<IEventHandlerFactory>>();
             Logger = NullLogger.Instance;
         }
 
@@ -96,11 +98,10 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
-            lock (_handlerFactories)
-            {
-                GetOrCreateHandlerFactories(eventType).Add(handlerFactory);
-                return new FactoryUnregistrar(this, eventType, handlerFactory);
-            }
+            GetOrCreateHandlerFactories(eventType)
+                .Locking(factories => factories.Add(handlerFactory));
+
+            return new FactoryUnregistrar(this, eventType, handlerFactory);
         }
 
         #endregion
@@ -110,10 +111,10 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
-            lock (_handlerFactories)
-            {
-                GetOrCreateHandlerFactories(typeof(TEventData))
-                    .RemoveAll(
+            GetOrCreateHandlerFactories(typeof(TEventData))
+                .Locking(factories =>
+                {
+                    factories.RemoveAll(
                         factory =>
                         {
                             if (factory is SingleInstanceHandlerFactory)
@@ -121,7 +122,8 @@ namespace Abp.Events.Bus
                                 var singleInstanceFactoru = factory as SingleInstanceHandlerFactory;
                                 if (singleInstanceFactoru.HandlerInstance is ActionEventHandler<TEventData>)
                                 {
-                                    var actionHandler = singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
+                                    var actionHandler =
+                                        singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
                                     if (actionHandler.Action == action)
                                     {
                                         return true;
@@ -131,7 +133,7 @@ namespace Abp.Events.Bus
 
                             return false;
                         });
-            }
+                });
         }
 
         /// <inheritdoc/>
@@ -143,14 +145,15 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandler handler)
         {
-            lock (_handlerFactories)
-            {
-                GetOrCreateHandlerFactories(eventType)
-                    .RemoveAll(
+            GetOrCreateHandlerFactories(eventType)
+                .Locking(factories =>
+                {
+                    factories.RemoveAll(
                         factory =>
-                        factory is SingleInstanceHandlerFactory && (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
-                    );
-            }
+                            factory is SingleInstanceHandlerFactory &&
+                            (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
+                        );
+                });
         }
 
         /// <inheritdoc/>
@@ -162,10 +165,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
-            lock (_handlerFactories)
-            {
-                GetOrCreateHandlerFactories(eventType).Remove(factory);
-            }
+            GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Remove(factory));
         }
 
         /// <inheritdoc/>
@@ -177,10 +177,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void UnregisterAll(Type eventType)
         {
-            lock (_handlerFactories)
-            {
-                GetOrCreateHandlerFactories(eventType).Clear();
-            }
+            GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Clear());
         }
 
         #endregion
@@ -236,7 +233,7 @@ namespace Abp.Events.Bus
 
             //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
             if (eventType.IsGenericType &&
-                eventType.GetGenericArguments().Length == 1 && 
+                eventType.GetGenericArguments().Length == 1 &&
                 typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
             {
                 var genericArg = eventType.GetGenericArguments()[0];
@@ -244,7 +241,7 @@ namespace Abp.Events.Bus
                 if (baseArg != null)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument) eventData).GetConstructorArgs();
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
                     var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
                     baseEventData.EventTime = eventData.EventTime;
                     Trigger(baseEventType, eventData.EventSource, baseEventData);
@@ -256,12 +253,9 @@ namespace Abp.Events.Bus
         {
             var handlerFactoryList = new List<IEventHandlerFactory>();
 
-            lock (_handlerFactories)
+            foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
             {
-                foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
-                {
-                    handlerFactoryList.AddRange(handlerFactory.Value);
-                }
+                handlerFactoryList.AddRange(handlerFactory.Value);
             }
 
             return handlerFactoryList.ToArray();
@@ -275,7 +269,7 @@ namespace Abp.Events.Bus
                 return true;
             }
 
-            //Should trigger 
+            //Should trigger for inherited types
             if (handlerType.IsAssignableFrom(eventType))
             {
                 return true;
@@ -350,13 +344,7 @@ namespace Abp.Events.Bus
 
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
-            List<IEventHandlerFactory> handlers;
-            if (!_handlerFactories.TryGetValue(eventType, out handlers))
-            {
-                _handlerFactories[eventType] = handlers = new List<IEventHandlerFactory>();
-            }
-
-            return handlers;
+            return _handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
         }
 
         #endregion
