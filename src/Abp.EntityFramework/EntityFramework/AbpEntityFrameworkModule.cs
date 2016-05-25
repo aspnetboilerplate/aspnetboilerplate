@@ -68,24 +68,7 @@ namespace Abp.EntityFramework
 
             using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
             {
-                foreach (var dbContextType in dbContextTypes)
-                {
-                    var types = new List<Type>();
-                    AddWithBaseTypes(dbContextType, types);
-                    foreach (var type in types)
-                    {
-                        dbContextMatcher.Object.Add(type, dbContextType);
-                    }
-                }
-            }
-        }
-
-        private static void AddWithBaseTypes(Type dbContextType, List<Type> types)
-        {
-            types.Add(dbContextType);
-            if (dbContextType != typeof(DbContext))
-            {
-                AddWithBaseTypes(dbContextType.BaseType, types);
+                dbContextMatcher.Object.Populate(dbContextTypes);
             }
         }
     }
