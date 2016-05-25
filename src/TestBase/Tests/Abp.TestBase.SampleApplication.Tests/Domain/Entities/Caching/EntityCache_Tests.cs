@@ -44,15 +44,10 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 
         public class MessageCache : EntityCache<Message, MessageCacheItem>, IMessageCache, ITransientDependency
         {
-            public MessageCache(ICacheManager cacheManager, IRepository<Message, int> repository, string cacheName = null)
-                : base(cacheManager, repository, cacheName)
+            public MessageCache(ICacheManager cacheManager, IRepository<Message, int> repository)
+                : base(cacheManager, repository)
             {
 
-            }
-
-            protected override MessageCacheItem MapToCacheItem(Message entity)
-            {
-                return entity.MapTo<MessageCacheItem>();
             }
         }
 

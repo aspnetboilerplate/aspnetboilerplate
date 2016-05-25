@@ -104,6 +104,7 @@
     <Compile Include="Domain\Uow\ConnectionStringResolveArgs.cs" />
     <Compile Include="Domain\Uow\DefaultConnectionStringResolver.cs" />
     <Compile Include="Domain\Uow\IConnectionStringResolver.cs" />
+    <Compile Include="ObjectMapping\IObjectMapper.cs" />
     <Compile Include="IUserIdentifier.cs" />
     <Compile Include="Json\AbpDateTimeConverter.cs" />
     <Compile Include="Json\JsonSerializationHelper.cs" />
@@ -573,6 +574,7 @@
     <Compile Include="Transactions\Extensions\IsolationLevelExtensions.cs" />
     <Compile Include="UI\Inputs\StaticLocalizableComboboxItemSource.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="ObjectMapping\NullObjectMapper.cs" />
     <Compile Include="UserIdentifier.cs" />
     <Compile Include="UserIdentifierExtensions.cs" />
     <Compile Include="Utils\Etc\NullDisposable.cs" />

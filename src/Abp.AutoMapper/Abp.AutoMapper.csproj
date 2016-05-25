@@ -61,6 +61,7 @@
     <Compile Include="AutoMapper\AutoMapDirection.cs" />
     <Compile Include="AutoMapper\AutoMapFromAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapperHelper.cs" />
+    <Compile Include="AutoMapper\AutoMapperObjectMapper.cs" />
     <Compile Include="AutoMapper\AutoMapToAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

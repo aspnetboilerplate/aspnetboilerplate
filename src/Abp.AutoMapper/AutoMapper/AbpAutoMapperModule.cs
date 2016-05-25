@@ -1,6 +1,7 @@
 ﻿using Abp.Localization;
 using Abp.Modules;
 using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.Core.Logging;
@@ -21,6 +22,11 @@ namespace Abp.AutoMapper
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
+        }
+
+        public override void PreInitialize()
+        {
+            Configuration.ReplaceService<Abp.ObjectMapping.IObjectMapper, AutoMapperObjectMapper>();
         }
 
         public override void PostInitialize()
