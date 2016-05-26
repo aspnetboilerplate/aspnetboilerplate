@@ -68,5 +68,30 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 unitOfWork.Complete();
             }
         }
+
+        [Fact]
+        public void Setting_SetTenantId_Should_Enable_Or_Disable_MustHaveTenant_Filter()
+        {
+            AbpSession.TenantId = null;
+
+            var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+            using (var unitOfWork = unitOfWorkManager.Begin())
+            {
+                //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
+                _contactListRepository.GetAllList().Count.ShouldBe(2);
+
+                unitOfWorkManager.Current.SetTenantId(1);
+                //We should only get tenant 1's entities since we set tenantId to 1 (which automatically enables MustHaveTenant filter)
+                var contactLists = _contactListRepository.GetAllList();
+                contactLists.Count.ShouldBe(1);
+                contactLists.Any(cl => cl.TenantId != 1).ShouldBe(false);
+
+                unitOfWorkManager.Current.SetTenantId(null);
+                //Switched to host, which automatically disables MustHaveTenant filter
+                _contactListRepository.GetAllList().Count.ShouldBe(2);
+
+                unitOfWork.Complete();
+            }
+        }
     }
 }
