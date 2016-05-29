@@ -25,10 +25,18 @@ namespace Abp.TestBase
 
         private readonly AbpBootstrapper _bootstrapper;
 
-        protected AbpIntegratedTestBase()
+        protected AbpIntegratedTestBase(bool manualInitialization = false)
         {
             LocalIocManager = new IocManager();
+            _bootstrapper = new AbpBootstrapper(LocalIocManager);
+            if (!manualInitialization)
+            {
+                Initialize();
+            }
+        }
 
+        protected void Initialize()
+        {
             LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
             LocalIocManager.Register<IAbpSession, TestAbpSession>();
 
@@ -36,7 +44,6 @@ namespace Abp.TestBase
 
             PreInitialize();
 
-            _bootstrapper = new AbpBootstrapper(LocalIocManager);
             _bootstrapper.Initialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
