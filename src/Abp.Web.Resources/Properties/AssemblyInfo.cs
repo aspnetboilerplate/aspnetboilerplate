@@ -10,9 +10,9 @@ using Abp;
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Web Resources")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Web Resources")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.Web.Resources")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

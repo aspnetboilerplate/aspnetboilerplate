@@ -10,9 +10,9 @@ using Abp;
 [assembly: AssemblyTitle("ASP.NET Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.EntityFramework")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

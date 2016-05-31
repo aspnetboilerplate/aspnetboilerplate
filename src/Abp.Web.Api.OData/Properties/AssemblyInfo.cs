@@ -9,9 +9,9 @@ using Abp;
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Web API - OData")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Web API - OData")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.Web.Api.OData")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
