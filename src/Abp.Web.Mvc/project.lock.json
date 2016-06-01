@@ -113,7 +113,7 @@
           "lib/net45/Nito.AsyncEx.dll": {}
         }
       },
-      "System.Collections.Immutable/1.1.36": {
+      "System.Collections.Immutable/1.2.0-rc2-24027": {
         "type": "package",
         "compile": {
           "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.dll": {}
@@ -130,7 +130,7 @@
           "Castle.Windsor": "3.3.0",
           "Newtonsoft.Json": "8.0.3",
           "Nito.AsyncEx": "3.0.1",
-          "System.Collections.Immutable": "1.1.36"
+          "System.Collections.Immutable": "1.2.0-rc2-24027"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -390,13 +390,16 @@
         "lib/wpa81/Nito.AsyncEx.xml"
       ]
     },
-    "System.Collections.Immutable/1.1.36": {
-      "sha512": "MOlivTIeAIQPPMUPWIIoMCvZczjFRLYUWSYwqi1szu8QPyeIbsaPeI+hpXe1DzTxNwnRnmfYaoToi6kXIfSPNg==",
+    "System.Collections.Immutable/1.2.0-rc2-24027": {
+      "sha512": "bn4jDP6DOvUHTlpUVa4ehecoz+V4YL4gdL6yOXdruc/3XHRVL2j/ZIggusM8f90uUSQhg7bgvBuLmQCGG3cZtg==",
       "type": "package",
       "files": [
-        "License-Stable.rtf",
-        "System.Collections.Immutable.1.1.36.nupkg.sha512",
+        "System.Collections.Immutable.1.2.0-rc2-24027.nupkg.sha512",
         "System.Collections.Immutable.nuspec",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/netstandard1.0/System.Collections.Immutable.dll",
+        "lib/netstandard1.0/System.Collections.Immutable.xml",
         "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.dll",
         "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.xml"
       ]

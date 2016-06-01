@@ -447,7 +447,7 @@
           "Castle.Windsor": "3.3.0",
           "Newtonsoft.Json": "8.0.3",
           "Nito.AsyncEx": "3.0.1",
-          "System.Collections.Immutable": "1.1.36"
+          "System.Collections.Immutable": "1.2.0-rc2-24027"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
