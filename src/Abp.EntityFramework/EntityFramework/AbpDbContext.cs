@@ -137,7 +137,8 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
+            //Commented due to issue #1059, AbpConcepts for EntityState.Added are applied in this.ApplyAbpConcepts();
+            /*var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -148,7 +149,7 @@ namespace Abp.EntityFramework
                 //case EntityState.Deleted: //It's not going here at all
                 //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
                 //    break;
-            }
+            }*/
         }
 
         private void SetNullsForInjectedProperties()
@@ -212,6 +213,9 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        CheckAndSetId(entry.Entity);
+                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+                        SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
