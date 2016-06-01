@@ -211,11 +211,13 @@ namespace Abp.EntityFramework.Uow
         private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
         {
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
-            var previousState = dbContext.Entry(e.Entity).State;
 
+            dbContext.Configuration.AutoDetectChangesEnabled = false;
+            
             DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
 
-            dbContext.Entry(e.Entity).State = previousState;
+            dbContext.Entry(e.Entity).State = EntityState.Unchanged;
+            dbContext.Configuration.AutoDetectChangesEnabled = true;
         }
     }
 }
