@@ -72,6 +72,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Owin", "Abp.Owin\Abp.Ow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.Mvc.Tests", "Tests\Abp.Web.Mvc.Tests\Abp.Web.Mvc.Tests.csproj", "{9E8BB913-BD85-4215-A1C0-0ED24251728B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Events.Producer", "Abp.Events.Producer\Abp.Events.Producer.csproj", "{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.RebusRabbitMqProducer", "Abp.RebusRabbitMqProducer\Abp.RebusRabbitMqProducer.csproj", "{C01C75FD-833F-4A3D-9890-18F276D11F78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +198,14 @@ Global
 		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E8BB913-BD85-4215-A1C0-0ED24251728B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0EB396-4DDA-4C03-92C7-9C42D03BBC17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C01C75FD-833F-4A3D-9890-18F276D11F78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C01C75FD-833F-4A3D-9890-18F276D11F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C01C75FD-833F-4A3D-9890-18F276D11F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C01C75FD-833F-4A3D-9890-18F276D11F78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
