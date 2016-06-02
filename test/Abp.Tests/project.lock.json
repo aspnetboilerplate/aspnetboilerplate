@@ -413,7 +413,7 @@
       "xunit.runner.visualstudio/2.1.0": {
         "type": "package"
       },
-      "Abp/0.9.1.2": {
+      "Abp/0.9.1.4": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
@@ -421,7 +421,7 @@
           "Castle.Windsor": "3.3.0",
           "Newtonsoft.Json": "8.0.3",
           "Nito.AsyncEx": "3.0.1",
-          "System.Collections.Immutable": "1.2.0-rc2-24027"
+          "System.Collections.Immutable": "1.1.36"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -1039,7 +1039,7 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
-    "Abp/0.9.1.2": {
+    "Abp/0.9.1.4": {
       "type": "project",
       "path": "../../src/Abp/project.json",
       "msbuildProject": "../../src/Abp/Abp.xproj"
@@ -1047,7 +1047,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Abp >= 0.9.1.2-*",
+      "Abp >= 0.9.1.4-*",
       "NSubstitute >= 1.10.0",
       "Shouldly >= 2.7.0",
       "dotnet-test-xunit >= 1.0.0-rc2-build10025",

@@ -1,29 +1,36 @@
 ﻿{
-  "version": "0.9.1.2-*",
+  "version": "0.9.1.4-*",
 
   "dependencies": {
     "Castle.LoggingFacility": "3.3.0",
     "Castle.Windsor": "3.3.0",
     "Newtonsoft.Json": "8.0.3",
     "Nito.AsyncEx": "3.0.1",
-    "System.Collections.Immutable": "1.2.0-rc2-24027"
+    "System.Collections.Immutable": "1.1.36"
   },
 
   "frameworks": {
     "net452": {
       "frameworkAssemblies": {
-        "System.Configuration": "4.0.0.0",
-        "System.Data": "4.0.0.0",
-        "System.Transactions": "4.0.0.0",
-        "System.Runtime": "4.0.10.0",
-        "System.Runtime.Caching": "4.0.0.0",
-        "System.ComponentModel.DataAnnotations": "4.0.0.0",
-        "System.Threading.Tasks": "4.0.0.0"
+        "System.Configuration": "",
+        "System.Data": "",
+        "System.Transactions": "",
+        "System.Runtime": {
+          "type": "build"
+        },
+        "System.Runtime.Caching": "",
+        "System.ComponentModel.DataAnnotations": "",
+        "System.Threading.Tasks": {
+          "type": "build"
+        }
       }
     }
   },
 
   "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
     "xmlDoc": true,
     "embed": {
       "include": [

@@ -4,7 +4,7 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp": "0.9.1.2-*",
+    "Abp": "0.9.1.4-*",
     "xunit": "2.1.0",
     "xunit.runner.visualstudio": "2.1.0",
     "xunit.extensibility.execution": "2.1.0",

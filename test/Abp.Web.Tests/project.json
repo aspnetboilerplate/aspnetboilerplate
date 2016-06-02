@@ -4,8 +4,8 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.Web": "0.9.1.2-*",
-    "Abp.TestBase": "0.9.1.2-*",
+    "Abp.Web": "0.9.1.4-*",
+    "Abp.TestBase": "0.9.1.4-*",
     "Abp.Tests": "1.0.0-*"
   },
 

@@ -1,8 +1,8 @@
 {
-  "version": "0.9.1.2-*",
+  "version": "0.9.1.4-*",
 
   "dependencies": {
-    "Abp": "0.9.1.2-*",
+    "Abp": "0.9.1.4-*",
     "mongocsharpdriver": "2.2.4"
   },
 
@@ -13,6 +13,9 @@
   },
 
   "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
     "xmlDoc": true
   },
 

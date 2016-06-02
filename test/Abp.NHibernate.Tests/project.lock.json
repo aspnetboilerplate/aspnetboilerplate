@@ -455,7 +455,7 @@
       "xunit.runner.visualstudio/2.1.0": {
         "type": "package"
       },
-      "Abp/0.9.1.2": {
+      "Abp/0.9.1.4": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
@@ -463,7 +463,7 @@
           "Castle.Windsor": "3.3.0",
           "Newtonsoft.Json": "8.0.3",
           "Nito.AsyncEx": "3.0.1",
-          "System.Collections.Immutable": "1.2.0-rc2-24027"
+          "System.Collections.Immutable": "1.1.36"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -481,11 +481,11 @@
           "net452/Abp.dll": {}
         }
       },
-      "Abp.NHibernate/0.9.1.2": {
+      "Abp.NHibernate/0.9.1.4": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
-          "Abp": "0.9.1.2",
+          "Abp": "0.9.1.4",
           "FluentNHibernate": "2.0.3",
           "NHibernate": "4.0.4.4000"
         },
@@ -496,11 +496,11 @@
           "net452/Abp.NHibernate.dll": {}
         }
       },
-      "Abp.TestBase/0.9.1.2": {
+      "Abp.TestBase/0.9.1.4": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
-          "Abp": "0.9.1.2"
+          "Abp": "0.9.1.4"
         },
         "compile": {
           "net452/Abp.TestBase.dll": {}
@@ -513,7 +513,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
-          "Abp": "0.9.1.2",
+          "Abp": "0.9.1.4",
           "NSubstitute": "1.10.0",
           "Shouldly": "2.7.0",
           "dotnet-test-xunit": "1.0.0-rc2-build10025",
@@ -1205,17 +1205,17 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
-    "Abp/0.9.1.2": {
+    "Abp/0.9.1.4": {
       "type": "project",
       "path": "../../src/Abp/project.json",
       "msbuildProject": "../../src/Abp/Abp.xproj"
     },
-    "Abp.NHibernate/0.9.1.2": {
+    "Abp.NHibernate/0.9.1.4": {
       "type": "project",
       "path": "../../src/Abp.NHibernate/project.json",
       "msbuildProject": "../../src/Abp.NHibernate/Abp.NHibernate.xproj"
     },
-    "Abp.TestBase/0.9.1.2": {
+    "Abp.TestBase/0.9.1.4": {
       "type": "project",
       "path": "../../src/Abp.TestBase/project.json",
       "msbuildProject": "../../src/Abp.TestBase/Abp.TestBase.xproj"
@@ -1228,8 +1228,8 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Abp.NHibernate >= 0.9.1.2-*",
-      "Abp.TestBase >= 0.9.1.2-*",
+      "Abp.NHibernate >= 0.9.1.4-*",
+      "Abp.TestBase >= 0.9.1.4-*",
       "Abp.Tests >= 1.0.0-*",
       "System.Data.SQLite.Core >= 1.0.101"
     ],

@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.9.1.2-*",
+  "version": "0.9.1.4-*",
 
   "dependencies": {
-    "Abp.Web": "0.9.1.2-*",
+    "Abp.Web": "0.9.1.4-*",
     "Microsoft.AspNet.Mvc": "5.2.3"
   },
 
@@ -12,6 +12,9 @@
   },
 
   "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
     "xmlDoc": true
   },
 
