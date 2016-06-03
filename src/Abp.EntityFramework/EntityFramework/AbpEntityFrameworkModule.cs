@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.EntityFramework.Repositories;

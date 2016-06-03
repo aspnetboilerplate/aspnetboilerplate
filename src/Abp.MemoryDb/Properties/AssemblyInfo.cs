@@ -10,9 +10,9 @@ using Abp;
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Memory DB")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Memory DB")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.MemoryDb")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
