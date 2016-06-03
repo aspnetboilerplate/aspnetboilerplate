@@ -5,6 +5,9 @@
 # Logs
 Logs/
 
+# Generated files
+project.lock.json
+
 # Nuget packages
 nupkg/*.nupkg
 nupkg/push.bat
