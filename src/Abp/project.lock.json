@@ -270,13 +270,13 @@
       "System.Collections.Immutable >= 1.1.36"
     ],
     ".NETFramework,Version=v4.5.2": [
-      "System.ComponentModel.DataAnnotations >= 4.0.0",
-      "System.Configuration >= 4.0.0",
-      "System.Data >= 4.0.0",
+      "System.ComponentModel.DataAnnotations",
+      "System.Configuration",
+      "System.Data",
       "System.Runtime",
-      "System.Runtime.Caching >= 4.0.0",
+      "System.Runtime.Caching",
       "System.Threading.Tasks",
-      "System.Transactions >= 4.0.0"
+      "System.Transactions"
     ]
   },
   "tools": {},
