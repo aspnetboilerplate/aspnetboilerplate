@@ -7,6 +7,7 @@ Logs/
 
 # Generated files
 project.lock.json
+.vs/
 
 # Nuget packages
 nupkg/*.nupkg
