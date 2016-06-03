@@ -212,6 +212,10 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        //Following 3 lines are required to support the compatability with GraphDiff library
+                        CheckAndSetId(entry.Entity);
+                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+                        SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
