@@ -212,10 +212,10 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        //Following 3 lines are required to support the compatability with GraphDiff library
+                        //Following 3 lines are required to support the compatability with GraphDiff library until best solution is found
                         CheckAndSetId(entry.Entity);
                         CheckAndSetMustHaveTenantIdProperty(entry.Entity);
-                        SetCreationAuditProperties(entry.Entity, GetAuditUserId());
+                        GuardedSetCreationAuditProperties(entry.Entity, GetAuditUserId());
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
@@ -295,6 +295,29 @@ namespace Abp.EntityFramework
                 if (entity.CreatorUserId == null)
                 {
                     entity.CreatorUserId = userId;
+                }
+            }
+        }
+
+        protected virtual void GuardedSetCreationAuditProperties(object entityAsObj, long? userId)
+        {
+            if (entityAsObj is IHasCreationTime)
+            {
+                var entity = entityAsObj.As<IHasCreationTime>();
+
+                //Will be true only for the GraphDiff.UpdateGraph() as persistant object will have default fields
+                if (entity.CreationTime == default(DateTime))
+                {
+                    entity.CreationTime = Clock.Now;
+
+                    if (userId.HasValue && entityAsObj is ICreationAudited)
+                    {
+                        var creationAuditedEntity = entityAsObj.As<ICreationAudited>();
+                        if (creationAuditedEntity.CreatorUserId == null)
+                        {
+                            creationAuditedEntity.CreatorUserId = userId;
+                        }
+                    }
                 }
             }
         }
