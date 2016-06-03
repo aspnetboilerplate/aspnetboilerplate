@@ -123,3 +123,4 @@ src/.vs/config/applicationhost.config
 
 # GitLink
 !GitLink.exe
+!nuget.exe
