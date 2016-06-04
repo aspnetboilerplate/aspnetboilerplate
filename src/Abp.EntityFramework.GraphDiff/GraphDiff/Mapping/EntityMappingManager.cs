@@ -1,63 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using Abp.Configuration;
 using Abp.Dependency;
 using RefactorThis.GraphDiff;
-using System.Linq;
+using Abp.GraphDiff.Configuration.Startup;
 
 namespace Abp.GraphDiff.Mapping
 {
     /// <summary>
     /// Used for resolving mappings for a GraphDiff repositroy extension methods
     /// </summary>
-    internal class EntityMappingManager : IEntityMappingManager, ITransientDependency
+    public class EntityMappingManager : IEntityMappingManager, ISingletonDependency
     {
-        private Dictionary<Type, object> _mappings;
-        private readonly ISettingDefinitionManager _settingDefinitionManager;
+        private readonly IAbpEntityFrameworkGraphDiffModuleConfiguration _moduleConfiguration;
 
         /// <summary>
         ///     Constructor.
         /// </summary>
-        public EntityMappingManager(ISettingDefinitionManager settingDefinitionManager)
+        public EntityMappingManager(IAbpEntityFrameworkGraphDiffModuleConfiguration moduleConfiguration)
         {
-            _settingDefinitionManager = settingDefinitionManager;
-
-            InitializeMappings();
+            _moduleConfiguration = moduleConfiguration;
         }
 
         /// <summary>
-        /// Loads mappings using SettingDefinitionManager, using settings in group "<see cref="EntityMappingProvider.GraphDiffSettingGroupName"/>"
-        /// </summary>
-        private void InitializeMappings()
-        {
-            _mappings = new Dictionary<Type, object>();
-            var allSettings = _settingDefinitionManager.GetAllSettingDefinitions();
-            foreach (var setting in allSettings.Where(s => s.Group.Name == EntityMappingProvider.GraphDiffSettingGroupName))
-            {
-                var type = Type.GetType(setting.DefaultValue);
-                if (type != null && !_mappings.ContainsKey(type))
-                {
-                    _mappings.Add(
-                        type,
-                        setting.CustomData as Expression<Func<IUpdateConfiguration<Type>, object>>);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets an entity mapping or null
+        /// Gets an entity mapping or null for a specified entity type
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Entity mapping or null</returns>
+        /// <returns>Entity mapping or null if mapping doesn't exist</returns>
         public Expression<Func<IUpdateConfiguration<TEntity>, object>> GetEntityMappingOrNull<TEntity>()
         {
-            //Check wheter mapping exists
-            if (_mappings.ContainsKey(typeof(TEntity)))
-                return null;
-
-            var mapping = (Expression<Func<IUpdateConfiguration<TEntity>, object>>)_mappings[typeof(TEntity)];
-            return mapping;
+            var entityMapping = _moduleConfiguration.EntityMappings.FirstOrDefault(m => m.EntityType == typeof(TEntity));
+            var mappingExptession = entityMapping?.MappingExpression as Expression<Func<IUpdateConfiguration<TEntity>, object>>;
+            return mappingExptession;
         }
     }
 }

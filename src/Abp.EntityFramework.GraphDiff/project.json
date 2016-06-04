@@ -4,6 +4,7 @@
   "dependencies": {
     "Abp": "0.9.1.4-*",
     "Abp.EntityFramework": "0.9.1.4-*",
+    "EntityFramework": "6.1.3",
     "RefactorThis.GraphDiff": "2.0.1"
   },
 

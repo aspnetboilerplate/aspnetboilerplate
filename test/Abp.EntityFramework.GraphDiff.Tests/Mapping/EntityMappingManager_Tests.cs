@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.GraphDiff.Configuration.Startup;
 using Abp.GraphDiff.Extensions;
 using Abp.GraphDiff.Mapping;
 using Abp.Tests;
+using Castle.MicroKernel.Registration;
 using NSubstitute;
 using RefactorThis.GraphDiff;
 using Shouldly;
@@ -13,7 +16,7 @@ using Xunit;
 
 namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 {
-    public class EntityMappingManager_Tests
+    public class EntityMappingManager_Tests : TestBaseWithLocalIocManager
     {
         private readonly IEntityMappingManager _entityMappingManager;
         private readonly IRepository<MyMainEntity> _mainEntityRepository;
@@ -21,22 +24,19 @@ namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 
         public EntityMappingManager_Tests()
         {
-            _entityMappingManager = Substitute.For<IEntityMappingManager>();
-            _mainEntityRepository = Substitute.For<IRepository<MyMainEntity>>();
-            _dependentEntityRepository = Substitute.For<IRepository<MyDependentEntity>>();
-        }
+            LocalIocManager.Register<IEntityMappingManager, EntityMappingManager>();
+            LocalIocManager.Register<IAbpEntityFrameworkGraphDiffModuleConfiguration, AbpEntityFrameworkGraphDiffModuleConfiguration>();
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
 
-        public class MyMappingProvider1 : EntityMappingProvider
-        {
-            public override IEnumerable<EntityMapping> GetEntityMappings()
-            {
-                var mappings = new List<EntityMapping>
+            LocalIocManager.Resolve<IAbpEntityFrameworkGraphDiffModuleConfiguration>().EntityMappings = new List<EntityMapping>
                 {
                     MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
                     MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
                 };
-                return mappings;
-            }
+
+            _entityMappingManager = LocalIocManager.Resolve<IEntityMappingManager>();
+            _mainEntityRepository = Substitute.For<IRepository<MyMainEntity>>();
+            _dependentEntityRepository = Substitute.For<IRepository<MyDependentEntity>>();
         }
 
         public class MyMainDbContext : AbpDbContext
@@ -73,7 +73,7 @@ namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
                 var disattachedEntity1 = new MyDependentEntity
                 {
                     Id = 1,
-                    MyMainEntity = new MyMainEntity {Id = 2}
+                    MyMainEntity = new MyMainEntity { Id = 2 }
                 };
 
                 //As a result of graph attachment, we should get old entity with UPDATED nav property (EF would create a new entity as it's disattached);
