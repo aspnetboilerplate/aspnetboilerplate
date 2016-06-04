@@ -36,8 +36,7 @@ namespace Abp.GraphDiff.Mapping
             foreach (var setting in allSettings.Where(s => s.Group.Name == EntityMappingProvider.GraphDiffSettingGroupName))
             {
                 var type = Type.GetType(setting.DefaultValue);
-                if (type != null &&
-                    !_mappings.ContainsKey(type))
+                if (type != null && !_mappings.ContainsKey(type))
                 {
                     _mappings.Add(
                         type,

@@ -72,6 +72,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.SignalR", "src\Abp.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.GraphDiff", "src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.xproj", "{F9066A34-8822-427D-9E62-B2BBA2B3A618}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.GraphDiff.Tests", "test\Abp.EntityFramework.GraphDiff.Tests\Abp.EntityFramework.GraphDiff.Tests.xproj", "{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +200,10 @@ Global
 		{F9066A34-8822-427D-9E62-B2BBA2B3A618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9066A34-8822-427D-9E62-B2BBA2B3A618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9066A34-8822-427D-9E62-B2BBA2B3A618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,5 +239,6 @@ Global
 		{1192F00E-070E-426B-9DF1-AD5E1C44AB7D} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{145B3DC6-599E-4FE2-BD76-A52DF3A86870} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{F9066A34-8822-427D-9E62-B2BBA2B3A618} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 	EndGlobalSection
 EndGlobal
