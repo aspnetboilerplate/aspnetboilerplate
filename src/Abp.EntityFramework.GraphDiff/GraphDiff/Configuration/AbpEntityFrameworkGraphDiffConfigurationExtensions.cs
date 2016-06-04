@@ -1,4 +1,8 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Abp.Configuration.Startup;
+using Abp.GraphDiff.Mapping;
+using Newtonsoft.Json.Linq;
 
 namespace Abp.GraphDiff.Configuration
 {
@@ -15,6 +19,16 @@ namespace Abp.GraphDiff.Configuration
             return configurations.AbpConfiguration.GetOrCreate(
                 "Modules.Abp.EntityFramework.GraphDiff",
                 () => configurations.AbpConfiguration.IocManager.Resolve<IAbpEntityFrameworkGraphDiffModuleConfiguration>());
+        }
+
+        /// <summary>
+        /// Used to provide a mappings for the Abp.EntityFramework.GraphDiff module.
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="entityMappings"></param>
+        public static void UseMappings(this IAbpEntityFrameworkGraphDiffModuleConfiguration configuration, IEnumerable<EntityMapping> entityMappings)
+        {
+            configuration.EntityMappings = entityMappings.ToList();
         }
     }
 }

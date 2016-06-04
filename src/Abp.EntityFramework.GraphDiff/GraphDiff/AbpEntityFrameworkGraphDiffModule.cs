@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Abp.Configuration;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.EntityFramework;
 using Abp.GraphDiff.Configuration;
@@ -14,7 +14,10 @@ namespace Abp.GraphDiff
         public override void PreInitialize()
         {
             IocManager.Register<IAbpEntityFrameworkGraphDiffModuleConfiguration, AbpEntityFrameworkGraphDiffModuleConfiguration>();
-            IocManager.Register<IEntityMappingManager, EntityMappingManager>(DependencyLifeStyle.Transient);
+
+            Configuration.Modules
+                .AbpEfGraphDiff()
+                .UseMappings(new List<EntityMapping>());
         }
 
         public override void Initialize()
