@@ -4,7 +4,6 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.GraphDiff.Configuration.Startup;
 using Abp.GraphDiff.Extensions;
 using Abp.GraphDiff.Mapping;
 using Abp.Tests;
@@ -16,7 +15,7 @@ using Xunit;
 
 namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 {
-    public class EntityMappingManager_Tests : TestBaseWithLocalIocManager
+    public class EntityMappingManager_Tests : AbpEntityFrameworkGraphDiffTestBase
     {
         private readonly IEntityMappingManager _entityMappingManager;
         private readonly IRepository<MyMainEntity> _mainEntityRepository;
@@ -24,17 +23,7 @@ namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 
         public EntityMappingManager_Tests()
         {
-            LocalIocManager.Register<IEntityMappingManager, EntityMappingManager>();
-            LocalIocManager.Register<IAbpEntityFrameworkGraphDiffModuleConfiguration, AbpEntityFrameworkGraphDiffModuleConfiguration>();
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
-
-            LocalIocManager.Resolve<IAbpEntityFrameworkGraphDiffModuleConfiguration>().EntityMappings = new List<EntityMapping>
-                {
-                    MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
-                    MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
-                };
-
-            _entityMappingManager = LocalIocManager.Resolve<IEntityMappingManager>();
+            _entityMappingManager = Substitute.For<IEntityMappingManager>();
             _mainEntityRepository = Substitute.For<IRepository<MyMainEntity>>();
             _dependentEntityRepository = Substitute.For<IRepository<MyDependentEntity>>();
         }

@@ -1,14 +1,14 @@
-﻿using Abp.GraphDiff.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 
-namespace Abp.Configuration.Startup
+namespace Abp.GraphDiff.Configuration
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP GraphDiff module.
+    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.EntityFramework.GraphDiff module.
     /// </summary>
     public static class AbpEntityFrameworkGraphDiffConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure ABP GraphDiff module.
+        /// Used to configure Abp.EntityFramework.GraphDiff module.
         /// </summary>
         public static IAbpEntityFrameworkGraphDiffModuleConfiguration AbpEfGraphDiff(this IModuleConfigurations configurations)
         {

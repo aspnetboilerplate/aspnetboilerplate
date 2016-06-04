@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Abp.Dependency;
+using Abp.GraphDiff.Configuration;
 using RefactorThis.GraphDiff;
-using Abp.GraphDiff.Configuration.Startup;
 
 namespace Abp.GraphDiff.Mapping
 {
     /// <summary>
     /// Used for resolving mappings for a GraphDiff repositroy extension methods
     /// </summary>
-    public class EntityMappingManager : IEntityMappingManager, ISingletonDependency
+    public class EntityMappingManager : IEntityMappingManager, ITransientDependency
     {
         private readonly IAbpEntityFrameworkGraphDiffModuleConfiguration _moduleConfiguration;
 

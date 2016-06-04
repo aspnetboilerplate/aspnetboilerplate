@@ -12,7 +12,6 @@ namespace Abp.GraphDiff.Extensions
     /// <summary>
     /// This class is an extension for GraphDiff library which provides a possibility to attach a detached graphs (i.e. entities) to a context.
     /// Attaching a whole graph using this methods updates all entity's navigation properties on entity creation or modification.
-    /// These extensions use mappings from the <see cref="EntityMappingProvider"/>, which need to be implemented.
     /// </summary>
     public static class GraphDiffExtensions
     {

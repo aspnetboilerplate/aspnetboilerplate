@@ -2,6 +2,7 @@
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.EntityFramework;
+using Abp.GraphDiff.Configuration;
 using Abp.GraphDiff.Mapping;
 using Abp.Modules;
 
@@ -12,7 +13,8 @@ namespace Abp.GraphDiff
     {
         public override void PreInitialize()
         {
-            IocManager.RegisterIfNot<IEntityMappingManager, EntityMappingManager>();
+            IocManager.Register<IAbpEntityFrameworkGraphDiffModuleConfiguration, AbpEntityFrameworkGraphDiffModuleConfiguration>();
+            IocManager.Register<IEntityMappingManager, EntityMappingManager>(DependencyLifeStyle.Transient);
         }
 
         public override void Initialize()
