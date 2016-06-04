@@ -29,10 +29,13 @@ namespace Abp.GraphDiff.Extensions
         public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> respoitory, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
+            //TODO@Alex: Bug1: Looks like it's the only way to use a DI inside of static class, isn't it?
             var mappingManager = IocManager.Instance.Resolve<IEntityMappingManager>();
+            var mapping = mappingManager.GetEntityMappingOrNull<TEntity>();
+
+            //TODO@Alex: Bug2: Get a context without using a dark magic (which doesn't work anyway)
             var context = GetDbContextFromEntity(entity);
 
-            var mapping = mappingManager.GetEntityMappingOrNull<TEntity>();
             var insertedEntity = context.UpdateGraph(entity, mapping);
 
             return insertedEntity;
