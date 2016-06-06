@@ -4,7 +4,7 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.Web.Mvc": "0.9.2.0-*",
+    "Abp.Web.Mvc": "0.9.2.1-*",
     "Abp.Tests": "1.0.0-*"
   },
 
