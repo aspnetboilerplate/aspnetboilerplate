@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
@@ -26,8 +27,9 @@ namespace Abp.GraphDiff.Extensions
         {
             var iocResolver = ((AbpRepositoryBase<TEntity, TPrimaryKey>)repository).IocResolver;
 
-            var mappingManager = iocResolver.Resolve<IEntityMappingManager>();
-            var mapping = mappingManager.GetEntityMappingOrNull<TEntity>();
+            var mappingManager = iocResolver.ResolveAsDisposable<IEntityMappingManager>();
+            var mapping = mappingManager.Object.GetEntityMappingOrNull<TEntity>();
+            mappingManager.Dispose();
 
             var context = repository.GetDbContext();
             var insertedEntity = context.UpdateGraph(entity, mapping);
