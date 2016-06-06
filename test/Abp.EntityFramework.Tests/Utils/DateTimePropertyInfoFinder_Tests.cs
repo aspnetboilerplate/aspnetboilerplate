@@ -14,7 +14,7 @@ namespace Abp.EntityFramework.Tests.Utils
         {
             var dateTimePropertInfos = DateTimePropertyInfoHelper.GetDatePropertyInfos(typeof(Hotel));
 
-            dateTimePropertInfos.DateTimePropertyInfos.Count.ShouldBe(2);
+            dateTimePropertInfos.DateTimePropertyInfos.Count.ShouldBe(1);
             dateTimePropertInfos.ComplexTypePropertyPaths.Count.ShouldBe(6);
 
             dateTimePropertInfos.ComplexTypePropertyPaths.Count(path => path.Contains("RealLocation")).ShouldBe(3);
@@ -26,7 +26,8 @@ namespace Abp.EntityFramework.Tests.Utils
         {
             public string Name { get; set; }
 
-            public DateTime CreationDate { get; set; }
+            public DateTime CreationDate { get { return _creationDate; } }
+            private DateTime _creationDate;
 
             public DateTime? ModificationDate { get; set; }
 

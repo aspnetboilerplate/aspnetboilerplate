@@ -60,17 +60,17 @@ namespace Abp.Domain.Entities.Caching
             ObjectMapper = NullObjectMapper.Instance;
         }
 
-        public TCacheItem Get(TPrimaryKey id)
+        public virtual TCacheItem Get(TPrimaryKey id)
         {
             return InternalCache.Get(id, () => GetCacheItemFromDataSource(id));
         }
 
-        public Task<TCacheItem> GetAsync(TPrimaryKey id)
+        public virtual Task<TCacheItem> GetAsync(TPrimaryKey id)
         {
             return InternalCache.GetAsync(id, () => GetCacheItemFromDataSourceAsync(id));
         }
 
-        public void HandleEvent(EntityChangedEventData<TEntity> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<TEntity> eventData)
         {
             InternalCache.Remove(eventData.Entity.Id);
         }
