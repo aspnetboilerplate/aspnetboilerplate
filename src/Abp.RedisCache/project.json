@@ -1,0 +1,39 @@
+﻿{
+  "version": "0.9.2.0-*",
+
+  "dependencies": {
+    "Abp": "0.9.2.0-*",
+    "StackExchange.Redis": "1.1.603"
+  },
+
+  "frameworks": {
+    "net452": {
+
+    }
+  },
+
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "xmlDoc": true
+  },
+
+  "packOptions": {
+    "summary": "Redis Cache integration package for ASP.NET Boilerplate.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "Redis", "Caching" ],
+    "owners": [ "Halil İbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    }
+  },
+
+  "packInclude": {
+    "lib/net452/": "bin/Release/net452/Abp.RedisCache.pdb"
+  }
+}

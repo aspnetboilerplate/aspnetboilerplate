@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Abp.RedisCache": "0.9.2.0-*",
+    "Abp.Tests": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net452": {
+      "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+    }
+  }
+}

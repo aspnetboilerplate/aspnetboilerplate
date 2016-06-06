@@ -1,0 +1,17 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Abp.TestBase.SampleApplication": "1.0.0-*",
+    "Abp.Tests": "1.0.0-*",
+    "Effort.EF6": "1.1.5"
+  },
+
+  "frameworks": {
+    "net452": {
+      "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+    }
+  }
+}

@@ -2,13 +2,14 @@
 using Abp.Domain.Repositories;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
+using Abp.ObjectMapping;
 using Abp.Runtime.Caching;
 
 namespace Abp.Domain.Entities.Caching
 {
     public abstract class EntityCache<TEntity, TCacheItem> :
         EntityCache<TEntity, TCacheItem, int>,
-        IEventHandler<EntityChangedEventData<TEntity>>, IEntityCache<TCacheItem>
+        IEntityCache<TCacheItem>
         where TEntity : class, IEntity<int>
     {
         protected EntityCache(
@@ -42,28 +43,34 @@ namespace Abp.Domain.Entities.Caching
             }
         }
 
+        public IObjectMapper ObjectMapper { get; set; }
+
         protected ICacheManager CacheManager { get; private set; }
 
         protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
 
-        protected EntityCache(ICacheManager cacheManager, IRepository<TEntity, TPrimaryKey> repository, string cacheName = null)
+        protected EntityCache(
+            ICacheManager cacheManager, 
+            IRepository<TEntity, TPrimaryKey> repository, 
+            string cacheName = null)
         {
             Repository = repository;
             CacheManager = cacheManager;
             CacheName = cacheName ?? GenerateDefaultCacheName();
+            ObjectMapper = NullObjectMapper.Instance;
         }
 
-        public TCacheItem Get(TPrimaryKey id)
+        public virtual TCacheItem Get(TPrimaryKey id)
         {
             return InternalCache.Get(id, () => GetCacheItemFromDataSource(id));
         }
 
-        public Task<TCacheItem> GetAsync(TPrimaryKey id)
+        public virtual Task<TCacheItem> GetAsync(TPrimaryKey id)
         {
             return InternalCache.GetAsync(id, () => GetCacheItemFromDataSourceAsync(id));
         }
 
-        public void HandleEvent(EntityChangedEventData<TEntity> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<TEntity> eventData)
         {
             InternalCache.Remove(eventData.Entity.Id);
         }
@@ -88,7 +95,21 @@ namespace Abp.Domain.Entities.Caching
             return Repository.FirstOrDefaultAsync(id);
         }
 
-        protected abstract TCacheItem MapToCacheItem(TEntity entity);
+        protected virtual TCacheItem MapToCacheItem(TEntity entity)
+        {
+            if (ObjectMapper is NullObjectMapper)
+            {
+                throw new AbpException(
+                    string.Format(
+                        "MapToCacheItem method should be overrided or IObjectMapper should be implemented in order to map {0} to {1}",
+                        typeof (TEntity),
+                        typeof (TCacheItem)
+                        )
+                    );
+            }
+
+            return ObjectMapper.Map<TCacheItem>(entity);
+        }
 
         protected virtual string GenerateDefaultCacheName()
         {

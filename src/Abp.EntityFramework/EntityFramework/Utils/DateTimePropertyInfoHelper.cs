@@ -57,8 +57,9 @@ namespace Abp.EntityFramework.Utils
         {
             var datetimeProperties = entityType.GetProperties()
                                      .Where(property =>
-                                         property.PropertyType == typeof(DateTime) ||
-                                         property.PropertyType == typeof(DateTime?)
+                                         (property.PropertyType == typeof(DateTime) ||
+                                         property.PropertyType == typeof(DateTime?)) &&
+                                         property.CanWrite
                                      ).ToList();
 
             var complexTypeProperties = entityType.GetProperties()

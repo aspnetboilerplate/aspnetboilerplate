@@ -29,7 +29,7 @@ namespace Abp.Web
                 new DictionaryBasedLocalizationSource(
                     AbpWebLocalizedMessages.SourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
+                        Assembly.GetExecutingAssembly(), "Abp.Web.Web.Localization.AbpWebXmlSource"
                         )));
         }
 
