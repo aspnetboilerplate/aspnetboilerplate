@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityFramework.Repositories;
 using Abp.GraphDiff.Mapping;
 using RefactorThis.GraphDiff;
 
@@ -15,27 +16,23 @@ namespace Abp.GraphDiff.Extensions
     /// </summary>
     public static class GraphDiffExtensions
     {
-
-        #region Extensions
-
         /// <summary>
         /// Attaches an <paramref name="entity"/> (as a detached graph) to a context.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-        /// <param name="respoitory"></param>
+        /// <param name="repository"></param>
         /// <param name="entity"></param>
         /// <returns>Attached entity</returns>
-        public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> respoitory, TEntity entity)
+        public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
-            //TODO@Alex: Bug1: Looks like it's the only way to use a DI inside of static class, isn't it?
-            var mappingManager = IocManager.Instance.Resolve<IEntityMappingManager>();
+            var iocResolver = ((AbpRepositoryBase<TEntity, TPrimaryKey>)repository).IocResolver;
+
+            var mappingManager = iocResolver.Resolve<IEntityMappingManager>();
             var mapping = mappingManager.GetEntityMappingOrNull<TEntity>();
 
-            //TODO@Alex: Bug2: Get a context without using a dark magic (which doesn't work anyway)
-            var context = GetDbContextFromEntity(entity);
-
+            var context = repository.GetDbContext();
             var insertedEntity = context.UpdateGraph(entity, mapping);
 
             return insertedEntity;
@@ -86,35 +83,5 @@ namespace Abp.GraphDiff.Extensions
         {
             return Task.FromResult(AttachGraphAndGetId(repository, entity));
         }
-
-        #endregion
-
-        #region Private methods
-
-        private static ObjectContext GetObjectContextFromEntity(object entity)
-        {
-            var field = entity.GetType().GetField("_entityWrapper");
-
-            if (field == null)
-                return null;
-
-            var wrapper = field.GetValue(entity);
-            var property = wrapper.GetType().GetProperty("Context");
-            var context = (ObjectContext)property.GetValue(wrapper, null);
-
-            return context;
-        }
-
-        private static DbContext GetDbContextFromEntity(object entity)
-        {
-            var objectContext = GetObjectContextFromEntity(entity);
-
-            if (objectContext == null)
-                return null;
-
-            return new DbContext(objectContext, dbContextOwnsObjectContext: false);
-        }
-
-        #endregion
     }
 }
