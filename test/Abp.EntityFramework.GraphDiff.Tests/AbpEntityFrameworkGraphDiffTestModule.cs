@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Abp.EntityFramework.GraphDiff;
+using Abp.EntityFramework.GraphDiff.Configuration;
+using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.EntityFramework.GraphDIff.Tests.Entities;
-using Abp.GraphDiff;
-using Abp.GraphDiff.Configuration;
-using Abp.GraphDiff.Mapping;
 using Abp.Modules;
 using RefactorThis.GraphDiff;
 

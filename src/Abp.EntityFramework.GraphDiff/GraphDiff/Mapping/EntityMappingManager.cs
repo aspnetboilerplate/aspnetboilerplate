@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Abp.Dependency;
-using Abp.GraphDiff.Configuration;
+using Abp.EntityFramework.GraphDiff.Configuration;
 using RefactorThis.GraphDiff;
 
-namespace Abp.GraphDiff.Mapping
+namespace Abp.EntityFramework.GraphDiff.Mapping
 {
     /// <summary>
     /// Used for resolving mappings for a GraphDiff repository extension methods

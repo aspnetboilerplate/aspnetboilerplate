@@ -1,7 +1,7 @@
 ﻿using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.GraphDiff.Extensions;
+using Abp.EntityFramework.GraphDiff.Extensions;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Abp.GraphDiff.Mapping;
+using Abp.EntityFramework.GraphDiff.Mapping;
 
-namespace Abp.GraphDiff.Configuration
+namespace Abp.EntityFramework.GraphDiff.Configuration
 {
     public class AbpEntityFrameworkGraphDiffModuleConfiguration : IAbpEntityFrameworkGraphDiffModuleConfiguration
     {

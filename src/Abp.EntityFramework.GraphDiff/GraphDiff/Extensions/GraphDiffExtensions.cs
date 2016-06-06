@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.EntityFramework.Repositories;
-using Abp.GraphDiff.Mapping;
 using RefactorThis.GraphDiff;
 
-namespace Abp.GraphDiff.Extensions
+namespace Abp.EntityFramework.GraphDiff.Extensions
 {
     /// <summary>
     /// This class is an extension for GraphDiff library which provides a possibility to attach a detached graphs (i.e. entities) to a context.

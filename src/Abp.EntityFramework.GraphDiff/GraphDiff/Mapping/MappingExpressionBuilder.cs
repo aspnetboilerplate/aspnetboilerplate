@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Abp.Domain.Entities;
 using RefactorThis.GraphDiff;
 
-namespace Abp.GraphDiff.Mapping
+namespace Abp.EntityFramework.GraphDiff.Mapping
 {
     /// <summary>
     /// Helper class for creating entity mappings

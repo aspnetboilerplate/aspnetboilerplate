@@ -2,11 +2,11 @@
 using System.Reflection;
 using Abp.AutoMapper;
 using Abp.EntityFramework;
-using Abp.GraphDiff;
-using Abp.GraphDiff.Mapping;
+using Abp.EntityFramework.GraphDiff;
+using Abp.EntityFramework.GraphDiff.Configuration;
+using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.Modules;
 using Abp.TestBase.SampleApplication.ContacLists;
-using Abp.GraphDiff.Configuration;
 using Abp.TestBase.SampleApplication.People;
 using RefactorThis.GraphDiff;
 

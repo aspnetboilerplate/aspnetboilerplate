@@ -7,6 +7,7 @@ dotnet "pack" "..\src\Abp" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX
 dotnet "pack" "..\src\Abp.AutoMapper" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.HangFire" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.EntityFramework" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.EntityFramework.GraphDiff" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.FluentMigrator" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.MemoryDb" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.MongoDB" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"

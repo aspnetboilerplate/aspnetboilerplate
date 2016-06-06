@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.GraphDiff.Mapping
+namespace Abp.EntityFramework.GraphDiff.Mapping
 {
     public class EntityMapping
     {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Abp.EntityFramework;
-using Abp.GraphDiff.Configuration;
-using Abp.GraphDiff.Mapping;
+using Abp.EntityFramework.GraphDiff.Configuration;
+using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.Modules;
 
-namespace Abp.GraphDiff
+namespace Abp.EntityFramework.GraphDiff
 {
     [DependsOn(typeof(AbpEntityFrameworkModule), typeof(AbpKernelModule))]
     public class AbpEntityFrameworkGraphDiffModule : AbpModule

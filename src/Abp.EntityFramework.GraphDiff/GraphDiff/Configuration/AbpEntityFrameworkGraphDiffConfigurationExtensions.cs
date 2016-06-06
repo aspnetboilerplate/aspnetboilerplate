@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Abp.Configuration.Startup;
-using Abp.GraphDiff.Mapping;
+using Abp.EntityFramework.GraphDiff.Mapping;
 
-namespace Abp.GraphDiff.Configuration
+namespace Abp.EntityFramework.GraphDiff.Configuration
 {
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.EntityFramework.GraphDiff module.

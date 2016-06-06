@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using RefactorThis.GraphDiff;
 
-namespace Abp.GraphDiff.Mapping
+namespace Abp.EntityFramework.GraphDiff.Mapping
 {
     public interface IEntityMappingManager
     {
