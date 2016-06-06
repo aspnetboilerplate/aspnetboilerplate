@@ -8,7 +8,7 @@ using RefactorThis.GraphDiff;
 namespace Abp.GraphDiff.Mapping
 {
     /// <summary>
-    /// Used for resolving mappings for a GraphDiff repositroy extension methods
+    /// Used for resolving mappings for a GraphDiff repository extension methods
     /// </summary>
     public class EntityMappingManager : IEntityMappingManager, ITransientDependency
     {
