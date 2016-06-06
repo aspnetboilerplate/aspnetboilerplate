@@ -1,14 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using Abp.Configuration.Startup;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.GraphDiff.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Abp.EntityFramework.GraphDIff.Tests.Entities;
 using Abp.GraphDiff.Mapping;
-using Abp.Tests;
-using Castle.MicroKernel.Registration;
-using NSubstitute;
 using RefactorThis.GraphDiff;
 using Shouldly;
 using Xunit;
@@ -17,61 +11,44 @@ namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 {
     public class EntityMappingManager_Tests : AbpEntityFrameworkGraphDiffTestBase
     {
+
         private readonly IEntityMappingManager _entityMappingManager;
-        private readonly IRepository<MyMainEntity> _mainEntityRepository;
-        private readonly IRepository<MyDependentEntity> _dependentEntityRepository;
 
         public EntityMappingManager_Tests()
         {
-            _entityMappingManager = Substitute.For<IEntityMappingManager>();
-            _mainEntityRepository = Substitute.For<IRepository<MyMainEntity>>();
-            _dependentEntityRepository = Substitute.For<IRepository<MyDependentEntity>>();
-        }
-
-        public class MyMainDbContext : AbpDbContext
-        {
-            public virtual DbSet<MyMainEntity> MainEntities { get; set; }
-
-            public virtual DbSet<MyDependentEntity> DependentEntities { get; set; }
-        }
-
-        public class MyMainEntity : Entity
-        {
-            public virtual ICollection<MyDependentEntity> MyDependentEntities { get; set; }
-        }
-
-        public class MyDependentEntity : Entity
-        {
-            public virtual MyMainEntity MyMainEntity { get; set; }
+            _entityMappingManager = LocalIocManager.Resolve<IEntityMappingManager>();
         }
 
         [Fact]
-        public void Should_Change_Dependent_Entities_Using_GraphDiff()
+        public void Mapping_Manager_Should_Be_Registered_Automatically_With_The_Assembly()
         {
-            var unitOfWorkManager = Substitute.For<IUnitOfWorkManager>();
-            {
-                //Insert few entities
-                var mainEntity1 = _mainEntityRepository.Insert(new MyMainEntity()); //Id: 1
-                var mainEntity2 = _mainEntityRepository.Insert(new MyMainEntity()); //Id: 2
-                unitOfWorkManager.Current.SaveChanges();
+            _entityMappingManager.ShouldNotBeNull();
+        }
 
-                var dependentEntity1 = new MyDependentEntity { MyMainEntity = mainEntity1 }; //Id: 1
-                unitOfWorkManager.Current.SaveChanges();  //dependentEntity1 gets Id 1 and is linked to mainEntity1 using EF change tracker
+        [Fact]
+        public void Should_Get_Mapping_For_Each_Entity()
+        {
+            var mainEntityMapping = _entityMappingManager.GetEntityMappingOrNull<MyMainEntity>();
+            var dependentEntityMapping = _entityMappingManager.GetEntityMappingOrNull<MyDependentEntity>();
 
-                //Let's assume that we got it via API (i.e. was deserialized from JSOn format) or was just created manually (not fetched via repository)
-                var disattachedEntity1 = new MyDependentEntity
-                {
-                    Id = 1,
-                    MyMainEntity = new MyMainEntity { Id = 2 }
-                };
+            Expression<Func<IUpdateConfiguration<MyMainEntity>, object>> expectedMainExrepssion =
+                config => config.AssociatedCollection(entity => entity.MyDependentEntities);
+            Expression<Func<IUpdateConfiguration<MyDependentEntity>, object>> expectedDependentExpression =
+                config => config.AssociatedEntity(entity => entity.MyMainEntity);
 
-                //As a result of graph attachment, we should get old entity with UPDATED nav property (EF would create a new entity as it's disattached);
-                var attachedDependentEntity1 = _dependentEntityRepository.AttachGraph(disattachedEntity1);
-                unitOfWorkManager.Current.SaveChanges();
+            //Mappings shouldn't be null as they are configured
+            mainEntityMapping.ShouldNotBeNull();
+            dependentEntityMapping.ShouldNotBeNull();
 
-                attachedDependentEntity1.MyMainEntity.ShouldBe(mainEntity2); //New entity should be attached with it's navigation property
-                dependentEntity1.Id.ShouldBe(attachedDependentEntity1.Id); //As entity was detached (but not deleted), it should be updated (not re-created)
-            }
+            //Assert that string representation of mappings are equal
+            mainEntityMapping.ToString().ShouldBe(expectedMainExrepssion.ToString());
+            dependentEntityMapping.ToString().ShouldBe(expectedDependentExpression.ToString());
+        }
+
+        [Fact]
+        public void Should_Get_Null_If_Mapping_For_Entity_Does_Not_Exist()
+        {
+            _entityMappingManager.GetEntityMappingOrNull<MyUnmappedEntity>().ShouldBeNull();
         }
     }
 }

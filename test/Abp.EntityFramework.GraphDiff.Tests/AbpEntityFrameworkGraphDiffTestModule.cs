@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Abp.Configuration.Startup;
-using Abp.EntityFramework.GraphDIff.Tests.Mapping;
+using Abp.EntityFramework.GraphDIff.Tests.Entities;
 using Abp.GraphDiff;
 using Abp.GraphDiff.Configuration;
 using Abp.GraphDiff.Mapping;
@@ -21,8 +20,8 @@ namespace Abp.EntityFramework.GraphDIff.Tests
 
             Configuration.Modules.AbpEfGraphDiff().EntityMappings = new List<EntityMapping>
             {
-                MappingExpressionBuilder.For<EntityMappingManager_Tests.MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
-                MappingExpressionBuilder.For<EntityMappingManager_Tests.MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
+                MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
+                MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
             };
         }
     }
