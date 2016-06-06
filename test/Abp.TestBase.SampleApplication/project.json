@@ -5,7 +5,7 @@
     "Abp.AutoMapper": "0.9.2.1-*",
     "Abp.EntityFramework": "0.9.2.1-*",
     "Abp.TestBase": "0.9.2.1-*",
-    "Abp.EntityFramework.GraphDiff": "0.9.2.0-*"
+    "Abp.EntityFramework.GraphDiff": "0.9.2.1-*"
   },
 
   "frameworks": {
