@@ -12,7 +12,6 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 {
     public class Messages_MultiTenancy_Tests : SampleApplicationTestBase
     {
-        private object context;
         private readonly IRepository<Message> _messageRepository;
 
         public Messages_MultiTenancy_Tests()
