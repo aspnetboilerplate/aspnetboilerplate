@@ -15,7 +15,7 @@ namespace Abp.GraphDiff.Mapping
         private readonly IAbpEntityFrameworkGraphDiffModuleConfiguration _moduleConfiguration;
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         public EntityMappingManager(IAbpEntityFrameworkGraphDiffModuleConfiguration moduleConfiguration)
         {

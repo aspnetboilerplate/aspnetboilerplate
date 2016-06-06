@@ -2,7 +2,6 @@
 using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.GraphDiff.Mapping;
-using Newtonsoft.Json.Linq;
 
 namespace Abp.GraphDiff.Configuration
 {

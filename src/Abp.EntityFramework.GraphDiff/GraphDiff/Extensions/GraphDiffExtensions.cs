@@ -1,7 +1,4 @@
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Threading.Tasks;
-using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
