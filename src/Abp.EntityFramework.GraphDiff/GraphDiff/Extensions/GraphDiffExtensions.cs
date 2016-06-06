@@ -27,14 +27,13 @@ namespace Abp.GraphDiff.Extensions
         {
             var iocResolver = ((AbpRepositoryBase<TEntity, TPrimaryKey>)repository).IocResolver;
 
-            var mappingManager = iocResolver.ResolveAsDisposable<IEntityMappingManager>();
-            var mapping = mappingManager.Object.GetEntityMappingOrNull<TEntity>();
-            mappingManager.Dispose();
-
-            var context = repository.GetDbContext();
-            var insertedEntity = context.UpdateGraph(entity, mapping);
-
-            return insertedEntity;
+            using (var mappingManager = iocResolver.ResolveAsDisposable<IEntityMappingManager>())
+            {
+                var mapping = mappingManager.Object.GetEntityMappingOrNull<TEntity>();
+                return repository
+                    .GetDbContext()
+                    .UpdateGraph(entity, mapping);
+            }
         }
 
         /// <summary>
