@@ -26,6 +26,7 @@ namespace Abp.EntityFramework.Uow
 
         protected TransactionScope CurrentTransaction;
         private readonly IDbContextResolver _dbContextResolver;
+        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
@@ -34,11 +35,14 @@ namespace Abp.EntityFramework.Uow
             IIocResolver iocResolver,
             IConnectionStringResolver connectionStringResolver,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions)
+            IUnitOfWorkDefaultOptions defaultOptions, 
+            IDbContextTypeMatcher dbContextTypeMatcher)
             : base(connectionStringResolver, defaultOptions)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
+            _dbContextTypeMatcher = dbContextTypeMatcher;
+
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
@@ -133,11 +137,14 @@ namespace Abp.EntityFramework.Uow
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
+            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof(TDbContext).FullName + "#" + connectionString;
+            var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
