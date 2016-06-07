@@ -37,7 +37,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
             //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
             AbpSession.TenantId = null;
-            _contactListRepository.GetAllList().Count.ShouldBe(2);
+            _contactListRepository.GetAllList().Count.ShouldBe(4);
 
             //Host can filter tenant data if it wants
             _contactListRepository.GetAllList().Count(t => t.TenantId == 1).ShouldBe(1);
@@ -49,7 +49,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
-                _contactListRepository.GetAllList().Count.ShouldBe(2);
+                _contactListRepository.GetAllList().Count.ShouldBe(4);
 
                 using (unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MustHaveTenant))
                 {
@@ -78,7 +78,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
-                _contactListRepository.GetAllList().Count.ShouldBe(2);
+                _contactListRepository.GetAllList().Count.ShouldBe(4);
 
                 unitOfWorkManager.Current.SetTenantId(1);
                 //We should only get tenant 1's entities since we set tenantId to 1 (which automatically enables MustHaveTenant filter)
@@ -88,7 +88,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
                 unitOfWorkManager.Current.SetTenantId(null);
                 //Switched to host, which automatically disables MustHaveTenant filter
-                _contactListRepository.GetAllList().Count.ShouldBe(2);
+                _contactListRepository.GetAllList().Count.ShouldBe(4);
 
                 unitOfWork.Complete();
             }
