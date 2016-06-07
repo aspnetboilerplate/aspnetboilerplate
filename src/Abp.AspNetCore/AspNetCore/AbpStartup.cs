@@ -14,16 +14,24 @@ namespace Abp.AspNetCore
     {
         protected AbpBootstrapper AbpBootstrapper { get; private set; }
 
-        protected AbpStartup(IHostingEnvironment env)
+        protected AbpStartup(IHostingEnvironment env, bool initialize = true)
+        {
+            AbpBootstrapper = new AbpBootstrapper();
+
+            if (initialize)
+            {
+                InitializeAbp();
+            }
+        }
+
+        protected virtual void InitializeAbp()
         {
             ThreadCultureSanitizer.Sanitize();
-
-            AbpBootstrapper = new AbpBootstrapper();
             AbpBootstrapper.Initialize();
         }
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
-        {
+        { 
             return WindsorRegistrationHelper.CreateServiceProvider(AbpBootstrapper.IocManager.IocContainer, services);
         }
 

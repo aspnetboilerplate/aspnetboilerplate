@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.AutoMapper;
+﻿using System.Collections.Generic;
+using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
-using AbpAspNetCoreDemo.Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
@@ -12,18 +8,18 @@ namespace AbpAspNetCoreDemo.Controllers
     [Route("api/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IProductAppService _productAppService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductAppService productAppService)
         {
-            _productService = productService;
+            _productAppService = productAppService;
         }
 
         // GET api/values
         [HttpGet]
         public IEnumerable<ProductDto> Get()
         {
-            return _productService.GetAll().MapTo<List<ProductDto>>();
+            return _productAppService.GetAll();
         }
 
         // GET api/values/5
