@@ -4,6 +4,7 @@ REM "..\tools\gitlink\GitLink.exe" ..\ -u https://github.com/aspnetboilerplate/a
 SET /P VERSION_SUFFIX=Please enter version-suffix (can be left empty): 
 
 dotnet "pack" "..\src\Abp" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.AspNetCore" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.AutoMapper" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.HangFire" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.EntityFramework" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
