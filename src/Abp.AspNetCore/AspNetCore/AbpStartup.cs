@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Threading;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,16 +8,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Abp.AspNetCore
 {
-    // This project can output the Class library as a NuGet Package.
-    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    //TODO: Inject all available services?
+
     public abstract class AbpStartup : IDisposable
     {
         protected AbpBootstrapper AbpBootstrapper { get; private set; }
 
         protected AbpStartup(IHostingEnvironment env)
         {
+            ThreadCultureSanitizer.Sanitize();
+
             AbpBootstrapper = new AbpBootstrapper();
-            AbpBootstrapper.Initialize(); //TODO: Here or where?
+            AbpBootstrapper.Initialize();
         }
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
@@ -31,7 +34,7 @@ namespace Abp.AspNetCore
 
         public void Dispose()
         {
-            //AbpBootstrapper.Dispose();
+            //AbpBootstrapper.Dispose(); //TODO: Dispose?
         }
     }
 }
