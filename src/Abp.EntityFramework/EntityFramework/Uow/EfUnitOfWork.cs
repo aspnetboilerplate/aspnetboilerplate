@@ -220,10 +220,11 @@ namespace Abp.EntityFramework.Uow
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
 
             dbContext.Configuration.AutoDetectChangesEnabled = false;
-            
+            var previousState = dbContext.Entry(e.Entity).State;
+
             DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
 
-            dbContext.Entry(e.Entity).State = EntityState.Unchanged;
+            dbContext.Entry(e.Entity).State = previousState;
             dbContext.Configuration.AutoDetectChangesEnabled = true;
         }
     }
