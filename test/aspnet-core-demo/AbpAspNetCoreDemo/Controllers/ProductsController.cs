@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Abp.AspNetCore.Mvc.Controllers;
 using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbpAspNetCoreDemo.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductsController : Controller
+    public class ProductsController : AbpController
     {
         private readonly IProductAppService _productAppService;
 
