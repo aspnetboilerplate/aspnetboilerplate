@@ -26,19 +26,23 @@ namespace Abp.EntityFramework.Uow
 
         protected TransactionScope CurrentTransaction;
         private readonly IDbContextResolver _dbContextResolver;
+        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
         public EfUnitOfWork(
-            IIocResolver iocResolver, 
-            IConnectionStringResolver connectionStringResolver, 
-            IDbContextResolver dbContextResolver, 
-            IUnitOfWorkDefaultOptions defaultOptions)
+            IIocResolver iocResolver,
+            IConnectionStringResolver connectionStringResolver,
+            IDbContextResolver dbContextResolver,
+            IUnitOfWorkDefaultOptions defaultOptions, 
+            IDbContextTypeMatcher dbContextTypeMatcher)
             : base(connectionStringResolver, defaultOptions)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
+            _dbContextTypeMatcher = dbContextTypeMatcher;
+
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
@@ -133,18 +137,25 @@ namespace Abp.EntityFramework.Uow
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
+            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof (TDbContext).FullName + "#" + connectionString;
+            var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+
+                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                {
+                    ObjectContext_ObjectMaterialized(dbContext, args);
+                };
 
                 foreach (var filter in Filters)
                 {
@@ -197,17 +208,24 @@ namespace Abp.EntityFramework.Uow
         {
             await dbContext.SaveChangesAsync();
         }
-        
+
         protected virtual void Release(DbContext dbContext)
         {
             dbContext.Dispose();
             IocResolver.Release(dbContext);
         }
 
-        private static void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
         {
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
-            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity,entityType);
+
+            dbContext.Configuration.AutoDetectChangesEnabled = false;
+            var previousState = dbContext.Entry(e.Entity).State;
+
+            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
+
+            dbContext.Entry(e.Entity).State = previousState;
+            dbContext.Configuration.AutoDetectChangesEnabled = true;
         }
     }
 }

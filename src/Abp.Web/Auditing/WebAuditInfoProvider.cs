@@ -25,7 +25,7 @@ namespace Abp.Auditing
             Logger = NullLogger.Instance;
         }
 
-        public void Fill(AuditInfo auditInfo)
+        public virtual void Fill(AuditInfo auditInfo)
         {
             var httpContext = HttpContext.Current ?? _httpContext;
             if (httpContext == null)
