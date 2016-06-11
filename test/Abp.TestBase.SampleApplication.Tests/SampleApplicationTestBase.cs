@@ -54,6 +54,25 @@ namespace Abp.TestBase.SampleApplication.Tests
                                          new Person {Name = "asimov"},
                                      }
                         });
+
+                    context.ContactLists.Add(
+                        new ContactList
+                        {
+                            TenantId = 3,
+                            Name = "List-1 of Tenant-3",
+                            People = new List<Person>
+                                     {
+                                         new Person {Name = "John Doe"},
+                                     }
+                        });
+
+                    context.ContactLists.Add(
+                        new ContactList
+                        {
+                            TenantId = 3,
+                            Name = "List-2 of Tenant-3",
+                            People = new List<Person>()
+                        });
                 });
 
             UsingDbContext(

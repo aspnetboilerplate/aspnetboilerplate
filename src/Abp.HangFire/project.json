@@ -1,8 +1,8 @@
 {
-  "version": "0.9.1.4-*",
+  "version": "0.9.3.0-*",
 
   "dependencies": {
-    "Abp": "0.9.1.4-*",
+    "Abp": "0.9.3.0-*",
     "Hangfire.Core": "1.5.7"
   },
 
