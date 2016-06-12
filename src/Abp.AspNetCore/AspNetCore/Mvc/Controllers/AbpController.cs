@@ -12,6 +12,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
@@ -27,6 +28,7 @@ using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 
 namespace Abp.AspNetCore.Mvc.Controllers
 {
@@ -145,35 +147,17 @@ namespace Abp.AspNetCore.Mvc.Controllers
         public IAuditingStore AuditingStore { get; set; }
 
         /// <summary>
-        /// This object is used to measure an action execute duration.
-        /// </summary>
-        private Stopwatch _actionStopwatch;
-
-        private AuditInfo _auditInfo;
-
-        /// <summary>
-        /// MethodInfo for currently executing action.
-        /// </summary>
-        private MethodInfo _currentMethodInfo;
-
-        /// <summary>
-        /// WrapResultAttribute for currently executing action.
-        /// </summary>
-        private WrapResultAttribute _wrapResultAttribute;
-
-        /// <summary>
         /// Ignored types for serialization on audit logging.
         /// </summary>
         protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
 
-        //static AbpController()
-        //{
-        //    IgnoredTypesForSerializationOnAuditLogging = new List<Type>
-        //    {
-        //        typeof (HttpPostedFileBase),
-        //        typeof (IEnumerable<HttpPostedFileBase>)
-        //    };
-        //}
+        static AbpController()
+        {
+            IgnoredTypesForSerializationOnAuditLogging = new List<Type>
+            {
+                
+            };
+        }
 
         /// <summary>
         /// Constructor.
@@ -186,6 +170,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             PermissionChecker = NullPermissionChecker.Instance;
             AuditingStore = SimpleLogAuditingStore.Instance;
             EventBus = NullEventBus.Instance;
+            //AuditInfoProvider = iocResolver.Resolve<IAuditInfoProvider>();
         }
 
         /// <summary>
@@ -271,265 +256,83 @@ namespace Abp.AspNetCore.Mvc.Controllers
             return FeatureChecker.IsEnabled(featureName);
         }
 
-        ///// <summary>
-        ///// Json the specified data, contentType, contentEncoding and behavior.
-        ///// </summary>
-        ///// <param name="data">Data.</param>
-        ///// <param name="contentType">Content type.</param>
-        ///// <param name="contentEncoding">Content encoding.</param>
-        ///// <param name="behavior">Behavior.</param>
-        //protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
-        //{
-        //    if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
-        //    {
-        //        return base.Json(data, contentType, contentEncoding, behavior);
-        //    }
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            //TODO: VALIDATION
 
-        //    if (data == null)
-        //    {
-        //        data = new AjaxResponse();
-        //    }
-        //    else if (!ReflectionHelper.IsAssignableToGenericType(data.GetType(), typeof(AjaxResponse<>)))
-        //    {
-        //        data = new AjaxResponse(data);
-        //    }
+            var auditInfo = CreateAuditInfo(context);
+            var stopwatch = Stopwatch.StartNew();
 
-        //    return new AbpJsonResult(data)
-        //    {
-        //        Data = data,
-        //        ContentType = contentType,
-        //        ContentEncoding = contentEncoding,
-        //        JsonRequestBehavior = behavior
-        //    };
-        //}
+            try
+            {
+                await base.OnActionExecutionAsync(context, next);
+            }
+            catch (Exception ex)
+            {
+                auditInfo.Exception = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
-        //#region OnActionExecuting / OnActionExecuted
+                AuditInfoProvider?.Fill(auditInfo);
 
-        //public override void OnActionExecuting(ActionExecutingContext filterContext)
-        //{
-        //    SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
-        //    HandleAuditingBeforeAction(filterContext);
+                await AuditingStore.SaveAsync(auditInfo);
+            }
+        }
 
-        //    base.OnActionExecuting(filterContext);
-        //}
+        private AuditInfo CreateAuditInfo(ActionExecutingContext context)
+        {
+            var auditInfo = new AuditInfo
+            {
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
+                ServiceName = context.Controller?.GetType().ToString() ?? "",
+                MethodName = context.ActionDescriptor.DisplayName,
+                Parameters = ConvertArgumentsToJson(context.ActionArguments),
+                ExecutionTime = Clock.Now
+            };
 
-        //public override void OnActionExecuted(ActionExecutedContext filterContext)
-        //{
-        //    base.OnActionExecuted(filterContext);
+            AuditInfoProvider.Fill(auditInfo);
 
-        //    HandleAuditingAfterAction(filterContext);
-        //}
+            return auditInfo;
+        }
 
-        //private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
-        //{
-        //    _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
-        //    _wrapResultAttribute =
-        //        ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(_currentMethodInfo) ??
-        //        WrapResultAttribute.Default;
-        //}
 
-        //#endregion
+        private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
+        {
+            try
+            {
+                if (arguments.IsNullOrEmpty())
+                {
+                    return "{}";
+                }
 
-        //#region Exception handling
+                var dictionary = new Dictionary<string, object>();
 
-        //protected override void OnException(ExceptionContext context)
-        //{
-        //    if (context == null)
-        //    {
-        //        throw new ArgumentNullException("context");
-        //    }
+                foreach (var argument in arguments)
+                {
+                    if (argument.Value != null && IgnoredTypesForSerializationOnAuditLogging.Any(t => t.IsInstanceOfType(argument.Value)))
+                    {
+                        dictionary[argument.Key] = null;
+                    }
+                    else
+                    {
+                        dictionary[argument.Key] = argument.Value;
+                    }
+                }
 
-        //    //If exception handled before, do nothing.
-        //    //If this is child action, exception should be handled by main action.
-        //    if (context.ExceptionHandled || context.IsChildAction)
-        //    {
-        //        base.OnException(context);
-        //        return;
-        //    }
-
-        //    //Log exception
-        //    if (_wrapResultAttribute.LogError)
-        //    {
-        //        LogHelper.LogException(Logger, context.Exception);
-        //    }
-
-        //    // If custom errors are disabled, we need to let the normal ASP.NET exception handler
-        //    // execute so that the user can see useful debugging information.
-        //    if (!context.HttpContext.IsCustomErrorEnabled)
-        //    {
-        //        base.OnException(context);
-        //        return;
-        //    }
-
-        //    // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
-        //    // ignore it.
-        //    if (new HttpException(null, context.Exception).GetHttpCode() != 500)
-        //    {
-        //        base.OnException(context);
-        //        return;
-        //    }
-
-        //    //Check WrapResultAttribute
-        //    if (!_wrapResultAttribute.WrapOnError)
-        //    {
-        //        base.OnException(context);
-        //        return;
-        //    }
-
-        //    //We handled the exception!
-        //    context.ExceptionHandled = true;
-
-        //    //Return a special error response to the client.
-        //    context.HttpContext.Response.Clear();
-        //    context.Result = IsJsonResult()
-        //        ? GenerateJsonExceptionResult(context)
-        //        : GenerateNonJsonExceptionResult(context);
-
-        //    // Certain versions of IIS will sometimes use their own error page when
-        //    // they detect a server error. Setting this property indicates that we
-        //    // want it to try to render ASP.NET MVC's error page instead.
-        //    context.HttpContext.Response.TrySkipIisCustomErrors = true;
-
-        //    //Trigger an event, so we can register it.
-        //    EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
-        //}
-
-        //protected virtual bool IsJsonResult()
-        //{
-        //    return typeof(JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
-        //           typeof(Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
-        //}
-
-        //protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
-        //{
-        //    context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
-        //    context.HttpContext.Response.StatusCode = 200; //TODO: Consider to return 500
-        //    return new AbpJsonResult(
-        //        new MvcAjaxResponse(
-        //            ErrorInfoBuilder.Instance.BuildForException(context.Exception),
-        //            context.Exception is AbpAuthorizationException
-        //            )
-        //        );
-        //}
-
-        //protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
-        //{
-        //    context.HttpContext.Response.StatusCode = 500;
-        //    return new ViewResult
-        //    {
-        //        ViewName = "Error",
-        //        MasterName = string.Empty,
-        //        ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(context.Exception)),
-        //        TempData = context.Controller.TempData
-        //    };
-        //}
-
-        //#endregion
-
-        //#region Auditing
-
-        //private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
-        //{
-        //    if (!ShouldSaveAudit(filterContext))
-        //    {
-        //        _auditInfo = null;
-        //        return;
-        //    }
-
-        //    _actionStopwatch = Stopwatch.StartNew();
-        //    _auditInfo = new AuditInfo
-        //    {
-        //        TenantId = AbpSession.TenantId,
-        //        UserId = AbpSession.UserId,
-        //        ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-        //        ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-        //        ServiceName = _currentMethodInfo.DeclaringType != null
-        //                        ? _currentMethodInfo.DeclaringType.FullName
-        //                        : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-        //        MethodName = _currentMethodInfo.Name,
-        //        Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
-        //        ExecutionTime = Clock.Now
-        //    };
-        //}
-
-        //private void HandleAuditingAfterAction(ActionExecutedContext filterContext)
-        //{
-        //    if (_auditInfo == null || _actionStopwatch == null)
-        //    {
-        //        return;
-        //    }
-
-        //    _actionStopwatch.Stop();
-
-        //    _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
-        //    _auditInfo.Exception = filterContext.Exception;
-
-        //    if (AuditInfoProvider != null)
-        //    {
-        //        AuditInfoProvider.Fill(_auditInfo);
-        //    }
-
-        //    AuditingStore.Save(_auditInfo);
-        //}
-
-        //private bool ShouldSaveAudit(ActionExecutingContext filterContext)
-        //{
-        //    if (AuditingConfiguration == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (!AuditingConfiguration.MvcControllers.IsEnabled)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
-        //    {
-        //        return false;
-        //    }
-
-        //    return AuditingHelper.ShouldSaveAudit(
-        //        _currentMethodInfo,
-        //        AuditingConfiguration,
-        //        AbpSession,
-        //        true
-        //        );
-        //}
-
-        //private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
-        //{
-        //    try
-        //    {
-        //        if (arguments.IsNullOrEmpty())
-        //        {
-        //            return "{}";
-        //        }
-
-        //        var dictionary = new Dictionary<string, object>();
-
-        //        foreach (var argument in arguments)
-        //        {
-        //            if (argument.Value != null && IgnoredTypesForSerializationOnAuditLogging.Any(t => t.IsInstanceOfType(argument.Value)))
-        //            {
-        //                dictionary[argument.Key] = null;
-        //            }
-        //            else
-        //            {
-        //                dictionary[argument.Key] = argument.Value;
-        //            }
-        //        }
-
-        //        return AuditingHelper.Serialize(dictionary);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." + _auditInfo.MethodName);
-        //        Logger.Warn(ex.ToString(), ex);
-        //        return "{}";
-        //    }
-        //}
-
-        //#endregion
+                return AuditingHelper.Serialize(dictionary);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+                return "{}";
+            }
+        }
     }
 }
