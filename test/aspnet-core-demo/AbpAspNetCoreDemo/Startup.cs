@@ -1,14 +1,18 @@
 ﻿using System;
 using Abp.AspNetCore;
-using Abp.Dependency;
+using Abp.AspNetCore.Mvc.Filters;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
@@ -39,12 +43,26 @@ namespace AbpAspNetCoreDemo
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             // Add framework services.
-            services.AddMvc();
-             
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(AbpAuthorizationFilter));
+                options.Filters.Add(typeof(AbpExeptionFilter));
+                options.Filters.Add(typeof(AbpResultFilter));
+
+                //TODO: InputFotmatter!
+
+                options.OutputFormatters.Add(new JsonOutputFormatter(
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    }));
+
+            }).AddControllersAsServices();
+
             return base.ConfigureServices(services);
         }
 
@@ -56,7 +74,10 @@ namespace AbpAspNetCoreDemo
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc();
+            app.UseMvc(options =>
+            {
+                
+            });
         }
     }
 }

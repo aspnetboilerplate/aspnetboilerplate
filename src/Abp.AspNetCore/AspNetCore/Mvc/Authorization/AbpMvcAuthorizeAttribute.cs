@@ -26,29 +26,5 @@ namespace Abp.AspNetCore.Mvc.Authorization
         {
             Permissions = permissions;
         }
-
-        ///// <inheritdoc/>
-        //protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
-        //{
-        //    if (!base.AuthorizeCore(httpContext))
-        //    {
-        //        return false;
-        //    }
-
-        //    try
-        //    {
-        //        using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-        //        {
-        //            authorizationAttributeHelper.Object.Authorize(this);
-        //        }
-
-        //        return true;
-        //    }
-        //    catch (AbpAuthorizationException ex)
-        //    {
-        //        LogHelper.Logger.Warn(ex.ToString(), ex);
-        //        return false;
-        //    }
-        //}
     }
 }
