@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">
+<localizationDictionary culture="lv">
   <texts>
     <text name="InternalServerError" value="Jūsu pieprasījuma laikā radās iekšēja kļūda!" />
     <text name="ValidationError" value="Jūsu pieprasījums nav derīgs!" />
