@@ -11,5 +11,8 @@
     <text name="DefaultFromSenderEmailAddress">Pagal nutylėjimą iš (siuntėjo) el. pašto adresas</text>
     <text name="DefaultFromSenderDisplayName">Pagal nutylėjimą rodomas iš (siuntėjo) pavadinimas</text>
     <text name="DefaultLanguage">Kalba pagal nutylėjimą</text>
+    <text name="ReceiveNotifications">Gauti pranešimus</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Dabartinis vartotojas neprisijungė prie programos!</text>
+    <text name="TimeZone">Laiko juosta</text>
   </texts>
 </localizationDictionary>
