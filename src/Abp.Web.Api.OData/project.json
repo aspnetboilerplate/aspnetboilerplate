@@ -1,9 +1,9 @@
 ﻿{
-  "version": "0.9.3.1-*",
+  "version": "0.9.3.2-*",
 
   "dependencies": {
-    "Abp": "0.9.3.1-*",
-    "Abp.Web.Api": "0.9.3.1-*",
+    "Abp": "0.9.3.2-*",
+    "Abp.Web.Api": "0.9.3.2-*",
     "Microsoft.AspNet.OData": "5.9.0"
   },
 
