@@ -1,9 +1,9 @@
 ﻿{
-  "version": "0.9.3.1-*",
+  "version": "0.9.3.2-*",
 
   "dependencies": {
-    "Abp": "0.9.3.1-*",
-    "Abp.Web.Common": "0.9.3.1-*",
+    "Abp": "0.9.3.2-*",
+    "Abp.Web.Common": "0.9.3.2-*",
     "Castle.Windsor.MsDependencyInjection": "0.1.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
   },
