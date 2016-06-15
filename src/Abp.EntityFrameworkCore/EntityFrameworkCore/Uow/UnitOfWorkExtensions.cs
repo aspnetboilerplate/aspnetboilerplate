@@ -12,7 +12,7 @@ namespace Abp.EntityFrameworkCore.Uow
     {
         /// <summary>
         /// Gets a DbContext as a part of active unit of work.
-        /// This method can be called when current unit of work is an <see cref="EfUnitOfWork"/>.
+        /// This method can be called when current unit of work is an <see cref="EfCoreUnitOfWork"/>.
         /// </summary>
         /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
         /// <param name="unitOfWork">Current (active) unit of work</param>
@@ -30,12 +30,12 @@ namespace Abp.EntityFrameworkCore.Uow
                 throw new ArgumentNullException("unitOfWork");
             }
 
-            if (!(unitOfWork is EfUnitOfWork))
+            if (!(unitOfWork is EfCoreUnitOfWork))
             {
-                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, "unitOfWork");
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfCoreUnitOfWork).FullName, "unitOfWork");
             }
 
-            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide);
+            return (unitOfWork as EfCoreUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide);
         }
     }
 }

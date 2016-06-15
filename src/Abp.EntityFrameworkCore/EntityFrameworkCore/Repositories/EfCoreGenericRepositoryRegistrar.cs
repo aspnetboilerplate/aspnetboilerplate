@@ -6,11 +6,11 @@ using Castle.Core.Logging;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
-    internal class EntityFrameworkGenericRepositoryRegistrar : ITransientDependency
+    internal class EfCoreGenericRepositoryRegistrar : ITransientDependency
     {
         public ILogger Logger { get; set; }
 
-        public EntityFrameworkGenericRepositoryRegistrar()
+        public EfCoreGenericRepositoryRegistrar()
         {
             Logger = NullLogger.Instance;
         }

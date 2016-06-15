@@ -15,7 +15,7 @@ namespace Abp.EntityFrameworkCore.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
+    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
@@ -35,7 +35,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         /// Constructor
         /// </summary>
         /// <param name="dbContextProvider"></param>
-        public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
+        public EfCoreRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
         }

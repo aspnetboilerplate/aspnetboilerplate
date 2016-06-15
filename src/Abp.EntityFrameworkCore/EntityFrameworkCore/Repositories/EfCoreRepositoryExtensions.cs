@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
-    public static class EfRepositoryExtensions
+    public static class EfCoreRepositoryExtensions
     {
         public static DbContext GetDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)
             where TEntity : class, IEntity<TPrimaryKey>, new()
