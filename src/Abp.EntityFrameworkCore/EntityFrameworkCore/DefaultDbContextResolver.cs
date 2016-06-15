@@ -7,7 +7,9 @@ namespace Abp.EntityFrameworkCore
         private readonly IIocResolver _iocResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
-        public DefaultDbContextResolver(IIocResolver iocResolver, IDbContextTypeMatcher dbContextTypeMatcher)
+        public DefaultDbContextResolver(
+            IIocResolver iocResolver, 
+            IDbContextTypeMatcher dbContextTypeMatcher)
         {
             _iocResolver = iocResolver;
             _dbContextTypeMatcher = dbContextTypeMatcher;
@@ -19,19 +21,11 @@ namespace Abp.EntityFrameworkCore
 
             if (!dbContextType.IsAbstract)
             {
-                return _iocResolver.Resolve<TDbContext>(new
-                {
-                    nameOrConnectionString = connectionString
-                });
+                return _iocResolver.Resolve<TDbContext>();
             }
-            else
-            {
-                var concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
-                return (TDbContext)_iocResolver.Resolve(concreteType, new
-                {
-                    nameOrConnectionString = connectionString
-                });
-            }
+
+            var concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
+            return (TDbContext)_iocResolver.Resolve(concreteType);
         }
     }
 }

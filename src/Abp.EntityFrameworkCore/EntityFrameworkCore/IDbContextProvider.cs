@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TDbContext"></typeparam>
     public interface IDbContextProvider<out TDbContext>
         where TDbContext : DbContext
     {

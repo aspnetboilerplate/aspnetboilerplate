@@ -20,16 +20,6 @@ namespace Abp.EntityFrameworkCore
             _dbContextTypes = new Dictionary<Type, List<Type>>();
         }
 
-        public virtual void Add(Type sourceDbContextType, Type targetDbContextType)
-        {
-            if (!_dbContextTypes.ContainsKey(sourceDbContextType))
-            {
-                _dbContextTypes[sourceDbContextType] = new List<Type>();
-            }
-
-            _dbContextTypes[sourceDbContextType].Add(targetDbContextType);
-        }
-
         public void Populate(Type[] dbContextTypes)
         {
             foreach (var dbContextType in dbContextTypes)
@@ -141,6 +131,16 @@ namespace Abp.EntityFrameworkCore
             {
                 AddWithBaseTypes(dbContextType.BaseType, types);
             }
+        }
+
+        private void Add(Type sourceDbContextType, Type targetDbContextType)
+        {
+            if (!_dbContextTypes.ContainsKey(sourceDbContextType))
+            {
+                _dbContextTypes[sourceDbContextType] = new List<Type>();
+            }
+
+            _dbContextTypes[sourceDbContextType].Add(targetDbContextType);
         }
     }
 }
