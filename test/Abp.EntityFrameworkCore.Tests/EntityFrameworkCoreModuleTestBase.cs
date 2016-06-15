@@ -18,7 +18,10 @@ namespace Abp.EntityFrameworkCore.Tests
             var services = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase();
 
-            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(LocalIocManager.IocContainer, services);
+            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(
+                LocalIocManager.IocContainer,
+                services
+            );
 
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
             builder.UseInMemoryDatabase()
@@ -42,7 +45,6 @@ namespace Abp.EntityFrameworkCore.Tests
                     context.Blogs.Add(blog1);
                 });
         }
-
         
         protected override void AddModules(ITypeList<AbpModule> modules)
         {
