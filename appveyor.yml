@@ -15,3 +15,4 @@ test:
   - test\Abp.Web.Api.Tests\bin\Debug\net452\win7-x64\Abp.Web.Api.Tests.dll
   - test\Abp.Web.Mvc.Tests\bin\Debug\net452\win7-x64\Abp.Web.Mvc.Tests.dll
   - test\Abp.Web.Tests\bin\Debug\net452\win7-x64\Abp.Web.Tests.dll
+  - test\Abp.EntityFrameworkCore.Tests\bin\Debug\net452\win7-x64\Abp.EntityFrameworkCore.Tests.dll

@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using Abp.AspNetCore.Mvc.Controllers;
+using Abp.Auditing;
+using Abp.Dependency;
+using Abp.UI;
 using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -6,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbpAspNetCoreDemo.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductsController : Controller
+    public class ProductsController : AbpController
     {
         private readonly IProductAppService _productAppService;
 
-        public ProductsController(IProductAppService productAppService)
+        public ProductsController(IProductAppService productAppService, IAuditInfoProvider auditInfoProvider, IIocManager iocManager)
         {
             _productAppService = productAppService;
         }
@@ -26,6 +30,7 @@ namespace AbpAspNetCoreDemo.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
+            throw new UserFriendlyException("A test exception message");
             return "value";
         }
 

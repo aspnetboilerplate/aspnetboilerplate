@@ -16,6 +16,7 @@ using Abp;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+[assembly: InternalsVisibleTo("Abp.AspNetCore")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 

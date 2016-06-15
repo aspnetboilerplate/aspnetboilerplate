@@ -1,8 +1,8 @@
 {
-  "version": "0.9.3.0-*",
+  "version": "0.9.3.2-*",
 
   "dependencies": {
-    "Abp": "0.9.3.0-*",
+    "Abp": "0.9.3.2-*",
     "mongocsharpdriver": "2.2.4"
   },
 
