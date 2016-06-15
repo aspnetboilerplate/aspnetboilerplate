@@ -54,22 +54,22 @@ namespace Abp.Web.Mvc.Authorization
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             var httpContext = filterContext.HttpContext;
-            var request = httpContext.Request;
-            var response = httpContext.Response;
-            var user = httpContext.User;
 
-            if (request.IsAjaxRequest())
+            if (!httpContext.Request.IsAjaxRequest())
             {
-                if (user.Identity.IsAuthenticated == false)
-                    response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-                else
-                    response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
-
-                response.SuppressFormsAuthenticationRedirect = true;
-                response.End();
+                base.HandleUnauthorizedRequest(filterContext);
+                return;
             }
 
-            base.HandleUnauthorizedRequest(filterContext);
+            var user = httpContext.User;
+            var response = httpContext.Response;
+
+            response.StatusCode = user.Identity.IsAuthenticated == false
+                                      ? (int) System.Net.HttpStatusCode.Unauthorized
+                                      : (int) System.Net.HttpStatusCode.Forbidden;
+
+            response.SuppressFormsAuthenticationRedirect = true;
+            response.End();
         }
     }
 }
