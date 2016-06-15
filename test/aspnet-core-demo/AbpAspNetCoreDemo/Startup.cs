@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc.Filters;
+using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace AbpAspNetCoreDemo
 {
@@ -45,6 +47,10 @@ namespace AbpAspNetCoreDemo
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddDbContext<MyDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
+            );
 
             // Add framework services.
             services.AddMvc(options =>

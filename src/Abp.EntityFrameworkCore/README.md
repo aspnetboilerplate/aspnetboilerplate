@@ -9,3 +9,4 @@ TODO:
 - [ ] DateTime conversion (while getting entities)
 - [ ] Log validation errors
 - [ ] Multiple connstring for same dbcontext
+- [ ] Transaction management

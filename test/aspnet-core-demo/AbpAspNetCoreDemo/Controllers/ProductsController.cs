@@ -5,7 +5,6 @@ using Abp.Dependency;
 using Abp.UI;
 using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
