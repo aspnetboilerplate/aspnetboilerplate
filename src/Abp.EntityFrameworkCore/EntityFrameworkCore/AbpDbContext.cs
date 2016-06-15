@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -46,15 +45,6 @@ namespace Abp.EntityFrameworkCore
         /// Reference to the current UOW provider.
         /// </summary>
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
-        /// </summary>
-        protected AbpDbContext()
-        {
-            InitializeDbContext();
-        }
 
         /// <summary>
         /// Constructor.
