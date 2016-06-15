@@ -15,13 +15,6 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         protected EntityFrameworkCoreModuleTestBase()
         {
-            ////Fake DbConnection using Effort!
-            //LocalIocManager.IocContainer.Register(
-            //    Component.For<DbConnection>()
-            //        .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
-            //        .LifestyleSingleton()
-            //    );
-
             var services = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase();
 
@@ -45,7 +38,7 @@ namespace Abp.EntityFrameworkCore.Tests
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog() {Name = "Test blog 1", Url = "http://testblog1.myblogs.com"};
+                    var blog1 = new Blog() {Name = "test-blog-1", Url = "http://testblog1.myblogs.com"};
                     context.Blogs.Add(blog1);
                 });
         }
@@ -77,6 +70,15 @@ namespace Abp.EntityFrameworkCore.Tests
             }
 
             return result;
+        }
+
+        public async Task UsingDbContextAsync(Func<BloggingDbContext, Task> action)
+        {
+            using (var context = LocalIocManager.Resolve<BloggingDbContext>())
+            {
+                await action(context);
+                await context.SaveChangesAsync(true);
+            }
         }
 
         public async Task<T> UsingDbContextAsync<T>(Func<BloggingDbContext, Task<T>> func)

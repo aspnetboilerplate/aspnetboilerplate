@@ -7,11 +7,6 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         public DbSet<Blog> Blogs { get; set; }
 
-        public BloggingDbContext()
-        {
-            
-        }
-
         public BloggingDbContext(DbContextOptions<BloggingDbContext> options)
             : base(options)
         {
