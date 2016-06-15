@@ -1,7 +1,7 @@
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     public sealed class SimpleDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : DbContext

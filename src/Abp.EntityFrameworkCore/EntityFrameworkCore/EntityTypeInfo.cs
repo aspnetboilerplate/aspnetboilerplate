@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     internal class EntityTypeInfo
     {

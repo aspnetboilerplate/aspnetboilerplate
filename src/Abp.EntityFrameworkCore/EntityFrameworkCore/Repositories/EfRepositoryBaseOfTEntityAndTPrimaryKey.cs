@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Abp.EntityFramework.Repositories
+namespace Abp.EntityFrameworkCore.Repositories
 {
     /// <summary>
     /// Implements IRepository for Entity Framework.

@@ -1,6 +1,6 @@
 using Abp.Dependency;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     public class DefaultDbContextResolver : IDbContextResolver, ITransientDependency
     {

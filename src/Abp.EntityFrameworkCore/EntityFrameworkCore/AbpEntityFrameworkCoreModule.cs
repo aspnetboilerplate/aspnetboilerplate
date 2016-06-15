@@ -1,26 +1,26 @@
 ﻿using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Abp.EntityFramework.Repositories;
-using Abp.EntityFramework.Uow;
+using Abp.EntityFrameworkCore.Repositories;
+using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;
 using Abp.Reflection;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
-    public class AbpEntityFrameworkModule : AbpModule
+    public class AbpEntityFrameworkCoreModule : AbpModule
     {
         public ILogger Logger { get; set; }
 
         private readonly ITypeFinder _typeFinder;
 
-        public AbpEntityFrameworkModule(ITypeFinder typeFinder)
+        public AbpEntityFrameworkCoreModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;

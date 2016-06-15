@@ -6,7 +6,7 @@ using Abp.Domain.Entities;
 using Abp.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     internal static class DbContextHelper
     {

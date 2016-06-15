@@ -1,4 +1,4 @@
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     public interface IDbContextResolver
     {

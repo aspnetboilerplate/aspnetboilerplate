@@ -3,7 +3,7 @@ using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Uow
+namespace Abp.EntityFrameworkCore.Uow
 {
     /// <summary>
     /// Extension methods for UnitOfWork.

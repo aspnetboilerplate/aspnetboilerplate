@@ -2,7 +2,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Repositories
+namespace Abp.EntityFrameworkCore.Repositories
 {
     public class EfRepositoryBase<TDbContext, TEntity> : EfRepositoryBase<TDbContext, TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>

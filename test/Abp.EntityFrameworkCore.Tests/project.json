@@ -5,7 +5,10 @@
 
   "dependencies": {
     "Abp.EntityFrameworkCore": "0.9.3.2-*",
-    "Abp.Tests": "1.0.0-*"
+    "Abp.TestBase": "0.9.3.2-*",
+    "Abp.Tests": "1.0.0-*",
+    "Castle.Windsor.MsDependencyInjection": "0.1.0",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.0-rc2-final"
   },
 
   "frameworks": {
