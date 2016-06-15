@@ -7,7 +7,7 @@ using Abp.MultiTenancy;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Uow
+namespace Abp.EntityFrameworkCore.Uow
 {
     /// <summary>
     /// Implements Unit of work for Entity Framework.

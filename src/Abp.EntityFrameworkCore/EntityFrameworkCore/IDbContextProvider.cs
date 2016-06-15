@@ -2,7 +2,7 @@ using System;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     /// <summary>
     /// 

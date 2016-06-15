@@ -3,7 +3,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Repositories
+namespace Abp.EntityFrameworkCore.Repositories
 {
     public static class EfRepositoryExtensions
     {

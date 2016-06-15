@@ -7,7 +7,7 @@ using System.Reflection;
 using Abp.Reflection;
 using Abp.Timing;
 
-namespace Abp.EntityFramework.Utils
+namespace Abp.EntityFrameworkCore.Utils
 {
     internal static class DateTimePropertyInfoHelper
     {

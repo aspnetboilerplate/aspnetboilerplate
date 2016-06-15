@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Abp.EntityFramework.Utils
+namespace Abp.EntityFrameworkCore.Utils
 {
     internal class EntityDateTimePropertiesInfo
     {

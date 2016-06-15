@@ -2,7 +2,7 @@ using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Uow
+namespace Abp.EntityFrameworkCore.Uow
 {
     /// <summary>
     /// Implements <see cref="IDbContextProvider{TDbContext}"/> that gets DbContext from

@@ -15,7 +15,7 @@ using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     /// <summary>
     /// Base class for all DbContext classes in the application.

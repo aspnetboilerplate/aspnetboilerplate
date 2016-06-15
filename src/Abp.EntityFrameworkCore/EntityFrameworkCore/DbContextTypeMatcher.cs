@@ -4,10 +4,10 @@ using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.EntityFramework.Repositories;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.MultiTenancy;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     public class DbContextTypeMatcher : IDbContextTypeMatcher, ISingletonDependency
     {

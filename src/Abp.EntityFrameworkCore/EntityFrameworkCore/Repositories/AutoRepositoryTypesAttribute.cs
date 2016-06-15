@@ -1,7 +1,7 @@
 using System;
 using Abp.Domain.Repositories;
 
-namespace Abp.EntityFramework.Repositories
+namespace Abp.EntityFrameworkCore.Repositories
 {
     /// <summary>
     /// Add this class to a DbContext to define auto-repository types for entities in this DbContext.

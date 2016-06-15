@@ -1,11 +1,10 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.EntityFramework.Extensions;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 
-namespace Abp.EntityFramework.Repositories
+namespace Abp.EntityFrameworkCore.Repositories
 {
     internal class EntityFrameworkGenericRepositoryRegistrar : ITransientDependency
     {

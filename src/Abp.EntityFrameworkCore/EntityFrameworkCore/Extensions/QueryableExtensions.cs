@@ -1,10 +1,9 @@
 using System;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFramework.Extensions
+namespace Abp.EntityFrameworkCore.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IQueryable"/> and <see cref="IQueryable{T}"/>.

@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityFrameworkCore
 {
     public interface IDbContextTypeMatcher
     {
