@@ -3,21 +3,22 @@ using Abp.Application.Services;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 using Abp.AutoMapper;
+using Abp.Domain.Repositories;
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
     public class ProductAppService : ApplicationService, IProductAppService
     {
-        private readonly IProductService _productService;
+        private readonly IRepository<Product> _productRepository;
 
-        public ProductAppService(IProductService productService)
+        public ProductAppService(IRepository<Product> productRepository)
         {
-            _productService = productService;
+            _productRepository = productRepository;
         }
 
         public List<ProductDto> GetAll()
         {
-            return _productService.GetAll().MapTo<List<ProductDto>>();
+            return _productRepository.GetAllList().MapTo<List<ProductDto>>();
         }
     }
 }

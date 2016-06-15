@@ -5,6 +5,10 @@
     "Abp.AutoMapper": "0.9.3.2-*"
   },
 
+  "tools": {
+    
+  },
+
   "frameworks": {
     "net452": {
 

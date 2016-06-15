@@ -18,7 +18,8 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected IIocResolver IocResolver { get; private set; }
 
-        protected TransactionScope CurrentTransaction;
+        //protected TransactionScope CurrentTransaction;
+
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
@@ -42,24 +43,24 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected override void BeginUow()
         {
-            if (Options.IsTransactional == true)
-            {
-                var transactionOptions = new TransactionOptions
-                {
-                    IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
-                };
+            //if (Options.IsTransactional == true)
+            //{
+            //    var transactionOptions = new TransactionOptions
+            //    {
+            //        IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+            //    };
 
-                if (Options.Timeout.HasValue)
-                {
-                    transactionOptions.Timeout = Options.Timeout.Value;
-                }
+            //    if (Options.Timeout.HasValue)
+            //    {
+            //        transactionOptions.Timeout = Options.Timeout.Value;
+            //    }
 
-                CurrentTransaction = new TransactionScope(
-                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
-                    transactionOptions,
-                    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
-                    );
-            }
+            //    CurrentTransaction = new TransactionScope(
+            //        Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
+            //        transactionOptions,
+            //        Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
+            //        );
+            //}
         }
 
         public override void SaveChanges()
@@ -78,10 +79,10 @@ namespace Abp.EntityFrameworkCore.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Complete();
-            }
+            //if (CurrentTransaction != null)
+            //{
+            //    CurrentTransaction.Complete();
+            //}
 
             DisposeUow();
         }
@@ -89,10 +90,10 @@ namespace Abp.EntityFrameworkCore.Uow
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Complete();
-            }
+            //if (CurrentTransaction != null)
+            //{
+            //    CurrentTransaction.Complete();
+            //}
 
             DisposeUow();
         }
@@ -188,11 +189,11 @@ namespace Abp.EntityFrameworkCore.Uow
             ActiveDbContexts.Values.ForEach(Release);
             ActiveDbContexts.Clear();
 
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Dispose();
-                CurrentTransaction = null;
-            }
+            //if (CurrentTransaction != null)
+            //{
+            //    CurrentTransaction.Dispose();
+            //    CurrentTransaction = null;
+            //}
         }
 
         protected virtual void SaveChangesInDbContext(DbContext dbContext)
