@@ -12,7 +12,7 @@ namespace Abp.EntityFrameworkCore.Uow
     /// <summary>
     /// Implements Unit of work for Entity Framework.
     /// </summary>
-    public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
+    public class EfCoreUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
 
@@ -23,9 +23,9 @@ namespace Abp.EntityFrameworkCore.Uow
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
         /// <summary>
-        /// Creates a new <see cref="EfUnitOfWork"/>.
+        /// Creates a new <see cref="EfCoreUnitOfWork"/>.
         /// </summary>
-        public EfUnitOfWork(
+        public EfCoreUnitOfWork(
             IIocResolver iocResolver,
             IConnectionStringResolver connectionStringResolver,
             IDbContextResolver dbContextResolver,

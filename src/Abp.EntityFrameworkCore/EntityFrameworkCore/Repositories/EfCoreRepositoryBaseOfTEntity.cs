@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
-    public class EfRepositoryBase<TDbContext, TEntity> : EfRepositoryBase<TDbContext, TEntity, int>, IRepository<TEntity>
+    public class EfCoreRepositoryBase<TDbContext, TEntity> : EfCoreRepositoryBase<TDbContext, TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
         where TDbContext : DbContext
     {
-        public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
+        public EfCoreRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
         }

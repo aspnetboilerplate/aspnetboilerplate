@@ -25,8 +25,8 @@ namespace Abp.EntityFrameworkCore.Repositories
             Default = new AutoRepositoryTypesAttribute(
                 typeof (IRepository<>),
                 typeof (IRepository<,>),
-                typeof (EfRepositoryBase<,>),
-                typeof (EfRepositoryBase<,,>)
+                typeof (EfCoreRepositoryBase<,>),
+                typeof (EfCoreRepositoryBase<,,>)
                 );
         }
 
