@@ -465,10 +465,7 @@ namespace Abp.Web.Mvc.Controllers
             _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
             _auditInfo.Exception = filterContext.Exception;
 
-            if (AuditInfoProvider != null)
-            {
-                AuditInfoProvider.Fill(_auditInfo);
-            }
+            AuditInfoProvider?.Fill(_auditInfo);
 
             AuditingStore.Save(_auditInfo);
         }

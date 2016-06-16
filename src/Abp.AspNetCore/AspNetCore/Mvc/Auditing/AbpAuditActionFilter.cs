@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
@@ -13,42 +14,36 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Auditing
 {
-    public class AbpAuditActionFilter : IAsyncActionFilter
+    public class AbpAuditActionFilter : IAsyncActionFilter, ITransientDependency
     {
         private readonly IAuditingConfiguration _auditingConfiguration;
 
-        private readonly IAuditInfoProvider _auditInfoProvider;
+        public IAuditInfoProvider AuditInfoProvider;
 
-        private readonly IAuditingStore _auditingStore;
-
-        private readonly IAbpSession _abpSession;
+        public IAuditingStore AuditingStore { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
+        public ILogger Logger { get; set; }
+        
         /// <summary>
         /// Ignored types for serialization on audit logging.
         /// </summary>
         protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
-
-        private readonly ILogger _logger;
 
         static AbpAuditActionFilter()
         {
             IgnoredTypesForSerializationOnAuditLogging = new List<Type>();
         }
 
-        public AbpAuditActionFilter(
-            IAuditingConfiguration auditingConfiguration, 
-            IAuditInfoProvider auditInfoProvider, 
-            IAuditingStore auditingStore, 
-            IAbpSession abpSession,
-            ILogger logger)
+        public AbpAuditActionFilter(IAuditingConfiguration auditingConfiguration)
         {
             _auditingConfiguration = auditingConfiguration;
-            _auditInfoProvider = auditInfoProvider;
-            _auditingStore = auditingStore;
-            _abpSession = abpSession;
-            _logger = logger;
+
+            AbpSession = NullAbpSession.Instance;
+            AuditingStore = SimpleLogAuditingStore.Instance;
+            AuditInfoProvider = NullAuditInfoProvider.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -75,8 +70,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                _auditInfoProvider?.Fill(auditInfo);
-                await _auditingStore.SaveAsync(auditInfo);
+                AuditInfoProvider?.Fill(auditInfo);
+                await AuditingStore.SaveAsync(auditInfo);
             }
         }
 
@@ -84,17 +79,17 @@ namespace Abp.AspNetCore.Mvc.Auditing
         {
             var auditInfo = new AuditInfo
             {
-                TenantId = _abpSession.TenantId,
-                UserId = _abpSession.UserId,
-                ImpersonatorUserId = _abpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = _abpSession.ImpersonatorTenantId,
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ServiceName = context.Controller?.GetType().ToString() ?? "",
                 MethodName = context.ActionDescriptor.DisplayName,
                 Parameters = ConvertArgumentsToJson(context.ActionArguments),
                 ExecutionTime = Clock.Now
             };
 
-            _auditInfoProvider.Fill(auditInfo);
+            AuditInfoProvider.Fill(auditInfo);
 
             return auditInfo;
         }
@@ -141,7 +136,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex.ToString(), ex);
+                Logger.Warn(ex.ToString(), ex);
                 return "{}";
             }
         }

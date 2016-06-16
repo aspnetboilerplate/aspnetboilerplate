@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Authorization
 {
-    public class AbpAuthorizationFilter : IAsyncAuthorizationFilter
+    public class AbpAuthorizationFilter : IAsyncAuthorizationFilter, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
 

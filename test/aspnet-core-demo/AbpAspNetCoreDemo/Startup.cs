@@ -59,11 +59,11 @@ namespace AbpAspNetCoreDemo
             // Add framework services.
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(AbpAuthorizationFilter));
-                options.Filters.Add(typeof(AbpAuditActionFilter));
-                options.Filters.Add(typeof(AbpValidationActionFilter));
-                options.Filters.Add(typeof(AbpExceptionFilter));
-                options.Filters.Add(typeof(AbpResultFilter));
+                options.Filters.AddService(typeof(AbpAuthorizationFilter));
+                options.Filters.AddService(typeof(AbpAuditActionFilter));
+                options.Filters.AddService(typeof(AbpValidationActionFilter));
+                options.Filters.AddService(typeof(AbpExceptionFilter));
+                options.Filters.AddService(typeof(AbpResultFilter));
 
                 options.OutputFormatters.Add(new JsonOutputFormatter(
                     new JsonSerializerSettings

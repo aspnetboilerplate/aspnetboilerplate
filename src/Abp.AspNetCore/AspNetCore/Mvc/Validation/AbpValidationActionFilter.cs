@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Validation
 {
-    public class AbpValidationActionFilter : IActionFilter
+    public class AbpValidationActionFilter : IActionFilter, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
 

@@ -1,5 +1,6 @@
 ﻿using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
+using Abp.Dependency;
 using Abp.Logging;
 using Abp.Reflection;
 using Abp.Web.Models;
@@ -10,14 +11,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.ExceptionHandling
 {
-    public class AbpExceptionFilter : IExceptionFilter
+    public class AbpExceptionFilter : IExceptionFilter, ITransientDependency
     {
-        private readonly ILogger _logger;
+        public ILogger Logger { get; set; }
 
-        public AbpExceptionFilter(ILoggerFactory loggerFactory)
+        public AbpExceptionFilter()
         {
-            //TODO: Constructor injection did not set logger Name correctly. So, we created logger from factory. Test it why.
-            _logger = loggerFactory.Create(typeof(AbpExceptionFilter));
+            Logger = NullLogger.Instance;
         }
 
         public void OnException(ExceptionContext context)
@@ -30,7 +30,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
             if (wrapResultAttribute.LogError)
             {
-                LogHelper.LogException(_logger, context.Exception);
+                LogHelper.LogException(Logger, context.Exception);
             }
             
             if (wrapResultAttribute.WrapOnError)
