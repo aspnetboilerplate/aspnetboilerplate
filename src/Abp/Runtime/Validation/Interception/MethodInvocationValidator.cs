@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
 using Abp.Reflection;
 
 namespace Abp.Runtime.Validation.Interception
@@ -13,24 +14,38 @@ namespace Abp.Runtime.Validation.Interception
     /// <summary>
     /// This class is used to validate a method call (invocation) for method arguments.
     /// </summary>
-    internal class MethodInvocationValidator
+    public class MethodInvocationValidator : ITransientDependency
     {
-        protected readonly MethodInfo _method;
-        protected readonly object[] _parameterValues;
-        protected readonly ParameterInfo[] _parameters;
-        protected readonly List<ValidationResult> _validationErrors;
+        protected MethodInfo Method { get; private set; }
+        protected object[] ParameterValues { get; private set; }
+        protected ParameterInfo[] Parameters { get; private set; }
+        protected List<ValidationResult> ValidationErrors { get; }
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
+        public MethodInvocationValidator()
+        {
+            ValidationErrors = new List<ValidationResult>();
+        }
+
         /// <param name="method">Method to be validated</param>
         /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
-        public MethodInvocationValidator(MethodInfo method, object[] parameterValues)
+        public virtual void Initialize(MethodInfo method, object[] parameterValues)
         {
-            _method = method;
-            _parameterValues = parameterValues;
-            _parameters = method.GetParameters();
-            _validationErrors = new List<ValidationResult>();
+            if (method == null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            if (parameterValues == null)
+            {
+                throw new ArgumentNullException(nameof(parameterValues));
+            }
+
+            Method = method;
+            ParameterValues = parameterValues;
+            Parameters = method.GetParameters();
         }
 
         /// <summary>
@@ -38,53 +53,63 @@ namespace Abp.Runtime.Validation.Interception
         /// </summary>
         public void Validate()
         {
-            if (!_method.IsPublic)
+            CheckInitialized();
+
+            if (!Method.IsPublic)
             {
                 return;
             }
 
-            if (IsValidationDisabled(_method))
+            if (IsValidationDisabled())
             {
                 return;                
             }
 
-            if (_parameters.IsNullOrEmpty())
+            if (Parameters.IsNullOrEmpty())
             {
                 return;
             }
 
-            if (_parameters.Length != _parameterValues.Length)
+            if (Parameters.Length != ParameterValues.Length)
             {
                 throw new Exception("Method parameter count does not match with argument count!");
             }
 
-            for (var i = 0; i < _parameters.Length; i++)
+            for (var i = 0; i < Parameters.Length; i++)
             {
-                ValidateMethodParameter(_parameters[i], _parameterValues[i]);
+                ValidateMethodParameter(Parameters[i], ParameterValues[i]);
             }
 
-            if (_validationErrors.Any())
+            if (ValidationErrors.Any())
             {
                 throw new AbpValidationException(
                     "Method arguments are not valid! See ValidationErrors for details.",
-                    _validationErrors
+                    ValidationErrors
                     );
             }
 
-            foreach (var parameterValue in _parameterValues)
+            foreach (var parameterValue in ParameterValues)
             {
                 NormalizeParameter(parameterValue);
             }
         }
 
-        protected virtual bool IsValidationDisabled(MethodInfo methodInfo)
+        private void CheckInitialized()
         {
-            if (methodInfo.IsDefined(typeof(EnableValidationAttribute), true))
+            if (Method == null)
+            {
+                throw new AbpException("This object has not beedn initialized. Call Initialize method first.");
+            }
+        }
+
+        protected virtual bool IsValidationDisabled()
+        {
+            if (Method.IsDefined(typeof(EnableValidationAttribute), true))
             {
                 return false;
             }
 
-            return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(methodInfo) != null;
+            return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
         }
 
         /// <summary>
@@ -98,7 +123,7 @@ namespace Abp.Runtime.Validation.Interception
             {
                 if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
-                    _validationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
+                    ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
 
                 return;
@@ -126,7 +151,7 @@ namespace Abp.Runtime.Validation.Interception
 
             if (validatingObject is ICustomValidate)
             {
-                (validatingObject as ICustomValidate).AddValidationErrors(_validationErrors);
+                (validatingObject as ICustomValidate).AddValidationErrors(ValidationErrors);
             }
 
             var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
@@ -161,7 +186,7 @@ namespace Abp.Runtime.Validation.Interception
                     var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
                     if (result != null)
                     {
-                        _validationErrors.Add(result);
+                        ValidationErrors.Add(result);
                     }
                 }
             }

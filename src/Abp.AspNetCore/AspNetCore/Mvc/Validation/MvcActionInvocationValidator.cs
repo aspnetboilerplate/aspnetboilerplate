@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Validation
 {
-    internal class MvcActionInvocationValidator : MethodInvocationValidator
+    public class MvcActionInvocationValidator : MethodInvocationValidator
     {
-        protected readonly ActionExecutingContext ActionContext;
-
-        public MvcActionInvocationValidator(ActionExecutingContext actionContext, object[] parameterValues) 
-            : base(actionContext.ActionDescriptor.GetMethodInfo(), parameterValues)
+        protected ActionExecutingContext ActionContext { get; private set; }
+        
+        public void Initialize(ActionExecutingContext actionContext, object[] parameterValues)
         {
+            base.Initialize(actionContext.ActionDescriptor.GetMethodInfo(), parameterValues);
+
             ActionContext = actionContext;
         }
 
@@ -26,7 +27,7 @@ namespace Abp.AspNetCore.Mvc.Validation
             {
                 foreach (var error in state.Value.Errors)
                 {
-                    _validationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
+                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
                 }
             }
         }
