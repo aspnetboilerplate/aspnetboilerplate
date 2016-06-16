@@ -65,8 +65,6 @@ namespace AbpAspNetCoreDemo
                 options.Filters.Add(typeof(AbpExceptionFilter));
                 options.Filters.Add(typeof(AbpResultFilter));
 
-                //TODO: InputFotmatter!
-
                 options.OutputFormatters.Add(new JsonOutputFormatter(
                     new JsonSerializerSettings
                     {
