@@ -1,4 +1,4 @@
-﻿ABP - EntityFramework Core Implementation
+﻿ABP - EntityFramework Core Integration
 -----------------------------------------
 
 TODO:
