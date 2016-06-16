@@ -51,64 +51,25 @@ namespace Abp.AspNetCore.Mvc.Auditing
         protected virtual string GetBrowserInfo(HttpContext httpContext)
         {
             return httpContext.Request.Headers["User-Agent"];
-
-            //return httpContext.Request.Browser.Browser + " / " +
-            //       httpContext.Request.Browser.Version + " / " +
-            //       httpContext.Request.Browser.Platform;
         }
 
         protected virtual string GetClientIpAddress(HttpContext httpContext)
         {
-            return httpContext.Connection.RemoteIpAddress.ToString();   
+            try
+            {
+                return httpContext.Connection.RemoteIpAddress.ToString();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString());
+            }
 
-            //var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
-            //               httpContext.Request.ServerVariables["REMOTE_ADDR"];
-
-            //try
-            //{
-            //    foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
-            //    {
-            //        if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
-            //        {
-            //            return hostAddress.ToString();
-            //        }
-            //    }
-
-            //    foreach (var hostAddress in Dns.GetHostAddresses(Dns.GetHostName()))
-            //    {
-            //        if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
-            //        {
-            //            return hostAddress.ToString();
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.Debug(ex.ToString());
-            //}
-
-            //return clientIp;
+            return null;
         }
 
         protected virtual string GetComputerName(HttpContext httpContext)
         {
             return null; //TODO: Implement!
-
-            //if (!httpContext.Request.IsLocal)
-            //{
-            //    return null;
-            //}
-
-            //try
-            //{
-            //    var clientIp = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
-            //                   HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
-            //    return Dns.GetHostEntry(IPAddress.Parse(clientIp)).HostName;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
         }
     }
 }
