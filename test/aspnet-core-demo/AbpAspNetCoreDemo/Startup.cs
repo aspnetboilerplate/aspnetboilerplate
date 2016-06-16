@@ -59,7 +59,7 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(AbpAuthorizationFilter));
-                options.Filters.Add(typeof(AbpExeptionFilter));
+                options.Filters.Add(typeof(AbpExceptionFilter));
                 options.Filters.Add(typeof(AbpResultFilter));
                 options.Filters.Add(typeof(AbpAuditActionFilter));
 

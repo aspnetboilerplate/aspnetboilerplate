@@ -13,8 +13,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Auditing
 {
-    //TODO: MOVE MVC AUDIT CONFIGURATION TO RELATED MODULES, REMOVE FROM ABP PACKAGE
-
     public class AbpAuditActionFilter : IAsyncActionFilter
     {
         private readonly IAuditingConfiguration _auditingConfiguration;

@@ -10,13 +10,14 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.ExceptionHandling
 {
-    public class AbpExeptionFilter : IExceptionFilter
+    public class AbpExceptionFilter : IExceptionFilter
     {
         private readonly ILogger _logger;
 
-        public AbpExeptionFilter(ILogger logger)
+        public AbpExceptionFilter(ILoggerFactory loggerFactory)
         {
-            _logger = logger;
+            //TODO: Constructor injection did not set logger Name correctly. So, we created logger from factory. Test it why.
+            _logger = loggerFactory.Create(typeof(AbpExceptionFilter));
         }
 
         public void OnException(ExceptionContext context)
