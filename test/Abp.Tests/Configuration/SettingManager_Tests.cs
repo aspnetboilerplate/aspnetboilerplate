@@ -176,6 +176,32 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level default value");
         }
 
+        [Fact]
+        public async Task Should_Delete_Setting_Values_On_Default_Defined_Value()
+        {
+            var session = new MyChangableSession();
+            var store = new MemorySettingStore();
+
+            var settingManager = CreateSettingManager();
+            settingManager.SettingStore = store;
+            settingManager.AbpSession = session;
+
+            session.TenantId = 1;
+            session.UserId = 1;
+
+            //We can get user's personal stored value
+            (await store.GetSettingOrNullAsync(1, 1, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 stored value");
+
+            //This should delete setting for the user since it's the same as the defined setting default value
+            await settingManager.ChangeSettingForUserAsync(1, MyAllLevelsSetting, "application level default value");
+            (await store.GetSettingOrNullAsync(1, 1, MyAllLevelsSetting)).ShouldBe(null);
+
+            //Now, the tenant value should be returned:
+            (await store.GetSettingOrNullAsync(1, null, MyAllLevelsSetting)).ShouldNotBe(null);
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("tenant 1 stored value");
+        }
+
         private static ISettingDefinitionManager CreateMockSettingDefinitionManager()
         {
             var settings = new Dictionary<string, SettingDefinition>
