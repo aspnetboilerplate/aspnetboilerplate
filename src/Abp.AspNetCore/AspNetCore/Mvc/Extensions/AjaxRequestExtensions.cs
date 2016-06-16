@@ -9,7 +9,7 @@ namespace Abp.AspNetCore.Mvc.Extensions
         {
             if (request == null)
             {
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
             }
 
             return request.Headers != null &&

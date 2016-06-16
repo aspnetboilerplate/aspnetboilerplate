@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
@@ -18,11 +19,12 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var authorizeAttributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpMvcAuthorizeAttribute>(
-                context.ActionDescriptor.GetMethodInfo()
-            );
+            var authorizeAttributes =
+                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpMvcAuthorizeAttribute>(
+                    context.ActionDescriptor.GetMethodInfo()
+                );
 
-            if (authorizeAttributes.Count <= 0)
+            if (!authorizeAttributes.Any())
             {
                 return;
             }

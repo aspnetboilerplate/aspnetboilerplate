@@ -49,7 +49,7 @@ namespace Abp.AspNetCore
             ConfigureRequestLocalization(app);
         }
 
-        private void ConfigureRequestLocalization(IApplicationBuilder app)
+        protected virtual void ConfigureRequestLocalization(IApplicationBuilder app)
         {
             using (var languageManager = AbpBootstrapper.IocManager.ResolveAsDisposable<ILanguageManager>())
             {

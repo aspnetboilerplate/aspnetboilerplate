@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.Mvc.Authorization
 {
-    //TODO: How to implement this?
-
     /// <summary>
     /// This attribute is used on an action of an MVC <see cref="Controller"/>
     /// to make that action usable only by authorized users. 

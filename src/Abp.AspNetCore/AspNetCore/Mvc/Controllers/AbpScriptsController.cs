@@ -62,6 +62,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
             }
 
@@ -92,9 +93,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             sb.AppendLine();
 
             sb.AppendLine(GetTriggerScript());
-
             
-
             return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
         }
 
