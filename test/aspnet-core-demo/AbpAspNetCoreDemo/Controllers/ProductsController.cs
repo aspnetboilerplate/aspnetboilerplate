@@ -28,7 +28,7 @@ namespace AbpAspNetCoreDemo.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(int id, string y)
         {
             throw new UserFriendlyException("A test exception message");
             return "value";

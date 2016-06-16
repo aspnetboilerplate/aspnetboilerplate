@@ -15,10 +15,10 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     internal class MethodInvocationValidator
     {
-        private readonly MethodInfo _method;
-        private readonly object[] _parameterValues;
-        private readonly ParameterInfo[] _parameters;
-        private readonly List<ValidationResult> _validationErrors;
+        protected readonly MethodInfo _method;
+        protected readonly object[] _parameterValues;
+        protected readonly ParameterInfo[] _parameters;
+        protected readonly List<ValidationResult> _validationErrors;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
@@ -40,25 +40,21 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (!_method.IsPublic)
             {
-                //Validate only public methods!
                 return;
             }
 
-            if (_method.IsDefined(typeof (DisableValidationAttribute)))
+            if (IsValidationDisabled(_method))
             {
-                //Don't validate if explicitly requested!
                 return;                
             }
 
             if (_parameters.IsNullOrEmpty())
             {
-                //Object has no parameter, no need to validate.
                 return;
             }
 
             if (_parameters.Length != _parameterValues.Length)
             {
-                //This is not possible actually
                 throw new Exception("Method parameter count does not match with argument count!");
             }
 
@@ -81,12 +77,22 @@ namespace Abp.Runtime.Validation.Interception
             }
         }
 
+        protected virtual bool IsValidationDisabled(MethodInfo methodInfo)
+        {
+            if (methodInfo.IsDefined(typeof(EnableValidationAttribute), true))
+            {
+                return false;
+            }
+
+            return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(methodInfo) != null;
+        }
+
         /// <summary>
         /// Validates given parameter for given value.
         /// </summary>
         /// <param name="parameterInfo">Parameter of the method to validate</param>
         /// <param name="parameterValue">Value to validate</param>
-        private void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
+        protected virtual void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
             if (parameterValue == null)
             {
@@ -101,7 +107,7 @@ namespace Abp.Runtime.Validation.Interception
             ValidateObjectRecursively(parameterValue);
         }
 
-        private void ValidateObjectRecursively(object validatingObject)
+        protected virtual void ValidateObjectRecursively(object validatingObject)
         {
             if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
             {
@@ -116,7 +122,7 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            SetValidationAttributeErrors(validatingObject);
+            SetDataAnnotationAttributeErrors(validatingObject);
 
             if (validatingObject is ICustomValidate)
             {
@@ -133,7 +139,7 @@ namespace Abp.Runtime.Validation.Interception
         /// <summary>
         /// Checks all properties for DataAnnotations attributes.
         /// </summary>
-        private void SetValidationAttributeErrors(object validatingObject)
+        protected virtual void SetDataAnnotationAttributeErrors(object validatingObject)
         {
             var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
@@ -161,7 +167,7 @@ namespace Abp.Runtime.Validation.Interception
             }
         }
 
-        private static void NormalizeParameter(object parameterValue)
+        protected virtual void NormalizeParameter(object parameterValue)
         {
             if (parameterValue is IShouldNormalize)
             {

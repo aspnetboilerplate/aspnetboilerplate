@@ -11,7 +11,7 @@ namespace Abp.AspNetCore.Mvc.Models
     /// </summary>
     public static class ModelStateExtensions
     {
-        public static MvcAjaxResponse ToMvcAjaxResponse(ModelStateDictionary modelState)
+        public static MvcAjaxResponse ToMvcAjaxResponse(this ModelStateDictionary modelState)
         {
             if (modelState.IsValid)
             {

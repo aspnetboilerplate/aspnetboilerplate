@@ -4,6 +4,7 @@ using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
 using Abp.AspNetCore.Mvc.Results;
+using Abp.AspNetCore.Mvc.Validation;
 using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -59,9 +60,10 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(AbpAuthorizationFilter));
+                options.Filters.Add(typeof(AbpAuditActionFilter));
+                options.Filters.Add(typeof(AbpValidationActionFilter));
                 options.Filters.Add(typeof(AbpExceptionFilter));
                 options.Filters.Add(typeof(AbpResultFilter));
-                options.Filters.Add(typeof(AbpAuditActionFilter));
 
                 //TODO: InputFotmatter!
 
@@ -84,9 +86,11 @@ namespace AbpAspNetCoreDemo
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc(options =>
+            app.UseMvc(routes =>
             {
-                
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
