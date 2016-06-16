@@ -1,34 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Features;
-using Abp.AspNetCore.Mvc.Controllers.Results;
-using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Collections.Extensions;
 using Abp.Configuration;
-using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
-using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Localization.Sources;
-using Abp.Logging;
-using Abp.Reflection;
 using Abp.Runtime.Session;
-using Abp.Timing;
-using Abp.Web.Models;
-using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 
 namespace Abp.AspNetCore.Mvc.Controllers
 {
@@ -140,25 +122,6 @@ namespace Abp.AspNetCore.Mvc.Controllers
         /// </summary>
         protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
-        public IAuditingConfiguration AuditingConfiguration { get; set; }
-
-        public IAuditInfoProvider AuditInfoProvider { get; set; }
-
-        public IAuditingStore AuditingStore { get; set; }
-
-        /// <summary>
-        /// Ignored types for serialization on audit logging.
-        /// </summary>
-        protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
-
-        static AbpController()
-        {
-            IgnoredTypesForSerializationOnAuditLogging = new List<Type>
-            {
-                
-            };
-        }
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -168,9 +131,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
-            AuditingStore = SimpleLogAuditingStore.Instance;
             EventBus = NullEventBus.Instance;
-            //AuditInfoProvider = iocResolver.Resolve<IAuditInfoProvider>();
         }
 
         /// <summary>
@@ -254,85 +215,6 @@ namespace Abp.AspNetCore.Mvc.Controllers
         protected virtual bool IsEnabled(string featureName)
         {
             return FeatureChecker.IsEnabled(featureName);
-        }
-
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            //TODO: VALIDATION
-
-            var auditInfo = CreateAuditInfo(context);
-            var stopwatch = Stopwatch.StartNew();
-
-            try
-            {
-                await base.OnActionExecutionAsync(context, next);
-            }
-            catch (Exception ex)
-            {
-                auditInfo.Exception = ex;
-                throw;
-            }
-            finally
-            {
-                stopwatch.Stop();
-                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-
-                AuditInfoProvider?.Fill(auditInfo);
-
-                await AuditingStore.SaveAsync(auditInfo);
-            }
-        }
-
-        private AuditInfo CreateAuditInfo(ActionExecutingContext context)
-        {
-            var auditInfo = new AuditInfo
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = context.Controller?.GetType().ToString() ?? "",
-                MethodName = context.ActionDescriptor.DisplayName,
-                Parameters = ConvertArgumentsToJson(context.ActionArguments),
-                ExecutionTime = Clock.Now
-            };
-
-            AuditInfoProvider.Fill(auditInfo);
-
-            return auditInfo;
-        }
-
-
-        private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
-        {
-            try
-            {
-                if (arguments.IsNullOrEmpty())
-                {
-                    return "{}";
-                }
-
-                var dictionary = new Dictionary<string, object>();
-
-                foreach (var argument in arguments)
-                {
-                    if (argument.Value != null && IgnoredTypesForSerializationOnAuditLogging.Any(t => t.IsInstanceOfType(argument.Value)))
-                    {
-                        dictionary[argument.Key] = null;
-                    }
-                    else
-                    {
-                        dictionary[argument.Key] = argument.Value;
-                    }
-                }
-
-                return AuditingHelper.Serialize(dictionary);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.ToString(), ex);
-                return "{}";
-            }
         }
     }
 }
