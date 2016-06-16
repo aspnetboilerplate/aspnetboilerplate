@@ -17,7 +17,7 @@ namespace Abp.AspNetCore.Mvc.Validation
         {
             using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
             {
-                validator.Object.Initialize(context, context.ActionArguments.Values.ToArray());
+                validator.Object.Initialize(context);
                 validator.Object.Validate();
             }
         }

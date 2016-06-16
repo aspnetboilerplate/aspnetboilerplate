@@ -41,7 +41,12 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
-    "copyToOutput": "log4net.config"
+    "copyToOutput": "log4net.config",
+    "embed": {
+      "include": [
+        "Localization/SourceFiles/*.json"
+      ]
+    }
   },
 
   "publishOptions": {

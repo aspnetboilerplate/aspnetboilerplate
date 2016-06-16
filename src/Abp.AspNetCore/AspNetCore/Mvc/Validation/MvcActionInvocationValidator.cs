@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.Collections.Extensions;
 using Abp.Runtime.Validation.Interception;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,9 +10,12 @@ namespace Abp.AspNetCore.Mvc.Validation
     {
         protected ActionExecutingContext ActionContext { get; private set; }
         
-        public void Initialize(ActionExecutingContext actionContext, object[] parameterValues)
+        public void Initialize(ActionExecutingContext actionContext)
         {
-            base.Initialize(actionContext.ActionDescriptor.GetMethodInfo(), parameterValues);
+            base.Initialize(
+                actionContext.ActionDescriptor.GetMethodInfo(),
+                GetParameterValues(actionContext)
+            );
 
             ActionContext = actionContext;
         }
@@ -30,6 +34,21 @@ namespace Abp.AspNetCore.Mvc.Validation
                     ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
                 }
             }
+        }
+
+        protected virtual object[] GetParameterValues(ActionExecutingContext actionContext)
+        {
+            var methodInfo = actionContext.ActionDescriptor.GetMethodInfo();
+
+            var parameters = methodInfo.GetParameters();
+            var parameterValues = new object[parameters.Length];
+
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                parameterValues[i] = actionContext.ActionArguments.GetOrDefault(parameters[i].Name);
+            }
+
+            return parameterValues;
         }
     }
 }
