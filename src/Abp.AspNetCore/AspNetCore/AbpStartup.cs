@@ -1,8 +1,10 @@
 ﻿using System;
+using Abp.Localization.Sources.Xml;
 using Abp.Threading;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +18,9 @@ namespace Abp.AspNetCore
 
         protected AbpStartup(IHostingEnvironment env, bool initialize = true)
         {
+            //TODO: TEST
+            XmlLocalizationSource.RootDirectoryOfApplication = env.WebRootPath;
+
             AbpBootstrapper = new AbpBootstrapper();
 
             if (initialize)
