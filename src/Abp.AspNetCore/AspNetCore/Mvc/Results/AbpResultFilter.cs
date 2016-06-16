@@ -4,7 +4,7 @@ using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Filters
+namespace Abp.AspNetCore.Mvc.Results
 {
     public class AbpResultFilter : IResultFilter
     {

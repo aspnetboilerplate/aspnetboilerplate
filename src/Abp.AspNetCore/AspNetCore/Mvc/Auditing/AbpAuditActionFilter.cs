@@ -11,7 +11,7 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Filters
+namespace Abp.AspNetCore.Mvc.Auditing
 {
     //TODO: MOVE MVC AUDIT CONFIGURATION TO RELATED MODULES, REMOVE FROM ABP PACKAGE
 

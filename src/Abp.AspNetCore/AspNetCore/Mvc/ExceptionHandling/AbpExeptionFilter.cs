@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Filters
+namespace Abp.AspNetCore.Mvc.ExceptionHandling
 {
     public class AbpExeptionFilter : IExceptionFilter
     {
@@ -30,8 +30,7 @@ namespace Abp.AspNetCore.Mvc.Filters
             {
                 LogHelper.LogException(_logger, context.Exception);
             }
-
-
+            
             if (!wrapResultAttribute.WrapOnError)
             {
                 return;

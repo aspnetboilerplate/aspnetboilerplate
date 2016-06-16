@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Filters
+namespace Abp.AspNetCore.Mvc.Authorization
 {
     public class AbpAuthorizationFilter : IAsyncAuthorizationFilter
     {
@@ -19,12 +18,9 @@ namespace Abp.AspNetCore.Mvc.Filters
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var methodInfo = context.ActionDescriptor.GetMethodInfo();
-
-            var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpMvcAuthorizeAttribute>(
-                    methodInfo
-                    );
+            var authorizeAttributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpMvcAuthorizeAttribute>(
+                context.ActionDescriptor.GetMethodInfo()
+            );
 
             if (authorizeAttributes.Count <= 0)
             {

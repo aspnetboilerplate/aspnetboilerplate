@@ -4,7 +4,7 @@ using Abp.Dependency;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
 
-namespace Abp.AspNetCore.Mvc.Filters
+namespace Abp.AspNetCore.Mvc.Auditing
 {
     /// <summary>
     /// Implements <see cref="IAuditInfoProvider"/> to fill web specific audit informations.
