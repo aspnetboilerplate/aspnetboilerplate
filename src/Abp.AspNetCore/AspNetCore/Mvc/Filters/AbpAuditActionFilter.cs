@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Filters
 {
+    //TODO: MOVE MVC AUDIT CONFIGURATION TO RELATED MODULES, REMOVE FROM ABP PACKAGE
+
     public class AbpAuditActionFilter : IAsyncActionFilter
     {
         private readonly IAuditingConfiguration _auditingConfiguration;
@@ -52,9 +55,11 @@ namespace Abp.AspNetCore.Mvc.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            //TODO: VALIDATION
-
-            //_auditingConfiguration.
+            if (!ShouldSaveAudit(context))
+            {
+                await next();
+                return;
+            }
 
             var auditInfo = CreateAuditInfo(context);
             var stopwatch = Stopwatch.StartNew();
@@ -72,9 +77,7 @@ namespace Abp.AspNetCore.Mvc.Filters
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-
                 _auditInfoProvider?.Fill(auditInfo);
-
                 await _auditingStore.SaveAsync(auditInfo);
             }
         }
@@ -98,6 +101,20 @@ namespace Abp.AspNetCore.Mvc.Filters
             return auditInfo;
         }
 
+        private bool ShouldSaveAudit(ActionExecutingContext filterContext)
+        {
+            if (!_auditingConfiguration.IsEnabled || !_auditingConfiguration.MvcControllers.IsEnabled)
+            {
+                return false;
+            }
+
+            return AuditingHelper.ShouldSaveAudit(
+                filterContext.ActionDescriptor.GetMethodInfo(),
+                _auditingConfiguration,
+                AbpSession,
+                true
+                );
+        }
 
         private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
         {
