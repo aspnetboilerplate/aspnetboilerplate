@@ -12,8 +12,10 @@ namespace Abp.AspNetCore.Mvc.Results
         {
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
             var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo) ??
-                WrapResultAttribute.Default;
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                    methodInfo,
+                    WrapResultAttribute.Default
+                );
 
             if (!wrapResultAttribute.WrapOnSuccess)
             {

@@ -323,8 +323,10 @@ namespace Abp.Web.Mvc.Controllers
         {
             _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
             _wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(_currentMethodInfo) ??
-                WrapResultAttribute.Default;
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                    _currentMethodInfo,
+                    WrapResultAttribute.Default
+                );
         }
 
         #endregion

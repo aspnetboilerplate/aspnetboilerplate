@@ -66,11 +66,12 @@ namespace Abp.Reflection
 
         /// <summary>
         /// Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
-        /// Returns null if it's not declared at all.
+        /// Returns default value if it's not declared at all.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrNull<TAttribute>(MemberInfo memberInfo)
+        /// <param name="defaultValue">Default value (null as default)</param>
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute))
             where TAttribute : Attribute
         {
             //Get attribute on the member
@@ -85,7 +86,7 @@ namespace Abp.Reflection
                 return memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), true).Cast<TAttribute>().First();
             }
 
-            return null;
+            return defaultValue;
         }
 
         /// <summary>

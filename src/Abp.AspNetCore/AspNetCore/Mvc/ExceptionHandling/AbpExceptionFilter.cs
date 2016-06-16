@@ -22,33 +22,35 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         public void OnException(ExceptionContext context)
         {
-            var methodInfo = context.ActionDescriptor.GetMethodInfo();
             var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo) ??
-                WrapResultAttribute.Default;
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                    context.ActionDescriptor.GetMethodInfo(),
+                    WrapResultAttribute.Default
+                );
 
             if (wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(_logger, context.Exception);
             }
             
-            if (!wrapResultAttribute.WrapOnError)
+            if (wrapResultAttribute.WrapOnError)
             {
-                return;
+                HandleAndWrapException(context);
             }
+        }
 
-            var exception = context.Exception;
-
-            context.Exception = null; //Handled!
-
-            context.HttpContext.Response.Clear(); 
+        private static void HandleAndWrapException(ExceptionContext context)
+        {
+            context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = 500; //TODO: Get from a constant?
             context.Result = new ObjectResult(
                 new AjaxResponse(
-                    ErrorInfoBuilder.Instance.BuildForException(exception),
-                    exception is AbpAuthorizationException
+                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    context.Exception is AbpAuthorizationException
                 )
             );
+
+            context.Exception = null; //Handled!
 
             //TODO: View results vs JSON results
         }
