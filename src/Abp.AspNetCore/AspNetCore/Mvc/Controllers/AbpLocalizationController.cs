@@ -1,10 +1,8 @@
 ﻿using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
-using Abp.Extensions;
 using Abp.Localization;
 using Abp.Timing;
 using Abp.Web.Mvc.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +11,6 @@ namespace Abp.AspNetCore.Mvc.Controllers
 {
     public class AbpLocalizationController : AbpController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
-
-        public AbpLocalizationController(IHostingEnvironment hostingEnvironment)
-        {
-            _hostingEnvironment = hostingEnvironment;
-        }
-
         [DisableAuditing]
         public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
@@ -46,7 +37,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 return Redirect(returnUrl);
             }
 
-            return Redirect(_hostingEnvironment.WebRootPath.EnsureEndsWith('/'));
+            return Redirect("/"); //TODO: Go to app root
         }
     }
 }

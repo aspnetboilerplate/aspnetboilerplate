@@ -1,10 +1,12 @@
 ﻿@using System.Threading.Tasks
 @using AbpAspNetCoreDemo.Models.ValidationTest
-@model AbpAspNetCoreDemo.Models.ValidationTest.IndexViewModel
+@model IndexViewModel
 
 <h2>@ViewBag.Message</h2>
 
-    <p>Validation succeed. Values:</p>
+<p>@L("WelcomeMessage")</p>
+
+<h4>Validation succeed. Values:</h4>
 
     <ul>
         <li>Name: @Model.Name</li>
