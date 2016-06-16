@@ -6,6 +6,7 @@ using Abp.UI;
 using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
@@ -13,16 +14,21 @@ namespace AbpAspNetCoreDemo.Controllers
     public class ProductsController : AbpController
     {
         private readonly IProductAppService _productAppService;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductAppService productAppService, IAuditInfoProvider auditInfoProvider, IIocManager iocManager)
+        public ProductsController(
+            IProductAppService productAppService,
+            ILogger<ProductsController> logger)
         {
             _productAppService = productAppService;
+            _logger = logger;
         }
 
         // GET api/values
         [HttpGet]
         public IEnumerable<ProductDto> Get()
         {
+            _logger.LogInformation("ProductsController.Get method is called. This message is logged via Microsoft.Extensions.Logging.ILogger");
             return _productAppService.GetAll();
         }
 
