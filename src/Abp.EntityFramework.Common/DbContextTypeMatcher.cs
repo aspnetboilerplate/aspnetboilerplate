@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 
@@ -74,10 +73,10 @@ namespace Abp.EntityFramework
 
             if (multiTenancySideContexes.Count > 1)
             {
-                return GetDbContextTypeWithoutAutoRepositoryTypesAttribute(multiTenancySideContexes, sourceDbContextType, currentTenancySide);
+                return GetDefaultDbContextType(multiTenancySideContexes, sourceDbContextType, currentTenancySide);
             }
 
-            return GetDbContextTypeWithoutAutoRepositoryTypesAttribute(allTargetTypes, sourceDbContextType, currentTenancySide);
+            return GetDefaultDbContextType(allTargetTypes, sourceDbContextType, currentTenancySide);
         }
 
         private void CheckCurrentUow()
@@ -109,10 +108,19 @@ namespace Abp.EntityFramework
             }).ToList();
         }
 
-        private static Type GetDbContextTypeWithoutAutoRepositoryTypesAttribute(List<Type> dbContextTypes, Type sourceDbContextType, MultiTenancySides tenancySide)
+        private static Type GetDefaultDbContextType(List<Type> dbContextTypes, Type sourceDbContextType, MultiTenancySides tenancySide)
         {
             var filteredTypes = dbContextTypes
                 .Where(type => !type.IsDefined(typeof(AutoRepositoryTypesAttribute), true))
+                .ToList();
+
+            if (filteredTypes.Count == 1)
+            {
+                return filteredTypes[0];
+            }
+
+            filteredTypes = filteredTypes
+                .Where(type => !type.IsDefined(typeof(DefaultDbContextAttribute), true))
                 .ToList();
 
             if (filteredTypes.Count == 1)
