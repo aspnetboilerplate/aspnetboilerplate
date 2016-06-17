@@ -59,6 +59,7 @@ namespace Abp.EntityFrameworkCore
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
+                    Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
                     repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
                 }
             }

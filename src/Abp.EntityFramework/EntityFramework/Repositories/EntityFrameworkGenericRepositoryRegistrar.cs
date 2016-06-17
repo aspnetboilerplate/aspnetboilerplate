@@ -1,7 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.EntityFramework.Extensions;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 
