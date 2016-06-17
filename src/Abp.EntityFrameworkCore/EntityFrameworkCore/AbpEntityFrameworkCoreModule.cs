@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.EntityFramework;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;

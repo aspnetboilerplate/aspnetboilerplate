@@ -1,4 +1,5 @@
 using Abp.Dependency;
+using Abp.EntityFramework;
 
 namespace Abp.EntityFrameworkCore
 {

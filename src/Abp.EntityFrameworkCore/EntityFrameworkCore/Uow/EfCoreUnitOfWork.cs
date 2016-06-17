@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityFramework;
 using Abp.MultiTenancy;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
