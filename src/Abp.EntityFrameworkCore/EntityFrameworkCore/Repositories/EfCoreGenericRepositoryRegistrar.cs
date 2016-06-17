@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 
@@ -18,7 +19,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         public void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
             var autoRepositoryAttr = dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
-                                     AutoRepositoryTypesAttribute.Default;
+                                     EfCoreAutoRepositoryTypes.Default;
 
             foreach (var entityTypeInfo in DbContextHelper.GetEntityTypeInfos(dbContextType))
             {

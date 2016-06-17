@@ -1,17 +1,13 @@
 using System;
-using Abp.Domain.Repositories;
 
-namespace Abp.EntityFrameworkCore.Repositories
+namespace Abp.Domain.Repositories
 {
     /// <summary>
-    /// Add this class to a DbContext to define auto-repository types for entities in this DbContext.
-    /// This is useful if you inherit same DbContext by more than one DbContext.
+    /// Used to define auto-repository types for entities.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class AutoRepositoryTypesAttribute : Attribute
     {
-        public static AutoRepositoryTypesAttribute Default { get; private set; }
-
         public Type RepositoryInterface { get; private set; }
 
         public Type RepositoryInterfaceWithPrimaryKey { get; private set; }
@@ -20,20 +16,10 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public Type RepositoryImplementationWithPrimaryKey { get; private set; }
 
-        static AutoRepositoryTypesAttribute()
-        {
-            Default = new AutoRepositoryTypesAttribute(
-                typeof (IRepository<>),
-                typeof (IRepository<,>),
-                typeof (EfCoreRepositoryBase<,>),
-                typeof (EfCoreRepositoryBase<,,>)
-                );
-        }
-
         public AutoRepositoryTypesAttribute(
-            Type repositoryInterface, 
-            Type repositoryInterfaceWithPrimaryKey, 
-            Type repositoryImplementation, 
+            Type repositoryInterface,
+            Type repositoryInterfaceWithPrimaryKey,
+            Type repositoryImplementation,
             Type repositoryImplementationWithPrimaryKey)
         {
             RepositoryInterface = repositoryInterface;
