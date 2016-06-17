@@ -495,6 +495,12 @@
         return root;
     };
 
+    String.prototype.replaceAll = function (search, replacement) {
+        var target = this;
+        var fix = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return target.replace(new RegExp(fix, 'g'), replacement);
+    };
+    
     /* Formats a string just like string.format in C#.
     *  Example:
     *  _formatString('Hello {0}','Halil') = 'Hello Halil'
@@ -508,7 +514,7 @@
 
         for (var i = 1; i < arguments.length; i++) {
             var placeHolder = '{' + (i - 1) + '}';
-            str = str.replace(placeHolder, arguments[i]);
+            str = str.replaceAll(placeHolder, arguments[i]);
         }
 
         return str;
