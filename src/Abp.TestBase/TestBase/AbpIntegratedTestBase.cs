@@ -14,37 +14,47 @@ namespace Abp.TestBase
     public abstract class AbpIntegratedTestBase : IDisposable
     {
         /// <summary>
-        /// A reference to the <see cref="IIocManager"/> used for this test.
+        /// Local <see cref="IIocManager"/> used for this test.
         /// </summary>
-        protected IIocManager LocalIocManager { get; private set; }
+        protected IIocManager LocalIocManager { get; }
+
+        protected AbpBootstrapper AbpBootstrapper { get; }
 
         /// <summary>
         /// Gets Session object. Can be used to change current user and tenant in tests.
         /// </summary>
         protected TestAbpSession AbpSession { get; private set; }
 
-        private readonly AbpBootstrapper _bootstrapper;
-
-        protected AbpIntegratedTestBase()
+        protected AbpIntegratedTestBase(bool initializeAbp = true)
         {
             LocalIocManager = new IocManager();
+            AbpBootstrapper = new AbpBootstrapper(LocalIocManager);
 
+            if (initializeAbp)
+            {
+                InitializeAbp();
+            }
+        }
+
+        protected void InitializeAbp()
+        {
             LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
             LocalIocManager.Register<IAbpSession, TestAbpSession>();
 
-            AddModules(LocalIocManager.Resolve<TestModuleFinder>().Modules);
+            var modules = LocalIocManager.Resolve<TestModuleFinder>().Modules;
+            modules.Add<TestBaseModule>();
+            AddModules(modules);
 
             PreInitialize();
 
-            _bootstrapper = new AbpBootstrapper(LocalIocManager);
-            _bootstrapper.Initialize();
+            AbpBootstrapper.Initialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
 
         protected virtual void AddModules(ITypeList<AbpModule> modules)
         {
-            modules.Add<TestBaseModule>();
+
         }
 
         /// <summary>
@@ -57,7 +67,7 @@ namespace Abp.TestBase
 
         public virtual void Dispose()
         {
-            _bootstrapper.Dispose();
+            AbpBootstrapper.Dispose();
             LocalIocManager.Dispose();
         }
 
