@@ -2,10 +2,7 @@
   "version": "0.9.3.2-*",
 
   "dependencies": {
-    "Abp": "0.9.3.2-*",
-    "Abp.EntityFramework.Common": "0.9.3.2-*",
-    "EntityFramework": "6.1.3",
-    "EntityFramework.DynamicFilters": "1.4.10.2"
+    "Abp": "0.9.3.2-*"
   },
 
   "frameworks": {
@@ -22,7 +19,7 @@
   },
 
   "packOptions": {
-    "summary": "EntityFramework integration package for ASP.NET Boilerplate.",
+    "summary": "Common classes for EntityFramework integrations of ASP.NET Boilerplate. Used by Abp.EntityFramework and Abp.EntityFrameworkCore packages.",
     "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "EntityFramework", "ORM" ],
     "owners": [ "Halil İbrahim Kalkan" ],
     "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
@@ -36,6 +33,6 @@
   },
 
   "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.EntityFramework.pdb"
+    "lib/net452/": "bin/Release/net452/Abp.EntityFramework.Common.pdb"
   }
 }

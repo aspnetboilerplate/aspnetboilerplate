@@ -3,7 +3,8 @@
 
   "dependencies": {
     "Abp": "0.9.3.2-*",
-    "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final" 
+    "Abp.EntityFramework.Common": "0.9.3.2-*",
+    "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final"
   },
 
   "frameworks": {
