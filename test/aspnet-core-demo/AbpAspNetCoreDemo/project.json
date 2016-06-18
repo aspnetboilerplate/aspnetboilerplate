@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "Abp.AspNetCore": "0.9.3.2-*",
+    "Abp.AspNetCore": "0.9.4.0-*",
     "Castle.Windsor-log4net": "3.3.0",
-    "AbpAspNetCoreDemo.Core": "0.9.3.2-*",
+    "AbpAspNetCoreDemo.Core": "0.9.4.0-*",
     "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.0.0-preview1-final",
@@ -19,7 +19,7 @@
     "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
-    "Abp.EntityFrameworkCore": "0.9.3.2-*",
+    "Abp.EntityFrameworkCore": "0.9.4.0-*",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
     "Microsoft.EntityFrameworkCore.Tools": {
       "version": "1.0.0-preview1-final",
