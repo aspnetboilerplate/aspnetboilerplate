@@ -40,7 +40,7 @@ namespace Abp.AspNetCore
         }
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
-        { 
+        {
             return WindsorRegistrationHelper.CreateServiceProvider(AbpBootstrapper.IocManager.IocContainer, services);
         }
 
@@ -61,8 +61,8 @@ namespace Abp.AspNetCore
                 var defaultCulture = new RequestCulture(
                     languageManager.Object
                         .GetLanguages()
-                        .Single(l => l.IsDefault)
-                        .Name
+                        .FirstOrDefault(l => l.IsDefault)
+                        ?.Name
                 );
 
                 var options = new RequestLocalizationOptions
