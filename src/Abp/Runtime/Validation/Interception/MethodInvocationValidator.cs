@@ -98,7 +98,7 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (Method == null)
             {
-                throw new AbpException("This object has not beedn initialized. Call Initialize method first.");
+                throw new AbpException("This object has not been initialized. Call Initialize method first.");
             }
         }
 
