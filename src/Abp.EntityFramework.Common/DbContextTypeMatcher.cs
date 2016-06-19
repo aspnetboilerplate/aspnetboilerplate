@@ -8,12 +8,12 @@ using Abp.MultiTenancy;
 
 namespace Abp.EntityFramework
 {
-    public class DbContextTypeMatcher<TBaseDbContext> : IDbContextTypeMatcher, ISingletonDependency
+    public abstract class DbContextTypeMatcher<TBaseDbContext> : IDbContextTypeMatcher, ISingletonDependency
     {
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
         private readonly Dictionary<Type, List<Type>> _dbContextTypes;
 
-        public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
+        protected DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
             _dbContextTypes = new Dictionary<Type, List<Type>>();
@@ -39,19 +39,18 @@ namespace Abp.EntityFramework
         public virtual Type GetConcreteType(Type sourceDbContextType)
         {
             //TODO: This can also get MultiTenancySide to filter dbcontexes
+
+            if (!sourceDbContextType.IsAbstract)
+            {
+                return sourceDbContextType;
+            }
             
             //Get possible concrete types for given DbContext type
             var allTargetTypes = _dbContextTypes.GetOrDefault(sourceDbContextType);
 
             if (allTargetTypes.IsNullOrEmpty())
             {
-                //Not found any target type, return the given type if it's not abstract
-                if (sourceDbContextType.IsAbstract)
-                {
-                    throw new AbpException("Could not find a concrete implementation of given DbContext type: " + sourceDbContextType.AssemblyQualifiedName);
-                }
-
-                return sourceDbContextType;
+                throw new AbpException("Could not find a concrete implementation of given DbContext type: " + sourceDbContextType.AssemblyQualifiedName);
             }
 
             if (allTargetTypes.Count == 1)
