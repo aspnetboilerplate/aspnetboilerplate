@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Abp.AspNetCore.Mvc.Controllers;
-using Abp.Auditing;
-using Abp.Dependency;
 using Abp.UI;
 using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
