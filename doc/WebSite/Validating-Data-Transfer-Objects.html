@@ -71,14 +71,14 @@ implementation:</p>
 }</pre>
 			<p>As you see, no validation code is written since ASP.NET Boilerplate does it 
 automatically. ASP.NET Boilerplate also checks if 
-input is <strong>null</strong>. Throws <strong>AbpValidationException</strong> if so. 
+input is <strong>null</strong> and throws <strong>AbpValidationException</strong> if so. 
 So, you don't have to write <strong>null-check</strong> code (guard clause). It 
 also throws 
-same exception if any of the input properties are invalid.</p>
+			AbpValidationException if any of the input properties are invalid.</p>
 			<p>This machanism is similar to ASP.NET MVC's validation but notice that an 
 application service class is not derived from Controller, it's a plain class and 
-can work out of a web application.</p>
-			<h3 id="DocCustomValidation">Custom validation</h3>
+can work even out of a web application.</p>
+			<h3 id="DocCustomValidation">Custom Validation</h3>
 			<p>If data annotations are not sufficient for your case, you can implement 
 				<strong>ICustomValidate</strong> interface as shown below:</p>
 			<pre lang="cs">public class CreateTaskInput : IInputDto, ICustomValidate
@@ -103,6 +103,18 @@ method to be implemented. Here, we have a <strong>SendEmailToAssignedPerson</str
 true, <strong>AssignedPersonId</strong> should be supplied, else it can be null. 
 We must add <strong>ValidationResult</strong> objects to <strong>results</strong> list if there are 
 validation errors.</p>
+			<h3>Disable Validation</h3>
+			<p>Validation is enabled for all public methods of application 
+			services by default. There are two attributes to change this 
+			behaviour:</p>
+			<ul>
+				<li><strong>DisableValidation</strong> attribute can be used for 
+				classes/methods to disable validation for desired 
+				classes/methods.</li>
+				<li><strong>EnableValidation</strong> attribute can be used to 
+				enable validation for a method, if it's disabled for the 
+				containing class.</li>
+			</ul>
 
 			<h3 id="DocNormalization">Normalization</h3>
 			<p>We may need to perform an extra operation to arrange DTO parameters 
