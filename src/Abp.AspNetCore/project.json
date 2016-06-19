@@ -9,7 +9,7 @@
   },
 
   "frameworks": {
-    "net452": {
+    "net461": {
 
     }
   },
@@ -36,6 +36,6 @@
   },
 
   "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.AspNetCore.pdb"
+    "lib/net452/": "bin/Release/net461/Abp.AspNetCore.pdb"
   }
 }

@@ -8,7 +8,7 @@
   },
 
   "frameworks": {
-    "net452": {
+    "net461": {
 
     }
   },
@@ -35,6 +35,6 @@
   },
 
   "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.EntityFrameworkCore.pdb"
+    "lib/net461/": "bin/Release/net452/Abp.EntityFrameworkCore.pdb"
   }
 }
