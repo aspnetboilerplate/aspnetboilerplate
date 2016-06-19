@@ -2,7 +2,6 @@
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Tests.Domain;
-using Abp.TestBase;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;

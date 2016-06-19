@@ -4,10 +4,6 @@ using Abp.Collections;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.Modules;
 using Abp.TestBase;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor.MsDependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -15,24 +11,6 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         protected EntityFrameworkCoreModuleTestBase()
         {
-            var services = new ServiceCollection()
-                .AddEntityFrameworkInMemoryDatabase();
-
-            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(
-                LocalIocManager.IocContainer,
-                services
-            );
-
-            var builder = new DbContextOptionsBuilder<BloggingDbContext>();
-            builder.UseInMemoryDatabase()
-                   .UseInternalServiceProvider(serviceProvider);
-
-            var options = builder.Options;
-
-            LocalIocManager.IocContainer.Register(
-                Component.For<DbContextOptions<BloggingDbContext>>().Instance(options).LifestyleSingleton()
-            );
-
             CreateInitialData();
         }
 
