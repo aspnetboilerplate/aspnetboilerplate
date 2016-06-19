@@ -18,7 +18,7 @@ namespace Abp.EntityFrameworkCore
 
         public TDbContext Resolve<TDbContext>(string connectionString)
         {
-            //TODO: connectionString is not used. We should find a way of creating DbContextOptions<TDbContext> based on that connection string
+            //TODO: connectionString is not used. We should find a way of creating DbContextOptions<TDbContext> based on that connection string for dynamic conn strings
 
             var dbContextType = typeof(TDbContext);
 

@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Abp.EntityFramework.Common")]
 [assembly: AssemblyTrademark("")]
+[assembly: InternalsVisibleTo("Abp.EntityFramework")]
+[assembly: InternalsVisibleTo("Abp.EntityFrameworkCore")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

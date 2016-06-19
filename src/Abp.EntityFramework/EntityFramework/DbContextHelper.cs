@@ -10,6 +10,8 @@ namespace Abp.EntityFramework
 {
     internal static class DbContextHelper
     {
+        //TODO: Get entities in different way.. we may not define DbSet for each entity.
+
         public static IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType)
         {
             return
