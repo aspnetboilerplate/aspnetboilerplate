@@ -32,7 +32,8 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview1-final",
       "type": "build"
-    }
+    },
+    "Castle.LoggingFacility.MsLogging": "0.1.0"
   },
 
   "tools": {

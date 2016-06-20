@@ -7,6 +7,7 @@ using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Validation;
 using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
+using Castle.LoggingFacility.MsLogging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -83,6 +84,7 @@ namespace AbpAspNetCoreDemo
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddCastleLogger(AbpBootstrapper.IocManager.Resolve<Castle.Core.Logging.ILoggerFactory>());
 
             if (env.IsDevelopment())
             {
