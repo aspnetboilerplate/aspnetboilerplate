@@ -4,6 +4,7 @@ using Abp.Dependency;
 using Abp.Logging;
 using Abp.Reflection;
 using Abp.Web.Models;
+using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                     context.Exception is AbpAuthorizationException
                 )
             );
+
+            //ViewResult result = new ViewResult();
+            //result.Model = new ErrorViewModel(context.Exception);
 
             context.Exception = null; //Handled!
 
