@@ -1,10 +1,10 @@
-﻿using Abp.AspNetCore.Mvc.Extensions;
+﻿using System.Net;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
 using Abp.Reflection;
 using Abp.Web.Models;
-using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +33,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             {
                 LogHelper.LogException(Logger, context.Exception);
             }
-            
+
             if (wrapResultAttribute.WrapOnError)
             {
                 HandleAndWrapException(context);
@@ -42,8 +42,13 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         private static void HandleAndWrapException(ExceptionContext context)
         {
+            if (typeof(ActionResult).IsAssignableFrom(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            {
+                return;
+            }
+            
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = 500; //TODO: Get from a constant?
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Result = new ObjectResult(
                 new AjaxResponse(
                     ErrorInfoBuilder.Instance.BuildForException(context.Exception),
@@ -51,12 +56,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 )
             );
 
-            //ViewResult result = new ViewResult();
-            //result.Model = new ErrorViewModel(context.Exception);
-
             context.Exception = null; //Handled!
-
-            //TODO: View results vs JSON results
         }
     }
 }
