@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using Abp.Application.Services;
 using Abp.Dependency;
@@ -15,25 +14,28 @@ namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
         [Fact]
         public void Test1()
         {
-            IocManager.Instance.Register<IMyFirstAppService, MyFirstAppService>();
+            lock (this)
+            {
+                IocManager.Instance.RegisterIfNot<IMyFirstAppService, MyFirstAppService>();
 
-            DynamicApiControllerBuilder
-                .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp")
-                .Where(type => type == typeof(IMyFirstAppService))
-                .ForMethods(builder =>
-                {
-                    if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute)))
+                DynamicApiControllerBuilder
+                    .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp")
+                    .Where(type => type == typeof(IMyFirstAppService))
+                    .ForMethods(builder =>
                     {
-                        builder.DontCreate = true;
-                    }
-                })
-                .Build();
+                        if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute)))
+                        {
+                            builder.DontCreate = true;
+                        }
+                    })
+                    .Build();
 
-            var services = DynamicApiControllerManager.GetAll();
-            services.Count.ShouldBe(1);
-            services[0].ServiceName.ShouldBe("myapp/myFirst");
-            services[0].Actions.Count.ShouldBe(1);
-            services[0].Actions.ContainsKey("GetStr").ShouldBe(true);
+                var services = DynamicApiControllerManager.GetAll();
+                services.Count.ShouldBe(1);
+                services[0].ServiceName.ShouldBe("myapp/myFirst");
+                services[0].Actions.Count.ShouldBe(1);
+                services[0].Actions.ContainsKey("GetStr").ShouldBe(true);
+            }
         }
 
         public interface IMyFirstAppService : IApplicationService
