@@ -15,5 +15,10 @@ namespace AbpAspNetCoreDemo.Controllers
         {
             throw new UserFriendlyException("This is a user friendly exception from an action returns ActionResult");
         }
+
+        public JsonResult JsonExUserFriendly()
+        {
+            throw new UserFriendlyException("Test User Friendly Exception", "This is a user friendly exception directly shown to the user.");
+        }
     }
 }

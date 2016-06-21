@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
@@ -42,7 +43,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         private static void HandleAndWrapException(ExceptionContext context)
         {
-            if (typeof(ActionResult).IsAssignableFrom(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            if (!IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
             {
                 return;
             }
@@ -57,6 +58,22 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             );
 
             context.Exception = null; //Handled!
+        }
+
+        private static bool IsObjectResult(Type returnType)
+        {
+            if (typeof(IActionResult).IsAssignableFrom(returnType))
+            {
+                if (typeof(JsonResult).IsAssignableFrom(returnType) ||
+                    typeof(ObjectResult).IsAssignableFrom(returnType))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }
