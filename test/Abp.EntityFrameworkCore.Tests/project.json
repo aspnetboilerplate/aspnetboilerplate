@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "testRunner": "xunit",
@@ -7,7 +7,7 @@
     "Abp.EntityFrameworkCore": "0.9.6.0-*",
     "Abp.TestBase": "0.9.6.0-*",
     "Abp.Tests": "1.0.0-*",
-    "Castle.Windsor.MsDependencyInjection": "0.1.0",
+    "Castle.Windsor.MsDependencyInjection": "0.2.0",
     "Microsoft.EntityFrameworkCore.InMemory": "1.0.0-rc2-final"
   },
 

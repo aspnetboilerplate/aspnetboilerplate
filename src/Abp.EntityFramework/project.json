@@ -1,11 +1,11 @@
-﻿{
+{
   "version": "0.9.6.0-*",
 
   "dependencies": {
     "Abp": "0.9.6.0-*",
     "Abp.EntityFramework.Common": "0.9.6.0-*",
     "EntityFramework": "6.1.3",
-    "EntityFramework.DynamicFilters": "1.4.10.2"
+    "EntityFramework.DynamicFilters": "1.4.11"
   },
 
   "frameworks": {
