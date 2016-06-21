@@ -38,26 +38,36 @@ namespace Abp.AspNetCore
 
         private static void AddCastleLoggerFactory(IApplicationBuilder app)
         {
-            var loggerFactory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
-            var castleLoggerFactory = app.ApplicationServices.GetRequiredService<Castle.Core.Logging.ILoggerFactory>();
-            loggerFactory.AddCastleLogger(castleLoggerFactory);
+            var castleLoggerFactory = app.ApplicationServices.GetService<Castle.Core.Logging.ILoggerFactory>();
+            if (castleLoggerFactory == null)
+            {
+                return;
+            }
+
+            app.ApplicationServices
+                .GetRequiredService<ILoggerFactory>()
+                .AddCastleLogger(castleLoggerFactory);
         }
 
         private static void ConfigureRequestLocalization(IApplicationBuilder app)
         {
             using (var languageManager = app.ApplicationServices.GetRequiredService<IIocResolver>().ResolveAsDisposable<ILanguageManager>())
             {
+                var defaultLanguage = languageManager.Object
+                    .GetLanguages()
+                    .FirstOrDefault(l => l.IsDefault);
+
+                if (defaultLanguage == null)
+                {
+                    return;
+                }
+
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
                     .Select(l => new CultureInfo(l.Name))
                     .ToArray();
 
-                var defaultCulture = new RequestCulture(
-                    languageManager.Object
-                        .GetLanguages()
-                        .FirstOrDefault(l => l.IsDefault)
-                        ?.Name
-                );
+                var defaultCulture = new RequestCulture(defaultLanguage.Name);
 
                 var options = new RequestLocalizationOptions
                 {
