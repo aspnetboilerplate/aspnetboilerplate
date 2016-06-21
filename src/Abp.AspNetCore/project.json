@@ -5,6 +5,7 @@
     "Abp": "0.9.5.0-*",
     "Abp.Web.Common": "0.9.5.0-*",
     "Castle.Windsor.MsDependencyInjection": "0.1.0",
+    "Castle.LoggingFacility.MsLogging": "0.1.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
   },
 

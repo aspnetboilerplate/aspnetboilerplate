@@ -17,8 +17,6 @@
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
     "Abp.EntityFrameworkCore": "0.9.5.0-*",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
     "Microsoft.EntityFrameworkCore.Tools": {
@@ -32,8 +30,7 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview1-final",
       "type": "build"
-    },
-    "Castle.LoggingFacility.MsLogging": "0.1.0"
+    }
   },
 
   "tools": {
