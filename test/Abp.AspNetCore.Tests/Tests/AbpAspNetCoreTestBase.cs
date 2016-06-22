@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App;
+using Abp.AspNetCore.Tests.Infrastructure;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -20,13 +21,17 @@ namespace Abp.AspNetCore.Tests
 
         protected IIocManager IocManager { get; }
 
+        protected TestAbpSession AbpSession { get; }
+
         protected AbpAspNetCoreTestBase()
         {
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             Server = new TestServer(builder);
+
             IocManager = Server.Host.Services.GetRequiredService<IIocManager>();
+            AbpSession = Server.Host.Services.GetRequiredService<TestAbpSession>();
 
             Client = Server.CreateClient();
         }

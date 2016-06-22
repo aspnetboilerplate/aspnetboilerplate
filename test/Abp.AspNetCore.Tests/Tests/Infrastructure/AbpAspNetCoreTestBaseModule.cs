@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Abp.Modules;
 
-namespace Abp.TestBase
+namespace Abp.AspNetCore.Tests.Infrastructure
 {
-    [DependsOn(typeof(AbpKernelModule))]
-    public class TestBaseModule : AbpModule
+    [DependsOn(typeof(AbpAspNetCoreModule))]
+    public class AbpAspNetCoreTestBaseModule : AbpModule
     {
         public override void PreInitialize()
         {

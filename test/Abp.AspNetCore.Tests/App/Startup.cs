@@ -1,6 +1,6 @@
 ﻿using System;
 using Abp.AspNetCore.Mvc;
-using Abp.Dependency;
+using Abp.AspNetCore.Tests.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ namespace Abp.AspNetCore.App
             //Configure Dependency Injection
             return services.AddAbp(options =>
             {
-                options.IocManager = new IocManager();
+                options.SetupTest(); //Test setup
             });
         }
 
