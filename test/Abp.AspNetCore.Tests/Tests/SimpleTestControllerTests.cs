@@ -9,19 +9,23 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
-    public class TestControllerTests : AppTestBase
+    public class SimpleTestControllerTests : AppTestBase
     {
         [Fact]
         public void Should_Resolve_Controller()
         {
-            ServiceProvider.GetService<TestController>().ShouldNotBeNull();
+            ServiceProvider.GetService<SimpleTestController>().ShouldNotBeNull();
         }
 
         [Fact]
         public async Task Should_Return_Content()
         {
             // Act
-            var response = await GetResponseAsStringAsync("/Test/SimpleContent");
+            var response = await GetResponseAsStringAsync(
+                               GetUrl<SimpleTestController>(
+                                   nameof(SimpleTestController.SimpleContent)
+                               )
+                           );
 
             // Assert
             response.ShouldBe("Hello world...");
@@ -31,7 +35,11 @@ namespace Abp.AspNetCore.Tests
         public async Task Should_Wrap_Json_By_Default()
         {
             // Act
-            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>("/Test/SimpleJson");
+            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+                               GetUrl<SimpleTestController>(
+                                   nameof(SimpleTestController.SimpleJson)
+                               )
+                           );
 
             //Assert
             response.Result.StrValue.ShouldBe("Forty Two");
@@ -45,7 +53,13 @@ namespace Abp.AspNetCore.Tests
         {
             // Act
             var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
-                               "/Test/SimpleJsonException" + "?message=" + message + "&userFriendly=" + userFriendly,
+                               GetUrl<SimpleTestController>(
+                                   nameof(SimpleTestController.SimpleJsonException),
+                                   new
+                                   {
+                                       message,
+                                       userFriendly
+                                   }),
                                HttpStatusCode.InternalServerError
                            );
 
@@ -65,7 +79,11 @@ namespace Abp.AspNetCore.Tests
         public async Task Should_Not_Wrap_Json_If_DontWrap_Declared()
         {
             // Act
-            var response = await GetResponseAsObjectAsync<SimpleViewModel>("/Test/SimpleJsonDontWrap");
+            var response = await GetResponseAsObjectAsync<SimpleViewModel>(
+                               GetUrl<SimpleTestController>(
+                                   nameof(SimpleTestController.SimpleJsonDontWrap)
+                               )
+                           );
 
             //Assert
             response.StrValue.ShouldBe("Forty Two");

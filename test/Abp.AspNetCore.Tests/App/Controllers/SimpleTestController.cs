@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.App.Controllers
 {
-    public class TestController : AbpController
+    public class SimpleTestController : AbpController
     {
         public ActionResult SimpleContent()
         {

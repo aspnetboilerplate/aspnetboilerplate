@@ -11,7 +11,7 @@ namespace Abp.AspNetCore.Tests
 {
     public abstract class AppTestBase : AbpAspNetCoreIntegratedTestBase<Startup>
     {
-        protected async Task<T> GetResponseAsObjectAsync<T>(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        protected virtual async Task<T> GetResponseAsObjectAsync<T>(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
             var strResponse = await GetResponseAsStringAsync(url, expectedStatusCode);
             return JsonConvert.DeserializeObject<T>(strResponse, new JsonSerializerSettings
@@ -20,13 +20,13 @@ namespace Abp.AspNetCore.Tests
             });
         }
 
-        protected async Task<string> GetResponseAsStringAsync(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        protected virtual async Task<string> GetResponseAsStringAsync(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
             var response = await GetResponseAsync(url, expectedStatusCode);
             return await response.Content.ReadAsStringAsync();
         }
 
-        private async Task<HttpResponseMessage> GetResponseAsync(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        protected virtual async Task<HttpResponseMessage> GetResponseAsync(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
             var response = await Client.GetAsync(url);
             response.StatusCode.ShouldBe(expectedStatusCode);
