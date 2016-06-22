@@ -9,7 +9,7 @@ namespace Abp.AspNetCore.Tests
     public class ControllerTests : AbpAspNetCoreTestBase
     {
         [Fact]
-        public async Task Should_Return_SimpleContent()
+        public async Task Should_Return_Content()
         {
             // Act
             var response = await GetResponseAsStringAsync("/Test/SimpleContent");
@@ -19,14 +19,25 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
-        public async Task Should_Wrap_SimpleJson_By_Default()
+        public async Task Should_Wrap_Json_By_Default()
         {
             // Act
-            var ajaxResponse = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>("/Test/SimpleJson");
+            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>("/Test/SimpleJson");
 
             //Assert
-            ajaxResponse.Result.StrValue.ShouldBe("Forty Two");
-            ajaxResponse.Result.IntValue.ShouldBe(42);
+            response.Result.StrValue.ShouldBe("Forty Two");
+            response.Result.IntValue.ShouldBe(42);
+        }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Json_If_DontWrap_Declared()
+        {
+            // Act
+            var response = await GetResponseAsObjectAsync<SimpleViewModel>("/Test/SimpleJsonDontWrap");
+
+            //Assert
+            response.StrValue.ShouldBe("Forty Two");
+            response.IntValue.ShouldBe(42);
         }
     }
 }
