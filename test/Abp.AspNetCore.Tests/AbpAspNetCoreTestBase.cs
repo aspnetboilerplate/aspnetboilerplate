@@ -1,18 +1,21 @@
 ﻿using System.Net.Http;
+using Abp.AspNetCore.Tests.App;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 
 namespace Abp.AspNetCore.Tests
 {
-    public class AbpAspNetCoreTestBase
+    public abstract class AbpAspNetCoreTestBase
     {
         protected TestServer Server { get; }
+
         protected HttpClient Client { get; }
 
-        public AbpAspNetCoreTestBase()
+        protected AbpAspNetCoreTestBase()
         {
-            // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
             Server = new TestServer(builder);
             Client = Server.CreateClient();
         }

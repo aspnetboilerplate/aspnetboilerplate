@@ -1,11 +1,12 @@
 ﻿using System;
 using Abp.AspNetCore.Mvc;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Abp.AspNetCore.Tests
+namespace Abp.AspNetCore.Tests.App
 {
     public class Startup
     {
@@ -17,7 +18,10 @@ namespace Abp.AspNetCore.Tests
             }).AddControllersAsServices();
 
             //Configure Dependency Injection
-            return services.AddAbp();
+            return services.AddAbp(options =>
+            {
+                options.IocManager = new IocManager();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
