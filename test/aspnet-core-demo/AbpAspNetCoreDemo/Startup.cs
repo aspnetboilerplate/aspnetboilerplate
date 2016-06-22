@@ -37,7 +37,7 @@ namespace AbpAspNetCoreDemo
                 options.AddAbp(); //Add ABP infrastructure to MVC
             }).AddControllersAsServices();
 
-            //Configure Dependency Injection
+            //Configure Abp and Dependency Injection
             return services.AddAbp(abpBootstrapper =>
             {
                 //Configure Log4Net logging
