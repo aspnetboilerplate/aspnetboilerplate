@@ -1,4 +1,4 @@
-﻿namespace Abp.AspNetCore.Tests.App.Models
+﻿namespace Abp.AspNetCore.App.Models
 {
     public class SimpleViewModel
     {

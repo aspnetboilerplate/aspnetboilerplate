@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Abp.AspNetCore.Tests.App
+namespace Abp.AspNetCore.App
 {
     public class Startup
     {
