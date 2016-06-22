@@ -2,9 +2,10 @@
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
-using NuGet.Packaging;
+using Abp.TestBase.Modules;
+using Abp.TestBase.Runtime.Session;
 
-namespace Abp.AspNetCore.Tests.Infrastructure
+namespace Abp.AspNetCore.TestBase
 {
     public static class AbpServiceOptionsTestExtensions
     {
@@ -21,12 +22,14 @@ namespace Abp.AspNetCore.Tests.Infrastructure
             testOptionsAction(testOptions);
 
             options.IocManager = new IocManager();
-
             options.IocManager.Register<IModuleFinder, TestModuleFinder>();
             options.IocManager.Register<IAbpSession, TestAbpSession>();
             
             var modules = options.IocManager.Resolve<TestModuleFinder>().Modules;
-            modules.AddRange(testOptions.Modules);
+            foreach (var module in testOptions.Modules)
+            {
+                modules.Add(module);
+            }
         }
     }
 }

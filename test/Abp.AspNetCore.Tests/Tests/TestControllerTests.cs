@@ -1,5 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
 using Abp.Web.Mvc.Models;
 using Shouldly;
@@ -7,8 +9,14 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
-    public class ControllerTests : AbpAspNetCoreTestBase
+    public class TestControllerTests : AppTestBase
     {
+        [Fact]
+        public void Should_Resolve_Controller()
+        {
+            ServiceProvider.GetService<TestController>().ShouldNotBeNull();
+        }
+
         [Fact]
         public async Task Should_Return_Content()
         {

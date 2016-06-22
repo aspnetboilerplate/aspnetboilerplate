@@ -1,6 +1,6 @@
 ﻿using System;
 using Abp.AspNetCore.Mvc;
-using Abp.AspNetCore.Tests.Infrastructure;
+using Abp.AspNetCore.TestBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

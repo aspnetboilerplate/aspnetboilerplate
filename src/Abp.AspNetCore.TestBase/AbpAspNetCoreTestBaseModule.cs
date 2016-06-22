@@ -1,16 +1,12 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.TestBase;
 
-namespace Abp.AspNetCore.Tests.Infrastructure
+namespace Abp.AspNetCore.TestBase
 {
-    [DependsOn(typeof(AbpAspNetCoreModule))]
+    [DependsOn(typeof(AbpTestBaseModule),typeof(AbpAspNetCoreModule))]
     public class AbpAspNetCoreTestBaseModule : AbpModule
     {
-        public override void PreInitialize()
-        {
-            Configuration.EventBus.UseDefaultEventBus = false;
-        }
-
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

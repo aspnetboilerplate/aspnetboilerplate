@@ -1,7 +1,7 @@
 ﻿using Abp.Collections;
 using Abp.Modules;
 
-namespace Abp.AspNetCore.Tests.Infrastructure
+namespace Abp.AspNetCore.TestBase
 {
     public class TestOptions
     {
