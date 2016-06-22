@@ -1,4 +1,5 @@
 using System;
+using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -11,15 +12,21 @@ namespace Abp.AspNetCore
     {
         public static IServiceProvider AddAbp(this IServiceCollection services)
         {
-            return services.AddAbp(bs => { });
+            return services.AddAbp(options => { });
         }
 
-        public static IServiceProvider AddAbp(this IServiceCollection services, Action<AbpBootstrapper> bootstrapAction)
+        public static IServiceProvider AddAbp(this IServiceCollection services, Action<AbpServiceOptions> optionsAction)
         {
+            var options = new AbpServiceOptions
+            {
+                IocManager = IocManager.Instance
+            };
+
+            optionsAction(options);
+
             AddContextAccessors(services);
 
-            var abpBootstrapper = AddAbpBootstrapper(services);
-            bootstrapAction(abpBootstrapper);
+            var abpBootstrapper = AddAbpBootstrapper(services, options.IocManager);
 
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
@@ -31,9 +38,9 @@ namespace Abp.AspNetCore
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
-        private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services)
+        private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)
         {
-            var abpBootstrapper = new AbpBootstrapper();
+            var abpBootstrapper = new AbpBootstrapper(iocManager);
             services.AddSingleton(abpBootstrapper);
             return abpBootstrapper;
         }
