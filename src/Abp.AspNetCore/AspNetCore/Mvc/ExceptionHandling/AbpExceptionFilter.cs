@@ -1,4 +1,6 @@
-﻿using Abp.AspNetCore.Mvc.Extensions;
+﻿using System;
+using System.Net;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
@@ -15,8 +17,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
     {
         public ILogger Logger { get; set; }
 
-        public AbpExceptionFilter()
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+
+        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder)
         {
+            _errorInfoBuilder = errorInfoBuilder;
             Logger = NullLogger.Instance;
         }
 
@@ -32,27 +37,46 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             {
                 LogHelper.LogException(Logger, context.Exception);
             }
-            
+
             if (wrapResultAttribute.WrapOnError)
             {
                 HandleAndWrapException(context);
             }
         }
 
-        private static void HandleAndWrapException(ExceptionContext context)
+        private void HandleAndWrapException(ExceptionContext context)
         {
+            if (!IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            {
+                return;
+            }
+            
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = 500; //TODO: Get from a constant?
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Result = new ObjectResult(
                 new AjaxResponse(
-                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    _errorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                 )
             );
 
             context.Exception = null; //Handled!
+        }
 
-            //TODO: View results vs JSON results
+        private static bool IsObjectResult(Type returnType)
+        {
+            if (typeof(IActionResult).IsAssignableFrom(returnType))
+            {
+                if (typeof(JsonResult).IsAssignableFrom(returnType) ||
+                    typeof(ObjectResult).IsAssignableFrom(returnType))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

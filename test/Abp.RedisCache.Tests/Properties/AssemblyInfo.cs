@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Abp;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -19,5 +17,4 @@ using Abp;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("0b306a5a-fcec-4e0b-a800-ecc9f94ffdc9")]
 
-[assembly: AssemblyVersion(AbpConsts.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpConsts.CurrentVersion)]
+

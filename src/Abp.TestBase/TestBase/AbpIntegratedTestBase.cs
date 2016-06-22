@@ -42,7 +42,7 @@ namespace Abp.TestBase
             LocalIocManager.Register<IAbpSession, TestAbpSession>();
 
             var modules = LocalIocManager.Resolve<TestModuleFinder>().Modules;
-            modules.Add<TestBaseModule>();
+            modules.Add<AbpTestBaseModule>();
             AddModules(modules);
 
             PreInitialize();

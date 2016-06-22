@@ -16,7 +16,7 @@ namespace Abp
         /// <summary>
         /// Gets IIocManager object used by this class.
         /// </summary>
-        public IIocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; }
 
         /// <summary>
         /// Is this object disposed before?

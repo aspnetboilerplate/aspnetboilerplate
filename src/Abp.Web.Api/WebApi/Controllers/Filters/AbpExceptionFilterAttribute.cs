@@ -52,10 +52,10 @@ namespace Abp.WebApi.Controllers.Filters
                 }
                 else
                 {
-                    wrapResultAttribute = DontWrapResultAttribute.Default;                    
+                    wrapResultAttribute = DontWrapResultAttribute.Default;
                 }
             }
-            
+
             if (wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);
@@ -66,7 +66,7 @@ namespace Abp.WebApi.Controllers.Filters
                 context.Response = context.Request.CreateResponse(
                     HttpStatusCode.OK, //TODO: Consider to return 500
                     new AjaxResponse(
-                        ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                        SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
                         context.Exception is Abp.Authorization.AbpAuthorizationException)
                     );
 
