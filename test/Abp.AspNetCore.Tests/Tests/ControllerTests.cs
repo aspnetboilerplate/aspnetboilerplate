@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Models;
 using Abp.Web.Mvc.Models;
@@ -27,6 +28,29 @@ namespace Abp.AspNetCore.Tests
             //Assert
             response.Result.StrValue.ShouldBe("Forty Two");
             response.Result.IntValue.ShouldBe(42);
+        }
+
+        [Theory]
+        [InlineData(true, "This is a user friendly exception message")]
+        [InlineData(false, "This is an exception message")]
+        public async Task Should_Wrap_Json_Exception_By_Default(bool userFriendly, string message)
+        {
+            // Act
+            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+                               "/Test/SimpleJsonException" + "?message=" + message + "&userFriendly=" + userFriendly,
+                               HttpStatusCode.InternalServerError
+                           );
+
+            //Assert
+            response.Error.ShouldNotBeNull();
+            if (userFriendly)
+            {
+                response.Error.Message.ShouldBe(message);
+            }
+            else
+            {
+                response.Error.Message.ShouldNotBe(message);
+            }
         }
 
         [Fact]

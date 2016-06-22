@@ -17,8 +17,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
     {
         public ILogger Logger { get; set; }
 
-        public AbpExceptionFilter()
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+
+        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder)
         {
+            _errorInfoBuilder = errorInfoBuilder;
             Logger = NullLogger.Instance;
         }
 
@@ -41,7 +44,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             }
         }
 
-        private static void HandleAndWrapException(ExceptionContext context)
+        private void HandleAndWrapException(ExceptionContext context)
         {
             if (!IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
             {
@@ -52,7 +55,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Result = new ObjectResult(
                 new AjaxResponse(
-                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    _errorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                 )
             );

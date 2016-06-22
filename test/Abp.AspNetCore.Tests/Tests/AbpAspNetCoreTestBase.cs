@@ -2,8 +2,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Shouldly;
@@ -16,12 +18,16 @@ namespace Abp.AspNetCore.Tests
 
         protected HttpClient Client { get; }
 
+        protected IIocManager IocManager { get; }
+
         protected AbpAspNetCoreTestBase()
         {
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             Server = new TestServer(builder);
+            IocManager = Server.Host.Services.GetRequiredService<IIocManager>();
+
             Client = Server.CreateClient();
         }
         

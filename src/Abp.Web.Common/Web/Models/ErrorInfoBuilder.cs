@@ -7,9 +7,6 @@ namespace Abp.Web.Models
     /// <inheritdoc/>
     public class ErrorInfoBuilder : IErrorInfoBuilder, ISingletonDependency
     {
-        /// <inheritdoc/>
-        public static IErrorInfoBuilder Instance { get { return IocManager.Instance.Resolve<IErrorInfoBuilder>(); } }
-
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
         /// <inheritdoc/>
@@ -25,7 +22,7 @@ namespace Abp.Web.Models
         }
 
         /// <summary>
-        /// Adds an exception converter that is used by <paramref name="ForException"/> method.
+        /// Adds an exception converter that is used by <see cref="BuildForException"/> method.
         /// </summary>
         /// <param name="converter">Converter object</param>
         public void AddExceptionConverter(IExceptionToErrorInfoConverter converter)
