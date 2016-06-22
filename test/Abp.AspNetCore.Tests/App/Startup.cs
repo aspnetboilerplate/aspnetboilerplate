@@ -17,10 +17,14 @@ namespace Abp.AspNetCore.App
                 options.AddAbp(); //Add ABP infrastructure to MVC
             }).AddControllersAsServices();
 
-            //Configure Dependency Injection
+            //Configure Abp and Dependency Injection
             return services.AddAbp(options =>
             {
-                options.SetupTest(); //Test setup
+                //Test setup
+                options.SetupTest(testOptions =>
+                {
+                    testOptions.Modules.Add<AppModule>();
+                });
             });
         }
 

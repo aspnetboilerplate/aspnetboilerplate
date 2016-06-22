@@ -16,14 +16,15 @@ namespace Abp.AspNetCore.TestBase
 
         public static void SetupTest(this AbpServiceOptions options, Action<TestOptions> testOptionsAction)
         {
+            options.IocManager = new IocManager();
+
             var testOptions = new TestOptions();
             testOptions.Modules.Add<AbpAspNetCoreTestBaseModule>();
 
             testOptionsAction(testOptions);
 
-            options.IocManager = new IocManager();
-            options.IocManager.Register<IModuleFinder, TestModuleFinder>();
-            options.IocManager.Register<IAbpSession, TestAbpSession>();
+            options.IocManager.RegisterIfNot<IModuleFinder, TestModuleFinder>();
+            options.IocManager.RegisterIfNot<IAbpSession, TestAbpSession>();
             
             var modules = options.IocManager.Resolve<TestModuleFinder>().Modules;
             foreach (var module in testOptions.Modules)
