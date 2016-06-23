@@ -46,12 +46,6 @@ namespace Abp
         public AbpBootstrapper(IIocManager iocManager)
         {
             IocManager = iocManager;
-
-            //TODO: Create a single registrar initializes all inside
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            FeatureInterceptorRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>

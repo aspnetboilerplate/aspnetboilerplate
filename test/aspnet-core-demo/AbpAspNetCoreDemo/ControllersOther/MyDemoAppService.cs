@@ -24,7 +24,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
         public List<ProductDto> Get()
         {
             //throw new UserFriendlyException("just testing...");
-            return _productRepository.GetAllList().MapTo<List<ProductDto>>();
+            return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
     }
 }
