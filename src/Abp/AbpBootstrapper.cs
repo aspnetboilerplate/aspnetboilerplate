@@ -1,8 +1,13 @@
 ﻿using System;
+using Abp.Application.Features;
+using Abp.Auditing;
+using Abp.Authorization.Interceptors;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
+using Abp.Domain.Uow;
 using Abp.Modules;
+using Abp.Runtime.Validation.Interception;
 
 namespace Abp
 {
@@ -41,6 +46,12 @@ namespace Abp
         public AbpBootstrapper(IIocManager iocManager)
         {
             IocManager = iocManager;
+
+            //TODO: Create a single registrar initializes all inside
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            ValidationInterceptorRegistrar.Initialize(IocManager);
+            FeatureInterceptorRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>

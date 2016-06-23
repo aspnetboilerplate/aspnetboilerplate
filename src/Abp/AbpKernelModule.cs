@@ -5,7 +5,6 @@ using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
@@ -16,12 +15,10 @@ using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
-using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
-using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
@@ -38,14 +35,7 @@ namespace Abp
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-
-            FeatureInterceptorRegistrar.Initialize(IocManager);
             AuditingInterceptorRegistrar.Initialize(IocManager);
-
-            UnitOfWorkRegistrar.Initialize(IocManager);
-
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
                 new NamedTypeSelector(
