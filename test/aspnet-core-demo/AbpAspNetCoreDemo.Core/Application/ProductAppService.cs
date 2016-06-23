@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
@@ -18,7 +19,7 @@ namespace AbpAspNetCoreDemo.Core.Application
 
         public List<ProductDto> GetAll()
         {
-            return _productRepository.GetAllList().MapTo<List<ProductDto>>();
+            return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
     }
 }
