@@ -4,7 +4,7 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.MemoryDb": "0.9.6.0-*",
+    "Abp.MemoryDb": "0.9.6.1-*",
     "Abp.Tests": "1.0.0-*"
   },
 
