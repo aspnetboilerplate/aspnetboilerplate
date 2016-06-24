@@ -52,10 +52,10 @@ namespace Abp.AspNetCore.Mvc.Authorization
         private async Task CheckPermissions(MethodInfo methodInfo)
         {
             var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<AbpMvcAuthorizeAttribute>(
+                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
                     methodInfo
-                );
-
+                ).OfType<IAbpAuthorizeAttribute>().ToArray();
+            
             if (!authorizeAttributes.Any())
             {
                 return;
