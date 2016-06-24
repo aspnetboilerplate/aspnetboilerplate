@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbpAspNetCoreDemo.ControllersOther
 {
     [Controller]
-    [Route("api/demo-products")]
     public class MyDemoAppService : ApplicationService
     {
         private readonly IRepository<Product> _productRepository;
@@ -20,8 +19,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
             _productRepository = productRepository;
         }
 
-        [HttpGet]
-        public List<ProductDto> Get()
+        public List<ProductDto> MyTest1()
         {
             //throw new UserFriendlyException("just testing...");
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
