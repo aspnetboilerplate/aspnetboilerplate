@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.EntityFramework.Repositories;
@@ -62,6 +59,7 @@ namespace Abp.EntityFramework
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
+                    Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
                     repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
@@ -22,6 +23,8 @@ namespace Abp.Domain.Repositories
         /// The multi tenancy side
         /// </summary>
         public static MultiTenancySides? MultiTenancySide { get; private set; }
+
+        public IIocResolver IocResolver { get; set; }
 
         static AbpRepositoryBase()
         {

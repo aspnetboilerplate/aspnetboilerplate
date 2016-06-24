@@ -1,8 +1,13 @@
 ﻿using System;
+using Abp.Application.Features;
+using Abp.Auditing;
+using Abp.Authorization.Interceptors;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
+using Abp.Domain.Uow;
 using Abp.Modules;
+using Abp.Runtime.Validation.Interception;
 
 namespace Abp
 {
@@ -16,7 +21,7 @@ namespace Abp
         /// <summary>
         /// Gets IIocManager object used by this class.
         /// </summary>
-        public IIocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; }
 
         /// <summary>
         /// Is this object disposed before?

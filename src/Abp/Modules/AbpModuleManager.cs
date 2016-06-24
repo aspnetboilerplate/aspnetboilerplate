@@ -41,9 +41,11 @@ namespace Abp.Modules
 
         public virtual void ShutdownModules()
         {
+            Logger.Debug("Shutting down has been started");
             var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.Reverse();
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
+            Logger.Debug("Shutting down completed.");
         }
 
         private void LoadAll()

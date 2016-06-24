@@ -1,0 +1,19 @@
+version: 1.0.{build}
+before_build:
+- cmd: dotnet.exe restore
+build:
+  verbosity: minimal
+test:
+  assemblies:
+  - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
+  - test\Abp.EntityFramework.Tests\bin\Debug\net452\win7-x64\Abp.EntityFramework.Tests.dll
+  - test\Abp.MemoryDb.Tests\bin\Debug\net452\win7-x64\Abp.MemoryDb.Tests.dll
+  - test\Abp.NHibernate.Tests\bin\Debug\net452\win7-x64\Abp.NHibernate.Tests.dll
+  - test\Abp.TestBase.SampleApplication.Tests\bin\Debug\net452\win7-x64\Abp.TestBase.SampleApplication.Tests.dll
+  - test\Abp.TestBase.Tests\bin\Debug\net452\win7-x64\Abp.TestBase.Tests.dll
+  - test\Abp.Tests\bin\Debug\net452\win7-x64\Abp.Tests.dll
+  - test\Abp.Web.Api.Tests\bin\Debug\net452\win7-x64\Abp.Web.Api.Tests.dll
+  - test\Abp.Web.Mvc.Tests\bin\Debug\net452\win7-x64\Abp.Web.Mvc.Tests.dll
+  - test\Abp.Web.Tests\bin\Debug\net452\win7-x64\Abp.Web.Tests.dll
+  - test\Abp.EntityFrameworkCore.Tests\bin\Debug\net461\win7-x64\Abp.EntityFrameworkCore.Tests.dll
+  - test\Abp.AspNetCore.Tests\bin\Debug\net461\win7-x64\Abp.AspNetCore.Tests.dll

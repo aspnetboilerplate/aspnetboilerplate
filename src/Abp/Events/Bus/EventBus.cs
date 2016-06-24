@@ -216,7 +216,7 @@ namespace Abp.Events.Bus
                 var baseArg = genericArg.BaseType;
                 if (baseArg != null)
                 {
-                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
+                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
                     var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
                     var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
                     baseEventData.EventTime = eventData.EventTime;

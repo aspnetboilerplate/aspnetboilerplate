@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lv">
+  <texts>
+    <text name="SmtpHost">SMTP hosts</text>
+    <text name="SmtpPort">SMTP ports</text>
+    <text name="Username">Lietotājs</text>
+    <text name="Password">Parole</text>
+    <text name="DomainName">Domēna vārds</text>
+    <text name="UseSSL">Izmantot SSL</text>
+    <text name="UseDefaultCredentials">Izmantot noklusējuma akreditācijas datus</text>
+    <text name="DefaultFromSenderEmailAddress">Pēc Noklusējuma (sender) email pasts</text>
+    <text name="DefaultFromSenderDisplayName">Pēc Noklusējuma (sender) displejs nosaukums</text>
+    <text name="DefaultLanguage">Noklusējuma valoda</text>
+    <text name="ReceiveNotifications">Saņemt paziņojumus</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Pašreizējais lietotājs nav pieslēdzies lietotnei!</text>
+    <text name="TimeZone">Laika zona</text>
+  </texts>
+</localizationDictionary>

@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-*",
+
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Abp.EntityFrameworkCore": "0.9.6.1-*",
+    "Abp.TestBase": "0.9.6.1-*",
+    "Abp.Tests": "1.0.0-*",
+    "Castle.Windsor.MsDependencyInjection": "0.2.0",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.0-rc2-final"
+  },
+
+  "frameworks": {
+    "net461": {
+      "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+    }
+  }
+}

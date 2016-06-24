@@ -75,6 +75,11 @@ namespace Abp.Web.Mvc.Controllers
         public ILocalizationManager LocalizationManager { protected get; set; }
 
         /// <summary>
+        /// Reference to the error info builder.
+        /// </summary>
+        public IErrorInfoBuilder ErrorInfoBuilder { protected get; set; }
+
+        /// <summary>
         /// Gets/sets name of the localization source that is used in this application service.
         /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
@@ -323,8 +328,10 @@ namespace Abp.Web.Mvc.Controllers
         {
             _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
             _wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(_currentMethodInfo) ??
-                WrapResultAttribute.Default;
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                    _currentMethodInfo,
+                    WrapResultAttribute.Default
+                );
         }
 
         #endregion
@@ -405,7 +412,7 @@ namespace Abp.Web.Mvc.Controllers
             context.HttpContext.Response.StatusCode = 200; //TODO: Consider to return 500
             return new AbpJsonResult(
                 new MvcAjaxResponse(
-                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    ErrorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                     )
                 );
@@ -418,7 +425,7 @@ namespace Abp.Web.Mvc.Controllers
             {
                 ViewName = "Error",
                 MasterName = string.Empty,
-                ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(context.Exception)),
+                ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(ErrorInfoBuilder.BuildForException(context.Exception), context.Exception)),
                 TempData = context.Controller.TempData
             };
         }
@@ -463,10 +470,7 @@ namespace Abp.Web.Mvc.Controllers
             _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
             _auditInfo.Exception = filterContext.Exception;
 
-            if (AuditInfoProvider != null)
-            {
-                AuditInfoProvider.Fill(_auditInfo);
-            }
+            AuditInfoProvider?.Fill(_auditInfo);
 
             AuditingStore.Save(_auditInfo);
         }

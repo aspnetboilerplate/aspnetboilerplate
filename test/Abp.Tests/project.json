@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0-*",
+  
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Abp": "0.9.6.1-*",
+    "xunit": "2.1.0",
+    "xunit.runner.visualstudio": "2.1.0",
+    "xunit.extensibility.execution": "2.1.0",
+    "dotnet-test-xunit": "1.0.0-rc2-build10025",
+    "NSubstitute": "1.10.0",
+    "Shouldly": "2.8.0"
+  },
+
+  "frameworks": {
+    "net452": {
+      "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+    }
+  },
+
+  "buildOptions": {
+    "embed": {
+      "include": [
+        "Localization/Json/JsonSources/*.json",
+        "Localization/Json/XmlSources/*.xml",
+        "Localization/TestResourceFiles/*.resx",
+        "Localization/TestXmlFiles/*.xml",
+        "Resources/Embedded/MyResources/js/*.js"
+      ]
+    }
+  }
+}

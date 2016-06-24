@@ -16,7 +16,6 @@ using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
-using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
@@ -39,12 +38,9 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
-
             FeatureInterceptorRegistrar.Initialize(IocManager);
             AuditingInterceptorRegistrar.Initialize(IocManager);
-
             UnitOfWorkRegistrar.Initialize(IocManager);
-
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
 
             Configuration.Auditing.Selectors.Add(
@@ -140,8 +136,8 @@ namespace Abp
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
 

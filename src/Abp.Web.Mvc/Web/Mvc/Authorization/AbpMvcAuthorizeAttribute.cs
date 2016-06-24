@@ -49,5 +49,27 @@ namespace Abp.Web.Mvc.Authorization
                 return false;
             }
         }
+
+        /// <inheritdoc/>
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            var httpContext = filterContext.HttpContext;
+
+            if (!httpContext.Request.IsAjaxRequest())
+            {
+                base.HandleUnauthorizedRequest(filterContext);
+                return;
+            }
+
+            var user = httpContext.User;
+            var response = httpContext.Response;
+
+            response.StatusCode = user.Identity.IsAuthenticated == false
+                                      ? (int) System.Net.HttpStatusCode.Unauthorized
+                                      : (int) System.Net.HttpStatusCode.Forbidden;
+
+            response.SuppressFormsAuthenticationRedirect = true;
+            response.End();
+        }
     }
 }

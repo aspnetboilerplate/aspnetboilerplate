@@ -21,8 +21,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             _filters = filters;
 
             Properties["__AbpDynamicApiDontWrapResultAttribute"] =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrNull<WrapResultAttribute>(methodInfo)
-                ?? WrapResultAttribute.Default;
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                    methodInfo,
+                    WrapResultAttribute.Default
+                );
         }
 
         /// <summary>

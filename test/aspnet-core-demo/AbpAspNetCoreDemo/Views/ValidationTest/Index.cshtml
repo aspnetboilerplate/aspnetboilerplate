@@ -1,0 +1,15 @@
+﻿@using System.Threading.Tasks
+@using AbpAspNetCoreDemo.Models.ValidationTest
+@model IndexViewModel
+
+<h2>@ViewBag.Message</h2>
+
+<p>@L("WelcomeMessage")</p>
+
+<h4>Validation succeed. Values:</h4>
+
+    <ul>
+        <li>Name: @Model.Name</li>
+        <li>Age: @Model.Age</li>
+        <li>ValueToBeNormalized: @Model.ValueToBeNormalized</li>
+    </ul>

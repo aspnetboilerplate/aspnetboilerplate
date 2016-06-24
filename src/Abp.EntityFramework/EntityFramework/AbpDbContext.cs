@@ -212,6 +212,9 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        CheckAndSetId(entry.Entity);
+                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+                        SetCreationAuditProperties(entry.Entity, userId);
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
@@ -280,17 +283,35 @@ namespace Abp.EntityFramework
 
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
         {
-            if (entityAsObj is IHasCreationTime)
+            var entityWithCreationTime = entityAsObj as IHasCreationTime;
+            if (entityWithCreationTime == null)
             {
-                entityAsObj.As<IHasCreationTime>().CreationTime = Clock.Now;
+                return;
+            }
+
+            if (entityWithCreationTime.CreationTime == default(DateTime))
+            {
+                entityWithCreationTime.CreationTime = Clock.Now;
             }
 
             if (userId.HasValue && entityAsObj is ICreationAudited)
             {
-                var entity = entityAsObj.As<ICreationAudited>();
+                var entity = entityAsObj as ICreationAudited;
                 if (entity.CreatorUserId == null)
                 {
-                    entity.CreatorUserId = userId;
+                    if (entity is IMayHaveTenant || entity is IMustHaveTenant)
+                    {
+                        //Sets CreatorUserId only if current user is in same tenant/host with the given entity
+                        if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
+                            (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
+                        {
+                            entity.CreatorUserId = userId;
+                        }
+                    }
+                    else
+                    {
+                        entity.CreatorUserId = userId;
+                    }
                 }
             }
         }
