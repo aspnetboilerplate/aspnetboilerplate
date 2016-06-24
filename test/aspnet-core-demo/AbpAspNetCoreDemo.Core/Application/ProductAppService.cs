@@ -17,7 +17,7 @@ namespace AbpAspNetCoreDemo.Core.Application
             _productRepository = productRepository;
         }
 
-        public List<ProductDto> GetAll()
+        public List<ProductDto> Get()
         {
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }

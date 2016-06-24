@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace AbpAspNetCoreDemo.Controllers
 {
     [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class ProductsController : AbpController
     {
         private readonly IProductAppService _productAppService;
@@ -27,7 +28,7 @@ namespace AbpAspNetCoreDemo.Controllers
         public IEnumerable<ProductDto> Get()
         {
             _logger.LogInformation("ProductsController.Get method is called. This message is logged via Microsoft.Extensions.Logging.ILogger");
-            return _productAppService.GetAll();
+            return _productAppService.Get();
         }
 
         // GET api/values/5
