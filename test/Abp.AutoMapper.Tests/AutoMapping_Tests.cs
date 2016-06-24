@@ -4,15 +4,8 @@ using Xunit;
 
 namespace Abp.AutoMapper.Tests
 {
-    public class AutoMapping_Tests
+    public class AutoMapping_Tests : AutoMapperTestBase
     {
-        static AutoMapping_Tests()
-        {
-            //ABP will automatically find and create these mappings normally. This is just for test purposes.
-            AutoMapperHelper.CreateMap(typeof(MyClass1));
-            AutoMapperHelper.CreateMap(typeof(MyClass2));
-        }
-
         [Fact]
         public void Map_Null_Tests()
         {

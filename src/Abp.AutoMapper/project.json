@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Abp": "0.9.2.1-*",
-    "AutoMapper": "3.3.1"
+    "AutoMapper": "4.2.1"
   },
 
   "frameworks": {

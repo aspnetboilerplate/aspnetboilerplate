@@ -1,17 +1,12 @@
-﻿using Shouldly;
+﻿using Abp.Modules;
+using Shouldly;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests
 {
-    public class AutoMapper_Inheritance_Tests
+    [DependsOn(typeof(AbpAutoMapperModule))]
+    public class AutoMapper_Inheritance_Tests : AutoMapperTestBase
     {
-        public AutoMapper_Inheritance_Tests()
-        {
-            AutoMapperHelper.CreateMap(typeof(MyTargetClassToMap));
-            AutoMapperHelper.CreateMap(typeof(EntityDto));
-            AutoMapperHelper.CreateMap(typeof(DerivedEntityDto));
-        }
-
         [Fact]
         public void Should_Map_Derived_To_Target()
         {

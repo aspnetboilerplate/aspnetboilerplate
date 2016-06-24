@@ -8,7 +8,8 @@ using Castle.Core.Logging;
 
 namespace Abp.AutoMapper
 {
-    [DependsOn(typeof (AbpKernelModule))]
+
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule
     {
         public ILogger Logger { get; set; }
@@ -43,15 +44,17 @@ namespace Abp.AutoMapper
                 {
                     return;
                 }
-
-                FindAndAutoMapTypes();
-                CreateOtherMappings();
+                Mapper.Initialize(cfg =>
+                {
+                    FindAndAutoMapTypes(cfg);
+                    CreateOtherMappings(cfg);
+                });
 
                 _createdMappingsBefore = true;
             }
         }
 
-        private void FindAndAutoMapTypes()
+        private void FindAndAutoMapTypes(IConfiguration cfg)
         {
             var types = _typeFinder.Find(type =>
                 type.IsDefined(typeof(AutoMapAttribute)) ||
@@ -63,14 +66,14 @@ namespace Abp.AutoMapper
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
-                AutoMapperHelper.CreateMap(type);
+                AutoMapperHelper.CreateMap(type, cfg);
             }
         }
 
-        private void CreateOtherMappings()
+        private void CreateOtherMappings(IConfiguration cfg)
         {
             var localizationManager = IocManager.Resolve<ILocalizationManager>();
-            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => localizationManager.GetString(ls));
+            cfg.CreateMap<LocalizableString, string>("AbpAutoMapperModuleProfile").ConvertUsing(ls => localizationManager.GetString(ls));
         }
     }
 }
