@@ -26,7 +26,6 @@ namespace Abp.AspNetCore
             optionsAction(options);
 
             AddContextAccessors(services);
-            AddModelProvider(services);
 
             var abpBootstrapper = AddAbpBootstrapper(services, options.IocManager);
 
@@ -38,11 +37,6 @@ namespace Abp.AspNetCore
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-        }
-
-        private static void AddModelProvider(IServiceCollection services)
-        {
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, AbpApplicationModelProvider>());
         }
 
         private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)

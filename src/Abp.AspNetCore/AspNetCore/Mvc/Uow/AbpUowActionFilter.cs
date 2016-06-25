@@ -27,7 +27,7 @@ namespace Abp.AspNetCore.Mvc.Uow
                 return;
             }
 
-            using (var uow = _unitOfWorkManager.Begin())
+            using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
                 await next();
                 await uow.CompleteAsync();

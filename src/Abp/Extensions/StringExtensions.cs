@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Abp.Extensions
 {
@@ -286,6 +288,23 @@ namespace Abp.Extensions
             }
 
             return (T)Enum.Parse(typeof(T), value, ignoreCase);
+        }
+
+        public static string ToMd5(this string str)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var inputBytes = Encoding.UTF8.GetBytes(str);
+                var hashBytes = md5.ComputeHash(inputBytes);
+
+                var sb = new StringBuilder();
+                foreach (var hashByte in hashBytes)
+                {
+                    sb.Append(hashByte.ToString("X2"));
+                }
+
+                return sb.ToString();
+            }
         }
 
         /// <summary>

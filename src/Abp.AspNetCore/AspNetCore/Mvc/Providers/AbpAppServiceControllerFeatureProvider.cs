@@ -13,10 +13,11 @@ namespace Abp.AspNetCore.Mvc.Providers
 
         protected virtual bool IsAppService(TypeInfo typeInfo)
         {
-            return typeof(IApplicationService).IsAssignableFrom(typeInfo.GetTypeInfo()) &&
+            return typeof(IApplicationService).IsAssignableFrom(typeInfo.AsType()) &&
+                   typeInfo.IsPublic &&
                    !typeInfo.IsAbstract &&
                    !typeInfo.IsGenericType &&
-                   typeInfo.IsPublic;
+                   !typeInfo.IsDefined(typeof(DisableDynamicWebApiAttribute));
         }
     }
 }

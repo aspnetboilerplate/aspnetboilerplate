@@ -1,6 +1,8 @@
 ﻿using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AspNetCore.Mvc.Conventions;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
+using Abp.AspNetCore.Mvc.Providers;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Uow;
 using Abp.AspNetCore.Mvc.Validation;
@@ -15,6 +17,8 @@ namespace Abp.AspNetCore.Mvc
     {
         public static void AddAbp(this MvcOptions options)
         {
+            options.Conventions.Add(new AbpAppServiceConvention());
+            
             options.Filters.AddService(typeof(AbpAuthorizationFilter));
             options.Filters.AddService(typeof(AbpAuditActionFilter));
             options.Filters.AddService(typeof(AbpValidationActionFilter));
