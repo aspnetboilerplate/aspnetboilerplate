@@ -19,11 +19,11 @@ namespace Abp.Web.Api.Modeling
 
         }
 
-        public ActionApiDescriptionModel(string name, string httpMethod, string url)
+        public ActionApiDescriptionModel(string name, string url, string httpMethod = null)
         {
             Name = name;
-            HttpMethod = httpMethod;
             Url = url;
+            HttpMethod = httpMethod;
 
             Parameters = new List<ParameterApiDescriptionModel>();
         }

@@ -28,8 +28,8 @@ namespace Abp.AspNetCore.Mvc.Proxying
                     var action = controller.AddAction(
                         new ActionApiDescriptionModel(
                             apiDescription.ActionDescriptor.GetMethodInfo().Name,
-                            apiDescription.HttpMethod,
-                            apiDescription.RelativePath
+                            apiDescription.RelativePath,
+                            apiDescription.HttpMethod
                         )
                     );
 
@@ -38,10 +38,10 @@ namespace Abp.AspNetCore.Mvc.Proxying
                         action.AddParameter(
                             new ParameterApiDescriptionModel(
                                 parameterDescription.Name,
-                                parameterDescription.Type.FullName,
-                                parameterDescription.RouteInfo.IsOptional,
-                                parameterDescription.RouteInfo.DefaultValue,
-                                parameterDescription.RouteInfo.Constraints?.Select(c => c.GetType().Name).ToArray(),
+                                parameterDescription.Type,
+                                parameterDescription.RouteInfo?.IsOptional ?? false,
+                                parameterDescription.RouteInfo?.DefaultValue,
+                                parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
                                 parameterDescription.Source.Id
                             )
                         );
