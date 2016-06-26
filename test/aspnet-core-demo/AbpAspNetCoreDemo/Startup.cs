@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Reflection;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc;
-using Abp.AspNetCore.Mvc.Providers;
-using AbpAspNetCoreDemo.Core.Application;
 using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AbpAspNetCoreDemo
 {
@@ -43,7 +37,7 @@ namespace AbpAspNetCoreDemo
                 mvcOptions.AddAbp(); //Add ABP infrastructure to MVC
             });
 
-            //Configure Abp and Dependency Injection
+            //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp(abpBootstrapper =>
             {
                 //Configure Log4Net logging
@@ -56,7 +50,7 @@ namespace AbpAspNetCoreDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseAbp(); //Initializes ABP framework.
+            app.UseAbp(); //Initializes ABP framework. Should be called first.
 
             if (env.IsDevelopment())
             {
@@ -76,15 +70,6 @@ namespace AbpAspNetCoreDemo
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}"
                     );
-
-                //TEST route
-                routes.MapRoute(
-                    name: "service-1",
-                    template: "api/services/app/demo/{action}",
-                    defaults: new
-                    {
-                        controller = "MyDemoAppService"
-                    });
             });
         }
     }
