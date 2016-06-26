@@ -1,23 +1,29 @@
 using System.Reflection;
 using Abp.Application.Services;
+using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Abp.AspNetCore.Mvc.Providers
 {
+    /// <summary>
+    /// Used to add application services as controller.
+    /// </summary>
     public class AbpAppServiceControllerFeatureProvider : ControllerFeatureProvider
     {
         protected override bool IsController(TypeInfo typeInfo)
         {
-            return IsAppService(typeInfo);
-        }
+            var type = typeInfo.AsType();
 
-        protected virtual bool IsAppService(TypeInfo typeInfo)
-        {
-            return typeof(IApplicationService).IsAssignableFrom(typeInfo.AsType()) &&
-                   typeInfo.IsPublic &&
-                   !typeInfo.IsAbstract &&
-                   !typeInfo.IsGenericType &&
-                   !typeInfo.IsDefined(typeof(DisableDynamicWebApiAttribute));
+            if (!typeof(IApplicationService).IsAssignableFrom(type) ||
+                !type.IsPublic || type.IsAbstract || type.IsGenericType)
+            {
+                return false;
+            }
+
+            var remoteServiceAttr = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
+
+            return remoteServiceAttr == null ||
+                   remoteServiceAttr.IsEnabledFor(type);
         }
     }
 }

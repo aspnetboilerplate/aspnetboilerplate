@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Abp.Application.Services
 {
     /// <summary>
@@ -7,6 +8,7 @@ namespace Abp.Application.Services
     /// </summary>
     [Serializable]
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Method)]
+    [Obsolete("Use RemoteServiceAttribute instead")]
     public class DisableDynamicWebApiAttribute : Attribute
     {
 

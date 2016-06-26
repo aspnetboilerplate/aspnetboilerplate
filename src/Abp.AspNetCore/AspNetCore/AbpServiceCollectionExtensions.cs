@@ -1,12 +1,14 @@
 using System;
-using Abp.AspNetCore.Mvc.Providers;
 using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Abp.AspNetCore.Mvc.Providers;
+using Abp.MsDependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore
 {
@@ -23,20 +25,28 @@ namespace Abp.AspNetCore
             {
                 IocManager = IocManager.Instance
             };
+
             optionsAction(options);
 
-            AddContextAccessors(services);
+            ConfigureMvc(services);
 
             var abpBootstrapper = AddAbpBootstrapper(services, options.IocManager);
 
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
-        private static void AddContextAccessors(IServiceCollection services)
+        private static void ConfigureMvc(IServiceCollection services)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            
+            //Use DI to create controllers
+            services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+
+            //Add feature providers
+            var partManager = services.GetSingletonService<ApplicationPartManager>();
+            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider());
         }
 
         private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)

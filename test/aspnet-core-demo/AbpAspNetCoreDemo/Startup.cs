@@ -38,16 +38,10 @@ namespace AbpAspNetCoreDemo
                 options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
             );
 
-            var mvc = services.AddMvc(options =>
+            services.AddMvc(mvcOptions =>
             {
-                options.AddAbp(); //Add ABP infrastructure to MVC
+                mvcOptions.AddAbp(); //Add ABP infrastructure to MVC
             });
-
-            //TODO: Move this to a configurable extension method.
-            mvc.PartManager.ApplicationParts.Add(new AssemblyPart(Assembly.GetAssembly(typeof(ProductAppService))));
-            mvc.PartManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider());
-
-            mvc.AddControllersAsServices();
 
             //Configure Abp and Dependency Injection
             return services.AddAbp(abpBootstrapper =>

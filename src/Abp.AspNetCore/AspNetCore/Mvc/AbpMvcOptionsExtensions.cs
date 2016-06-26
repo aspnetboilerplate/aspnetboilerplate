@@ -2,7 +2,6 @@
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.Conventions;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
-using Abp.AspNetCore.Mvc.Providers;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Uow;
 using Abp.AspNetCore.Mvc.Validation;
@@ -17,15 +16,28 @@ namespace Abp.AspNetCore.Mvc
     {
         public static void AddAbp(this MvcOptions options)
         {
+            AddConventions(options);
+            AddFilters(options);
+            AddFotmatters(options);
+        }
+
+        private static void AddConventions(MvcOptions options)
+        {
             options.Conventions.Add(new AbpAppServiceConvention());
-            
+        }
+
+        private static void AddFilters(MvcOptions options)
+        {
             options.Filters.AddService(typeof(AbpAuthorizationFilter));
             options.Filters.AddService(typeof(AbpAuditActionFilter));
             options.Filters.AddService(typeof(AbpValidationActionFilter));
             options.Filters.AddService(typeof(AbpUowActionFilter));
             options.Filters.AddService(typeof(AbpExceptionFilter));
             options.Filters.AddService(typeof(AbpResultFilter));
+        }
 
+        private static void AddFotmatters(MvcOptions options)
+        {
             options.OutputFormatters.Add(new JsonOutputFormatter(
                 new JsonSerializerSettings
                 {
