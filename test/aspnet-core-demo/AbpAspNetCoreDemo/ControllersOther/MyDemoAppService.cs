@@ -21,7 +21,8 @@ namespace AbpAspNetCoreDemo.ControllersOther
             _productRepository = productRepository;
         }
 
-        public List<ProductDto> MyTest1(int prm1, MyDemoInputDto input)
+        [HttpPost]
+        public List<ProductDto> MyTest1(MyDemoInputDto input)
         {
             //throw new UserFriendlyException("just testing...");
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();

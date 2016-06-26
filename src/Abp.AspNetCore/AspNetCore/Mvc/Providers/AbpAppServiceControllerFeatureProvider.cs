@@ -20,6 +20,8 @@ namespace Abp.AspNetCore.Mvc.Providers
                 return false;
             }
 
+            //TODO: Also check if given app service is created as controller (using IAbpAspNetCoreConfiguration)
+
             var remoteServiceAttr = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
 
             return remoteServiceAttr == null ||
