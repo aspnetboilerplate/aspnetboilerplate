@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "Abp.AspNetCore": "0.9.6.1-*",
+    "Abp.AspNetCore": "0.9.7.0-*",
     "Castle.Windsor-log4net": "3.3.0",
-    "AbpAspNetCoreDemo.Core": "0.9.6.1-*",
+    "AbpAspNetCoreDemo.Core": "0.9.7.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "Abp.EntityFrameworkCore": "0.9.6.1-*",
+    "Abp.EntityFrameworkCore": "0.9.7.0-*",
     "Microsoft.EntityFrameworkCore.Tools": {
       "version": "1.0.0-preview2-final",
       "type": "build"
