@@ -18,7 +18,6 @@ namespace Abp.AspNetCore.Mvc
         {
             AddConventions(options);
             AddFilters(options);
-            AddFotmatters(options);
         }
 
         private static void AddConventions(MvcOptions options)
@@ -34,15 +33,6 @@ namespace Abp.AspNetCore.Mvc
             options.Filters.AddService(typeof(AbpUowActionFilter));
             options.Filters.AddService(typeof(AbpExceptionFilter));
             options.Filters.AddService(typeof(AbpResultFilter));
-        }
-
-        private static void AddFotmatters(MvcOptions options)
-        {
-            options.OutputFormatters.Add(new JsonOutputFormatter(
-                new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }));
         }
     }
 }
