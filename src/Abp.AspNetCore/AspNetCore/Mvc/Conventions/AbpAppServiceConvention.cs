@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Abp.Collections.Extensions;
+using Abp.Web.Api.ProxyScripting.Generators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Abp.AspNetCore.Mvc.Conventions
@@ -38,7 +39,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
                 if (typeof(IApplicationService).IsAssignableFrom(type))
                 {
-                    controller.ControllerName = controller.ControllerName.RemovePostFix("AppService", "Service");
+                    controller.ControllerName = controller.ControllerName.RemovePostFix("AppService", "ApplicationService", "Service");
                     ConfigureRemoteService(controller);
                 }
                 else
@@ -54,8 +55,10 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private void ConfigureRemoteService(ControllerModel controller)
         {
+            var configuration = GetControllerSettingOrNull(controller.ControllerType);
+
             ConfigureApiExplorer(controller);
-            ConfigureSelector(controller);
+            ConfigureSelector(controller, configuration);
             ConfigureParameters(controller);
         }
 
@@ -70,12 +73,40 @@ namespace Abp.AspNetCore.Mvc.Conventions
                         continue;
                     }
 
-                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
+                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType) &&
+                        CanUseFormBodyBinding(action))
                     {
                         prm.BindingInfo = BindingInfo.GetBindingInfo(new[] {new FromBodyAttribute()});
                     }
                 }
             }
+        }
+
+        private static bool CanUseFormBodyBinding(ActionModel action)
+        {
+            foreach (var selector in action.Selectors)
+            {
+                if (selector.ActionConstraints == null)
+                {
+                    continue;
+                }
+
+                foreach (var actionConstraint in selector.ActionConstraints)
+                {
+                    var httpMethodActionConstraint = actionConstraint as HttpMethodActionConstraint;
+                    if (httpMethodActionConstraint == null)
+                    {
+                        continue;
+                    }
+
+                    if (httpMethodActionConstraint.HttpMethods.All(hm => hm.IsIn("GET", "DELETE")))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private void ConfigureApiExplorer(ControllerModel controller)
@@ -105,7 +136,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureSelector(ControllerModel controller)
+        private void ConfigureSelector(ControllerModel controller, AbpServiceControllerSetting configuration)
         {
             RemoveEmptySelectors(controller.Selectors);
 
@@ -115,19 +146,20 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
 
             var moduleName = GetModuleNameOrDefault(controller.ControllerType.AsType());
+
             foreach (var action in controller.Actions)
             {
-                ConfigureSelector(moduleName, controller.ControllerName, action);
+                ConfigureSelector(moduleName, controller.ControllerName, action, configuration);
             }
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action)
+        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, AbpServiceControllerSetting configuration)
         {
             RemoveEmptySelectors(action.Selectors);
 
             if (!action.Selectors.Any())
             {
-                AddAbpServiceSelector(moduleName, controllerName, action);
+                AddAbpServiceSelector(moduleName, controllerName, action, configuration);
             }
             else
             {
@@ -135,15 +167,18 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action)
+        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, AbpServiceControllerSetting configuration)
         {
             var abpServiceSelectorModel = new SelectorModel
             {
                 AttributeRouteModel = CreateAbpServiceAttributeRouteModel(moduleName, controllerName, action)
             };
 
-            //TODO: Use conventional verbs!
-            abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { "POST" }));
+            var verb = configuration?.UseConventionalHttpVerbs == true
+                           ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
+                           : ProxyScriptingHelper.DefaultHttpVerb;
+
+            abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
 
             action.Selectors.Add(abpServiceSelectorModel);
         }
@@ -165,15 +200,21 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private string GetModuleNameOrDefault(Type controllerType)
         {
+            return GetControllerSettingOrNull(controllerType)?.ModuleName ??
+                   AbpServiceControllerSetting.DefaultServiceModuleName;
+        }
+
+        private AbpServiceControllerSetting GetControllerSettingOrNull(Type controllerType)
+        {
             foreach (var controllerSetting in _configuration.Value.ServiceControllerSettings)
             {
                 if (controllerSetting.Assembly == controllerType.Assembly)
                 {
-                    return controllerSetting.ModuleName;
+                    return controllerSetting;
                 }
             }
 
-            return AbpServiceControllerSetting.DefaultServiceModuleName;
+            return null;
         }
 
         private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

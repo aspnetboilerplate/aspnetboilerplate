@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 namespace AbpAspNetCoreDemo.Controllers
 {
     [Route("api/[controller]")]
-    [Route("api/[controller]/[action]")]
     [RemoteService]
     public class ProductsController : AbpController
     {

@@ -10,6 +10,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
     internal static class ProxyScriptingHelper
     {
         private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyxABCDEFGHIJKLMNORQRSTUXWVYZ0123456789_";
+        public const string DefaultHttpVerb = "POST";
 
         private static string NormalizeJsVariableName(string name)
         {
@@ -46,7 +47,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
         {
             var paramNames = action.Parameters.Select(prm => NormalizeJsVariableName(prm.Name.ToCamelCase())).ToList();
             paramNames.Add(ajaxParametersName);
-            return string.Join(", ", paramNames);
+            return String.Join(", ", paramNames);
         }
 
         public static string GenerateHeaders(ActionApiDescriptionModel action, int indent = 0)
@@ -165,6 +166,37 @@ namespace Abp.Web.Api.ProxyScripting.Generators
             }
 
             return url;
+        }
+
+        public static string GetConventionalVerbForMethodName(string methodName)
+        {
+            if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "GET";
+            }
+
+            if (methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "PUT";
+            }
+
+            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "DELETE";
+            }
+
+            if (methodName.StartsWith("Patch", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "PATCH";
+            }
+
+            if (methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "POST";
+            }
+
+            //Default
+            return DefaultHttpVerb;
         }
     }
 }

@@ -33,7 +33,11 @@ namespace AbpAspNetCoreDemo
                 )
             );
 
-            Configuration.Modules.AbpAspNetCore().CreateControllersForAppServices(typeof(AbpAspNetCoreDemoCoreModule).Assembly);
+            Configuration.Modules.AbpAspNetCore()
+                .CreateControllersForAppServices(
+                    typeof(AbpAspNetCoreDemoCoreModule).Assembly,
+                    useConventionalHttpVerbs: true
+                );
         }
 
         public override void Initialize()

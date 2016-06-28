@@ -32,6 +32,12 @@ namespace AbpAspNetCoreDemo.ControllersOther
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
 
+        [HttpGet]
+        public int GetMe([FromForm] MyDemoInputDto input)
+        {
+            return 42;
+        }
+
         public int Test2()
         {
             return 42;
