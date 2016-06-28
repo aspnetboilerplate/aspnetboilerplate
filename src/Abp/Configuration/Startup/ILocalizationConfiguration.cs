@@ -37,8 +37,16 @@ namespace Abp.Configuration.Startup
         /// It returns the given text by wrapping with [ and ] chars
         /// if not found in the localization source.
         /// This is considered only if <see cref="ReturnGivenTextIfNotFound"/> is true.
-        /// Default: true.
+        /// Default: false.
         /// </summary>
         bool WrapGivenTextIfNotFound { get; set; }
+
+        /// <summary>
+        /// It returns the given text by converting string from 'PascalCase' to a 'Sentense case'
+        /// if not found in the localization source.
+        /// This is considered only if <see cref="ReturnGivenTextIfNotFound"/> is true.
+        /// Default: true.
+        /// </summary>
+        bool HumanizeTextIfNotFound { get; set; }
     }
 }

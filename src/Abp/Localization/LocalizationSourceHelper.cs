@@ -1,4 +1,5 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Text.RegularExpressions;
+using Abp.Configuration.Startup;
 using Abp.Logging;
 
 namespace Abp.Localization
@@ -19,9 +20,18 @@ namespace Abp.Localization
 
             LogHelper.Logger.Warn(exceptionMessage);
 
-            return configuration.WrapGivenTextIfNotFound
-                ? string.Format("[{0}]", name)
+            var notFoundText = configuration.HumanizeTextIfNotFound
+                ? ToSentenceCase(name)
                 : name;
+
+            return configuration.WrapGivenTextIfNotFound
+                ? string.Format("[{0}]", notFoundText)
+                : notFoundText;
+        }
+
+        private static string ToSentenceCase(string str)
+        {
+            return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1]));
         }
     }
 }

@@ -23,6 +23,9 @@ namespace Abp.Configuration.Startup
         /// <inheritdoc/>
         public bool WrapGivenTextIfNotFound { get; set; }
 
+        /// <inheritdoc/>
+        public bool HumanizeTextIfNotFound { get; set; }
+
         public LocalizationConfiguration()
         {
             Languages = new List<LanguageInfo>();
@@ -30,7 +33,8 @@ namespace Abp.Configuration.Startup
 
             IsEnabled = true;
             ReturnGivenTextIfNotFound = true;
-            WrapGivenTextIfNotFound = true;
+            WrapGivenTextIfNotFound = false;
+            HumanizeTextIfNotFound = false;
         }
     }
 }
