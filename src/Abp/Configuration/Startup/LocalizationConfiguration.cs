@@ -34,7 +34,7 @@ namespace Abp.Configuration.Startup
             IsEnabled = true;
             ReturnGivenTextIfNotFound = true;
             WrapGivenTextIfNotFound = false;
-            HumanizeTextIfNotFound = false;
+            HumanizeTextIfNotFound = true;
         }
     }
 }
