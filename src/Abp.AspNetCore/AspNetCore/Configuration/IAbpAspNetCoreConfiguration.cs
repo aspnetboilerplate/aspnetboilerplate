@@ -4,6 +4,6 @@ namespace Abp.AspNetCore.Configuration
 {
     public interface IAbpAspNetCoreConfiguration
     {
-        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName);
+        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = false);
     }
 }

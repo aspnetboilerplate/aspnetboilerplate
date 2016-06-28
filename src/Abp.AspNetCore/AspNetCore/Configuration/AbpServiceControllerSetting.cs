@@ -13,10 +13,13 @@ namespace Abp.AspNetCore.Configuration
 
         public Assembly Assembly { get; }
 
-        public AbpServiceControllerSetting(string moduleName, Assembly assembly)
+        public bool UseConventionalHttpVerbs { get; }
+
+        public AbpServiceControllerSetting(string moduleName, Assembly assembly, bool useConventionalHttpVerbs)
         {
             ModuleName = moduleName;
             Assembly = assembly;
+            UseConventionalHttpVerbs = useConventionalHttpVerbs;
         }
     }
 }
