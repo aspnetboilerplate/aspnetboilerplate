@@ -1,18 +1,28 @@
 ﻿using System.Linq;
+using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Dependency;
 using Abp.Web.Api.Modeling;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace Abp.AspNetCore.Mvc.Proxying
 {
     public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvider, ISingletonDependency
     {
-        private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
+        public ILogger Logger { get; set; }
 
-        public AspNetCoreApiDescriptionModelProvider(IApiDescriptionGroupCollectionProvider descriptionProvider)
+        private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
+        private readonly AbpAspNetCoreConfiguration _configuration;
+
+        public AspNetCoreApiDescriptionModelProvider(
+            IApiDescriptionGroupCollectionProvider descriptionProvider,
+            AbpAspNetCoreConfiguration configuration)
         {
             _descriptionProvider = descriptionProvider;
+            _configuration = configuration;
+
+            Logger = NullLogger.Instance;
         }
 
         public ApplicationApiDescriptionModel CreateModel()
@@ -23,11 +33,20 @@ namespace Abp.AspNetCore.Mvc.Proxying
             {
                 foreach (var apiDescription in descriptionGroupItem.Items)
                 {
-                    var module = model.GetOrAddModule("app"); //TODO: Get right module
+                    var moduleName = GetModuleName(apiDescription);
+                    var module = model.GetOrAddModule(moduleName);
                     var controller = module.GetOrAddController(apiDescription.GroupName);
+                    var actionName = apiDescription.ActionDescriptor.GetMethodInfo().Name;
+
+                    if (controller.Actions.ContainsKey(actionName))
+                    {
+                        Logger.Warn($"Controller '{controller.Name}' contains more than one action with name '{actionName}' for module '{moduleName}'");
+                        continue;
+                    }
+
                     var action = controller.AddAction(
                         new ActionApiDescriptionModel(
-                            apiDescription.ActionDescriptor.GetMethodInfo().Name,
+                            actionName,
                             apiDescription.RelativePath,
                             apiDescription.HttpMethod
                         )
@@ -50,6 +69,25 @@ namespace Abp.AspNetCore.Mvc.Proxying
             }
 
             return model;
+        }
+
+        private string GetModuleName(ApiDescription apiDescription)
+        {
+            var controllerType = apiDescription.ActionDescriptor.GetMethodInfo().DeclaringType; //TODO: What about base class methods?
+            if (controllerType == null)
+            {
+                return AbpServiceControllerSetting.DefaultServiceModuleName;
+            }
+
+            foreach (var controllerSetting in _configuration.ServiceControllerSettings)
+            {
+                if (controllerType.Assembly == controllerSetting.Assembly)
+                {
+                    return controllerSetting.ModuleName;
+                }
+            }
+
+            return AbpServiceControllerSetting.DefaultServiceModuleName;
         }
     }
 }

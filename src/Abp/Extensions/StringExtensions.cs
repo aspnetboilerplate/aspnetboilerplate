@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using Abp.Collections.Extensions;
 
 namespace Abp.Extensions
 {
@@ -152,7 +153,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
             var count = 0;
@@ -170,6 +171,64 @@ namespace Abp.Extensions
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Removes first occurrence of the given postfixes from end of the given string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <param name="postFixes">one or more postfix.</param>
+        /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
+        public static string RemovePostFix(this string str, params string[] postFixes)
+        {
+            if (str.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (postFixes.IsNullOrEmpty())
+            {
+                return str;
+            }
+
+            foreach (var postFix in postFixes)
+            {
+                if (str.EndsWith(postFix))
+                {
+                    return str.Left(str.Length - postFix.Length);
+                }
+            }
+
+            return str;
+        }
+
+        /// <summary>
+        /// Removes first occurrence of the given prefixes from beginning of the given string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <param name="preFixes">one or more prefix.</param>
+        /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
+        public static string RemovePreFix(this string str, params string[] preFixes)
+        {
+            if (str.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (preFixes.IsNullOrEmpty())
+            {
+                return str;
+            }
+
+            foreach (var preFix in preFixes)
+            {
+                if (str.StartsWith(preFix))
+                {
+                    return str.Right(str.Length - preFix.Length);
+                }
+            }
+
+            return str;
         }
 
         /// <summary>

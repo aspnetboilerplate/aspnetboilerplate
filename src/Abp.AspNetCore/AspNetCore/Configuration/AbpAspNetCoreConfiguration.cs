@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Abp.AspNetCore.Configuration
 {
-    internal class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
+    public class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
     {
         public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
 

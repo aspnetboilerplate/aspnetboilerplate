@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Abp.Application.Services;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AbpAspNetCoreDemo.ControllersOther
 {
     [Controller]
+    [Route("api/mydemoservice/[action]")]
     public class MyDemoAppService : ApplicationService
     {
         private readonly IRepository<Product> _productRepository;
@@ -21,12 +23,18 @@ namespace AbpAspNetCoreDemo.ControllersOther
             _productRepository = productRepository;
         }
 
+        [Route("test1Method")]
+        [Route("test1MethodRoute2")]
         [HttpPut]
-        [Route("mydemoservice/test1Method")]
         public List<ProductDto> MyTest1(MyDemoInputDto input)
         {
             //throw new UserFriendlyException("just testing...");
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
+        }
+
+        public int Test2()
+        {
+            return 42;
         }
     }
 
