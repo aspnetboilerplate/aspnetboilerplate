@@ -1,13 +1,30 @@
+using System;
 using Abp.Application.Services;
+using Abp.AspNetCore.Configuration;
 using Abp.Extensions;
+using Abp.MsDependencyInjection.Extensions;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.AspNetCore.Mvc.Conventions
 {
     public class AbpAppServiceConvention : IApplicationModelConvention
     {
+        private readonly Lazy<AbpAspNetCoreConfiguration> _configuration;
+
+        public AbpAppServiceConvention(IServiceCollection services)
+        {
+            _configuration = new Lazy<AbpAspNetCoreConfiguration>(() =>
+            {
+                return services
+                    .GetSingletonService<AbpBootstrapper>()
+                    .IocManager
+                    .Resolve<AbpAspNetCoreConfiguration>();
+            }, true);
+        }
+
         public void Apply(ApplicationModel application)
         {
             foreach (var controller in application.Controllers)
@@ -30,7 +47,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private static void ConfigureRemoteService(ControllerModel controller)
+        private void ConfigureRemoteService(ControllerModel controller)
         {
             ConfigureApiExplorer(controller);
             AddSelector(controller);
@@ -41,7 +58,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private static void ConfigureApiExplorer(ControllerModel controller)
+        private void ConfigureApiExplorer(ControllerModel controller)
         {
             if (controller.ApiExplorer.GroupName.IsNullOrEmpty())
             {
@@ -54,7 +71,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private static void ConfigureApiExplorer(ActionModel action)
+        private void ConfigureApiExplorer(ActionModel action)
         {
             if (action.ApiExplorer.IsVisible == null)
             {
@@ -63,19 +80,34 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private static void AddSelector(ControllerModel controller)
+        private void AddSelector(ControllerModel controller)
         {
+            var moduleName = GetModuleNameOrDefault(controller.ControllerType.AsType());
+            
             var selectorModel = new SelectorModel
             {
                 AttributeRouteModel = new AttributeRouteModel(
                     new RouteAttribute(
-                        "api/services/app/" + controller.ControllerName + "/[action]"
+                        $"api/services/{moduleName}/{controller.ControllerName}/[action]"
                     )
                 )
             };
 
             controller.Selectors.Clear();
             controller.Selectors.Add(selectorModel);
+        }
+
+        private string GetModuleNameOrDefault(Type controllerType)
+        {
+            foreach (var controllerSetting in _configuration.Value.ServiceControllerSettings)
+            {
+                if (controllerSetting.Assembly == controllerType.Assembly)
+                {
+                    return controllerSetting.ModuleName;
+                }
+            }
+
+            return AbpServiceControllerSetting.DefaultServiceModuleName;
         }
 
         private static void NormalizeAppServiceControllerName(ControllerModel controller)

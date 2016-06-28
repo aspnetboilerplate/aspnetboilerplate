@@ -28,20 +28,21 @@ namespace AbpAspNetCoreDemo
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
-            );
-
-            services.AddMvc(mvcOptions =>
+            services.AddDbContext<MyDbContext>(options =>
             {
-                mvcOptions.AddAbp(); //Add ABP infrastructure to MVC
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+
+            services.AddMvc(options =>
+            {
+                options.AddAbp(services); //Add ABP infrastructure to MVC
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
-            return services.AddAbp(abpBootstrapper =>
+            return services.AddAbp(options =>
             {
                 //Configure Log4Net logging
-                abpBootstrapper.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseLog4Net().WithConfig("log4net.config")
                 );
             });

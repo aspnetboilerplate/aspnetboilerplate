@@ -3,18 +3,18 @@ using System.Reflection;
 
 namespace Abp.AspNetCore.Configuration
 {
-    public class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
+    internal class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
     {
-        public List<Assembly> ControllerAssemblies { get; }
+        public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
 
         public AbpAspNetCoreConfiguration()
         {
-            ControllerAssemblies = new List<Assembly>();
+            ServiceControllerSettings = new List<AbpServiceControllerSetting>();
         }
 
-        public void CreateControllersForAppServices(Assembly assembly)
+        public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName)
         {
-            ControllerAssemblies.Add(assembly);
+            ServiceControllerSettings.Add(new AbpServiceControllerSetting(moduleName, assembly));
         }
     }
 }

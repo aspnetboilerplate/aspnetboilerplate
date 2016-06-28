@@ -28,14 +28,14 @@ namespace Abp.AspNetCore
 
             optionsAction(options);
 
-            ConfigureMvc(services);
+            ConfigureMvc(services, options.IocManager);
 
             var abpBootstrapper = AddAbpBootstrapper(services, options.IocManager);
 
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
-        private static void ConfigureMvc(IServiceCollection services)
+        private static void ConfigureMvc(IServiceCollection services, IIocResolver iocResolver)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -46,7 +46,7 @@ namespace Abp.AspNetCore
 
             //Add feature providers
             var partManager = services.GetSingletonService<ApplicationPartManager>();
-            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider());
+            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
         }
 
         private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)

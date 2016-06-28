@@ -1,5 +1,8 @@
+using System.Linq;
 using System.Reflection;
 using Abp.Application.Services;
+using Abp.AspNetCore.Configuration;
+using Abp.Dependency;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -10,6 +13,13 @@ namespace Abp.AspNetCore.Mvc.Providers
     /// </summary>
     public class AbpAppServiceControllerFeatureProvider : ControllerFeatureProvider
     {
+        private readonly IIocResolver _iocResolver;
+
+        public AbpAppServiceControllerFeatureProvider(IIocResolver iocResolver)
+        {
+            _iocResolver = iocResolver;
+        }
+
         protected override bool IsController(TypeInfo typeInfo)
         {
             var type = typeInfo.AsType();
@@ -20,12 +30,17 @@ namespace Abp.AspNetCore.Mvc.Providers
                 return false;
             }
 
-            //TODO: Also check if given app service is created as controller (using IAbpAspNetCoreConfiguration)
-
             var remoteServiceAttr = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
 
-            return remoteServiceAttr == null ||
-                   remoteServiceAttr.IsEnabledFor(type);
+            if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(type))
+            {
+                return false;
+            }
+
+            var configuration = _iocResolver.Resolve<AbpAspNetCoreConfiguration>();
+            return configuration.ServiceControllerSettings.Any(
+                controllerSetting => controllerSetting.Assembly == type.Assembly
+                );
         }
     }
 }

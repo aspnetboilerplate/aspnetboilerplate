@@ -1,28 +1,28 @@
-﻿using Abp.AspNetCore.Mvc.Auditing;
+﻿using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.Conventions;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Uow;
 using Abp.AspNetCore.Mvc.Validation;
+using Abp.MsDependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.AspNetCore.Mvc
 {
     public static class AbpMvcOptionsExtensions
     {
-        public static void AddAbp(this MvcOptions options)
+        public static void AddAbp(this MvcOptions options, IServiceCollection services)
         {
-            AddConventions(options);
+            AddConventions(options, services);
             AddFilters(options);
         }
 
-        private static void AddConventions(MvcOptions options)
+        private static void AddConventions(MvcOptions options, IServiceCollection services)
         {
-            options.Conventions.Add(new AbpAppServiceConvention());
+            options.Conventions.Add(new AbpAppServiceConvention(services));
         }
 
         private static void AddFilters(MvcOptions options)

@@ -24,9 +24,9 @@ namespace Abp.AspNetCore
             var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
             var partManager = IocManager.Resolve<ApplicationPartManager>();
 
-            foreach (var controllerAssembly in configuration.ControllerAssemblies)
+            foreach (var controllerSetting in configuration.ServiceControllerSettings)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(controllerAssembly));
+                partManager.ApplicationParts.Add(new AssemblyPart(controllerSetting.Assembly));
             }
         }
     }
