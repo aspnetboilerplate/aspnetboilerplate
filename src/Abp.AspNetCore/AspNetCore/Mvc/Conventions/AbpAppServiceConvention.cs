@@ -73,10 +73,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
                         continue;
                     }
 
-                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType) &&
-                        CanUseFormBodyBinding(action))
+                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
                     {
-                        prm.BindingInfo = BindingInfo.GetBindingInfo(new[] {new FromBodyAttribute()});
+                        if (CanUseFormBodyBinding(action))
+                        {
+                            prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
+                        }
                     }
                 }
             }
@@ -99,7 +101,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
                         continue;
                     }
 
-                    if (httpMethodActionConstraint.HttpMethods.All(hm => hm.IsIn("GET", "DELETE")))
+                    if (httpMethodActionConstraint.HttpMethods.All(hm => hm.IsIn("GET", "DELETE", "TRACE", "HEAD")))
                     {
                         return false;
                     }
