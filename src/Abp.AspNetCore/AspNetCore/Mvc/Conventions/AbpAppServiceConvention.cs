@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Abp.Application.Services;
 using Abp.AspNetCore.Configuration;
 using Abp.Extensions;
@@ -6,7 +7,12 @@ using Abp.MsDependencyInjection.Extensions;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using Abp.Collections.Extensions;
+using Castle.Components.DictionaryAdapter;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace Abp.AspNetCore.Mvc.Conventions
 {
@@ -50,12 +56,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
         private void ConfigureRemoteService(ControllerModel controller)
         {
             ConfigureApiExplorer(controller);
-            AddSelector(controller);
-
-            foreach (var action in controller.Actions)
-            {
-                ConfigureApiExplorer(action);
-            }
+            ConfigureSelector(controller);
         }
 
         private void ConfigureApiExplorer(ControllerModel controller)
@@ -69,6 +70,11 @@ namespace Abp.AspNetCore.Mvc.Conventions
             {
                 controller.ApiExplorer.IsVisible = true;
             }
+
+            foreach (var action in controller.Actions)
+            {
+                ConfigureApiExplorer(action);
+            }
         }
 
         private void ConfigureApiExplorer(ActionModel action)
@@ -80,21 +86,58 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void AddSelector(ControllerModel controller)
+        private void ConfigureSelector(ControllerModel controller)
         {
+            RemoveEmptySelectors(controller.Selectors);
+
             var moduleName = GetModuleNameOrDefault(controller.ControllerType.AsType());
-            
+            foreach (var action in controller.Actions)
+            {
+                ConfigureSelector(moduleName, controller.ControllerName, action);
+            }
+        }
+
+        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action)
+        {
+            RemoveEmptySelectors(action.Selectors);
+
+            var actionConstraints = new List<IActionConstraintMetadata>();
+
+            foreach (var selector in action.Selectors)
+            {
+                if (selector.AttributeRouteModel != null)
+                {
+                    return;
+                }
+
+                if (!selector.ActionConstraints.IsNullOrEmpty())
+                {
+                    actionConstraints.AddRange(selector.ActionConstraints);
+                }
+            }
+
+            if (!actionConstraints.Any())
+            {
+                actionConstraints.Add(new HttpMethodActionConstraint(new[] { "POST" }));
+            }
+
+            action.Selectors.Clear();
+
             var selectorModel = new SelectorModel
             {
                 AttributeRouteModel = new AttributeRouteModel(
                     new RouteAttribute(
-                        $"api/services/{moduleName}/{controller.ControllerName}/[action]"
+                        $"api/services/{moduleName}/{controllerName}/{action.ActionName}"
                     )
                 )
             };
+            
+            foreach (var actionConstraint in actionConstraints)
+            {
+                selectorModel.ActionConstraints.Add(actionConstraint);
+            }
 
-            controller.Selectors.Clear();
-            controller.Selectors.Add(selectorModel);
+            action.Selectors.Add(selectorModel);
         }
 
         private string GetModuleNameOrDefault(Type controllerType)
@@ -120,6 +163,19 @@ namespace Abp.AspNetCore.Mvc.Conventions
             {
                 controller.ControllerName = controller.ControllerName.Left(controller.ControllerName.Length - "Service".Length);
             }
+        }
+
+        private void RemoveEmptySelectors(IList<SelectorModel> selectors)
+        {
+            selectors
+                .Where(IsEmptySelector)
+                .ToList()
+                .ForEach(s => selectors.Remove(s));
+        }
+
+        private bool IsEmptySelector(SelectorModel s)
+        {
+            return s.AttributeRouteModel == null && s.ActionConstraints.IsNullOrEmpty();
         }
     }
 }

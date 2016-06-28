@@ -21,7 +21,8 @@ namespace AbpAspNetCoreDemo.ControllersOther
             _productRepository = productRepository;
         }
 
-        [HttpPost]
+        [HttpPut]
+        [Route("mydemoservice/test1Method")]
         public List<ProductDto> MyTest1(MyDemoInputDto input)
         {
             //throw new UserFriendlyException("just testing...");
