@@ -52,6 +52,11 @@ namespace Abp.AspNetCore.Mvc.Proxying
                         )
                     );
 
+                    if (action.Name == "Test3")
+                    {
+                        
+                    }
+
                     foreach (var parameterDescription in apiDescription.ParameterDescriptions)
                     {
                         action.AddParameter(

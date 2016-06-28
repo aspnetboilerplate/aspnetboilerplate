@@ -36,6 +36,11 @@ namespace AbpAspNetCoreDemo.ControllersOther
         {
             return 42;
         }
+
+        public int Test3([FromHeader(Name = "my-header-value")] string myHeaderValue)
+        {
+            return 42;
+        }
     }
 
     public class MyDemoInputDto : IInputDto

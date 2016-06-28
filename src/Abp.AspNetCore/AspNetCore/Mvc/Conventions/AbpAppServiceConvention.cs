@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Abp.Collections.Extensions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Abp.AspNetCore.Mvc.Conventions
 {
@@ -55,6 +56,26 @@ namespace Abp.AspNetCore.Mvc.Conventions
         {
             ConfigureApiExplorer(controller);
             ConfigureSelector(controller);
+            ConfigureParameters(controller);
+        }
+
+        private void ConfigureParameters(ControllerModel controller)
+        {
+            foreach (var action in controller.Actions)
+            {
+                foreach (var prm in action.Parameters)
+                {
+                    if (prm.BindingInfo != null)
+                    {
+                        continue;
+                    }
+
+                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
+                    {
+                        prm.BindingInfo = BindingInfo.GetBindingInfo(new[] {new FromBodyAttribute()});
+                    }
+                }
+            }
         }
 
         private void ConfigureApiExplorer(ControllerModel controller)
@@ -123,7 +144,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
             //TODO: Use conventional verbs!
             abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { "POST" }));
-            
+
             action.Selectors.Add(abpServiceSelectorModel);
         }
 

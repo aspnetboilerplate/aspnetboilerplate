@@ -66,17 +66,16 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
 
         private void AddActionScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
         {
+            var parameterList = ProxyScriptingHelper.GenerateJsFuncParameterList(action, "ajaxParams");
+
             script.AppendLine($"    // action '{action.Name.ToCamelCase()}'");
-            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}.{action.Name.ToCamelCase()} = function({GenerateParameterList(action)}) {{");
-            script.AppendLine("      return abp.ajax($.extend({");
+            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}.{action.Name.ToCamelCase()} = function({parameterList}) {{");
+            script.AppendLine("      return abp.ajax($.extend(true, {");
+
             AddAjaxCallParameters(script, controller, action);
+
             script.AppendLine("      }, ajaxParams));;");
             script.AppendLine("    };");
-        }
-
-        private static string GenerateParameterList(ActionApiDescriptionModel action)
-        {
-            return ProxyScriptingHelper.GenerateJsMethodParameterList(action, "ajaxParams");
         }
 
         private void AddAjaxCallParameters(StringBuilder script, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
@@ -84,16 +83,32 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             var httpMethod = action.HttpMethod?.ToUpperInvariant() ?? "POST";
 
             script.AppendLine("        url: abp.appPath + '" + ProxyScriptingHelper.GenerateUrlWithParameters(action) + "',");
-            script.AppendLine("        type: '" + httpMethod + "',");
+            script.Append("        type: '" + httpMethod + "'");
 
-            if (httpMethod == "GET")
+            var headers = ProxyScriptingHelper.GenerateHeaders(action, 8);
+            if (headers != null)
             {
-                script.AppendLine("        data: " + ProxyScriptingHelper.GenerateBody(action));
+                script.AppendLine(",");
+                script.Append("        headers: " + headers);
+            }
+
+            var body = ProxyScriptingHelper.GenerateBody(action);
+            if (!body.IsNullOrEmpty())
+            {
+                script.AppendLine(",");
+                script.Append("        data: JSON.stringify(" + body + ")");
             }
             else
             {
-                script.AppendLine("        data: JSON.stringify(" + ProxyScriptingHelper.GenerateBody(action) + ")");
+                var formData = ProxyScriptingHelper.GenerateFormPostData(action, 8);
+                if (!formData.IsNullOrEmpty())
+                {
+                    script.AppendLine(",");
+                    script.Append("        data: " + formData);
+                }
             }
+            
+            script.AppendLine();
         }
     }
 }

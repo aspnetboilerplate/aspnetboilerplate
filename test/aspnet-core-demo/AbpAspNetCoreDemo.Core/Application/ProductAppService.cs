@@ -21,5 +21,10 @@ namespace AbpAspNetCoreDemo.Core.Application
         {
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
+
+        public int CreateProduct(ProductCreateInput input)
+        {
+            return _productRepository.InsertAndGetId(ObjectMapper.Map<Product>(input));
+        }
     }
 }

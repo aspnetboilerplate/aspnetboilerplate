@@ -17,14 +17,14 @@ namespace Abp.Web.Api.Modeling
 
         public string[] ConstraintTypes { get; }
 
-        public string Source { get; }
+        public string BindingSourceId { get; }
 
         private ParameterApiDescriptionModel()
         {
             
         }
 
-        public ParameterApiDescriptionModel(string name, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string source = null)
+        public ParameterApiDescriptionModel(string name, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
         {
             Name = name;
             Type = type;
@@ -32,7 +32,7 @@ namespace Abp.Web.Api.Modeling
             IsOptional = isOptional;
             DefaultValue = defaultValue;
             ConstraintTypes = constraintTypes;
-            Source = source;
+            BindingSourceId = bindingSourceId;
         }
     }
 }
