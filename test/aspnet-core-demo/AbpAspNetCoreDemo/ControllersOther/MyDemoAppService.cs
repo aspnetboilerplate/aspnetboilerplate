@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 using Abp.AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.ControllersOther
@@ -33,7 +34,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
         }
 
         [HttpGet]
-        public int GetMe([FromForm] MyDemoInputDto input)
+        public int GetMe(MyDemoInputDto input)
         {
             return 42;
         }
@@ -47,6 +48,12 @@ namespace AbpAspNetCoreDemo.ControllersOther
         {
             return 42;
         }
+
+        [HttpPost]
+        public int Test4(IFormFile formFile)
+        {
+            return 42;
+        }
     }
 
     public class MyDemoInputDto : IInputDto
@@ -54,7 +61,16 @@ namespace AbpAspNetCoreDemo.ControllersOther
         [Required]
         public string TestStr { get; set; }
 
-        [Range(1,1000)]
+        [Range(1, 1000)]
         public int TestInt { get; set; }
+
+        public MyInnerInput InnrInput { get; set; }
+    }
+
+    public class MyInnerInput
+    {
+        public bool InnerTestBool { get; set; }
+
+        public byte InnerTestByte { get; set; }
     }
 }

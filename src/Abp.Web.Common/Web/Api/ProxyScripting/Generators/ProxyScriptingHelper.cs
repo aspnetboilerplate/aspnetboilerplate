@@ -29,7 +29,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
             if (sb.Length == 0)
             {
-                return NormalizeJsVariableName("_" + Guid.NewGuid().ToString("N").Left(8));
+                return "_" + Guid.NewGuid().ToString("N").Left(8);
             }
 
             return sb.ToString();
@@ -84,7 +84,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                     );
             }
 
-            return parameters[0].Name.ToCamelCase();
+            return NormalizeJsVariableName(parameters[0].Name.ToCamelCase());
         }
 
         private static string CreateJsObjectLiteral(ParameterApiDescriptionModel[] parameters, int indent = 0)
@@ -131,7 +131,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
             foreach (var pathParameter in pathParameters)
             {
-                url = url.Replace($"{{{pathParameter.Name}}}", $"' + {pathParameter.Name.ToCamelCase()} + '");
+                url = url.Replace($"{{{pathParameter.Name}}}", $"' + {NormalizeJsVariableName(pathParameter.Name.ToCamelCase())} + '");
             }
 
             return url;
@@ -162,7 +162,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                     url += "&";
                 }
 
-                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + parameterInfo.Name.ToCamelCase() + ") + '");
+                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + NormalizeJsVariableName(parameterInfo.Name.ToCamelCase()) + ") + '");
             }
 
             return url;
