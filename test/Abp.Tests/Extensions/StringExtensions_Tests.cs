@@ -136,6 +136,31 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
+        public void RemovePostFix_Tests()
+        {
+            //null case
+            (null as string).RemovePreFix("Test").ShouldBeNull();
+
+            //Simple case
+            "MyTestAppService".RemovePostFix("AppService").ShouldBe("MyTest");
+            "MyTestAppService".RemovePostFix("Service").ShouldBe("MyTestApp");
+
+            //Multiple postfix (orders of postfixes are important)
+            "MyTestAppService".RemovePostFix("AppService", "Service").ShouldBe("MyTest");
+            "MyTestAppService".RemovePostFix("Service", "AppService").ShouldBe("MyTestApp");
+
+            //Unmatched case
+            "MyTestAppService".RemovePostFix("Unmatched").ShouldBe("MyTestAppService");
+        }
+
+        [Fact]
+        public void RemovePreFix_Tests()
+        {
+            "Home.Index".RemovePreFix("NotMatchedPostfix").ShouldBe("Home.Index");
+            "Home.About".RemovePreFix("Home.").ShouldBe("About");
+        }
+
+        [Fact]
         public void ToEnum_Test()
         {
             "MyValue1".ToEnum<MyEnum>().ShouldBe(MyEnum.MyValue1);

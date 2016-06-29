@@ -1,6 +1,8 @@
 ﻿using System;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc;
+using Abp.Json;
+using Abp.Timing;
 using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +20,8 @@ namespace AbpAspNetCoreDemo
 
         public Startup(IHostingEnvironment env)
         {
+            Clock.Provider = new UtcClockProvider();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -28,20 +32,21 @@ namespace AbpAspNetCoreDemo
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
-            );
+            services.AddDbContext<MyDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
 
             services.AddMvc(options =>
             {
-                options.AddAbp(); //Add ABP infrastructure to MVC
-            }).AddControllersAsServices();
+                options.AddAbp(services); //Add ABP infrastructure to MVC
+            });
 
-            //Configure Dependency Injection
-            return services.AddAbp(abpBootstrapper =>
+            //Configure Abp and Dependency Injection. Should be called last.
+            return services.AddAbp(options =>
             {
                 //Configure Log4Net logging
-                abpBootstrapper.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseLog4Net().WithConfig("log4net.config")
                 );
             });
@@ -50,7 +55,7 @@ namespace AbpAspNetCoreDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseAbp(); //Initializes ABP framework.
+            app.UseAbp(); //Initializes ABP framework. Should be called first.
 
             if (env.IsDevelopment())
             {
@@ -68,7 +73,8 @@ namespace AbpAspNetCoreDemo
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    );
             });
         }
     }

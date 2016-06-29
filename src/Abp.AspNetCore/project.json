@@ -1,11 +1,11 @@
 {
-  "version": "0.9.6.0-*",
+  "version": "0.9.7.0-*",
 
   "dependencies": {
-    "Abp.Web.Common": "0.9.6.0-*",
+    "Abp.Web.Common": "0.9.7.0-*",
     "Castle.LoggingFacility.MsLogging": "0.1.0",
     "Castle.Windsor.MsDependencyInjection": "0.2.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
+    "Microsoft.AspNetCore.Mvc": "1.0.0"
   },
 
   "frameworks": {

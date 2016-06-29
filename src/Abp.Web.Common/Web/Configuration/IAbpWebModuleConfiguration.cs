@@ -1,4 +1,6 @@
-﻿namespace Abp.Web.Configuration
+﻿using Abp.Web.Api.ProxyScripting.Configuration;
+
+namespace Abp.Web.Configuration
 {
     /// <summary>
     /// Used to configure ABP Web module.
@@ -10,5 +12,10 @@
         /// Default: false (ABP hides exception details from clients except special exceptions.)
         /// </summary>
         bool SendAllExceptionsToClients { get; set; }
+
+        /// <summary>
+        /// Used to configure Api proxy scripting.
+        /// </summary>
+        IApiProxyScriptingConfiguration ApiProxyScripting { get; }
     }
 }

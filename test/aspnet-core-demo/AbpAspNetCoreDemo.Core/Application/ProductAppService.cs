@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
@@ -16,9 +17,14 @@ namespace AbpAspNetCoreDemo.Core.Application
             _productRepository = productRepository;
         }
 
-        public List<ProductDto> GetAll()
+        public virtual List<ProductDto> Get()
         {
-            return _productRepository.GetAllList().MapTo<List<ProductDto>>();
+            return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
+        }
+
+        public virtual int CreateProduct(ProductCreateInput input)
+        {
+            return _productRepository.InsertAndGetId(ObjectMapper.Map<Product>(input));
         }
     }
 }

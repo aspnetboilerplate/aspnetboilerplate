@@ -651,6 +651,24 @@
         };
     })();
 
+    abp.timing.unspecifiedClockProvider = (function () {
+
+        var now = function () {
+            return new Date();
+        }
+
+        var normalize = function (date) {
+            return date;
+        }
+
+        // Public interface ///////////////////////////////////////////////////
+
+        return {
+            now: now,
+            normalize: normalize
+        };
+    })();
+
     abp.timing.convertToUserTimezone = function (date) {
         var localTime = date.getTime();
         var utcTime = localTime + (date.getTimezoneOffset() * 60000);
@@ -677,6 +695,6 @@
         return date;
     }
 
-    abp.clock.provider = abp.timing.localClockProvider;
+    abp.clock.provider = abp.timing.unspecifiedClockProvider;
 
 })(jQuery);

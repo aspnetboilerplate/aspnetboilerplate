@@ -28,7 +28,7 @@ namespace Abp.Timing
 
         static Clock()
         {
-            Provider = new LocalClockProvider();
+            Provider = new UnspecifiedClockProvider();
         }
 
         /// <summary>

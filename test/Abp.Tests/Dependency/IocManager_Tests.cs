@@ -9,7 +9,7 @@ namespace Abp.Tests.Dependency
         public IocManager_Tests()
         {
             LocalIocManager.Register<IEmpty, EmptyImplOne>();
-            LocalIocManager.Register<IEmpty, EmptyImplTwo>(); //Second registered has no effect!
+            LocalIocManager.Register<IEmpty, EmptyImplTwo>();
         }
 
         [Fact]

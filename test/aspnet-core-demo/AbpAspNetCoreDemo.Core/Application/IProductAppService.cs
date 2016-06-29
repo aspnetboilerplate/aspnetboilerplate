@@ -6,6 +6,6 @@ namespace AbpAspNetCoreDemo.Core.Application
 {
     public interface IProductAppService : IApplicationService
     {
-        List<ProductDto> GetAll();
+        List<ProductDto> Get();
     }
 }

@@ -47,7 +47,7 @@ namespace Abp.AspNetCore.TestBase
                 controllerName = controllerName.Left(controllerName.Length - "Controller".Length);
             }
 
-            return controllerName;
+            return "/" + controllerName;
         }
 
         protected virtual string GetUrl<TController>(string actionName)
@@ -57,7 +57,7 @@ namespace Abp.AspNetCore.TestBase
 
         protected virtual string GetUrl<TController>(string actionName, object queryStringParamsAsAnonymousObject)
         {
-            var url = GetUrl<TController>() + "/" + actionName;
+            var url = GetUrl<TController>(actionName);
 
             var dictionary = new RouteValueDictionary(queryStringParamsAsAnonymousObject);
             if (dictionary.Any())

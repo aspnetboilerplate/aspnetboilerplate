@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
@@ -48,30 +49,33 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!ShouldSaveAudit(context))
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
             {
-                await next();
-                return;
-            }
+                if (!ShouldSaveAudit(context))
+                {
+                    await next();
+                    return;
+                }
 
-            var auditInfo = CreateAuditInfo(context);
-            var stopwatch = Stopwatch.StartNew();
+                var auditInfo = CreateAuditInfo(context);
+                var stopwatch = Stopwatch.StartNew();
 
-            try
-            {
-                await next();
-            }
-            catch (Exception ex)
-            {
-                auditInfo.Exception = ex;
-                throw;
-            }
-            finally
-            {
-                stopwatch.Stop();
-                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                AuditInfoProvider?.Fill(auditInfo);
-                await AuditingStore.SaveAsync(auditInfo);
+                try
+                {
+                    await next();
+                }
+                catch (Exception ex)
+                {
+                    auditInfo.Exception = ex;
+                    throw;
+                }
+                finally
+                {
+                    stopwatch.Stop();
+                    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                    AuditInfoProvider?.Fill(auditInfo);
+                    await AuditingStore.SaveAsync(auditInfo);
+                }
             }
         }
 

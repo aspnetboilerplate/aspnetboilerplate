@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Abp.Application.Services;
 using Abp.AspNetCore.Mvc.Controllers;
 using Abp.UI;
 using AbpAspNetCoreDemo.Core.Application;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace AbpAspNetCoreDemo.Controllers
 {
     [Route("api/[controller]")]
+    [RemoteService]
     public class ProductsController : AbpController
     {
         private readonly IProductAppService _productAppService;
@@ -24,10 +26,10 @@ namespace AbpAspNetCoreDemo.Controllers
 
         // GET api/values
         [HttpGet]
-        public IEnumerable<ProductDto> Get()
+        public IEnumerable<ProductDto> GetAll()
         {
             _logger.LogInformation("ProductsController.Get method is called. This message is logged via Microsoft.Extensions.Logging.ILogger");
-            return _productAppService.GetAll();
+            return _productAppService.Get();
         }
 
         // GET api/values/5

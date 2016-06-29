@@ -14,7 +14,7 @@ namespace Abp.AspNetCore.App
         {
             services.AddMvc(options =>
             {
-                options.AddAbp(); //Add ABP infrastructure to MVC
+                options.AddAbp(services); //Add ABP infrastructure to MVC
             }).AddControllersAsServices();
 
             //Configure Abp and Dependency Injection
