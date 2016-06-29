@@ -1,10 +1,10 @@
-﻿{
+{
   "version": "0.9.7.0-*",
 
   "dependencies": {
     "Abp": "0.9.7.0-*",
     "Abp.EntityFramework.Common": "0.9.7.0-*",
-    "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final"
+    "Microsoft.EntityFrameworkCore": "1.0.0"
   },
 
   "frameworks": {
