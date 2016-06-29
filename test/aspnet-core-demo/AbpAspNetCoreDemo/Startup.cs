@@ -1,6 +1,8 @@
 ﻿using System;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc;
+using Abp.Json;
+using Abp.Timing;
 using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +20,8 @@ namespace AbpAspNetCoreDemo
 
         public Startup(IHostingEnvironment env)
         {
+            Clock.Provider = new UtcClockProvider();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)

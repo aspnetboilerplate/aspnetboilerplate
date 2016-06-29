@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
+using Abp.Json;
 using Abp.MsDependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore
@@ -47,6 +49,12 @@ namespace Abp.AspNetCore
             //Add feature providers
             var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
             partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
+
+            //Configure JSON serializer
+            services.Configure<MvcJsonOptions>(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+            });
         }
 
         private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)

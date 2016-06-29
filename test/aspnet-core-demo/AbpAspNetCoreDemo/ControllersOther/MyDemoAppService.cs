@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 using Abp.AutoMapper;
+using Abp.Runtime.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,6 +60,35 @@ namespace AbpAspNetCoreDemo.ControllersOther
         {
             return 42;
         }
+
+        public int GetTest6(DateTime val)
+        {
+            var kind = val.Kind; //Should be Clock.Provider.Kind
+            return 42;
+        }
+
+        public int GetTest7([FromQuery] MyModelIncludingDateTime input)
+        {
+            if (!input.TestDateTime.HasValue)
+            {
+                return 41;
+            }
+
+            var kind = input.TestDateTime.Value.Kind; //Should be Clock.Provider.Kind
+            return 42;
+        }
+
+        [DisableValidation]
+        public int GetTest8(MyModelIncludingDateTime input)
+        {
+            if (!input.TestDateTime.HasValue)
+            {
+                return 41;
+            }
+
+            var kind = input.TestDateTime.Value.Kind; //Should be Clock.Provider.Kind
+            return 42;
+        }
     }
 
     public class MyDemoInputDto : IInputDto
@@ -79,5 +109,11 @@ namespace AbpAspNetCoreDemo.ControllersOther
         public byte InnerTestByte { get; set; }
 
         public int[] InnerIntArray { get; set; }
+    }
+
+    public class MyModelIncludingDateTime
+    {
+        public bool TestBool { get; set; }
+        public DateTime? TestDateTime { get; set; }
     }
 }
