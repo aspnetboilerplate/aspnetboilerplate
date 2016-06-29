@@ -33,43 +33,42 @@ namespace Abp.AspNetCore.Mvc.Proxying
             {
                 foreach (var apiDescription in descriptionGroupItem.Items)
                 {
-                    var moduleName = GetModuleName(apiDescription);
-                    var module = model.GetOrAddModule(moduleName);
-                    var controller = module.GetOrAddController(apiDescription.GroupName);
-                    var actionName = apiDescription.ActionDescriptor.GetMethodInfo().Name;
-
-                    if (controller.Actions.ContainsKey(actionName))
-                    {
-                        Logger.Warn($"Controller '{controller.Name}' contains more than one action with name '{actionName}' for module '{moduleName}'");
-                        continue;
-                    }
-
-                    var action = controller.AddAction(
-                        new ActionApiDescriptionModel(
-                            apiDescription.ActionDescriptor.GetMethodInfo(),
-                            actionName,
-                            apiDescription.RelativePath,
-                            apiDescription.HttpMethod
-                        )
-                    );
-
-                    foreach (var parameterDescription in apiDescription.ParameterDescriptions)
-                    {
-                        action.AddParameter(
-                            new ParameterApiDescriptionModel(
-                                parameterDescription.Name,
-                                parameterDescription.Type,
-                                parameterDescription.RouteInfo?.IsOptional ?? false,
-                                parameterDescription.RouteInfo?.DefaultValue,
-                                parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
-                                parameterDescription.Source.Id
-                            )
-                        );
-                    }
+                    AddApiDescriptionToModel(apiDescription, model);
                 }
             }
 
             return model;
+        }
+
+        private void AddApiDescriptionToModel(ApiDescription apiDescription, ApplicationApiDescriptionModel model)
+        {
+            var moduleName = GetModuleName(apiDescription);
+            var module = model.GetOrAddModule(moduleName);
+            var controller = module.GetOrAddController(apiDescription.GroupName);
+            var actionName = apiDescription.ActionDescriptor.GetMethodInfo().Name;
+
+            if (controller.Actions.ContainsKey(actionName))
+            {
+                Logger.Warn($"Controller '{controller.Name}' contains more than one action with name '{actionName}' for module '{moduleName}'. Ignored: " + apiDescription.ActionDescriptor.GetMethodInfo());
+                return;
+            }
+
+            var action = controller.AddAction(CreateActionApiDescriptionModel(apiDescription));
+            foreach (var parameterDescription in apiDescription.ParameterDescriptions)
+            {
+                action.AddParameter(CreateParameterApiDescriptionModel(parameterDescription));
+            }
+        }
+
+        private static ActionApiDescriptionModel CreateActionApiDescriptionModel(ApiDescription apiDescription)
+        {
+            var method = apiDescription.ActionDescriptor.GetMethodInfo();
+            return new ActionApiDescriptionModel(
+                method,
+                method.Name,
+                apiDescription.RelativePath,
+                apiDescription.HttpMethod
+            );
         }
 
         private string GetModuleName(ApiDescription apiDescription)
@@ -89,6 +88,18 @@ namespace Abp.AspNetCore.Mvc.Proxying
             }
 
             return AbpServiceControllerSetting.DefaultServiceModuleName;
+        }
+
+        private static ParameterApiDescriptionModel CreateParameterApiDescriptionModel(ApiParameterDescription parameterDescription)
+        {
+            return new ParameterApiDescriptionModel(
+                parameterDescription.Name,
+                parameterDescription.Type,
+                parameterDescription.RouteInfo?.IsOptional ?? false,
+                parameterDescription.RouteInfo?.DefaultValue,
+                parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
+                parameterDescription.Source.Id
+            );
         }
     }
 }

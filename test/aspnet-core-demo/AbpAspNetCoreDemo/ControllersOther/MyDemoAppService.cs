@@ -54,6 +54,11 @@ namespace AbpAspNetCoreDemo.ControllersOther
         {
             return 42;
         }
+
+        public int GetTest5([FromQuery(Name = "prm1")]int p1, string p2)
+        {
+            return 42;
+        }
     }
 
     public class MyDemoInputDto : IInputDto
