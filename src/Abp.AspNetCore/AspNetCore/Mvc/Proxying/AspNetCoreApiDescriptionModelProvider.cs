@@ -114,7 +114,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
         private string GetModuleName(ApiDescription apiDescription)
         {
-            var controllerType = apiDescription.ActionDescriptor.GetMethodInfo().DeclaringType; //TODO: What about base class methods?
+            var controllerType = apiDescription.ActionDescriptor.AsControllerActionDescriptor().ControllerTypeInfo.AsType();
             if (controllerType == null)
             {
                 return AbpServiceControllerSetting.DefaultServiceModuleName;

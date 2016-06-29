@@ -18,7 +18,7 @@ namespace Abp.Runtime.Validation.Interception
 
         public void Intercept(IInvocation invocation)
         {
-            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Auditing))
+            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
             {
                 invocation.Proceed();
                 return;

@@ -36,7 +36,8 @@ namespace AbpAspNetCoreDemo
             Configuration.Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
                     typeof(AbpAspNetCoreDemoCoreModule).Assembly,
-                    useConventionalHttpVerbs: true
+                    useConventionalHttpVerbs: true,
+                    moduleName: "appcore"
                 );
         }
 

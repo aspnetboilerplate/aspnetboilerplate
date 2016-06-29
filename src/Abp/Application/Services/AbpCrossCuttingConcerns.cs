@@ -28,15 +28,15 @@ namespace Abp.Application.Services
                 throw new ArgumentNullException(nameof(concerns), $"{nameof(concerns)} should be provided!");
             }
 
-            var ccobj = obj as IAvoidDuplicateCrossCuttingConcerns;
-            if (ccobj == null)
+            var crossCuttingEnabledObj = obj as IAvoidDuplicateCrossCuttingConcerns;
+            if (crossCuttingEnabledObj == null)
             {
                 return;
             }
 
             foreach (var concern in concerns)
             {
-                ccobj.AppliedCrossCuttingConcerns.Remove(concern);
+                crossCuttingEnabledObj.AppliedCrossCuttingConcerns.RemoveAll(c => c == concern);
             }
         }
 
