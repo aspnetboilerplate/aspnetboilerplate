@@ -46,16 +46,12 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
                     var action = controller.AddAction(
                         new ActionApiDescriptionModel(
+                            apiDescription.ActionDescriptor.GetMethodInfo(),
                             actionName,
                             apiDescription.RelativePath,
                             apiDescription.HttpMethod
                         )
                     );
-
-                    if (action.Name == "Test3")
-                    {
-                        
-                    }
 
                     foreach (var parameterDescription in apiDescription.ParameterDescriptions)
                     {

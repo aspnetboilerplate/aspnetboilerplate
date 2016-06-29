@@ -25,7 +25,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             _configuration = new Lazy<AbpAspNetCoreConfiguration>(() =>
             {
                 return services
-                    .GetSingletonService<AbpBootstrapper>()
+                    .GetSingletonServiceOrNull<AbpBootstrapper>()
                     .IocManager
                     .Resolve<AbpAspNetCoreConfiguration>();
             }, true);

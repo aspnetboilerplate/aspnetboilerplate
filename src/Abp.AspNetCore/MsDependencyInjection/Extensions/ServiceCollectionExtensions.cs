@@ -5,7 +5,7 @@ namespace Abp.MsDependencyInjection.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        internal static T GetSingletonService<T>(this IServiceCollection services)
+        internal static T GetSingletonServiceOrNull<T>(this IServiceCollection services)
         {
             return (T)services
                 .FirstOrDefault(d => d.ServiceType == typeof(T))

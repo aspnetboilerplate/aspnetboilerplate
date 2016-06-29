@@ -45,7 +45,7 @@ namespace Abp.AspNetCore
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
 
             //Add feature providers
-            var partManager = services.GetSingletonService<ApplicationPartManager>();
+            var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
             partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
         }
 
