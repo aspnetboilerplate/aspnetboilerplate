@@ -27,16 +27,24 @@ namespace Abp.AspNetCore.TestBase
 
         protected AbpAspNetCoreIntegratedTestBase()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<TStartup>();
-
-            Server = new TestServer(builder);
+            var builder = CreateWebHostBuilder();
+            Server = CreateTestServer(builder);
+            Client = Server.CreateClient();
 
             ServiceProvider = Server.Host.Services;
             IocManager = ServiceProvider.GetRequiredService<IIocManager>();
             AbpSession = ServiceProvider.GetRequiredService<TestAbpSession>();
+        }
 
-            Client = Server.CreateClient();
+        protected virtual IWebHostBuilder CreateWebHostBuilder()
+        {
+            return new WebHostBuilder()
+                .UseStartup<TStartup>();
+        }
+
+        protected virtual TestServer CreateTestServer(IWebHostBuilder builder)
+        {
+            return new TestServer(builder);
         }
 
         protected virtual string GetUrl<TController>()
