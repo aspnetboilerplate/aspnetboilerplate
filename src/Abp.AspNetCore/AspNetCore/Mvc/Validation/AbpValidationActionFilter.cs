@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp.Application.Services;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Validation
@@ -14,6 +15,8 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            AbpCrossCuttingConcerns.AddApplied(context.Controller, AbpCrossCuttingConcerns.Validation);
+
             using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
             {
                 validator.Object.Initialize(context);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
@@ -48,6 +49,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            AbpCrossCuttingConcerns.AddApplied(context.Controller, AbpCrossCuttingConcerns.Auditing);
+
             if (!ShouldSaveAudit(context))
             {
                 await next();

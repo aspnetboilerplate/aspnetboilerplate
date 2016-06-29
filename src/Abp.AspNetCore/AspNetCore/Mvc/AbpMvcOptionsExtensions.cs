@@ -1,12 +1,10 @@
-﻿using Abp.AspNetCore.Configuration;
-using Abp.AspNetCore.Mvc.Auditing;
+﻿using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.Conventions;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Uow;
 using Abp.AspNetCore.Mvc.Validation;
-using Abp.MsDependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 

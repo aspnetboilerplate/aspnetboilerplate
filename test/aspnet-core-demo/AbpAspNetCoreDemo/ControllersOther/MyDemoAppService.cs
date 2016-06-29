@@ -39,7 +39,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
             return 42;
         }
 
-        public int Test2()
+        public virtual int Test2()
         {
             return 42;
         }
