@@ -11,14 +11,33 @@ namespace Abp.Application.Services
         public const string UnitOfWork = "AbpUnitOfWork";
         public const string Authorization = "AbpAuthorization";
 
-        public static void AddApplied(object obj, params string[] appliedConcerns)
+        public static void AddApplied(object obj, params string[] concerns)
         {
-            if (appliedConcerns.IsNullOrEmpty())
+            if (concerns.IsNullOrEmpty())
             {
-                throw new ArgumentNullException(nameof(appliedConcerns), $"{nameof(appliedConcerns)} should be provided!");
+                throw new ArgumentNullException(nameof(concerns), $"{nameof(concerns)} should be provided!");
             }
 
-            (obj as IAvoidDuplicateCrossCuttingConcerns)?.AppliedCrossCuttingConcerns.AddRange(appliedConcerns);
+            (obj as IAvoidDuplicateCrossCuttingConcerns)?.AppliedCrossCuttingConcerns.AddRange(concerns);
+        }
+
+        public static void RemoveApplied(object obj, params string[] concerns)
+        {
+            if (concerns.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(concerns), $"{nameof(concerns)} should be provided!");
+            }
+
+            var ccobj = obj as IAvoidDuplicateCrossCuttingConcerns;
+            if (ccobj == null)
+            {
+                return;
+            }
+
+            foreach (var concern in concerns)
+            {
+                ccobj.AppliedCrossCuttingConcerns.Remove(concern);
+            }
         }
 
         public static bool IsApplied([NotNull] object obj, [NotNull] string concern)
@@ -34,6 +53,15 @@ namespace Abp.Application.Services
             }
 
             return (obj as IAvoidDuplicateCrossCuttingConcerns)?.AppliedCrossCuttingConcerns.Contains(concern) ?? false;
+        }
+
+        public static IDisposable Applying(object obj, params string[] concerns)
+        {
+            AddApplied(obj, concerns);
+            return new DisposeAction(() =>
+            {
+                RemoveApplied(obj, concerns);
+            });
         }
     }
 }

@@ -15,12 +15,13 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            AbpCrossCuttingConcerns.AddApplied(context.Controller, AbpCrossCuttingConcerns.Validation);
-
-            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Validation))
             {
-                validator.Object.Initialize(context);
-                validator.Object.Validate();
+                using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+                {
+                    validator.Object.Initialize(context);
+                    validator.Object.Validate();
+                }
             }
         }
 

@@ -49,32 +49,33 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            AbpCrossCuttingConcerns.AddApplied(context.Controller, AbpCrossCuttingConcerns.Auditing);
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
+            {
+                if (!ShouldSaveAudit(context))
+                {
+                    await next();
+                    return;
+                }
 
-            if (!ShouldSaveAudit(context))
-            {
-                await next();
-                return;
-            }
+                var auditInfo = CreateAuditInfo(context);
+                var stopwatch = Stopwatch.StartNew();
 
-            var auditInfo = CreateAuditInfo(context);
-            var stopwatch = Stopwatch.StartNew();
-
-            try
-            {
-                await next();
-            }
-            catch (Exception ex)
-            {
-                auditInfo.Exception = ex;
-                throw;
-            }
-            finally
-            {
-                stopwatch.Stop();
-                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                AuditInfoProvider?.Fill(auditInfo);
-                await AuditingStore.SaveAsync(auditInfo);
+                try
+                {
+                    await next();
+                }
+                catch (Exception ex)
+                {
+                    auditInfo.Exception = ex;
+                    throw;
+                }
+                finally
+                {
+                    stopwatch.Stop();
+                    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                    AuditInfoProvider?.Fill(auditInfo);
+                    await AuditingStore.SaveAsync(auditInfo);
+                }
             }
         }
 
