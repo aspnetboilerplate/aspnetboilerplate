@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Abp.Extensions;
 using Abp.Web.Api.Modeling;
 
@@ -9,31 +8,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 {
     internal static class ProxyScriptingHelper
     {
-        private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyxABCDEFGHIJKLMNORQRSTUXWVYZ0123456789_";
         public const string DefaultHttpVerb = "POST";
-
-        private static string NormalizeJsVariableName(string name)
-        {
-            var sb = new StringBuilder(name);
-
-            sb.Replace('-', '_');
-
-            //Delete invalid chars
-            foreach (var c in name)
-            {
-                if (!ValidJsVariableNameChars.Contains(c))
-                {
-                    sb.Replace(c.ToString(), "");
-                }
-            }
-
-            if (sb.Length == 0)
-            {
-                return "_" + Guid.NewGuid().ToString("N").Left(8);
-            }
-
-            return sb.ToString();
-        }
 
         public static string GenerateUrlWithParameters(ActionApiDescriptionModel action)
         {
@@ -41,13 +16,6 @@ namespace Abp.Web.Api.ProxyScripting.Generators
             var url = ReplacePathVariables(action.Url, action.Parameters);
             url = AddQueryStringParameters(url, action.Parameters);
             return url;
-        }
-
-        public static string GenerateJsFuncParameterList(ActionApiDescriptionModel action, string ajaxParametersName)
-        {
-            var paramNames = action.Parameters.Select(prm => NormalizeJsVariableName(prm.Name.ToCamelCase())).ToList();
-            paramNames.Add(ajaxParametersName);
-            return String.Join(", ", paramNames);
         }
 
         public static string GenerateHeaders(ActionApiDescriptionModel action, int indent = 0)
@@ -62,7 +30,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return null;
             }
 
-            return CreateJsObjectLiteral(parameters, indent);
+            return ProxyScriptingJsFuncHelper.CreateJsObjectLiteral(parameters, indent);
         }
 
         public static string GenerateBody(ActionApiDescriptionModel action)
@@ -84,23 +52,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                     );
             }
 
-            return NormalizeJsVariableName(parameters[0].Name.ToCamelCase());
-        }
-
-        private static string CreateJsObjectLiteral(ParameterApiDescriptionModel[] parameters, int indent = 0)
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("{");
-
-            foreach (var prm in parameters)
-            {
-                sb.AppendLine($"{new string(' ', indent)}  '{prm.Name}': {NormalizeJsVariableName(prm.Name)}");
-            }
-
-            sb.Append(new string(' ', indent) + "}");
-
-            return sb.ToString();
+            return ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(parameters[0]);
         }
 
         public static string GenerateFormPostData(ActionApiDescriptionModel action, int indent = 0)
@@ -115,7 +67,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return null;
             }
 
-            return CreateJsObjectLiteral(parameters, indent);
+            return ProxyScriptingJsFuncHelper.CreateJsObjectLiteral(parameters, indent);
         }
 
         private static string ReplacePathVariables(string url, IList<ParameterApiDescriptionModel> actionParameters)
@@ -131,7 +83,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
             foreach (var pathParameter in pathParameters)
             {
-                url = url.Replace($"{{{pathParameter.Name}}}", $"' + {NormalizeJsVariableName(pathParameter.Name.ToCamelCase())} + '");
+                url = url.Replace($"{{{pathParameter.Name}}}", $"' + {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(pathParameter)} + '");
             }
 
             return url;
@@ -162,12 +114,12 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                     url += "&";
                 }
 
-                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + NormalizeJsVariableName(parameterInfo.Name.ToCamelCase()) + ") + '");
+                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(parameterInfo) + ") + '");
             }
 
             return url;
         }
-
+        
         public static string GetConventionalVerbForMethodName(string methodName)
         {
             if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))

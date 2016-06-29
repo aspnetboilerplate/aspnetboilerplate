@@ -69,7 +69,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
         [Range(1, 1000)]
         public int TestInt { get; set; }
 
-        public MyInnerInput InnrInput { get; set; }
+        public MyInnerInput InnerInput { get; set; }
     }
 
     public class MyInnerInput
@@ -77,5 +77,7 @@ namespace AbpAspNetCoreDemo.ControllersOther
         public bool InnerTestBool { get; set; }
 
         public byte InnerTestByte { get; set; }
+
+        public int[] InnerIntArray { get; set; }
     }
 }

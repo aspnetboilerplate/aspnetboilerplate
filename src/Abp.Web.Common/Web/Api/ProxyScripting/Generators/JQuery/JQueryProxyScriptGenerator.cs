@@ -67,7 +67,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
 
         private void AddActionScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
         {
-            var parameterList = ProxyScriptingHelper.GenerateJsFuncParameterList(action, "ajaxParams");
+            var parameterList = ProxyScriptingJsFuncHelper.GenerateJsFuncParameterList(action, "ajaxParams");
 
             script.AppendLine($"    // action '{action.Name.ToCamelCase()}'");
             script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}.{action.Name.ToCamelCase()} = function({parameterList}) {{");

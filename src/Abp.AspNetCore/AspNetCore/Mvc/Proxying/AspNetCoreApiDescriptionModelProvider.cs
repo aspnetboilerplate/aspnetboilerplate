@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.AspNetCore.Mvc.Proxying.Utils;
 using Abp.Dependency;
 using Abp.Web.Api.Modeling;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Abp.AspNetCore.Mvc.Proxying
 {
@@ -28,7 +32,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
         public ApplicationApiDescriptionModel CreateModel()
         {
             var model = new ApplicationApiDescriptionModel();
-            
+
             foreach (var descriptionGroupItem in _descriptionProvider.ApiDescriptionGroups.Items)
             {
                 foreach (var apiDescription in descriptionGroupItem.Items)
@@ -42,33 +46,70 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
         private void AddApiDescriptionToModel(ApiDescription apiDescription, ApplicationApiDescriptionModel model)
         {
-            var moduleName = GetModuleName(apiDescription);
-            var module = model.GetOrAddModule(moduleName);
-            var controller = module.GetOrAddController(apiDescription.GroupName);
-            var actionName = apiDescription.ActionDescriptor.GetMethodInfo().Name;
+            var moduleModel = model.GetOrAddModule(GetModuleName(apiDescription));
+            var controllerModel = moduleModel.GetOrAddController(apiDescription.GroupName);
+            var method = apiDescription.ActionDescriptor.GetMethodInfo();
 
-            if (controller.Actions.ContainsKey(actionName))
+            if (controllerModel.Actions.ContainsKey(method.Name))
             {
-                Logger.Warn($"Controller '{controller.Name}' contains more than one action with name '{actionName}' for module '{moduleName}'. Ignored: " + apiDescription.ActionDescriptor.GetMethodInfo());
+                Logger.Warn($"Controller '{controllerModel.Name}' contains more than one action with name '{method.Name}' for module '{moduleModel.Name}'. Ignored: " + apiDescription.ActionDescriptor.GetMethodInfo());
                 return;
             }
 
-            var action = controller.AddAction(CreateActionApiDescriptionModel(apiDescription));
-            foreach (var parameterDescription in apiDescription.ParameterDescriptions)
-            {
-                action.AddParameter(CreateParameterApiDescriptionModel(parameterDescription));
-            }
-        }
 
-        private static ActionApiDescriptionModel CreateActionApiDescriptionModel(ApiDescription apiDescription)
-        {
-            var method = apiDescription.ActionDescriptor.GetMethodInfo();
-            return new ActionApiDescriptionModel(
-                method,
+            var actionModel = controllerModel.AddAction(new ActionApiDescriptionModel(
                 method.Name,
                 apiDescription.RelativePath,
                 apiDescription.HttpMethod
+            ));
+
+            AddParameterDescriptionsToModel(actionModel, method, apiDescription);
+        }
+
+        private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method, ApiDescription apiDescription)
+        {
+            if (!apiDescription.ParameterDescriptions.Any())
+            {
+                return;
+            }
+
+            var matchedMethodParamNames = ArrayMatcher.Match(
+                apiDescription.ParameterDescriptions.Select(p => p.Name).ToArray(),
+                method.GetParameters().Select(GetMethodParamName).ToArray()
             );
+
+            for (var i = 0; i < apiDescription.ParameterDescriptions.Count; i++)
+            {
+                var parameterDescription = apiDescription.ParameterDescriptions[i];
+                var matchedMethodParamName = matchedMethodParamNames.Length > i
+                                                 ? matchedMethodParamNames[i]
+                                                 : parameterDescription.Name;
+
+                actionModel.AddParameter(new ParameterApiDescriptionModel(
+                        parameterDescription.Name,
+                        matchedMethodParamName,
+                        parameterDescription.Type,
+                        parameterDescription.RouteInfo?.IsOptional ?? false,
+                        parameterDescription.RouteInfo?.DefaultValue,
+                        parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
+                        parameterDescription.Source.Id
+                    )
+                );
+            }
+        }
+
+        public string GetMethodParamName(ParameterInfo parameterInfo)
+        {
+            var modelNameProvider = parameterInfo.GetCustomAttributes()
+                .OfType<IModelNameProvider>()
+                .FirstOrDefault();
+
+            if (modelNameProvider == null)
+            {
+                return parameterInfo.Name;
+            }
+
+            return modelNameProvider.Name;
         }
 
         private string GetModuleName(ApiDescription apiDescription)
@@ -88,18 +129,6 @@ namespace Abp.AspNetCore.Mvc.Proxying
             }
 
             return AbpServiceControllerSetting.DefaultServiceModuleName;
-        }
-
-        private static ParameterApiDescriptionModel CreateParameterApiDescriptionModel(ApiParameterDescription parameterDescription)
-        {
-            return new ParameterApiDescriptionModel(
-                parameterDescription.Name,
-                parameterDescription.Type,
-                parameterDescription.RouteInfo?.IsOptional ?? false,
-                parameterDescription.RouteInfo?.DefaultValue,
-                parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
-                parameterDescription.Source.Id
-            );
         }
     }
 }

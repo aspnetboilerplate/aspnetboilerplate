@@ -1,20 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Abp.Web.Api.Modeling
 {
     [Serializable]
     public class ActionApiDescriptionModel
     {
-        public MethodInfo Method
-        {
-            get { return _method; }
-            set { _method = value; }
-        }
-        [NonSerialized]
-        private MethodInfo _method;
-
         public string Name { get; }
 
         public string HttpMethod { get; }
@@ -28,9 +19,8 @@ namespace Abp.Web.Api.Modeling
 
         }
 
-        public ActionApiDescriptionModel(MethodInfo method, string name, string url, string httpMethod = null)
+        public ActionApiDescriptionModel(string name, string url, string httpMethod = null)
         {
-            Method = method;
             Name = name;
             Url = url;
             HttpMethod = httpMethod;
