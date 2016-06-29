@@ -156,8 +156,8 @@ namespace Abp.Tests.Extensions
         [Fact]
         public void RemovePreFix_Tests()
         {
-            "Home.Index".RemovePostFix("NotMatchedPostfix").ShouldBe("Home.Index");
-            "Home.About".RemovePostFix("Home.").ShouldBe("About");
+            "Home.Index".RemovePreFix("NotMatchedPostfix").ShouldBe("Home.Index");
+            "Home.About".RemovePreFix("Home.").ShouldBe("About");
         }
 
         [Fact]
