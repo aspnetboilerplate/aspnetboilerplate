@@ -15,7 +15,7 @@ namespace Abp.Tests.Localization
 
         public HumanizerOfUndefinedLocalizationSource_Tests()
         {
-            _localizationConfiguration = new LocalizationConfiguration();
+            _localizationConfiguration = new LocalizationConfiguration{ WrapGivenTextIfNotFound = false };
             _resourceFileLocalizationSource = new ResourceFileLocalizationSource("MyTestResource", MyTestResource.ResourceManager);
             _resourceFileLocalizationSource.Initialize(_localizationConfiguration, new IocManager());
         }
