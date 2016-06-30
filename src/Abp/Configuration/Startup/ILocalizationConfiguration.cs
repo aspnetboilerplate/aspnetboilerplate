@@ -37,7 +37,7 @@ namespace Abp.Configuration.Startup
         /// It returns the given text by wrapping with [ and ] chars
         /// if not found in the localization source.
         /// This is considered only if <see cref="ReturnGivenTextIfNotFound"/> is true.
-        /// Default: false.
+        /// Default: true.
         /// </summary>
         bool WrapGivenTextIfNotFound { get; set; }
 
