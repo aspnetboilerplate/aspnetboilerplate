@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Features;
+using Abp.Application.Services;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 
 namespace Abp.TestBase.SampleApplication.ContacLists
 {
-    public class ContactListAppService : IContactListAppService
+    public class ContactListAppService : ApplicationService, IContactListAppService
     {
         private readonly IRepository<ContactList> _contactListRepository;
 
