@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Abp.Collections.Extensions;
 
 namespace Abp.Reflection
 {
     public class MultiSourceAssemblyFinder : IAssemblyFinder
     {
-        public List<IAssemblyFinder> Sources { get; private set; }
+        public List<IAssemblyFinder> Sources { get; }
 
         public MultiSourceAssemblyFinder(params IAssemblyFinder[] sources)
         {
@@ -21,7 +22,11 @@ namespace Abp.Reflection
 
             foreach (var source in Sources)
             {
-                list.AddRange(source.GetAllAssemblies());
+                var assemblies = source.GetAllAssemblies();
+                foreach (var assembly in assemblies)
+                {
+                    list.AddIfNotContains(assembly);
+                }
             }
 
             return list;
