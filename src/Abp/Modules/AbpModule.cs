@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 
@@ -106,9 +107,8 @@ namespace Abp.Modules
         public static List<Type> FindDependedModuleTypesRecursively(Type moduleType)
         {
             var list = new List<Type>();
-
             AddModuleAndDependenciesResursively(list, moduleType);
-
+            list.AddIfNotContains(typeof(AbpKernelModule));
             return list;
         }
 
@@ -132,6 +132,5 @@ namespace Abp.Modules
                 AddModuleAndDependenciesResursively(modules, dependedModule);
             }
         }
-
     }
 }

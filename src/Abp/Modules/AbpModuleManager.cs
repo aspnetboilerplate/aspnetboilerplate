@@ -55,8 +55,6 @@ namespace Abp.Modules
             Logger.Debug("Loading Abp modules...");
 
             var moduleTypes = _moduleFinder.FindAll();
-
-            AddKernalModule(moduleTypes);
             
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
@@ -68,14 +66,6 @@ namespace Abp.Modules
             SetDependencies();
 
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
-        }
-
-        private static void AddKernalModule(ICollection<Type> moduleTypes)
-        {
-            if (!moduleTypes.Contains(typeof(AbpKernelModule)))
-            {
-                moduleTypes.Add(typeof(AbpKernelModule));
-            }
         }
 
         private void CreateModules(ICollection<Type> moduleTypes)
