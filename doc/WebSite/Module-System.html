@@ -14,7 +14,9 @@
 			<h3 id="DocIntroModules">Introduction To Modules</h3>
 			<p>ASP.NET Boilerplate provides an infrastructure to build modules and compose 
 them to create an application. A module can depend on another module. Generally, an assembly is considered 
-as a module. A 
+as a module. If you created an application with more than one 
+assembly, it's suggested to create a module definition for each assembly.</p>
+			<p>A 
 module is defined with a class that is derived from <strong>AbpModule</strong>. 
 Say that we're developing a Blog module that can be used in different 
 applications. Simplest module definition can be as shown below:</p>
@@ -25,9 +27,11 @@ applications. Simplest module definition can be as shown below:</p>
         IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
-			<p>ASP.NET Boilerplate scans all assemblies and finds all classes those are 
-devired from AbpModule class. If you created an application with more than one 
-assembly, it's suggested to create a module definition for each assembly.</p>
+
+<p>Module definition class is responsible to register it's classes to
+<a href="Dependency-Injection.html">dependency injection</a> (can be done 
+conventionally as shown above). It can configure application and other modules, 
+add new features to the application and so on...</p>
 			<h3 id="DocModuleLifecycleEvents">Lifecycle Methods</h3>
 			<p>ASP.NET Boilerplate calls some specific methods of modules on application 
 startup and shutdown. You can override these methods to perform some specific 
@@ -59,8 +63,7 @@ dependency here.</p>
 			<p>This method is called when the application shuts down.</p>
 			<h3 id="DocModuleDepend">Module Dependencies</h3>
 
-			<p>A module can be dependent to another. ASP.NET Boilerplate tries to resolve 
-these dependencies automatically. But it's suggested to explicitly declare dependencies 
+			<p>A module can be dependent to another. It's required to <strong>explicitly</strong> declare dependencies 
 using <strong>DependsOn</strong> attribute like below:</p>
 			<pre lang="cs"><strong>[DependsOn(typeof(MyBlogCoreModule))]</strong>
 public class MyBlogApplicationModule : AbpModule
@@ -73,6 +76,9 @@ public class MyBlogApplicationModule : AbpModule
 			<p>Thus, we declare to ASP.NET Boilerplate that MyBlogApplicationModule is 
 depended to MyBlogCoreModule and the core module should be initialized before 
 the application module.</p>
+			<p>ABP can resolve dependencies recursively beginning from the
+			<strong>startup module</strong> and initialize 
+			them accordingly.&nbsp;</p>
 			<h3 id="DocCustomModule">Custom Module Methods</h3>
 			<p>Your modules also can have custom methods those can be used by other modules 
 depend on this module. Assume that MyModule2 depends on MyModule1 and wants to 
@@ -113,11 +119,13 @@ public class MyModule2 : AbpModule
 }</pre>
 
 			<p>Here, we constructor-injected MyModule1 to MyModule2, so MyModule2 can call 
-MyModule1's custom method.</p>
+MyModule1's custom method. This is only possible if Module2 depends on Module1.</p>
 			<p>While this type of method calling can be used to configure 
 			modules, we suggest to use <a href="Startup-Configuration.html">
 			startup configuration</a> system to define and set configuration for 
 			modules.</p>
+			<h3>Module Lifecycle</h3>
+			<p>Module classes are automatically registered as <strong>singleton</strong>.</p>
 		</div>
 	</body>
 

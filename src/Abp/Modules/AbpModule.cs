@@ -11,7 +11,7 @@ namespace Abp.Modules
     /// </summary>
     /// <remarks>
     /// A module definition class is generally located in it's own assembly
-    /// and implements some action in module events on application startup and shotdown.
+    /// and implements some action in module events on application startup and shutdown.
     /// It also defines depended modules.
     /// </remarks>
     public abstract class AbpModule
@@ -68,14 +68,13 @@ namespace Abp.Modules
             return
                 type.IsClass &&
                 !type.IsAbstract &&
+                !type.IsGenericType &&
                 typeof(AbpModule).IsAssignableFrom(type);
         }
 
         /// <summary>
-        /// Finds depended modules of a module.
+        /// Finds direct depended modules of a module.
         /// </summary>
-        /// <param name="moduleType"></param>
-        /// <returns></returns>
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
             if (!IsAbpModule(moduleType))
@@ -99,5 +98,40 @@ namespace Abp.Modules
 
             return list;
         }
+
+
+        /// <summary>
+        /// Finds all depended modules (and their dependencies recursively) for a module.
+        /// </summary>
+        public static List<Type> FindDependedModuleTypesRecursively(Type moduleType)
+        {
+            var list = new List<Type>();
+
+            AddModuleAndDependenciesResursively(list, moduleType);
+
+            return list;
+        }
+
+        private static void AddModuleAndDependenciesResursively(List<Type> modules, Type module)
+        {
+            if (!IsAbpModule(module))
+            {
+                throw new AbpInitializationException("This type is not an ABP module: " + module.AssemblyQualifiedName);
+            }
+
+            if (modules.Contains(module))
+            {
+                return;
+            }
+
+            modules.Add(module);
+
+            var dependedModules = FindDependedModuleTypes(module);
+            foreach (var dependedModule in dependedModules)
+            {
+                AddModuleAndDependenciesResursively(modules, dependedModule);
+            }
+        }
+
     }
 }

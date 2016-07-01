@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using Abp.Collections;
-using Abp.Modules;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;
 using NHibernate;
 
 namespace Abp.NHibernate.Tests
 {
-    public class NHibernateTestBase : AbpIntegratedTestBase
+    public class NHibernateTestBase : AbpIntegratedTestBase<NHibernateTestModule>
     {
         private SQLiteConnection _connection;
 
@@ -21,12 +19,6 @@ namespace Abp.NHibernate.Tests
             LocalIocManager.IocContainer.Register(
                 Component.For<IDbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
                 );
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<NHibernateTestModule>();
         }
 
         public void UsingSession(Action<ISession> action)

@@ -1,22 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Abp.Reflection;
 
 namespace Abp.Modules
 {
     internal class DefaultModuleFinder : IModuleFinder
     {
-        private readonly ITypeFinder _typeFinder;
+        private readonly IAbpStartupModuleAccessor _startupModuleAccessor;
 
-        public DefaultModuleFinder(ITypeFinder typeFinder)
+        private ICollection<Type> _modules;
+
+        private readonly object _syncObj = new object();
+
+        public DefaultModuleFinder(IAbpStartupModuleAccessor startupModuleAccessor)
         {
-            _typeFinder = typeFinder;
+            _startupModuleAccessor = startupModuleAccessor;
         }
 
         public ICollection<Type> FindAll()
         {
-            return _typeFinder.Find(AbpModule.IsAbpModule).ToList();
+            if (_modules == null)
+            {
+                lock (_syncObj)
+                {
+                    if (_modules == null)
+                    {
+                        _modules = AbpModule.FindDependedModuleTypesRecursively(_startupModuleAccessor.StartupModule);
+                    }
+                }
+            }
+
+            return _modules;
         }
     }
 }

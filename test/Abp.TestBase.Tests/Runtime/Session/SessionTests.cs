@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.TestBase.Tests.Runtime.Session
 {
-    public class SessionTests : AbpIntegratedTestBase
+    public class SessionTests : AbpIntegratedTestBase<AbpKernelModule>
     {
         [Fact]
         public void Should_Be_Default_On_Startup()

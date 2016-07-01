@@ -43,7 +43,7 @@ namespace AbpAspNetCoreDemo
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
-            return services.AddAbp(options =>
+            return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(

@@ -42,9 +42,11 @@ namespace Abp.Modules
         public virtual void ShutdownModules()
         {
             Logger.Debug("Shutting down has been started");
+
             var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.Reverse();
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
+
             Logger.Debug("Shutting down completed.");
         }
 
@@ -52,27 +54,39 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = AddMissingDependedModules(_moduleFinder.FindAll());
+            var moduleTypes = _moduleFinder.FindAll();
+
+            AddKernalModule(moduleTypes);
+            
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
-            //Register to IOC container.
+            RegisterModules(moduleTypes);
+            CreateModules(moduleTypes);
+
+            AbpModuleCollection.EnsureKernelModuleToBeFirst(_modules);
+
+            SetDependencies();
+
+            Logger.DebugFormat("{0} modules loaded.", _modules.Count);
+        }
+
+        private static void AddKernalModule(ICollection<Type> moduleTypes)
+        {
+            if (!moduleTypes.Contains(typeof(AbpKernelModule)))
+            {
+                moduleTypes.Add(typeof(AbpKernelModule));
+            }
+        }
+
+        private void CreateModules(ICollection<Type> moduleTypes)
+        {
             foreach (var moduleType in moduleTypes)
             {
-                if (!AbpModule.IsAbpModule(moduleType))
+                var moduleObject = _iocManager.Resolve(moduleType) as AbpModule;
+                if (moduleObject == null)
                 {
                     throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
                 }
-
-                if (!_iocManager.IsRegistered(moduleType))
-                {
-                    _iocManager.Register(moduleType);
-                }
-            }
-
-            //Add to module collection
-            foreach (var moduleType in moduleTypes)
-            {
-                var moduleObject = (AbpModule)_iocManager.Resolve(moduleType);
 
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
@@ -81,22 +95,16 @@ namespace Abp.Modules
 
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
-
-            EnsureKernelModuleToBeFirst();
-
-            SetDependencies();
-
-            Logger.DebugFormat("{0} modules loaded.", _modules.Count);
         }
 
-        private void EnsureKernelModuleToBeFirst()
+        private void RegisterModules(ICollection<Type> moduleTypes)
         {
-            var kernelModuleIndex = _modules.FindIndex(m => m.Type == typeof (AbpKernelModule));
-            if (kernelModuleIndex > 0)
+            foreach (var moduleType in moduleTypes)
             {
-                var kernelModule = _modules[kernelModuleIndex];
-                _modules.RemoveAt(kernelModuleIndex);
-                _modules.Insert(0, kernelModule);
+                if (!_iocManager.IsRegistered(moduleType))
+                {
+                    _iocManager.Register(moduleType);
+                }
             }
         }
 
@@ -128,29 +136,6 @@ namespace Abp.Modules
                     {
                         moduleInfo.Dependencies.Add(dependedModuleInfo);
                     }
-                }
-            }
-        }
-
-        private static ICollection<Type> AddMissingDependedModules(ICollection<Type> allModules)
-        {
-            var initialModules = allModules.ToList();
-            foreach (var module in initialModules)
-            {
-                FillDependedModules(module, allModules);
-            }
-
-            return allModules;
-        }
-
-        private static void FillDependedModules(Type module, ICollection<Type> allModules)
-        {
-            foreach (var dependedModule in AbpModule.FindDependedModuleTypes(module))
-            {
-                if (!allModules.Contains(dependedModule))
-                {
-                    allModules.Add(dependedModule);
-                    FillDependedModules(dependedModule, allModules);
                 }
             }
         }
