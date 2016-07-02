@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -9,7 +10,7 @@ namespace Abp.Application.Services
     /// <summary>
     /// This class can be used as a base class for application services. 
     /// </summary>
-    public abstract class ApplicationService : AbpServiceBase, IApplicationService
+    public abstract class ApplicationService : AbpServiceBase, IApplicationService, IAvoidDuplicateCrossCuttingConcerns
     {
         /// <summary>
         /// Gets current session information.
@@ -39,8 +40,13 @@ namespace Abp.Application.Services
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
         protected IAbpSession CurrentSession { get { return AbpSession; } }
+
+        /// <summary>
+        /// Gets the applied cross cutting concerns.
+        /// </summary>
+        public List<string> AppliedCrossCuttingConcerns { get; } = new List<string>();
 
         /// <summary>
         /// Constructor.

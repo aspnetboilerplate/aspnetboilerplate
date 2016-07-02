@@ -177,7 +177,7 @@ namespace Abp.Runtime.Validation.Interception
 
                 var validationContext = new ValidationContext(validatingObject)
                 {
-                    DisplayName = property.Name,
+                    DisplayName = property.DisplayName,
                     MemberName = property.Name
                 };
 

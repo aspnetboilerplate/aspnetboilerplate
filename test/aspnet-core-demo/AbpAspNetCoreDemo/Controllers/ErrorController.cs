@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
+    //TODO: Can be converted to a base class and move to Abp.AspNetCore package.
     public class ErrorController : AbpController
     {
         private readonly IErrorInfoBuilder _errorInfoBuilder;

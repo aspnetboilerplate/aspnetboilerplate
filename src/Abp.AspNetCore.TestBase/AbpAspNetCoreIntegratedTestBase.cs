@@ -27,16 +27,24 @@ namespace Abp.AspNetCore.TestBase
 
         protected AbpAspNetCoreIntegratedTestBase()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<TStartup>();
-
-            Server = new TestServer(builder);
+            var builder = CreateWebHostBuilder();
+            Server = CreateTestServer(builder);
+            Client = Server.CreateClient();
 
             ServiceProvider = Server.Host.Services;
             IocManager = ServiceProvider.GetRequiredService<IIocManager>();
             AbpSession = ServiceProvider.GetRequiredService<TestAbpSession>();
+        }
 
-            Client = Server.CreateClient();
+        protected virtual IWebHostBuilder CreateWebHostBuilder()
+        {
+            return new WebHostBuilder()
+                .UseStartup<TStartup>();
+        }
+
+        protected virtual TestServer CreateTestServer(IWebHostBuilder builder)
+        {
+            return new TestServer(builder);
         }
 
         protected virtual string GetUrl<TController>()
@@ -47,7 +55,7 @@ namespace Abp.AspNetCore.TestBase
                 controllerName = controllerName.Left(controllerName.Length - "Controller".Length);
             }
 
-            return controllerName;
+            return "/" + controllerName;
         }
 
         protected virtual string GetUrl<TController>(string actionName)
@@ -57,7 +65,7 @@ namespace Abp.AspNetCore.TestBase
 
         protected virtual string GetUrl<TController>(string actionName, object queryStringParamsAsAnonymousObject)
         {
-            var url = GetUrl<TController>() + "/" + actionName;
+            var url = GetUrl<TController>(actionName);
 
             var dictionary = new RouteValueDictionary(queryStringParamsAsAnonymousObject);
             if (dictionary.Any())

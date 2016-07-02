@@ -354,7 +354,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             //Log exception
-            if (_wrapResultAttribute.LogError)
+            if (_wrapResultAttribute == null || _wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);
             }
@@ -376,7 +376,7 @@ namespace Abp.Web.Mvc.Controllers
             }
 
             //Check WrapResultAttribute
-            if (!_wrapResultAttribute.WrapOnError)
+            if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
             {
                 base.OnException(context);
                 return;

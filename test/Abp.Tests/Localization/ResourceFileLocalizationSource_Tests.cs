@@ -15,7 +15,11 @@ namespace Abp.Tests.Localization
         public ResourceFileLocalizationSource_Tests()
         {
             _resourceFileLocalizationSource = new ResourceFileLocalizationSource("MyTestResource", MyTestResource.ResourceManager);
-            _resourceFileLocalizationSource.Initialize(new LocalizationConfiguration(), new IocManager());
+            _resourceFileLocalizationSource.Initialize(new LocalizationConfiguration
+            {
+                HumanizeTextIfNotFound = false,
+                WrapGivenTextIfNotFound = true
+            }, new IocManager());
         }
 
         [Fact]
@@ -28,7 +32,7 @@ namespace Abp.Tests.Localization
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("en-US")).ShouldBe("Hello!");
             _resourceFileLocalizationSource.GetString("World", new CultureInfo("en-US")).ShouldBe("World!");
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("en-GB")).ShouldBe("Hello!");
-            
+
             //Defined in Turkish
             _resourceFileLocalizationSource.GetString("Hello", new CultureInfo("tr")).ShouldBe("Merhaba!");
 
@@ -37,7 +41,7 @@ namespace Abp.Tests.Localization
 
             //Undefined for Turkish, fallbacks to default language
             _resourceFileLocalizationSource.GetString("World", new CultureInfo("tr-TR")).ShouldBe("World!");
-            
+
             //Undefined at all, fallback to given text
             _resourceFileLocalizationSource.GetString("Apple", new CultureInfo("en-US")).ShouldBe("[Apple]");
         }

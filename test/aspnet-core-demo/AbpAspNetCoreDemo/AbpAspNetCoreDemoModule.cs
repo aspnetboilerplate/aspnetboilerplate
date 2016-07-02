@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
+using Abp.AspNetCore.Configuration;
 using Abp.EntityFrameworkCore;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
@@ -31,6 +32,13 @@ namespace AbpAspNetCoreDemo
                     )
                 )
             );
+
+            Configuration.Modules.AbpAspNetCore()
+                .CreateControllersForAppServices(
+                    typeof(AbpAspNetCoreDemoCoreModule).Assembly,
+                    useConventionalHttpVerbs: true,
+                    moduleName: "appcore"
+                );
         }
 
         public override void Initialize()

@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp.Application.Services;
+using Abp.Dependency;
 using Castle.DynamicProxy;
 
 namespace Abp.Runtime.Validation.Interception
@@ -17,6 +18,12 @@ namespace Abp.Runtime.Validation.Interception
 
         public void Intercept(IInvocation invocation)
         {
+            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
+            {
+                invocation.Proceed();
+                return;
+            }
+
             using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
             {
                 validator.Object.Initialize(invocation.Method, invocation.Arguments);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
@@ -17,7 +18,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
     /// <summary>
     /// Base class for all MVC Controllers in Abp system.
     /// </summary>
-    public abstract class AbpController : Controller
+    public abstract class AbpController : Controller, ITransientDependency
     {
         /// <summary>
         /// Gets current session information.
