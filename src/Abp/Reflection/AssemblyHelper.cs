@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Abp.Reflection
@@ -8,16 +9,11 @@ namespace Abp.Reflection
     {
         public static List<Assembly> GetAllAssembliesInFolder(string folderPath, SearchOption searchOption)
         {
-            var assemblies = new List<Assembly>();
+            var assemblyFiles = Directory
+                .EnumerateFiles(folderPath, "*.*", searchOption)
+                .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
-            var assemblyFiles = Directory.GetFiles(folderPath, "*.dll|*.exe", searchOption);
-
-            foreach (string assemblyFile in assemblyFiles)
-            {
-                assemblies.Add(Assembly.LoadFile(assemblyFile));
-            }
-
-            return assemblies;
+            return assemblyFiles.Select(Assembly.LoadFile).ToList();
         }
     }
 }
