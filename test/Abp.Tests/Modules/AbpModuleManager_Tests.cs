@@ -5,13 +5,13 @@ using Xunit;
 
 namespace Abp.Tests.Modules
 {
-    public class AbpModuleManager_Tests
+    public class AbpModuleManager_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Get_Load_Depended_Modules()
         {
             //Arrange
-            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>();
+            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
             bootstrapper.Initialize();
 
             //Act
