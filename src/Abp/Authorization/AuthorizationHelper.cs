@@ -42,17 +42,11 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(MethodInfo methodInfo)
         {
-            //Defines IAbpAllowAnonymousAttribute?
-            var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
-                    methodInfo
-                ).OfType<IAbpAllowAnonymousAttribute>();
-
-            if (authorizeAttributes.Any())
+            if (AllowAnonymous(methodInfo))
             {
                 return;
             }
-
+            
             //Authorize
             await CheckFeatures(methodInfo);
             await CheckPermissions(methodInfo);
@@ -89,6 +83,12 @@ namespace Abp.Authorization
             }
 
             await AuthorizeAsync(authorizeAttributes);
+        }
+
+        private static bool AllowAnonymous(MethodInfo methodInfo)
+        {
+            return ReflectionHelper.GetAttributesOfMemberAndDeclaringType(methodInfo)
+                .OfType<IAbpAllowAnonymousAttribute>().Any();
         }
     }
 }
