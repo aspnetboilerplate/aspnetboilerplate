@@ -37,7 +37,7 @@ namespace Abp.WebApi.Authorization
 
             try
             {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
+                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizationHelper>())
                 {
                     authorizationAttributeHelper.Object.Authorize(this);
                 }
