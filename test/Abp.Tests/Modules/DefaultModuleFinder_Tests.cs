@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.Tests.Modules
 {
-    public class DefaultModuleFinder_Tests
+    public class AbpModuleManager_Tests
     {
         [Fact]
         public void Should_Get_Load_Depended_Modules()
@@ -15,17 +15,17 @@ namespace Abp.Tests.Modules
             bootstrapper.Initialize();
 
             //Act
-            var modules = bootstrapper.IocManager.Resolve<DefaultModuleFinder>().FindAll();
+            var modules = bootstrapper.IocManager.Resolve<IAbpModuleManager>().Modules;
 
             //Assert
             modules.Count.ShouldBe(4);
 
-            modules.Any(m => m == typeof(AbpKernelModule)).ShouldBeTrue();
-            modules.Any(m => m == typeof(MyStartupModule)).ShouldBeTrue();
-            modules.Any(m => m == typeof(MyModule1)).ShouldBeTrue();
-            modules.Any(m => m == typeof(MyModule2)).ShouldBeTrue();
+            modules.Any(m => m.Type == typeof(AbpKernelModule)).ShouldBeTrue();
+            modules.Any(m => m.Type == typeof(MyStartupModule)).ShouldBeTrue();
+            modules.Any(m => m.Type == typeof(MyModule1)).ShouldBeTrue();
+            modules.Any(m => m.Type == typeof(MyModule2)).ShouldBeTrue();
 
-            modules.Any(m => m == typeof(MyNotDependedModule)).ShouldBeFalse();
+            modules.Any(m => m.Type == typeof(MyNotDependedModule)).ShouldBeFalse();
         }
 
         [DependsOn(typeof(MyModule1), typeof(MyModule2))]

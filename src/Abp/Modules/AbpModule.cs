@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -58,6 +59,11 @@ namespace Abp.Modules
         public virtual void Shutdown()
         {
             
+        }
+
+        public virtual Assembly[] GetAdditionalAssemblies()
+        {
+            return new Assembly[0];
         }
 
         /// <summary>

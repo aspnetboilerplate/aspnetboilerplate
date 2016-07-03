@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using Abp.Collections.Extensions;
-using Abp.Dependency;
 using Abp.Localization;
 using Abp.Modules;
-using Abp.Reflection;
 using Abp.Threading;
 
 namespace Abp.Web
@@ -36,8 +34,6 @@ namespace Abp.Web
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
-
-            AbpBootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             AbpBootstrapper.Initialize();
         }
 

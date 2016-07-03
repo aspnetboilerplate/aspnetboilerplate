@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.PlugIns;
+using Abp.Reflection;
 using Castle.Core.Logging;
 
 namespace Abp.Modules
@@ -11,29 +14,37 @@ namespace Abp.Modules
     /// <summary>
     /// This class is used to manage modules.
     /// </summary>
-    internal class AbpModuleManager : IAbpModuleManager
+    public class AbpModuleManager : IAbpModuleManager
     {
+        public AbpModuleInfo StartupModule { get; private set; }
+
+        private Type _startupModuleType;
+
+        public IReadOnlyList<AbpModuleInfo> Modules => _modules.ToImmutableList();
+
         public ILogger Logger { get; set; }
 
+        private readonly IIocManager _iocManager;
+        private readonly IAbpPlugInManager _abpPlugInManager;
         private readonly AbpModuleCollection _modules;
 
-        private readonly IIocManager _iocManager;
-        private readonly IModuleFinder _moduleFinder;
-
-        public AbpModuleManager(IIocManager iocManager, IModuleFinder moduleFinder)
+        public AbpModuleManager(IIocManager iocManager, IAbpPlugInManager abpPlugInManager)
         {
             _modules = new AbpModuleCollection();
             _iocManager = iocManager;
-            _moduleFinder = moduleFinder;
+            _abpPlugInManager = abpPlugInManager;
             Logger = NullLogger.Instance;
         }
 
-        public virtual void InitializeModules()
+        public virtual void Initialize(Type startupModule)
         {
-            LoadAll();
+            _startupModuleType = startupModule;
+            LoadAllModules();
+        }
 
+        public virtual void StartModules()
+        {
             var sortedModules = _modules.GetSortedModuleListByDependency();
-
             sortedModules.ForEach(module => module.Instance.PreInitialize());
             sortedModules.ForEach(module => module.Instance.Initialize());
             sortedModules.ForEach(module => module.Instance.PostInitialize());
@@ -50,12 +61,12 @@ namespace Abp.Modules
             Logger.Debug("Shutting down completed.");
         }
 
-        private void LoadAll()
+        private void LoadAllModules()
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = _moduleFinder.FindAll();
-            
+            var moduleTypes = FindAllModules();
+
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
             RegisterModules(moduleTypes);
@@ -66,6 +77,34 @@ namespace Abp.Modules
             SetDependencies();
 
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
+        }
+
+        private List<Type> FindAllModules()
+        {
+            var modules = AbpModule.FindDependedModuleTypesRecursively(_startupModuleType);
+            AddPlugInModules(modules);
+            return modules;
+        }
+
+        private void AddPlugInModules(List<Type> modules)
+        {
+            foreach (var assembly in _abpPlugInManager.GetPlugInAssemblies())
+            {
+                try
+                {
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        if (AbpModule.IsAbpModule(type) || !modules.Contains(type))
+                        {
+                            modules.Add(type);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn("Could not get types in assembly: " + assembly.FullName, ex);
+                }
+            }
         }
 
         private void CreateModules(ICollection<Type> moduleTypes)
@@ -81,7 +120,14 @@ namespace Abp.Modules
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
 
-                _modules.Add(new AbpModuleInfo(moduleObject));
+                var moduleInfo = new AbpModuleInfo(moduleType, moduleObject);
+
+                _modules.Add(moduleInfo);
+
+                if (moduleType == _startupModuleType)
+                {
+                    StartupModule = moduleInfo;
+                }
 
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }

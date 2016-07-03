@@ -6,6 +6,7 @@ using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Notifications;
+using Abp.PlugIns;
 using Abp.Reflection;
 using Abp.Runtime.Caching.Configuration;
 using Castle.MicroKernel.Registration;
@@ -35,8 +36,9 @@ namespace Abp.Dependency.Installers
                 Component.For<INotificationConfiguration, NotificationConfiguration>().ImplementedBy<NotificationConfiguration>().LifestyleSingleton(),
                 Component.For<IAbpStartupConfiguration, AbpStartupConfiguration>().ImplementedBy<AbpStartupConfiguration>().LifestyleSingleton(),
                 Component.For<ITypeFinder, TypeFinder>().ImplementedBy<TypeFinder>().LifestyleSingleton(),
-                Component.For<IModuleFinder, DefaultModuleFinder>().ImplementedBy<DefaultModuleFinder>().LifestyleSingleton(),
+                Component.For<IAbpPlugInManager, AbpPlugInManager>().ImplementedBy<AbpPlugInManager>().LifestyleSingleton(),
                 Component.For<IAbpModuleManager, AbpModuleManager>().ImplementedBy<AbpModuleManager>().LifestyleSingleton(),
+                Component.For<IAssemblyFinder, AbpAssemblyFinder>().ImplementedBy<AbpAssemblyFinder>().LifestyleSingleton(),
                 Component.For<ILocalizationManager, LocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton()
                 );
         }

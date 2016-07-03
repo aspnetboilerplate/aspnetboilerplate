@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Modules;
+using Abp.PlugIns;
 using Castle.MicroKernel.Registration;
 using JetBrains.Annotations;
 
@@ -13,12 +15,17 @@ namespace Abp
     /// Prepares dependency injection and registers core components needed for startup.
     /// It must be instantiated and initialized (see <see cref="Initialize"/>) first in an application.
     /// </summary>
-    public class AbpBootstrapper : IDisposable, IAbpStartupModuleAccessor
+    public class AbpBootstrapper : IDisposable
     {
         /// <summary>
         /// Get the startup module of the application which depends on other used modules.
         /// </summary>
         public Type StartupModule { get; }
+
+        /// <summary>
+        /// A list of plug in folders.
+        /// </summary>
+        public List<PlugInFolderInfo> PlugInFolders { get; }
 
         /// <summary>
         /// Gets IIocManager object used by this class.
@@ -30,7 +37,7 @@ namespace Abp
         /// </summary>
         protected bool IsDisposed;
 
-        private IAbpModuleManager _moduleManager;
+        private AbpModuleManager _moduleManager;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
@@ -59,6 +66,8 @@ namespace Abp
 
             StartupModule = startupModule;
             IocManager = iocManager;
+
+            PlugInFolders = new List<PlugInFolderInfo>();
         }
 
         /// <summary>
@@ -111,19 +120,20 @@ namespace Abp
 
             IocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
-            _moduleManager = IocManager.Resolve<IAbpModuleManager>();
-            _moduleManager.InitializeModules();
+            _moduleManager = IocManager.Resolve<AbpModuleManager>();
+            _moduleManager.Initialize(StartupModule);
+            _moduleManager.StartModules();
+
+            IocManager.Resolve<AbpPlugInManager>().PlugInFolders.AddRange(PlugInFolders);
         }
 
         private void RegisterBootstrapper()
         {
             if (!IocManager.IsRegistered<AbpBootstrapper>())
             {
-                IocManager.IocContainer.Register(Component.For<IAbpStartupModuleAccessor, AbpBootstrapper>().Instance(this));
-            }
-            else if (!IocManager.IsRegistered<IAbpStartupModuleAccessor>())
-            {
-                IocManager.IocContainer.Register(Component.For<IAbpStartupModuleAccessor>().Instance(this));
+                IocManager.IocContainer.Register(
+                    Component.For<AbpBootstrapper>().Instance(this)
+                    );
             }
         }
 
