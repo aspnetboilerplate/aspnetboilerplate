@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
+using Abp.UI;
 using Abp.Web.Mvc.Models;
 using Shouldly;
 using Xunit;
@@ -73,6 +74,19 @@ namespace Abp.AspNetCore.Tests
             {
                 response.Error.Message.ShouldNotBe(message);
             }
+        }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Json_Exception_If_Requested()
+        {
+            //Act & Assert
+            await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+            {
+                await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+                    GetUrl<SimpleTestController>(
+                        nameof(SimpleTestController.SimpleJsonExceptionDownWrap)
+                    ));
+            });
         }
 
         [Fact]
