@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
@@ -15,6 +17,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
@@ -249,7 +252,13 @@ namespace Abp.EntityFramework
             var entity = entityAsObj as IEntity<Guid>;
             if (entity != null && entity.Id == Guid.Empty)
             {
-                entity.Id = GuidGenerator.Create();
+                var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
+                var idProperty = entityType.GetProperty("Id");
+                var dbGeneratedAttr = ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
+                if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                {
+                    entity.Id = GuidGenerator.Create();
+                }
             }
         }
 
