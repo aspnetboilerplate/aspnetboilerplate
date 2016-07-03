@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Authorization;
 using Abp.Dependency;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Authorization
 {
+    //TODO: Register only actions which define AbpMvcAuthorizeAttribute..?
     public class AbpAuthorizationFilter : IAsyncAuthorizationFilter, ITransientDependency
     {
         private readonly IAuthorizationHelper _authorizationHelper;
@@ -19,12 +20,8 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            //Check IAllowAnonymous
-            if (context.ActionDescriptor
-                .GetMethodInfo()
-                .GetCustomAttributes(true)
-                .OfType<IAllowAnonymous>()
-                .Any())
+            // Allow Anonymous skips all authorization
+            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
             {
                 return;
             }
