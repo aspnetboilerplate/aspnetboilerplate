@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
+using Abp.Web.Mvc.Models;
 using Shouldly;
 using Xunit;
 
@@ -55,6 +57,20 @@ namespace Abp.AspNetCore.Tests
                 );
             });
 
+            //Act
+            var response = await GetResponseAsObjectAsync<MvcAjaxResponse>(
+                    GetUrl<AuthTestController>(
+                        nameof(AuthTestController.AbpMvcAuthorizedActionReturnsObject)
+                    ),
+                    HttpStatusCode.Unauthorized
+                );
+
+            //Assert
+            response.Success.ShouldBeFalse();
+            response.Result.ShouldBe(null);
+            response.Error.ShouldNotBeNull();
+            response.Error.Message.ShouldNotBeNull();
+            response.UnAuthorizedRequest.ShouldBeTrue();
 
             // Act & Assert
             await Assert.ThrowsAnyAsync<Exception>(async () =>
