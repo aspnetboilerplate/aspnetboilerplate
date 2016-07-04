@@ -8,7 +8,7 @@
 
     abp.ng.http = {
         defaultError: {
-            message: 'Ajax request did not succeed!',
+            message: 'An error has occurred!', //TODO: Automatically localize
             details: 'Error detail not sent by server.'
         },
 
@@ -107,6 +107,7 @@
 
                     'responseError': function (ngError) {
                         if (!ngError.data || !ngError.data.__abp) {
+                            abp.ng.http.showError(abp.ng.http.defaultError);
                             return ngError;
                         }
 

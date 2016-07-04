@@ -29,6 +29,7 @@
                     if (jqXHR.responseJSON && jqXHR.responseJSON.__abp) {
                         abp.ajax.handleResponse(jqXHR.responseJSON, userOptions, $dfd);
                     } else {
+                        abp.ajax.showError(abp.ajax.defaultError);
                         $dfd.reject.apply(this, arguments);
                         userOptions.error && userOptions.error.apply(this, arguments);
                     }
@@ -43,8 +44,8 @@
             contentType: 'application/json'
         },
 
-        defaultError: {
-            message: 'Ajax request did not succeed!',
+        defaultError: { //TODO: Automatically localize
+            message: 'An error has occurred!',
             details: 'Error detail not sent by server.'
         },
 
