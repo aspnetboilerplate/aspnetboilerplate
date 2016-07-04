@@ -31,6 +31,11 @@ namespace Abp.Web.Models
         public bool UnAuthorizedRequest { get; set; }
 
         /// <summary>
+        /// A special signature for AJAX responses. It's used in the client to detect if this is a response wrapped by ABP.
+        /// </summary>
+        public bool __abp { get; } = true;
+
+        /// <summary>
         /// Creates an <see cref="AjaxResponse"/> object with <see cref="Result"/> specified.
         /// <see cref="Success"/> is set as true.
         /// </summary>

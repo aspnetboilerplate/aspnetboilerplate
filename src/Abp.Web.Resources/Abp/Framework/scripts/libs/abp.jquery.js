@@ -19,9 +19,19 @@
         return $.Deferred(function ($dfd) {
             $.ajax(options)
                 .done(function (data) {
-                    abp.ajax.handleResponse(data, userOptions, $dfd);
-                }).fail(function () {
-                    $dfd.reject.apply(this, arguments);
+                    if (data.__abp) {
+                        abp.ajax.handleResponse(data, userOptions, $dfd);
+                    } else {
+                        $dfd.resolve(data);
+                        userOptions.success && userOptions.success(data);
+                    }
+                }).fail(function (err) {
+                    if (err.responseJSON && err.responseJSON.__abp) {
+                        abp.ajax.handleResponse(err.responseJSON, userOptions, $dfd);
+                    } else {
+                        $dfd.reject.apply(this, arguments);
+                        userOptions.error && userOptions.error.apply(this, arguments);
+                    }
                 });
         });
     };
