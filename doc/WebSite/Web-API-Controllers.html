@@ -32,7 +32,7 @@ ApiControllers.</p>
 {
     public UsersController()
     {
-				<strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
+        <strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
     }
 
     public UserDto Get(long id)
@@ -56,7 +56,7 @@ ApiControllers.</p>
 	and actions. Example:</p>
 			<pre lang="cs">public class UsersController : AbpApiController
 {
-				<strong>[AbpApiAuthorize(&quot;MyPermissionName&quot;)]</strong>
+    <strong>[AbpApiAuthorize(&quot;MyPermissionName&quot;)]</strong>
     public UserDto Get(long id)
     {
         //...
@@ -81,7 +81,7 @@ ApiControllers.</p>
         _userRepository = userRepository;
     }
 
-				<strong>[UnitOfWork]</strong>
+    <strong>[UnitOfWork]</strong>
     public <strong>virtual</strong> List&lt;UserDto&gt; Users(string filter)
     {
         var users = _userRepository
@@ -100,6 +100,19 @@ ApiControllers.</p>
 	otherwise).</p>
 			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
 	documentation for more.</p>
+			<h4>Result Wrapping</h4>
+<p>ASP.NET Boilerplate <strong>does not wrap</strong> Web API actions <strong>by 
+default</strong> if action has successfully executed. You can add WrapResult to actions or controllers if you need.&nbsp;But 
+it <strong>wraps exceptions</strong>. You can change this default behaviour from
+<a href="Startup-Configuration.html">startup configuration</a> (using 
+Configuration.Modules.AbpWebApi()...). See <a href="Javascript-API/AJAX.html">
+AJAX document</a> for more about result wrapping.</p>
+			<h4>Validation</h4>
+			<p>ASP.NET Boilerplate automatically checks <strong>
+			ModelState.IsValid</strong> and prevents execution of the action if 
+			it's not valid. Also, implements input DTO validation described in 
+			the <a href="Validating-Data-Transfer-Objects.html">validation 
+			documentation</a>.</p>
 			<h4>Others</h4>
 			<p>You can also use pre-injected <a href="/Pages/Documents/Abp-Session">AbpSession</a>, 
 				<a href="/Pages/Documents/EventBus-Domain-Events">EventBus</a>, 

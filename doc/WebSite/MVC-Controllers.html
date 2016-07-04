@@ -57,12 +57,20 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 	return type is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async 
 	actions). You can change this by using <strong>WrapResult</strong> and
 				<strong>DontWrapResult</strong> 
-	attributes for controllers or actions. See
+	attributes for controllers or actions or from
+			<a href="Startup-Configuration.html">startup configuration</a> 
+			(using Configuration.Modules.AbpMvc()...) globally. See
 				<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for more.</p>
 			<h4>Audit Logging</h4>
 			<p>Audit logs are automatically written if you derive from AbpController. 
 	See <a href="/Pages/Documents/Audit-Logging">audit logs</a> documentation 
 	for more.</p>
+			<h4>Validation</h4>
+			<p>ASP.NET Boilerplate automatically checks <strong>
+			ModelState.IsValid</strong> and prevents execution of the action if 
+			it's not valid. Also, implements input DTO validation described in 
+			the <a href="Validating-Data-Transfer-Objects.html">validation 
+			documentation</a>.</p>
 			<h4>Authorization</h4>
 			<p>You can use <strong>AbpMvcAuthorize</strong> attribute for your 
 	controllers or actions to prevent unauthorized users to use your controllers 

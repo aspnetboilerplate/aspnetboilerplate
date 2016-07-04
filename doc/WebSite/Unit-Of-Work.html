@@ -24,33 +24,13 @@ sent back to the pool. It's not disposed completely. This mechanism provided by
 .NET as an out of the box feature. So, we should always dispose a connection 
 after using it and create a new connection when needed. This is the best 
 practice.</p>
-			<p>There are two common approach to create/dispose a database connection in an 
-application:</p>
-			<p>
-				<strong>First approach</strong>: Creating a connection when a web request begins (Application_BeginRequest 
-event in global.asax), using the same connection in all database operations and 
-closing/disposing the connection at end of the request (Application_EndRequest event). 
-This is simple but not efficient. Why?</p>
-			<ul>
-				<li>Maybe there is no database operation in a request, but a connection is 
-	opened anyway. An inefficient usage of the connection pool.</li>
-				<li>There maybe cases a request is very long and database operation takes a short time in that request. 
-	This is also an inefficient way of using connection pool.</li>
-				<li>This is possbile only in a web application. If your application is a 
-	Windows service, this can not be implemented.</li>
-			</ul>
 			<p>Also, it's considered as a best practice to perform database operations in a
 				<strong>transactional</strong> way. If one operation fails, all of them are 
 rolled back. Since a transaction may lock some rows (even tables) in database, 
 it must be short-lived.</p>
-			<p>
-				<strong>Second approach</strong>: Creating a connection when needed (just 
-before using it) and disposing it just after using it. This is the most 
-efficient but a tedious and repating work to create/dispose connections 
-everywhere.</p>
+			<p>ASP.NET Boilerplate manages database connection and transactions 
+			by it's <strong>unit of work</strong> system.</p>
 			<h3 id="DocAbpApproach">Connection &amp; Transaction Management in ASP.NET Boilerplate</h3>
-
-			<p>ASP.NET Boilerplate mixes both approach and provides a simple yet efficient model.</p>
 			<h4 id="DocRepositoryClasses">Repository Classes</h4>
 			<p>
 				<a href="/Pages/Documents/Repositories">Repositories</a> are main classes 
@@ -117,11 +97,16 @@ example since this is an application service method. ASP.NET Boilerplate opens a
 database connection and starts a transaction when entering CreatePerson method 
 and commint the transaction at end of the method if no exception is thrown, 
 rolls back if any exception occurs. In that way, all database operations in 
-CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).</p>
+CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).&nbsp;</p>
+			<h4>ASP.NET Core MVC Controllers</h4>
+			<p><strong>ASP.NET Core</strong> MVC Controllers are also run as 
+			unit of work. Note that this is not valid for "classic" ASP.NET MVC 
+			and Web API Controllers.</p>
 			<h4 id="DocUow">Unit Of Work</h4>
-			<p>Unit of work <strong>implicitly</strong> works for repository and application service methods. 
+			<p>Unit of work <strong>implicitly</strong> works for the classes 
+			defined above. 
 You should <strong>explicitly </strong>use it if you want to control database connection and 
-transaction somewhere else. There are two approaches for this.</p>
+transaction somewhere else. There are two approaches for this.&nbsp;</p>
 			<h5>UnitOfWork attribute</h5>
 			<p>First and preferred approach is using <strong>UnitOfWorkAttribute</strong>. Example:</p>
 			<pre lang="cs">[UnitOfWork]

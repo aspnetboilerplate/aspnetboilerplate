@@ -156,14 +156,24 @@ change this by using <strong>WrapResult</strong> attribute as shown below:</p>
 }</pre>
 <p>As a shortcut, we can only use <strong>[DontWrapResult]</strong> which is 
 identical for this example.</p>
+	<p>You can change this default behaviour from
+	<a href="../Startup-Configuration.html">startup configuration</a> (using 
+	Configuration.Modules.AbpMvc()...).</p>
 <h5>ASP.NET Web API Controllers</h5>
 <p>ASP.NET Boilerplate <strong>does not wrap</strong> Web API actions <strong>by 
-default</strong> (except AjaxResponse return types). You can add WrapResult to actions or controllers if you need.</p>
+default</strong> if action has successfully executed. You can add WrapResult to actions or controllers if you need.&nbsp;But 
+it <strong>wraps exceptions</strong>.</p>
+	<p>You can change this default behaviour from
+	<a href="../Startup-Configuration.html">startup configuration</a> (using 
+	Configuration.Modules.AbpWebApi()...).</p>
 <h5>Dynamic Web API Layer</h5>
 <p>ASP.NET Boilerplate <strong>wraps</strong> dynamic web api layer methods
 <strong>by default</strong>. You can change this behaviour using <strong>
 WrapResult </strong>and <strong>DontWrapResult </strong>attributes in the
-<strong>interface</strong> of your application service. See the next section.</p>
+<strong>interface</strong> of your application service.</p>
+	<p>You can change this default behaviour from
+	<a href="../Startup-Configuration.html">startup configuration</a> (using 
+	Configuration.Modules.AbpWebApi()...).</p>
 
 <h4>Dynamic Web API Layer</h4>
 <p>While ASP.NET Boilerplate provides a mechanism to make easy AJAX calls, in a 

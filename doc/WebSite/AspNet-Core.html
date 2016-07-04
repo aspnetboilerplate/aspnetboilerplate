@@ -39,7 +39,13 @@ framework.</p>
         });
 
 <strong>        //Configure Abp and Dependency Injection. Should be called last.
-        return services.AddAbp();
+        return services.AddAbp&lt;MyProjectWebModule&gt;(options =&gt;
+        {
+            //Configure Log4Net logging (optional)
+            options.IocManager.IocContainer.AddFacility&lt;LoggingFacility&gt;(
+                f =&gt; f.UseLog4Net().WithConfig(&quot;log4net.config&quot;)
+            );
+        });
 </strong>    }
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -51,7 +57,8 @@ framework.</p>
     }
 }</pre>
 	<h4>Module Configuration</h4>
-	<p>TODO</p>
+	<p>You can use <a href="Startup-Configuration.html">startup configuration</a> 
+	to configure AspNet Core Module (Configuration.Modules.AbpAspNetCore()...).</p>
 	<h3>Controllers</h3>
 	<p>Controllers can be any type of classes in ASP.NET Core. It's not 
 	restricted to classes derived from Controller class. By default, a class 
@@ -70,15 +77,27 @@ framework.</p>
 	expose your application services to remote clients as controllers (as 
 	previously done using <a href="Dynamic-Web-API.html">dynamic web api</a>), 
 	you can easily do it by a simple configuration in
-	<a href="Module-System.html">PreInitialize</a> method of your module:</p>
-	<pre lang="cs">Configuration.Modules.AbpAspNetCore().<strong>CreateControllersForAppServices</strong>(typeof(MyApplicationModule).Assembly);</pre>
+	<a href="Module-System.html">PreInitialize</a> method of your module. 
+	Example:</p>
+	<pre lang="cs">Configuration.Modules.AbpAspNetCore().<strong>CreateControllersForAppServices</strong>(typeof(MyApplicationModule).Assembly, moduleName: 'app', useConventionalHttpVerbs: true);</pre>
 	<p><strong>CreateControllersForAppServices</strong> method gets an assembly 
 	and converts all application services to MVC controllers in that assembly. 
 	You can use <strong>RemoteService</strong> attribute to enable/disable it for method or 
 	class level.</p>
+	<p>When an application service is converted to MVC Controller, it's default 
+	route will be like <em>
+	/api/services/&lt;module-name&gt;/&lt;service-name&gt;/&lt;method-name&gt;</em>. Example: If 
+	ProductAppService defines a Create method, it's URL will be <strong>
+	/api/services/app/product/create</strong> (assumed that module name is 
+	'app'). If useConventionalHttpVerbs set to true, then it's HTTP Verb will be 
+	POST (because of naming conventions).</p>
+	<p>You can use any ASP.NET Core attributes to change HTTP methods or routes 
+	of the actions (but surely, this requires to add reference to ASP.NET Core 
+	packages).</p>
 	<p><strong>Note</strong>: Previously, dynamic web api system was requiring 
-	to create interfaces for application services. But this is not required for 
+	to create service <strong>interfaces</strong> for application services. But this is not required for 
 	ASP.NET Core integration.</p>
+	<p>TODO</p>
 	<h3>Filters</h3>
 	<p>ABP defines some <strong>pre-built filters</strong> for AspNet Core. All 
 	of them are added to <strong>all actions of all controllers</strong> by 
@@ -140,10 +159,31 @@ framework.</p>
 		<li>&nbsp;<strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
 		attributes can be used for methods and classes to enable/disable 
 		wrapping.</li>
+		<li>You can use startup configuration to change default behaviour for 
+		result wrapping.</li>
 	</ul>
-	<h3>Client Proxies</h3>
+	<h3>Model Binders</h3>
 	<p>TODO</p>
-	<p>....</p>
+	<h3>Views</h3>
+	<p>TODO</p>
+	<h3>Client Proxies</h3>
+	<p>ABP can automatically create javascript proxies for all MVC Controllers. 
+	It's created for <em>Application Services as Controllers</em> (see the 
+	section above) by default. You can add [RemoteService] attribute to any MVC 
+	controller to create client proxy for it. Javascript proxies are dynamically 
+	generated on runtime. You need to add given script definition to your page:</p>
+	<pre lang="xml">&lt;script src=&quot;~/AbpServiceProxies/GetAll?type=jquery&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+	<p>Currently, only JQuery proxies are generated. We can then call an MVC method 
+	with javascript as shown below:</p>
+	<pre lang="js">
+abp.services.app.product.create({
+    name: 'My test product',
+    price: 99
+}).done(function(result){
+    //...
+});</pre>
+	<h3>Integration Testing</h3>
+	<p>TODO</p>
 
 </div>
 
