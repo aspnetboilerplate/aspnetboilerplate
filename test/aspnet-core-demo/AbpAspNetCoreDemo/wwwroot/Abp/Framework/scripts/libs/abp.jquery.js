@@ -25,9 +25,9 @@
                         $dfd.resolve(data);
                         userOptions.success && userOptions.success(data);
                     }
-                }).fail(function (err) {
-                    if (err.responseJSON && err.responseJSON.__abp) {
-                        abp.ajax.handleResponse(err.responseJSON, userOptions, $dfd);
+                }).fail(function (jqXHR) {
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.__abp) {
+                        abp.ajax.handleResponse(jqXHR.responseJSON, userOptions, $dfd);
                     } else {
                         $dfd.reject.apply(this, arguments);
                         userOptions.error && userOptions.error.apply(this, arguments);
