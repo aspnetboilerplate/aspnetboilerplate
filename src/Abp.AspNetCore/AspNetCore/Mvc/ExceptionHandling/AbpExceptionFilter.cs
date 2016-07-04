@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
@@ -18,19 +19,21 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
         public ILogger Logger { get; set; }
 
         private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IAbpAspNetCoreConfiguration _configuration;
 
-        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder)
+        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder, IAbpAspNetCoreConfiguration configuration)
         {
             _errorInfoBuilder = errorInfoBuilder;
+            _configuration = configuration;
             Logger = NullLogger.Instance;
         }
 
         public void OnException(ExceptionContext context)
         {
             var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
-                    WrapResultAttribute.Default
+                    _configuration.DefaultWrapResultAttribute
                 );
 
             if (wrapResultAttribute.LogError)
