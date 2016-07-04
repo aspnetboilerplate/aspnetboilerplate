@@ -13,6 +13,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
@@ -25,6 +26,7 @@ using Abp.Timing;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
+using Abp.Web.Mvc.Validation;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
@@ -148,6 +150,8 @@ namespace Abp.Web.Mvc.Controllers
 
         public IAuditingStore AuditingStore { get; set; }
 
+        public IIocResolver IocResolver { get; set; }
+
         /// <summary>
         /// This object is used to measure an action execute duration.
         /// </summary>
@@ -190,6 +194,7 @@ namespace Abp.Web.Mvc.Controllers
             PermissionChecker = NullPermissionChecker.Instance;
             AuditingStore = SimpleLogAuditingStore.Instance;
             EventBus = NullEventBus.Instance;
+            IocResolver = IocManager.Instance;
         }
 
         /// <summary>
@@ -313,8 +318,22 @@ namespace Abp.Web.Mvc.Controllers
         {
             SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
             HandleAuditingBeforeAction(filterContext);
+            ValidateArguments(filterContext);
 
             base.OnActionExecuting(filterContext);
+        }
+
+        private void ValidateArguments(ActionExecutingContext filterContext)
+        {
+            var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
+            if (methodInfo != null)
+            {
+                using (var validator = IocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+                {
+                    validator.Object.Initialize(filterContext, methodInfo);
+                    validator.Object.Validate();
+                }
+            }
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
