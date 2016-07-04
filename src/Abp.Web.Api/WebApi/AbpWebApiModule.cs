@@ -13,7 +13,6 @@ using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
-using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
@@ -22,6 +21,8 @@ using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.Web.Api.Description;
 using Abp.WebApi.Controllers.Dynamic.Binders;
+using Abp.WebApi.ExceptionHandling;
+using Abp.WebApi.Validation;
 
 namespace Abp.WebApi
 {
@@ -84,6 +85,7 @@ namespace Abp.WebApi
         {
             httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpValidationFilterAttribute>());
         }
 
         private static void InitializeFormatters(HttpConfiguration httpConfiguration)

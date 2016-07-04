@@ -9,7 +9,7 @@ using Abp.WebApi.Configuration;
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Wrapps Web API return values by <see cref="AjaxResponse"/>.
+    /// Wraps Web API return values by <see cref="AjaxResponse"/>.
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {

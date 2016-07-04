@@ -5,6 +5,7 @@ using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Modules;
 using Abp.PlugIns;
+using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using JetBrains.Annotations;
 
@@ -38,6 +39,7 @@ namespace Abp
         protected bool IsDisposed;
 
         private AbpModuleManager _moduleManager;
+        private ILogger _logger;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
@@ -68,6 +70,7 @@ namespace Abp
             IocManager = iocManager;
 
             PlugInFolders = new List<PlugInFolderInfo>();
+            _logger = NullLogger.Instance;
         }
 
         /// <summary>
@@ -115,16 +118,33 @@ namespace Abp
         /// </summary>
         public virtual void Initialize()
         {
-            RegisterBootstrapper();
-            IocManager.IocContainer.Install(new AbpCoreInstaller());
+            ResolveLogger();
 
-            IocManager.Resolve<AbpStartupConfiguration>().Initialize();
+            try
+            {
+                RegisterBootstrapper();
+                IocManager.IocContainer.Install(new AbpCoreInstaller());
 
-            _moduleManager = IocManager.Resolve<AbpModuleManager>();
-            _moduleManager.Initialize(StartupModule);
-            _moduleManager.StartModules();
+                IocManager.Resolve<AbpPlugInManager>().PlugInFolders.AddRange(PlugInFolders);
+                IocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
-            IocManager.Resolve<AbpPlugInManager>().PlugInFolders.AddRange(PlugInFolders);
+                _moduleManager = IocManager.Resolve<AbpModuleManager>();
+                _moduleManager.Initialize(StartupModule);
+                _moduleManager.StartModules();
+            }
+            catch (Exception ex)
+            {
+                _logger.Fatal(ex.ToString(), ex);
+                throw;
+            }
+        }
+
+        private void ResolveLogger()
+        {
+            if (IocManager.IsRegistered<ILoggerFactory>())
+            {
+                _logger = IocManager.Resolve<ILoggerFactory>().Create(typeof(AbpBootstrapper));
+            }
         }
 
         private void RegisterBootstrapper()

@@ -7,9 +7,10 @@ using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
+using Abp.WebApi.Controllers;
 using Castle.Core.Logging;
 
-namespace Abp.WebApi.Controllers.Filters
+namespace Abp.WebApi.ExceptionHandling
 {
     /// <summary>
     /// Used to handle exceptions on web api controllers.
