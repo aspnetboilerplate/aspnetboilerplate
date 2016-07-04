@@ -1,9 +1,7 @@
 ﻿using System;
-using Abp.Collections;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
-using Abp.TestBase.Modules;
 using Abp.TestBase.Runtime.Session;
 
 namespace Abp.TestBase
@@ -11,7 +9,8 @@ namespace Abp.TestBase
     /// <summary>
     /// This is the base class for all tests integrated to ABP.
     /// </summary>
-    public abstract class AbpIntegratedTestBase : IDisposable
+    public abstract class AbpIntegratedTestBase<TStartupModule> : IDisposable 
+        where TStartupModule : AbpModule
     {
         /// <summary>
         /// Local <see cref="IIocManager"/> used for this test.
@@ -28,7 +27,7 @@ namespace Abp.TestBase
         protected AbpIntegratedTestBase(bool initializeAbp = true)
         {
             LocalIocManager = new IocManager();
-            AbpBootstrapper = new AbpBootstrapper(LocalIocManager);
+            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>(LocalIocManager);
 
             if (initializeAbp)
             {
@@ -38,23 +37,13 @@ namespace Abp.TestBase
 
         protected void InitializeAbp()
         {
-            LocalIocManager.Register<IModuleFinder, TestModuleFinder>();
             LocalIocManager.Register<IAbpSession, TestAbpSession>();
-
-            var modules = LocalIocManager.Resolve<TestModuleFinder>().Modules;
-            modules.Add<AbpTestBaseModule>();
-            AddModules(modules);
 
             PreInitialize();
 
             AbpBootstrapper.Initialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
-        }
-
-        protected virtual void AddModules(ITypeList<AbpModule> modules)
-        {
-
         }
 
         /// <summary>

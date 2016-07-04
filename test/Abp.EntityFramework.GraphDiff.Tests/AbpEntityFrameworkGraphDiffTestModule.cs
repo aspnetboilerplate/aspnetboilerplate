@@ -5,11 +5,12 @@ using Abp.EntityFramework.GraphDiff.Configuration;
 using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.EntityFramework.GraphDIff.Tests.Entities;
 using Abp.Modules;
+using Abp.TestBase;
 using RefactorThis.GraphDiff;
 
 namespace Abp.EntityFramework.GraphDIff.Tests
 {
-    [DependsOn(typeof(AbpEntityFrameworkGraphDiffModule))]
+    [DependsOn(typeof(AbpEntityFrameworkGraphDiffModule), typeof(AbpTestBaseModule))]
     public class AbpEntityFrameworkGraphDiffTestModule : AbpModule
     {
         public override void Initialize()

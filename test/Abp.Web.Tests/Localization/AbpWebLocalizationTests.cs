@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
-using Abp.Collections;
 using Abp.Localization;
-using Abp.Modules;
 using Abp.TestBase;
 using Abp.Web.Localization;
 using Shouldly;
@@ -10,19 +8,13 @@ using Xunit;
 
 namespace Abp.Web.Tests.Localization
 {
-    public class AbpWebLocalizationTests : AbpIntegratedTestBase
+    public class AbpWebLocalizationTests : AbpIntegratedTestBase<AbpWebModule>
     {
         private readonly ILocalizationManager _localizationManager;
 
         public AbpWebLocalizationTests()
         {
             _localizationManager = Resolve<ILocalizationManager>();
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add(typeof(AbpWebModule));
         }
 
         [Fact]

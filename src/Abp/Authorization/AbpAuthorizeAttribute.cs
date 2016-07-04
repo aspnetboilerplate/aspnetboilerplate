@@ -12,7 +12,7 @@ namespace Abp.Authorization
         /// <summary>
         /// A list of permissions to authorize.
         /// </summary>
-        public string[] Permissions { get; private set; }
+        public string[] Permissions { get; }
 
         /// <summary>
         /// If this property is set to true, all of the <see cref="Permissions"/> must be granted.

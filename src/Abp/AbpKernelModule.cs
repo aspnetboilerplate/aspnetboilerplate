@@ -5,7 +5,6 @@ using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
@@ -38,7 +37,6 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
-            FeatureInterceptorRegistrar.Initialize(IocManager);
             AuditingInterceptorRegistrar.Initialize(IocManager);
             UnitOfWorkRegistrar.Initialize(IocManager);
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
