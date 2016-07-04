@@ -76,9 +76,9 @@ namespace Abp.WebApi
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
-            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector(IocManager.Resolve<IAbpWebApiModuleConfiguration>()));
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
-            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(IocManager.Resolve<IAbpWebApiModuleConfiguration>(), httpConfiguration));
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)

@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? DontWrapResultAttribute.Default;
+                           ?? _webApiModuleConfiguration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
             {

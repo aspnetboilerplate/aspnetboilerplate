@@ -24,6 +24,7 @@ using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Models;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Models;
 using Abp.Web.Mvc.Validation;
@@ -151,6 +152,8 @@ namespace Abp.Web.Mvc.Controllers
         public IAuditingStore AuditingStore { get; set; }
 
         public IIocResolver IocResolver { get; set; }
+
+        public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
 
         /// <summary>
         /// This object is used to measure an action execute duration.
@@ -347,9 +350,9 @@ namespace Abp.Web.Mvc.Controllers
         {
             _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
             _wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     _currentMethodInfo,
-                    WrapResultAttribute.Default
+                    AbpMvcConfiguration.DefaultWrapResultAttribute
                 );
         }
 
@@ -361,7 +364,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             //If exception handled before, do nothing.

@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Web.Mvc;
 using Abp.Modules;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.ModelBinding.Binders;
 
@@ -16,6 +17,8 @@ namespace Abp.Web.Mvc
         /// <inheritdoc/>
         public override void PreInitialize()
         {
+            IocManager.Register<IAbpMvcConfiguration, AbpMvcConfiguration>();
+
             IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
         }
 
