@@ -8,7 +8,7 @@ using Abp.Domain.Repositories;
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
-    public class ProductAppService : ApplicationService, IProductAppService
+    public class ProductAppService : ApplicationService
     {
         private readonly IRepository<Product> _productRepository;
 
@@ -17,7 +17,7 @@ namespace AbpAspNetCoreDemo.Core.Application
             _productRepository = productRepository;
         }
 
-        public virtual List<ProductDto> Get()
+        public virtual List<ProductDto> GetAll()
         {
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
