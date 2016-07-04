@@ -409,7 +409,7 @@ namespace Abp.Web.Mvc.Controllers
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
-            context.HttpContext.Response.StatusCode = 200; //TODO: Consider to return 500
+            context.HttpContext.Response.StatusCode = 500;
             return new AbpJsonResult(
                 new MvcAjaxResponse(
                     ErrorInfoBuilder.BuildForException(context.Exception),

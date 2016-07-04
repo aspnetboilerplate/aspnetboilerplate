@@ -148,16 +148,7 @@ namespace Abp.Modules
         {
             foreach (var moduleInfo in _modules)
             {
-                //Set dependencies according to assembly dependency
-                foreach (var referencedAssemblyName in moduleInfo.Assembly.GetReferencedAssemblies())
-                {
-                    var referencedAssembly = Assembly.Load(referencedAssemblyName);
-                    var dependedModuleList = _modules.Where(m => m.Assembly == referencedAssembly).ToList();
-                    if (dependedModuleList.Count > 0)
-                    {
-                        moduleInfo.Dependencies.AddRange(dependedModuleList);
-                    }
-                }
+                moduleInfo.Dependencies.Clear();
 
                 //Set dependencies for defined DependsOnAttribute attribute(s).
                 foreach (var dependedModuleType in AbpModule.FindDependedModuleTypes(moduleInfo.Type))

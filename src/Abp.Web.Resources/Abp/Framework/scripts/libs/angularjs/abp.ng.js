@@ -96,29 +96,23 @@
                     },
 
                     'response': function (response) {
-                        if (!response.config || !response.config.abp || !response.data) {
+                        if (!response.data || !response.data.__abp) {
                             return response;
                         }
 
                         var defer = $q.defer();
-
                         abp.ng.http.handleResponse(response, defer);
-
                         return defer.promise;
                     },
 
                     'responseError': function (ngError) {
-                        var error = {
-                            message: ngError.data || abp.ng.http.defaultError.message,
-                            details: ngError.statusText || abp.ng.http.defaultError.details,
-                            responseError: true
+                        if (!ngError.data || !ngError.data.__abp) {
+                            return ngError;
                         }
 
-                        abp.ng.http.showError(error);
-
-                        abp.ng.http.logError(error);
-
-                        return $q.reject(ngError);
+                        var defer = $q.defer();
+                        abp.ng.http.handleResponse(ngError, defer);
+                        return defer.promise;
                     }
 
                 };
