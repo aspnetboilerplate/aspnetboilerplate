@@ -1,5 +1,9 @@
-﻿{
+{
   "dependencies": {
+    "Abp.AspNetCore": "0.9.7.0-*",
+    "Abp.EntityFrameworkCore": "0.9.7.0-*",
+    "AbpAspNetCoreDemo.Core": "0.9.7.0-*",
+    "Castle.Windsor-log4net": "3.3.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Razor.Tools": {
@@ -30,7 +34,8 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "copyToOutput": "log4net.config"
   },
 
   "publishOptions": {
@@ -39,7 +44,8 @@
       "Views",
       "Areas/**/Views",
       "appsettings.json",
-      "web.config"
+      "web.config",
+      "log4net.config"
     ]
   },
 
