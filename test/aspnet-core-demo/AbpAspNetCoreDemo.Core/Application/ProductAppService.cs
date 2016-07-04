@@ -17,12 +17,12 @@ namespace AbpAspNetCoreDemo.Core.Application
             _productRepository = productRepository;
         }
 
-        public virtual List<ProductDto> GetAll()
+        public List<ProductDto> GetAll()
         {
             return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
         }
 
-        public virtual int CreateProduct(ProductCreateInput input)
+        public int CreateProduct(ProductCreateInput input)
         {
             return _productRepository.InsertAndGetId(ObjectMapper.Map<Product>(input));
         }

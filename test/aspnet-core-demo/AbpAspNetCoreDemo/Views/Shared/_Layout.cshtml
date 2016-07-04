@@ -54,13 +54,22 @@
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
+
+
         </script>
         <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+
+
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+
+    <script src="~/Abp/Framework/scripts/abp.js" type="text/javascript"></script>
+    <script src="~/Abp/Framework/scripts/libs/abp.jquery.js" type="text/javascript"></script>
+    <script src="~/AbpScripts/GetScripts" type="text/javascript"></script>
+    <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
     @RenderSection("scripts", required: false)
 </body>
