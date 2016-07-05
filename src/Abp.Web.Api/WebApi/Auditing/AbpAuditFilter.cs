@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using Abp.Application.Services;
 using Abp.Aspects;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
@@ -19,7 +18,7 @@ using Castle.Core.Logging;
 
 namespace Abp.WebApi.Auditing
 {
-    public class AbpAuditFilterAttribute : IActionFilter, ITransientDependency
+    public class AbpAuditFilter : IActionFilter, ITransientDependency
     {
         /// <summary>
         /// Ignored types for serialization on audit logging.
@@ -38,12 +37,12 @@ namespace Abp.WebApi.Auditing
 
         private readonly IAuditingConfiguration _auditingConfiguration;
 
-        static AbpAuditFilterAttribute()
+        static AbpAuditFilter()
         {
             IgnoredTypesForSerializationOnAuditLogging = new List<Type>();
         }
 
-        public AbpAuditFilterAttribute(IAuditingConfiguration auditingConfiguration)
+        public AbpAuditFilter(IAuditingConfiguration auditingConfiguration)
         {
             _auditingConfiguration = auditingConfiguration;
 
@@ -55,14 +54,14 @@ namespace Abp.WebApi.Auditing
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
+            if (actionContext.ActionDescriptor.GetMethodInfoOrNull() == null ||
+                !ShouldSaveAudit(actionContext))
+            {
+                return await continuation();
+            }
+
             using (AbpCrossCuttingConcerns.Applying(actionContext.ControllerContext.Controller, AbpCrossCuttingConcerns.Auditing))
             {
-                if (actionContext.ActionDescriptor.GetMethodInfoOrNull() == null ||
-                    !ShouldSaveAudit(actionContext))
-                {
-                    return await continuation();
-                }
-
                 var auditInfo = CreateAuditInfo(actionContext);
                 var stopwatch = Stopwatch.StartNew();
 
@@ -106,7 +105,7 @@ namespace Abp.WebApi.Auditing
 
         private bool ShouldSaveAudit(HttpActionContext filterContext)
         {
-            if (!_auditingConfiguration.IsEnabled || !_auditingConfiguration.MvcControllers.IsEnabled)
+            if (!_auditingConfiguration.IsEnabled)
             {
                 return false;
             }

@@ -10,29 +10,31 @@ using Abp.Dependency;
 
 namespace Abp.WebApi.Validation
 {
-    public class AbpValidationFilterAttribute : IActionFilter, ITransientDependency
+    public class AbpValidationFilter : IActionFilter, ITransientDependency
     {
         public bool AllowMultiple => false;
 
         private readonly IIocResolver _iocResolver;
 
-        public AbpValidationFilterAttribute(IIocResolver iocResolver)
+        public AbpValidationFilter(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
+            var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
+            if (methodInfo == null)
+            {
+                return await continuation();
+            }
+
             using (AbpCrossCuttingConcerns.Applying(actionContext.ControllerContext.Controller, AbpCrossCuttingConcerns.Validation))
             {
-                var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-                if (methodInfo != null)
+                using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
                 {
-                    using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
-                    {
-                        validator.Object.Initialize(actionContext, methodInfo);
-                        validator.Object.Validate();
-                    }
+                    validator.Object.Initialize(actionContext, methodInfo);
+                    validator.Object.Validate();
                 }
 
                 return await continuation();

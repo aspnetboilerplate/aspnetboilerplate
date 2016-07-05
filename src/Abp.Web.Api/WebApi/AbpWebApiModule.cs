@@ -23,6 +23,7 @@ using Abp.Web.Api.Description;
 using Abp.WebApi.Auditing;
 using Abp.WebApi.Controllers.Dynamic.Binders;
 using Abp.WebApi.ExceptionHandling;
+using Abp.WebApi.Uow;
 using Abp.WebApi.Validation;
 
 namespace Abp.WebApi
@@ -86,8 +87,9 @@ namespace Abp.WebApi
         {
             httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
-            httpConfiguration.Filters.Add(IocManager.Resolve<AbpAuditFilterAttribute>());
-            httpConfiguration.Filters.Add(IocManager.Resolve<AbpValidationFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpAuditFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpValidationFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpUowFilter>());
         }
 
         private static void InitializeFormatters(HttpConfiguration httpConfiguration)
