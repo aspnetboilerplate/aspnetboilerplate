@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Abp.Application.Services;
 using Abp.Dependency;
 
 namespace Abp.WebApi.Validation
@@ -21,17 +22,20 @@ namespace Abp.WebApi.Validation
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo != null)
+            using (AbpCrossCuttingConcerns.Applying(actionContext.ControllerContext.Controller, AbpCrossCuttingConcerns.Validation))
             {
-                using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
+                var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
+                if (methodInfo != null)
                 {
-                    validator.Object.Initialize(actionContext, methodInfo);
-                    validator.Object.Validate();
+                    using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
+                    {
+                        validator.Object.Initialize(actionContext, methodInfo);
+                        validator.Object.Validate();
+                    }
                 }
-            }
 
-            return await continuation();
+                return await continuation();
+            }
         }
     }
 }
