@@ -20,6 +20,7 @@ using System.Web.Http.Description;
 using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.Web.Api.Description;
+using Abp.WebApi.Auditing;
 using Abp.WebApi.Controllers.Dynamic.Binders;
 using Abp.WebApi.ExceptionHandling;
 using Abp.WebApi.Validation;
@@ -45,7 +46,10 @@ namespace Abp.WebApi
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
+        }
+        
+        public override void PostInitialize()
+        {
             var httpConfiguration = IocManager.Resolve<IAbpWebApiModuleConfiguration>().HttpConfiguration;
 
             InitializeAspNetServices(httpConfiguration);
@@ -53,10 +57,7 @@ namespace Abp.WebApi
             InitializeFormatters(httpConfiguration);
             InitializeRoutes(httpConfiguration);
             InitializeModelBinders(httpConfiguration);
-        }
-        
-        public override void PostInitialize()
-        {
+
             foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
             {
                 IocManager.IocContainer.Register(
@@ -85,6 +86,7 @@ namespace Abp.WebApi
         {
             httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpAuditFilterAttribute>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpValidationFilterAttribute>());
         }
 
