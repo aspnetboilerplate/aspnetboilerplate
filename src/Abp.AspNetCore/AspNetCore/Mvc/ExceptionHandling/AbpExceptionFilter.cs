@@ -1,6 +1,7 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
+using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
@@ -18,19 +19,21 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
         public ILogger Logger { get; set; }
 
         private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IAbpAspNetCoreConfiguration _configuration;
 
-        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder)
+        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder, IAbpAspNetCoreConfiguration configuration)
         {
             _errorInfoBuilder = errorInfoBuilder;
+            _configuration = configuration;
             Logger = NullLogger.Instance;
         }
 
         public void OnException(ExceptionContext context)
         {
             var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
-                    WrapResultAttribute.Default
+                    _configuration.DefaultWrapResultAttribute
                 );
 
             if (wrapResultAttribute.LogError)
@@ -46,7 +49,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         private void HandleAndWrapException(ExceptionContext context)
         {
-            if (!IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            if (!ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
             {
                 return;
             }
@@ -61,22 +64,6 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             );
 
             context.Exception = null; //Handled!
-        }
-
-        private static bool IsObjectResult(Type returnType)
-        {
-            if (typeof(IActionResult).IsAssignableFrom(returnType))
-            {
-                if (typeof(JsonResult).IsAssignableFrom(returnType) ||
-                    typeof(ObjectResult).IsAssignableFrom(returnType))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return true;
         }
     }
 }

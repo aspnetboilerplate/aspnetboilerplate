@@ -1,32 +1,14 @@
-﻿@using Abp.Collections.Extensions
-@model Abp.Web.Mvc.Models.ErrorViewModel
-<div class="row">
-    <section class="col-lg-12">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h3 class="panel-title">@Model.ErrorInfo.Message</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    @(!string.IsNullOrEmpty(Model.ErrorInfo.Details) ? Model.ErrorInfo.Details : Model.ErrorInfo.Message)
-                </p>
-                @* Show validation errors *@
-                @if (!Model.ErrorInfo.ValidationErrors.IsNullOrEmpty())
-                {
-                    <ul>
-                        @foreach (var validationError in Model.ErrorInfo.ValidationErrors)
-                        {
-                            <li>
-                                @validationError.Message
-                                @if (validationError.Members != null && validationError.Members.Any())
-                                {
-                                    <text>(@string.Join(", ", validationError.Members))</text>
-                                }
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-        </div>
-    </section>
-</div>
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+<h3>Development Mode</h3>
+<p>
+    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+</p>
+<p>
+    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
+</p>

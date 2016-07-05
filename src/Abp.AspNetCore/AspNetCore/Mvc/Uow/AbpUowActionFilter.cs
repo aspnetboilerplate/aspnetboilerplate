@@ -19,7 +19,7 @@ namespace Abp.AspNetCore.Mvc.Uow
         {
             var unitOfWorkAttr = UnitOfWorkAttribute
                 .GetUnitOfWorkAttributeOrNull(context.ActionDescriptor.GetMethodInfo()) ??
-                new UnitOfWorkAttribute(); //TODO: GetUnitOfWorkAttributeOrNull also checks for conventional classes, which makes this duplicate
+                new UnitOfWorkAttribute();
 
             if (unitOfWorkAttr.IsDisabled)
             {

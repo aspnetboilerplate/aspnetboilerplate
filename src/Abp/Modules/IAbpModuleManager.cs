@@ -1,8 +1,17 @@
+using System;
+using System.Collections.Generic;
+
 namespace Abp.Modules
 {
-    internal interface IAbpModuleManager
+    public interface IAbpModuleManager
     {
-        void InitializeModules();
+        AbpModuleInfo StartupModule { get; }
+
+        IReadOnlyList<AbpModuleInfo> Modules { get; }
+
+        void Initialize(Type startupModule);
+
+        void StartModules();
 
         void ShutdownModules();
     }

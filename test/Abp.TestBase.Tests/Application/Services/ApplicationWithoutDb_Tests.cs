@@ -9,7 +9,7 @@ namespace Abp.TestBase.Tests.Application.Services
     /// <summary>
     /// Should support working without database or a unit of work.
     /// </summary>
-    public class ApplicationWithoutDb_Tests : AbpIntegratedTestBase
+    public class ApplicationWithoutDb_Tests : AbpIntegratedTestBase<AbpKernelModule>
     {
         private readonly IMyAppService _myAppService;
         public ApplicationWithoutDb_Tests()

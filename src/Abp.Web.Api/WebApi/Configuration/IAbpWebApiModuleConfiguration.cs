@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Abp.Web.Models;
 
 namespace Abp.WebApi.Configuration
 {
@@ -7,6 +8,10 @@ namespace Abp.WebApi.Configuration
     /// </summary>
     public interface IAbpWebApiModuleConfiguration
     {
+        WrapResultAttribute DefaultWrapResultAttribute { get; set; }
+
+        WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; set; }
+
         /// <summary>
         /// Gets/sets <see cref="HttpConfiguration"/>.
         /// </summary>

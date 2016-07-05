@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Collections;
 using Abp.EntityFrameworkCore.Tests.Domain;
-using Abp.Modules;
 using Abp.TestBase;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
-    public abstract class EntityFrameworkCoreModuleTestBase : AbpIntegratedTestBase
+    public abstract class EntityFrameworkCoreModuleTestBase : AbpIntegratedTestBase<EntityFrameworkCoreTestModule>
     {
         protected EntityFrameworkCoreModuleTestBase()
         {
@@ -22,12 +20,6 @@ namespace Abp.EntityFrameworkCore.Tests
                     var blog1 = new Blog() {Name = "test-blog-1", Url = "http://testblog1.myblogs.com"};
                     context.Blogs.Add(blog1);
                 });
-        }
-        
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<EntityFrameworkCoreTestModule>();
         }
 
         public void UsingDbContext(Action<BloggingDbContext> action)

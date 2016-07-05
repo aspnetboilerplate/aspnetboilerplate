@@ -1,27 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc;
-using Abp.Json;
-using Abp.Timing;
-using AbpAspNetCoreDemo.EntityFrameworkCore;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 
 namespace AbpAspNetCoreDemo
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
-
         public Startup(IHostingEnvironment env)
         {
-            Clock.Provider = new UtcClockProvider();
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -30,20 +25,19 @@ namespace AbpAspNetCoreDemo
             Configuration = builder.Build();
         }
 
+        public IConfigurationRoot Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("Default"));
-            });
-
+            //Add framework services.
             services.AddMvc(options =>
             {
                 options.AddAbp(services); //Add ABP infrastructure to MVC
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
-            return services.AddAbp(options =>
+            return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
@@ -57,14 +51,17 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -73,8 +70,7 @@ namespace AbpAspNetCoreDemo
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
-                    );
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -11,11 +11,13 @@ namespace Abp.Reflection
     {
         public ILogger Logger { get; set; }
 
-        public IAssemblyFinder AssemblyFinder { get; set; }
+        private readonly IAssemblyFinder _assemblyFinder;
+        private readonly object _syncObj = new object();
+        private Type[] _types;
 
-        public TypeFinder()
+        public TypeFinder(IAssemblyFinder assemblyFinder)
         {
-            AssemblyFinder = CurrentDomainAssemblyFinder.Instance;
+            _assemblyFinder = assemblyFinder;
             Logger = NullLogger.Instance;
         }
 
@@ -29,11 +31,29 @@ namespace Abp.Reflection
             return GetAllTypes().ToArray();
         }
 
-        private List<Type> GetAllTypes()
+        private Type[] GetAllTypes()
+        {
+            if (_types == null)
+            {
+                lock (_syncObj)
+                {
+                    if (_types == null)
+                    {
+                        _types = CreateTypeList().ToArray();
+                    }
+                }
+            }
+
+            return _types;
+        }
+
+        private List<Type> CreateTypeList()
         {
             var allTypes = new List<Type>();
 
-            foreach (var assembly in AssemblyFinder.GetAllAssemblies().Distinct())
+            var assemblies = _assemblyFinder.GetAllAssemblies().Distinct();
+
+            foreach (var assembly in assemblies)
             {
                 try
                 {

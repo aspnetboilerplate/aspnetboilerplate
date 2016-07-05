@@ -1,0 +1,40 @@
+﻿.abp-clickable {
+  cursor: pointer;
+}
+.abp-dock-top {
+  left: 0;
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin: 0;
+}
+.abp-dock-right {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  margin: 0;
+}
+.abp-dock-bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  margin: 0;
+}
+.abp-dock-left {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  margin: 0;
+}
+.abp-busy-indicator-small {
+  width: 36px;
+  height: 36px;
+}
+.abp-busy-indicator-small.abp-dock-left,
+.abp-busy-indicator-small.abp-dock-right {
+  height: auto;
+}
+/*# sourceMappingURL=abp.css.map */

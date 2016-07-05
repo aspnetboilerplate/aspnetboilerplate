@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using Abp.Collections.Extensions;
-using Abp.Dependency;
 using Abp.Localization;
-using Abp.Reflection;
+using Abp.Modules;
 using Abp.Threading;
 
 namespace Abp.Web
@@ -15,16 +14,18 @@ namespace Abp.Web
     /// This class is used to simplify starting of ABP system using <see cref="AbpBootstrapper"/> class..
     /// Inherit from this class in global.asax instead of <see cref="HttpApplication"/> to be able to start ABP system.
     /// </summary>
-    public abstract class AbpWebApplication : HttpApplication
+    /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+    public abstract class AbpWebApplication<TStartupModule> : HttpApplication
+        where TStartupModule : AbpModule
     {
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        protected AbpBootstrapper AbpBootstrapper { get; private set; }
+        protected AbpBootstrapper AbpBootstrapper { get; }
 
         protected AbpWebApplication()
         {
-            AbpBootstrapper = new AbpBootstrapper();
+            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
         }
 
         /// <summary>
@@ -33,8 +34,6 @@ namespace Abp.Web
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
-
-            AbpBootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             AbpBootstrapper.Initialize();
         }
 

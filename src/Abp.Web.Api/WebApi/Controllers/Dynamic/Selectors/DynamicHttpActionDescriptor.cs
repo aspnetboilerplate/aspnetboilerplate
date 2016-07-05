@@ -5,6 +5,7 @@ using System.Web.Http.Filters;
 using Abp.Collections.Extensions;
 using Abp.Reflection;
 using Abp.Web.Models;
+using Abp.WebApi.Configuration;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
@@ -15,15 +16,21 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// </summary>
         private readonly IFilter[] _filters;
 
-        public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
-            : base(controllerDescriptor, methodInfo)
+        public DynamicHttpActionDescriptor(
+            IAbpWebApiModuleConfiguration configuration,
+            HttpControllerDescriptor controllerDescriptor, 
+            MethodInfo methodInfo,
+            IFilter[] filters = null)
+            : base(
+                  controllerDescriptor, 
+                  methodInfo)
         {
             _filters = filters;
 
             Properties["__AbpDynamicApiDontWrapResultAttribute"] =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     methodInfo,
-                    WrapResultAttribute.Default
+                    configuration.DefaultDynamicApiWrapResultAttribute
                 );
         }
 

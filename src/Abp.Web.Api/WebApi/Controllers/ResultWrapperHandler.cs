@@ -9,7 +9,7 @@ using Abp.WebApi.Configuration;
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Wrapps Web API return values by <see cref="AjaxResponse"/>.
+    /// Wraps Web API return values by <see cref="AjaxResponse"/>.
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? DontWrapResultAttribute.Default;
+                           ?? _webApiModuleConfiguration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
             {

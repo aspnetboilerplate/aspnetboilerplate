@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
@@ -17,9 +18,12 @@ namespace Abp.AspNetCore.Mvc.Auditing
 {
     public class AbpAuditActionFilter : IAsyncActionFilter, ITransientDependency
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
 
-        public IAuditInfoProvider AuditInfoProvider;
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
 
         public IAuditingStore AuditingStore { get; set; }
 
@@ -27,11 +31,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public ILogger Logger { get; set; }
         
-        /// <summary>
-        /// Ignored types for serialization on audit logging.
-        /// </summary>
-        protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
-
+        private readonly IAuditingConfiguration _auditingConfiguration;
+             
         static AbpAuditActionFilter()
         {
             IgnoredTypesForSerializationOnAuditLogging = new List<Type>();
