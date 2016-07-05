@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using Abp.Json;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -26,7 +27,7 @@ namespace Abp.WebApi.Auditing
         public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
 
         public bool AllowMultiple => false;
-        
+
         public IAuditInfoProvider AuditInfoProvider { get; set; }
 
         public IAuditingStore AuditingStore { get; set; }

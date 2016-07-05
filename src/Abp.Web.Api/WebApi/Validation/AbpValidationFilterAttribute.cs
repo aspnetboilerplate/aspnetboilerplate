@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.Dependency;
 
 namespace Abp.WebApi.Validation

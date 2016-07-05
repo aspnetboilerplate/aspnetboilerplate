@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 

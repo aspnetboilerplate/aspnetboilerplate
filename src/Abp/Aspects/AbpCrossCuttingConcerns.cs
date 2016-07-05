@@ -1,8 +1,9 @@
 ﻿using System;
+using Abp.Application.Services;
 using Abp.Collections.Extensions;
 using JetBrains.Annotations;
 
-namespace Abp.Application.Services
+namespace Abp.Aspects
 {
     internal static class AbpCrossCuttingConcerns
     {
@@ -62,6 +63,17 @@ namespace Abp.Application.Services
             {
                 RemoveApplied(obj, concerns);
             });
+        }
+
+        public static string[] GetApplieds(object obj)
+        {
+            var crossCuttingEnabledObj = obj as IAvoidDuplicateCrossCuttingConcerns;
+            if (crossCuttingEnabledObj == null)
+            {
+                return new string[0];
+            }
+
+            return crossCuttingEnabledObj.AppliedCrossCuttingConcerns.ToArray();
         }
     }
 }
