@@ -45,8 +45,8 @@
         },
 
         defaultError: {
-            message: abp.localization.abpWeb('DefaultError'),
-            details: abp.localization.abpWeb('DefaultErrorDetail')
+            message: 'An error has occurred!',
+            details: 'Error detail not sent by server.'
         },
 
         logError: function (error) {
@@ -173,5 +173,10 @@
             method: 'POST'
         };
     }
+
+    abp.event.on('abp.dynamicScriptsInitialized', function () {
+        abp.ajax.defaultError.message = abp.localization.abpWeb('DefaultError');
+        abp.ajax.defaultError.details = abp.localization.abpWeb('DefaultErrorDetail');
+    });
 
 })(jQuery);

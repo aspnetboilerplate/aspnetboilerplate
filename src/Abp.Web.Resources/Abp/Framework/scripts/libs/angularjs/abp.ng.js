@@ -8,8 +8,8 @@
 
     abp.ng.http = {
         defaultError: {
-            message: abp.localization.abpWeb('DefaultError'),
-            details: abp.localization.abpWeb('DefaultErrorDetail')
+            message: 'An error has occurred!',
+            details: 'Error detail not sent by server.'
         },
 
         logError: function (error) {
@@ -128,5 +128,10 @@
 
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     }
+
+    abp.event.on('abp.dynamicScriptsInitialized', function () {
+        abp.ng.http.defaultError.message = abp.localization.abpWeb('DefaultError');
+        abp.ng.http.defaultError.details = abp.localization.abpWeb('DefaultErrorDetail');
+    });
 
 })((abp || (abp = {})), (angular || undefined));
