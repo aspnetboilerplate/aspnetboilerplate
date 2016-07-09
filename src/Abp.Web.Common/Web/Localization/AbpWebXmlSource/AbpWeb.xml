@@ -7,5 +7,7 @@
     <text name="Cancel" value="Cancel" />
     <text name="Yes" value="Yes" />
     <text name="ValidationNarrativeTitle" value="The following errors were detected during validation." />
+    <text name="DefaultError" value="An error has occurred!" />
+    <text name="DefaultErrorDetail" value="Error detail not sent by server." />
   </texts>
 </localizationDictionary>
