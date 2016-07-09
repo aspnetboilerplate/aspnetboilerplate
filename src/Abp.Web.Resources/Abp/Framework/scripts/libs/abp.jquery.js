@@ -44,9 +44,9 @@
             contentType: 'application/json'
         },
 
-        defaultError: { //TODO: Automatically localize
-            message: 'An error has occurred!',
-            details: 'Error detail not sent by server.'
+        defaultError: {
+            message: abp.localization.abpWeb('DefaultError'),
+            details: abp.localization.abpWeb('DefaultErrorDetail')
         },
 
         logError: function (error) {

@@ -7,5 +7,7 @@
     <text name="Cancel" value="İptal" />
     <text name="Yes" value="Evet" />
     <text name="ValidationNarrativeTitle" value="Aşağıdaki hatalar doğrulama sırasında tespit edilmiştir." />
+    <text name="DefaultError" value="Bir hata oluştu!" />
+    <text name="DefaultErrorDetail" value="Hatanın ne olduğu sunucu tarafından gönderilmedi." />
   </texts>
 </localizationDictionary>

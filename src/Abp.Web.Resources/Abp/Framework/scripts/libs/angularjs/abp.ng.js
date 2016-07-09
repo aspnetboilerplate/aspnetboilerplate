@@ -8,8 +8,8 @@
 
     abp.ng.http = {
         defaultError: {
-            message: 'An error has occurred!', //TODO: Automatically localize
-            details: 'Error detail not sent by server.'
+            message: abp.localization.abpWeb('DefaultError'),
+            details: abp.localization.abpWeb('DefaultErrorDetail')
         },
 
         logError: function (error) {
