@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Async;
 using Abp.Extensions;
 
-namespace Abp.Web.Mvc.Validation
+namespace Abp.Web.Mvc.Extensions
 {
     public static class ActionDescriptorExtensions
     {
