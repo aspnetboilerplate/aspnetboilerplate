@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Web.Mvc;
 using Abp.Modules;
+using Abp.Web.Mvc.Auditing;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.ModelBinding.Binders;
@@ -34,6 +35,7 @@ namespace Abp.Web.Mvc
         /// <inheritdoc/>
         public override void PostInitialize()
         {
+            GlobalFilters.Filters.Add(IocManager.Resolve<AbpAuditFilter>());
             GlobalFilters.Filters.Add(IocManager.Resolve<AbpValidationFilter>());
 
             var abpMvcDateTimeBinder = new AbpMvcDateTimeBinder();
