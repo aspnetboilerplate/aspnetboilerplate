@@ -23,6 +23,7 @@ using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Castle.MicroKernel.Registration;
 
 namespace Abp
 {
@@ -130,7 +131,15 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
-            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
+            if (!IocManager.IsRegistered<IGuidGenerator>())
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                        .For<IGuidGenerator, SequentialGuidGenerator>()
+                        .Instance(SequentialGuidGenerator.Instance)
+                );
+            }
+
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
