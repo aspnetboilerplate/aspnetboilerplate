@@ -61,15 +61,12 @@ namespace Abp.Web.Mvc.Authorization
                 return;
             }
 
-            var user = httpContext.User;
-            var response = httpContext.Response;
-
-            response.StatusCode = user.Identity.IsAuthenticated == false
+            httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
                                       ? (int) System.Net.HttpStatusCode.Unauthorized
                                       : (int) System.Net.HttpStatusCode.Forbidden;
 
-            response.SuppressFormsAuthenticationRedirect = true;
-            response.End();
+            httpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            httpContext.Response.End();
         }
     }
 }

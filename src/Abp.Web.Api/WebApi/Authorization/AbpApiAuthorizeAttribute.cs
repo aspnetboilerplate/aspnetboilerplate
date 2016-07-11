@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Web;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using Abp.Authorization;
 using Abp.Dependency;
@@ -49,6 +50,23 @@ namespace Abp.WebApi.Authorization
                 LogHelper.Logger.Warn(ex.ToString(), ex);
                 return false;
             }
+        }
+
+        protected override void HandleUnauthorizedRequest(HttpActionContext actionContext)
+        {
+            var httpContext = HttpContext.Current;
+            if (httpContext == null)
+            {
+                base.HandleUnauthorizedRequest(actionContext);
+                return;
+            }
+
+            httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
+                                      ? (int)System.Net.HttpStatusCode.Unauthorized
+                                      : (int)System.Net.HttpStatusCode.Forbidden;
+
+            httpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            httpContext.Response.End();
         }
     }
 }
