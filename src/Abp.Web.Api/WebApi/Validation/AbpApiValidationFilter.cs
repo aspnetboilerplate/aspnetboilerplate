@@ -10,13 +10,13 @@ using Abp.Dependency;
 
 namespace Abp.WebApi.Validation
 {
-    public class AbpValidationFilter : IActionFilter, ITransientDependency
+    public class AbpApiValidationFilter : IActionFilter, ITransientDependency
     {
         public bool AllowMultiple => false;
 
         private readonly IIocResolver _iocResolver;
 
-        public AbpValidationFilter(IIocResolver iocResolver)
+        public AbpApiValidationFilter(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
         }

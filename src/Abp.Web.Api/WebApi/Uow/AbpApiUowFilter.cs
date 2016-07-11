@@ -10,13 +10,13 @@ using Abp.WebApi.Validation;
 
 namespace Abp.WebApi.Uow
 {
-    public class AbpUowFilter : IActionFilter, ITransientDependency
+    public class AbpApiUowFilter : IActionFilter, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public bool AllowMultiple => false;
 
-        public AbpUowFilter(IUnitOfWorkManager unitOfWorkManager)
+        public AbpApiUowFilter(IUnitOfWorkManager unitOfWorkManager)
         {
             _unitOfWorkManager = unitOfWorkManager;
         }

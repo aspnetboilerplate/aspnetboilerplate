@@ -18,7 +18,7 @@ using Castle.Core.Logging;
 
 namespace Abp.WebApi.Auditing
 {
-    public class AbpAuditFilter : IActionFilter, ITransientDependency
+    public class AbpApiAuditFilter : IActionFilter, ITransientDependency
     {
         /// <summary>
         /// Ignored types for serialization on audit logging.
@@ -37,12 +37,12 @@ namespace Abp.WebApi.Auditing
 
         private readonly IAuditingConfiguration _auditingConfiguration;
 
-        static AbpAuditFilter()
+        static AbpApiAuditFilter()
         {
             IgnoredTypesForSerializationOnAuditLogging = new List<Type>();
         }
 
-        public AbpAuditFilter(IAuditingConfiguration auditingConfiguration)
+        public AbpApiAuditFilter(IAuditingConfiguration auditingConfiguration)
         {
             _auditingConfiguration = auditingConfiguration;
 

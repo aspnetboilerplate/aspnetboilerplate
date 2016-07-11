@@ -15,7 +15,7 @@ namespace Abp.WebApi.ExceptionHandling
     /// <summary>
     /// Used to handle exceptions on web api controllers.
     /// </summary>
-    public class AbpExceptionFilterAttribute : ExceptionFilterAttribute, ITransientDependency
+    public class AbpApiExceptionFilterAttribute : ExceptionFilterAttribute, ITransientDependency
     {
         /// <summary>
         /// Reference to the <see cref="ILogger"/>.
@@ -30,9 +30,9 @@ namespace Abp.WebApi.ExceptionHandling
         private readonly IAbpWebApiModuleConfiguration _configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpExceptionFilterAttribute"/> class.
+        /// Initializes a new instance of the <see cref="AbpApiExceptionFilterAttribute"/> class.
         /// </summary>
-        public AbpExceptionFilterAttribute(IAbpWebApiModuleConfiguration configuration)
+        public AbpApiExceptionFilterAttribute(IAbpWebApiModuleConfiguration configuration)
         {
             _configuration = configuration;
             Logger = NullLogger.Instance;
