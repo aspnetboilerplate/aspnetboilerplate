@@ -356,8 +356,9 @@ namespace Abp.Web.Mvc.Controllers
             //We handled the exception!
             context.ExceptionHandled = true;
 
-            //Return a special error response to the client.
+            //Return an error response to the client.
             context.HttpContext.Response.Clear();
+            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
             context.Result = IsJsonResult()
                 ? GenerateJsonExceptionResult(context)
                 : GenerateNonJsonExceptionResult(context);
@@ -371,6 +372,18 @@ namespace Abp.Web.Mvc.Controllers
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
+        protected virtual int GetStatusCodeForException(ExceptionContext context)
+        {
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return AbpSession.UserId.HasValue
+                    ? 403
+                    : 401;
+            }
+
+            return 500;
+        }
+
         protected virtual bool IsJsonResult()
         {
             return typeof(JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
@@ -380,7 +393,6 @@ namespace Abp.Web.Mvc.Controllers
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
-            context.HttpContext.Response.StatusCode = 500;
             return new AbpJsonResult(
                 new MvcAjaxResponse(
                     ErrorInfoBuilder.BuildForException(context.Exception),
@@ -391,7 +403,6 @@ namespace Abp.Web.Mvc.Controllers
 
         protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
         {
-            context.HttpContext.Response.StatusCode = 500;
             return new ViewResult
             {
                 ViewName = "Error",

@@ -6,6 +6,7 @@ using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
 using Abp.Reflection;
+using Abp.Runtime.Session;
 using Abp.Web.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
     public class AbpExceptionFilter : IExceptionFilter, ITransientDependency
     {
         public ILogger Logger { get; set; }
+        public IAbpSession AbpSession { get; set; }
 
         private readonly IErrorInfoBuilder _errorInfoBuilder;
         private readonly IAbpAspNetCoreConfiguration _configuration;
@@ -26,6 +28,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             _errorInfoBuilder = errorInfoBuilder;
             _configuration = configuration;
             Logger = NullLogger.Instance;
+            AbpSession = NullAbpSession.Instance;
         }
 
         public void OnException(ExceptionContext context)
@@ -53,9 +56,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             {
                 return;
             }
-            
+
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.HttpContext.Response.StatusCode = GetStatusCode(context);
             context.Result = new ObjectResult(
                 new AjaxResponse(
                     _errorInfoBuilder.BuildForException(context.Exception),
@@ -64,6 +67,18 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             );
 
             context.Exception = null; //Handled!
+        }
+
+        private int GetStatusCode(ExceptionContext context)
+        {
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return AbpSession.UserId.HasValue
+                    ? (int)HttpStatusCode.Forbidden
+                    : (int)HttpStatusCode.Unauthorized;
+            }
+
+            return (int)HttpStatusCode.InternalServerError;
         }
     }
 }

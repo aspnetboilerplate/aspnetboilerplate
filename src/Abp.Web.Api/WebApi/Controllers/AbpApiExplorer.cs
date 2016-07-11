@@ -20,9 +20,10 @@ namespace Abp.Web.Api.Description
 {
     public class AbpApiExplorer : ApiExplorer,IApiExplorer
     {
-        private Lazy<Collection<ApiDescription>> _apiDescriptions;
+        private readonly Lazy<Collection<ApiDescription>> _apiDescriptions;
         private readonly IAbpWebApiConfiguration _abpWebApiConfiguration;
-        private HttpConfiguration _config;
+        private readonly HttpConfiguration _config;
+
         public AbpApiExplorer(IAbpWebApiConfiguration abpWebApiConfiguration, HttpConfiguration config):base(config)
         {
             _apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);

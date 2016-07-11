@@ -5,6 +5,7 @@ using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
+using Abp.Runtime.Session;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
@@ -27,6 +28,8 @@ namespace Abp.WebApi.ExceptionHandling
         /// </summary>
         public IEventBus EventBus { get; set; }
 
+        public IAbpSession AbpSession { get; set; }
+
         private readonly IAbpWebApiConfiguration _configuration;
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace Abp.WebApi.ExceptionHandling
             _configuration = configuration;
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
+            AbpSession = NullAbpSession.Instance;
         }
 
         /// <summary>
@@ -57,7 +61,7 @@ namespace Abp.WebApi.ExceptionHandling
             if (wrapResultAttribute.WrapOnError)
             {
                 context.Response = context.Request.CreateResponse(
-                    HttpStatusCode.InternalServerError,
+                    GetStatusCode(context),
                     new AjaxResponse(
                         SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
                         context.Exception is Abp.Authorization.AbpAuthorizationException)
@@ -65,6 +69,18 @@ namespace Abp.WebApi.ExceptionHandling
 
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
             }
+        }
+
+        private HttpStatusCode GetStatusCode(HttpActionExecutedContext context)
+        {
+            if (context.Exception is Abp.Authorization.AbpAuthorizationException)
+            {
+                return AbpSession.UserId.HasValue
+                    ? HttpStatusCode.Forbidden
+                    : HttpStatusCode.Unauthorized;
+            }
+
+            return HttpStatusCode.InternalServerError;
         }
     }
 }
