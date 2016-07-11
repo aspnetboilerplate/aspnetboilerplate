@@ -374,9 +374,10 @@ namespace Abp.Web.Mvc.Controllers
 
         protected virtual int GetStatusCodeForException(ExceptionContext context)
         {
+            
             if (context.Exception is AbpAuthorizationException)
             {
-                return AbpSession.UserId.HasValue
+                return context.HttpContext.User.Identity.IsAuthenticated
                     ? 403
                     : 401;
             }
