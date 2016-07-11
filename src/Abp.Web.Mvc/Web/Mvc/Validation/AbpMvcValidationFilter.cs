@@ -4,11 +4,11 @@ using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Validation
 {
-    public class AbpValidationFilter : IActionFilter, ITransientDependency
+    public class AbpMvcValidationFilter : IActionFilter, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
 
-        public AbpValidationFilter(IIocResolver iocResolver)
+        public AbpMvcValidationFilter(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
         }

@@ -30,7 +30,7 @@ namespace Abp.WebApi.Uow
             }
 
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 new UnitOfWorkAttribute();
+                                 new UnitOfWorkAttribute(); //TODO: Get from configuration
 
             if (unitOfWorkAttr.IsDisabled)
             {

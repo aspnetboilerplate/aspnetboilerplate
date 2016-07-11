@@ -19,7 +19,7 @@ namespace Abp.AspNetCore.Mvc.Uow
         {
             var unitOfWorkAttr = UnitOfWorkAttribute
                 .GetUnitOfWorkAttributeOrNull(context.ActionDescriptor.GetMethodInfo()) ??
-                new UnitOfWorkAttribute();
+                new UnitOfWorkAttribute(); //TODO: Get from configuration
 
             if (unitOfWorkAttr.IsDisabled)
             {
