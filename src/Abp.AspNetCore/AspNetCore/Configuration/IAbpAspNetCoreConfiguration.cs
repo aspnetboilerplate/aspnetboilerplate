@@ -10,6 +10,6 @@ namespace Abp.AspNetCore.Configuration
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
-        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = false);
+        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true);
     }
 }

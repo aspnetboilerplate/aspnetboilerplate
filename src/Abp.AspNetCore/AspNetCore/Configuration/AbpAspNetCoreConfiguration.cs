@@ -20,7 +20,7 @@ namespace Abp.AspNetCore.Configuration
             ServiceControllerSettings = new List<AbpServiceControllerSetting>();
         }
 
-        public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = false)
+        public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)
         {
             ServiceControllerSettings.Add(new AbpServiceControllerSetting(moduleName, assembly, useConventionalHttpVerbs));
         }
