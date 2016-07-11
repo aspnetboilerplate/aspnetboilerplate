@@ -139,15 +139,9 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
-
-
         public IIocResolver IocResolver { get; set; }
 
         public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
-
-        /// <summary>
-        /// This object is used to measure an action execute duration.
-        /// </summary>
 
         /// <summary>
         /// MethodInfo for currently executing action.
@@ -158,7 +152,6 @@ namespace Abp.Web.Mvc.Controllers
         /// WrapResultAttribute for currently executing action.
         /// </summary>
         private WrapResultAttribute _wrapResultAttribute;
-
 
         /// <summary>
         /// Constructor.
@@ -293,12 +286,17 @@ namespace Abp.Web.Mvc.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
-
             base.OnActionExecuting(filterContext);
         }
 
         private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
+            //Prevent overriding for child actions
+            if (_currentMethodInfo != null)
+            {
+                return;
+            }
+
             _currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             _wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
