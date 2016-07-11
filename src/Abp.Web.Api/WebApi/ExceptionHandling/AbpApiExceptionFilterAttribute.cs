@@ -27,12 +27,12 @@ namespace Abp.WebApi.ExceptionHandling
         /// </summary>
         public IEventBus EventBus { get; set; }
 
-        private readonly IAbpWebApiModuleConfiguration _configuration;
+        private readonly IAbpWebApiConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpApiExceptionFilterAttribute"/> class.
         /// </summary>
-        public AbpApiExceptionFilterAttribute(IAbpWebApiModuleConfiguration configuration)
+        public AbpApiExceptionFilterAttribute(IAbpWebApiConfiguration configuration)
         {
             _configuration = configuration;
             Logger = NullLogger.Instance;

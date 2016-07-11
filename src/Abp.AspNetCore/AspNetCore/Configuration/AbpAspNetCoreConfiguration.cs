@@ -1,18 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Abp.Domain.Uow;
 using Abp.Web.Models;
 
 namespace Abp.AspNetCore.Configuration
 {
     public class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
     {
-        public WrapResultAttribute DefaultWrapResultAttribute { get; set; }
+        public WrapResultAttribute DefaultWrapResultAttribute { get; }
+
+        public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
         public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
 
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
+            DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ServiceControllerSettings = new List<AbpServiceControllerSetting>();
         }
 

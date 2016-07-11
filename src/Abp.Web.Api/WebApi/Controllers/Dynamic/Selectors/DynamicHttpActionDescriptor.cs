@@ -17,7 +17,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         private readonly IFilter[] _filters;
 
         public DynamicHttpActionDescriptor(
-            IAbpWebApiModuleConfiguration configuration,
+            IAbpWebApiConfiguration configuration,
             HttpControllerDescriptor controllerDescriptor, 
             MethodInfo methodInfo,
             IFilter[] filters = null)

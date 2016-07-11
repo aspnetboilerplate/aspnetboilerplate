@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Uow
@@ -11,10 +12,14 @@ namespace Abp.Web.Mvc.Uow
         public const string UowHttpContextKey = "__AbpUnitOfWork";
 
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAbpMvcConfiguration _configuration;
 
-        public AbpMvcUowFilter(IUnitOfWorkManager unitOfWorkManager)
+        public AbpMvcUowFilter(
+            IUnitOfWorkManager unitOfWorkManager,
+            IAbpMvcConfiguration configuration)
         {
             _unitOfWorkManager = unitOfWorkManager;
+            _configuration = configuration;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -31,7 +36,7 @@ namespace Abp.Web.Mvc.Uow
             }
 
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 new UnitOfWorkAttribute(); //TODO: Get from configuration
+                                 _configuration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {

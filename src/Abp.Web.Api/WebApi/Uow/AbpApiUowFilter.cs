@@ -6,6 +6,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Validation;
 
 namespace Abp.WebApi.Uow
@@ -13,12 +14,17 @@ namespace Abp.WebApi.Uow
     public class AbpApiUowFilter : IActionFilter, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAbpWebApiConfiguration _configuration;
 
         public bool AllowMultiple => false;
 
-        public AbpApiUowFilter(IUnitOfWorkManager unitOfWorkManager)
+        public AbpApiUowFilter(
+            IUnitOfWorkManager unitOfWorkManager,
+            IAbpWebApiConfiguration configuration
+            )
         {
             _unitOfWorkManager = unitOfWorkManager;
+            _configuration = configuration;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -30,7 +36,7 @@ namespace Abp.WebApi.Uow
             }
 
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 new UnitOfWorkAttribute(); //TODO: Get from configuration
+                                 _configuration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {

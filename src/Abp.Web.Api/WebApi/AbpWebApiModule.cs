@@ -38,7 +38,7 @@ namespace Abp.WebApi
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
-            IocManager.Register<IAbpWebApiModuleConfiguration, AbpWebApiModuleConfiguration>();
+            IocManager.Register<IAbpWebApiConfiguration, AbpWebApiConfiguration>();
 
             Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
         }
@@ -51,7 +51,7 @@ namespace Abp.WebApi
         
         public override void PostInitialize()
         {
-            var httpConfiguration = IocManager.Resolve<IAbpWebApiModuleConfiguration>().HttpConfiguration;
+            var httpConfiguration = IocManager.Resolve<IAbpWebApiConfiguration>().HttpConfiguration;
 
             InitializeAspNetServices(httpConfiguration);
             InitializeFilters(httpConfiguration);
@@ -78,9 +78,9 @@ namespace Abp.WebApi
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
-            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector(IocManager.Resolve<IAbpWebApiModuleConfiguration>()));
+            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector(IocManager.Resolve<IAbpWebApiConfiguration>()));
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
-            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(IocManager.Resolve<IAbpWebApiModuleConfiguration>(), httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(IocManager.Resolve<IAbpWebApiConfiguration>(), httpConfiguration));
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)

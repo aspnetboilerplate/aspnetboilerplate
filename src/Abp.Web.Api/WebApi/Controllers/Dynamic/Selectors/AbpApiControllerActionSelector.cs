@@ -10,9 +10,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public class AbpApiControllerActionSelector : ApiControllerActionSelector
     {
-        private readonly IAbpWebApiModuleConfiguration _configuration;
+        private readonly IAbpWebApiConfiguration _configuration;
 
-        public AbpApiControllerActionSelector(IAbpWebApiModuleConfiguration configuration)
+        public AbpApiControllerActionSelector(IAbpWebApiConfiguration configuration)
         {
             _configuration = configuration;
         }

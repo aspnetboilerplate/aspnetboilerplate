@@ -1,9 +1,12 @@
-﻿using Abp.Web.Models;
+﻿using Abp.Domain.Uow;
+using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Configuration
 {
     public interface IAbpMvcConfiguration
     {
-        WrapResultAttribute DefaultWrapResultAttribute { get; set; }
+        UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
+
+        WrapResultAttribute DefaultWrapResultAttribute { get; }
     }
 }

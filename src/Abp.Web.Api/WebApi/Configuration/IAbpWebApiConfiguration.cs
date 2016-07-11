@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Abp.Domain.Uow;
 using Abp.Web.Models;
 
 namespace Abp.WebApi.Configuration
@@ -6,11 +7,13 @@ namespace Abp.WebApi.Configuration
     /// <summary>
     /// Used to configure ABP WebApi module.
     /// </summary>
-    public interface IAbpWebApiModuleConfiguration
+    public interface IAbpWebApiConfiguration
     {
-        WrapResultAttribute DefaultWrapResultAttribute { get; set; }
+        UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
-        WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; set; }
+        WrapResultAttribute DefaultWrapResultAttribute { get; }
+
+        WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; }
 
         /// <summary>
         /// Gets/sets <see cref="HttpConfiguration"/>.
