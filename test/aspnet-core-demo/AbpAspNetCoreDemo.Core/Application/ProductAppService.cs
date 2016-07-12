@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
@@ -7,7 +8,7 @@ using Abp.Domain.Repositories;
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
-    public class ProductAppService : ApplicationService, IProductAppService
+    public class ProductAppService : ApplicationService
     {
         private readonly IRepository<Product> _productRepository;
 
@@ -18,7 +19,12 @@ namespace AbpAspNetCoreDemo.Core.Application
 
         public List<ProductDto> GetAll()
         {
-            return _productRepository.GetAllList().MapTo<List<ProductDto>>();
+            return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
+        }
+
+        public int CreateProduct(ProductCreateInput input)
+        {
+            return _productRepository.InsertAndGetId(ObjectMapper.Map<Product>(input));
         }
     }
 }

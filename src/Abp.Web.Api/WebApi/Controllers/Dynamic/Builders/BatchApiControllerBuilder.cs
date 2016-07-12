@@ -5,6 +5,7 @@ using System.Web.Http.Filters;
 using Abp.Application.Services;
 using Abp.Dependency;
 using Abp.Extensions;
+using Abp.Reflection.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -68,7 +69,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     type.IsInterface && 
                     typeof(T).IsAssignableFrom(type) && 
                     IocManager.Instance.IsRegistered(type) &&
-                    !type.IsDefined(typeof(DisableDynamicWebApiAttribute), true)
+                    !RemoteServiceAttribute.IsExplicitlyDisabledFor(type)
                 select
                     type;
 
@@ -119,7 +120,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                         .Invoke(builder, new object[0]);
             }
         }
-
+        
         public static string GetConventionalServiceName(Type type)
         {
             var typeName = type.Name;

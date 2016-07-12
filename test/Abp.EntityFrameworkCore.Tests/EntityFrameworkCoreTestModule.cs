@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.TestBase;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
-    [DependsOn(typeof(AbpEntityFrameworkCoreModule))]
+    [DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
     public class EntityFrameworkCoreTestModule : AbpModule
     {
         public override void PreInitialize()

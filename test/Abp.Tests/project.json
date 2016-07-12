@@ -1,16 +1,16 @@
-﻿{
+{
   "version": "1.0.0-*",
   
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp": "0.9.5.0-*",
-    "xunit": "2.1.0",
-    "xunit.runner.visualstudio": "2.1.0",
-    "xunit.extensibility.execution": "2.1.0",
-    "dotnet-test-xunit": "1.0.0-rc2-build10025",
-    "Shouldly": "2.7.0",
-    "NSubstitute": "1.10.0"
+    "Abp": "0.10.0.0-*",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "NSubstitute": "1.10.0",
+    "Shouldly": "2.8.0",
+    "xunit": "2.2.0-beta2-build3300",
+    "xunit.extensibility.execution": "2.2.0-beta2-build3300",
+    "xunit.runner.visualstudio": "2.2.0-beta2-build1149"
   },
 
   "frameworks": {

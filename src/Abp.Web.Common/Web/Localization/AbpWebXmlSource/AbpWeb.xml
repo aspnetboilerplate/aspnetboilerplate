@@ -7,5 +7,11 @@
     <text name="Cancel" value="Cancel" />
     <text name="Yes" value="Yes" />
     <text name="ValidationNarrativeTitle" value="The following errors were detected during validation." />
+    <text name="DefaultError" value="An error has occurred!" />
+    <text name="DefaultErrorDetail" value="Error detail not sent by server." />
+    <text name="DefaultError401" value="You are not authenticated!" />
+    <text name="DefaultErrorDetail401" value="You should be authenticated (sign in) in order to perform this operation." />
+    <text name="DefaultError403" value="You are not authorized!" />
+    <text name="DefaultErrorDetail403" value="You are not allowed to perform this operation." />
   </texts>
 </localizationDictionary>

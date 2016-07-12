@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Transactions;
+using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using Abp.Json;
@@ -40,6 +42,12 @@ namespace Abp.Auditing
 
         public void Intercept(IInvocation invocation)
         {
+            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Auditing))
+            {
+                invocation.Proceed();
+                return;
+            }
+
             if (!AuditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget, _configuration, AbpSession))
             {
                 invocation.Proceed();

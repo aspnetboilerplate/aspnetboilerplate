@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Aspects;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Collections.Extensions;
@@ -16,9 +18,12 @@ namespace Abp.AspNetCore.Mvc.Auditing
 {
     public class AbpAuditActionFilter : IAsyncActionFilter, ITransientDependency
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
 
-        public IAuditInfoProvider AuditInfoProvider;
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
 
         public IAuditingStore AuditingStore { get; set; }
 
@@ -26,11 +31,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public ILogger Logger { get; set; }
         
-        /// <summary>
-        /// Ignored types for serialization on audit logging.
-        /// </summary>
-        protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
-
+        private readonly IAuditingConfiguration _auditingConfiguration;
+             
         static AbpAuditActionFilter()
         {
             IgnoredTypesForSerializationOnAuditLogging = new List<Type>();
@@ -48,30 +50,33 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!ShouldSaveAudit(context))
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
             {
-                await next();
-                return;
-            }
+                if (!ShouldSaveAudit(context))
+                {
+                    await next();
+                    return;
+                }
 
-            var auditInfo = CreateAuditInfo(context);
-            var stopwatch = Stopwatch.StartNew();
+                var auditInfo = CreateAuditInfo(context);
+                var stopwatch = Stopwatch.StartNew();
 
-            try
-            {
-                await next();
-            }
-            catch (Exception ex)
-            {
-                auditInfo.Exception = ex;
-                throw;
-            }
-            finally
-            {
-                stopwatch.Stop();
-                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                AuditInfoProvider?.Fill(auditInfo);
-                await AuditingStore.SaveAsync(auditInfo);
+                try
+                {
+                    await next();
+                }
+                catch (Exception ex)
+                {
+                    auditInfo.Exception = ex;
+                    throw;
+                }
+                finally
+                {
+                    stopwatch.Stop();
+                    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                    AuditInfoProvider?.Fill(auditInfo);
+                    await AuditingStore.SaveAsync(auditInfo);
+                }
             }
         }
 

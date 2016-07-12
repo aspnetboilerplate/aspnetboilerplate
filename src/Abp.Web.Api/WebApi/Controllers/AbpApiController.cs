@@ -195,8 +195,7 @@ namespace Abp.WebApi.Controllers
         {
             return PermissionChecker.IsGranted(permissionName);
         }
-
-
+        
         /// <summary>
         /// Checks if given feature is enabled for current tenant.
         /// </summary>

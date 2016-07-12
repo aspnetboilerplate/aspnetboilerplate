@@ -22,10 +22,10 @@ namespace Abp.Tests.Threading
         }
 
         [Fact]
-        public void Should_Call_AfterAction()
+        public async Task Should_Call_AfterAction()
         {
             _asyncMethod1Worked.ShouldBe(false);
-            InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
+            await InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
                 MyMethod1Async(),
                 async () =>
                 {
@@ -33,10 +33,10 @@ namespace Abp.Tests.Threading
                     await Task.Delay(10);
                 },
                 (exception) => { }
-                ).Wait();
+                );
 
             _asyncMethod2Worked.ShouldBe(false);
-            var returnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinallyAndGetResult(
+            var returnValue = await InternalAsyncHelper.AwaitTaskWithPostActionAndFinallyAndGetResult(
                 MyMethod2Async(),
                 async () =>
                 {
@@ -44,7 +44,7 @@ namespace Abp.Tests.Threading
                     await Task.Delay(10);
                 },
                 (exception) => { }
-                ).Result;
+                );
 
             returnValue.ShouldBe(42);
         }

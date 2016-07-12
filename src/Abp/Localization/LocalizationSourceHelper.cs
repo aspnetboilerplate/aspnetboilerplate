@@ -1,11 +1,14 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using Abp.Configuration.Startup;
+using Abp.Extensions;
 using Abp.Logging;
 
 namespace Abp.Localization
 {
     public static class LocalizationSourceHelper
     {
-        public static string ReturnGivenNameOrThrowException(ILocalizationConfiguration configuration, string sourceName, string name)
+        public static string ReturnGivenNameOrThrowException(ILocalizationConfiguration configuration, string sourceName, string name, CultureInfo culture)
         {
             var exceptionMessage = string.Format(
                 "Can not find '{0}' in localization source '{1}'!",
@@ -19,9 +22,13 @@ namespace Abp.Localization
 
             LogHelper.Logger.Warn(exceptionMessage);
 
-            return configuration.WrapGivenTextIfNotFound
-                ? string.Format("[{0}]", name)
+            var notFoundText = configuration.HumanizeTextIfNotFound
+                ? name.ToSentenceCase(culture)
                 : name;
+
+            return configuration.WrapGivenTextIfNotFound
+                ? string.Format("[{0}]", notFoundText)
+                : notFoundText;
         }
     }
 }

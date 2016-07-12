@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Abp.TestBase.Tests.Application.Services
 {
-    public class Validation_Tests : AbpIntegratedTestBase
+    public class Validation_Tests : AbpIntegratedTestBase<AbpKernelModule>
     {
         private readonly IMyAppService _myAppService;
 

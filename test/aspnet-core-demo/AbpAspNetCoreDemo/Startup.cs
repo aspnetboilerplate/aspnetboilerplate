@@ -1,33 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.AspNetCore;
-using Abp.AspNetCore.Mvc.Auditing;
-using Abp.AspNetCore.Mvc.Authorization;
-using Abp.AspNetCore.Mvc.ExceptionHandling;
-using Abp.AspNetCore.Mvc.Results;
-using Abp.AspNetCore.Mvc.Validation;
-using AbpAspNetCoreDemo.EntityFrameworkCore;
+using Abp.AspNetCore.Mvc;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace AbpAspNetCoreDemo
 {
-    public class Startup : AbpStartup
+    public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
-
         public Startup(IHostingEnvironment env)
-            : base(env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -37,49 +25,31 @@ namespace AbpAspNetCoreDemo
             Configuration = builder.Build();
         }
 
-        protected override void InitializeAbp()
+        public IConfigurationRoot Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            AbpBootstrapper.IocManager.IocContainer.AddFacility<LoggingFacility>(
-                f => f.UseLog4Net().WithConfig("log4net.config")
-                );
-
-            base.InitializeAbp();
-        }
-
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            services.AddDbContext<MyDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
-            );
-
-            // Add framework services.
+            //Add framework services.
             services.AddMvc(options =>
             {
-                options.Filters.AddService(typeof(AbpAuthorizationFilter));
-                options.Filters.AddService(typeof(AbpAuditActionFilter));
-                options.Filters.AddService(typeof(AbpValidationActionFilter));
-                options.Filters.AddService(typeof(AbpExceptionFilter));
-                options.Filters.AddService(typeof(AbpResultFilter));
+                options.AddAbp(services); //Add ABP infrastructure to MVC
+            });
 
-                options.OutputFormatters.Add(new JsonOutputFormatter(
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    }));
-
-            }).AddControllersAsServices();
-
-            return base.ConfigureServices(services);
+            //Configure Abp and Dependency Injection. Should be called last.
+            return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
+            {
+                //Configure Log4Net logging
+                options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                    f => f.UseLog4Net().WithConfig("log4net.config")
+                );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public override void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            base.Configure(app, env, loggerFactory);
+            app.UseAbp(); //Initializes ABP framework. Should be called first.
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -87,7 +57,11 @@ namespace AbpAspNetCoreDemo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();

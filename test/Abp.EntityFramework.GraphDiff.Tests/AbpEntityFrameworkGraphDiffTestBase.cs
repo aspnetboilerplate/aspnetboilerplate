@@ -1,15 +1,9 @@
-﻿using Abp.Collections;
-using Abp.Modules;
-using Abp.TestBase;
+﻿using Abp.TestBase;
 
 namespace Abp.EntityFramework.GraphDIff.Tests
 {
-    public class AbpEntityFrameworkGraphDiffTestBase : AbpIntegratedTestBase
+    public class AbpEntityFrameworkGraphDiffTestBase : AbpIntegratedTestBase<AbpEntityFrameworkGraphDiffTestModule>
     {
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<AbpEntityFrameworkGraphDiffTestModule>();
-        }
+
     }
 }

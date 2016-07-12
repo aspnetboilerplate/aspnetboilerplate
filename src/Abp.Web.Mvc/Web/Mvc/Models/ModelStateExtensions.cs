@@ -7,7 +7,7 @@ namespace Abp.Web.Mvc.Models
 {
     public static class ModelStateExtensions
     {
-        public static MvcAjaxResponse ToMvcAjaxResponse(ModelStateDictionary modelState)
+        public static MvcAjaxResponse ToMvcAjaxResponse(this ModelStateDictionary modelState)
         {
             if (modelState.IsValid)
             {

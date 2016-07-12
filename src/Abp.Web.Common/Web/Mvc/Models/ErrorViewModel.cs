@@ -14,10 +14,10 @@ namespace Abp.Web.Mvc.Models
             
         }
 
-        public ErrorViewModel(Exception exception)
+        public ErrorViewModel(ErrorInfo errorInfo, Exception exception = null)
         {
+            ErrorInfo = errorInfo;
             Exception = exception;
-            ErrorInfo = ErrorInfoBuilder.Instance.BuildForException(exception);
         }
     }
 }

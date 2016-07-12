@@ -7,5 +7,11 @@
     <text name="Cancel" value="İptal" />
     <text name="Yes" value="Evet" />
     <text name="ValidationNarrativeTitle" value="Aşağıdaki hatalar doğrulama sırasında tespit edilmiştir." />
+    <text name="DefaultError" value="Bir hata oluştu!" />
+    <text name="DefaultErrorDetail" value="Hatanın ne olduğu sunucu tarafından gönderilmedi." />
+    <text name="DefaultError401" value="Giriş yapılmamış!" />
+    <text name="DefaultErrorDetail401" value="Bu işlemi gerçekleştirmek için uygulamaya giriş yapmalısınız." />
+    <text name="DefaultError403" value="İzinsiz işlem!" />
+    <text name="DefaultErrorDetail403" value="Bu işlemi gerçekleştirmek için gereken izne sahip değilsiniz." />
   </texts>
 </localizationDictionary>

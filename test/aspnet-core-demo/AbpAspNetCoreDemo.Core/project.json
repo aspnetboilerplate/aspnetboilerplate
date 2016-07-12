@@ -1,12 +1,12 @@
 ﻿{
-  "version": "0.9.5.0-*",
+  "version": "0.10.0.0-*",
 
   "dependencies": {
-    "Abp.AutoMapper": "0.9.5.0-*"
+    "Abp.AutoMapper": "0.10.0.0-*"
   },
 
   "tools": {
-    
+
   },
 
   "frameworks": {
@@ -15,17 +15,11 @@
     }
   },
 
-  "packOptions": {
-    "summary": "AspNet Core integration for ASP.NET Boilerplate.",
-    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "asp.net core" ],
-    "owners": [ "Halil İbrahim Kalkan" ],
-    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
-    "projectUrl": "http://www.aspnetboilerplate.com/",
-    "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
-    "requireLicenseAcceptance": false,
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+  "buildOptions": {
+    "embed": {
+      "include": [
+        "Localization/SourceFiles/*.json"
+      ]
     }
   }
 }

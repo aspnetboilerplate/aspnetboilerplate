@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
@@ -18,8 +18,11 @@ namespace Abp.Tests.Authorization
         public AuthorizationInterceptor_Tests()
         {
             //SUT: AuthorizationInterceptor and AuthorizeAttributeHelper
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureChecker>().Instance(Substitute.For<IFeatureChecker>())
+                );
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
-            LocalIocManager.Register<IAuthorizeAttributeHelper, AuthorizeAttributeHelper>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
                 Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
                 Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
@@ -33,9 +36,9 @@ namespace Abp.Tests.Authorization
 
             //Mock permission checker
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync("Permission1").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync("Permission2").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync("Permission3").Returns(Task.FromResult(false)); //Permission3 is not granted
+            permissionChecker.IsGrantedAsync("Permission1").Returns(true);
+            permissionChecker.IsGrantedAsync("Permission2").Returns(true);
+            permissionChecker.IsGrantedAsync("Permission3").Returns(false); //Permission3 is not granted
             LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();

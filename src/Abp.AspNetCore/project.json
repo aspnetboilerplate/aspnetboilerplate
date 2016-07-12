@@ -1,11 +1,11 @@
-﻿{
-  "version": "0.9.5.0-*",
+{
+  "version": "0.10.0.0-*",
 
   "dependencies": {
-    "Abp": "0.9.5.0-*",
-    "Abp.Web.Common": "0.9.5.0-*",
-    "Castle.Windsor.MsDependencyInjection": "0.1.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
+    "Abp.Web.Common": "0.10.0.0-*",
+    "Castle.LoggingFacility.MsLogging": "1.0.0",
+    "Castle.Windsor.MsDependencyInjection": "1.0.0",
+    "Microsoft.AspNetCore.Mvc": "1.0.0"
   },
 
   "frameworks": {
@@ -36,6 +36,6 @@
   },
 
   "packInclude": {
-    "lib/net452/": "bin/Release/net461/Abp.AspNetCore.pdb"
+    "lib/net461/": "bin/Release/net461/Abp.AspNetCore.pdb"
   }
 }

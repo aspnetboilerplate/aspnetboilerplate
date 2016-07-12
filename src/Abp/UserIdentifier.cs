@@ -52,7 +52,7 @@ namespace Abp
         {
             if (userIdentifierString.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("userIdentifierString", "userAtTenant can not be null or empty!");
+                throw new ArgumentNullException(nameof(userIdentifierString), "userAtTenant can not be null or empty!");
             }
 
             var splitted = userIdentifierString.Split('@');
@@ -67,7 +67,7 @@ namespace Abp
                 return new UserIdentifier(splitted[1].To<int>(), splitted[0].To<long>());
             }
 
-            throw new ArgumentException("userAtTenant is not properly formatted", "userIdentifierString");
+            throw new ArgumentException("userAtTenant is not properly formatted", nameof(userIdentifierString));
         }
 
         /// <summary>

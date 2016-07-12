@@ -1,9 +1,12 @@
-﻿using Abp.Dependency;
+﻿using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Aspects;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Validation
 {
-    public class AbpValidationActionFilter : IActionFilter, ITransientDependency
+    public class AbpValidationActionFilter : IAsyncActionFilter, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
 
@@ -12,18 +15,18 @@ namespace Abp.AspNetCore.Mvc.Validation
             _iocResolver = iocResolver;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Validation))
             {
-                validator.Object.Initialize(context);
-                validator.Object.Validate();
+                using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+                {
+                    validator.Object.Initialize(context);
+                    validator.Object.Validate();
+                }
+
+                await next();
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-
         }
     }
 }

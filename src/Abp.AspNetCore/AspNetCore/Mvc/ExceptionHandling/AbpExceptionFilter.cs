@@ -1,4 +1,7 @@
-﻿using Abp.AspNetCore.Mvc.Extensions;
+﻿using System.Net;
+using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Extensions;
+using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Logging;
@@ -15,44 +18,64 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
     {
         public ILogger Logger { get; set; }
 
-        public AbpExceptionFilter()
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IAbpAspNetCoreConfiguration _configuration;
+
+        public AbpExceptionFilter(IErrorInfoBuilder errorInfoBuilder, IAbpAspNetCoreConfiguration configuration)
         {
+            _errorInfoBuilder = errorInfoBuilder;
+            _configuration = configuration;
             Logger = NullLogger.Instance;
         }
 
         public void OnException(ExceptionContext context)
         {
             var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<WrapResultAttribute>(
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
-                    WrapResultAttribute.Default
+                    _configuration.DefaultWrapResultAttribute
                 );
 
             if (wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);
             }
-            
+
             if (wrapResultAttribute.WrapOnError)
             {
                 HandleAndWrapException(context);
             }
         }
 
-        private static void HandleAndWrapException(ExceptionContext context)
+        private void HandleAndWrapException(ExceptionContext context)
         {
+            if (!ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            {
+                return;
+            }
+
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = 500; //TODO: Get from a constant?
+            context.HttpContext.Response.StatusCode = GetStatusCode(context);
             context.Result = new ObjectResult(
                 new AjaxResponse(
-                    ErrorInfoBuilder.Instance.BuildForException(context.Exception),
+                    _errorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                 )
             );
 
             context.Exception = null; //Handled!
+        }
 
-            //TODO: View results vs JSON results
+        private int GetStatusCode(ExceptionContext context)
+        {
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return context.HttpContext.User.Identity.IsAuthenticated
+                    ? (int)HttpStatusCode.Forbidden
+                    : (int)HttpStatusCode.Unauthorized;
+            }
+
+            return (int)HttpStatusCode.InternalServerError;
         }
     }
 }

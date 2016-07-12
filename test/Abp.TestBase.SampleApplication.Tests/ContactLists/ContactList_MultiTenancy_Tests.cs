@@ -11,11 +11,13 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
     public class ContactList_MultiTenancy_Tests : SampleApplicationTestBase
     {
         private readonly IRepository<ContactList> _contactListRepository;
+        private readonly IContactListAppService _contactListAppService;
 
         public ContactList_MultiTenancy_Tests()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _contactListRepository = Resolve<IRepository<ContactList>>();
+            _contactListAppService = Resolve<IContactListAppService>();
         }
 
         [Fact]
@@ -92,6 +94,16 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
                 unitOfWork.Complete();
             }
+        }
+
+        [Fact]
+        public void MustHaveTenant_Should_Work_In_AppService()
+        {
+            AbpSession.TenantId = 3;
+            AbpSession.UserId = 3;
+
+            var lists = _contactListAppService.GetContactLists();
+            lists.Count.ShouldBeGreaterThan(0);
         }
     }
 }
