@@ -122,5 +122,10 @@ namespace Abp.Configuration.Startup
         {
             ServiceReplaceActions[type] = replaceAction;
         }
+
+        public T Get<T>()
+        {
+            return GetOrCreate(typeof(T).FullName, () => IocManager.Resolve<T>());
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpWebModuleConfiguration AbpWeb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpWebModuleConfiguration>();
         }
     }
 }

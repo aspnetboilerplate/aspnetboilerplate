@@ -12,7 +12,7 @@ namespace Abp.Web.Mvc.Configuration
         /// </summary>
         public static IAbpMvcConfiguration AbpMvc(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web.Mvc", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMvcConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpMvcConfiguration>();
         }
     }
 }
