@@ -8,12 +8,12 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 {
-    public class EntityCache_Tests : SampleApplicationTestBase
+    public class EntityCache_Invalidation_Tests : SampleApplicationTestBase
     {
         private readonly IMessageCache _messageCache;
         private readonly IRepository<Message> _messageRepository;
 
-        public EntityCache_Tests()
+        public EntityCache_Invalidation_Tests()
         {
             _messageCache = Resolve<IMessageCache>();
             _messageRepository = Resolve<IRepository<Message>>();
