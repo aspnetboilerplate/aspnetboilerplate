@@ -17,7 +17,9 @@
 implementation uses
 				<a href="https://msdn.microsoft.com/en-us/library/system.runtime.caching.memorycache(v=vs.110).aspx?f=255&amp;MSPPError=-2147217396">
 MemoryCache</a>, it can be implemented and changable for any other caching 
-provider.</p>
+provider. <a href="https://www.nuget.org/packages/Abp.RedisCache" target="_blank">
+			Abp.RedisCache</a> package implements cache in Redis for instance 
+			(see "Redis Cache Integration" section below).</p>
 
 			<h3>ICacheManager</h3>
 
@@ -52,8 +54,8 @@ cache named <strong>MyCache</strong>.</p>
 			<div class="bs-callout bs-callout-warning">
 				<h4>
 					<strong>WARNING: </strong>GetCache Method</h4>
-				<p>Do not use GetCache method in your constructor. This may dispose the 
-	Cache if your class is transient.</p>
+				<p>Do not use <strong>GetCache</strong> method in your constructor. This may dispose the 
+	Cache if your class is not singleton.</p>
 			</div>
 
 			<h3>ICache</h3>
@@ -139,10 +141,11 @@ public class PersonCacheItem
 			<p>We <strong>should not directly store entities in the cache</strong> since 
 			caching may need to <strong>serialize</strong> cached objects and 
 			entities may not be serialized (especially if they have navigation 
-			properties). That's why we defined a simple class to store data in 
+			properties). That's why we defined a simple (<a href="Data-Transfer-Objects.html">DTO</a> 
+			like) class to store data in 
 			the cache. We added <strong>
 			AutoMapFrom</strong> attribute since we want to use AutoMapper to 
-			convert Person entities to PersonCacheItem objects. If we don't use 
+			convert Person entities to PersonCacheItem objects automatically. If we don't use 
 			AutoMapper, we should <strong>override MapToCacheItem</strong> 
 			method of EntityCache class to manually convert/map it.</p>
 			<p>While it's <strong>not required</strong>, we may want to define an interface for 
