@@ -26,7 +26,7 @@ namespace Abp
         /// <summary>
         /// A list of plug in folders.
         /// </summary>
-        public List<PlugInFolderInfo> PlugInFolders { get; }
+        public List<IPlugInSource> PlugInSources { get; }
 
         /// <summary>
         /// Gets IIocManager object used by this class.
@@ -69,7 +69,7 @@ namespace Abp
             StartupModule = startupModule;
             IocManager = iocManager;
 
-            PlugInFolders = new List<PlugInFolderInfo>();
+            PlugInSources = new List<IPlugInSource>();
             _logger = NullLogger.Instance;
         }
 
@@ -125,7 +125,7 @@ namespace Abp
                 RegisterBootstrapper();
                 IocManager.IocContainer.Install(new AbpCoreInstaller());
 
-                IocManager.Resolve<AbpPlugInManager>().PlugInFolders.AddRange(PlugInFolders);
+                IocManager.Resolve<AbpPlugInManager>().PlugInSources.AddRange(PlugInSources);
                 IocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
                 _moduleManager = IocManager.Resolve<AbpModuleManager>();

@@ -8,11 +8,11 @@ namespace Abp.AspNetCore
     {
         public IIocManager IocManager { get; set; }
 
-        public List<PlugInFolderInfo> PlugInFolders { get; }
+        public List<IPlugInSource> PlugInSources { get; }
 
         public AbpServiceOptions()
         {
-            PlugInFolders = new List<PlugInFolderInfo>();
+            PlugInSources = new List<IPlugInSource>();
         }
     }
 }

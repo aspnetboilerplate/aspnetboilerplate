@@ -47,7 +47,7 @@ namespace Abp.AspNetCore
             ConfigureMvc(services, options.IocManager);
 
             var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, options.IocManager);
-            abpBootstrapper.PlugInFolders.AddRange(options.PlugInFolders);
+            abpBootstrapper.PlugInSources.AddRange(options.PlugInSources);
             
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
