@@ -14,7 +14,7 @@ namespace Abp.Tests.Modules
             //Arrange
             var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
 
-            bootstrapper.PlugInSources.Add(new PlugInListSource(typeof(MyPlugInModule)));
+            bootstrapper.PlugInSources.AddTypeList(typeof(MyPlugInModule));
 
             bootstrapper.Initialize();
 

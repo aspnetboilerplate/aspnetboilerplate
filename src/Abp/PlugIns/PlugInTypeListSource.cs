@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Abp.PlugIns
 {
-    public class PlugInListSource : IPlugInSource
+    public class PlugInTypeListSource : IPlugInSource
     {
         private readonly Type[] _moduleTypes;
 
-        public PlugInListSource(params Type[] moduleTypes)
+        public PlugInTypeListSource(params Type[] moduleTypes)
         {
             _moduleTypes = moduleTypes;
         }

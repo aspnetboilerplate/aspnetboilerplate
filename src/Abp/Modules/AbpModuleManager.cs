@@ -122,10 +122,7 @@ namespace Abp.Modules
         {
             foreach (var moduleType in moduleTypes)
             {
-                if (!_iocManager.IsRegistered(moduleType))
-                {
-                    _iocManager.Register(moduleType);
-                }
+                _iocManager.RegisterIfNot(moduleType);
             }
         }
 

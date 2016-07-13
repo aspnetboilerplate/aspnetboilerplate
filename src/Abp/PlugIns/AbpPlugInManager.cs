@@ -4,11 +4,11 @@ namespace Abp.PlugIns
 {
     public class AbpPlugInManager : IAbpPlugInManager
     {
-        public List<IPlugInSource> PlugInSources { get; }
+        public PlugInSourceList PlugInSources { get; }
 
         public AbpPlugInManager()
         {
-            PlugInSources = new List<IPlugInSource>();
+            PlugInSources = new PlugInSourceList();
         }
     }
 }

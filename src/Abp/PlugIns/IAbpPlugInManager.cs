@@ -4,6 +4,6 @@ namespace Abp.PlugIns
 {
     public interface IAbpPlugInManager
     {
-        List<IPlugInSource> PlugInSources { get; }
+        PlugInSourceList PlugInSources { get; }
     }
 }

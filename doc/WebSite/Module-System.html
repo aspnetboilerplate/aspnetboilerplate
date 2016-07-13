@@ -83,17 +83,24 @@ the MyBlogApplicationModule.</p>
 			<strong>startup module</strong> and initialize them accordingly.</p>
 			<h3>PlugIn Modules</h3>
 			<p>While modules are investigated beginning from startup module and 
-			going to dependencies, ABP can also load modules <strong>dynamically</strong> from 
-			specified folders. <strong>AbpBootstrapper</strong> class defines 
-			<strong>PlugInFolders</strong> 
-			property which can be used to add folders to dynamically load plugin 
-			modules from assemby files.</p>
+			going to dependencies, ABP can also load modules <strong>dynamically</strong>. <strong>AbpBootstrapper</strong> class defines 
+			<strong>PlugInSources</strong> 
+			property which can be used to add sources to dynamically load plugin 
+			modules. A plugin source can be any class implements <strong>
+			IPlugInSource</strong> interface. <strong>PlugInFolderSource</strong> 
+			class implements it to get plugin modules from assemblies located in 
+			a folder.</p>
 			<h4>ASP.NET Core</h4>
 			<p>ABP ASP.NET Core module defines options in <strong>AddAbp</strong> extension 
-			method to add plugin folders in <strong>Startup</strong> class:</p>
+			method to add plugin sources in <strong>Startup</strong> class:</p>
 			<pre lang="cs">services.AddAbp&lt;MyStartupModule&gt;(options =&gt;
 {
-    options.<strong>PlugInFolders</strong>.Add(new PlugInFolderInfo(@&quot;C:\MyPlugIns&quot;));
+    options.<strong>PlugInSources</strong>.Add(new <strong>FolderPlugInSource</strong>(@&quot;C:\MyPlugIns&quot;));
+});</pre>
+			<p>We could use <strong>AddFolder</strong> extension method for a simpler syntax:</p>
+<pre lang="cs">services.AddAbp&lt;MyStartupModule&gt;(options =&gt;
+{
+    options.PlugInSources.<strong>AddFolder</strong>(@&quot;C:\MyPlugIns&quot;);
 });</pre>
 			<p>See <a href="AspNet-Core.html">ASP.NET Core document</a> for more 
 			on Startup class.</p>
@@ -104,14 +111,15 @@ the MyBlogApplicationModule.</p>
 {
     protected <strong>override void Application_Start</strong>(object sender, EventArgs e)
     {
-        AbpBootstrapper.<strong>PlugInFolders</strong>.Add(new PlugInFolderInfo(@&quot;C:\MyPlugIns&quot;));
+        <strong>AbpBootstrapper.AddFolder(@"C:\MyPlugIns");</strong>
         //...
         base.Application_Start(sender, e);
     }
 }</pre>
 <h3>Additional Assemblies</h3>
-			<p>ITypeFinder (which is used by ABP to investigate specific classes 
-			in the application) only finds types in module assemblies. We can 
+			<p>Default implementations for IAssemblyFinder and ITypeFinder (which is used by ABP to investigate specific classes 
+			in the application) only finds module assemblies and types in those 
+			assemblies. We can 
 			override <strong>GetAdditionalAssemblies</strong> method in our 
 			module to include additional assemblies.</p>
 			<h3 id="DocCustomModule">Custom Module Methods</h3>
