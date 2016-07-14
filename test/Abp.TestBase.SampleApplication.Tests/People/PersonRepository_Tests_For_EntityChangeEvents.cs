@@ -41,6 +41,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(true);
                     changingTriggerCount++;
+                    changedTriggerCount.ShouldBe(0);
                 });
 
             Resolve<IEventBus>().Register<EntityCreatingEventData<Person>>(
@@ -49,6 +50,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(true);
                     creatingTriggerCount++;
+                    createdTriggerCount.ShouldBe(0);
                 });
 
             Resolve<IEventBus>().Register<EntityChangedEventData<Person>>(
@@ -56,6 +58,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
+                    changingTriggerCount.ShouldBe(1);
                     changedTriggerCount++;
                 });
 
@@ -64,6 +67,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
+                    creatingTriggerCount.ShouldBe(1);
                     createdTriggerCount++;
                 });
 
