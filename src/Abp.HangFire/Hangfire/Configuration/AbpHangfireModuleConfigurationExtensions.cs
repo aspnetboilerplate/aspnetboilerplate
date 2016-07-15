@@ -12,7 +12,7 @@ namespace Abp.Hangfire.Configuration
         /// </summary>
         public static IAbpHangfireConfiguration AbpHangfire(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Hangfire", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpHangfireConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpHangfireConfiguration>();
         }
 
         /// <summary>

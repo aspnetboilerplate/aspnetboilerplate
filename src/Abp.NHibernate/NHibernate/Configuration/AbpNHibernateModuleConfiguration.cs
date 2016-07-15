@@ -4,7 +4,7 @@ namespace Abp.NHibernate.Configuration
 {
     internal class AbpNHibernateModuleConfiguration : IAbpNHibernateModuleConfiguration
     {
-        public FluentConfiguration FluentConfiguration { get; private set; }
+        public FluentConfiguration FluentConfiguration { get; }
 
         public AbpNHibernateModuleConfiguration()
         {

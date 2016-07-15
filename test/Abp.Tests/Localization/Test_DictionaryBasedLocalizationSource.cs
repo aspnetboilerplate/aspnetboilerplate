@@ -16,7 +16,11 @@ namespace Abp.Tests.Localization
         public Test_DictionaryBasedLocalizationSource()
         {
             _localizationSource = new DictionaryBasedLocalizationSource("Test", new FakeLocalizationDictionary());
-            _localizationSource.Initialize(new LocalizationConfiguration(), new IocManager());
+            _localizationSource.Initialize(new LocalizationConfiguration
+            {
+                HumanizeTextIfNotFound = false,
+                WrapGivenTextIfNotFound = true
+            }, new IocManager());
         }
 
         [Fact]

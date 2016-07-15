@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Abp.Collections.Extensions;
 
 namespace Abp.Extensions
@@ -312,6 +313,32 @@ namespace Abp.Extensions
             }
 
             return char.ToLower(str[0], culture) + str.Substring(1);
+        }
+
+        /// <summary>
+        /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
+        /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        public static string ToSentenceCase(this string str)
+        {
+            return str.ToSentenceCase(CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
+        /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <param name="culture">An object that supplies culture-specific casing rules.</param>
+        public static string ToSentenceCase(this string str, CultureInfo culture)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return str;
+            }
+
+            return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
         }
 
         /// <summary>

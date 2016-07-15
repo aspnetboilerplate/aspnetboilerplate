@@ -5,7 +5,6 @@ using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
@@ -24,6 +23,7 @@ using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Castle.MicroKernel.Registration;
 
 namespace Abp
 {
@@ -38,7 +38,6 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             ValidationInterceptorRegistrar.Initialize(IocManager);
-            FeatureInterceptorRegistrar.Initialize(IocManager);
             AuditingInterceptorRegistrar.Initialize(IocManager);
             UnitOfWorkRegistrar.Initialize(IocManager);
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
@@ -132,10 +131,18 @@ namespace Abp
 
         private void RegisterMissingComponents()
         {
-            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
+            if (!IocManager.IsRegistered<IGuidGenerator>())
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                        .For<IGuidGenerator, SequentialGuidGenerator>()
+                        .Instance(SequentialGuidGenerator.Instance)
+                );
+            }
+
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
+            IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);

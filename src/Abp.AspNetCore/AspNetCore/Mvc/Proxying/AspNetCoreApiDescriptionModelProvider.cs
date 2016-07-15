@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
@@ -55,7 +54,6 @@ namespace Abp.AspNetCore.Mvc.Proxying
                 Logger.Warn($"Controller '{controllerModel.Name}' contains more than one action with name '{method.Name}' for module '{moduleModel.Name}'. Ignored: " + apiDescription.ActionDescriptor.GetMethodInfo());
                 return;
             }
-
 
             var actionModel = controllerModel.AddAction(new ActionApiDescriptionModel(
                 method.Name,

@@ -46,6 +46,7 @@ namespace Abp.Tests.Extensions
         [Fact]
         public void ToPascalCase_Test()
         {
+            (null as string).ToPascalCase().ShouldBe(null);
             "helloWorld".ToPascalCase().ShouldBe("HelloWorld");
             "istanbul".ToPascalCase().ShouldBe("Istanbul");
             "istanbul".ToPascalCase(new CultureInfo("tr-TR")).ShouldBe("İstanbul");
@@ -54,10 +55,20 @@ namespace Abp.Tests.Extensions
         [Fact]
         public void ToCamelCase_Test()
         {
+            (null as string).ToCamelCase().ShouldBe(null);
             "HelloWorld".ToCamelCase().ShouldBe("helloWorld");
             "Istanbul".ToCamelCase().ShouldBe("istanbul");
             "Istanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("ıstanbul");
             "İstanbul".ToCamelCase(new CultureInfo("tr-TR")).ShouldBe("istanbul");
+        }
+
+        [Fact]
+        public void ToSentenceCase_Test()
+        {
+            (null as string).ToSentenceCase().ShouldBe(null);
+            "HelloWorld".ToSentenceCase().ShouldBe("Hello world");
+            "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
+            "HelloIsparta".ToSentenceCase(new CultureInfo("tr-TR")).ShouldBe("Hello ısparta");
         }
 
         [Fact]

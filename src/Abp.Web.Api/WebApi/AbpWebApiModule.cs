@@ -13,7 +13,6 @@ using Abp.WebApi.Controllers;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
-using Abp.WebApi.Controllers.Filters;
 using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
@@ -21,7 +20,11 @@ using System.Web.Http.Description;
 using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.Web.Api.Description;
+using Abp.WebApi.Auditing;
 using Abp.WebApi.Controllers.Dynamic.Binders;
+using Abp.WebApi.ExceptionHandling;
+using Abp.WebApi.Uow;
+using Abp.WebApi.Validation;
 
 namespace Abp.WebApi
 {
@@ -35,7 +38,7 @@ namespace Abp.WebApi
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
-            IocManager.Register<IAbpWebApiModuleConfiguration, AbpWebApiModuleConfiguration>();
+            IocManager.Register<IAbpWebApiConfiguration, AbpWebApiConfiguration>();
 
             Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
         }
@@ -44,18 +47,18 @@ namespace Abp.WebApi
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
-            var httpConfiguration = IocManager.Resolve<IAbpWebApiModuleConfiguration>().HttpConfiguration;
+        }
+        
+        public override void PostInitialize()
+        {
+            var httpConfiguration = IocManager.Resolve<IAbpWebApiConfiguration>().HttpConfiguration;
 
             InitializeAspNetServices(httpConfiguration);
             InitializeFilters(httpConfiguration);
             InitializeFormatters(httpConfiguration);
             InitializeRoutes(httpConfiguration);
             InitializeModelBinders(httpConfiguration);
-        }
-        
-        public override void PostInitialize()
-        {
+
             foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
             {
                 IocManager.IocContainer.Register(
@@ -75,15 +78,19 @@ namespace Abp.WebApi
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
-            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector());
+            httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector(IocManager.Resolve<IAbpWebApiConfiguration>()));
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
-            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(IocManager.Resolve<IAbpWebApiConfiguration>(), httpConfiguration));
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiExceptionFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuditFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiValidationFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiUowFilter>());
+
             httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
-            httpConfiguration.Filters.Add(IocManager.Resolve<AbpExceptionFilterAttribute>());
         }
 
         private static void InitializeFormatters(HttpConfiguration httpConfiguration)

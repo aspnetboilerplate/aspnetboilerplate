@@ -3,6 +3,7 @@ using System.Data.Entity;
 using Abp.EntityFramework;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
+using Abp.TestBase.SampleApplication.GuidEntities;
 using Abp.TestBase.SampleApplication.People;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
@@ -18,6 +19,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         public virtual IDbSet<Company> Companies { get; set; }
 
         public virtual IDbSet<Branch> Branches { get; set; }
+
+        public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
+
+        public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }
 
         public SampleApplicationDbContext()
         {

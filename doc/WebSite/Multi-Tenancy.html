@@ -211,8 +211,7 @@ carefully since it's harder to maintain a code shared by host and tenants.</p>
 				host.</li>
 				<li>Use SetTenantId within a <strong>using</strong> block as in 
 				the example if there is not a special case. Thus, it 
-				automatically restore tenantId at the end of the using block. 
-				Thus, the code calls GetProducts method works as before.</li>
+				automatically restore tenantId at the end of the using block and the code calls GetProducts method works as before.</li>
 				<li>You can use SetTenantId in <strong>nested blocks </strong>if 
 				it's needed.</li>
 				<li>Since <strong>_unitOfWorkManager.Current</strong> only 

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.Net.Mail
 {
-    public class SmtpEmailSender_Resolve_Test : AbpIntegratedTestBase
+    public class SmtpEmailSender_Resolve_Test : AbpIntegratedTestBase<AbpKernelModule>
     {
         [Fact]
         public void Should_Resolve_EmailSenders()

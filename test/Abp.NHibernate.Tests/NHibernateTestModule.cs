@@ -3,12 +3,13 @@ using System.Data;
 using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Modules;
+using Abp.TestBase;
 using FluentNHibernate.Cfg.Db;
 using NHibernate.Tool.hbm2ddl;
 
 namespace Abp.NHibernate.Tests
 {
-    [DependsOn(typeof(AbpNHibernateModule))]
+    [DependsOn(typeof(AbpNHibernateModule), typeof(AbpTestBaseModule))]
     public class NHibernateTestModule : AbpModule
     {
         public override void PreInitialize()

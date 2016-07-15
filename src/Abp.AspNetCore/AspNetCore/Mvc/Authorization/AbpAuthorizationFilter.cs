@@ -1,69 +1,83 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Features;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
-using Abp.Reflection;
+using Abp.Web.Models;
+using Abp.Web.Mvc.Models;
+using Castle.Core.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Authorization
 {
     public class AbpAuthorizationFilter : IAsyncAuthorizationFilter, ITransientDependency
     {
-        private readonly IIocResolver _iocResolver;
+        public ILogger Logger { get; set; }
 
-        public AbpAuthorizationFilter(IIocResolver iocResolver)
+        private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+
+        public AbpAuthorizationFilter(
+            IAuthorizationHelper authorizationHelper,
+            IErrorInfoBuilder errorInfoBuilder
+            )
         {
-            _iocResolver = iocResolver;
+            _authorizationHelper = authorizationHelper;
+            _errorInfoBuilder = errorInfoBuilder;
+            Logger = NullLogger.Instance;
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var methodInfo = context.ActionDescriptor.GetMethodInfo();
-            await CheckFeatures(methodInfo);
-            await CheckPermissions(methodInfo);
-        }
-
-        //TODO: This methods can be moved to another class to be shared.
-
-        private async Task CheckFeatures(MethodInfo methodInfo)
-        {
-            var featureAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<RequiresFeatureAttribute>(
-                    methodInfo
-                    );
-
-            if (featureAttributes.Count <= 0)
+            // Allow Anonymous skips all authorization
+            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
             {
                 return;
             }
 
-            using (var featureChecker = _iocResolver.ResolveAsDisposable<IFeatureChecker>())
+            try
             {
-                foreach (var featureAttribute in featureAttributes)
+                //TODO: Avoid using try/catch, use conditional checking
+                await _authorizationHelper.AuthorizeAsync(context.ActionDescriptor.GetMethodInfo());
+            }
+            catch (AbpAuthorizationException ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+
+                if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
-                    await featureChecker.Object.CheckEnabledAsync(featureAttribute.RequiresAll, featureAttribute.Features);
+                    context.Result = new ObjectResult(new MvcAjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
+                    {
+                        StatusCode = context.HttpContext.User.Identity.IsAuthenticated
+                            ? (int) System.Net.HttpStatusCode.Forbidden
+                            : (int) System.Net.HttpStatusCode.Unauthorized
+                    };
+                }
+                else
+                {
+                    context.Result = new ChallengeResult();
                 }
             }
-        }
-
-        private async Task CheckPermissions(MethodInfo methodInfo)
-        {
-            var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
-                    methodInfo
-                ).OfType<IAbpAuthorizeAttribute>().ToArray();
-            
-            if (!authorizeAttributes.Any())
+            catch (Exception ex)
             {
-                return;
-            }
+                Logger.Error(ex.ToString(), ex);
 
-            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-            {
-                await authorizationAttributeHelper.Object.AuthorizeAsync(authorizeAttributes);
+                if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+                {
+                    context.Result = new ObjectResult(new MvcAjaxResponse(_errorInfoBuilder.BuildForException(ex)))
+                    {
+                        StatusCode = (int) System.Net.HttpStatusCode.InternalServerError
+                    };
+                }
+                else
+                {
+                    //TODO: How to return Error page?
+                    context.Result = new StatusCodeResult((int)System.Net.HttpStatusCode.InternalServerError);
+                }
             }
         }
     }

@@ -5,8 +5,8 @@ TODO:
 
 - [x] Repositories
 - [x] Unit of work
-- [ ] Data filters
-- [ ] DateTime conversion (while getting entities)
+- [ ] Transaction management (see https://docs.efproject.net/en/latest/saving/transactions.html#cross-context-transaction-relational-databases-only)
 - [ ] Log validation errors
 - [ ] Multiple connstring for same dbcontext
-- [ ] Transaction management (waiting answer: https://github.com/aspnet/EntityFramework.Docs/issues/108#issuecomment-226225846)
+- [ ] Data filters (waiting for https://github.com/aspnet/EntityFramework/issues/626 and https://github.com/jcachat/EntityFramework.DynamicFilters/issues/48)
+- [ ] DateTime Kind Normalization (while getting entities from database)

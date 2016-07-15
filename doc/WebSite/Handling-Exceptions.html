@@ -12,6 +12,11 @@
 		<div class="document-contents">
 
 			<h3 id="DocIntro">Introduction</h3>
+			<div class="bs-callout bs-callout-warning">
+				<p>This document is for ASP.NET MVC and Web API. If you're interested in 
+				ASP.NET Core, see <a href="AspNet-Core.html">ASP.NET Core</a> 
+				documentation.</p>
+			</div>
 			<p>In a web application, exceptions are usually handled in MVC Controller 
 actions and Web API Controller actions. When an exception occurs, application 
 user somehow informed about the error and optionally reason of the error.</p>
@@ -23,15 +28,18 @@ ASP.NET Boilerplate <strong>automates</strong> this. You almost never need to
 explicitly handle any exception. ASP.NET Boilerplate handles all exceptions, 
 logs them and returns appropriate and formatted response to the client. Also, 
 handles these response in the client and show error messages to the user.</p>
-			<h3 id="DocEnableErrorHandling">Enabling error handling</h3>
-			<p>To enable error handling, <strong>customErrors</strong> mode must be enabled.</p>
-			<pre>&lt;customErrors mode=&quot;On&quot; /&gt;</pre>
-			<p>It also can be 'RemoteOnly' if you do not want to handler errors in local 
+			<h3 id="DocEnableErrorHandling">Enabling Error Handling</h3>
+			<p>To enable error handling for ASP.NET MVC Controllers, <strong>customErrors</strong> mode must 
+			be enabled for ASP.NET MVC applications.</p>
+			<pre>&lt;customErrors mode=&quot;<strong>On</strong>&quot; /&gt;</pre>
+			<p>It also can be '<strong>RemoteOnly</strong>' if you do not want to handler errors in local 
 computer.</p>
+			<p>Note that this is only required for ASP.NET MVC Controllers, not 
+			needed for Web API and ASP.NET Core Controllers.</p>
 
-			<h3 id="DocNonAjax">Non-Ajax requests</h3>
+			<h3 id="DocNonAjax">Non-Ajax Requests</h3>
 			<p>If request is not AJAX, an error page is shown.</p>
-			<h4 id="DocShowExceptions">Showing exceptions</h4>
+			<h4 id="DocShowExceptions">Showing Exceptions</h4>
 			<p>Here, there is an MVC controller action which throws an arbitrary exception:</p>
 			<pre lang="cs">public ActionResult Index()
 {
@@ -61,7 +69,7 @@ to the user. See the sample below:</p>
 			</p>
 			<p>So, if you want to show a special error message to users, just throw a 
 UserFriendlyException (or an exception derived from it).</p>
-			<h4 id="DocErrorModel">Error model</h4>
+			<h4 id="DocErrorModel">Error Model</h4>
 
 			<p>ASP.NET Boilerplate passes an <strong>ErrorViewModel</strong> object as 
 model to the Error view:</p>
@@ -79,7 +87,7 @@ informations if you want. For example, we can show validation errors if it's an
 			<p>
 				<img alt="Validation errors" height="257" src="images/error-page-validation.png" width="722" />
 			</p>
-			<h3 id="DocAjax">AJAX requests</h3>
+			<h3 id="DocAjax">AJAX Requests</h3>
 			<p>If return type of MVC action is JsonResult (or Task&lt;JsonResult for async 
 actions), ASP.NET Boilerplate returns a JSON object to the client on exceptions. Sample return object for an error:</p>
 			<pre lang="js">{
@@ -100,11 +108,10 @@ details</strong>.</p>
 client side, it automatically handles this JSON object and shows error message 
 to the user using <a href="/Pages/Documents/Javascript-API/Message">message A<span class="text-primary">PI</span>
 				</a>. 
-See <a href="/Pages/Documents/Javascript-API/AJAX">AJAX API</a> and
-				<a href="/Pages/Documents/Dynamic-Web-API">dynamic web api layer</a> for more 
+See <a href="/Pages/Documents/Javascript-API/AJAX">AJAX API</a> for more 
 information.</p>
-			<h3 id="DocExceptionEvent">Exception event</h3>
-			<p>When ASP.NET Boilerplare handle any exception, it triggers <strong>AbpHandledExceptionData</strong> 
+			<h3 id="DocExceptionEvent">Exception Event</h3>
+			<p>When ASP.NET Boilerplare handles any exception, it triggers <strong>AbpHandledExceptionData</strong> 
 event that can be registered to be informed (See
 				<a href="/Pages/Documents/EventBus-Domain-Events">eventbus documentation</a> for 
 more information about Event Bus). Example:</p>

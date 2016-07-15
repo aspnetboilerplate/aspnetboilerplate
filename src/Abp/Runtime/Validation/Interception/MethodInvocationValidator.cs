@@ -134,6 +134,7 @@ namespace Abp.Runtime.Validation.Interception
 
         protected virtual void ValidateObjectRecursively(object validatingObject)
         {
+            //Validate items of enumerable
             if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
             {
                 foreach (var item in (validatingObject as IEnumerable))
@@ -142,7 +143,8 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            if (!(validatingObject is IValidate))
+            //Do not validate enumerable object itself
+            if (validatingObject is IEnumerable)
             {
                 return;
             }
@@ -157,6 +159,11 @@ namespace Abp.Runtime.Validation.Interception
             var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
+                if (property.Attributes.OfType<DisableValidationAttribute>().Any())
+                {
+                    continue;
+                }
+
                 ValidateObjectRecursively(property.GetValue(validatingObject));
             }
         }
@@ -177,7 +184,7 @@ namespace Abp.Runtime.Validation.Interception
 
                 var validationContext = new ValidationContext(validatingObject)
                 {
-                    DisplayName = property.Name,
+                    DisplayName = property.DisplayName,
                     MemberName = property.Name
                 };
 

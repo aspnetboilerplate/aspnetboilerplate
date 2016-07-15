@@ -99,5 +99,10 @@ namespace Abp.Configuration.Startup
         /// <param name="type">The type to be replaced.</param>
         /// <param name="replaceAction">Replace action.</param>
         void ReplaceService(Type type, Action replaceAction);
+
+        /// <summary>
+        /// Gets a configuration object.
+        /// </summary>
+        T Get<T>();
     }
 }

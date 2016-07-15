@@ -1,9 +1,15 @@
 ﻿using System.Reflection;
+using Abp.Domain.Uow;
+using Abp.Web.Models;
 
 namespace Abp.AspNetCore.Configuration
 {
     public interface IAbpAspNetCoreConfiguration
     {
-        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = false);
+        WrapResultAttribute DefaultWrapResultAttribute { get; }
+
+        UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
+
+        void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true);
     }
 }

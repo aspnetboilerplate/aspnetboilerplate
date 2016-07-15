@@ -9,15 +9,15 @@ using Abp.WebApi.Configuration;
 namespace Abp.WebApi.Controllers
 {
     /// <summary>
-    /// Wrapps Web API return values by <see cref="AjaxResponse"/>.
+    /// Wraps Web API return values by <see cref="AjaxResponse"/>.
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
-        private readonly IAbpWebApiModuleConfiguration _webApiModuleConfiguration;
+        private readonly IAbpWebApiConfiguration _webApiConfiguration;
 
-        public ResultWrapperHandler(IAbpWebApiModuleConfiguration webApiModuleConfiguration)
+        public ResultWrapperHandler(IAbpWebApiConfiguration webApiConfiguration)
         {
-            _webApiModuleConfiguration = webApiModuleConfiguration;
+            _webApiConfiguration = webApiConfiguration;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? DontWrapResultAttribute.Default;
+                           ?? _webApiConfiguration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
             {
@@ -52,7 +52,7 @@ namespace Abp.WebApi.Controllers
                 response.StatusCode = HttpStatusCode.OK;
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
-                    _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                    _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
                     );
                 return;
             }
@@ -64,7 +64,7 @@ namespace Abp.WebApi.Controllers
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
-                _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
                 );
         }
     }

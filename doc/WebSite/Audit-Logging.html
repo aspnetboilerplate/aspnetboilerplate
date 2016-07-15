@@ -36,11 +36,14 @@ application.</p>
 					<strong>
 IAbpSession</strong>
 				</a> to get current UserId and TenantId.</p>
+			<p>Application service, MVC Controller, Web API and ASP.NET Core 
+			methods are automatically audited by default.</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>About IAuditingStore</h4>
 				<p>
-					<span class="auto-style1">Auditing system uses IAuditingStore</span> to 
+					Auditing system uses
+					<span class="auto-style1">IAuditingStore</span> to 
 	save audit informatins. While you can 
 	implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
 	project. If you don't implement it, SimpleLogAuditingStore is used and it 
@@ -83,8 +86,6 @@ disable it as shown below.</p>
 				<li>
 					<strong>Selectors</strong>: Used to select other classes to save audit logs.</li>
 			</ul>
-			<p>As you see, auditing for <strong>MVC</strong> controller are seperately 
-configured since a different technique is used for it.</p>
 			<p>
 				<strong>Selectors</strong> is a list of predicates to select other types to 
 save audit logs. A selector has a unique <strong>name </strong>and a <strong>

@@ -49,7 +49,7 @@ namespace Abp.Localization.Sources.Resource
             var value = GetStringOrNull(name);
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, Thread.CurrentThread.CurrentUICulture);
             }
 
             return value;
@@ -60,7 +60,7 @@ namespace Abp.Localization.Sources.Resource
             var value = GetStringOrNull(name, culture);
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, culture);
             }
 
             return value;
@@ -98,9 +98,9 @@ namespace Abp.Localization.Sources.Resource
                 .ToImmutableList();
         }
 
-        protected virtual string ReturnGivenNameOrThrowException(string name)
+        protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
-            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name, culture);
         }
     }
 }
