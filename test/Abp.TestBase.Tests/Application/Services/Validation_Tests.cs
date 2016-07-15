@@ -170,7 +170,7 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyClassInList : IValidate
+        public class MyClassInList
         {
             [Required]
             [MinLength(3)]

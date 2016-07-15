@@ -142,11 +142,6 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            if (!(validatingObject is IValidate))
-            {
-                return;
-            }
-
             SetDataAnnotationAttributeErrors(validatingObject);
 
             if (validatingObject is ICustomValidate)
