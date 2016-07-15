@@ -103,6 +103,12 @@ namespace Abp.TestBase.Tests.Application.Services
                 );
         }
 
+        [Fact]
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation()
+        {
+            _myAppService.MyMethod5(new MyMethod5Input());
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -111,6 +117,7 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod2(MyMethod2Input input);
             MyMethodOutput MyMethod3(MyMethod3Input input);
             MyMethodOutput MyMethod4(MyMethod4Input input);
+            MyMethodOutput MyMethod5(MyMethod5Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -131,6 +138,11 @@ namespace Abp.TestBase.Tests.Application.Services
             }
 
             public MyMethodOutput MyMethod4(MyMethod4Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod5(MyMethod5Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
@@ -167,6 +179,12 @@ namespace Abp.TestBase.Tests.Application.Services
         public class MyMethod4Input : IInputDto
         {
             [Required]
+            public MyClassInList[] ArrayItems { get; set; }
+        }
+
+        public class MyMethod5Input : IInputDto
+        {
+            [DisableValidation]
             public MyClassInList[] ArrayItems { get; set; }
         }
 
