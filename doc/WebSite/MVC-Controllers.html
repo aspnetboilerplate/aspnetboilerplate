@@ -64,14 +64,14 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 		</div>
 
 			<h3>Filters</h3>
-			<h4>Exception Handling</h4>
+			<h4>Exception Handling &amp; Result Wrapping</h4>
 			<p>All exceptions are automatically handled, logged and a proper response is 
 	returned to the client. See <a href="/Pages/Documents/Handling-Exceptions">
 	exception handling</a> documentation for more.</p>
-			<h4>Result Wrapping&nbsp;</h4>
-			<p>ASP.NET Boilerplate <strong>wraps</strong> action results by default if 
+			<p>ASP.NET Boilerplate also <strong>wraps</strong> action results by default if 
 	return type is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async 
-	actions). You can change this by using <strong>WrapResult</strong> and
+	actions).</p>
+			<p>You can change exception handling and wrapping by using <strong>WrapResult</strong> and
 				<strong>DontWrapResult</strong> 
 	attributes for controllers or actions or from
 			<a href="Startup-Configuration.html">startup configuration</a> 
