@@ -29,11 +29,13 @@ explicitly handle any exception. ASP.NET Boilerplate handles all exceptions,
 logs them and returns appropriate and formatted response to the client. Also, 
 handles these response in the client and show error messages to the user.</p>
 			<h3 id="DocEnableErrorHandling">Enabling Error Handling</h3>
-			<p>To enable error handling, <strong>customErrors</strong> mode must 
+			<p>To enable error handling for ASP.NET MVC Controllers, <strong>customErrors</strong> mode must 
 			be enabled for ASP.NET MVC applications.</p>
 			<pre>&lt;customErrors mode=&quot;<strong>On</strong>&quot; /&gt;</pre>
 			<p>It also can be '<strong>RemoteOnly</strong>' if you do not want to handler errors in local 
 computer.</p>
+			<p>Note that this is only required for ASP.NET MVC Controllers, not 
+			needed for Web API and ASP.NET Core Controllers.</p>
 
 			<h3 id="DocNonAjax">Non-Ajax Requests</h3>
 			<p>If request is not AJAX, an error page is shown.</p>

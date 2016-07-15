@@ -35,6 +35,12 @@ namespace Abp.WebApi.Uow
                 return await continuation();
             }
 
+            //Dynamic web API should not be UOW since application services are already UOW.
+            if (actionContext.ActionDescriptor.IsDynamicAbpAction())
+            {
+                return await continuation();
+            }
+
             var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
                                  _configuration.DefaultUnitOfWorkAttribute;
 
