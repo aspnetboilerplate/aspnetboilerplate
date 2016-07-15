@@ -222,12 +222,14 @@ it's <strong>GetString</strong> method.</p>
 			<pre lang="cs">var s1 = _localizationManager.GetString("SimpleTaskSystem", "NewTask");</pre>
 			<p>GetString method gets the string from the localization source based on
 				<strong>current thread's UI culture</strong>. If not found, it fallbacks to
-				<strong>default language</strong>. If it's not defined anywhere then it returns 
-the <strong>given string</strong> by wrapping with <strong>[</strong> and 
+				<strong>default language</strong>.</p>
+			<p>If given string is not defined anywhere then it returns 
+the <strong>given string</strong> by humanizing and wrapping with <strong>[</strong> and 
 				<strong>]</strong> by default (instead 
-of throwing Exception). This behavior is configurable (you can use 
-Configuration.Localization.ReturnGivenTextIfNotFound property in PreInitialize of your
-				<a href="/Pages/Documents/Module-System">module</a>).</p>
+of throwing Exception). Example: If given text is "ThisIsMyText", then result 
+			will be "[This is my text]". This behavior is configurable (you can use 
+			Configuration.Localization in PreInitialize of your
+				<a href="/Pages/Documents/Module-System">module</a> to change it).</p>
 			<p>To do not repeat source name always, you can first <strong>get the source</strong>, 
 then get a string from the source:</p>
 			<pre lang="cs">var source = _localizationManager.GetSource("SimpleTaskSystem");

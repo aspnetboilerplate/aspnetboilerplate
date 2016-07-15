@@ -148,6 +148,11 @@ difference comes from inheritance. In application layer it's
 completely ASP.NET Boilerplate's implementation and does not extend any class. 
 			But, int MVC and Web API, it inherits from Authorize attributes of 
 			those frameworks.</p>
+			<h5>Suppress Authorization</h5>
+			<p>You can disable authorization for a method/class by adding
+			<strong>AbpAllowAnonymous</strong> attribute to aplication services. 
+			Use <strong>AllowAnonymous</strong> for MVC, Web API and ASP.NET 
+			Core Controllers, which are native attributes of these frameworks.</p>
 			<h4 id="DocUsingPermissionChecker">Using IPermissionChecker</h4>
 			<p>While AbpAuthorize attribute pretty enough for most cases, there must be 
 situations we should check for a permission in a method body. We can inject and 
