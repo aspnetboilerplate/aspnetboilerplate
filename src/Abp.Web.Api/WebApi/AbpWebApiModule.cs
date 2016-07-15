@@ -85,11 +85,12 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiExceptionFilterAttribute>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuditFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiValidationFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiUowFilter>());
+
+            httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
         }
 
         private static void InitializeFormatters(HttpConfiguration httpConfiguration)

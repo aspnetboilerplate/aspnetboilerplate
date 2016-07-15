@@ -15,11 +15,11 @@
 	<body>
 
 		<div class="document-contents">
-
-			<h3 id="DocAppLangs">Application Languages</h3>
-			<p>An application has at least one language for user interface. Many 
-applications have more than one language. ASP.NET Boilerplate provides a 
+<h3>Introduction</h3>
+			<p>Any application has at least one language for user interface. Many 
+applications have more than one. ASP.NET Boilerplate provides a 
 flexible localization system for an application.</p>
+			<h3 id="DocAppLangs">Application Languages</h3>
 			<p>The first thing is to declare which languages are supported. This is done
 in
 				<strong>PreInitialize</strong> method of your
@@ -39,10 +39,10 @@ template and see source codes for more.</p>
 			<h3 id="DocLocalizationSources">Localization Sources</h3>
 			<p>Localization 
 texts can be stored in different sources. 
-Even you can use more than one source in same application (If you have more than 
+Even, you can use more than one source in same application (If you have more than 
 one <a href="/Pages/Documents/Module-System">module</a>, each module can define 
-a seperated localization source).<strong> 
-ILocalizationSource</strong> interface should be implemented for a localization 
+a seperated localization source, or one module can define multiple source).<strong> 
+ILocalizationSource</strong> interface should be implemented by a localization 
 source. Then it is <strong>register</strong>ed to ASP.NET Boilerplate's 
 localization configuration. </p>
 			<p>Each localization source must have a <strong>unique source name</strong>. 
@@ -115,9 +115,9 @@ the localization source as shown below:</p>
 assembly containing XML files (GetExecutingAssembly simply refers to current 
 assembly) and a <strong>namespace</strong> of XML files (namespace is calculated 
 assembly name + folder hierarchy of XML files). </p>
-			<p>Note that: When adding language postfix to embedded XML files, <strong>do not</strong> use dot 
+			<p><strong>Note</strong>: When adding language postfix to embedded XML files, <strong>do not</strong> use dot 
 notation like 'MySource.tr.xml', instead use dash like '<strong>MySource-tr.xml</strong>' 
-since dot notation causes problems when finding resources.</p>
+since dot notation causes namespacing problems when finding resources.</p>
 			<h4>JSON Files</h4>
 			<p>JSON files can be used to store texts for a localization source. A sample 
 	JSON localization file is shown below:</p>
@@ -173,10 +173,10 @@ the localization source as shown below:</p>
 assembly containing JSON files (GetExecutingAssembly simply refers to current 
 assembly) and a <strong>namespace</strong> of JSON files (namespace is calculated 
 assembly name + folder hierarchy of JSON files). </p>
-			<p>Note that: When adding language postfix to embedded JSON files, <strong>do 
+			<p>Note: When adding language postfix to embedded JSON files, <strong>do 
 not</strong> use dot 
 notation like 'MySource.tr.json', instead use dash like '<strong>MySource-tr.json</strong>' 
-since dot notation causes problems when finding resources.&nbsp;</p>
+since dot notation causes namespace problems when finding resources.&nbsp;</p>
 			<h4 id="DocLocalizeResources">Resource Files</h4>
 			<p>Localization text can also be stored in .NET's resource files. We can create 
 a resource file for each language as shown below (Right click to the project, 
@@ -210,7 +210,8 @@ sources such as in a database. You can directly implement the <strong>
 ILocalizationSource</strong> interface or you can use <strong>
 DictionaryBasedLocalizationSource</strong> 
 class to make implementation easier (json and xml localization sources also use 
-it).</p>
+it). <a href="Zero/Language-Management.html">Module zero</a> implements source 
+			in the database for example.</p>
 			<h3 id="DocGetText">Getting A Localized Text</h3>
 			<p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
@@ -249,7 +250,7 @@ methods.</p>
 			<h5 id="DocInControllers">In MVC Controllers</h5>
 			<p>Localization texts are generally needed in MVC Controller and Views. There is 
 a shortcut for that. See the sample controller below:</p>
-			<pre lang="cs">public class HomeController : SimpleTaskSystemControllerBase
+			<pre lang="cs">public class HomeController : <strong>SimpleTaskSystemControllerBase</strong>
 {
     public ActionResult Index()
     {
@@ -261,12 +262,12 @@ a shortcut for that. See the sample controller below:</p>
 				<strong>L</strong> method is used to localize a string. Surely, you must 
 supply a source name. It's done in SimpleTaskSystemControllerBase as shown 
 below:</p>
-			<pre lang="cs">public abstract class SimpleTaskSystemControllerBase : AbpController
+			<pre lang="cs">public abstract class SimpleTaskSystemControllerBase : <strong>AbpController</strong>
 {
     protected SimpleTaskSystemControllerBase()
     {
-        LocalizationSourceName = "SimpleTaskSystem";
-    }
+        <strong>LocalizationSourceName = "SimpleTaskSystem";
+</strong>    }
 }</pre>
 			<p>Notice that it is derived from <strong>AbpController</strong>. Thus, you can 
 easily localize texts with <strong>L</strong> method. </p>
@@ -288,16 +289,16 @@ views:</p>
 &lt;/div&gt;</pre>
 			<p>To make this work, you should derive your views from a base class that sets 
 the source name:</p>
-			<pre lang="cs">public abstract class SimpleTaskSystemWebViewPageBase : SimpleTaskSystemWebViewPageBase&lt;dynamic&gt;
-{
+			<pre lang="cs">public abstract class SimpleTaskSystemWebViewPageBase : <strong>SimpleTaskSystemWebViewPageBase&lt;dynamic&gt;
+</strong>{
 
 }
 
-public abstract class SimpleTaskSystemWebViewPageBase&lt;TModel&gt; : AbpWebViewPage&lt;TModel&gt;
+public abstract class SimpleTaskSystemWebViewPageBase&lt;TModel&gt; : <strong>AbpWebViewPage&lt;TModel&gt;</strong>
 {
     protected SimpleTaskSystemWebViewPageBase()
     {
-        LocalizationSourceName = &quot;SimpleTaskSystem&quot;;
+        <strong>LocalizationSourceName = &quot;SimpleTaskSystem&quot;;</strong>
     }
 }</pre>
 			<p>And set this view base class in web.config:</p>

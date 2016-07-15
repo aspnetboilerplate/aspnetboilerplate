@@ -137,8 +137,7 @@ framework. ASP.NET Core integration is implemented in
 	<h4>Audit Action Filter</h4>
 	<p><strong>AbpAuditActionFilter</strong> is used to integrate to
 	<a href="Audit-Logging.html">audit logging system</a>. It logs all requests 
-	to all actions by default (if auditing is not disabled).</p>
-	<p>You can control audit logging using <strong>Audited</strong> and <strong>
+	to all actions by default (if auditing is not disabled). You can control audit logging using <strong>Audited</strong> and <strong>
 	DisableAuditing</strong> attributes for actions and controllers.</p>
 	<h4>Validation Action Filter</h4>
 	<p><strong>AbpValidationActionFilter</strong> is used to integrate to
@@ -176,7 +175,8 @@ framework. ASP.NET Core integration is implemented in
 	<p><strong>AbpResultFilter</strong> is used to wrap result action if action 
 	is successfully executed.</p>
 	<ul>
-		<li>It only wraps results for JsonResult and ObjectResult. If your 
+		<li>It only wraps results for JsonResult, ObjectResult and any object 
+		which does not implement IActionResult. If your 
 		action is returning a view or any other type of result, it's not 
 		wrapped.</li>
 		<li><strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
