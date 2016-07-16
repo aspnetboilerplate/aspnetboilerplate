@@ -15,14 +15,19 @@ namespace Abp.TestBase.SampleApplication.Tests
     {
         protected SampleApplicationTestBase()
         {
+            CreateInitialData();
+        }
+
+        protected override void PreInitialize()
+        {
+            base.PreInitialize();
+
             //Fake DbConnection using Effort!
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>()
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
                 );
-
-            CreateInitialData();
         }
 
         private void CreateInitialData()
