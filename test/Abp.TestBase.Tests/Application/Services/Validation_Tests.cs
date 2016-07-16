@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
+using Abp.Timing;
 using Shouldly;
 using Xunit;
 
@@ -39,7 +41,8 @@ namespace Abp.TestBase.Tests.Application.Services
             var output = _myAppService.MyMethod2(new MyMethod2Input
                             {
                                 MyStringValue2 = "test 1",
-                                Input1 = new MyMethodInput { MyStringValue = "test 2" }
+                                Input1 = new MyMethodInput { MyStringValue = "test 2" },
+                                DateTimeValue = Clock.Now
                             });
             output.Result.ShouldBe(42);
         }
@@ -160,6 +163,8 @@ namespace Abp.TestBase.Tests.Application.Services
             [Required]
             [MinLength(2)]
             public string MyStringValue2 { get; set; }
+
+            public DateTime DateTimeValue { get; set; }
 
             [Required]
             public MyMethodInput Input1 { get; set; }
