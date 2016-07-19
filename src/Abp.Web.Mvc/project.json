@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.10.0.1-*",
+  "version": "0.10.0.3-*",
 
   "dependencies": {
-    "Abp.Web": "0.10.0.1-*",
+    "Abp.Web": "0.10.0.3-*",
     "Microsoft.AspNet.Mvc": "5.2.3"
   },
 
