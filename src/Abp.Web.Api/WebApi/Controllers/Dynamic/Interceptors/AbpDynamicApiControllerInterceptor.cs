@@ -1,7 +1,4 @@
 using System.Reflection;
-using Abp.Application.Services;
-using Abp.Aspects;
-using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 using Castle.DynamicProxy;
@@ -42,12 +39,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
                 //Call real object's method
                 try
                 {
-                    var appliedConcerns = AbpCrossCuttingConcerns.GetApplieds(invocation.Proxy);
-                    if (!appliedConcerns.IsNullOrEmpty())
-                    {
-                        AbpCrossCuttingConcerns.AddApplied(_proxiedObject, appliedConcerns);
-                    }
-
                     invocation.ReturnValue = invocation.Method.Invoke(_proxiedObject, invocation.Arguments);
                 }
                 catch (TargetInvocationException targetInvocation)

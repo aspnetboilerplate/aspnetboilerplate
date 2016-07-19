@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
+using Abp.Auditing;
 using Abp.Web.Models;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 
@@ -9,6 +10,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     /// This class is used to create proxies to call dynamic api methods from Javascript clients.
     /// </summary>
     [DontWrapResult]
+    [DisableAuditing]
     public class AbpServiceProxiesController : AbpApiController
     {
         private readonly ScriptProxyManager _scriptProxyManager;

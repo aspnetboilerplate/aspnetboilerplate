@@ -23,7 +23,7 @@ namespace Abp.WebApi.Auditing
         /// <summary>
         /// Ignored types for serialization on audit logging.
         /// </summary>
-        public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
+        public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; }
 
         public bool AllowMultiple => false;
 
@@ -60,27 +60,24 @@ namespace Abp.WebApi.Auditing
                 return await continuation();
             }
 
-            using (AbpCrossCuttingConcerns.Applying(actionContext.ControllerContext.Controller, AbpCrossCuttingConcerns.Auditing))
-            {
-                var auditInfo = CreateAuditInfo(actionContext);
-                var stopwatch = Stopwatch.StartNew();
+            var auditInfo = CreateAuditInfo(actionContext);
+            var stopwatch = Stopwatch.StartNew();
 
-                try
-                {
-                    return await continuation();
-                }
-                catch (Exception ex)
-                {
-                    auditInfo.Exception = ex;
-                    throw;
-                }
-                finally
-                {
-                    stopwatch.Stop();
-                    auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                    AuditInfoProvider?.Fill(auditInfo);
-                    await AuditingStore.SaveAsync(auditInfo);
-                }
+            try
+            {
+                return await continuation();
+            }
+            catch (Exception ex)
+            {
+                auditInfo.Exception = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                AuditInfoProvider?.Fill(auditInfo);
+                await AuditingStore.SaveAsync(auditInfo);
             }
         }
 
@@ -103,15 +100,20 @@ namespace Abp.WebApi.Auditing
             return auditInfo;
         }
 
-        private bool ShouldSaveAudit(HttpActionContext filterContext)
+        private bool ShouldSaveAudit(HttpActionContext context)
         {
             if (!_auditingConfiguration.IsEnabled)
             {
                 return false;
             }
 
+            if (context.ActionDescriptor.IsDynamicAbpAction())
+            {
+                return false;
+            }
+
             return AuditingHelper.ShouldSaveAudit(
-                filterContext.ActionDescriptor.GetMethodInfoOrNull(),
+                context.ActionDescriptor.GetMethodInfoOrNull(),
                 _auditingConfiguration,
                 AbpSession,
                 true
