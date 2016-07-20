@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Abp.Collections.Extensions;
 using Abp.Modules;
 using Abp.Reflection;
 
@@ -29,9 +30,9 @@ namespace Abp.PlugIns
                 {
                     foreach (var type in assembly.GetTypes())
                     {
-                        if (AbpModule.IsAbpModule(type) || !modules.Contains(type))
+                        if (AbpModule.IsAbpModule(type))
                         {
-                            modules.Add(type);
+                            modules.AddIfNotContains(type);
                         }
                     }
                 }

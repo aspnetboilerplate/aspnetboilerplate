@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.PlugIns;
@@ -88,7 +89,10 @@ namespace Abp.Modules
         {
             foreach (var plugInSource in _abpPlugInManager.PlugInSources)
             {
-                modules.AddRange(plugInSource.GetModules());
+                foreach (var module in plugInSource.GetModules())
+                {
+                    modules.AddIfNotContains(module);
+                }
             }
         }
 
