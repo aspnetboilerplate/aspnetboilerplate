@@ -1,5 +1,5 @@
 {
-  "version": "0.10.1.1-*",
+  "version": "0.10.1.2-*",
 
   "dependencies": {
     "Castle.LoggingFacility": "3.3.0",
