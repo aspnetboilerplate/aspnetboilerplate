@@ -4,7 +4,7 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp": "0.10.0.3-*",
+    "Abp": "0.10.1.0-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "NSubstitute": "1.10.0",
     "Shouldly": "2.8.0",
