@@ -1,8 +1,8 @@
 {
-  "version": "0.10.1.0-*",
+  "version": "0.10.1.1-*",
 
   "dependencies": {
-    "Abp.Web.Common": "0.10.1.0-*",
+    "Abp.Web.Common": "0.10.1.1-*",
     "Castle.LoggingFacility.MsLogging": "1.0.0",
     "Castle.Windsor.MsDependencyInjection": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0"

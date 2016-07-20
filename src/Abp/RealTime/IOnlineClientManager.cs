@@ -42,8 +42,7 @@ namespace Abp.RealTime
         /// <param name="user">User.</param>
         [Obsolete("Use GetAllByUserId(user) instead.")]
         IOnlineClient GetByUserIdOrNull(IUserIdentifier user);
-
-
+        
         /// <summary>
         /// Gets all online clients of a user.
         /// </summary>
