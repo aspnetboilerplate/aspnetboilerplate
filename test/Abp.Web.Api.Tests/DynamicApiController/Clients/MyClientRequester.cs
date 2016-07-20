@@ -1,5 +1,4 @@
 ﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Xunit;
 
 namespace Abp.Web.Api.Tests.DynamicApiController.Clients
@@ -27,12 +26,12 @@ namespace Abp.Web.Api.Tests.DynamicApiController.Clients
         MyMethodOutput MyMethod(MyMethodInput input);
     }
 
-    public class MyMethodOutput : IOutputDto
+    public class MyMethodOutput
     {
         public string TestProperty1 { get; set; }
     }
 
-    public class MyMethodInput : IInputDto
+    public class MyMethodInput
     {
         public string TestProperty1 { get; set; }
     }

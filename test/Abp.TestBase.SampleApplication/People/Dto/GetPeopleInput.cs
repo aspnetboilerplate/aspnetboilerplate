@@ -1,8 +1,6 @@
-﻿using Abp.Application.Services.Dto;
-
-namespace Abp.TestBase.SampleApplication.People.Dto
+﻿namespace Abp.TestBase.SampleApplication.People.Dto
 {
-    public class GetPeopleInput : IInputDto
+    public class GetPeopleInput
     {
         public string NameFilter { get; set; }
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
 using Abp.Timing;
@@ -151,14 +150,14 @@ namespace Abp.TestBase.Tests.Application.Services
             }
         }
 
-        public class MyMethodInput : IInputDto
+        public class MyMethodInput
         {
             [Required]
             [MinLength(3)]
             public string MyStringValue { get; set; }
         }
 
-        public class MyMethod2Input : IInputDto
+        public class MyMethod2Input
         {
             [Required]
             [MinLength(2)]
@@ -170,7 +169,7 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyMethodInput Input1 { get; set; }
         }
 
-        public class MyMethod3Input : IInputDto
+        public class MyMethod3Input
         {
             [Required]
             [MinLength(2)]
@@ -181,13 +180,13 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyMethod4Input : IInputDto
+        public class MyMethod4Input
         {
             [Required]
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyMethod5Input : IInputDto
+        public class MyMethod5Input
         {
             [DisableValidation]
             public MyClassInList[] ArrayItems { get; set; }
@@ -200,7 +199,7 @@ namespace Abp.TestBase.Tests.Application.Services
             public string ValueInList { get; set; }
         }
 
-        public class MyMethodOutput : IOutputDto
+        public class MyMethodOutput
         {
             public int Result { get; set; }
         }
