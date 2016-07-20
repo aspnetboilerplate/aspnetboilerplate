@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -46,10 +47,16 @@ namespace Abp.RealTime
             return _clients.GetOrDefault(connectionId);
         }
 
+        [Obsolete("Use GetAllByUserId(user) instead.")]
         public IOnlineClient GetByUserIdOrNull(IUserIdentifier user)
         {
             //TODO: We can create a dictionary for a faster lookup.
             return GetAllClients().FirstOrDefault(c => c.UserId == user.UserId && c.TenantId == user.TenantId);
+        }
+
+        public IReadOnlyList<IOnlineClient> GetAllByUserId(IUserIdentifier user)
+        {
+            return GetAllClients().Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId).ToImmutableList();
         }
 
         public IReadOnlyList<IOnlineClient> GetAllClients()
