@@ -41,7 +41,7 @@ namespace Abp.Web.SignalR.Hubs
             Logger.Debug("A client is registered: " + Context.ConnectionId);
         }
 
-        public async override Task OnConnected()
+        public override async Task OnConnected()
         {
             await base.OnConnected();
 
@@ -57,7 +57,7 @@ namespace Abp.Web.SignalR.Hubs
             _onlineClientManager.Add(client);
         }
 
-        public async override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnected(bool stopCalled)
         {
             await base.OnDisconnected(stopCalled);
 
