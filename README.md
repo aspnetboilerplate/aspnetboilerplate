@@ -26,3 +26,6 @@ Links
 
 * Web site: http://www.aspnetboilerplate.com
 * Official forum: http://forum.aspnetboilerplate.com
+
+Note: In order to load this project in Visual Studio 2015 sucessfully, you need to install VS2015 Update 3 and .NET Core 1.0
+* Donwload from Official Website https://www.microsoft.com/net/core
