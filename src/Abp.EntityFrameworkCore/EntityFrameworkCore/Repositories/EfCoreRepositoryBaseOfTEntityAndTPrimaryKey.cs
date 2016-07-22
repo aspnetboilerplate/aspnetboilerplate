@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,23 @@ namespace Abp.EntityFrameworkCore.Repositories
         public override IQueryable<TEntity> GetAll()
         {
             return Table;
+        }
+
+        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return GetAll();
+            }
+
+            var query = GetAll();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                query = query.Include(propertySelector);
+            }
+
+            return query;
         }
 
         public override async Task<List<TEntity>> GetAllListAsync()
