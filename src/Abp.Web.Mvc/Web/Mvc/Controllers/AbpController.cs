@@ -395,7 +395,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
             return new AbpJsonResult(
-                new MvcAjaxResponse(
+                new AjaxResponse(
                     ErrorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                     )

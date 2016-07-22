@@ -4,6 +4,7 @@ using Abp.AspNetCore.Mvc.Results.Wrapping;
 using Abp.Dependency;
 using Abp.Reflection;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Results
@@ -32,8 +33,8 @@ namespace Abp.AspNetCore.Mvc.Results
             }
 
             AbpActionResultWrapperFactory
-                .CreateFor(context.Result)
-                .Wrap(context.Result);
+                .CreateFor(context)
+                .Wrap(context);
         }
 
         public void OnResultExecuted(ResultExecutedContext context)

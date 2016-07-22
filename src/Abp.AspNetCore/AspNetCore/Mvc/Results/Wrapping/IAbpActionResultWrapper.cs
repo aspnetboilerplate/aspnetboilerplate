@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
     public interface IAbpActionResultWrapper
     {
-        void Wrap(IActionResult actionResult);
+        void Wrap(ResultExecutingContext actionResult);
     }
 }

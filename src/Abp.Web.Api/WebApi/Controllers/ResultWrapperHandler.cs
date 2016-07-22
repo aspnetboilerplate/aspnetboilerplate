@@ -57,7 +57,7 @@ namespace Abp.WebApi.Controllers
                 return;
             }
 
-            if (resultObject is AjaxResponse)
+            if (resultObject is AjaxResponseBase)
             {
                 return;
             }
