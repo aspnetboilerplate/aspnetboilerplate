@@ -131,5 +131,17 @@ namespace Abp.AspNetCore.Tests
             response.Success.ShouldBeTrue();
             response.Result.ShouldBeNull();
         }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Void_Methods_If_Requested()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetVoidTestDontWrap)
+                ));
+
+            response.ShouldBeNullOrEmpty();
+        }
     }
 }

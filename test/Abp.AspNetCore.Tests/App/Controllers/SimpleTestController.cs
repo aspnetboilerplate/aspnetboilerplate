@@ -47,5 +47,11 @@ namespace Abp.AspNetCore.App.Controllers
         {
             
         }
+
+        [DontWrapResult]
+        public void GetVoidTestDontWrap()
+        {
+
+        }
     }
 }
