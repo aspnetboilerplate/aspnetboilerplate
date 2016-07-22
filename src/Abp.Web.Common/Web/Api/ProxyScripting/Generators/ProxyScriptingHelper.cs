@@ -127,12 +127,14 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return "GET";
             }
 
-            if (methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) || 
+                methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "PUT";
             }
 
-            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) ||
+                methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "DELETE";
             }
@@ -142,7 +144,9 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return "PATCH";
             }
 
-            if (methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) || 
+                methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) ||
+                methodName.StartsWith("Insert", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "POST";
             }
