@@ -21,6 +21,7 @@ using Abp.Web.Models;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Extensions;
+using Abp.Web.Mvc.Helpers;
 using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 
@@ -359,7 +360,7 @@ namespace Abp.Web.Mvc.Controllers
             //Return an error response to the client.
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
-            context.Result = IsJsonResult()
+            context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
                 ? GenerateJsonExceptionResult(context)
                 : GenerateNonJsonExceptionResult(context);
 
@@ -384,13 +385,7 @@ namespace Abp.Web.Mvc.Controllers
 
             return 500;
         }
-
-        protected virtual bool IsJsonResult()
-        {
-            return typeof(JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
-                   typeof(Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
-        }
-
+        
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
