@@ -2,8 +2,6 @@
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.WebApi.Authorization
 {
@@ -26,30 +24,6 @@ namespace Abp.WebApi.Authorization
         public AbpApiAuthorizeAttribute(params string[] permissions)
         {
             Permissions = permissions;
-        }
-
-        /// <inheritdoc/>
-        protected override bool IsAuthorized(HttpActionContext actionContext)
-        {
-            if (!base.IsAuthorized(actionContext))
-            {
-                return false;
-            }
-
-            try
-            {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizationHelper>())
-                {
-                    authorizationAttributeHelper.Object.Authorize(this);
-                }
-
-                return true;
-            }
-            catch (AbpAuthorizationException ex)
-            {
-                LogHelper.Logger.Warn(ex.ToString(), ex);
-                return false;
-            }
         }
 
         protected override void HandleUnauthorizedRequest(HttpActionContext actionContext)
