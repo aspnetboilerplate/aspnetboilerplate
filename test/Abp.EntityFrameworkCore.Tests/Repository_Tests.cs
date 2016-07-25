@@ -88,5 +88,32 @@ namespace Abp.EntityFrameworkCore.Tests
                 await uow.CompleteAsync();
             }
         }
+
+        [Fact]
+        public async Task Should_Insert_New_Entity()
+        {
+            using (var uow = _uowManager.Begin())
+            {
+                var blog = new Blog("blog2", "http://myblog2.com");
+                blog.IsTransient().ShouldBeTrue();
+                await _blogRepository.InsertAsync(blog);
+                await uow.CompleteAsync();
+                blog.IsTransient().ShouldBeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Insert_New_Entity_With_Guid_Id()
+        {
+            using (var uow = _uowManager.Begin())
+            {
+                var blog1 = await _blogRepository.GetAsync(1);
+                var post = new Post(blog1, "a test title", "a test body");
+                post.IsTransient().ShouldBeTrue();
+                await _postRepository.InsertAsync(post);
+                await uow.CompleteAsync();
+                post.IsTransient().ShouldBeFalse();
+            }
+        }
     }
 }

@@ -12,5 +12,17 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
         public string Title { get; set; }
 
         public string Body { get; set; }
+
+        public Post()
+        {
+            
+        }
+
+        public Post(Blog blog, string title, string body)
+        {
+            Blog = blog;
+            Title = title;
+            Body = body;
+        }
     }
 }
