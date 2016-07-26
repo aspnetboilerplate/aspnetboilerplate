@@ -1,63 +1,89 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-	<head>
-		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-		<title>EntityFramework Integration</title>
-		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
-		<style type="text/css">
-.auto-style2 {
-	font-weight: normal;
-}
-		</style>
-	</head>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Entity Framework Core</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
 
-	<body>
+<body>
 
-		<div class="document-contents">
+<div class="document-contents">
 
-			<p>ASP.NET Boilerplate can work with any O/RM framework. It has built-in 
-integration with <b>EntityFramework</b>. This document will explain how to 
-use EntityFramework with ASP.NET Boilerplate. It's assumed that you're already familar with 
-EntityFramework in a 
-basic level.</p>
-			<h3 id="DocNugetPackage">Nuget Package</h3>
-			<p>Nuget package to use EntityFramework as O/RM in ASP.NET Boilerplate is
-				<a href="http://www.nuget.org/packages/Abp.EntityFramework" target="_blank">Abp.EntityFramework</a>. You should add it to your application. It's 
-better to implement EntityFramework in a seperated assembly (dll) in your application 
-and depend on that package from this assembly.</p>
-			<h3 id="DocDbContext">DbContext</h3>
-			<p>As you know, to work with EntityFramework, you should define a <strong>DbContext</strong> 
-class for your application. An example DbContext is shown below:</p>
-			<pre lang="cs">public class SimpleTaskSystemDbContext : <strong>AbpDbContext</strong>
+<h3>Introduction</h3>
+<p>
+<a href="https://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">
+Abp.EntityFrameworkCore</a> nuget package is used to integrate to Entity 
+Framework (EF) Core ORM framework. After installing this package, we should also add 
+a <a href="Module-System.html">DependsOn</a> attribute for <strong>
+AbpEntityFrameworkCoreModule</strong>.</p>
+	<h3>DbContext</h3>
+	<p>EF Core requires to define a class derived from DbContext. In ABP, we 
+	should derive from <strong>AbpDbContext</strong> as shown below:</p>
+	<pre lang="cs">public class MyDbContext : <strong>AbpDbContext</strong>
 {
-    public virtual IDbSet&lt;Person&gt; People { get; set; }
-    public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
+    public DbSet&lt;Product&gt; Products { get; set; }
 
-    public SimpleTaskSystemDbContext()
-        : base(&quot;<strong>MyConnectionStringName</strong>&quot;)
+    public MyDbContext(<strong>DbContextOptions&lt;MyDbContext&gt; options</strong>)
+        : base(options)
     {
-
-    }
-
-    protected override void OnModelCreating(DbModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity&lt;Person&gt;().ToTable(&quot;StsPeople&quot;);
-        modelBuilder.Entity&lt;Task&gt;().ToTable(&quot;StsTasks&quot;).HasOptional(t =&gt; t.AssignedPerson);
     }
 }</pre>
-			<p>It's a regular DbContext class except it's derived from <strong>AbpDbContext</strong> 
-instead of DbContext. There are many overloaded constructors of AbpDbContext. 
-You can use which you need.</p>
-			<p>EntityFramework can map classes to database tables in a 
-conventional way. You even don't need to make any configuration unless you make 
-some custom stuff. In this example, we mapped entities to different tables. As 
-default, Task entity maps to <strong>Tasks</strong> table. But we changed it to 
-be <strong>StsTasks</strong> table. Instead of configuring it with data 
-annotation attributes, I prefered to use fluent configuration. You can choice 
-the way you like.</p>
+	<p>Constructor should get a <strong>DbContextOptions&lt;T&gt;</strong> as shown 
+	above.</p>
+	<h3>Configuration</h3>
+	<p>There are a few ways of adding your DbContext to the application.</p>
+	<h4>In Startup Class</h4>
+	<p>For an ASP.NET Core project, you will have a <strong>Startup</strong> 
+	file and you can use <strong>AddDbContext</strong> extension method of EF 
+	Core as you always do:</p>
+	<pre lang="cs">public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+    ...
+    
+<strong>    services.AddDbContext&lt;MyDbContext&gt;(options =&gt;
+    {
+        options.UseSqlServer(Configuration.GetConnectionString(&quot;Default&quot;));
+    });</strong>
+
+    ...
+}</pre>
+	<p>This approach is standard, simple and enough for ABP. In this approach, 
+	connection string is static (because this code runs once in the 
+	application). If you have single database for a dbcontext, that's fine. But 
+	if you want to dynamically determine connection string, see the next 
+	section.</p>
+	<h4>In Module PreInitialize</h4>
+	<p>You can do it in PreInitialize of your module as shown below:</p>
+	<pre lang="cs">public class MyEfCoreAppModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+<strong>        Configuration.DefaultNameOrConnectionString = GetConnectionString(&quot;Default&quot;);
+
+        Configuration.Modules.AbpEfCore().AddDbContext&lt;MyDbContext&gt;(options =&gt;
+        {
+            options.DbContextOptions.UseSqlServer(options.ConnectionString);
+        });</strong>
+
+        ...
+    }
+}</pre>
+	<p>First, we are setting default connection string (we can get it from a 
+	configuration file for example). Then we are using <strong>AddDbContext</strong> 
+	method of ABP EF Core module. In this method, we can setup DbContext 
+	options.</p>
+	<p><strong>options.ConnectionString</strong> is the default connection 
+	string normally. But since ABP uses IConnectionStringResolver to determine 
+	it, this behaviour can be changed and connection string can be determined 
+	dynamically. Also, in AddDbContext method, you don't have to use <strong>
+	options.ConnectionString</strong> if you want.</p>
+	<p>The action passed to AddDbContext is called whenever a DbContext instance 
+	will be created.</p>
+	<p>Note that; there is also IServiceCollection.<strong>AddAbpDbContext</strong> 
+	extension method that can be used in Startup class. But even in that case, 
+	you should define DefaultNameOrConnectionString in your module class.</p>
 
 			<h3 id="DocRepositories">Repositories</h3>
 			<p>Repositories are used to abstract data access from higher layers. 
@@ -65,7 +91,7 @@ the way you like.</p>
 			more.&nbsp;</p>
 			<h4 id="DocImplRepositories">Default Repositories</h4>
 			<p>
-				<a href="http://www.nuget.org/packages/Abp.EntityFramework" target="_blank">Abp.EntityFramework</a> 
+				<a href="http://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">Abp.EntityFrameworkCore</a> 
 			implements default repositories for all entities defined in your 
 			DbContext. You don't have to create repository classes to use 
 predefined repository methods. Example:</p>
@@ -97,13 +123,13 @@ documentation</a> for all predefined methods.</p>
 			custom repository classes for your entities.</p>
 			<h5 id="DocAppBaseRepo">Application Specific Base Repository Class</h5>
 
-			<p>ASP.NET Boilerplate provides a base class <strong>EfRepositoryBase</strong> 
+			<p>ASP.NET Boilerplate provides a base class <strong>EfCoreRepositoryBase</strong> 
 to implement repositories easily. To implement <strong>IRepository</strong> interface, you can 
 just derive your repository from this class. But it's better to create your own 
 base class that extens EfRepositoryBase. Thus, you can add shared/common methods 
 to your repositories easily. An example base class all for repositories of a <em>SimpleTaskSystem</em> application:</p>
 			<pre lang="cs">//Base class for all repositories in my application
-public class SimpleTaskSystemRepositoryBase&lt;TEntity, TPrimaryKey&gt; : <strong>EfRepositoryBase&lt;SimpleTaskSystemDbContext, TEntity, TPrimaryKey&gt;</strong>
+public class SimpleTaskSystemRepositoryBase&lt;TEntity, TPrimaryKey&gt; : <strong>EfCoreRepositoryBase&lt;SimpleTaskSystemDbContext, TEntity, TPrimaryKey&gt;</strong>
     where TEntity : class, IEntity&lt;TPrimaryKey&gt;
 {
     public SimpleTaskSystemRepositoryBase(<strong>IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider</strong>)
@@ -125,7 +151,7 @@ public class SimpleTaskSystemRepositoryBase&lt;TEntity&gt; : <strong>SimpleTaskS
 
     //do not add any method here, add to the class above (because this class inherits it)
 }</pre>
-			<p>Notice that we're inheriting from EfRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
+			<p>Notice that we're inheriting from EfCoreRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
 This declares to ASP.NET Boilerplate to use SimpleTaskSystemDbContext in our 
 repositories.</p>
 			<h5>Custom Repository Example</h5>
@@ -188,10 +214,12 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 				<li>Define <strong>interfaces </strong>for your custom 
 				repositories in <strong>domain layer</strong> (.Core project in 
 				startup template), custom repository <strong>classes </strong>in
-				<strong>.EntityFramework</strong> project if you want to 
-				abstract EF from your domain/application.</li>
+				<strong>.EntityFrameworkCore</strong> project if you want to 
+				abstract EF Core from your domain/application.</li>
 			</ul>
-		</div>
-	</body>
+
+</div>
+
+</body>
 
 </html>
