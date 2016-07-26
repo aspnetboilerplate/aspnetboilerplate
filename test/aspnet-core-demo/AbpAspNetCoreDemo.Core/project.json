@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.10.1.2-*",
+  "version": "0.10.3.0-*",
 
   "dependencies": {
-    "Abp.AutoMapper": "0.10.1.2-*"
+    "Abp.AutoMapper": "0.10.3.0-*"
   },
 
   "tools": {

@@ -4,10 +4,10 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.EntityFrameworkCore": "0.10.1.2-*",
-    "Abp.TestBase": "0.10.1.2-*",
+    "Abp.EntityFrameworkCore": "0.10.3.0-*",
+    "Abp.TestBase": "0.10.3.0-*",
     "Abp.Tests": "1.0.0-*",
-    "Castle.Windsor.MsDependencyInjection": "1.0.0",
+    "Castle.Windsor.MsDependencyInjection": "1.1.0",
     "Microsoft.EntityFrameworkCore.InMemory": "1.0.0"
   },
 

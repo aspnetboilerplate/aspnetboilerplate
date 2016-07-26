@@ -2,10 +2,10 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Abp.AutoMapper": "0.10.1.2-*",
-    "Abp.EntityFramework": "0.10.1.2-*",
-    "Abp.TestBase": "0.10.1.2-*",
-    "Abp.EntityFramework.GraphDiff": "0.10.1.2-*"
+    "Abp.AutoMapper": "0.10.3.0-*",
+    "Abp.EntityFramework": "0.10.3.0-*",
+    "Abp.TestBase": "0.10.3.0-*",
+    "Abp.EntityFramework.GraphDiff": "0.10.3.0-*"
   },
 
   "frameworks": {
