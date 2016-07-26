@@ -276,9 +276,12 @@ namespace Abp.Domain.Uow
         }
 
         /// <summary>
-        /// Should be implemented by derived classes to start UOW.
+        /// Can be implemented by derived classes to start UOW.
         /// </summary>
-        protected abstract void BeginUow();
+        protected virtual void BeginUow()
+        {
+            
+        }
 
         /// <summary>
         /// Should be implemented by derived classes to complete UOW.
