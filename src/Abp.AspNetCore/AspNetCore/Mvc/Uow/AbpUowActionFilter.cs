@@ -34,8 +34,11 @@ namespace Abp.AspNetCore.Mvc.Uow
 
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
-                await next();
-                await uow.CompleteAsync();
+                var result = await next();
+                if (result.Exception == null || result.ExceptionHandled)
+                {
+                    await uow.CompleteAsync();
+                }
             }
         }
     }

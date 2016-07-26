@@ -1,10 +1,9 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Localization;
 using Abp.Timing;
-using Abp.Web.Mvc.Models;
+using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {
@@ -22,7 +21,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
 
             if (Request.IsAjaxRequest())
             {
-                return Json(new MvcAjaxResponse(), JsonRequestBehavior.AllowGet);
+                return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
             if (!string.IsNullOrWhiteSpace(returnUrl))

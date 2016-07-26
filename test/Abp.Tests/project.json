@@ -4,10 +4,10 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp": "0.10.1.2-*",
+    "Abp": "0.10.3.0-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "NSubstitute": "1.10.0",
-    "Shouldly": "2.8.0",
+    "Shouldly": "2.8.1",
     "xunit": "2.2.0-beta2-build3300",
     "xunit.extensibility.execution": "2.2.0-beta2-build3300",
     "xunit.runner.visualstudio": "2.2.0-beta2-build1149"

@@ -5,8 +5,12 @@ TODO:
 
 - [x] Repositories
 - [x] Unit of work
-- [ ] Transaction management (see https://docs.efproject.net/en/latest/saving/transactions.html#cross-context-transaction-relational-databases-only)
-- [ ] Log validation errors
-- [ ] Multiple connstring for same dbcontext
-- [ ] Data filters (waiting for https://github.com/aspnet/EntityFramework/issues/626 and https://github.com/jcachat/EntityFramework.DynamicFilters/issues/48)
-- [ ] DateTime Kind Normalization (while getting entities from database)
+- [x] Single DbContext Transaction management
+- [x] Multiple connstring for same dbcontext
+- [x] Multiple DbContext Transaction management
+
+NOT POSSIBLE TO IMPLEMENT:
+
+- Log validation errors - EF Core does not throw DbValidationException
+- Data filters (waiting for https://github.com/aspnet/EntityFramework/issues/626 and https://github.com/jcachat/EntityFramework.DynamicFilters/issues/48) - No interceptors to implement it
+- DateTime Kind Normalization (while getting entities from database) - No callback to implement it

@@ -5,6 +5,7 @@ using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
+using Abp.UI;
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
@@ -24,7 +25,16 @@ namespace AbpAspNetCoreDemo.Core.Application
 
         public int CreateProduct(ProductCreateInput input)
         {
-            return _productRepository.InsertAndGetId(ObjectMapper.Map<Product>(input));
+            input.Name = "";
+            var product = ObjectMapper.Map<Product>(input);
+            return _productRepository.InsertAndGetId(product);
+        }
+
+        public void CreateProductAndRollback(ProductCreateInput input)
+        {
+            _productRepository.Insert(ObjectMapper.Map<Product>(input));
+            CurrentUnitOfWork.SaveChanges();
+            throw new UserFriendlyException("This exception is thrown to rollback the transaction!");
         }
     }
 }

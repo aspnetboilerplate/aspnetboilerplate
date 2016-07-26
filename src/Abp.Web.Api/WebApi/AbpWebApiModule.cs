@@ -21,6 +21,7 @@ using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.Web.Api.Description;
 using Abp.WebApi.Auditing;
+using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers.Dynamic.Binders;
 using Abp.WebApi.ExceptionHandling;
 using Abp.WebApi.Uow;
@@ -85,10 +86,11 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiExceptionFilterAttribute>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuthorizeFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuditFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiValidationFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiUowFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiExceptionFilterAttribute>());
 
             httpConfiguration.MessageHandlers.Add(IocManager.Resolve<ResultWrapperHandler>());
         }

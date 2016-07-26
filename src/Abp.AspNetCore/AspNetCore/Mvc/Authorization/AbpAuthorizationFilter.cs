@@ -6,7 +6,6 @@ using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Web.Models;
-using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -50,7 +49,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
-                    context.Result = new ObjectResult(new MvcAjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
+                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
                     {
                         StatusCode = context.HttpContext.User.Identity.IsAuthenticated
                             ? (int) System.Net.HttpStatusCode.Forbidden
@@ -68,7 +67,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
-                    context.Result = new ObjectResult(new MvcAjaxResponse(_errorInfoBuilder.BuildForException(ex)))
+                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex)))
                     {
                         StatusCode = (int) System.Net.HttpStatusCode.InternalServerError
                     };

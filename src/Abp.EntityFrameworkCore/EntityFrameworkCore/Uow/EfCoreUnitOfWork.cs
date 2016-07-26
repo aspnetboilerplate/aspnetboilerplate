@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.MultiTenancy;
+using Abp.Transactions.Extensions;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
@@ -18,7 +22,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected IIocResolver IocResolver { get; private set; }
 
-        //protected TransactionScope CurrentTransaction;
+        protected IDbContextTransaction SharedTransaction;
 
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
@@ -41,31 +45,12 @@ namespace Abp.EntityFrameworkCore.Uow
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
-        protected override void BeginUow()
-        {
-            //if (Options.IsTransactional == true)
-            //{
-            //    var transactionOptions = new TransactionOptions
-            //    {
-            //        IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
-            //    };
-
-            //    if (Options.Timeout.HasValue)
-            //    {
-            //        transactionOptions.Timeout = Options.Timeout.Value;
-            //    }
-
-            //    CurrentTransaction = new TransactionScope(
-            //        Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
-            //        transactionOptions,
-            //        Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
-            //        );
-            //}
-        }
-
         public override void SaveChanges()
         {
-            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
+            foreach (var dbContext in ActiveDbContexts.Values)
+            {
+                SaveChangesInDbContext(dbContext);
+            }
         }
 
         public override async Task SaveChangesAsync()
@@ -79,23 +64,36 @@ namespace Abp.EntityFrameworkCore.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Complete();
-            //}
+            CommitTransaction();
+            DisposeUow(); //TODO: Is that needed?
+        }
 
-            DisposeUow();
+        private void CommitTransaction()
+        {
+            if (Options.IsTransactional != true)
+            {
+                return;
+            }
+
+            SharedTransaction?.Commit();
+
+            foreach (var dbContext in ActiveDbContexts.Values)
+            {
+                if (dbContext.HasRelationalTransactionManager())
+                {
+                    //Relational databases use the SharedTransaction
+                    continue;
+                }
+
+                dbContext.Database.CommitTransaction();
+            }
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Complete();
-            //}
-
-            DisposeUow();
+            CommitTransaction();
+            DisposeUow(); //TODO: Is that needed?
         }
 
         protected override void ApplyDisableFilter(string filterName)
@@ -178,22 +176,48 @@ namespace Abp.EntityFrameworkCore.Uow
                 //    }
                 //}
 
+                if (Options.IsTransactional == true)
+                {
+                    BeginTransaction(dbContext);
+                }
+
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
             return (TDbContext)dbContext;
         }
 
+        private void BeginTransaction(DbContext dbContext)
+        {
+            if (dbContext.HasRelationalTransactionManager())
+            {
+                if (SharedTransaction == null)
+                {
+                    SharedTransaction = dbContext.Database.BeginTransaction(
+                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
+                    );
+                }
+                else
+                {
+                    dbContext.Database.UseTransaction(SharedTransaction.GetDbTransaction());
+                }
+            }
+            else
+            {
+                dbContext.Database.BeginTransaction();
+            }
+        }
+
         protected override void DisposeUow()
         {
+            if (SharedTransaction != null)
+            {
+                SharedTransaction.Dispose();
+                SharedTransaction = null;
+            }
+
             ActiveDbContexts.Values.ForEach(Release);
             ActiveDbContexts.Clear();
-
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Dispose();
-            //    CurrentTransaction = null;
-            //}
         }
 
         protected virtual void SaveChangesInDbContext(DbContext dbContext)

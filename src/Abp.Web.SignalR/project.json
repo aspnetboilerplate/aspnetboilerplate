@@ -1,9 +1,9 @@
-﻿{
-  "version": "0.10.1.2-*",
+{
+  "version": "0.10.3.0-*",
 
   "dependencies": {
-    "Abp": "0.10.1.2-*",
-    "Microsoft.AspNet.SignalR.Core": "2.2.0"
+    "Abp": "0.10.3.0-*",
+    "Microsoft.AspNet.SignalR.Core": "2.2.1"
   },
 
   "frameworks": {

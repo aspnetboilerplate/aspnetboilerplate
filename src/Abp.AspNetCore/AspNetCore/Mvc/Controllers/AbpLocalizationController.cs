@@ -2,7 +2,7 @@
 using Abp.Auditing;
 using Abp.Localization;
 using Abp.Timing;
-using Abp.Web.Mvc.Models;
+using Abp.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +29,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                return Json(new MvcAjaxResponse());
+                return Json(new AjaxResponse());
             }
 
             if (!string.IsNullOrWhiteSpace(returnUrl))

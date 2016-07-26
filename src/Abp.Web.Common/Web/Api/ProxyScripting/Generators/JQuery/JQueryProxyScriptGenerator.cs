@@ -86,6 +86,12 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             script.AppendLine("        url: abp.appPath + '" + ProxyScriptingHelper.GenerateUrlWithParameters(action) + "',");
             script.Append("        type: '" + httpMethod + "'");
 
+            if (action.ReturnValue.Type == typeof(void))
+            {
+                script.AppendLine(",");
+                script.Append("        dataType: null");
+            }
+
             var headers = ProxyScriptingHelper.GenerateHeaders(action, 8);
             if (headers != null)
             {

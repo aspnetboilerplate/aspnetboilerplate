@@ -14,14 +14,17 @@ namespace Abp.Web.Api.Modeling
 
         public IList<ParameterApiDescriptionModel> Parameters { get; }
 
+        public ReturnValueApiDescriptionModel ReturnValue { get; }
+
         private ActionApiDescriptionModel()
         {
 
         }
 
-        public ActionApiDescriptionModel(string name, string url, string httpMethod = null)
+        public ActionApiDescriptionModel(string name, ReturnValueApiDescriptionModel returnValue, string url, string httpMethod = null)
         {
             Name = name;
+            ReturnValue = returnValue;
             Url = url;
             HttpMethod = httpMethod;
 

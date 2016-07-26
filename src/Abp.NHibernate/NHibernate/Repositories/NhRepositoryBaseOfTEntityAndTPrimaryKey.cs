@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using NHibernate;
 using NHibernate.Linq;
+using NHibernate.Util;
 
 namespace Abp.NHibernate.Repositories
 {
@@ -34,6 +38,24 @@ namespace Abp.NHibernate.Repositories
         public override IQueryable<TEntity> GetAll()
         {
             return Session.Query<TEntity>();
+        }
+
+        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return GetAll();
+            }
+
+            var query = GetAll();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                //TODO: Test if NHibernate supports multiple fetch.
+                query = query.Fetch(propertySelector);
+            }
+
+            return query;
         }
 
         public override TEntity FirstOrDefault(TPrimaryKey id)

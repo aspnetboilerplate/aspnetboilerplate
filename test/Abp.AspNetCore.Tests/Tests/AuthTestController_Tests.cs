@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
-using Abp.Web.Mvc.Models;
+using Abp.Web.Models;
 using Shouldly;
 using Xunit;
 
@@ -58,7 +58,7 @@ namespace Abp.AspNetCore.Tests
             });
 
             //Act
-            var response = await GetResponseAsObjectAsync<MvcAjaxResponse>(
+            var response = await GetResponseAsObjectAsync<AjaxResponse>(
                     GetUrl<AuthTestController>(
                         nameof(AuthTestController.AbpMvcAuthorizedActionReturnsObject)
                     ),
