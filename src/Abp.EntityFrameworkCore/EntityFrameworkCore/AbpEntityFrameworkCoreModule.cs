@@ -2,6 +2,7 @@
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.EntityFramework;
+using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;
@@ -25,6 +26,11 @@ namespace Abp.EntityFrameworkCore
         {
             _typeFinder = typeFinder;
             Logger = NullLogger.Instance;
+        }
+
+        public override void PreInitialize()
+        {
+            IocManager.Register<IAbpEfCoreConfiguration, AbpEfCoreConfiguration>();
         }
 
         public override void Initialize()

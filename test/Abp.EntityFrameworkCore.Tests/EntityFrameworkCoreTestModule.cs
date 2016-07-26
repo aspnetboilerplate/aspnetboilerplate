@@ -27,12 +27,10 @@ namespace Abp.EntityFrameworkCore.Tests
             builder.UseInMemoryDatabase()
                 .UseInternalServiceProvider(serviceProvider);
 
-            var options = builder.Options;
-
             IocManager.IocContainer.Register(
                 Component
                     .For<DbContextOptions<BloggingDbContext>>()
-                    .Instance(options)
+                    .Instance(builder.Options)
                     .LifestyleSingleton()
             );
         }

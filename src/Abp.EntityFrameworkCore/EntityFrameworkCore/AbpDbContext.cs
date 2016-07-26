@@ -22,7 +22,8 @@ namespace Abp.EntityFrameworkCore
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext, ITransientDependency, IShouldInitialize
+    public abstract class AbpDbContext : DbContext, ITransientDependency
+        //, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.
@@ -102,12 +103,12 @@ namespace Abp.EntityFrameworkCore
             GuidGenerator = SequentialGuidGenerator.Instance;
         }
 
-        public virtual void Initialize()
-        {
+        //public virtual void Initialize()
+        //{
         //    Database.Initialize(false);
         //    this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
         //    this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
-        }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,30 +120,14 @@ namespace Abp.EntityFrameworkCore
 
         public override int SaveChanges()
         {
-            try
-            {
-                ApplyAbpConcepts();
-                return base.SaveChanges();
-            }
-            catch //(DbEntityValidationException ex)
-            {
-                //LogDbEntityValidationException(ex);
-                throw;
-            }
+            ApplyAbpConcepts();
+            return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                ApplyAbpConcepts();
-                return await base.SaveChangesAsync(cancellationToken);
-            }
-            catch //(DbEntityValidationException ex)
-            {
-                //LogDbEntityValidationException(ex);
-                throw;
-            }
+            ApplyAbpConcepts();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected virtual void ApplyAbpConcepts()

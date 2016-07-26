@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc;
+using Abp.EntityFrameworkCore;
 using AbpAspNetCoreDemo.Db;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -32,10 +30,8 @@ namespace AbpAspNetCoreDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(
-               options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
-           );
-
+            services.AddSingleton(Configuration);
+            
             //Add framework services.
             services.AddMvc(options =>
             {
