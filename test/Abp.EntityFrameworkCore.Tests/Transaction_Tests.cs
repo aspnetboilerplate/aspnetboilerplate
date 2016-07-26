@@ -5,10 +5,10 @@ using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using Xunit;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
+    //WE CAN NOT TEST TRANSACTIONS SINCE INMEMORY DB DOES NOT SUPPORT IT! TODO: Use SQLite
     public class Transaction_Tests : EntityFrameworkCoreModuleTestBase
     {
         private readonly IUnitOfWorkManager _uowManager;
@@ -20,7 +20,7 @@ namespace Abp.EntityFrameworkCore.Tests
             _blogRepository = Resolve<IRepository<Blog>>();
         }
 
-        [Fact]
+        //[Fact] 
         public async Task Should_Rollback_Transaction_On_Failure()
         {
             const string exceptionMessage = "This is a test exception!";
