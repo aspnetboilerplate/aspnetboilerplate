@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -6,6 +7,7 @@ using Abp.EntityFramework;
 using Abp.MultiTenancy;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
@@ -18,7 +20,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected IIocResolver IocResolver { get; private set; }
 
-        //protected TransactionScope CurrentTransaction;
+        protected IDbContextTransaction CurrentTransaction;
 
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
@@ -79,23 +81,15 @@ namespace Abp.EntityFrameworkCore.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Complete();
-            //}
-
-            DisposeUow();
+            CurrentTransaction?.Commit();
+            DisposeUow(); //TODO: Is that needed?
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Complete();
-            //}
-
-            DisposeUow();
+            CurrentTransaction?.Commit();
+            DisposeUow(); //TODO: Is that needed?
         }
 
         protected override void ApplyDisableFilter(string filterName)
@@ -178,6 +172,11 @@ namespace Abp.EntityFrameworkCore.Uow
                 //    }
                 //}
 
+                if (Options.IsTransactional == true)
+                {
+                    CurrentTransaction = dbContext.Database.BeginTransaction();
+                }
+
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
@@ -186,14 +185,14 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected override void DisposeUow()
         {
+            if (CurrentTransaction != null)
+            {
+                CurrentTransaction.Dispose();
+                CurrentTransaction = null;
+            }
+
             ActiveDbContexts.Values.ForEach(Release);
             ActiveDbContexts.Clear();
-
-            //if (CurrentTransaction != null)
-            //{
-            //    CurrentTransaction.Dispose();
-            //    CurrentTransaction = null;
-            //}
         }
 
         protected virtual void SaveChangesInDbContext(DbContext dbContext)

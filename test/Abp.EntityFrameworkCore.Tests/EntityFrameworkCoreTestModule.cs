@@ -13,6 +13,8 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         public override void PreInitialize()
         {
+            Configuration.UnitOfWork.IsTransactional = false; //EF Core InMemory DB does not support transactions
+
             var services = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase();
 
@@ -28,7 +30,10 @@ namespace Abp.EntityFrameworkCore.Tests
             var options = builder.Options;
 
             IocManager.IocContainer.Register(
-                Component.For<DbContextOptions<BloggingDbContext>>().Instance(options).LifestyleSingleton()
+                Component
+                    .For<DbContextOptions<BloggingDbContext>>()
+                    .Instance(options)
+                    .LifestyleSingleton()
             );
         }
 

@@ -63,7 +63,11 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
                 try
                 {
-                    await next();
+                    var result = await next();
+                    if (result.Exception != null && !result.ExceptionHandled)
+                    {
+                        auditInfo.Exception = result.Exception;
+                    }
                 }
                 catch (Exception ex)
                 {

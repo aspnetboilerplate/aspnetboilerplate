@@ -9,6 +9,8 @@ namespace Abp.AspNetCore.Mvc.Validation
     public class MvcActionInvocationValidator : MethodInvocationValidator
     {
         protected ActionExecutingContext ActionContext { get; private set; }
+
+        private bool _isValidatedBefore;
         
         public void Initialize(ActionExecutingContext actionContext)
         {
@@ -22,7 +24,7 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         protected override void SetDataAnnotationAttributeErrors(object validatingObject)
         {
-            if (ActionContext.ModelState.IsValid)
+            if (_isValidatedBefore || ActionContext.ModelState.IsValid)
             {
                 return;
             }
@@ -34,6 +36,8 @@ namespace Abp.AspNetCore.Mvc.Validation
                     ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
                 }
             }
+
+            _isValidatedBefore = true;
         }
 
         protected virtual object[] GetParameterValues(ActionExecutingContext actionContext)

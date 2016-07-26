@@ -10,7 +10,9 @@ namespace Abp.Web.Mvc.Validation
     public class MvcActionInvocationValidator : MethodInvocationValidator
     {
         protected ActionExecutingContext ActionContext { get; private set; }
-        
+
+        private bool _isValidatedBefore;
+
         public void Initialize(ActionExecutingContext actionContext, MethodInfo methodInfo)
         {
             base.Initialize(
@@ -23,6 +25,13 @@ namespace Abp.Web.Mvc.Validation
 
         protected override void SetDataAnnotationAttributeErrors(object validatingObject)
         {
+            if (_isValidatedBefore)
+            {
+                return;
+            }
+
+            _isValidatedBefore = true;
+
             var modelState = ActionContext.Controller.As<Controller>().ModelState;
             if (modelState.IsValid)
             {
