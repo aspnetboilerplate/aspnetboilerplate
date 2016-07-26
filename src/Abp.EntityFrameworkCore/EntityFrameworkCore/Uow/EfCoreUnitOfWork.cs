@@ -174,7 +174,10 @@ namespace Abp.EntityFrameworkCore.Uow
 
                 if (Options.IsTransactional == true)
                 {
-                    CurrentTransaction = dbContext.Database.BeginTransaction();
+                    if (CurrentTransaction == null)
+                    {
+                        CurrentTransaction = dbContext.Database.BeginTransaction();
+                    }
                 }
 
                 ActiveDbContexts[dbContextKey] = dbContext;
