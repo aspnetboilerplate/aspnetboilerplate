@@ -14,12 +14,15 @@ namespace Abp.WebApi.Configuration
 
         public HttpConfiguration HttpConfiguration { get; set; }
 
+        public bool IsValidationEnabledForControllers { get; set; }
+
         public AbpWebApiConfiguration()
         {
             HttpConfiguration = GlobalConfiguration.Configuration;
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             DefaultWrapResultAttribute = new WrapResultAttribute(false);
             DefaultDynamicApiWrapResultAttribute = new WrapResultAttribute();
+            IsValidationEnabledForControllers = true;
         }
     }
 }

@@ -10,6 +10,11 @@ namespace Abp.AspNetCore.Configuration
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool IsValidationEnabledForControllers { get; set; }
+
         void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true);
     }
 }

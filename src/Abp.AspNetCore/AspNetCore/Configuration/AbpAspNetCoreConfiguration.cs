@@ -11,6 +11,8 @@ namespace Abp.AspNetCore.Configuration
 
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
+        public bool IsValidationEnabledForControllers { get; set; }
+
         public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
 
         public AbpAspNetCoreConfiguration()
@@ -18,6 +20,7 @@ namespace Abp.AspNetCore.Configuration
             DefaultWrapResultAttribute = new WrapResultAttribute();
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ServiceControllerSettings = new List<AbpServiceControllerSetting>();
+            IsValidationEnabledForControllers = true;
         }
 
         public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)

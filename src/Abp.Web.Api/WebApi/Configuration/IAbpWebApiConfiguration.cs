@@ -19,5 +19,10 @@ namespace Abp.WebApi.Configuration
         /// Gets/sets <see cref="HttpConfiguration"/>.
         /// </summary>
         HttpConfiguration HttpConfiguration { get; set; }
+
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool IsValidationEnabledForControllers { get; set; }
     }
 }
