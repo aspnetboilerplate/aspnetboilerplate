@@ -7,7 +7,7 @@ namespace Abp.Configuration
 {
     /// <summary>
     /// A setting group is used to group some settings togehter.
-    /// A group can be child of another group and can has child groups.
+    /// A group can be child of another group and can have child groups.
     /// </summary>
     public class SettingDefinitionGroup
     {
