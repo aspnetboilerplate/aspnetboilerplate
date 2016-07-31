@@ -77,7 +77,7 @@ EntityDeletedEventData&lt;TEntity&gt;</strong>. Also, there are <strong>
 EntityChangingEventData&lt;TEntity&gt;</strong> and <strong>
 EntityChangedEventData&lt;TEntity&gt;</strong>. A change can be insert, update 
 or delete.</p>
-			<p>'ing' events (ex: EntityUpdating) are triggered befor saving changes. So, 
+			<p>'ing' events (ex: EntityUpdating) are triggered before saving changes. So, 
 	you can rollback the <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
 	to prevent the operation by throwing exceptions in these events. 'ed' events 
 	(ex: EntityUpdated) are triggered after saving changes and no chance to 
