@@ -33,7 +33,6 @@ AbpEntityFrameworkCoreModule</strong>.</p>
 	<p>Constructor should get a <strong>DbContextOptions&lt;T&gt;</strong> as shown 
 	above.</p>
 	<h3>Configuration</h3>
-	<p>There are a few ways of adding your DbContext to the application.</p>
 	<h4>In Startup Class</h4>
 	<p>For an ASP.NET Core project, you will have a <strong>Startup</strong> 
 	file and you can use <strong>AddDbContext</strong> extension method of EF 
@@ -50,40 +49,40 @@ AbpEntityFrameworkCoreModule</strong>.</p>
     ...
 }</pre>
 	<p>This approach is standard, simple and enough for ABP. In this approach, 
-	connection string is static (because this code runs once in the 
-	application). If you have single database for a dbcontext, that's fine. But 
-	if you want to dynamically determine connection string, see the next 
-	section.</p>
+	connection string is static (because we are always using the "Default" 
+	connection string). If you have single database for a dbcontext, that's fine. But 
+	if you want to dynamically determine connection string and better integrate 
+	to ABP's connection string system, use <strong>AddAbpDbContext</strong> method:</p>
+	<pre lang="cs">services.<strong>AddAbpDbContext</strong>&lt;MyDbContext&gt;(options =&gt;
+{
+    options.DbContextOptions.UseSqlServer(options.ConnectionString);
+});</pre>
+	<p>We used given connection string and used Sql Server as database provider. <strong>options.ConnectionString</strong> 
+	is the <strong>default connection string</strong> (see next section) 
+	normally. But since ABP uses IConnectionStringResolver to determine it. So, 
+	this behaviour can be changed and connection string can be determined 
+	dynamically. The action passed to AddDbContext is called whenever a DbContext instance 
+	will be created. So, you also have a chance to return different connection 
+	string conditionally.</p>
+	<p>So, where to set default connection string?</p>
 	<h4>In Module PreInitialize</h4>
 	<p>You can do it in PreInitialize of your module as shown below:</p>
 	<pre lang="cs">public class MyEfCoreAppModule : AbpModule
 {
     public override void PreInitialize()
     {
-<strong>        Configuration.DefaultNameOrConnectionString = GetConnectionString(&quot;Default&quot;);
-
-        Configuration.Modules.AbpEfCore().AddDbContext&lt;MyDbContext&gt;(options =&gt;
-        {
-            options.DbContextOptions.UseSqlServer(options.ConnectionString);
-        });</strong>
-
+<strong>        Configuration.DefaultNameOrConnectionString = GetConnectionString(&quot;Default&quot;);</strong>
         ...
     }
 }</pre>
-	<p>First, we are setting default connection string (we can get it from a 
-	configuration file for example). Then we are using <strong>AddDbContext</strong> 
-	method of ABP EF Core module. In this method, we can setup DbContext 
-	options.</p>
-	<p><strong>options.ConnectionString</strong> is the default connection 
-	string normally. But since ABP uses IConnectionStringResolver to determine 
-	it, this behaviour can be changed and connection string can be determined 
-	dynamically. Also, in AddDbContext method, you don't have to use <strong>
-	options.ConnectionString</strong> if you want.</p>
-	<p>The action passed to AddDbContext is called whenever a DbContext instance 
-	will be created.</p>
-	<p>Note that; there is also IServiceCollection.<strong>AddAbpDbContext</strong> 
-	extension method that can be used in Startup class. But even in that case, 
-	you should define DefaultNameOrConnectionString in your module class.</p>
+	<p>For non web projects, we will not have a Startup class. In that case, we 
+	can use
+<strong>        Configuration.Modules.AbpEfCore().AddDbContext</strong> method 
+	here to configure DbContext, as shown below:</p>
+	<pre lang="cs">Configuration.Modules.AbpEfCore().AddDbContext&lt;MyDbContext&gt;(options =&gt;
+{
+    options.DbContextOptions.UseSqlServer(options.ConnectionString);
+});</pre>
 
 			<h3 id="DocRepositories">Repositories</h3>
 			<p>Repositories are used to abstract data access from higher layers. 
