@@ -22,7 +22,7 @@ namespace Abp.Web.Mvc.Authorization
             _errorInfoBuilder = errorInfoBuilder;
         }
 
-        public void OnAuthorization(AuthorizationContext filterContext)
+        public virtual void OnAuthorization(AuthorizationContext filterContext)
         {
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
@@ -41,7 +41,7 @@ namespace Abp.Web.Mvc.Authorization
             }
         }
 
-        private void HandleUnauthorizedRequest(
+        protected virtual void HandleUnauthorizedRequest(
             AuthorizationContext filterContext, 
             MethodInfo methodInfo, 
             AbpAuthorizationException ex)
