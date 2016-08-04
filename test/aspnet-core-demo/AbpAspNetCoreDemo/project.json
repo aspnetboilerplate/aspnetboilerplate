@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "Abp.AspNetCore": "0.10.3.0-*",
-    "Abp.EntityFrameworkCore": "0.10.3.0-*",
-    "AbpAspNetCoreDemo.Core": "0.10.3.0-*",
+    "Abp.AspNetCore": "0.10.3.1-*",
+    "Abp.EntityFrameworkCore": "0.10.3.1-*",
+    "AbpAspNetCoreDemo.Core": "0.10.3.1-*",
     "BundlerMinifier.Core": "2.1.258",
     "Castle.Windsor-log4net": "3.3.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
