@@ -55,7 +55,15 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private void ConfigureRemoteService(ControllerModel controller)
         {
-            var configuration = GetControllerSettingOrNull(controller.ControllerType);
+            var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
+
+            if (configuration != null)
+            {
+                if (!controller.RouteValues.ContainsKey("area"))
+                {
+                    controller.RouteValues["area"] = configuration.ModuleName;
+                }
+            }
 
             ConfigureApiExplorer(controller);
             ConfigureSelector(controller, configuration);
