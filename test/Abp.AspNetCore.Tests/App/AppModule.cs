@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore.TestBase;
+using Abp.Configuration.Startup;
 using Abp.Modules;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mocks;
+using Abp.Auditing;
 
 namespace Abp.AspNetCore.App
 {
@@ -10,6 +13,10 @@ namespace Abp.AspNetCore.App
     {
         public override void PreInitialize()
         {
+            Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+
+            Configuration.ReplaceService<IAuditingStore, MockAuditingStore>();
+
             Configuration
                 .Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
