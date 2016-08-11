@@ -28,12 +28,12 @@ namespace Abp.Authorization
 
         private static bool ShouldIntercept(Type type)
         {
-            if (SelfOrMethodsDefinesAttrbiute<AbpAuthorizeAttribute>(type))
+            if (SelfOrMethodsDefinesAttribute<AbpAuthorizeAttribute>(type))
             {
                 return true;
             }
 
-            if (SelfOrMethodsDefinesAttrbiute<RequiresFeatureAttribute>(type))
+            if (SelfOrMethodsDefinesAttribute<RequiresFeatureAttribute>(type))
             {
                 return true;
             }
@@ -41,7 +41,7 @@ namespace Abp.Authorization
             return false;
         }
 
-        private static bool SelfOrMethodsDefinesAttrbiute<TAttr>(Type type)
+        private static bool SelfOrMethodsDefinesAttribute<TAttr>(Type type)
         {
             if (type.IsDefined(typeof(TAttr), true))
             {
