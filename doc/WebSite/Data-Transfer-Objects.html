@@ -53,15 +53,15 @@ serialized in somewhere. For example, in an MVC method that returns JSON, your
 object can be serialized to JSON and sent to the client. Returning an Entity to 
 the presentation layer can be problematic in that case. How?</p>
 			<p>In a real application, your entities will have references to each other. User 
-entity can has a reference to it's Role. So, if you want to serialize User, it's 
+entity can have a reference to its Roles. So, if you want to serialize User, its 
 Roles are also serialized. And even Role class may have a List&lt;Permission&gt; and 
-Permission class can has a reference to a PermissionGroup class and so on... Can 
+Permission class can have a reference to a PermissionGroup class and so on... Can 
 you think that all of these objects are serialized? You can easily serialize 
 your whole database accidently. Also, if your objects has circcular references, 
 			it can not be serialized.</p>
 			<p>What's the solution? Marking properties as 
 NonSerialized? No, you can not know when it should be serialized and when it 
-shouldn't be. It may needed in one application service method, may not needed in 
+shouldn't be. It may be needed in one application service method, may not be needed in 
 other. So, returning a safely serializable, specially designed DTOs are a good 
 choice in this situation.</p>
 			<p>Almost all O/RM frameworks support lazy-loading. It's a feature to load 
@@ -249,7 +249,7 @@ result set.</p>
 by adding <strong>SkipCount</strong>. So, we can implement this interface in
 SearchPeopleInput for paging:</p>
 
-			<pre lang="cs">public class SearchPeopleInput : IInputDto, IPagedResultRequest
+			<pre lang="cs">public class SearchPeopleInput : IPagedResultRequest
 {
     [StringLength(40, MinimumLength = 1)]
     public string SearchedName { get; set; }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Web.Api.ProxyScripting.Generators;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Abp.AspNetCore.Mvc.Conventions
@@ -40,23 +41,40 @@ namespace Abp.AspNetCore.Mvc.Conventions
                 if (typeof(IApplicationService).IsAssignableFrom(type))
                 {
                     controller.ControllerName = controller.ControllerName.RemovePostFix("AppService", "ApplicationService", "Service");
-                    ConfigureRemoteService(controller);
+
+                    var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
+                    ConfigureArea(controller, configuration);
+                    ConfigureRemoteService(controller, configuration);
                 }
                 else
                 {
                     var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
                     if (remoteServiceAtt != null && remoteServiceAtt.IsEnabledFor(type))
                     {
-                        ConfigureRemoteService(controller);
+                        var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
+                        ConfigureRemoteService(controller, configuration);
                     }
                 }
             }
         }
 
-        private void ConfigureRemoteService(ControllerModel controller)
+        private void ConfigureArea(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
         {
-            var configuration = GetControllerSettingOrNull(controller.ControllerType);
+            if (configuration == null)
+            {
+                return;
+            }
 
+            if (controller.RouteValues.ContainsKey("area"))
+            {
+                return;
+            }
+
+            controller.RouteValues["area"] = configuration.ModuleName;
+        }
+
+        private void ConfigureRemoteService(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
+        {
             ConfigureApiExplorer(controller);
             ConfigureSelector(controller, configuration);
             ConfigureParameters(controller);
@@ -138,7 +156,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureSelector(ControllerModel controller, AbpServiceControllerSetting configuration)
+        private void ConfigureSelector(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
         {
             RemoveEmptySelectors(controller.Selectors);
 
@@ -155,7 +173,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, AbpServiceControllerSetting configuration)
+        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpServiceControllerSetting configuration)
         {
             RemoveEmptySelectors(action.Selectors);
 
@@ -169,7 +187,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, AbpServiceControllerSetting configuration)
+        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpServiceControllerSetting configuration)
         {
             var abpServiceSelectorModel = new SelectorModel
             {

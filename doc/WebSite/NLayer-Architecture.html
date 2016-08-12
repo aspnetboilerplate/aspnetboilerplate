@@ -149,7 +149,7 @@ differences based on implementation.</p>
 			</p>
 			<p>A layer can be implemented as one or more assemblies. It may be good to create more than one assembly for third-party dependencies (like 
 			EntityFramework here) for larger projects. Also, there may be 
-			bounded contexes where every context has it's own layers.</p>
+			bounded contextes where every context has it's own layers.</p>
 
 			<h4 id="DocDomainLayer">Domain (Core) Layer</h4>
 			<p>Domain Layer is where all business rules should be implemented.</p>
@@ -192,7 +192,7 @@ library. We have also <a href="Abp-Session.html">session</a> here to obtain
 
 			<h4 id="DocInfraLayer">Infrastructure Layer</h4>
 			<p>While Domain Layer defines interfaces for <a href="/Pages/Documents/Repositories">repositories</a>,
-			<a href="Unit-Of-Work.html">unit of work</a> and other services, Infrastructure Layer implements those interface. 
+			<a href="Unit-Of-Work.html">unit of work</a> and other services, Infrastructure Layer implements those interfaces. 
 			It implements repositories using ORM tools like
 				<a href="/Pages/Documents/NHibernate-Integration" target="_blank">NHibernate</a> or
 				<a href="/Pages/Documents/EntityFramework-Integration" target="_blank">EntityFramework</a>.

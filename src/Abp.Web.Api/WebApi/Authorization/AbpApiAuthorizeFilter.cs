@@ -23,7 +23,7 @@ namespace Abp.WebApi.Authorization
             _authorizationHelper = authorizationHelper;
         }
 
-        public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
+        public virtual async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
             HttpActionContext actionContext,
             CancellationToken cancellationToken,
             Func<Task<HttpResponseMessage>> continuation)
@@ -51,7 +51,7 @@ namespace Abp.WebApi.Authorization
             }
         }
 
-        private static HttpResponseMessage CreateUnAuthorizedResponse(HttpActionContext actionContext)
+        protected virtual HttpResponseMessage CreateUnAuthorizedResponse(HttpActionContext actionContext)
         {
             var response = new HttpResponseMessage(
                 actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false

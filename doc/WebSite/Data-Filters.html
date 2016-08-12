@@ -84,7 +84,7 @@ extends ISoftDelete) then deletion time and deleter user id are also
 automatically set by ASP.NET Boilerplate.</p>
 
 			<h4 id="DocMustHaveTenant">IMustHaveTenant</h4>
-			<p>If you are building multi-tenant applications and store all tenant datas in 
+			<p>If you are building multi-tenant applications and store all tenant data in 
 single database, you definitely do not want a tenant accidently see other's 
 data. You can implement <strong>IMustHaveTenant</strong> in that case. Example:</p>
 			<pre lang="cs">public class Product : Entity, <strong>IMustHaveTenant</strong>
@@ -104,7 +104,7 @@ and automatically filter query for the current tenant.</p>
 				<h4>When Enabled?</h4>
 				<p>IMustHaveTenant is enabled by default.</p>
 				<p>If current user is not logged in to the system or current user is a <strong>host</strong> user (Host user is an upper level user that can 
-	manage tenants and tenant datas), ASP.NET Boilerplate automatically <strong>
+	manage tenants and tenant data), ASP.NET Boilerplate automatically <strong>
 	disables</strong> IMustHaveTenant filter. Thus, all data of all tenant's can be 
 	retrieved to the application. Notice that this is not about security, you should 
 	always <a href="/Pages/Documents/Authorization">authorize</a> sensitive data.</p>

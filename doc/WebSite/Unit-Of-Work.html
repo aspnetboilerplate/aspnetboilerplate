@@ -67,7 +67,7 @@ and incrementing total people count using statistics repository. Both of
 repositories <strong>shares </strong>same connection and transaction in this 
 example since application service method is unit of work by default. ASP.NET Boilerplate opens a 
 database connection and starts a transaction when entering CreatePerson method 
-and commint the transaction at end of the method if no exception is thrown, 
+and commit the transaction at end of the method if no exception is thrown, 
 rolls back if any exception occurs. In that way, all database operations in 
 CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).&nbsp;</p>
 			<h4 id="DocUow">Controlling Unit Of Work</h4>
