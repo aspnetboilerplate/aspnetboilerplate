@@ -40,7 +40,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
                 if (typeof(IApplicationService).IsAssignableFrom(type))
                 {
-                    controller.ControllerName = controller.ControllerName.RemovePostFix("AppService", "ApplicationService", "Service");
+                    controller.ControllerName = controller.ControllerName.RemovePostFix(ApplicationService.CommonPostfixes);
 
                     var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
                     ConfigureArea(controller, configuration);
