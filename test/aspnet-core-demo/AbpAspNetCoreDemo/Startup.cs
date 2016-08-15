@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.AspNetCore;
-using Abp.AspNetCore.Mvc;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,10 +29,7 @@ namespace AbpAspNetCoreDemo
             services.AddSingleton(Configuration);
             
             //Add framework services.
-            services.AddMvc(options =>
-            {
-                options.AddAbp(services); //Add ABP infrastructure to MVC
-            });
+            services.AddMvc();
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
