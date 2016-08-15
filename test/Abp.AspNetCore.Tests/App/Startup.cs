@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.AspNetCore.Mvc;
 using Abp.AspNetCore.TestBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,10 +11,7 @@ namespace Abp.AspNetCore.App
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.AddAbp(services); //Add ABP infrastructure to MVC
-            }).AddControllersAsServices();
+            services.AddMvc();
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<AppModule>(options =>
