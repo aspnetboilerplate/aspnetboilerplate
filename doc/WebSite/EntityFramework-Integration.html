@@ -177,6 +177,11 @@ then implemented it.<strong> GetAll()</strong> returns <strong>IQueryable&lt;Tas
 Tasks.</p>
 			<p>You can also use <strong>Context </strong>object in repository methods to 
 reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
+			<p><strong>Note</strong>: Define the custom repository <strong>
+			interface </strong>in the <strong>domain/core</strong> layer,
+			<strong>implement </strong>it in the <strong>EntityFramework
+			</strong>project for layered applications. Thus, you can inject the 
+			interface from any project without referencing to EF.</p>
 			<h4>Repository Best Practices</h4>
 			<ul>
 				<li><strong>Use default repositories</strong> wherever it's 
