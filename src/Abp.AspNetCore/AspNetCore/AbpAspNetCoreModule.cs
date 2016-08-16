@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore.Configuration;
+using Abp.Dependency;
 using Abp.Modules;
+using Abp.Runtime.Session;
 using Abp.Web;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
@@ -17,6 +19,8 @@ namespace Abp.AspNetCore
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.Register<IAbpSession,Runtime.Session.AspNetCoreClaimsAbpSession>(DependencyLifeStyle.Singleton);
+
         }
 
         public override void PostInitialize()
