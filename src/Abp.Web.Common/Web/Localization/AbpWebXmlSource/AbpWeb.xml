@@ -13,5 +13,7 @@
     <text name="DefaultErrorDetail401" value="You should be authenticated (sign in) in order to perform this operation." />
     <text name="DefaultError403" value="You are not authorized!" />
     <text name="DefaultErrorDetail403" value="You are not allowed to perform this operation." />
+    <text name="DefaultError404" value="Resource not found!" />
+    <text name="DefaultErrorDetail404" value="The resource requested could not found on the server." />
   </texts>
 </localizationDictionary>

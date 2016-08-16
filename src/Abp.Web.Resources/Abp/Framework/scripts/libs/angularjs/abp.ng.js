@@ -22,6 +22,11 @@
             details: 'You are not allowed to perform this operation.'
         },
 
+        defaultError404: {
+            message: 'Resource not found!',
+            details: 'The resource requested could not found on the server.'
+        },
+
         logError: function (error) {
             abp.log.error(error);
         },
@@ -52,6 +57,9 @@
                     break;
                 case 403:
                     abp.ng.http.showError(abp.ajax.defaultError403);
+                    break;
+                case 404:
+                    abp.ng.http.showError(abp.ajax.defaultError404);
                     break;
                 default:
                     abp.ng.http.showError(abp.ng.http.defaultError);

@@ -13,5 +13,7 @@
     <text name="DefaultErrorDetail401" value="Bu işlemi gerçekleştirmek için uygulamaya giriş yapmalısınız." />
     <text name="DefaultError403" value="İzinsiz işlem!" />
     <text name="DefaultErrorDetail403" value="Bu işlemi gerçekleştirmek için gereken izne sahip değilsiniz." />
+    <text name="DefaultError404" value="Kaynak bulunamadı!" />
+    <text name="DefaultErrorDetail404" value="İstenilen kaynak sunucuda bulunamadı." />
   </texts>
 </localizationDictionary>

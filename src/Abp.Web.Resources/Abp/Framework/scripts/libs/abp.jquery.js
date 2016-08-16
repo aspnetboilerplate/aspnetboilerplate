@@ -57,6 +57,11 @@
             details: 'You are not allowed to perform this operation.'
         },
 
+        defaultError404: {
+            message: 'Resource not found!',
+            details: 'The resource requested could not found on the server.'
+        },
+
         logError: function (error) {
             abp.log.error(error);
         },
@@ -87,6 +92,9 @@
                     break;
                 case 403:
                     abp.ajax.showError(abp.ajax.defaultError403);
+                    break;
+                case 404:
+                    abp.ajax.showError(abp.ajax.defaultError404);
                     break;
                 default:
                     abp.ajax.showError(abp.ajax.defaultError);
@@ -130,7 +138,7 @@
                     $dfd && $dfd.reject(data.error, jqXHR);
                     userOptions.error && userOptions.error(data.error, jqXHR);
 
-                    if (jqXHR.status == 401) {
+                    if (jqXHR.status === 401) {
                         abp.ajax.handleUnAuthorizedRequest(messagePromise, data.targetUrl);
                     }
                 } else { //not wrapped result
