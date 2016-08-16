@@ -171,6 +171,8 @@
         abp.ng.http.defaultError401.details = abp.localization.abpWeb('DefaultErrorDetail401');
         abp.ng.http.defaultError403.message = abp.localization.abpWeb('DefaultError403');
         abp.ng.http.defaultError403.details = abp.localization.abpWeb('DefaultErrorDetail403');
+        abp.ng.http.defaultError404.message = abp.localization.abpWeb('DefaultError404');
+        abp.ng.http.defaultError404.details = abp.localization.abpWeb('DefaultErrorDetail404');
     });
 
 })((abp || (abp = {})), (angular || undefined));

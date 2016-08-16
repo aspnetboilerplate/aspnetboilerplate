@@ -217,6 +217,8 @@
         abp.ajax.defaultError401.details = abp.localization.abpWeb('DefaultErrorDetail401');
         abp.ajax.defaultError403.message = abp.localization.abpWeb('DefaultError403');
         abp.ajax.defaultError403.details = abp.localization.abpWeb('DefaultErrorDetail403');
+        abp.ajax.defaultError404.message = abp.localization.abpWeb('DefaultError404');
+        abp.ajax.defaultError404.details = abp.localization.abpWeb('DefaultErrorDetail404');
     });
 
 })(jQuery);
