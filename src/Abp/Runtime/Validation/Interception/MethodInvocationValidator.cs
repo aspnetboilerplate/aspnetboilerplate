@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Reflection;
 
@@ -16,23 +17,19 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     public class MethodInvocationValidator : ITransientDependency
     {
-        public static List<Type> IgnoredTypesForRecursiveValidation { get; }
-
         protected MethodInfo Method { get; private set; }
         protected object[] ParameterValues { get; private set; }
         protected ParameterInfo[] Parameters { get; private set; }
         protected List<ValidationResult> ValidationErrors { get; }
 
-        static MethodInvocationValidator()
-        {
-            IgnoredTypesForRecursiveValidation = new List<Type>();
-        }
+        private readonly IValidationConfiguration _configuration;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        public MethodInvocationValidator()
+        public MethodInvocationValidator(IValidationConfiguration configuration)
         {
+            _configuration = configuration;
             ValidationErrors = new List<ValidationResult>();
         }
 
@@ -176,7 +173,7 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            if (IgnoredTypesForRecursiveValidation.Contains(validatingObjectType))
+            if (_configuration.IgnoredTypes.Contains(validatingObjectType))
             {
                 return;
             }

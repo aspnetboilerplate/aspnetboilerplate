@@ -19,7 +19,7 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Reference to the IocManager.
         /// </summary>
-        public IIocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; }
 
         /// <summary>
         /// Used to set localization configuration.
@@ -30,6 +30,11 @@ namespace Abp.Configuration.Startup
         /// Used to configure authorization.
         /// </summary>
         public IAuthorizationConfiguration Authorization { get; private set; }
+
+        /// <summary>
+        /// Used to configure validation.
+        /// </summary>
+        public IValidationConfiguration Validation { get; private set; }
 
         /// <summary>
         /// Used to configure settings.
@@ -107,6 +112,7 @@ namespace Abp.Configuration.Startup
             Features = IocManager.Resolve<IFeatureConfiguration>();
             Navigation = IocManager.Resolve<INavigationConfiguration>();
             Authorization = IocManager.Resolve<IAuthorizationConfiguration>();
+            Validation = IocManager.Resolve<IValidationConfiguration>();
             Settings = IocManager.Resolve<ISettingsConfiguration>();
             UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
             EventBus = IocManager.Resolve<IEventBusConfiguration>();

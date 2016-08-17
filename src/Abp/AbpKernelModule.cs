@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
@@ -6,6 +7,7 @@ using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -66,6 +68,8 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
 
             ConfigureCaches();
+
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
         }
 
         public override void Initialize()
