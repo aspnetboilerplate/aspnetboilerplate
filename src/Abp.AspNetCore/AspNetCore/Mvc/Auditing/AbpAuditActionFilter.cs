@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Services;
 using Abp.Aspects;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
@@ -50,14 +49,14 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            if (!ShouldSaveAudit(context))
+            {
+                await next();
+                return;
+            }
+
             using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
             {
-                if (!ShouldSaveAudit(context))
-                {
-                    await next();
-                    return;
-                }
-
                 var auditInfo = CreateAuditInfo(context);
                 var stopwatch = Stopwatch.StartNew();
 
@@ -93,7 +92,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ServiceName = context.Controller?.GetType().ToString() ?? "",
-                MethodName = context.ActionDescriptor.DisplayName,
+                MethodName = context.ActionDescriptor.AsControllerActionDescriptor().ActionName,
                 Parameters = ConvertArgumentsToJson(context.ActionArguments),
                 ExecutionTime = Clock.Now
             };

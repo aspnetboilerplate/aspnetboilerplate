@@ -22,7 +22,7 @@ namespace Abp.Web.Mvc.Authorization
             _errorInfoBuilder = errorInfoBuilder;
         }
 
-        public void OnAuthorization(AuthorizationContext filterContext)
+        public virtual void OnAuthorization(AuthorizationContext filterContext)
         {
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
@@ -41,7 +41,7 @@ namespace Abp.Web.Mvc.Authorization
             }
         }
 
-        private void HandleUnauthorizedRequest(
+        protected virtual void HandleUnauthorizedRequest(
             AuthorizationContext filterContext, 
             MethodInfo methodInfo, 
             AbpAuthorizationException ex)
@@ -55,21 +55,31 @@ namespace Abp.Web.Mvc.Authorization
 
             if (isJsonResult)
             {
-                filterContext.Result = new AbpJsonResult(
-                    new AjaxResponse(
-                        _errorInfoBuilder.BuildForException(ex)
-                    )
-                ) {JsonRequestBehavior = JsonRequestBehavior.AllowGet};
+                filterContext.Result = CreateUnAuthorizedJsonResult(ex);
             }
             else
             {
-                filterContext.Result = new HttpStatusCodeResult(filterContext.HttpContext.Response.StatusCode, ex.Message);
+                filterContext.Result = CreateUnAuthorizedNonJsonResult(filterContext, ex);
             }
 
             if (isJsonResult || filterContext.HttpContext.Request.IsAjaxRequest())
             {
                 filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
             }
+        }
+
+        protected virtual AbpJsonResult CreateUnAuthorizedJsonResult(AbpAuthorizationException ex)
+        {
+            return new AbpJsonResult(
+                new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+        }
+
+        protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext, AbpAuthorizationException ex)
+        {
+            return new HttpStatusCodeResult(filterContext.HttpContext.Response.StatusCode, ex.Message);
         }
     }
 }

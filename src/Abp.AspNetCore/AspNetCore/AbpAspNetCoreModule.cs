@@ -1,17 +1,22 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Runtime.Session;
+using Abp.Configuration.Startup;
 using Abp.Modules;
+using Abp.Runtime.Session;
 using Abp.Web;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore
 {
-    [DependsOn(typeof (AbpWebCommonModule))]
+    [DependsOn(typeof(AbpWebCommonModule))]
     public class AbpAspNetCoreModule : AbpModule
     {
         public override void PreInitialize()
         {
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
+
+            Configuration.ReplaceService<IAbpSession, AspNetCoreClaimsAbpSession>();
         }
 
         public override void Initialize()

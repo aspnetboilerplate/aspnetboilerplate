@@ -1,4 +1,5 @@
 using System;
+using Abp.AspNetCore.Mvc;
 using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +45,7 @@ namespace Abp.AspNetCore
 
             optionsAction(options);
 
-            ConfigureMvc(services, options.IocManager);
+            ConfigureAspNetCore(services, options.IocManager);
 
             var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, options.IocManager);
             abpBootstrapper.PlugInSources.AddRange(options.PlugInSources);
@@ -52,7 +53,7 @@ namespace Abp.AspNetCore
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
-        private static void ConfigureMvc(IServiceCollection services, IIocResolver iocResolver)
+        private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -70,6 +71,9 @@ namespace Abp.AspNetCore
             {
                 jsonOptions.SerializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
             });
+
+            //Configure MVC
+            services.Configure<MvcOptions>(mvcOptions => mvcOptions.AddAbp(services));
         }
 
         private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services, IIocManager iocManager)

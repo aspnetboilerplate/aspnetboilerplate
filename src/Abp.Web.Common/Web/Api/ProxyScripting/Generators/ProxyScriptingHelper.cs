@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Web.Api.Modeling;
 
@@ -100,26 +101,13 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return url;
             }
 
-            if (!url.Contains("?"))
-            {
-                url += "?";
-            }
+            var qsBuilderParams = queryStringParameters
+                .Select(p => $"{{ name: '{p.Name.ToCamelCase()}', value: {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(p)} }}")
+                .JoinAsString(", ");
 
-            for (var i = 0; i < queryStringParameters.Length; i++)
-            {
-                var parameterInfo = queryStringParameters[i];
-
-                if (i > 0)
-                {
-                    url += "&";
-                }
-
-                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(parameterInfo) + ") + '");
-            }
-
-            return url;
+            return url + $"' + abp.utils.buildQueryString([{qsBuilderParams}]) + '";
         }
-        
+
         public static string GetConventionalVerbForMethodName(string methodName)
         {
             if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
@@ -127,7 +115,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return "GET";
             }
 
-            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) || 
+            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) ||
                 methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "PUT";
@@ -144,7 +132,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return "PATCH";
             }
 
-            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) || 
+            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) ||
                 methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) ||
                 methodName.StartsWith("Insert", StringComparison.InvariantCultureIgnoreCase))
             {

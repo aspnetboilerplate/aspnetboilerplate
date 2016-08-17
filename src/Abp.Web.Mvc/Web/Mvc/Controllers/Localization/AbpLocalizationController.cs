@@ -1,7 +1,9 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
+using Abp.Configuration;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Models;
 
@@ -18,6 +20,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
             }
 
             Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
+            SettingManager.ChangeSettingForUser(AbpSession.ToUserIdentifier(), LocalizationSettingNames.DefaultLanguage, cultureName);
 
             if (Request.IsAjaxRequest())
             {

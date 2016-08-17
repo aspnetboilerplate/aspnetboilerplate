@@ -5,7 +5,6 @@ using System.Web.Http.Filters;
 using Abp.Application.Services;
 using Abp.Dependency;
 using Abp.Extensions;
-using Abp.Reflection.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -125,18 +124,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             var typeName = type.Name;
 
-            if (typeName.EndsWith("ApplicationService"))
-            {
-                typeName = typeName.Substring(0, typeName.Length - "ApplicationService".Length);
-            }
-            else if (typeName.EndsWith("AppService"))
-            {
-                typeName = typeName.Substring(0, typeName.Length - "AppService".Length);
-            }
-            else if (typeName.EndsWith("Service"))
-            {
-                typeName = typeName.Substring(0, typeName.Length - "Service".Length);
-            }
+            typeName = typeName.RemovePostFix(ApplicationService.CommonPostfixes);
 
             if (typeName.Length > 1 && typeName.StartsWith("I") && char.IsUpper(typeName, 1))
             {

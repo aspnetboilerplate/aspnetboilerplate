@@ -45,16 +45,28 @@ namespace Abp.Web.SignalR.Hubs
         {
             await base.OnConnected();
 
-            var client = new OnlineClient(
-                Context.ConnectionId,
-                GetIpAddressOfClient(),
-                AbpSession.TenantId,
-                AbpSession.UserId
-                );
+            var client = CreateClientForCurrentConnection();
 
             Logger.Debug("A client is connected: " + client);
             
             _onlineClientManager.Add(client);
+        }
+
+        public override async Task OnReconnected()
+        {
+            await base.OnReconnected();
+
+            var client = _onlineClientManager.GetByConnectionIdOrNull(Context.ConnectionId);
+            if (client == null)
+            {
+                client = CreateClientForCurrentConnection();
+                _onlineClientManager.Add(client);
+                Logger.Debug("A client is connected (on reconnected event): " + client);
+            }
+            else
+            {
+                Logger.Debug("A client is reconnected: " + client);
+            }
         }
 
         public override async Task OnDisconnected(bool stopCalled)
@@ -71,6 +83,16 @@ namespace Abp.Web.SignalR.Hubs
             {
                 Logger.Warn(ex.ToString(), ex);
             }
+        }
+
+        private IOnlineClient CreateClientForCurrentConnection()
+        {
+            return new OnlineClient(
+                Context.ConnectionId,
+                GetIpAddressOfClient(),
+                AbpSession.TenantId,
+                AbpSession.UserId
+            );
         }
 
         private string GetIpAddressOfClient()
