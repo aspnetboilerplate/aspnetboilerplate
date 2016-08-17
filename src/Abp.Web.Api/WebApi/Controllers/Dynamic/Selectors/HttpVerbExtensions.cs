@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Abp.Web;
 
@@ -52,6 +53,29 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             return false;
+        }
+
+        public static HttpMethod ToHttpMethod(this HttpVerb verb)
+        {
+            switch (verb)
+            {
+                case HttpVerb.Get:
+                    return HttpMethod.Get;
+                case HttpVerb.Post:
+                    return HttpMethod.Post;
+                case HttpVerb.Put:
+                    return HttpMethod.Put;
+                case HttpVerb.Delete:
+                    return HttpMethod.Delete;
+                case HttpVerb.Options:
+                    return HttpMethod.Options;
+                case HttpVerb.Trace:
+                    return HttpMethod.Trace;
+                case HttpVerb.Head:
+                    return HttpMethod.Head;
+                default:
+                    throw new ArgumentException("Given HttpVerb is unknown: " + verb, nameof(verb));
+            }
         }
     }
 }

@@ -86,7 +86,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             //Return the single action by the current http verb
-            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionsByVerb[0].Method, actionsByVerb[0].Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionsByVerb[0]);
         }
 
         private HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
@@ -107,7 +107,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     ". It should be " + actionInfo.Verb);
             }
 
-            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo.Method, actionInfo.Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo);
         }
 
         private HttpActionDescriptor GetDefaultActionDescriptor(HttpControllerContext controllerContext)
