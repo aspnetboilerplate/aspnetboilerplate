@@ -7,32 +7,20 @@ namespace Abp.AutoMapper
 {
     internal static class AutoMapperHelper
     {
-        public static void CreateMap(Type type, IConfiguration cfg = null)
+        public static void CreateAbpAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
-            CreateMap<AutoMapFromAttribute>(type, cfg);
-            CreateMap<AutoMapToAttribute>(type, cfg);
-            CreateMap<AutoMapAttribute>(type, cfg);
+            configuration.CreateAbpAttributeMap<AutoMapFromAttribute>(type);
+            configuration.CreateAbpAttributeMap<AutoMapToAttribute>(type);
+            configuration.CreateAbpAttributeMap<AutoMapAttribute>(type);
         }
 
-        public static void CreateMap<TAttribute>(Type type, IConfiguration cfg = null)
+        private static void CreateAbpAttributeMap<TAttribute>(this IMapperConfigurationExpression configuration, Type type)
             where TAttribute : AutoMapAttribute
         {
             if (!type.IsDefined(typeof(TAttribute)))
             {
                 return;
             }
-
-            Func<Type, Type, IMappingExpression> _createMap;
-
-            if (cfg != null)
-            {
-                _createMap = cfg.CreateMap;
-            }
-            else
-            {
-                _createMap = Mapper.CreateMap;
-            }
-
 
             foreach (var autoMapToAttribute in type.GetCustomAttributes<TAttribute>())
             {
@@ -46,12 +34,12 @@ namespace Abp.AutoMapper
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.To))
                     {
 
-                        _createMap(type, targetType);
+                        configuration.CreateMap(type, targetType);
                     }
 
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.From))
                     {
-                        _createMap(targetType, type);
+                        configuration.CreateMap(targetType, type);
                     }
                 }
             }
