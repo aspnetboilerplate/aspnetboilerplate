@@ -34,6 +34,10 @@ namespace Abp.AutoMapper
         public override void PostInitialize()
         {
             CreateMappings();
+
+            IocManager.IocContainer.Register(
+                Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
+            );
         }
 
         public void CreateMappings()
@@ -46,10 +50,6 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                IocManager.IocContainer.Register(
-                    Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
-                );
-
                 Mapper.Initialize(configuration =>
                 {
                     FindAndAutoMapTypes(configuration);
@@ -58,7 +58,7 @@ namespace Abp.AutoMapper
                         configurator(configuration);
                     }
                 });
-                
+
                 _createdMappingsBefore = true;
             }
         }
