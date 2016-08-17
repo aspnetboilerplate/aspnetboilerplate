@@ -4,6 +4,7 @@ using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Reflection;
 using AutoMapper;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.AutoMapper
 {
@@ -35,15 +36,19 @@ namespace Abp.AutoMapper
             CreateMappings();
         }
 
-        private void CreateMappings()
+        public void CreateMappings()
         {
             lock (SyncObj)
             {
-                //We should prevent duplicate mapping in an application, since AutoMapper is static.
+                //We should prevent duplicate mapping in an application, since Mapper is static.
                 if (_createdMappingsBefore)
                 {
                     return;
                 }
+
+                IocManager.IocContainer.Register(
+                    Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
+                );
 
                 Mapper.Initialize(configuration =>
                 {

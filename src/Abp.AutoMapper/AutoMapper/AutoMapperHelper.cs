@@ -33,7 +33,6 @@ namespace Abp.AutoMapper
                 {
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.To))
                     {
-
                         configuration.CreateMap(type, targetType);
                     }
 
