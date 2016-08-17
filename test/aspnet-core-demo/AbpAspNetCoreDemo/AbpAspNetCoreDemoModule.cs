@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.Castle.Logging.Log4Net;
 using Abp.EntityFrameworkCore;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
@@ -14,7 +15,8 @@ namespace AbpAspNetCoreDemo
     [DependsOn(
         typeof(AbpAspNetCoreModule), 
         typeof(AbpAspNetCoreDemoCoreModule),
-        typeof(AbpEntityFrameworkCoreModule)
+        typeof(AbpEntityFrameworkCoreModule),
+        typeof(AbpCastleLog4NetModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {

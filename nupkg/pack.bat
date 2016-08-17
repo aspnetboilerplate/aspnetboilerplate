@@ -23,6 +23,7 @@ dotnet "pack" "..\src\Abp.Web.Api" -c "Release" -o "." --version-suffix "%VERSIO
 dotnet "pack" "..\src\Abp.Web.Mvc" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Web.SignalR" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Web.Api.OData" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.Castle.Log4Net" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.TestBase" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.AspNetCore.TestBase" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Web.Resources" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"

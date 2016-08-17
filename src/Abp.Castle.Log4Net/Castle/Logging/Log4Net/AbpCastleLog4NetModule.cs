@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
 
 namespace Abp.Castle.Logging.Log4Net
 {
@@ -9,9 +8,6 @@ namespace Abp.Castle.Logging.Log4Net
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpCastleLog4NetModule : AbpModule
     {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
+
     }
 }
