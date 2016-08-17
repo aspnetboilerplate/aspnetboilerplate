@@ -45,7 +45,7 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                Mapper.Initialize((IMapperConfigurationExpression configuration) =>
+                Mapper.Initialize(configuration =>
                 {
                     FindAndAutoMapTypes(configuration);
                     foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
@@ -53,7 +53,7 @@ namespace Abp.AutoMapper
                         configurator(configuration);
                     }
                 });
-
+                
                 _createdMappingsBefore = true;
             }
         }
