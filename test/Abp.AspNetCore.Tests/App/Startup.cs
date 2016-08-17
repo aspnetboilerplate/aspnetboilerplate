@@ -2,6 +2,7 @@
 using Abp.AspNetCore.TestBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +12,9 @@ namespace Abp.AspNetCore.App
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            var mvc = services.AddMvc();
+
+            mvc.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(AbpAspNetCoreModule).Assembly));
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<AppModule>(options =>
