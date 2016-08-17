@@ -1,34 +1,33 @@
-﻿
-using System;
-
-using log4net;
+﻿using System;
 using Castle.Core.Logging;
+using log4net;
 using log4net.Config;
 
-namespace Abp
+namespace Abp.Castle.Logging.Log4Net
 {
-    public class Log4NetFactory
-        : AbstractLoggerFactory
+    public class Log4NetLoggerFactory : AbstractLoggerFactory
     {
         internal const string DefaultConfigFileName = "log4net.config";
 
-        public Log4NetFactory()
+        public Log4NetLoggerFactory()
             : this(DefaultConfigFileName)
         {
         }
 
-        public Log4NetFactory(string configFile)
+        public Log4NetLoggerFactory(string configFileName)
         {
-            var file = GetConfigFile(configFile);
+            var file = GetConfigFile(configFileName);
             XmlConfigurator.ConfigureAndWatch(file);
         }
 
         public override ILogger Create(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
-            var log = LogManager.GetLogger(name);
-            return new Log4NetLogger(log, this);
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new Log4NetLogger(LogManager.GetLogger(name), this);
         }
 
         public override ILogger Create(string name, LoggerLevel level)

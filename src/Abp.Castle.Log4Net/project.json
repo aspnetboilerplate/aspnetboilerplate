@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.10.3.1-*",
 
   "dependencies": {
-    "Abp": "0.10.3",
+    "Abp": "0.10.3.1-*",
     "Castle.LoggingFacility": "3.3.0",
     "Castle.Windsor": "3.3.0",
     "log4net": "2.0.5"
@@ -12,18 +12,13 @@
     "net452": {
       "frameworkAssemblies": {
         "System.Configuration": "",
-        "System.Data": "",
-        "System.Transactions": "",
         "System.Runtime": {
           "type": "build"
         },
-        "System.Runtime.Caching": "",
-        "System.ComponentModel.DataAnnotations": "",
         "System.Threading.Tasks": {
           "type": "build"
         }
       }
     }
   }
-
 }
