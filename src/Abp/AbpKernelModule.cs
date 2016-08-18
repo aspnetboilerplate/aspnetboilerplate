@@ -68,8 +68,7 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
 
             ConfigureCaches();
-
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
+            AddIgnoredTypes();
         }
 
         public override void Initialize()
@@ -131,6 +130,12 @@ namespace Abp
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
             });
+        }
+
+        private void AddIgnoredTypes()
+        {
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(Stream));
         }
 
         private void RegisterMissingComponents()
