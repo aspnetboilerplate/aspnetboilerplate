@@ -86,6 +86,7 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiCsrfFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuthorizeFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuditFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiValidationFilter>());

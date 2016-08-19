@@ -612,6 +612,46 @@
         return qs;
     }
 
+    /**
+     * Sets a cookie value for given key.
+     * @param {string} key
+     * @param {string} value 
+     * @param {Date} expireDate Optional expire date (default: 30 days).
+     */
+    abp.utils.setCookieValue = function (key, value, expireDate) {
+        if (!expireDate) {
+            expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 30);
+        }
+
+        document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value) + "; expires=" + expireDate.toUTCString();
+    };
+
+    /**
+     * Gets a cookie with given key.
+     * @param {string} key
+     * @returns {string} Cookie value
+     */
+    abp.utils.getCookieValue = function (key) {
+        var equalities = document.cookie.split('; ');
+        for (var i = 0; i < equalities.length; i++) {
+            if (!equalities[i]) {
+                continue;
+            }
+
+            var splitted = equalities[i].split('=');
+            if (splitted.length != 2) {
+                continue;
+            }
+
+            if (decodeURIComponent(splitted[0]) === key) {
+                return decodeURIComponent(splitted[1] || '');
+            }
+        }
+
+        return null;
+    };
+
     /* TIMING *****************************************/
     abp.timing = abp.timing || {};
 
@@ -728,5 +768,15 @@
     }
 
     abp.clock.provider = abp.timing.unspecifiedClockProvider;
+
+    /* SECURITY ***************************************/
+    abp.security = abp.security || {};
+
+    abp.security.csrfTokenCookieName = 'XSRF-TOKEN';
+    abp.security.csrfTokenHeaderName = 'X-XSRF-TOKEN';
+
+    abp.security.getCsrfToken = function () {
+        return abp.utils.getCookieValue(abp.security.csrfTokenCookieName);
+    };
 
 })(jQuery);

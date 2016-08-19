@@ -1,4 +1,5 @@
-﻿using Abp.Web.Configuration;
+﻿using System;
+using Abp.Web.Configuration;
 
 namespace Abp.Configuration.Startup
 {
@@ -10,9 +11,18 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure ABP Web module.
         /// </summary>
-        public static IAbpWebModuleConfiguration AbpWeb(this IModuleConfigurations configurations)
+        [Obsolete("Use AbpWebCommon() extension method to configure Abp.Web.Common module.")]
+        public static IAbpWebCommonModuleConfiguration AbpWeb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.Get<IAbpWebModuleConfiguration>();
+            return configurations.AbpWebCommon();
+        }
+
+        /// <summary>
+        /// Used to configure ABP Web Common module.
+        /// </summary>
+        public static IAbpWebCommonModuleConfiguration AbpWebCommon(this IModuleConfigurations configurations)
+        {
+            return configurations.AbpConfiguration.Get<IAbpWebCommonModuleConfiguration>();
         }
     }
 }

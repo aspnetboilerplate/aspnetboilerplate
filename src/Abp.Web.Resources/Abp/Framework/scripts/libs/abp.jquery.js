@@ -169,7 +169,17 @@
                     abp.ui.clearBusy(options.blockUI);
                 }
             }
+        },
+
+        ajaxSendHandler: function (event, request, settings) {
+            if (!settings.headers || settings.headers[abp.security.csrfTokenHeaderName] === undefined) {
+                request.setRequestHeader(abp.security.csrfTokenHeaderName, abp.security.getCsrfToken());
+            }
         }
+    });
+
+    $(document).ajaxSend(function(event, request, settings) {
+        return abp.ajax.ajaxSendHandler(event, request, settings);
     });
 
     /* JQUERY PLUGIN ENHANCEMENTS ********************************************/

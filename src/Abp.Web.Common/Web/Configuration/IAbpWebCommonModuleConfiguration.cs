@@ -1,11 +1,12 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
+using Abp.Web.Security;
 
 namespace Abp.Web.Configuration
 {
     /// <summary>
-    /// Used to configure ABP Web module.
+    /// Used to configure ABP Web Common module.
     /// </summary>
-    public interface IAbpWebModuleConfiguration
+    public interface IAbpWebCommonModuleConfiguration
     {
         /// <summary>
         /// If this is set to true, all exception and details are sent directly to clients on an error.
@@ -17,5 +18,10 @@ namespace Abp.Web.Configuration
         /// Used to configure Api proxy scripting.
         /// </summary>
         IApiProxyScriptingConfiguration ApiProxyScripting { get; }
+
+        /// <summary>
+        /// Used to configure CSRF security settings.
+        /// </summary>
+        ICsrfConfiguration Csrf { get; }
     }
 }
