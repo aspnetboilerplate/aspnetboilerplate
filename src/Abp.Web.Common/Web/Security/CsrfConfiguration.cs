@@ -17,7 +17,7 @@ namespace Abp.Web.Security
             TokenCookieName = "XSRF-TOKEN";
             TokenHeaderName = "X-XSRF-TOKEN";
             IsEnabled = true;
-            IgnoredHttpVerbs = new HashSet<HttpVerb> { HttpVerb.Get, HttpVerb.Head };
+            IgnoredHttpVerbs = new HashSet<HttpVerb> { HttpVerb.Get, HttpVerb.Head, HttpVerb.Options, HttpVerb.Trace };
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Abp.Web.Security
 
         /// <summary>
         /// A list of ignored HTTP verbs for CSRF token validation.
-        /// Default list: Get, Head.
+        /// Default list: Get, Head, Options, Trace.
         /// </summary>
         HashSet<HttpVerb> IgnoredHttpVerbs { get; }
     }
