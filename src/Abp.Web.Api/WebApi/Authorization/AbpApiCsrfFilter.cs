@@ -42,21 +42,23 @@ namespace Abp.WebApi.Authorization
                 return await continuation();
             }
 
-            if (_configuration.IgnoredHttpVerbs.Contains(actionContext.Request.Method.ToHttpVerb()))
-            {
-                return await continuation();
-            }
-
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
             {
                 return await continuation();
             }
 
-            if (!methodInfo.IsDefined(typeof(ValidateCsrfTokenAttribute), true) && 
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableCsrfTokenValidationAttribute>(methodInfo) != null)
+            if (!methodInfo.IsDefined(typeof(ValidateCsrfTokenAttribute), true))
             {
-                return await continuation();
+                if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableCsrfTokenValidationAttribute>(methodInfo) != null)
+                {
+                    return await continuation();
+                }
+
+                if (_configuration.IgnoredHttpVerbs.Contains(actionContext.Request.Method.ToHttpVerb()))
+                {
+                    return await continuation();
+                }
             }
 
             var csrfCookie = actionContext.Request.Headers.GetCookies(_configuration.TokenCookieName).LastOrDefault();
