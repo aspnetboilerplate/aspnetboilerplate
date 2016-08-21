@@ -1,30 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Http.Headers;
-using Abp.Web.Security;
-using Abp.WebApi.Extensions;
-using System.Net.Http;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using Abp.Extensions;
+using Abp.Web.Security.AntiForgery;
+using Abp.WebApi.Extensions;
 
-namespace Abp.WebApi.Security
+namespace Abp.WebApi.Security.AntiForgery
 {
-    public static class CsrfTokenManagerWebApiExtensions
+    public static class AbpAntiForgeryTokenManagerWebApiExtensions
     {
-        public static void SetCookie(this ICsrfTokenManager manager, HttpResponseHeaders headers)
+        public static void SetCookie(this IAbpAntiForgeryTokenManager manager, HttpResponseHeaders headers)
         {
             headers.SetCookie(new Cookie(manager.Configuration.TokenCookieName, manager.TokenGenerator.Generate()));
         }
 
-        public static bool IsValid(this ICsrfTokenManager manager, HttpRequestHeaders headers)
+        public static bool IsValid(this IAbpAntiForgeryTokenManager manager, HttpRequestHeaders headers)
         {
-            var csrfCookie = headers.GetCookies(manager.Configuration.TokenCookieName).LastOrDefault();
-            if (csrfCookie == null)
+            var antiForgeryCookie = headers.GetCookies(manager.Configuration.TokenCookieName).LastOrDefault();
+            if (antiForgeryCookie == null)
             {
                 return true;
             }
 
-            var cookieTokenValue = csrfCookie[manager.Configuration.TokenCookieName].Value;
+            var cookieTokenValue = antiForgeryCookie[manager.Configuration.TokenCookieName].Value;
             if (cookieTokenValue.IsNullOrEmpty())
             {
                 return true;

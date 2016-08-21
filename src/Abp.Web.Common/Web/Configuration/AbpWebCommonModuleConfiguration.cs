@@ -1,5 +1,6 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration
 {
@@ -9,12 +10,12 @@ namespace Abp.Web.Configuration
 
         public IApiProxyScriptingConfiguration ApiProxyScripting { get; }
 
-        public ICsrfConfiguration Csrf { get; }
+        public IAbpAntiForgeryConfiguration AntiForgery { get; }
 
-        public AbpWebCommonModuleConfiguration(IApiProxyScriptingConfiguration apiProxyScripting, ICsrfConfiguration csrf)
+        public AbpWebCommonModuleConfiguration(IApiProxyScriptingConfiguration apiProxyScripting, IAbpAntiForgeryConfiguration abpAntiForgery)
         {
             ApiProxyScripting = apiProxyScripting;
-            Csrf = csrf;
+            AntiForgery = abpAntiForgery;
         }
     }
 }

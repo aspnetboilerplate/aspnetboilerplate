@@ -6,25 +6,24 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
-using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
-using Abp.WebApi.Security;
 using Abp.WebApi.Validation;
 using Castle.Core.Logging;
 
-namespace Abp.WebApi.Authorization
+namespace Abp.WebApi.Security.AntiForgery
 {
-    public class AbpApiCsrfFilter : IAuthorizationFilter, ITransientDependency
+    public class AbpAntiForgeryApiFilter : IAuthorizationFilter, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
         public bool AllowMultiple => false;
 
-        private readonly ICsrfTokenManager _csrfManager;
+        private readonly IAbpAntiForgeryTokenManager _abpAntiForgeryManager;
 
-        public AbpApiCsrfFilter(ICsrfTokenManager csrfManager)
+        public AbpAntiForgeryApiFilter(IAbpAntiForgeryTokenManager abpAntiForgeryManager)
         {
-            _csrfManager = csrfManager;
+            _abpAntiForgeryManager = abpAntiForgeryManager;
 
             Logger = NullLogger.Instance;
         }
@@ -40,14 +39,14 @@ namespace Abp.WebApi.Authorization
                 return await continuation();
             }
 
-            if (!_csrfManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), true))
+            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), true))
             {
                 return await continuation();
             }
 
-            if (!_csrfManager.IsValid(actionContext.Request.Headers))
+            if (!_abpAntiForgeryManager.IsValid(actionContext.Request.Headers))
             {
-                return CreateForbiddenResponse(actionContext, "A request done with an empty or invalid CSRF header token. It should be same of the Cookie value!");
+                return CreateForbiddenResponse(actionContext, "A request done with an empty or invalid Anti Forgery header token. It should be same of the Cookie value!");
             }
             
             return await continuation();

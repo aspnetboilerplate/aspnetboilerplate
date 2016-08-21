@@ -1,9 +1,9 @@
 ﻿using System;
 using Abp.Dependency;
 
-namespace Abp.Web.Security
+namespace Abp.Web.Security.AntiForgery
 {
-    public class DefaultCsrfTokenGenerator : ICsrfTokenGenerator, ITransientDependency
+    public class DefaultAbpAntiForgeryTokenGenerator : IAbpAntiForgeryTokenGenerator, ITransientDependency
     {
         public string Generate()
         {

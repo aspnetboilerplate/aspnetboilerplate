@@ -8,6 +8,7 @@ using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 using Abp.Web.Configuration;
 using Abp.Web.Localization;
 using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web
 {
@@ -21,7 +22,7 @@ namespace Abp.Web
         public override void PreInitialize()
         {
             IocManager.Register<IApiProxyScriptingConfiguration, ApiProxyScriptingConfiguration>();
-            IocManager.Register<ICsrfConfiguration, CsrfConfiguration>();
+            IocManager.Register<IAbpAntiForgeryConfiguration, AbpAntiForgeryConfiguration>();
             IocManager.Register<IAbpWebCommonModuleConfiguration, AbpWebCommonModuleConfiguration>();
 
             Configuration.Modules.AbpWebCommon().ApiProxyScripting.Generators[JQueryProxyScriptGenerator.Name] = typeof(JQueryProxyScriptGenerator);

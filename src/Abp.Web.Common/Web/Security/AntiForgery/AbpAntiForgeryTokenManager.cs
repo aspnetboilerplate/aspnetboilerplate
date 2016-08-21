@@ -2,15 +2,17 @@
 using Abp.Dependency;
 using Abp.Reflection;
 
-namespace Abp.Web.Security
+namespace Abp.Web.Security.AntiForgery
 {
-    public class CsrfTokenManager : ICsrfTokenManager, ITransientDependency
+    public class AbpAntiForgeryTokenManager : IAbpAntiForgeryTokenManager, ITransientDependency
     {
-        public ICsrfConfiguration Configuration { get; }
+        public IAbpAntiForgeryConfiguration Configuration { get; }
 
-        public ICsrfTokenGenerator TokenGenerator { get; }
+        public IAbpAntiForgeryTokenGenerator TokenGenerator { get; }
         
-        public CsrfTokenManager(ICsrfConfiguration configuration, ICsrfTokenGenerator tokenGenerator)
+        public AbpAntiForgeryTokenManager(
+            IAbpAntiForgeryConfiguration configuration, 
+            IAbpAntiForgeryTokenGenerator tokenGenerator)
         {
             Configuration = configuration;
             TokenGenerator = tokenGenerator;
@@ -23,9 +25,9 @@ namespace Abp.Web.Security
                 return false;
             }
 
-            if (!methodInfo.IsDefined(typeof(ValidateCsrfTokenAttribute), true))
+            if (!methodInfo.IsDefined(typeof(ValidateAbpAntiForgeryTokenAttribute), true))
             {
-                if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableCsrfTokenValidationAttribute>(methodInfo) != null)
+                if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableAbpAntiForgeryTokenValidationAttribute>(methodInfo) != null)
                 {
                     return false;
                 }

@@ -772,11 +772,11 @@
     /* SECURITY ***************************************/
     abp.security = abp.security || {};
 
-    abp.security.csrfTokenCookieName = 'XSRF-TOKEN';
-    abp.security.csrfTokenHeaderName = 'X-XSRF-TOKEN';
+    abp.security.antiForgeryTokenCookieName = 'XSRF-TOKEN';
+    abp.security.antiForgeryTokenHeaderName = 'X-XSRF-TOKEN';
 
-    abp.security.getCsrfToken = function () {
-        return abp.utils.getCookieValue(abp.security.csrfTokenCookieName);
+    abp.security.getAntiForgeryToken = function () {
+        return abp.utils.getCookieValue(abp.security.antiForgeryTokenCookieName);
     };
 
 })(jQuery);

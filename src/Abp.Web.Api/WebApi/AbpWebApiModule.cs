@@ -24,6 +24,8 @@ using Abp.WebApi.Auditing;
 using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers.Dynamic.Binders;
 using Abp.WebApi.ExceptionHandling;
+using Abp.WebApi.Security;
+using Abp.WebApi.Security.AntiForgery;
 using Abp.WebApi.Uow;
 using Abp.WebApi.Validation;
 
@@ -86,7 +88,7 @@ namespace Abp.WebApi
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiCsrfFilter>());
+            httpConfiguration.Filters.Add(IocManager.Resolve<AbpAntiForgeryApiFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuthorizeFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiAuditFilter>());
             httpConfiguration.Filters.Add(IocManager.Resolve<AbpApiValidationFilter>());

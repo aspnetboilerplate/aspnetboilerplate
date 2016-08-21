@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Web.Security
+namespace Abp.Web.Security.AntiForgery
 {
-    public class CsrfConfiguration : ICsrfConfiguration
+    public class AbpAntiForgeryConfiguration : IAbpAntiForgeryConfiguration
     {
         public string TokenCookieName { get; set; }
 
@@ -12,7 +12,7 @@ namespace Abp.Web.Security
 
         public HashSet<HttpVerb> IgnoredHttpVerbs { get; }
 
-        public CsrfConfiguration()
+        public AbpAntiForgeryConfiguration()
         {
             TokenCookieName = "XSRF-TOKEN";
             TokenHeaderName = "X-XSRF-TOKEN";

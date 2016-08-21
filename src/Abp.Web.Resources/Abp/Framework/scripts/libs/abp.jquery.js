@@ -172,8 +172,8 @@
         },
 
         ajaxSendHandler: function (event, request, settings) {
-            if (!settings.headers || settings.headers[abp.security.csrfTokenHeaderName] === undefined) {
-                request.setRequestHeader(abp.security.csrfTokenHeaderName, abp.security.getCsrfToken());
+            if (!settings.headers || settings.headers[abp.security.antiForgeryTokenHeaderName] === undefined) {
+                request.setRequestHeader(abp.security.antiForgeryTokenHeaderName, abp.security.getAntiForgeryToken());
             }
         }
     });

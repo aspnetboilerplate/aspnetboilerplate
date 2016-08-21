@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Abp.Auditing;
 using Abp.Web.Models;
 using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
@@ -13,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     /// </summary>
     [DontWrapResult]
     [DisableAuditing]
-    [DisableCsrfTokenValidation]
+    [DisableAbpAntiForgeryTokenValidation]
     [Obsolete("Use AbpServiceProxiesController. This will be removed in later versions.")]
     public class ServiceProxiesController : AbpApiController
     {

@@ -1,5 +1,6 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration
 {
@@ -20,8 +21,8 @@ namespace Abp.Web.Configuration
         IApiProxyScriptingConfiguration ApiProxyScripting { get; }
 
         /// <summary>
-        /// Used to configure CSRF security settings.
+        /// Used to configure Anti Forgery security settings.
         /// </summary>
-        ICsrfConfiguration Csrf { get; }
+        IAbpAntiForgeryConfiguration AntiForgery { get; }
     }
 }
