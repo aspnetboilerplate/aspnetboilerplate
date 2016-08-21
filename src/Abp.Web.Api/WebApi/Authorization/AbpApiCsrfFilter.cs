@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -8,10 +6,9 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Reflection;
 using Abp.Web.Security;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
+using Abp.WebApi.Security;
 using Abp.WebApi.Validation;
 using Castle.Core.Logging;
 
@@ -23,11 +20,11 @@ namespace Abp.WebApi.Authorization
 
         public bool AllowMultiple => false;
 
-        private readonly ICsrfConfiguration _configuration;
+        private readonly ICsrfTokenManager _csrfManager;
 
-        public AbpApiCsrfFilter(ICsrfConfiguration configuration)
+        public AbpApiCsrfFilter(ICsrfTokenManager csrfManager)
         {
-            _configuration = configuration;
+            _csrfManager = csrfManager;
 
             Logger = NullLogger.Instance;
         }
@@ -37,54 +34,22 @@ namespace Abp.WebApi.Authorization
             CancellationToken cancellationToken,
             Func<Task<HttpResponseMessage>> continuation)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return await continuation();
-            }
-
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
             {
                 return await continuation();
             }
 
-            if (!methodInfo.IsDefined(typeof(ValidateCsrfTokenAttribute), true))
-            {
-                if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableCsrfTokenValidationAttribute>(methodInfo) != null)
-                {
-                    return await continuation();
-                }
-
-                if (_configuration.IgnoredHttpVerbs.Contains(actionContext.Request.Method.ToHttpVerb()))
-                {
-                    return await continuation();
-                }
-            }
-
-            var csrfCookie = actionContext.Request.Headers.GetCookies(_configuration.TokenCookieName).LastOrDefault();
-            if (csrfCookie == null)
+            if (!_csrfManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), true))
             {
                 return await continuation();
             }
 
-            var cookieTokenValue = csrfCookie[_configuration.TokenCookieName].Value;
-            if (cookieTokenValue.IsNullOrEmpty())
+            if (!_csrfManager.IsValid(actionContext.Request.Headers))
             {
-                return await continuation();
+                return CreateForbiddenResponse(actionContext, "A request done with an empty or invalid CSRF header token. It should be same of the Cookie value!");
             }
-
-            IEnumerable<string> tokenHeaderValues;
-            if (!actionContext.Request.Headers.TryGetValues(_configuration.TokenHeaderName, out tokenHeaderValues))
-            {
-                return CreateForbiddenResponse(actionContext, "A request done with an empty CSRF header token but with non-empty CSRF cookie value!");
-            }
-
-            var headerTokenValue = tokenHeaderValues.Last();
-            if (headerTokenValue != cookieTokenValue)
-            {
-                return CreateForbiddenResponse(actionContext, "A request done with an invalid CSRF header token. It should be same of the Cookie value!");
-            }
-
+            
             return await continuation();
         }
 
