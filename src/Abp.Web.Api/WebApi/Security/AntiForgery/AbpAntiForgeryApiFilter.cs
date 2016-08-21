@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
+using Abp.Web.Security;
 using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Validation;

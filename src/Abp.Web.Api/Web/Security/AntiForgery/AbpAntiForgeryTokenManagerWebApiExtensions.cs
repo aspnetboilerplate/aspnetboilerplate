@@ -4,10 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Abp.Extensions;
-using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Extensions;
 
-namespace Abp.WebApi.Security.AntiForgery
+namespace Abp.Web.Security.AntiForgery
 {
     public static class AbpAntiForgeryTokenManagerWebApiExtensions
     {
