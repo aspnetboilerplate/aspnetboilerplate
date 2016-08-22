@@ -30,14 +30,19 @@ namespace Abp.Web.Security.AntiForgery
                 return true;
             }
 
+            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableAbpAntiForgeryTokenValidationAttribute>(methodInfo) != null)
+            {
+                return false;
+            }
+
             if (Configuration.IgnoredHttpVerbs.Contains(httpVerb))
             {
                 return false;
             }
 
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableAbpAntiForgeryTokenValidationAttribute>(methodInfo) != null)
+            if (methodInfo.DeclaringType?.IsDefined(typeof(ValidateAbpAntiForgeryTokenAttribute), true) ?? false)
             {
-                return false;
+                return true;
             }
 
             return defaultValue;

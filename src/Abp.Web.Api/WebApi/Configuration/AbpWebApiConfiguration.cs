@@ -16,6 +16,8 @@ namespace Abp.WebApi.Configuration
 
         public bool IsValidationEnabledForControllers { get; set; }
 
+        public bool IsAutomaticAntiForgeryValidationEnabled { get; set; }
+
         public AbpWebApiConfiguration()
         {
             HttpConfiguration = GlobalConfiguration.Configuration;
@@ -23,6 +25,7 @@ namespace Abp.WebApi.Configuration
             DefaultWrapResultAttribute = new WrapResultAttribute(false);
             DefaultDynamicApiWrapResultAttribute = new WrapResultAttribute();
             IsValidationEnabledForControllers = true;
+            IsAutomaticAntiForgeryValidationEnabled = true;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Web.Security.AntiForgery;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Validation;
 using Castle.Core.Logging;
@@ -20,10 +21,12 @@ namespace Abp.WebApi.Security.AntiForgery
         public bool AllowMultiple => false;
 
         private readonly IAbpAntiForgeryManager _abpAntiForgeryManager;
+        private readonly IAbpWebApiConfiguration _webApiConfiguration;
 
-        public AbpAntiForgeryApiFilter(IAbpAntiForgeryManager abpAntiForgeryManager)
+        public AbpAntiForgeryApiFilter(IAbpAntiForgeryManager abpAntiForgeryManager, IAbpWebApiConfiguration webApiConfiguration)
         {
             _abpAntiForgeryManager = abpAntiForgeryManager;
+            _webApiConfiguration = webApiConfiguration;
             Logger = NullLogger.Instance;
         }
 
@@ -38,7 +41,7 @@ namespace Abp.WebApi.Security.AntiForgery
                 return await continuation();
             }
 
-            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), true))
+            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
             {
                 return await continuation();
             }
@@ -47,7 +50,7 @@ namespace Abp.WebApi.Security.AntiForgery
             {
                 return CreateForbiddenResponse(actionContext, "Empty or invalid anti forgery header token.");
             }
-            
+
             return await continuation();
         }
 

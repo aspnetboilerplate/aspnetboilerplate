@@ -9,10 +9,19 @@ namespace Abp.WebApi.Configuration
     /// </summary>
     public interface IAbpWebApiConfiguration
     {
+        /// <summary>
+        /// Default UnitOfWorkAttribute for all actions.
+        /// </summary>
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
+        /// <summary>
+        /// Default WrapResultAttribute for all actions.
+        /// </summary>
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        /// <summary>
+        /// Default WrapResultAttribute for all dynamic web api actions.
+        /// </summary>
         WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; }
 
         /// <summary>
@@ -24,5 +33,10 @@ namespace Abp.WebApi.Configuration
         /// Default: true.
         /// </summary>
         bool IsValidationEnabledForControllers { get; set; }
+
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool IsAutomaticAntiForgeryValidationEnabled { get; set; }
     }
 }
