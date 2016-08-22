@@ -10,38 +10,48 @@ namespace Abp.Web.Security.AntiForgery
 {
     public static class AbpAntiForgeryTokenManagerWebApiExtensions
     {
-        public static void SetCookie(this IAbpAntiForgeryTokenManager manager, HttpResponseHeaders headers)
+        public static void SetCookie(this IAbpAntiForgeryManager manager, HttpResponseHeaders headers)
         {
-            headers.SetCookie(new Cookie(manager.Configuration.TokenCookieName, manager.TokenGenerator.Generate()));
+            headers.SetCookie(new Cookie(manager.Configuration.TokenCookieName, manager.GenerateToken()));
         }
 
-        public static bool IsValid(this IAbpAntiForgeryTokenManager manager, HttpRequestHeaders headers)
+        public static bool IsValid(this IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
         {
-            var antiForgeryCookie = headers.GetCookies(manager.Configuration.TokenCookieName).LastOrDefault();
-            if (antiForgeryCookie == null)
-            {
-                return true;
-            }
-
-            var cookieTokenValue = antiForgeryCookie[manager.Configuration.TokenCookieName].Value;
+            var cookieTokenValue = GetCookieValue(manager, headers);
             if (cookieTokenValue.IsNullOrEmpty())
             {
                 return true;
             }
 
-            IEnumerable<string> tokenHeaderValues;
-            if (!headers.TryGetValues(manager.Configuration.TokenHeaderName, out tokenHeaderValues))
+            var headerTokenValue = GetHeaderValue(manager, headers);
+            if (headerTokenValue.IsNullOrEmpty())
             {
                 return false;
             }
 
-            var headerTokenValue = tokenHeaderValues.Last();
-            if (headerTokenValue != cookieTokenValue)
+            return manager.IsValid(cookieTokenValue, headerTokenValue);
+        }
+
+        private static string GetCookieValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
+        {
+            var cookie = headers.GetCookies(manager.Configuration.TokenCookieName).LastOrDefault();
+            if (cookie == null)
             {
-                return false;
+                return null;
             }
 
-            return true;
+            return cookie[manager.Configuration.TokenCookieName].Value;
+        }
+
+        private static string GetHeaderValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
+        {
+            IEnumerable<string> headerValues;
+            if (!headers.TryGetValues(manager.Configuration.TokenHeaderName, out headerValues))
+            {
+                return null;
+            }
+
+            return headerValues.Last();
         }
     }
 }

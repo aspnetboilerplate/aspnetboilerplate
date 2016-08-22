@@ -172,8 +172,8 @@
         },
 
         ajaxSendHandler: function (event, request, settings) {
-            if (!settings.headers || settings.headers[abp.security.antiForgeryTokenHeaderName] === undefined) {
-                request.setRequestHeader(abp.security.antiForgeryTokenHeaderName, abp.security.getAntiForgeryToken());
+            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
+                request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, abp.security.antiForgery.getToken());
             }
         }
     });

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Dependency;
-using Abp.Web.Security;
 using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 using Abp.WebApi.Validation;
@@ -20,12 +19,11 @@ namespace Abp.WebApi.Security.AntiForgery
 
         public bool AllowMultiple => false;
 
-        private readonly IAbpAntiForgeryTokenManager _abpAntiForgeryManager;
+        private readonly IAbpAntiForgeryManager _abpAntiForgeryManager;
 
-        public AbpAntiForgeryApiFilter(IAbpAntiForgeryTokenManager abpAntiForgeryManager)
+        public AbpAntiForgeryApiFilter(IAbpAntiForgeryManager abpAntiForgeryManager)
         {
             _abpAntiForgeryManager = abpAntiForgeryManager;
-
             Logger = NullLogger.Instance;
         }
 
@@ -47,7 +45,7 @@ namespace Abp.WebApi.Security.AntiForgery
 
             if (!_abpAntiForgeryManager.IsValid(actionContext.Request.Headers))
             {
-                return CreateForbiddenResponse(actionContext, "A request done with an empty or invalid Anti Forgery header token. It should be same of the Cookie value!");
+                return CreateForbiddenResponse(actionContext, "Empty or invalid anti forgery header token.");
             }
             
             return await continuation();
