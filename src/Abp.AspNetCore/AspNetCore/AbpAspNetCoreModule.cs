@@ -16,7 +16,7 @@ namespace Abp.AspNetCore
         {
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
 
-            Configuration.ReplaceService<IAbpSession, AspNetCoreClaimsAbpSession>();
+            Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>();
         }
 
         public override void Initialize()

@@ -13,14 +13,11 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class ClaimsAbpSession : IAbpSession
     {
-        protected virtual ClaimsPrincipal Principal => Thread.CurrentPrincipal as ClaimsPrincipal;
-        protected virtual ClaimsIdentity Identity => Principal?.Identity as ClaimsIdentity;
-
         public virtual long? UserId
         {
             get
             {
-                var userIdClaim = Identity?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;
@@ -45,7 +42,7 @@ namespace Abp.Runtime.Session
                     return MultiTenancyConsts.DefaultTenantId;
                 }
 
-                var tenantIdClaim = Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
+                var tenantIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
                 if (string.IsNullOrEmpty(tenantIdClaim?.Value))
                 {
                     return null;
@@ -59,7 +56,7 @@ namespace Abp.Runtime.Session
         {
             get
             {
-                var impersonatorUserIdClaim = Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
+                var impersonatorUserIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
                 if (string.IsNullOrEmpty(impersonatorUserIdClaim?.Value))
                 {
                     return null;
@@ -78,7 +75,7 @@ namespace Abp.Runtime.Session
                     return MultiTenancyConsts.DefaultTenantId;
                 }
 
-                var impersonatorTenantIdClaim = Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
+                var impersonatorTenantIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
                 if (string.IsNullOrEmpty(impersonatorTenantIdClaim?.Value))
                 {
                     return null;
@@ -98,11 +95,14 @@ namespace Abp.Runtime.Session
             }
         }
 
+        public IPrincipalAccessor PrincipalAccessor { get; set; } //TODO: Convert to constructor-injection
+
         protected readonly IMultiTenancyConfig MultiTenancy;
 
         public ClaimsAbpSession(IMultiTenancyConfig multiTenancy)
         {
             MultiTenancy = multiTenancy;
+            PrincipalAccessor = DefaultPrincipalAccessor.Instance;
         }
     }
 }

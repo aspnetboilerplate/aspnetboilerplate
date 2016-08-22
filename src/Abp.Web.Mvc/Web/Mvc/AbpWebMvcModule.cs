@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Modules;
+using Abp.Runtime.Session;
 using Abp.Web.Mvc.Auditing;
 using Abp.Web.Mvc.Authorization;
 using Abp.Web.Mvc.Configuration;

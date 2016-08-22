@@ -2,6 +2,9 @@
 using System.Web;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
+using Abp.Runtime.Session;
+using Abp.Web.Session;
+using Abp.Configuration.Startup;
 
 namespace Abp.Web
 {
@@ -18,6 +21,8 @@ namespace Abp.Web
             {
                 XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
             }
+
+            Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>();
         }
 
         /// <inheritdoc/>
