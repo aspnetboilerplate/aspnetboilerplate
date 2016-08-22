@@ -1,5 +1,4 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
-using Abp.Web.Security;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration

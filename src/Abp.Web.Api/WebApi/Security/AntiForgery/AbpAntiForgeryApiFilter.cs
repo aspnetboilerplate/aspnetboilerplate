@@ -22,11 +22,16 @@ namespace Abp.WebApi.Security.AntiForgery
 
         private readonly IAbpAntiForgeryManager _abpAntiForgeryManager;
         private readonly IAbpWebApiConfiguration _webApiConfiguration;
+        private readonly IAbpAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
 
-        public AbpAntiForgeryApiFilter(IAbpAntiForgeryManager abpAntiForgeryManager, IAbpWebApiConfiguration webApiConfiguration)
+        public AbpAntiForgeryApiFilter(
+            IAbpAntiForgeryManager abpAntiForgeryManager, 
+            IAbpWebApiConfiguration webApiConfiguration,
+            IAbpAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
             _abpAntiForgeryManager = abpAntiForgeryManager;
             _webApiConfiguration = webApiConfiguration;
+            _antiForgeryWebConfiguration = antiForgeryWebConfiguration;
             Logger = NullLogger.Instance;
         }
 
@@ -41,7 +46,7 @@ namespace Abp.WebApi.Security.AntiForgery
                 return await continuation();
             }
 
-            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, actionContext.Request.Method.ToHttpVerb(), _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
+            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, actionContext.Request.Method.ToHttpVerb(), _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
             {
                 return await continuation();
             }

@@ -33,7 +33,7 @@ namespace Abp.Web.Security.AntiForgery
                 return false;
             }
 
-            return manager.IsValid(cookieValue, formOrHeaderValue);
+            return manager.As<IAbpAntiForgeryValidator>().IsValid(cookieValue, formOrHeaderValue);
         }
 
         private static string GetCookieValue(HttpContextBase context)

@@ -7,7 +7,6 @@ using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 using Abp.Web.Configuration;
 using Abp.Web.Localization;
-using Abp.Web.Security;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web

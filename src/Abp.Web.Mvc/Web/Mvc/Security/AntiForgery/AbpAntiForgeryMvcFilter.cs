@@ -17,12 +17,17 @@ namespace Abp.Web.Mvc.Security.AntiForgery
         public ILogger Logger { get; set; }
 
         private readonly IAbpAntiForgeryManager _abpAntiForgeryManager;
-        private readonly IAbpMvcConfiguration _configuration;
+        private readonly IAbpMvcConfiguration _mvcConfiguration;
+        private readonly IAbpAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
 
-        public AbpAntiForgeryMvcFilter(IAbpAntiForgeryManager abpAntiForgeryManager, IAbpMvcConfiguration configuration)
+        public AbpAntiForgeryMvcFilter(
+            IAbpAntiForgeryManager abpAntiForgeryManager, 
+            IAbpMvcConfiguration mvcConfiguration,
+            IAbpAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
             _abpAntiForgeryManager = abpAntiForgeryManager;
-            _configuration = configuration;
+            _mvcConfiguration = mvcConfiguration;
+            _antiForgeryWebConfiguration = antiForgeryWebConfiguration;
             Logger = NullLogger.Instance;
         }
 
@@ -35,7 +40,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             }
 
             var httpVerb = HttpVerbHelper.Create(context.HttpContext.Request.HttpMethod);
-            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, httpVerb, _configuration.IsAutomaticAntiForgeryValidationEnabled))
+            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, httpVerb, _mvcConfiguration.IsAutomaticAntiForgeryValidationEnabled))
             {
                 return;
             }

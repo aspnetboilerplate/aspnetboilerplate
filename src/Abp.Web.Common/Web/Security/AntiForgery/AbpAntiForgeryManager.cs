@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using Abp.Dependency;
-using Abp.Reflection;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Security.AntiForgery
 {
-    public class AbpAntiForgeryManager : IAbpAntiForgeryManager, ITransientDependency
+    public class AbpAntiForgeryManager : IAbpAntiForgeryManager, IAbpAntiForgeryValidator, ITransientDependency
     {
         public ILogger Logger { protected get; set; }
 
@@ -16,36 +14,6 @@ namespace Abp.Web.Security.AntiForgery
         {
             Configuration = configuration;
             Logger = NullLogger.Instance;
-        }
-
-        public virtual bool ShouldValidate(MethodInfo methodInfo, HttpVerb httpVerb, bool defaultValue)
-        {
-            if (!Configuration.IsEnabled)
-            {
-                return false;
-            }
-
-            if (methodInfo.IsDefined(typeof(ValidateAbpAntiForgeryTokenAttribute), true))
-            {
-                return true;
-            }
-
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableAbpAntiForgeryTokenValidationAttribute>(methodInfo) != null)
-            {
-                return false;
-            }
-
-            if (Configuration.IgnoredHttpVerbs.Contains(httpVerb))
-            {
-                return false;
-            }
-
-            if (methodInfo.DeclaringType?.IsDefined(typeof(ValidateAbpAntiForgeryTokenAttribute), true) ?? false)
-            {
-                return true;
-            }
-
-            return defaultValue;
         }
 
         public virtual string GenerateToken()

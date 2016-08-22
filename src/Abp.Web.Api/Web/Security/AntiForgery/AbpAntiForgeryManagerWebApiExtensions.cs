@@ -29,7 +29,7 @@ namespace Abp.Web.Security.AntiForgery
                 return false;
             }
 
-            return manager.IsValid(cookieTokenValue, headerTokenValue);
+            return manager.As<IAbpAntiForgeryValidator>().IsValid(cookieTokenValue, headerTokenValue);
         }
 
         private static string GetCookieValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)

@@ -5,6 +5,8 @@ using Abp.Modules;
 using Abp.Runtime.Session;
 using Abp.Web.Session;
 using Abp.Configuration.Startup;
+using Abp.Web.Configuration;
+using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web
 {
@@ -17,6 +19,9 @@ namespace Abp.Web
         /// <inheritdoc/>
         public override void PreInitialize()
         {
+            IocManager.Register<IAbpAntiForgeryWebConfiguration, AbpAntiForgeryWebConfiguration>();
+            IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
+            
             if (HttpContext.Current != null)
             {
                 XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");

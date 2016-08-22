@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Abp.Web.Security.AntiForgery
+﻿namespace Abp.Web.Security.AntiForgery
 {
+    /// <summary>
+    /// Common configuration shared between ASP.NET Core, ASP.NET MVC and ASP.NET Web API.
+    /// </summary>
     public interface IAbpAntiForgeryConfiguration
     {
         /// <summary>
@@ -15,17 +16,5 @@ namespace Abp.Web.Security.AntiForgery
         /// Default value: "X-XSRF-TOKEN". 
         /// </summary>
         string TokenHeaderName { get; set; }
-
-        /// <summary>
-        /// Used to enable/disable Anti Forgery token security.
-        /// Default: true (enabled).
-        /// </summary>
-        bool IsEnabled { get; set; }
-
-        /// <summary>
-        /// A list of ignored HTTP verbs for Anti Forgery token validation.
-        /// Default list: Get, Head, Options, Trace.
-        /// </summary>
-        HashSet<HttpVerb> IgnoredHttpVerbs { get; }
     }
 }
