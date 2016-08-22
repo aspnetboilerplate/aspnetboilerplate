@@ -1,14 +1,20 @@
-﻿using System.Web;
+﻿using System.Security.Claims;
+using System.Security.Principal;
+using System.Web;
 using System.Web.Helpers;
 using Abp.Extensions;
-using Abp.Web.Security.AntiForgery;
 
-namespace Abp.Web.Security
+namespace Abp.Web.Security.AntiForgery
 {
     public static class AbpAntiForgeryTokenManagerMvcExtensions
     {
-        public static void SetCookie(this IAbpAntiForgeryManager manager, HttpContextBase context)
+        public static void SetCookie(this IAbpAntiForgeryManager manager, HttpContextBase context, IIdentity identity = null)
         {
+            if (identity != null)
+            {
+                context.User = new ClaimsPrincipal(identity);
+            }
+
             context.Response.Cookies.Add(new HttpCookie(manager.Configuration.TokenCookieName, manager.GenerateToken()));
         }
 
