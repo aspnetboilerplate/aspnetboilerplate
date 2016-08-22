@@ -7,7 +7,7 @@ using Abp.Extensions;
 
 namespace Abp.Web.Security.AntiForgery
 {
-    public static class AbpAntiForgeryTokenManagerMvcExtensions
+    public static class AbpAntiForgeryManagerMvcExtensions
     {
         public static void SetCookie(this IAbpAntiForgeryManager manager, HttpContextBase context, IIdentity identity = null)
         {

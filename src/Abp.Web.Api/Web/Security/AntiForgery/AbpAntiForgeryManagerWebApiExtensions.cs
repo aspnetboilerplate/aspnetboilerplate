@@ -8,7 +8,7 @@ using Abp.WebApi.Extensions;
 
 namespace Abp.Web.Security.AntiForgery
 {
-    public static class AbpAntiForgeryTokenManagerWebApiExtensions
+    public static class AbpAntiForgeryManagerWebApiExtensions
     {
         public static void SetCookie(this IAbpAntiForgeryManager manager, HttpResponseHeaders headers)
         {

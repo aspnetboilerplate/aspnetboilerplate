@@ -11,6 +11,7 @@ using Abp.AspNetCore.Mvc.Providers;
 using Abp.Json;
 using Abp.Modules;
 using Abp.MsDependencyInjection.Extensions;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
@@ -73,7 +74,10 @@ namespace Abp.AspNetCore
             });
 
             //Configure MVC
-            services.Configure<MvcOptions>(mvcOptions => mvcOptions.AddAbp(services));
+            services.Configure<MvcOptions>(mvcOptions =>
+            {
+                mvcOptions.AddAbp(services);
+            });
         }
 
         private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services, IIocManager iocManager)
