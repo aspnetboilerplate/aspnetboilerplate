@@ -47,11 +47,11 @@ namespace Abp.Web.Mvc.Security.AntiForgery
 
             if (!_abpAntiForgeryManager.IsValid(context.HttpContext))
             {
-                CreateForbiddenResponse(context, methodInfo, "Empty or invalid anti forgery header token.");
+                CreateErrorResponse(context, methodInfo, "Empty or invalid anti forgery header token.");
             }
         }
 
-        private void CreateForbiddenResponse(
+        private void CreateErrorResponse(
             AuthorizationContext context, 
             MethodInfo methodInfo, 
             string message)
@@ -59,7 +59,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             Logger.Warn(message);
             Logger.Warn("Requested URI: " + context.HttpContext.Request.Url);
 
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.HttpContext.Response.StatusDescription = message;
 
             var isJsonResult = MethodInfoHelper.IsJsonResult(methodInfo);

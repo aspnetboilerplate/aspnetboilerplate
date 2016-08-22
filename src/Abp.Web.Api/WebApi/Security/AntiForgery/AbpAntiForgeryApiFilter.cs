@@ -53,17 +53,17 @@ namespace Abp.WebApi.Security.AntiForgery
 
             if (!_abpAntiForgeryManager.IsValid(actionContext.Request.Headers))
             {
-                return CreateForbiddenResponse(actionContext, "Empty or invalid anti forgery header token.");
+                return CreateErrorResponse(actionContext, "Empty or invalid anti forgery header token.");
             }
 
             return await continuation();
         }
 
-        protected virtual HttpResponseMessage CreateForbiddenResponse(HttpActionContext actionContext, string reason)
+        protected virtual HttpResponseMessage CreateErrorResponse(HttpActionContext actionContext, string reason)
         {
             Logger.Warn(reason);
             Logger.Warn("Requested URI: " + actionContext.Request.RequestUri);
-            return new HttpResponseMessage(HttpStatusCode.Forbidden) { ReasonPhrase = reason };
+            return new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = reason };
         }
     }
 }
