@@ -51,7 +51,13 @@ namespace Abp.Web.Security.AntiForgery
                 return null;
             }
 
-            return headerValues.Last();
+            var headersArray = headerValues.ToArray();
+            if (!headersArray.Any())
+            {
+                return null;
+            }
+            
+            return headersArray.Last().Split(", ").Last();
         }
     }
 }

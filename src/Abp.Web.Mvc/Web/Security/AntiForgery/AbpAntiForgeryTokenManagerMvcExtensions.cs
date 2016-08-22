@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Helpers;
@@ -49,7 +50,19 @@ namespace Abp.Web.Security.AntiForgery
                 return formValue;
             }
 
-            return context.Request.Headers[configuration.TokenHeaderName];
+            var headerValues = context.Request.Headers.GetValues(configuration.TokenHeaderName);
+            if (headerValues == null)
+            {
+                return null;
+            }
+
+            var headersArray = headerValues.ToArray();
+            if (!headersArray.Any())
+            {
+                return null;
+            }
+
+            return headersArray.Last().Split(", ").Last();
         }
     }
 }

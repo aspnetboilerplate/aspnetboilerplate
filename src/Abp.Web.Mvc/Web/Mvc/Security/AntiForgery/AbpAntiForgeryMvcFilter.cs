@@ -6,7 +6,6 @@ using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Extensions;
 using Abp.Web.Mvc.Helpers;
-using Abp.Web.Security;
 using Abp.Web.Security.AntiForgery;
 using Castle.Core.Logging;
 
@@ -33,7 +32,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             }
 
             var httpVerb = HttpVerbHelper.Create(context.HttpContext.Request.HttpMethod);
-            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, httpVerb, false))
+            if (!_abpAntiForgeryManager.ShouldValidate(methodInfo, httpVerb, true))
             {
                 return;
             }
