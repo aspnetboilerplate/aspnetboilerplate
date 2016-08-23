@@ -72,10 +72,10 @@ using Abp.Web.Configuration;
 ...
 public override void PreInitialize() 
 {
-    Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;
+    Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
 }
 ...</pre>
-			<p>In this example, we configured AbpWeb module to send all exceptions to 
+			<p>In this example, we configured AbpWebCommon module to send all exceptions to 
 clients.</p>
 			<p>Not every module should define this type of configuration. It's generally needed when a 
 module will be re-usable in different applications and needs to be configured on 

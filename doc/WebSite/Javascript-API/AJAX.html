@@ -136,13 +136,15 @@ function. If your server side code throws an exception type of
 Otherwise, it hides the actual error (writes error to logs) and shows a standard 
 ''An internal error occured..." message to the user. All these are automatically 
 done by ASP.NET Boilerplate.</p>
+	<p>You may want to disable displaying message for particular AJAX call. Then 
+	add <strong>abpHandleError: false</strong> into abp.ajax options.</p>
 	<h5>HTTP Status Codes</h5>
 	<p>ABP returns given HTTP status codes on exceptions:</p>
 	<ul>
 		<li><strong>401</strong> for unauthenticated requests (Used has not 
 		logged in but server action needs authentication).</li>
 		<li><strong>403</strong> for unauthorized requests.</li>
-		<li>&nbsp;<strong>500</strong> for all other exception types.</li>
+		<li><strong>500</strong> for all other exception types.</li>
 	</ul>
 <h4>WrapResult and DontWrapResult Attributes</h4>
 <p>You can control wrapping using <strong>WrapResult</strong> and <strong>
