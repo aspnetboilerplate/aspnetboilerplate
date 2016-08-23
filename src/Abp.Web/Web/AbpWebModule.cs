@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Web;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
@@ -7,6 +8,7 @@ using Abp.Web.Session;
 using Abp.Configuration.Startup;
 using Abp.Web.Configuration;
 using Abp.Web.Security.AntiForgery;
+using Abp.Collections.Extensions;
 
 namespace Abp.Web
 {
@@ -28,12 +30,27 @@ namespace Abp.Web
             }
 
             Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>();
+
+            AddIgnoredTypes();
         }
 
         /// <inheritdoc/>
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());            
+        }
+
+        private void AddIgnoredTypes()
+        {
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
+
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileWrapper));
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileWrapper>));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileWrapper));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileWrapper>));
         }
     }
 }
