@@ -107,7 +107,7 @@
                 response.data = originalData.error;
                 defer.reject(response);
 
-                if (response.status == 401) {
+                if (response.status == 401 && response.config.abpHandleError !== false) {
                     abp.ng.http.handleUnAuthorizedRequest(messagePromise, originalData.targetUrl);
                 }
             } else { //not wrapped result
