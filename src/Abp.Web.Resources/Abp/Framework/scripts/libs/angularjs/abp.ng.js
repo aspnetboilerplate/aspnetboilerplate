@@ -48,22 +48,24 @@
         },
 
         handleNonAbpErrorResponse: function (response, defer) {
-            switch (response.status) {
-                case 401:
-                    abp.ng.http.handleUnAuthorizedRequest(
-                        abp.ng.http.showError(abp.ng.http.defaultError401),
-                        abp.appPath
-                    );
-                    break;
-                case 403:
-                    abp.ng.http.showError(abp.ajax.defaultError403);
-                    break;
-                case 404:
-                    abp.ng.http.showError(abp.ajax.defaultError404);
-                    break;
-                default:
-                    abp.ng.http.showError(abp.ng.http.defaultError);
-                    break;
+            if (response.config.abpHandleError !== false) {
+                switch (response.status) {
+                    case 401:
+                        abp.ng.http.handleUnAuthorizedRequest(
+                            abp.ng.http.showError(abp.ng.http.defaultError401),
+                            abp.appPath
+                        );
+                        break;
+                    case 403:
+                        abp.ng.http.showError(abp.ajax.defaultError403);
+                        break;
+                    case 404:
+                        abp.ng.http.showError(abp.ajax.defaultError404);
+                        break;
+                    default:
+                        abp.ng.http.showError(abp.ng.http.defaultError);
+                        break;
+                }
             }
 
             defer.reject(response);
@@ -93,7 +95,9 @@
                 var messagePromise = null;
 
                 if (originalData.error) {
-                    messagePromise = abp.ng.http.showError(originalData.error);
+                    if (response.config.abpHandleError !== false) {
+                        messagePromise = abp.ng.http.showError(originalData.error);
+                    }
                 } else {
                     originalData.error = defaultError;
                 }
