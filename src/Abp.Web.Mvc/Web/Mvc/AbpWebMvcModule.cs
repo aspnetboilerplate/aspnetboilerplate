@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Modules;
 using Abp.Web.Mvc.Auditing;
@@ -32,8 +30,6 @@ namespace Abp.Web.Mvc
             IocManager.Register<IAbpMvcConfiguration, AbpMvcConfiguration>();
 
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpMvcAntiForgeryManager>();
-
-            AddIgnoredTypes();
         }
 
         /// <inheritdoc/>
@@ -56,14 +52,6 @@ namespace Abp.Web.Mvc
             var abpMvcDateTimeBinder = new AbpMvcDateTimeBinder();
             ModelBinders.Binders.Add(typeof(DateTime), abpMvcDateTimeBinder);
             ModelBinders.Binders.Add(typeof(DateTime?), abpMvcDateTimeBinder);
-        }
-
-        private void AddIgnoredTypes()
-        {
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
         }
     }
 }
