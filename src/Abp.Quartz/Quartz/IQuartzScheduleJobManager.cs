@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Abp.Threading.BackgroundWorkers;
-
 using Quartz;
 
 namespace Abp.Quartz.Quartz

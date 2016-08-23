@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Abp.BackgroundJobs;
 using Abp.Quartz.Quartz.Configuration;
 using Abp.Threading.BackgroundWorkers;
-
 using Quartz;
 
 namespace Abp.Quartz.Quartz
 {
     public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager
     {
-        private readonly IBackgroundJobConfiguration backgroundJobConfiguration;
-        private readonly IAbpQuartzConfiguration quartzConfiguration;
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
+        private readonly IAbpQuartzConfiguration _quartzConfiguration;
 
-        public QuartzScheduleJobManager(IAbpQuartzConfiguration quartzConfiguration, IBackgroundJobConfiguration backgroundJobConfiguration)
+        public QuartzScheduleJobManager(
+            IAbpQuartzConfiguration quartzConfiguration, 
+            IBackgroundJobConfiguration backgroundJobConfiguration)
         {
-            this.quartzConfiguration = quartzConfiguration;
-            this.backgroundJobConfiguration = backgroundJobConfiguration;
+            _quartzConfiguration = quartzConfiguration;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
         }
 
-        public Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger) where TJob : IJob
+        public Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger)
+            where TJob : IJob
         {
             var jobToBuild = JobBuilder.Create<TJob>();
             configureJob(jobToBuild);
@@ -30,7 +31,7 @@ namespace Abp.Quartz.Quartz
             configureTrigger(triggerToBuild);
             var trigger = triggerToBuild.Build();
 
-            quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
+            _quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
 
             return Task.FromResult(0);
         }
@@ -39,19 +40,19 @@ namespace Abp.Quartz.Quartz
         {
             base.Start();
 
-            if (backgroundJobConfiguration.IsJobExecutionEnabled)
+            if (_backgroundJobConfiguration.IsJobExecutionEnabled)
             {
-                quartzConfiguration.Scheduler.Start();
+                _quartzConfiguration.Scheduler.Start();
             }
         }
 
         public override void WaitToStop()
         {
-            if (quartzConfiguration.Scheduler != null)
+            if (_quartzConfiguration.Scheduler != null)
             {
                 try
                 {
-                    quartzConfiguration.Scheduler.Shutdown(true);
+                    _quartzConfiguration.Scheduler.Shutdown(true);
                 }
                 catch (Exception ex)
                 {
