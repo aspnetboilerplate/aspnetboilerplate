@@ -96,6 +96,13 @@
 	HTML helper for our <strong>HTML forms</strong> which are <strong>not posted via AJAX</strong> 
 	(But <strong>no need</strong> to
 		ValidateAbpAntiForgeryToken attribute for the corresponding action).</p>
+	<h4>Configuration</h4>
+	<p>XSRF protection is <strong>enabled by default</strong>. You can disable or configure it in 
+	your <a href="Module-System.html">module</a>'s PreInitialize method. 
+	Example:</p>
+	<pre lang="cs">Configuration.Modules.AbpWeb().AntiForgery.IsEnabled = false;</pre>
+	<p>You can also configure token and cookie names using <em>
+	Configuration.Modules.AbpWebCommon().AntiForgery</em> object.</p>
 	<h3>ASP.NET Web API</h3>
 	<h4>Features</h4>
 	<p>ASP.NET Web API <strong>does not</strong> include an anti forgery 
