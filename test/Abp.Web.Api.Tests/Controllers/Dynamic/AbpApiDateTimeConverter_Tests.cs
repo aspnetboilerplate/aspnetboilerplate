@@ -22,7 +22,7 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
         [InlineData("2016-04-13 01:58:10.526PM+05:00")]
         public void DateTimeConverter_Utc_Tests(string sourceDate)
         {
-            Clock.Provider = new UtcClockProvider();
+            Clock.Provider = ClockProviders.Utc;
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc);
 
             var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
@@ -56,7 +56,7 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
 
         private void DateTimeConverter_Local_Test_Internal(string sourceDate)
         {
-            Clock.Provider = new LocalClockProvider();
+            Clock.Provider = ClockProviders.Local;
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc).ToLocalTime();
 
             var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
