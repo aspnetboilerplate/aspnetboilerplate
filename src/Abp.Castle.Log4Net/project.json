@@ -1,8 +1,8 @@
 {
-  "version": "0.11.0.0-*",
+  "version": "0.11.0.2-*",
 
   "dependencies": {
-    "Abp": "0.11.0.0-*",
+    "Abp": "0.11.0.2-*",
     "Castle.LoggingFacility": "3.3.0",
     "Castle.Windsor": "3.3.0",
     "log4net": "2.0.5"
