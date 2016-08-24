@@ -20,7 +20,7 @@ namespace Abp.Tests.Json
         [Fact]
         public void Test_2()
         {
-            Clock.Provider = new UtcClockProvider();
+            Clock.Provider = ClockProviders.Utc;
 
             var str = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass2, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
             var result = (MyClass2)JsonSerializationHelper.DeserializeWithType(str);
@@ -32,7 +32,7 @@ namespace Abp.Tests.Json
         [Fact]
         public void Test_3()
         {
-            Clock.Provider = new LocalClockProvider();
+            Clock.Provider = ClockProviders.Local;
 
             var myClass = new MyClass2(new DateTime(2016, 04, 13, 08, 58, 10, 526, Clock.Kind));
             var str = JsonSerializationHelper.SerializeWithType(myClass);

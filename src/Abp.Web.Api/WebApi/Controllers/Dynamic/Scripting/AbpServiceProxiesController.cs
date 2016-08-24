@@ -2,6 +2,8 @@
 using System.Net.Http.Headers;
 using Abp.Auditing;
 using Abp.Web.Models;
+using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
@@ -11,6 +13,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     /// </summary>
     [DontWrapResult]
     [DisableAuditing]
+    [DisableAbpAntiForgeryTokenValidation]
     public class AbpServiceProxiesController : AbpApiController
     {
         private readonly ScriptProxyManager _scriptProxyManager;

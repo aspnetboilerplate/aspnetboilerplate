@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Runtime.Validation.Interception;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -11,7 +12,13 @@ namespace Abp.AspNetCore.Mvc.Validation
         protected ActionExecutingContext ActionContext { get; private set; }
 
         private bool _isValidatedBefore;
-        
+
+        public MvcActionInvocationValidator(IValidationConfiguration configuration)
+            : base(configuration)
+        {
+
+        }
+
         public void Initialize(ActionExecutingContext actionContext)
         {
             base.Initialize(

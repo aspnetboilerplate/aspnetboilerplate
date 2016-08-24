@@ -1,4 +1,7 @@
-﻿namespace Abp.Auditing
+﻿using System;
+using System.Collections.Generic;
+
+namespace Abp.Auditing
 {
     /// <summary>
     /// Used to configure auditing.
@@ -26,5 +29,10 @@
         /// List of selectors to select classes/interfaces which should be audited as default.
         /// </summary>
         IAuditingSelectorList Selectors { get; }
+
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        HashSet<Type> IgnoredTypes { get; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Web.Mvc;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Extensions;
 using Abp.Runtime.Validation.Interception;
 
@@ -12,6 +13,12 @@ namespace Abp.Web.Mvc.Validation
         protected ActionExecutingContext ActionContext { get; private set; }
 
         private bool _isValidatedBefore;
+
+        public MvcActionInvocationValidator(IValidationConfiguration configuration) 
+            : base(configuration)
+        {
+
+        }
 
         public void Initialize(ActionExecutingContext actionContext, MethodInfo methodInfo)
         {

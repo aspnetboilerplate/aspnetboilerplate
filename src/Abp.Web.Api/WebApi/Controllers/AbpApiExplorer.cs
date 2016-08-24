@@ -60,7 +60,7 @@ namespace Abp.Web.Api.Description
                     httpaction.Configuration = _config;
                     httpaction.ControllerType = dynamicapiinfo.ServiceInterfaceType;
                     httpaction.ControllerName = dynamicapiinfo.ServiceName;               
-                    var action = new DynamicHttpActionDescriptor(_abpWebApiConfiguration, httpaction, item.Value.Method, item.Value.Filters);
+                    var action = new DynamicHttpActionDescriptor(_abpWebApiConfiguration, httpaction, item.Value);
                     api.ActionDescriptor = action;
                     api.HttpMethod = GetMethod(item.Value.Verb);
                     IActionValueBinder actionValueBinder = _config.Services.GetActionValueBinder();

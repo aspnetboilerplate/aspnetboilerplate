@@ -56,6 +56,11 @@ namespace Abp.Configuration.Startup
         IAuthorizationConfiguration Authorization { get; }
 
         /// <summary>
+        /// Used to configure validation.
+        /// </summary>
+        IValidationConfiguration Validation { get; }
+
+        /// <summary>
         /// Used to configure settings.
         /// </summary>
         ISettingsConfiguration Settings { get; }

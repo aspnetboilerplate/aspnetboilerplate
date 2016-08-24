@@ -29,7 +29,7 @@ namespace Abp.Runtime.Caching.Redis
                 : null;
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             if (value == null)
             {
@@ -47,7 +47,7 @@ namespace Abp.Runtime.Caching.Redis
             _database.StringSet(
                 GetLocalizedKey(key),
                 JsonSerializationHelper.SerializeWithType(value, type),
-                slidingExpireTime
+                absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
         }
 

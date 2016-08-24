@@ -31,13 +31,6 @@ framework. ASP.NET Core integration is implemented in
     public <strong>IServiceProvider</strong> ConfigureServices(IServiceCollection services)
     {
         //...
-    
-        services.AddMvc(mvcOptions =&gt;
-        {
-<strong>            //Add ABP infrastructure to MVC
-            mvcOptions.AddAbp(services);
-</strong>            //...
-        });
 
 <strong>        //Configure Abp and Dependency Injection. Should be called last.
         return services.AddAbp&lt;MyProjectWebModule&gt;(options =&gt;

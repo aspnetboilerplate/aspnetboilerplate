@@ -18,20 +18,18 @@
 
         return $.Deferred(function ($dfd) {
             $.ajax(options)
-                .done(function (data) {
+                .done(function (data, textStatus, jqXHR) {
                     if (data.__abp) {
-                        abp.ajax.handleResponse(data, userOptions, $dfd);
+                        abp.ajax.handleResponse(data, userOptions, $dfd, jqXHR);
                     } else {
                         $dfd.resolve(data);
                         userOptions.success && userOptions.success(data);
                     }
                 }).fail(function (jqXHR) {
                     if (jqXHR.responseJSON && jqXHR.responseJSON.__abp) {
-                        abp.ajax.handleResponse(jqXHR.responseJSON, userOptions, $dfd);
+                        abp.ajax.handleResponse(jqXHR.responseJSON, userOptions, $dfd, jqXHR);
                     } else {
-                        abp.ajax.showError(abp.ajax.defaultError);
-                        $dfd.reject.apply(this, arguments);
-                        userOptions.error && userOptions.error.apply(this, arguments);
+                        abp.ajax.handleNonAbpErrorResponse(jqXHR, userOptions, $dfd);
                     }
                 });
         });
@@ -49,6 +47,21 @@
             details: 'Error detail not sent by server.'
         },
 
+        defaultError401: {
+            message: 'You are not authenticated!',
+            details: 'You should be authenticated (sign in) in order to perform this operation.'
+        },
+
+        defaultError403: {
+            message: 'You are not authorized!',
+            details: 'You are not allowed to perform this operation.'
+        },
+
+        defaultError404: {
+            message: 'Resource not found!',
+            details: 'The resource requested could not found on the server.'
+        },
+
         logError: function (error) {
             abp.log.error(error);
         },
@@ -63,10 +76,33 @@
 
         handleTargetUrl: function (targetUrl) {
             if (!targetUrl) {
-                location.reload();
+                location.href = abp.appPath;
             } else {
                 location.href = targetUrl;
             }
+        },
+
+        handleNonAbpErrorResponse: function (jqXHR, userOptions, $dfd) {
+            switch (jqXHR.status) {
+                case 401:
+                    abp.ajax.handleUnAuthorizedRequest(
+                        abp.ajax.showError(abp.ajax.defaultError401),
+                        abp.appPath
+                    );
+                    break;
+                case 403:
+                    abp.ajax.showError(abp.ajax.defaultError403);
+                    break;
+                case 404:
+                    abp.ajax.showError(abp.ajax.defaultError404);
+                    break;
+                default:
+                    abp.ajax.showError(abp.ajax.defaultError);
+                    break;
+            }
+
+            $dfd.reject.apply(this, arguments);
+            userOptions.error && userOptions.error.apply(this, arguments);
         },
 
         handleUnAuthorizedRequest: function (messagePromise, targetUrl) {
@@ -79,11 +115,11 @@
             }
         },
 
-        handleResponse: function (data, userOptions, $dfd) {
+        handleResponse: function (data, userOptions, $dfd, jqXHR) {
             if (data) {
                 if (data.success === true) {
-                    $dfd && $dfd.resolve(data.result, data);
-                    userOptions.success && userOptions.success(data.result, data);
+                    $dfd && $dfd.resolve(data.result, data, jqXHR);
+                    userOptions.success && userOptions.success(data.result, data, jqXHR);
 
                     if (data.targetUrl) {
                         abp.ajax.handleTargetUrl(data.targetUrl);
@@ -99,19 +135,19 @@
 
                     abp.ajax.logError(data.error);
 
-                    $dfd && $dfd.reject(data.error);
-                    userOptions.error && userOptions.error(data.error);
+                    $dfd && $dfd.reject(data.error, jqXHR);
+                    userOptions.error && userOptions.error(data.error, jqXHR);
 
-                    if (data.unAuthorizedRequest) {
+                    if (jqXHR.status === 401) {
                         abp.ajax.handleUnAuthorizedRequest(messagePromise, data.targetUrl);
                     }
                 } else { //not wrapped result
-                    $dfd && $dfd.resolve(data);
-                    userOptions.success && userOptions.success(data);
+                    $dfd && $dfd.resolve(data, null, jqXHR);
+                    userOptions.success && userOptions.success(data, null, jqXHR);
                 }
             } else { //no data sent to back
-                $dfd && $dfd.resolve();
-                userOptions.success && userOptions.success();
+                $dfd && $dfd.resolve(jqXHR);
+                userOptions.success && userOptions.success(jqXHR);
             }
         },
 
@@ -133,7 +169,17 @@
                     abp.ui.clearBusy(options.blockUI);
                 }
             }
+        },
+
+        ajaxSendHandler: function (event, request, settings) {
+            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
+                request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, abp.security.antiForgery.getToken());
+            }
         }
+    });
+
+    $(document).ajaxSend(function (event, request, settings) {
+        return abp.ajax.ajaxSendHandler(event, request, settings);
     });
 
     /* JQUERY PLUGIN ENHANCEMENTS ********************************************/
@@ -177,6 +223,12 @@
     abp.event.on('abp.dynamicScriptsInitialized', function () {
         abp.ajax.defaultError.message = abp.localization.abpWeb('DefaultError');
         abp.ajax.defaultError.details = abp.localization.abpWeb('DefaultErrorDetail');
+        abp.ajax.defaultError401.message = abp.localization.abpWeb('DefaultError401');
+        abp.ajax.defaultError401.details = abp.localization.abpWeb('DefaultErrorDetail401');
+        abp.ajax.defaultError403.message = abp.localization.abpWeb('DefaultError403');
+        abp.ajax.defaultError403.details = abp.localization.abpWeb('DefaultErrorDetail403');
+        abp.ajax.defaultError404.message = abp.localization.abpWeb('DefaultError404');
+        abp.ajax.defaultError404.details = abp.localization.abpWeb('DefaultErrorDetail404');
     });
 
 })(jQuery);

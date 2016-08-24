@@ -114,6 +114,10 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 	<p>You can use <strong>UnitOfWork</strong> attribute to control behaviour of 
 	UOW for an action. You can also use startup configuration to change default 
 	unit of work attribute for all actions.</p>
+		<h4>Anti Forgery</h4>
+		<p><strong>AbpAntiForgeryMvcFilter</strong> is used to auto protect MVC 
+		actions for POST, PUT and DELETE requests from CSRF/XSRF attacks. See
+		<a href="XSRF-CSRF-Protection.html">CSRF documentation</a> for more.</p>
 		<h3>Model Binders</h3>
 		<p><strong>AbpMvcDateTimeBinder</strong> is used to normalize DateTime 
 	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 

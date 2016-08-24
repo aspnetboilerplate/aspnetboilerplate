@@ -33,7 +33,7 @@
     And we want to expose this service as a Web API Controller for clients. 
 	ASP.NET Boilerplate can automatically and dynamically create a Web API 
 	Controller for this application service with a single line of configuration:</p>
-			<pre lang="cs">DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;("tasksystem/task").Build();</pre>
+			<pre lang="cs">DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;(<strong>"tasksystem/task"</strong>).Build();</pre>
 			<p>
     Thats 
 	all! An api controller is created in the address '<strong>/api/services/tasksystem/task</strong>' and all methods are now usable by clients.
@@ -194,6 +194,9 @@ them as second argument as sown below:</p>
 			<p>All parameters of
 				<a href="http://api.jquery.com/jQuery.ajax/" target="_blank">jQuery.ajax</a> are 
 valid here.</p>
+			<p>In addition to standard jQuery.ajax parameters, you can add
+			<strong>abpHandleError: false</strong> to AJAX options in order to 
+			disable automatic message displaying on error cases.</p>
 			<h4 id="DocSingleService">Single Service Script</h4>
 			<p>'/api/AbpServiceProxies/GetAll' generates all service proxies in one file. 
 You can also generate a sinle service proxy using 

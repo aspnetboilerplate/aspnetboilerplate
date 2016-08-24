@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Abp.Web;
 
@@ -16,42 +17,70 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <returns>True, if they are equal</returns>
         public static bool IsEqualTo(this HttpVerb verb, HttpMethod method)
         {
-            if (verb == HttpVerb.Get && method == HttpMethod.Get)
+            return verb.ToHttpMethod() == method;
+        }
+
+        public static HttpMethod ToHttpMethod(this HttpVerb verb)
+        {
+            switch (verb)
             {
-                return true;
+                case HttpVerb.Get:
+                    return HttpMethod.Get;
+                case HttpVerb.Post:
+                    return HttpMethod.Post;
+                case HttpVerb.Put:
+                    return HttpMethod.Put;
+                case HttpVerb.Delete:
+                    return HttpMethod.Delete;
+                case HttpVerb.Options:
+                    return HttpMethod.Options;
+                case HttpVerb.Trace:
+                    return HttpMethod.Trace;
+                case HttpVerb.Head:
+                    return HttpMethod.Head;
+                default:
+                    throw new ArgumentException("Given HttpVerb is unknown: " + verb, nameof(verb));
+            }
+        }
+
+        public static HttpVerb ToHttpVerb(this HttpMethod method)
+        {
+            if (method == HttpMethod.Get)
+            {
+                return HttpVerb.Get;
             }
 
-            if (verb == HttpVerb.Post && method == HttpMethod.Post)
+            if (method == HttpMethod.Post)
             {
-                return true;
+                return HttpVerb.Post;
             }
 
-            if (verb == HttpVerb.Put && method == HttpMethod.Put)
+            if (method == HttpMethod.Put)
             {
-                return true;
+                return HttpVerb.Put;
             }
 
-            if (verb == HttpVerb.Delete && method == HttpMethod.Delete)
+            if (method == HttpMethod.Delete)
             {
-                return true;
+                return HttpVerb.Delete;
             }
 
-            if (verb == HttpVerb.Options && method == HttpMethod.Options)
+            if (method == HttpMethod.Options)
             {
-                return true;
+                return HttpVerb.Options;
             }
 
-            if (verb == HttpVerb.Trace && method == HttpMethod.Trace)
+            if (method == HttpMethod.Trace)
             {
-                return true;
+                return HttpVerb.Trace;
             }
 
-            if (verb == HttpVerb.Head && method == HttpMethod.Head)
+            if (method == HttpMethod.Head)
             {
-                return true;
+                return HttpVerb.Head;
             }
 
-            return false;
+            throw new ArgumentException("Given HttpMethod is unknown: " + method, nameof(method));
         }
     }
 }

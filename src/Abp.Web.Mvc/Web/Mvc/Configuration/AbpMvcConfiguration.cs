@@ -11,11 +11,14 @@ namespace Abp.Web.Mvc.Configuration
 
         public bool IsValidationEnabledForControllers { get; set; }
 
+        public bool IsAutomaticAntiForgeryValidationEnabled { get; set; }
+        
         public AbpMvcConfiguration()
         {
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             DefaultWrapResultAttribute = new WrapResultAttribute();
             IsValidationEnabledForControllers = true;
+            IsAutomaticAntiForgeryValidationEnabled = true;
         }
     }
 }

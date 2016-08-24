@@ -504,7 +504,7 @@
         var fix = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         return str.replace(new RegExp(fix, 'g'), replacement);
     };
-    
+
     /* Formats a string just like string.format in C#.
     *  Example:
     *  abp.utils.formatString('Hello {0}','Tuana') = 'Hello Tuana'
@@ -578,6 +578,78 @@
 
         //alternative for $.isFunction
         return !!(obj && obj.constructor && obj.call && obj.apply);
+    };
+
+    /**
+     * parameterInfos should be an array of { name, value } objects
+     * where name is query string parameter name and value is it's value.
+     * includeQuestionMark is true by default.
+     */
+    abp.utils.buildQueryString = function (parameterInfos, includeQuestionMark) {
+        if (includeQuestionMark === undefined) {
+            includeQuestionMark = true;
+        }
+
+        var qs = '';
+
+        for (var i = 0; i < parameterInfos.length; ++i) {
+            var parameterInfo = parameterInfos[i];
+            if (parameterInfo.value === undefined) {
+                continue;
+            }
+
+            if (!qs.length) {
+                if (includeQuestionMark) {
+                    qs = qs + '?';
+                }
+            } else {
+                qs = qs + '&';
+            }
+
+            qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value);
+        }
+
+        return qs;
+    }
+
+    /**
+     * Sets a cookie value for given key.
+     * @param {string} key
+     * @param {string} value 
+     * @param {Date} expireDate Optional expire date (default: 30 days).
+     */
+    abp.utils.setCookieValue = function (key, value, expireDate) {
+        if (!expireDate) {
+            expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 30);
+        }
+
+        document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value) + "; expires=" + expireDate.toUTCString();
+    };
+
+    /**
+     * Gets a cookie with given key.
+     * @param {string} key
+     * @returns {string} Cookie value
+     */
+    abp.utils.getCookieValue = function (key) {
+        var equalities = document.cookie.split('; ');
+        for (var i = 0; i < equalities.length; i++) {
+            if (!equalities[i]) {
+                continue;
+            }
+
+            var splitted = equalities[i].split('=');
+            if (splitted.length != 2) {
+                continue;
+            }
+
+            if (decodeURIComponent(splitted[0]) === key) {
+                return decodeURIComponent(splitted[1] || '');
+            }
+        }
+
+        return null;
     };
 
     /* TIMING *****************************************/
@@ -696,5 +768,16 @@
     }
 
     abp.clock.provider = abp.timing.unspecifiedClockProvider;
+
+    /* SECURITY ***************************************/
+    abp.security = abp.security || {};
+    abp.security.antiForgery = abp.security.antiForgery || {};
+
+    abp.security.antiForgery.tokenCookieName = 'XSRF-TOKEN';
+    abp.security.antiForgery.tokenHeaderName = 'X-XSRF-TOKEN';
+
+    abp.security.antiForgery.getToken = function () {
+        return abp.utils.getCookieValue(abp.security.antiForgery.tokenCookieName);
+    };
 
 })(jQuery);

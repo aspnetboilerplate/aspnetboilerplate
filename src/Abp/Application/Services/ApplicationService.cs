@@ -12,6 +12,8 @@ namespace Abp.Application.Services
     /// </summary>
     public abstract class ApplicationService : AbpServiceBase, IApplicationService, IAvoidDuplicateCrossCuttingConcerns
     {
+        public static string[] CommonPostfixes = { "AppService", "ApplicationService" };
+
         /// <summary>
         /// Gets current session information.
         /// </summary>

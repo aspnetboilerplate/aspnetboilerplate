@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
@@ -6,6 +7,7 @@ using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -66,6 +68,7 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
 
             ConfigureCaches();
+            AddIgnoredTypes();
         }
 
         public override void Initialize()
@@ -127,6 +130,12 @@ namespace Abp
             {
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
             });
+        }
+
+        private void AddIgnoredTypes()
+        {
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
+            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(Stream));
         }
 
         private void RegisterMissingComponents()
