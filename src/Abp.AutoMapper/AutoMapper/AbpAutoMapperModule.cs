@@ -81,11 +81,10 @@ namespace Abp.AutoMapper
 
         private void CreateCoreMappings(IMapperConfigurationExpression configuration)
         {
-            var localizationManager = IocManager.Resolve<ILocalizationManager>();
             var localizationContext = IocManager.Resolve<ILocalizationContext>();
 
             configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
-            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationManager.GetString(ls));
+            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }
 }
