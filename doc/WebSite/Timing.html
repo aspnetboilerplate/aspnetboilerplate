@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Timing</title>
+    <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="document-contents">
+
+        <h3 id="DocIntroduction">Introduction</h3>
+        <p>
+            While some applications target a single timezone, some others target
+            to many different timezones. To satisfy such needs and
+            centralize datetime operations,  Abp provides some classes for datetime operations
+        </p>
+
+        <h3 id="DocAboutClock">Clock</h3>
+        <p><strong>Clock</strong> class is used for getting current time and normalizing a datetime according to it's clock provider. Provider property of Clock class must be set at the startup of application. A clock provider class must implement 
+		<strong>IClockProvider</strong> interface. Abp has 3 clock provider classes which are 
+		<strong>UtcClockProvider</strong>, <strong>LocalClockProvider</strong> and 
+		<strong>UnspecifiedClockProvider</strong>.</p>
+        <p><strong>UtcClockProvider's </strong> now method returns current time in utc datetime, normalize method converts a given datetime to utc datetime and set it's kind to DateTimeKind.UTC. Only UtcClockProvider supports multiple timezones.</p>
+        <p><strong>LocalClockProvider's </strong> now method returns current time in local datetime, normalize method converts a given datetime to local datetime and set it's kind to DateTimeKind.Local.</p>
+        <p>
+            <strong>UnspecifiedClockProvider's </strong> now method returns DateTime.Now, normalize method returns given date and does not change anything.
+            Abp uses UnspecifiedClockProvider by default.
+        </p>
+
+        <h4>Client Side</h4>
+        <p>
+            Methods of Clock class can be used on the client side by
+            <strong>abp.clock </strong> object. When you set Clock.Provider on the server side, Abp automatically sets value of
+            <strong>abp.clock.provider</strong> on the client side.
+        </p>
+
+
+        <h3 id="DocTimeZones">Time Zones</h3>
+		<p>Abp defines a setting named <strong>Abp.Timing.TimeZone</strong> for 
+		storing selected timezone of host, tenant and user.  Abp assumes that value of timezone setting is a valid windows timezone id. Abp also defines a timezone mapping file to convert a Windows Timezone to IANA timezone, 
+		because some of the known libraries are using IANA timezone id. 
+		UtcClockProvider must be used in order to support multiple timezones, 
+		because if UtcClockProvider is used all datetime values will be stored 
+		in utc and all datetimes will be sent to clients in utc format. Then on 
+		the client side we can convert utc datetime to user's timezone by using 
+		user's current timezone setting.&nbsp; </p>
+
+<h4>Client Side</h4>
+<p>Abp creates an javascript object named <strong>abp.timing.timeZoneInfo</strong> which contains timezone information for current user. This information contains Windows and IANA timezone ids and some extra information for windows timezone info. This information can be used to make client side datetime convertions for showing a datetime to user in his/her timezone.</p>
+
+<h3 id="DocBindersAndConverters">Binders and Converter</h3>
+
+<p>Abp uses <strong>AbpApiDateTimeBinder </strong>and <strong>AbpMvcDateTimeBinder
+</strong>classes to handle datetime binding operatins for WebApi and MVC controllers. These classes basically uses normalize method of current Clock.Provider to normalize a datetime.</p>
+<p>For dynamic web api conrollers, Abp uses <strong>AbpDateTimeConverter</strong> class which does a similar job.</p>
+
+<h3 id="DocEntityFramework">Entity Framework</h3>
+<p>Abp also registers <strong>ObjectMaterialized</strong> event of EntityFramework and ensures that kind property of datetimes retrieved from database are set correctly according to value of Clock.Provider.</p>
+    </div>
+</body>
+
+</html>
