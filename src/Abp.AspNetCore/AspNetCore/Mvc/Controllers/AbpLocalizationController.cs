@@ -1,6 +1,8 @@
 ﻿using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
+using Abp.Configuration;
 using Abp.Localization;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,15 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 cookieValue,
                 new CookieOptions {Expires = Clock.Now.AddYears(2)}
             );
+
+            if (AbpSession.UserId.HasValue)
+            {
+                SettingManager.ChangeSettingForUser(
+                    AbpSession.ToUserIdentifier(),
+                    LocalizationSettingNames.DefaultLanguage,
+                    cultureName
+                );
+            }
 
             if (Request.IsAjaxRequest())
             {
