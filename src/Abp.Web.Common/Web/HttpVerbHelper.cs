@@ -20,6 +20,8 @@ namespace Abp.Web
                     return HttpVerb.Trace;
                 case "HEAD":
                     return HttpVerb.Head;
+                case "PATCH":
+                    return HttpVerb.Patch;
                 default:
                     throw new AbpException("Unknown HTTP METHOD: " + httpMethod);
             }

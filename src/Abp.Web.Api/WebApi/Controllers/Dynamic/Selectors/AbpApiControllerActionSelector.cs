@@ -64,7 +64,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         {
             //Check if there is only one action with the current http verb
             var actionsByVerb = controllerInfo.Actions.Values
-                .Where(action => action.Verb.ToHttpMethod() == controllerContext.Request.Method)
+                .Where(action => action.Verb == controllerContext.Request.Method.ToHttpVerb())
                 .ToArray();
 
             if (actionsByVerb.Length == 0)
@@ -98,7 +98,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
             }
 
-            if (actionInfo.Verb.ToHttpMethod() != controllerContext.Request.Method)
+            if (actionInfo.Verb != controllerContext.Request.Method.ToHttpVerb())
             {
                 throw new AbpException(
                     "There is an action " + actionName +
