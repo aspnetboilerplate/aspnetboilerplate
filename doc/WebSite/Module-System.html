@@ -111,7 +111,7 @@ the MyBlogApplicationModule.</p>
 {
     protected <strong>override void Application_Start</strong>(object sender, EventArgs e)
     {
-        <strong>AbpBootstrapper.AddFolder(@"C:\MyPlugIns");</strong>
+        <strong>AbpBootstrapper.PlugInSources.AddFolder(@"C:\MyPlugIns");</strong>
         //...
         base.Application_Start(sender, e);
     }
