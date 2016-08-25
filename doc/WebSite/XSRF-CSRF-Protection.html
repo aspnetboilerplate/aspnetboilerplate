@@ -175,6 +175,15 @@ namespace AngularForgeryDemo.Controllers
 	<p>Startup templates already integrated to CSRF protection out of the box. 
 	If you need to manually add it to your project (maybe you created your 
 	project before we added it), follow this guide.</p>
+	<h5>Startup Class</h5>
+	<p>First, we should add AutoValidateAntiforgeryTokenAttribute to global 
+	filters while adding MVC in ConfigureServices of Startup class:</p>
+	<pre lang="cs">services.AddMvc(options =&gt;
+{
+    <strong>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());</strong>
+});</pre>
+	<p>Thus, all MVC actions (except GET, HEAD, OPTIONS and TRACE as declared 
+	before) will be automatically validated for anti forgery token.</p>
 	<h5>Layout View</h5>
 	<p>We should add the following code in our <strong>Layout</strong> view:</p>
 	<pre lang="cs">@using Abp.Web.Security.AntiForgery
