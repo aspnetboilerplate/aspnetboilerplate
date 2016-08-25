@@ -38,6 +38,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     return HttpMethod.Trace;
                 case HttpVerb.Head:
                     return HttpMethod.Head;
+                case HttpVerb.Patch:
+                    return new HttpMethod("PATCH");
                 default:
                     throw new ArgumentException("Given HttpVerb is unknown: " + verb, nameof(verb));
             }
@@ -78,6 +80,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             if (method == HttpMethod.Head)
             {
                 return HttpVerb.Head;
+            }
+
+            if (method == new HttpMethod("PATCH"))
+            {
+                return HttpVerb.Patch;
             }
 
             throw new ArgumentException("Given HttpMethod is unknown: " + method, nameof(method));
