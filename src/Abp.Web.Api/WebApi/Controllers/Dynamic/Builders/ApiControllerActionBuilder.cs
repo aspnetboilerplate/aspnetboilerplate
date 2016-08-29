@@ -142,6 +142,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return HttpVerb.Delete;
             }
 
+            if (Method.IsDefined(typeof(HttpPatchAttribute)))
+            {
+                return HttpVerb.Patch;
+            }
+
             if (Method.IsDefined(typeof(HttpOptionsAttribute)))
             {
                 return HttpVerb.Options;

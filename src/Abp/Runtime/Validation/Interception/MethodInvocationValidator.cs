@@ -125,7 +125,9 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                if (!parameterInfo.IsOptional && 
+                    !parameterInfo.IsOut && 
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
@@ -173,7 +175,7 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            if (_configuration.IgnoredTypes.Contains(validatingObjectType))
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }

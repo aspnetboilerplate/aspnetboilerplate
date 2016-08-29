@@ -33,6 +33,6 @@ namespace Abp.Auditing
         /// <summary>
         /// Ignored types for serialization on audit logging.
         /// </summary>
-        HashSet<Type> IgnoredTypes { get; }
+        List<Type> IgnoredTypes { get; }
     }
 }

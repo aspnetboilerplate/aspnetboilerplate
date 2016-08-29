@@ -30,7 +30,7 @@
 		<strong>OPTIONS</strong> 
 		and <strong>TRACE</strong> HTTP verbs since they should be side effect free (don't 
 		change database) normally. While ABP assumes that (and implements Anti 
-		Forgery protection for only <strong>POST</strong>, <strong>PUT </strong>
+		Forgery protection for only <strong>POST</strong>, <strong>PUT, PATCH </strong>
 		and <strong>DELETE</strong> verbs), you can change this 
 		behaviour using attrbiutes defined in this document.</p>
 	</div>
@@ -60,7 +60,7 @@
 	<p>ABP does followings to overcome this difficulties:</p>
 	<ul>
 		<li>No need to add <strong>ValidateAntiForgeryToken</strong> attribute 
-		for <strong>POST</strong>, <strong>PUT</strong> and <strong>DELETE</strong> 
+		for <strong>POST</strong>, <strong>PUT, PATCH</strong> and <strong>DELETE</strong> 
 		actions anymore, because they are <strong>automatically protected</strong> 
 		(by <strong>AbpAntiForgeryMvcFilter</strong>). Automatic protection will 
 		be enough for most cases. But you can disable it for an action or 
@@ -154,7 +154,7 @@ namespace AngularForgeryDemo.Controllers
 	<ul>
 		<li>It has <strong>AutoValidateAntiforgeryTokenAttribute</strong> class 
 		that automates anti forgery validation for all <strong>POST</strong>,
-		<strong>PUT</strong> and <strong>DELETE</strong> actions.</li>
+		<strong>PUT, PATCH</strong> and <strong>DELETE</strong> actions.</li>
 		<li>It has <strong>ValidateAntiForgeryToken</strong> and <strong>
 		IgnoreAntiforgeryToken</strong> attributes to control token validation.</li>
 		<li>Automatically adds anti forgery security token to HTML forms if you 

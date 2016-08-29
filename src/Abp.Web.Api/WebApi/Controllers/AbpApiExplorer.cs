@@ -192,6 +192,8 @@ namespace Abp.Web.Api.Description
                 return HttpMethod.Options;
             else if (verb == HttpVerb.Head)
                 return HttpMethod.Head;
+            else if (verb == HttpVerb.Patch)
+                return HttpVerbExtensions.HttpPatch;
             else
                 return HttpMethod.Post;
         }
