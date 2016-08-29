@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
@@ -134,8 +135,13 @@ namespace Abp
 
         private void AddIgnoredTypes()
         {
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(Stream));
+            var ignoredTypes = new[] { typeof(Stream), typeof(Expression) };
+
+            foreach (var ignoredType in ignoredTypes)
+            {
+                Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
         }
 
         private void RegisterMissingComponents()
