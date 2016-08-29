@@ -598,6 +598,10 @@
                 continue;
             }
 
+            if (parameterInfo.value === null) {
+                parameterInfo.value = '';
+            }
+
             if (!qs.length) {
                 if (includeQuestionMark) {
                     qs = qs + '?';
