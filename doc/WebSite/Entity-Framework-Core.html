@@ -59,7 +59,7 @@ AbpEntityFrameworkCoreModule</strong>.</p>
 });</pre>
 	<p>We used given connection string and used Sql Server as database provider. <strong>options.ConnectionString</strong> 
 	is the <strong>default connection string</strong> (see next section) 
-	normally. But since ABP uses IConnectionStringResolver to determine it. So, 
+	normally. But ABP uses IConnectionStringResolver to determine it. So, 
 	this behaviour can be changed and connection string can be determined 
 	dynamically. The action passed to AddDbContext is called whenever a DbContext instance 
 	will be created. So, you also have a chance to return different connection 
