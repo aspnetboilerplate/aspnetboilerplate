@@ -5,11 +5,11 @@ namespace Abp.Configuration.Startup
 {
     public class ValidationConfiguration : IValidationConfiguration
     {
-        public HashSet<Type> IgnoredTypes { get; }
+        public List<Type> IgnoredTypes { get; }
 
         public ValidationConfiguration()
         {
-            IgnoredTypes = new HashSet<Type>();
+            IgnoredTypes = new List<Type>();
         }
     }
 }

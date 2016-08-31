@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
@@ -20,7 +21,6 @@ using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
@@ -134,8 +134,13 @@ namespace Abp
 
         private void AddIgnoredTypes()
         {
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Stream));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(Stream));
+            var ignoredTypes = new[] { typeof(Stream), typeof(Expression) };
+
+            foreach (var ignoredType in ignoredTypes)
+            {
+                Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
         }
 
         private void RegisterMissingComponents()
@@ -152,12 +157,9 @@ namespace Abp
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
-
-            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

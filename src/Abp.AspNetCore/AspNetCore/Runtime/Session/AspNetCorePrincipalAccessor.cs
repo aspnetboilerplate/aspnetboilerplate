@@ -8,9 +8,9 @@ namespace Abp.AspNetCore.Runtime.Session
     {
         public override ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User ?? base.Principal;
 
-        private readonly HttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AspNetCorePrincipalAccessor(HttpContextAccessor httpContextAccessor)
+        public AspNetCorePrincipalAccessor(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

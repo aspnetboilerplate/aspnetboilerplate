@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using Castle.Core;
 
 namespace Abp.Domain.Uow
 {
@@ -15,6 +16,7 @@ namespace Abp.Domain.Uow
     {
         public string Id { get; private set; }
 
+        [DoNotWire]
         public IUnitOfWork Outer { get; set; }
 
         /// <inheritdoc/>

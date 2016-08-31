@@ -30,7 +30,7 @@
 		<strong>OPTIONS</strong> 
 		and <strong>TRACE</strong> HTTP verbs since they should be side effect free (don't 
 		change database) normally. While ABP assumes that (and implements Anti 
-		Forgery protection for only <strong>POST</strong>, <strong>PUT </strong>
+		Forgery protection for only <strong>POST</strong>, <strong>PUT, PATCH </strong>
 		and <strong>DELETE</strong> verbs), you can change this 
 		behaviour using attrbiutes defined in this document.</p>
 	</div>
@@ -60,7 +60,7 @@
 	<p>ABP does followings to overcome this difficulties:</p>
 	<ul>
 		<li>No need to add <strong>ValidateAntiForgeryToken</strong> attribute 
-		for <strong>POST</strong>, <strong>PUT</strong> and <strong>DELETE</strong> 
+		for <strong>POST</strong>, <strong>PUT, PATCH</strong> and <strong>DELETE</strong> 
 		actions anymore, because they are <strong>automatically protected</strong> 
 		(by <strong>AbpAntiForgeryMvcFilter</strong>). Automatic protection will 
 		be enough for most cases. But you can disable it for an action or 
@@ -96,6 +96,13 @@
 	HTML helper for our <strong>HTML forms</strong> which are <strong>not posted via AJAX</strong> 
 	(But <strong>no need</strong> to
 		ValidateAbpAntiForgeryToken attribute for the corresponding action).</p>
+	<h4>Configuration</h4>
+	<p>XSRF protection is <strong>enabled by default</strong>. You can disable or configure it in 
+	your <a href="Module-System.html">module</a>'s PreInitialize method. 
+	Example:</p>
+	<pre lang="cs">Configuration.Modules.AbpWeb().AntiForgery.IsEnabled = false;</pre>
+	<p>You can also configure token and cookie names using <em>
+	Configuration.Modules.AbpWebCommon().AntiForgery</em> object.</p>
 	<h3>ASP.NET Web API</h3>
 	<h4>Features</h4>
 	<p>ASP.NET Web API <strong>does not</strong> include an anti forgery 
@@ -147,7 +154,7 @@ namespace AngularForgeryDemo.Controllers
 	<ul>
 		<li>It has <strong>AutoValidateAntiforgeryTokenAttribute</strong> class 
 		that automates anti forgery validation for all <strong>POST</strong>,
-		<strong>PUT</strong> and <strong>DELETE</strong> actions.</li>
+		<strong>PUT, PATCH</strong> and <strong>DELETE</strong> actions.</li>
 		<li>It has <strong>ValidateAntiForgeryToken</strong> and <strong>
 		IgnoreAntiforgeryToken</strong> attributes to control token validation.</li>
 		<li>Automatically adds anti forgery security token to HTML forms if you 
@@ -168,6 +175,15 @@ namespace AngularForgeryDemo.Controllers
 	<p>Startup templates already integrated to CSRF protection out of the box. 
 	If you need to manually add it to your project (maybe you created your 
 	project before we added it), follow this guide.</p>
+	<h5>Startup Class</h5>
+	<p>First, we should add AutoValidateAntiforgeryTokenAttribute to global 
+	filters while adding MVC in ConfigureServices of Startup class:</p>
+	<pre lang="cs">services.AddMvc(options =&gt;
+{
+    <strong>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());</strong>
+});</pre>
+	<p>Thus, all MVC actions (except GET, HEAD, OPTIONS and TRACE as declared 
+	before) will be automatically validated for anti forgery token.</p>
 	<h5>Layout View</h5>
 	<p>We should add the following code in our <strong>Layout</strong> view:</p>
 	<pre lang="cs">@using Abp.Web.Security.AntiForgery

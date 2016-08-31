@@ -20,7 +20,15 @@ namespace Abp.Web.Mvc.Controllers.Localization
             }
 
             Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
-            SettingManager.ChangeSettingForUser(AbpSession.ToUserIdentifier(), LocalizationSettingNames.DefaultLanguage, cultureName);
+
+            if (AbpSession.UserId.HasValue)
+            {
+                SettingManager.ChangeSettingForUser(
+                    AbpSession.ToUserIdentifier(),
+                    LocalizationSettingNames.DefaultLanguage,
+                    cultureName
+                );
+            }
 
             if (Request.IsAjaxRequest())
             {

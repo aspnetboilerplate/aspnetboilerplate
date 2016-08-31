@@ -30,7 +30,7 @@ namespace Abp.TestBase.SampleApplication.Tests
                 );
         }
 
-        private void CreateInitialData()
+        protected virtual void CreateInitialData()
         {
             UsingDbContext(
                 context =>

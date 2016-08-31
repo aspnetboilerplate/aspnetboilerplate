@@ -13,14 +13,14 @@ namespace Abp.Auditing
 
         public IAuditingSelectorList Selectors { get; }
 
-        public HashSet<Type> IgnoredTypes { get; }
+        public List<Type> IgnoredTypes { get; }
 
         public AuditingConfiguration()
         {
             IsEnabled = true;
             Selectors = new AuditingSelectorList();
             MvcControllers = new MvcControllersAuditingConfiguration();
-            IgnoredTypes = new HashSet<Type>();
+            IgnoredTypes = new List<Type>();
         }
     }
 }

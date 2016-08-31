@@ -42,15 +42,19 @@ namespace Abp.Web
 
         private void AddIgnoredTypes()
         {
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileBase));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileBase>));
-
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileWrapper));
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileWrapper>));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(HttpPostedFileWrapper));
-            Configuration.Auditing.IgnoredTypes.AddIfNotContains(typeof(IEnumerable<HttpPostedFileWrapper>));
+            var ignoredTypes = new[]
+            {
+                typeof(HttpPostedFileBase),
+                typeof(IEnumerable<HttpPostedFileBase>),
+                typeof(HttpPostedFileWrapper),
+                typeof(IEnumerable<HttpPostedFileWrapper>)
+            };
+            
+            foreach (var ignoredType in ignoredTypes)
+            {
+                Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
         }
     }
 }

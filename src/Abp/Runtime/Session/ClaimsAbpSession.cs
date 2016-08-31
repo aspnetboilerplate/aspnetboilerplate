@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 
@@ -11,7 +12,7 @@ namespace Abp.Runtime.Session
     /// <summary>
     /// Implements <see cref="IAbpSession"/> to get session properties from claims of <see cref="Thread.CurrentPrincipal"/>.
     /// </summary>
-    public class ClaimsAbpSession : IAbpSession
+    public class ClaimsAbpSession : IAbpSession, ISingletonDependency
     {
         public virtual long? UserId
         {

@@ -5,6 +5,6 @@ namespace Abp.Configuration.Startup
 {
     public interface IValidationConfiguration
     {
-        HashSet<Type> IgnoredTypes { get; }
+        List<Type> IgnoredTypes { get; }
     }
 }
