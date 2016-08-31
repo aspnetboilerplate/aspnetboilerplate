@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.11.1.0-*",
+  "version": "0.11.2.0-*",
 
   "dependencies": {
-    "Abp.Web.Common": "0.11.1.0-*"
+    "Abp.Web.Common": "0.11.2.0-*"
   },
 
   "frameworks": {
