@@ -9,7 +9,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 {
     internal static class ProxyScriptingJsFuncHelper
     {
-        private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyxABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
+        private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyzABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
 
         public static string NormalizeJsVariableName(string name, string additionalChars = "")
         {
