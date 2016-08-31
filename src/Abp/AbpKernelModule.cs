@@ -134,11 +134,17 @@ namespace Abp
 
         private void AddIgnoredTypes()
         {
-            var ignoredTypes = new[] { typeof(Stream), typeof(Expression) };
+            var commonIgnoredTypes = new[] { typeof(Stream), typeof(Expression) };
 
-            foreach (var ignoredType in ignoredTypes)
+            foreach (var ignoredType in commonIgnoredTypes)
             {
                 Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+
+            var validationIgnoredTypes = new[] { typeof(Type) };
+            foreach (var ignoredType in validationIgnoredTypes)
+            {
                 Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
             }
         }
