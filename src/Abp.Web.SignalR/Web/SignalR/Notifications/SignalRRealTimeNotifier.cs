@@ -48,12 +48,6 @@ namespace Abp.Web.SignalR.Notifications
                     var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
                     foreach (var onlineClient in onlineClients)
                     {
-                        if (onlineClient == null)
-                        {
-                            //User is not online. No problem, go to the next user.
-                            continue;
-                        }
-
                         var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
                         if (signalRClient == null)
                         {
