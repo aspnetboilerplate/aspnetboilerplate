@@ -20,7 +20,7 @@ namespace Abp.Hangfire.Configuration
         /// </summary>
         public static void UseHangfire(this IBackgroundJobConfiguration backgroundJobConfiguration, Action<IAbpHangfireConfiguration> configureAction)
         {
-            backgroundJobConfiguration.AbpConfiguration.IocManager.RegisterIfNot<IBackgroundJobManager, HangfireBackgroundJobManager>();
+            backgroundJobConfiguration.AbpConfiguration.ReplaceService<IBackgroundJobManager, HangfireBackgroundJobManager>();
             configureAction(backgroundJobConfiguration.AbpConfiguration.Modules.AbpHangfire());
         }
     }
