@@ -610,7 +610,11 @@
                 qs = qs + '&';
             }
 
-            qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value);
+            if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
+                qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value.toJSON());
+            } else {
+                qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value);
+            }
         }
 
         return qs;
