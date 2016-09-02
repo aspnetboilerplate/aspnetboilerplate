@@ -134,6 +134,34 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        protected virtual void ApplyCurrentFilters<TDbContext>(DbContext dbContext) 
+            where TDbContext : DbContext
+        {
+            foreach (var filter in Filters)
+            {
+                if (filter.IsEnabled)
+                {
+                    dbContext.EnableFilter(filter.FilterName);
+                }
+                else
+                {
+                    dbContext.DisableFilter(filter.FilterName);
+                }
+
+                foreach (var filterParameter in filter.FilterParameters)
+                {
+                    if (TypeHelper.IsFunc<object>(filterParameter.Value))
+                    {
+                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
+                    }
+                    else
+                    {
+                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
+                    }
+                }
+            }
+        }
+
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
@@ -157,29 +185,7 @@ namespace Abp.EntityFramework.Uow
                     ObjectContext_ObjectMaterialized(dbContext, args);
                 };
 
-                foreach (var filter in Filters)
-                {
-                    if (filter.IsEnabled)
-                    {
-                        dbContext.EnableFilter(filter.FilterName);
-                    }
-                    else
-                    {
-                        dbContext.DisableFilter(filter.FilterName);
-                    }
-
-                    foreach (var filterParameter in filter.FilterParameters)
-                    {
-                        if (TypeHelper.IsFunc<object>(filterParameter.Value))
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
-                        }
-                        else
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
-                        }
-                    }
-                }
+                ApplyCurrentFilters<TDbContext>(dbContext);
 
                 ActiveDbContexts[dbContextKey] = dbContext;
             }

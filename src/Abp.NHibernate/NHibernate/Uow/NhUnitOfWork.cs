@@ -47,8 +47,6 @@ namespace Abp.NHibernate.Uow
                 ? _sessionFactory.OpenSession(DbConnection)
                 : _sessionFactory.OpenSession();
 
-            
-
             if (Options.IsTransactional == true)
             {
                 _transaction = Options.IsolationLevel.HasValue
@@ -56,9 +54,8 @@ namespace Abp.NHibernate.Uow
                     : Session.BeginTransaction();
             }
             
-            this.CheckAndSetMayHaveTenant();
-            this.CheckAndSetMustHaveTenant();
-
+            CheckAndSetMayHaveTenant();
+            CheckAndSetMustHaveTenant();
         }
 
         protected virtual void CheckAndSetMustHaveTenant()
