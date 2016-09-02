@@ -18,5 +18,30 @@
         }
       }
     }
+  },
+
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "xmlDoc": true
+  },
+
+  "packOptions": {
+    "summary": "ASP.NET Boilerplate is a general-purpose, web focused application framework.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "log4net", "castle" ],
+    "owners": [ "Halil Ýbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    }
+  },
+
+  "packInclude": {
+    "lib/net452/": "bin/Release/net452/Abp.Castle.Log4Net.pdb"
   }
 }
