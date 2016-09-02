@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -8,10 +8,9 @@ using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
+using Abp.Extensions;
 using Abp.MultiTenancy;
-using Abp.Reflection;
 using Castle.Core.Internal;
-using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -35,9 +34,13 @@ namespace Abp.EntityFramework.Uow
             IIocResolver iocResolver,
             IConnectionStringResolver connectionStringResolver,
             IDbContextResolver dbContextResolver,
+            IEfUnitOfWorkFilterExecuter filterExecuter,
             IUnitOfWorkDefaultOptions defaultOptions, 
             IDbContextTypeMatcher dbContextTypeMatcher)
-            : base(connectionStringResolver, defaultOptions)
+            : base(
+                  connectionStringResolver, 
+                  defaultOptions,
+                  filterExecuter)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
@@ -81,6 +84,11 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        public IReadOnlyList<DbContext> GetAllActiveDbContexts()
+        {
+            return ActiveDbContexts.Values.ToImmutableList();
+        }
+
         protected override void CompleteUow()
         {
             SaveChanges();
@@ -101,65 +109,6 @@ namespace Abp.EntityFramework.Uow
             }
 
             DisposeUow();
-        }
-
-        protected override void ApplyDisableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.DisableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyEnableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.EnableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                if (TypeHelper.IsFunc<object>(value))
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
-                }
-                else
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
-                }
-            }
-        }
-
-        protected virtual void ApplyCurrentFilters<TDbContext>(DbContext dbContext) 
-            where TDbContext : DbContext
-        {
-            foreach (var filter in Filters)
-            {
-                if (filter.IsEnabled)
-                {
-                    dbContext.EnableFilter(filter.FilterName);
-                }
-                else
-                {
-                    dbContext.DisableFilter(filter.FilterName);
-                }
-
-                foreach (var filterParameter in filter.FilterParameters)
-                {
-                    if (TypeHelper.IsFunc<object>(filterParameter.Value))
-                    {
-                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
-                    }
-                    else
-                    {
-                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
-                    }
-                }
-            }
         }
 
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
@@ -185,7 +134,7 @@ namespace Abp.EntityFramework.Uow
                     ObjectContext_ObjectMaterialized(dbContext, args);
                 };
 
-                ApplyCurrentFilters<TDbContext>(dbContext);
+                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
 
                 ActiveDbContexts[dbContextKey] = dbContext;
             }

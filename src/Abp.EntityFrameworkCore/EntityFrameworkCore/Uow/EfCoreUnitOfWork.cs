@@ -33,10 +33,14 @@ namespace Abp.EntityFrameworkCore.Uow
         public EfCoreUnitOfWork(
             IIocResolver iocResolver,
             IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkFilterExecuter filterExecuter,
             IDbContextResolver dbContextResolver,
             IUnitOfWorkDefaultOptions defaultOptions, 
             IDbContextTypeMatcher dbContextTypeMatcher)
-            : base(connectionStringResolver, defaultOptions)
+            : base(
+                  connectionStringResolver, 
+                  defaultOptions, 
+                  filterExecuter)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
@@ -96,41 +100,7 @@ namespace Abp.EntityFrameworkCore.Uow
             DisposeUow(); //TODO: Is that needed?
         }
 
-        protected override void ApplyDisableFilter(string filterName)
-        {
-            //Disabled since there is no implementation.
-            //foreach (var activeDbContext in ActiveDbContexts.Values)
-            //{
-            //    activeDbContext.DisableFilter(filterName);
-            //}
-        }
-
-        protected override void ApplyEnableFilter(string filterName)
-        {
-            //Disabled since there is no implementation.
-            //foreach (var activeDbContext in ActiveDbContexts.Values)
-            //{
-            //    activeDbContext.EnableFilter(filterName);
-            //}
-        }
-
-        //Disabled since there is no implementation.
-        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
-        {
-            //foreach (var activeDbContext in ActiveDbContexts.Values)
-            //{
-            //    if (TypeHelper.IsFunc<object>(value))
-            //    {
-            //        activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
-            //    }
-            //    else
-            //    {
-            //        activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
-            //    }
-            //}
-        }
-
-        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
+       public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
@@ -147,34 +117,9 @@ namespace Abp.EntityFrameworkCore.Uow
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-                //((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
-                //{
-                //    ObjectContext_ObjectMaterialized(dbContext, args);
-                //};
 
-                //foreach (var filter in Filters)
-                //{
-                //    if (filter.IsEnabled)
-                //    {
-                //        dbContext.EnableFilter(filter.FilterName);
-                //    }
-                //    else
-                //    {
-                //        dbContext.DisableFilter(filter.FilterName);
-                //    }
-
-                //    foreach (var filterParameter in filter.FilterParameters)
-                //    {
-                //        if (TypeHelper.IsFunc<object>(filterParameter.Value))
-                //        {
-                //            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
-                //        }
-                //        else
-                //        {
-                //            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
-                //        }
-                //    }
-                //}
+                //TODO: Object materialize event
+                //TODO: Apply current filters to this dbcontext
 
                 if (Options.IsTransactional == true)
                 {
