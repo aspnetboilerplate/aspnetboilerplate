@@ -56,6 +56,11 @@ namespace Abp.EntityFramework
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
 
         /// <summary>
+        /// Reference to multi tenancy configuration.
+        /// </summary>
+        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// Uses <see cref="IAbpStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
@@ -217,6 +222,7 @@ namespace Abp.EntityFramework
                     case EntityState.Added:
                         CheckAndSetId(entry.Entity);
                         CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+                        CheckAndSetMayHaveTenantIdProperty(entry.Entity);
                         SetCreationAuditProperties(entry.Entity, userId);
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
@@ -288,6 +294,31 @@ namespace Abp.EntityFramework
             {
                 throw new AbpException("Can not set TenantId to 0 for IMustHaveTenant entities!");
             }
+        }
+
+        protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
+        {
+            //Only works for single tenant applications
+            if (MultiTenancyConfig.IsEnabled)
+            {
+                return;
+            }
+
+            //Only set IMayHaveTenant entities
+            if (!(entityAsObj is IMayHaveTenant))
+            {
+                return;
+            }
+
+            var entity = entityAsObj.As<IMayHaveTenant>();
+
+            //Don't set if it's already set
+            if (entity.TenantId != null)
+            {
+                return;
+            }
+
+            entity.TenantId = GetCurrentTenantIdOrNull();
         }
 
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
@@ -448,8 +479,7 @@ namespace Abp.EntityFramework
 
         protected virtual int? GetCurrentTenantIdOrNull()
         {
-            if (CurrentUnitOfWorkProvider != null &&
-                CurrentUnitOfWorkProvider.Current != null)
+            if (CurrentUnitOfWorkProvider?.Current != null)
             {
                 return CurrentUnitOfWorkProvider.Current.GetTenantId();
             }

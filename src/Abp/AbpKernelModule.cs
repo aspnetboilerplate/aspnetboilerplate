@@ -21,7 +21,6 @@ using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
@@ -135,11 +134,17 @@ namespace Abp
 
         private void AddIgnoredTypes()
         {
-            var ignoredTypes = new[] { typeof(Stream), typeof(Expression) };
+            var commonIgnoredTypes = new[] { typeof(Stream), typeof(Expression) };
 
-            foreach (var ignoredType in ignoredTypes)
+            foreach (var ignoredType in commonIgnoredTypes)
             {
                 Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+
+            var validationIgnoredTypes = new[] { typeof(Type) };
+            foreach (var ignoredType in validationIgnoredTypes)
+            {
                 Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
             }
         }
@@ -158,12 +163,9 @@ namespace Abp
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
-
-            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

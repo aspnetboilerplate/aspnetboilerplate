@@ -16,8 +16,13 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
         public Messages_MultiTenancy_Tests()
         {
-            Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _messageRepository = Resolve<IRepository<Message>>();
+        }
+
+        protected override void CreateInitialData()
+        {
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            base.CreateInitialData();
         }
 
         [Fact]

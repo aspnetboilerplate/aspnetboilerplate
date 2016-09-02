@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Web.OData;
 using System.Web.OData.Extensions;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
@@ -14,6 +15,8 @@ namespace Abp.WebApi.OData
         public override void PreInitialize()
         {
             IocManager.Register<IAbpWebApiODataModuleConfiguration, AbpWebApiODataModuleConfiguration>();
+
+            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Delta));
         }
 
         public override void Initialize()
