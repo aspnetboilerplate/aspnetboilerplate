@@ -40,5 +40,18 @@ namespace Abp.AspNetCore.App.Controllers
         {
             return Json(new SimpleViewModel("Forty Two", 42));
         }
+
+        [HttpGet]
+        [WrapResult]
+        public void GetVoidTest()
+        {
+            
+        }
+
+        [DontWrapResult]
+        public void GetVoidTestDontWrap()
+        {
+
+        }
     }
 }

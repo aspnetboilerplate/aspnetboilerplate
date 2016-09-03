@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Abp.Web.Security.AntiForgery
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@{
+    AbpAntiForgeryManager.SetCookie(Context);
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />

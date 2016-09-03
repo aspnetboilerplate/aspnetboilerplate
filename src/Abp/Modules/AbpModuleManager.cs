@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.PlugIns;
-using Abp.Reflection;
 using Castle.Core.Logging;
 
 namespace Abp.Modules
@@ -88,21 +87,11 @@ namespace Abp.Modules
 
         private void AddPlugInModules(List<Type> modules)
         {
-            foreach (var assembly in _abpPlugInManager.GetPlugInAssemblies())
+            foreach (var plugInSource in _abpPlugInManager.PlugInSources)
             {
-                try
+                foreach (var module in plugInSource.GetModules())
                 {
-                    foreach (var type in assembly.GetTypes())
-                    {
-                        if (AbpModule.IsAbpModule(type) || !modules.Contains(type))
-                        {
-                            modules.Add(type);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn("Could not get types in assembly: " + assembly.FullName, ex);
+                    modules.AddIfNotContains(module);
                 }
             }
         }
@@ -137,10 +126,7 @@ namespace Abp.Modules
         {
             foreach (var moduleType in moduleTypes)
             {
-                if (!_iocManager.IsRegistered(moduleType))
-                {
-                    _iocManager.Register(moduleType);
-                }
+                _iocManager.RegisterIfNot(moduleType);
             }
         }
 

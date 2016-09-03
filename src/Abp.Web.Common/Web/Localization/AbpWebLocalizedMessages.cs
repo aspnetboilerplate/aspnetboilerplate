@@ -6,6 +6,7 @@ namespace Abp.Web.Localization
 {
     /// <summary>
     /// This class is used to simplify getting localized messages in this assembly.
+    /// TODO: DELETE THIS CLASS (except SourceName)
     /// </summary>
     internal static class AbpWebLocalizedMessages
     {

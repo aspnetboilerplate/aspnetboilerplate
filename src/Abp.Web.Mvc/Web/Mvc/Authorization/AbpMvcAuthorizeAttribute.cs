@@ -1,7 +1,5 @@
 ﻿using System.Web.Mvc;
 using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.Web.Mvc.Authorization
 {
@@ -26,31 +24,6 @@ namespace Abp.Web.Mvc.Authorization
             Permissions = permissions;
         }
 
-        /// <inheritdoc/>
-        protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
-        {
-            if (!base.AuthorizeCore(httpContext))
-            {
-                return false;
-            }
-
-            try
-            {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizationHelper>())
-                {
-                    authorizationAttributeHelper.Object.Authorize(this);
-                }
-
-                return true;
-            }
-            catch (AbpAuthorizationException ex)
-            {
-                LogHelper.Logger.Warn(ex.ToString(), ex);
-                return false;
-            }
-        }
-
-        /// <inheritdoc/>
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             var httpContext = filterContext.HttpContext;
@@ -61,15 +34,12 @@ namespace Abp.Web.Mvc.Authorization
                 return;
             }
 
-            var user = httpContext.User;
-            var response = httpContext.Response;
+            httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
+                                      ? (int)System.Net.HttpStatusCode.Unauthorized
+                                      : (int)System.Net.HttpStatusCode.Forbidden;
 
-            response.StatusCode = user.Identity.IsAuthenticated == false
-                                      ? (int) System.Net.HttpStatusCode.Unauthorized
-                                      : (int) System.Net.HttpStatusCode.Forbidden;
-
-            response.SuppressFormsAuthenticationRedirect = true;
-            response.End();
+            httpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            httpContext.Response.End();
         }
     }
 }

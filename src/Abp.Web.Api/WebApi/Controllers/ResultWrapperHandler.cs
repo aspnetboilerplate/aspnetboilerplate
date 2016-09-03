@@ -13,11 +13,11 @@ namespace Abp.WebApi.Controllers
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
-        private readonly IAbpWebApiModuleConfiguration _webApiModuleConfiguration;
+        private readonly IAbpWebApiConfiguration _webApiConfiguration;
 
-        public ResultWrapperHandler(IAbpWebApiModuleConfiguration webApiModuleConfiguration)
+        public ResultWrapperHandler(IAbpWebApiConfiguration webApiConfiguration)
         {
-            _webApiModuleConfiguration = webApiModuleConfiguration;
+            _webApiConfiguration = webApiConfiguration;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace Abp.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? _webApiModuleConfiguration.DefaultWrapResultAttribute;
+                           ?? _webApiConfiguration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
             {
@@ -52,19 +52,19 @@ namespace Abp.WebApi.Controllers
                 response.StatusCode = HttpStatusCode.OK;
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
-                    _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                    _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
                     );
                 return;
             }
 
-            if (resultObject is AjaxResponse)
+            if (resultObject is AjaxResponseBase)
             {
                 return;
             }
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
-                _webApiModuleConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
                 );
         }
     }

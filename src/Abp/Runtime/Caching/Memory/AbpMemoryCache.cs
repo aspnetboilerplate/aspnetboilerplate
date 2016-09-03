@@ -24,22 +24,34 @@ namespace Abp.Runtime.Caching.Memory
         {
             return _memoryCache.Get(key);
         }
-        
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
+
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            //TODO: Optimize by using a default CacheItemPolicy?
-            _memoryCache.Set(
-                key,
-                value,
-                new CacheItemPolicy
-                {
-                    SlidingExpiration = slidingExpireTime ?? DefaultSlidingExpireTime
-                });
+            var cachePolicy = new CacheItemPolicy();
+
+            if (absoluteExpireTime != null)
+            {
+                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(absoluteExpireTime.Value);
+            }
+            else if (slidingExpireTime != null)
+            {
+                cachePolicy.SlidingExpiration = slidingExpireTime.Value;
+            }
+            else if(DefaultAbsoluteExpireTime != null)
+            {
+                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value);
+            }
+            else
+            {
+                cachePolicy.SlidingExpiration = DefaultSlidingExpireTime;
+            }
+
+            _memoryCache.Set(key, value, cachePolicy);
         }
 
         public override void Remove(string key)

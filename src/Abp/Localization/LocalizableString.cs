@@ -27,8 +27,8 @@ namespace Abp.Localization
             
         }
 
-        /// <param name="name">Unique name of the localization source</param>
-        /// <param name="sourceName">Unique Name of the string to be localized</param>
+        /// <param name="name">Unique Name of the string to be localized</param>
+        /// <param name="sourceName">Unique name of the localization source</param>
         public LocalizableString(string name, string sourceName)
         {
             if (name == null)

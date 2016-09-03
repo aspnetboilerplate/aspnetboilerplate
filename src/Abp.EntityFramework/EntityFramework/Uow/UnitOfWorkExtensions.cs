@@ -27,12 +27,12 @@ namespace Abp.EntityFramework.Uow
         {
             if (unitOfWork == null)
             {
-                throw new ArgumentNullException("unitOfWork");
+                throw new ArgumentNullException(nameof(unitOfWork));
             }
 
             if (!(unitOfWork is EfUnitOfWork))
             {
-                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, "unitOfWork");
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
             }
 
             return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide);

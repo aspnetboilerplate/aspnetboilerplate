@@ -6,7 +6,7 @@ using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 
 namespace Abp.AspNetCore.Mvc.Proxying
 {
-    public class ApiProxyGenerationModel: IShouldNormalize
+    public class ApiProxyGenerationModel : IShouldNormalize
     {
         public string Type { get; set; }
 

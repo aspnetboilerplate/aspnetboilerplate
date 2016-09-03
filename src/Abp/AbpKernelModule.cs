@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
@@ -6,6 +8,7 @@ using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -18,11 +21,11 @@ using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Castle.MicroKernel.Registration;
 
 namespace Abp
 {
@@ -65,6 +68,7 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
 
             ConfigureCaches();
+            AddIgnoredTypes();
         }
 
         public override void Initialize()
@@ -128,18 +132,41 @@ namespace Abp
             });
         }
 
+        private void AddIgnoredTypes()
+        {
+            var commonIgnoredTypes = new[] { typeof(Stream), typeof(Expression) };
+
+            foreach (var ignoredType in commonIgnoredTypes)
+            {
+                Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+
+            var validationIgnoredTypes = new[] { typeof(Type) };
+            foreach (var ignoredType in validationIgnoredTypes)
+            {
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+        }
+
         private void RegisterMissingComponents()
         {
-            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
+            if (!IocManager.IsRegistered<IGuidGenerator>())
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                        .For<IGuidGenerator, SequentialGuidGenerator>()
+                        .Instance(SequentialGuidGenerator.Instance)
+                );
+            }
+
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
-
-            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IUnitOfWorkFilterExecuter, NullUnitOfWorkFilterExecuter>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

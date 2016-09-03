@@ -24,11 +24,11 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
 
             if (RandomHelper.GetRandomOf(new[] { 1, 2 }) == 1)
             {
-                Clock.Provider = new LocalClockProvider();
+                Clock.Provider = ClockProviders.Local;
             }
             else
             {
-                Clock.Provider = new UtcClockProvider();
+                Clock.Provider = ClockProviders.Utc;
             }
         }
 

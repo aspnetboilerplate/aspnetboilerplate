@@ -28,7 +28,7 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone())
+            if (!Clock.SupportsMultipleTimezone)
             {
                 return date;
             }
@@ -50,7 +50,7 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone())
+            if (!Clock.SupportsMultipleTimezone)
             {
                 return date;
             }
@@ -72,7 +72,7 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone())
+            if (!Clock.SupportsMultipleTimezone)
             {
                 return date;
             }

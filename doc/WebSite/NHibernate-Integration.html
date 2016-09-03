@@ -13,10 +13,7 @@
 
 			<p>ASP.NET Boilerplate can work with any O/RM framework. It has built-in 
 integration with <strong>NHibernate</strong>. This document will explain how to 
-use NHibernate with ASP.NET Boilerplate. See also
-				<a href="http://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate" target="_blank">
-this article</a> for developing a complete application with ASP.NET Boilerplate 
-and NHibernate. It's assumed that you're already familar with NHibernate in a 
+			use NHibernate with ASP.NET Boilerplate. It's assumed that you're already familar with NHibernate in a 
 basic level.</p>
 			<h3 id="DocNugetPackage">Nuget package</h3>
 			<p>Nuget package to use NHibernate as O/RM in ASP.NET Boilerplate is
@@ -25,20 +22,19 @@ Abp.NHibernate</a>. You should add it to your application. It's
 better to implement NHibernate in a seperated assembly (dll) in your application 
 and depend on that package from this assembly.</p>
 			<h3 id="DocConfiguration">Configuration</h3>
-			<p>To start using NHibernate, you should first configure it. You should write 
-configuration code in
+			<p>To start using NHibernate, you should configure it in
 				<a href="/Pages/Documents/Module-System">PreInitialize</a> of your module.</p>
-			<pre lang="cs">[DependsOn(typeof(AbpNHibernateModule))]
+			<pre lang="cs"><strong>[DependsOn(typeof(AbpNHibernateModule))]</strong>
 public class SimpleTaskSystemDataModule : AbpModule
 {
     public override void PreInitialize()
     {
         var connStr = ConfigurationManager.ConnectionStrings[&quot;Default&quot;].ConnectionString;
 
-        Configuration.Modules.AbpNHibernate().FluentConfiguration
+<strong>        Configuration.Modules.AbpNHibernate().FluentConfiguration
             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connStr))
             .Mappings(m =&gt; m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()));
-    }
+</strong>    }
 
     public override void Initialize()
     {
@@ -49,12 +45,12 @@ public class SimpleTaskSystemDataModule : AbpModule
 				<strong>AbpNHibernateModule</strong> module provides base functionality and 
 adapters to make NHibernate work with ASP.NET Boilerplate.</p>
 			<h4 id="DocEntityMapping">Entity mapping</h4>
-			<p>In this sample configuration, we're fluently mapping using all mapping 
+			<p>In this sample configuration above, we have fluently mapped using all mapping 
 classes in current assembly. An example mapping class can be as shown below:</p>
-			<pre lang="cs">public class TaskMap : EntityMap&lt;Task&gt;
+			<pre lang="cs">public class TaskMap : <strong>EntityMap&lt;Task&gt;</strong>
 {
     public TaskMap()
-        : base(&quot;TeTasks&quot;)
+        : base(&quot;<strong>TeTasks</strong>&quot;)
     {
         References(x =&gt; x.AssignedUser).Column(&quot;AssignedUserId&quot;).LazyLoad();
 
@@ -69,22 +65,25 @@ classes in current assembly. An example mapping class can be as shown below:</p>
 				<strong>EntityMap</strong> is a class of ASP.NET Boilerplate that extends
 				<strong>ClassMap&lt;T&gt;</strong>, automatically maps <strong>Id</strong> property and gets <strong>table name</strong> in the constructor. So, I'm deriving from it and mapping other properties 
 using <a href="http://www.fluentnhibernate.org/" target="_blank">
-FluentNHibernate</a>.&nbsp; Surely, you can derive directly from ClassMap. You 
-can use full API of FluentNHibernate. You can also use other mapping techniques 
+FluentNHibernate</a>.&nbsp; Surely, you can derive directly from ClassMap, you 
+can use full API of <strong>FluentNHibernate</strong> and you can use other mapping techniques 
 of NHibernate (like mapping XML files).</p>
-			<h3>Repository implementation</h3>
+			<h3>Repositories</h3>
 
-			<p>You can use default implementation for repositories even without creating a 
-repository class in your project. Or you can create your repository class 
-derived from NhRepositoryBase.</p>
-			<h4 id="#DocDefaultImpl">Default implementation</h4>
-			<p>You don't have to create repository classes for entities to just use 
+			<p>Repositories are used to abstract data access from higher layers. 
+			See <a href="Repositories.html">repository documentation</a> for 
+			more.&nbsp;&nbsp;</p>
+			<h4 id="#DocDefaultImpl">Default Implementation</h4>
+			<p>
+				<a href="http://www.nuget.org/packages/Abp.NHibernate" target="_blank">
+Abp.NHibernate</a> package implements default repositories for entities in your 
+			application. You don't have to create repository classes for entities to just use 
 predefined repository methods. Example:</p>
 			<pre lang="cs">public class PersonAppService : IPersonAppService
 {
-    private readonly IRepository&lt;Person&gt; _personRepository;
+    private readonly <strong>IRepository&lt;Person&gt; _personRepository</strong>;
 
-    public PersonAppService(IRepository&lt;Person&gt; personRepository)
+    public PersonAppService(<strong>IRepository&lt;Person&gt; personRepository</strong>)
     {
         _personRepository = personRepository;
     }
@@ -93,7 +92,7 @@ predefined repository methods. Example:</p>
     {        
         person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
 
-        _personRepository.Insert(person);
+        <strong>_personRepository.Insert(person);</strong>
     }
 }</pre>
 
@@ -102,9 +101,10 @@ uses the <strong>Insert</strong> method. In this way, you can easily inject
 				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;) and 
 use predefined methods. See <a href="/Pages/Documents/Repositories">repository 
 documentation</a> for list of all predefined methods.</p>
-			<h4>Custom repositories</h4>
-			<p>If you want to add some custom method, you should first add it to repository 
-interface (as a best practice), then implement in the repository class. ASP.NET Boilerplate provides a base class <strong>NhRepositoryBase</strong> 
+			<h4>Custom Repositories</h4>
+			<p>If you want to add some custom method, you should first add it to 
+			a repository 
+interface (as a best practice), then implement in a repository class. ASP.NET Boilerplate provides a base class <strong>NhRepositoryBase</strong> 
 to implement repositories easily. To implement IRepository interface, you can 
 just derive your repository from this class.</p>
 			<p>Assume that we have a Task entity that can be assigned to a Person (entity) 
@@ -112,14 +112,14 @@ and a Task has a State (new, assigned, completed... and so on). We may need to
 write a custom method to get list of Tasks with some conditions and with 
 AssisgnedPerson property pre-fetched in a single database query. See the example 
 code:</p>
-			<pre>public interface ITaskRepository : IRepository&lt;Task, long&gt;
-{
+			<pre>public interface ITaskRepository : <strong>IRepository&lt;Task, long&gt;
+</strong>{
     List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state);
 }
 
-public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;, ITaskRepository
-{
-    public TaskRepository(ISessionProvider sessionProvider)
+public class TaskRepository : <strong>NhRepositoryBase&lt;Task, long&gt;, ITaskRepository
+</strong>{
+    public TaskRepository(<strong>ISessionProvider sessionProvider</strong>)
         : base(sessionProvider)
     {
     }
@@ -150,17 +150,19 @@ public class TaskRepository : NhRepositoryBase&lt;Task, long&gt;, ITaskRepositor
 				<strong>ToList()</strong> to get list of 
 Tasks.</p>
 			<p>You can also use <strong>Session </strong>object in repository methods to use 
-full API of NHibernate.</p>
-			<p>A repository should get ISessionProvider in it's constructor. In this way, we 
-can easily inject a fake session provider in unit tests. In runtime, ASP.NET 
-Boilerplate automatically injects the right session provider.</p>
-			<h4 id="DocAppBaseRepo">Application specific base repository class</h4>
+full API of NHibernate.&nbsp;</p>
+			<p><strong>Note</strong>: Define the custom repository <strong>
+			interface </strong>in the <strong>domain/core</strong> layer,
+			<strong>implement </strong>it in the <strong>NHibernate </strong>
+			project for layered applications. Thus, you can inject the interface 
+			from any project without referencing to NH.</p>
+			<h5 id="DocAppBaseRepo">Application Specific Base Repository Class</h5>
 			<p>Although you can derive your repositories from NhRepositoryBase of ASP.NET 
 Boilerplate, it's a better practice to create your own base class that <strong>extends</strong> 
 NhRepositoryBase. Thus, you can add shared/common methods to your repositories 
 easily. Example:</p>
 			<pre lang="cs">//Base class for all repositories in my application
-public abstract class MyRepositoryBase&lt;TEntity, TPrimaryKey&gt; : NhRepositoryBase&lt;TEntity, TPrimaryKey&gt;
+public abstract class MyRepositoryBase&lt;TEntity, TPrimaryKey&gt; : <strong>NhRepositoryBase&lt;TEntity, TPrimaryKey&gt;</strong>
     where TEntity : class, IEntity&lt;TPrimaryKey&gt;
 {
     protected MyRepositoryBase(ISessionProvider sessionProvider)
@@ -172,7 +174,7 @@ public abstract class MyRepositoryBase&lt;TEntity, TPrimaryKey&gt; : NhRepositor
 }
 
 //A shortcut for entities those have integer Id.
-public abstract class MyRepositoryBase&lt;TEntity&gt; : MyRepositoryBase&lt;TEntity, int&gt;
+public abstract class MyRepositoryBase&lt;TEntity&gt; : <strong>MyRepositoryBase&lt;TEntity, int&gt;</strong>
     where TEntity : class, IEntity&lt;int&gt;
 {
     protected MyRepositoryBase(ISessionProvider sessionProvider)
@@ -183,7 +185,7 @@ public abstract class MyRepositoryBase&lt;TEntity&gt; : MyRepositoryBase&lt;TEnt
     //do not add any method here, add the class above (since this inherits it)
 }
 
-public class TaskRepository : MyRepositoryBase&lt;Task&gt;, ITaskRepository
+public class <strong>TaskRepository</strong> : <strong>MyRepositoryBase&lt;Task&gt;, ITaskRepository</strong>
 {
     public TaskRepository(ISessionProvider sessionProvider)
         : base(sessionProvider)
@@ -192,10 +194,6 @@ public class TaskRepository : MyRepositoryBase&lt;Task&gt;, ITaskRepository
 
     //Specific methods for task repository
 }</pre>
-
-			<h3 id="DocSeeAlso">See also</h3>
-			<p>See <a href="/Pages/Documents/Repositories">repository documentation</a> 
-for more information on repositories.</p>
 		</div>
 	</body>
 

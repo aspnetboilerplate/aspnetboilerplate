@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Reflection;
 
@@ -21,11 +22,14 @@ namespace Abp.Runtime.Validation.Interception
         protected ParameterInfo[] Parameters { get; private set; }
         protected List<ValidationResult> ValidationErrors { get; }
 
+        private readonly IValidationConfiguration _configuration;
+
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        public MethodInvocationValidator()
+        public MethodInvocationValidator(IValidationConfiguration configuration)
         {
+            _configuration = configuration;
             ValidationErrors = new List<ValidationResult>();
         }
 
@@ -121,7 +125,9 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                if (!parameterInfo.IsOptional && 
+                    !parameterInfo.IsOut && 
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
@@ -134,6 +140,14 @@ namespace Abp.Runtime.Validation.Interception
 
         protected virtual void ValidateObjectRecursively(object validatingObject)
         {
+            if (validatingObject == null)
+            {
+                return;
+            }
+
+            SetDataAnnotationAttributeErrors(validatingObject);
+
+            //Validate items of enumerable
             if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
             {
                 foreach (var item in (validatingObject as IEnumerable))
@@ -142,21 +156,38 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            if (!(validatingObject is IValidate))
-            {
-                return;
-            }
-
-            SetDataAnnotationAttributeErrors(validatingObject);
-
             if (validatingObject is ICustomValidate)
             {
                 (validatingObject as ICustomValidate).AddValidationErrors(ValidationErrors);
             }
 
+            //Do not recursively validate for enumerable objects
+            if (validatingObject is IEnumerable)
+            {
+                return;
+            }
+
+            var validatingObjectType = validatingObject.GetType();
+
+            //Do not recursively validate for primitive objects
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObjectType))
+            {
+                return;
+            }
+
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
+            {
+                return;
+            }
+
             var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
+                if (property.Attributes.OfType<DisableValidationAttribute>().Any())
+                {
+                    continue;
+                }
+
                 ValidateObjectRecursively(property.GetValue(validatingObject));
             }
         }

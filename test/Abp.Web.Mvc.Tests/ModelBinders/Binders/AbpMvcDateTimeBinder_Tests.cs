@@ -23,7 +23,7 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
         [InlineData("2016-04-13 01:58:10.526PM+05:00")]
         public void DateTimeBinder_Utc_Tests(string sourceDate)
         {
-            Clock.Provider = new UtcClockProvider();
+            Clock.Provider = ClockProviders.Utc;
 
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, Clock.Kind);
             var fields = new NameValueCollection { { "date", sourceDate } };
@@ -67,7 +67,7 @@ namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
 
         private void DateTimeBinder_Local_Test_Internal(string sourceDate)
         {
-            Clock.Provider = new LocalClockProvider();
+            Clock.Provider = ClockProviders.Local;
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc).ToLocalTime();
 
             var fields = new NameValueCollection { { "date", sourceDate } };

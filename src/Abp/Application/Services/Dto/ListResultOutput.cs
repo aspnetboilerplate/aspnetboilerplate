@@ -8,7 +8,7 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     /// <typeparam name="T">Type of the items in the <see cref="ListResultDto{T}.Items"/> list</typeparam>
     [Serializable]
-    public class ListResultOutput<T> : ListResultDto<T>, IOutputDto
+    public class ListResultOutput<T> : ListResultDto<T>
     {
         /// <summary>
         /// Creates a new <see cref="ListResultOutput{T}"/> object.

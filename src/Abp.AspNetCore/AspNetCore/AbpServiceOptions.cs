@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Abp.Dependency;
 using Abp.PlugIns;
 
@@ -8,11 +7,11 @@ namespace Abp.AspNetCore
     {
         public IIocManager IocManager { get; set; }
 
-        public List<PlugInFolderInfo> PlugInFolders { get; }
+        public PlugInSourceList PlugInSources { get; }
 
         public AbpServiceOptions()
         {
-            PlugInFolders = new List<PlugInFolderInfo>();
+            PlugInSources = new PlugInSourceList();
         }
     }
 }

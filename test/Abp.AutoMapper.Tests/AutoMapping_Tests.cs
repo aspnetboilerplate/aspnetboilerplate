@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using Shouldly;
 using Xunit;
 
@@ -6,18 +7,24 @@ namespace Abp.AutoMapper.Tests
 {
     public class AutoMapping_Tests
     {
+        private static IMapper _mapper;
+
         static AutoMapping_Tests()
         {
-            //ABP will automatically find and create these mappings normally. This is just for test purposes.
-            AutoMapperHelper.CreateMap(typeof(MyClass1));
-            AutoMapperHelper.CreateMap(typeof(MyClass2));
+            var config = new MapperConfiguration(configuration =>
+            {
+                configuration.CreateAbpAttributeMaps(typeof(MyClass1));
+                configuration.CreateAbpAttributeMaps(typeof(MyClass2));
+            });
+
+            _mapper = config.CreateMapper();
         }
 
         [Fact]
         public void Map_Null_Tests()
         {
             MyClass1 obj1 = null;
-            var obj2 = obj1.MapTo<MyClass2>();
+            var obj2 = _mapper.Map<MyClass2>(obj1);
             obj2.ShouldBe(null);
         }
 
@@ -27,7 +34,7 @@ namespace Abp.AutoMapper.Tests
             MyClass1 obj1 = null;
 
             var obj2 = new MyClass2 { TestProp = "before map" };
-            obj1.MapTo(obj2);
+            _mapper.Map(obj1, obj2);
             obj2.TestProp.ShouldBe("before map");
         }
 
@@ -36,10 +43,10 @@ namespace Abp.AutoMapper.Tests
         {
             var obj1 = new MyClass1 { TestProp = "Test value" };
 
-            var obj2 = obj1.MapTo<MyClass2>();
+            var obj2 = _mapper.Map<MyClass2>(obj1);
             obj2.TestProp.ShouldBe("Test value");
 
-            var obj3 = obj1.MapTo<MyClass3>();
+            var obj3 = _mapper.Map<MyClass3>(obj1);
             obj3.TestProp.ShouldBe("Test value");
         }
 
@@ -49,11 +56,11 @@ namespace Abp.AutoMapper.Tests
             var obj1 = new MyClass1 { TestProp = "Test value" };
 
             var obj2 = new MyClass2();
-            obj1.MapTo(obj2);
+            _mapper.Map(obj1, obj2);
             obj2.TestProp.ShouldBe("Test value");
 
             var obj3 = new MyClass3();
-            obj2.MapTo(obj3);
+            _mapper.Map(obj2, obj3);
             obj3.TestProp.ShouldBe("Test value");
         }
 
@@ -62,7 +69,7 @@ namespace Abp.AutoMapper.Tests
         {
             var obj2 = new MyClass2 { TestProp = "Test value" };
 
-            var obj1 = obj2.MapTo<MyClass1>();
+            var obj1 = _mapper.Map<MyClass1>(obj2);
             obj1.TestProp.ShouldBe("Test value");
         }
 
@@ -75,7 +82,7 @@ namespace Abp.AutoMapper.Tests
                             new MyClass1 {TestProp = "Test value 2"}
                         };
 
-            var list2 = list1.MapTo<List<MyClass2>>();
+            var list2 = _mapper.Map<List<MyClass2>>(list1);
             list2.Count.ShouldBe(2);
             list2[0].TestProp.ShouldBe("Test value 1");
             list2[1].TestProp.ShouldBe("Test value 2");
@@ -86,7 +93,7 @@ namespace Abp.AutoMapper.Tests
         {
             MyClass1 obj1 = new MyClass1 { TestProp = null };
             var obj2 = new MyClass2 { TestProp = "before map" };
-            obj1.MapTo(obj2);
+            _mapper.Map(obj1, obj2);
             obj2.TestProp.ShouldBe(null);
         }
 

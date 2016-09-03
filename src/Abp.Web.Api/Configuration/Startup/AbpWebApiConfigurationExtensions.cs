@@ -10,9 +10,9 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure Abp.Web.Api module.
         /// </summary>
-        public static IAbpWebApiModuleConfiguration AbpWebApi(this IModuleConfigurations configurations)
+        public static IAbpWebApiConfiguration AbpWebApi(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web.Api", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebApiModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpWebApiConfiguration>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -16,16 +17,17 @@ namespace Abp.TestBase.SampleApplication.Tests.People
     public class PersonRepository_Tests_For_EntityChangeEvents : SampleApplicationTestBase
     {
         private readonly IRepository<Person> _personRepository;
-        private readonly IRepository<Message> _messageRepository;
 
         public PersonRepository_Tests_For_EntityChangeEvents()
         {
             _personRepository = Resolve<IRepository<Person>>();
-            _messageRepository = Resolve<IRepository<Message>>();
         }
-
-        [Fact]
-        public void Should_Trigger_All_Events_On_Create()
+        
+        [Theory]
+        [InlineData(TransactionScopeOption.Required)]
+        [InlineData(TransactionScopeOption.RequiresNew)]
+        [InlineData(TransactionScopeOption.Suppress)]
+        public void Should_Trigger_All_Events_On_Create_For_All_Transaction_Scopes(TransactionScopeOption scopeOption)
         {
             var changingTriggerCount = 0;
             var creatingTriggerCount = 0;
@@ -39,6 +41,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(true);
                     changingTriggerCount++;
+                    changedTriggerCount.ShouldBe(0);
                 });
 
             Resolve<IEventBus>().Register<EntityCreatingEventData<Person>>(
@@ -47,6 +50,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(true);
                     creatingTriggerCount++;
+                    createdTriggerCount.ShouldBe(0);
                 });
 
             Resolve<IEventBus>().Register<EntityChangedEventData<Person>>(
@@ -54,6 +58,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
+                    changingTriggerCount.ShouldBe(1);
                     changedTriggerCount++;
                 });
 
@@ -62,10 +67,22 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 {
                     eventData.Entity.Name.ShouldBe("halil");
                     eventData.Entity.IsTransient().ShouldBe(false);
+                    creatingTriggerCount.ShouldBe(1);
                     createdTriggerCount++;
                 });
 
-            _personRepository.Insert(new Person { ContactListId = 1, Name = "halil" });
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin(scopeOption))
+            {
+                _personRepository.Insert(new Person { ContactListId = 1, Name = "halil" });
+
+                changingTriggerCount.ShouldBe(0);
+                creatingTriggerCount.ShouldBe(0);
+
+                changedTriggerCount.ShouldBe(0);
+                createdTriggerCount.ShouldBe(0);
+
+                uow.Complete();
+            }
 
             changingTriggerCount.ShouldBe(1);
             creatingTriggerCount.ShouldBe(1);

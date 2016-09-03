@@ -15,5 +15,13 @@ namespace Abp.WebApi.Validation
             
             return null;
         }
+
+        public static bool IsDynamicAbpAction(this HttpActionDescriptor actionDescriptor)
+        {
+            return actionDescriptor
+                .ControllerDescriptor
+                .Properties
+                .ContainsKey("__AbpDynamicApiControllerInfo");
+        }
     }
 }

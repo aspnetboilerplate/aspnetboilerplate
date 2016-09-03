@@ -36,7 +36,12 @@ namespace Abp.Domain.Repositories
         }
 
         public abstract IQueryable<TEntity> GetAll();
-        
+
+        public virtual IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return GetAll();
+        }
+
         public virtual List<TEntity> GetAllList()
         {
             return GetAll().ToList();

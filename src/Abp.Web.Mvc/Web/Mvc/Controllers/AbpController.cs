@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Application.Features;
-using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -22,12 +17,12 @@ using Abp.Localization.Sources;
 using Abp.Logging;
 using Abp.Reflection;
 using Abp.Runtime.Session;
-using Abp.Timing;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
+using Abp.Web.Mvc.Extensions;
+using Abp.Web.Mvc.Helpers;
 using Abp.Web.Mvc.Models;
-using Abp.Web.Mvc.Validation;
 using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Controllers
@@ -145,22 +140,9 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
-        public IAuditingConfiguration AuditingConfiguration { get; set; }
-
-        public IAuditInfoProvider AuditInfoProvider { get; set; }
-
-        public IAuditingStore AuditingStore { get; set; }
-
         public IIocResolver IocResolver { get; set; }
 
         public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
-
-        /// <summary>
-        /// This object is used to measure an action execute duration.
-        /// </summary>
-        private Stopwatch _actionStopwatch;
-
-        private AuditInfo _auditInfo;
 
         /// <summary>
         /// MethodInfo for currently executing action.
@@ -173,20 +155,6 @@ namespace Abp.Web.Mvc.Controllers
         private WrapResultAttribute _wrapResultAttribute;
 
         /// <summary>
-        /// Ignored types for serialization on audit logging.
-        /// </summary>
-        protected static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
-
-        static AbpController()
-        {
-            IgnoredTypesForSerializationOnAuditLogging = new List<Type>
-            {
-                typeof (HttpPostedFileBase),
-                typeof (IEnumerable<HttpPostedFileBase>)
-            };
-        }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpController()
@@ -195,7 +163,6 @@ namespace Abp.Web.Mvc.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
-            AuditingStore = SimpleLogAuditingStore.Instance;
             EventBus = NullEventBus.Instance;
             IocResolver = IocManager.Instance;
         }
@@ -297,13 +264,28 @@ namespace Abp.Web.Mvc.Controllers
                 return base.Json(data, contentType, contentEncoding, behavior);
             }
 
-            if (data == null)
+            return AbpJson(data, contentType, contentEncoding, behavior);
+        }
+
+        protected virtual AbpJsonResult AbpJson(
+            object data,
+            string contentType = null,
+            Encoding contentEncoding = null,
+            JsonRequestBehavior behavior = JsonRequestBehavior.DenyGet,
+            bool wrapResult = true,
+            bool camelCase = true,
+            bool indented = false)
+        {
+            if (wrapResult)
             {
-                data = new AjaxResponse();
-            }
-            else if (!ReflectionHelper.IsAssignableToGenericType(data.GetType(), typeof(AjaxResponse<>)))
-            {
-                data = new AjaxResponse(data);
+                if (data == null)
+                {
+                    data = new AjaxResponse();
+                }
+                else if (!(data is AjaxResponseBase))
+                {
+                    data = new AjaxResponse(data);
+                }
             }
 
             return new AbpJsonResult
@@ -311,7 +293,9 @@ namespace Abp.Web.Mvc.Controllers
                 Data = data,
                 ContentType = contentType,
                 ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
+                JsonRequestBehavior = behavior,
+                CamelCase = camelCase,
+                Indented = indented
             };
         }
 
@@ -320,35 +304,18 @@ namespace Abp.Web.Mvc.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
-            HandleAuditingBeforeAction(filterContext);
-            ValidateArguments(filterContext);
-
             base.OnActionExecuting(filterContext);
-        }
-
-        private void ValidateArguments(ActionExecutingContext filterContext)
-        {
-            var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo != null)
-            {
-                using (var validator = IocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
-                {
-                    validator.Object.Initialize(filterContext, methodInfo);
-                    validator.Object.Validate();
-                }
-            }
-        }
-
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            base.OnActionExecuted(filterContext);
-
-            HandleAuditingAfterAction(filterContext);
         }
 
         private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
-            _currentMethodInfo = ActionDescriptorHelper.GetMethodInfo(filterContext.ActionDescriptor);
+            //Prevent overriding for child actions
+            if (_currentMethodInfo != null)
+            {
+                return;
+            }
+
+            _currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             _wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     _currentMethodInfo,
@@ -407,9 +374,10 @@ namespace Abp.Web.Mvc.Controllers
             //We handled the exception!
             context.ExceptionHandled = true;
 
-            //Return a special error response to the client.
+            //Return an error response to the client.
             context.HttpContext.Response.Clear();
-            context.Result = IsJsonResult()
+            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
+            context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
                 ? GenerateJsonExceptionResult(context)
                 : GenerateNonJsonExceptionResult(context);
 
@@ -422,18 +390,24 @@ namespace Abp.Web.Mvc.Controllers
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
-        protected virtual bool IsJsonResult()
+        protected virtual int GetStatusCodeForException(ExceptionContext context)
         {
-            return typeof(JsonResult).IsAssignableFrom(_currentMethodInfo.ReturnType) ||
-                   typeof(Task<JsonResult>).IsAssignableFrom(_currentMethodInfo.ReturnType);
+
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return context.HttpContext.User.Identity.IsAuthenticated
+                    ? 403
+                    : 401;
+            }
+
+            return 500;
         }
 
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
-            context.HttpContext.Response.StatusCode = 500;
             return new AbpJsonResult(
-                new MvcAjaxResponse(
+                new AjaxResponse(
                     ErrorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
                     )
@@ -442,7 +416,6 @@ namespace Abp.Web.Mvc.Controllers
 
         protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
         {
-            context.HttpContext.Response.StatusCode = 500;
             return new ViewResult
             {
                 ViewName = "Error",
@@ -450,109 +423,6 @@ namespace Abp.Web.Mvc.Controllers
                 ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(ErrorInfoBuilder.BuildForException(context.Exception), context.Exception)),
                 TempData = context.Controller.TempData
             };
-        }
-
-        #endregion
-
-        #region Auditing
-
-        private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
-        {
-            if (!ShouldSaveAudit(filterContext))
-            {
-                _auditInfo = null;
-                return;
-            }
-
-            _actionStopwatch = Stopwatch.StartNew();
-            _auditInfo = new AuditInfo
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = _currentMethodInfo.DeclaringType != null
-                                ? _currentMethodInfo.DeclaringType.FullName
-                                : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                MethodName = _currentMethodInfo.Name,
-                Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
-                ExecutionTime = Clock.Now
-            };
-        }
-
-        private void HandleAuditingAfterAction(ActionExecutedContext filterContext)
-        {
-            if (_auditInfo == null || _actionStopwatch == null)
-            {
-                return;
-            }
-
-            _actionStopwatch.Stop();
-
-            _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
-            _auditInfo.Exception = filterContext.Exception;
-
-            AuditInfoProvider?.Fill(_auditInfo);
-
-            AuditingStore.Save(_auditInfo);
-        }
-
-        private bool ShouldSaveAudit(ActionExecutingContext filterContext)
-        {
-            if (AuditingConfiguration == null)
-            {
-                return false;
-            }
-
-            if (!AuditingConfiguration.MvcControllers.IsEnabled)
-            {
-                return false;
-            }
-
-            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
-            {
-                return false;
-            }
-
-            return AuditingHelper.ShouldSaveAudit(
-                _currentMethodInfo,
-                AuditingConfiguration,
-                AbpSession,
-                true
-                );
-        }
-
-        private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
-        {
-            try
-            {
-                if (arguments.IsNullOrEmpty())
-                {
-                    return "{}";
-                }
-
-                var dictionary = new Dictionary<string, object>();
-
-                foreach (var argument in arguments)
-                {
-                    if (argument.Value != null && IgnoredTypesForSerializationOnAuditLogging.Any(t => t.IsInstanceOfType(argument.Value)))
-                    {
-                        dictionary[argument.Key] = null;
-                    }
-                    else
-                    {
-                        dictionary[argument.Key] = argument.Value;
-                    }
-                }
-
-                return AuditingHelper.Serialize(dictionary);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." + _auditInfo.MethodName);
-                Logger.Warn(ex.ToString(), ex);
-                return "{}";
-            }
         }
 
         #endregion

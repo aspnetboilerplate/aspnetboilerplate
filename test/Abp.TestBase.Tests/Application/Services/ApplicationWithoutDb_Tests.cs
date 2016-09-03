@@ -1,5 +1,4 @@
 ﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Shouldly;
 using Xunit;
@@ -40,12 +39,12 @@ namespace Abp.TestBase.Tests.Application.Services
             }
         }
 
-        public class MyMethodInput : IInputDto
+        public class MyMethodInput 
         {
             public string MyStringValue { get; set; }
         }
 
-        public class MyMethodOutput : IOutputDto
+        public class MyMethodOutput
         {
             public int Result { get; set; }
         }

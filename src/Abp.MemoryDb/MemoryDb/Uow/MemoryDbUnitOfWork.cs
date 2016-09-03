@@ -21,8 +21,16 @@ namespace Abp.MemoryDb.Uow
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MemoryDbUnitOfWork(IAbpMemoryDbModuleConfiguration configuration, MemoryDatabase memoryDatabase, IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(connectionStringResolver, defaultOptions)
+        public MemoryDbUnitOfWork(
+            IAbpMemoryDbModuleConfiguration configuration, 
+            MemoryDatabase memoryDatabase, 
+            IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkFilterExecuter filterExecuter,
+            IUnitOfWorkDefaultOptions defaultOptions)
+            : base(
+                  connectionStringResolver, 
+                  defaultOptions,
+                  filterExecuter)
         {
             _configuration = configuration;
             _memoryDatabase = memoryDatabase;

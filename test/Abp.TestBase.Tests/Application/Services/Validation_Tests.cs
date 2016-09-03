@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Abp.Runtime.Validation;
+using Abp.Timing;
 using Shouldly;
 using Xunit;
 
@@ -39,7 +40,8 @@ namespace Abp.TestBase.Tests.Application.Services
             var output = _myAppService.MyMethod2(new MyMethod2Input
                             {
                                 MyStringValue2 = "test 1",
-                                Input1 = new MyMethodInput { MyStringValue = "test 2" }
+                                Input1 = new MyMethodInput { MyStringValue = "test 2" },
+                                DateTimeValue = Clock.Now
                             });
             output.Result.ShouldBe(42);
         }
@@ -103,6 +105,12 @@ namespace Abp.TestBase.Tests.Application.Services
                 );
         }
 
+        [Fact]
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation()
+        {
+            _myAppService.MyMethod5(new MyMethod5Input());
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -111,6 +119,7 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod2(MyMethod2Input input);
             MyMethodOutput MyMethod3(MyMethod3Input input);
             MyMethodOutput MyMethod4(MyMethod4Input input);
+            MyMethodOutput MyMethod5(MyMethod5Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -134,26 +143,33 @@ namespace Abp.TestBase.Tests.Application.Services
             {
                 return new MyMethodOutput { Result = 42 };
             }
+
+            public MyMethodOutput MyMethod5(MyMethod5Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
         }
 
-        public class MyMethodInput : IInputDto
+        public class MyMethodInput
         {
             [Required]
             [MinLength(3)]
             public string MyStringValue { get; set; }
         }
 
-        public class MyMethod2Input : IInputDto
+        public class MyMethod2Input
         {
             [Required]
             [MinLength(2)]
             public string MyStringValue2 { get; set; }
 
+            public DateTime DateTimeValue { get; set; }
+
             [Required]
             public MyMethodInput Input1 { get; set; }
         }
 
-        public class MyMethod3Input : IInputDto
+        public class MyMethod3Input
         {
             [Required]
             [MinLength(2)]
@@ -164,20 +180,26 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyMethod4Input : IInputDto
+        public class MyMethod4Input
         {
             [Required]
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyClassInList : IValidate
+        public class MyMethod5Input
+        {
+            [DisableValidation]
+            public MyClassInList[] ArrayItems { get; set; }
+        }
+
+        public class MyClassInList
         {
             [Required]
             [MinLength(3)]
             public string ValueInList { get; set; }
         }
 
-        public class MyMethodOutput : IOutputDto
+        public class MyMethodOutput
         {
             public int Result { get; set; }
         }

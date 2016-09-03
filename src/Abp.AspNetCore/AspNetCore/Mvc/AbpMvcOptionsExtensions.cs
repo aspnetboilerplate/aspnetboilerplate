@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.AspNetCore.Mvc
 {
-    public static class AbpMvcOptionsExtensions
+    internal static class AbpMvcOptionsExtensions
     {
         public static void AddAbp(this MvcOptions options, IServiceCollection services)
         {

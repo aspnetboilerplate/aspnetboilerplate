@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;
@@ -38,6 +39,30 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             var personFinal = UsingDbContext(context => context.People.Single(p => p.Id == personInitial.Id));
             personFinal.Name.ShouldBe("halil-updated");
+        }
+
+        [Fact]
+        public void Should_Insert_New_Entity()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var contactList = UsingDbContext(context => context.ContactLists.First());
+
+                var person = new Person
+                {
+                    Name = "test-person",
+                    ContactListId = contactList.Id
+                };
+
+                _personRepository.Insert(person);
+
+                person.IsTransient().ShouldBeTrue();
+
+                uow.Complete();
+
+                person.IsTransient().ShouldBeFalse();
+            }
+
         }
     }
 }

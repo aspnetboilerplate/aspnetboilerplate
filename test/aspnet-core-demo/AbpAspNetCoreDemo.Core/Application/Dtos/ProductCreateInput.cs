@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using AbpAspNetCoreDemo.Core.Domain;
 
 namespace AbpAspNetCoreDemo.Core.Application.Dtos
 {
     [AutoMapTo(typeof(Product))]
-    public class ProductCreateInput : IInputDto
+    public class ProductCreateInput
     {
         [Required]
         [MaxLength(200)]

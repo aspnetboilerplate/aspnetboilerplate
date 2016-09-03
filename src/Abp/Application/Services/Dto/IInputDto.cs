@@ -1,11 +1,12 @@
-using Abp.Runtime.Validation;
+using System;
 
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
     /// This interface is used to define DTOs those are used as input parameters.
     /// </summary>
-    public interface IInputDto : IDto, IValidate
+    [Obsolete("Don't use this interface anymore, it's not needed.")]
+    public interface IInputDto : IDto
     {
 
     }

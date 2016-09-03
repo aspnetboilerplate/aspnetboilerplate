@@ -19,9 +19,36 @@
 	Generally, a seperated repository is used for each Entity (or Aggregate 
 	Root).</p>
 			<h3 id="DocIRepositoryClasses">
-    IRepository interfaces</h3>
+    		Default Repositories</h3>
 			<p>
-    In ASP.NET Boilerplate, a repository class should implement <strong>IRepository</strong> interface. It's good to define an interface for each repository.</p>
+    In ASP.NET Boilerplate, a repository classes implement <strong>IRepository&lt;TEntity, 
+			TPrimaryKey&gt;</strong> interface. ABP can automatically creates 
+			default repositories for each entity type. You can directly <a href="/Pages/Documents/Dependency-Injection">inject</a> 
+				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;). An example
+				<a href="/Pages/Documents/Application-Services">application service</a> uses a 
+repository to insert an entity to database:</p>
+			<pre lang="cs">public class PersonAppService : IPersonAppService
+{
+    <strong>private readonly IRepository&lt;Person&gt; _personRepository;</strong>
+
+    public PersonAppService(<strong>IRepository&lt;Person&gt; personRepository</strong>)
+    {
+        _personRepository = personRepository;
+    }
+
+    public void CreatePerson(CreatePersonInput input)
+    {        
+        person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
+        <strong>_personRepository.Insert(person);</strong>
+    }
+}</pre>
+			<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
+uses the <strong>Insert</strong> method.</p>
+			<h3>Custom Repositories</h3>
+			<p>You only create a 
+repository class for an entity when you need to create a custom repository 
+method(s) for that entity.</p>
+			<h4>Custom Repository Interface</h4>
 			<p>
     A repository definition for a Person entity is shown below:</p>
 			<pre lang="cs">public interface IPersonRepository : IRepository&lt;Person&gt;
@@ -37,16 +64,29 @@
 {
 
 }</pre>
-			<p>
-    IRepostory defines most common methods for a repository class such as 
-	select, insert, update and delete methods (CRUD operations). Most of time these methods will be 
-	enough for simple entities. If these methods are enough for an entity, you 
-	don't have to create repository interface/class for this entitiy. See
-				<a href="#DocRepositoryImpl">implementation</a> section for details.</p>
+			<h4>
+    		Custom Repository Implementation</h4>
+
+			<p>ASP.NET Boilerplate is designed to be independent from a 
+			particular ORM (Object/Relational Mapping) framework or another 
+			technique to access to database. Repositories are implemented in <strong>NHibernate</strong> and <strong>
+EntityFramework</strong> as out-of-the-box. See documents to implement 
+repositories in ASP.NET Boilerplate in these frameworks:</p>
+			<ul>
+				<li>
+					<a href="/Pages/Documents/NHibernate-Integration">NHibernate integration</a>
+				</li>
+				<li>
+					<a href="/Pages/Documents/EntityFramework-Integration">EntityFramework integration</a>
+				</li>
+			</ul>
+
+			<h3>Base Repository Methods</h3>
+			<p>Every repository has some common methods coming from 
+			IRepository&lt;TEntity&gt; interface. We will investigate most of them 
+			here.</p>
 			<h4 id="DocQuerying">
     Querying</h4>
-			<p>
-    IRepository defines common methods to retrive entities from database.</p>
 			<h5 id="DocGettingSingleEntity">
     Getting single entity</h5>
 
@@ -81,10 +121,8 @@ there are more than one entity for given conditions.</p>
 proxy object for lazy loading. If you only use Id property, Entity is not 
 actually retrieved. It's retrieved from database only if you access to other 
 properties of entity. This can be used instead of Get, for performance reasons. 
-It's implemented in NHibernate. If ORM provider does not implements it, Load 
+It's implemented in <strong>NHibernate</strong>. If ORM provider does not implements it, Load 
 method works as identical as Get method.</p>
-			<p>Some methods have <strong>async</strong> versions to be used in async 
-programming model (See 'about async methods' section).</p>
 
 			<h5 id="DocGettingListOfEntities">Getting a list of entities</h5>
 
@@ -120,22 +158,17 @@ a join expression.</p>
 	does not perform database query unless you call ToList() method or use the 
 	IQueryable&lt;T&gt; in a foreach loop (or somehow access to queried items). 
 	So, 
-	when you call ToList() method, database connection must be alive. This can 
-	be achived by marking caller method by <strong>
-						<a href="/Pages/Documents/Unit-Of-Work">UnitOfWork</a>
-					</strong>attribute of ASP.NET 
-	Boilerplate. Note that <a href="/Pages/Documents/Application-Services">
-	Application Service</a> methods are already UnitOfWork as default, so, 
-	GetAll() will work without adding UnitOfWork attribute for application 
-	service methods.</p>
+	when you call ToList() method, database connection must be alive. For a web 
+				application, you don't care about that in most cases since MVC 
+				controller methods are unit of work by default and database 
+				connection is available for entire request. See <strong>
+						<a href="/Pages/Documents/Unit-Of-Work">UnitOfWork</a></strong> 
+				documentation to understand it better.</p>
 			</div>
 
-			<p>Some methods have <strong>async</strong> versions to be used in async 
-programming model (See 'about async methods' section).</p>
-
 			<h5 id="DocGettingCustom">Custom return value</h5>
-			<p>There is also an additional method to provide power of IQueryable without 
-using UnitOfWork attribute in the calling method.</p>
+			<p>There is also an additional method to provide power of IQueryable 
+			that can be usable out of a unit of work.</p>
 
 			<pre lang="cs">T Query&lt;T&gt;(Func&lt;IQueryable&lt;TEntity&gt;, T&gt; queryMethod);</pre>
 
@@ -144,11 +177,11 @@ IQueryable&lt;T&gt; and returns any type of object. Example:</p>
 			<pre lang="cs">var people = _personRepository.Query(q =&gt; q.Where(p =&gt; p.Name.Contains("H")).OrderBy(p =&gt; p.Name).ToList());</pre>
 
 			<p>Since 
-given lamda (or method) is executed in the repository method, it's executed when 
-database connection is open. You can return a list of entities, a single entity, 
+given lamda (or method) is executed inside the repository method, it's executed when 
+database connection is available. You can return a list of entities, a single entity, 
 a projection or something else that executes the query.</p>
 			<h4 id="DocInsertEntity">Insert</h4>
-			<p>IRepository interface defines simple methods to insert an entity to database:</p>
+			<p>IRepository interface defines methods to insert an entity to database:</p>
 			<pre lang="cs">TEntity Insert(TEntity entity);
 Task&lt;TEntity&gt; InsertAsync(TEntity entity);
 TPrimaryKey InsertAndGetId(TEntity entity);
@@ -164,13 +197,14 @@ Id of new inserted entity. This is useful if Id is auto increment and you need
 Id of the new inserted entity. <strong>InsertOrUpdate</strong> inserts or updated given 
 entity by checking it's Id's value. Lastly, <strong>InsertOrUpdateAndGetId</strong> 
 returns Id of the entity after inserting or updating.</p>
-			<p>All methods have <strong>async</strong> versions to be used in async 
-programming model (See 'about async methods' section).</p>
 			<h4 id="DocUpdateEntity">Update</h4>
-			<p>IRepository defines a method to update an existing entity in the database. It 
+			<p>IRepository defines methods to update an existing entity in the database. It 
 gets the entity to be updated and returns the same entity object.</p>
 			<pre>TEntity Update(TEntity entity);
 Task&lt;TEntity&gt; UpdateAsync(TEntity entity);</pre>
+<p>Most of times you don't need to explicitly call Update methods since unit of 
+work system automatically saves all changes when unit of work completes. See
+<a href="Unit-Of-Work.html">unit of work</a> documentation for more.</p>
 			<h4 id="DocDeleteEntity">Delete</h4>
 			<p>IRepository defines methods to delete an existing entity from the database</p>
 
@@ -181,16 +215,13 @@ Task DeleteAsync(TPrimaryKey id);
 void Delete(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 Task DeleteAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
 			<p>First method accepts an existing entity, second one accepts Id of the entity 
-to delete. </p>
-			<p>The last one accepts a condition to delete all entities fit to given 
-condition. Notice that all entities matches given predicate will be retrived 
-from database and then deleted. So, use it carefully, it may cause performance 
+to delete. The last one accepts a condition to delete all entities fit to given 
+condition. Notice that all entities matches given predicate may be retrived 
+from database and then deleted (based on repository implementation). So, use it carefully, it may cause performance 
 problems if there are too many entities with given condition.</p>
-			<p>All methods have <strong>async</strong> versions to be used in async 
-programming model (See 'about async methods' section).</p>
 
 			<h4 id="DocOtherRepositoryMethods">Others</h4>
-			<p>IRepository also provides methods to get count of entities in the table.</p>
+			<p>IRepository also provides methods to get count of entities in a table.</p>
 			<pre>int Count();
 Task&lt;int&gt; CountAsync();
 int Count(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
@@ -200,10 +231,7 @@ Task&lt;long&gt; LongCountAsync();
 long LongCount(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);
 Task&lt;long&gt; LongCountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate);</pre>
 
-			<p>All methods have <strong>async</strong> versions to be used in async 
-programming model (See 'about async methods' section).</p>
-
-			<h4 id="DocAboutAsyncMethods">About Async methods</h4>
+			<h4 id="DocAboutAsyncMethods">About Async Methods</h4>
 
 			<p>ASP.NET Boilerplate supports async programming model. So, repository methods 
 has Async versions. Here, a sample 
@@ -232,52 +260,9 @@ has Async versions. Here, a sample
 EntityFramework. If not supported, Async repository methods works synchronously. 
 Also, for example, InsertAsync works same as Insert in EntityFramework since EF 
 does not write new entities to database until unit of work completes 
-(DbContext.SaveChanges).</p>
+(a.k.a. DbContext.SaveChanges).</p>
 
-			<h3 id="DocRepositoryImpl">Repository Implementation</h3>
-
-			<p>ASP.NET Boilerplate is designed to be independent from a particular ORM 
-(Object/Relational Mapping) framework or another technique to access to 
-database. By implementing IRepository interface, any framework can be used.</p>
-			<p>Repositories are implemented in <strong>NHibernate</strong> and <strong>
-EntityFramework</strong> as out-of-the-box. See documents to implement 
-repositories in ASP.NET Boilerplate in these frameworks:</p>
-			<ul>
-				<li>
-					<a href="/Pages/Documents/NHibernate-Integration">NHibernate integration</a>
-				</li>
-				<li>
-					<a href="/Pages/Documents/EntityFramework-Integration">EntityFramework integration</a>
-				</li>
-			</ul>
-
-			<p>When you use NHibernate or EntityFramework, you don't have to 
-create repository classes for your entities if standard methods are enough for 
-you. You can directly <a href="/Pages/Documents/Dependency-Injection">inject</a> 
-				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;). An example
-				<a href="/Pages/Documents/Application-Services">application service</a> uses a 
-repository to insert an entity to database:</p>
-			<pre lang="cs">public class PersonAppService : IPersonAppService
-{
-    private readonly IRepository&lt;Person&gt; _personRepository;
-
-    public PersonAppService(IRepository&lt;Person&gt; personRepository)
-    {
-        _personRepository = personRepository;
-    }
-
-    public void CreatePerson(CreatePersonInput input)
-    {        
-        person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
-
-        _personRepository.Insert(person);
-    }
-}</pre>
-			<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
-uses the <strong>Insert</strong> method. In this way, you should only create a 
-repository class for an entity when you need to create a custom repository 
-method for that entity.</p>
-			<h3 id="DocManageConnection">Managing database connection</h3>
+			<h3 id="DocManageConnection">Managing Database Connection</h3>
 			<p>A database 
 connection is not opened or closed in a repository method. Connection management is made automatically 
 by ASP.NET Boilerplate.</p>
@@ -294,15 +279,13 @@ different repository) they share same connection and transaction. Connection is
 managed (opened/closed) by the first method that enters a repository. For more 
 information on database connection management, see
 				<a href="/Pages/Documents/Unit-Of-Work">UnitOfWork</a> documentation.</p>
-			<h3 id="DocRepositoryLifecycle">Lifecycle of a repository</h3>
-			<p>All repository instances are <strong>Transient</strong>. It means, they are 
-instantiated per usage. ASP.NET Boilerplate strongly uses Dependency Injection 
-technique. When a repository class needed to be injected, a new instance of the 
-class is created automatically by dependency injection container. See
+			<h3 id="DocRepositoryLifecycle">Lifetime of a Repository</h3>
+			<p>All repository instances are <strong>Transient</strong>. It 
+			means, they are instantiated per usage. See
 				<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> 
 documentation for more information.</p>
 
-			<h3 id="DocRepositoryBestPractices">Repository best practices</h3>
+			<h3 id="DocRepositoryBestPractices">Repository Best Practices</h3>
 			<ul>
 				<li>For an entity of T, use IRepository&lt;T&gt; wherever it's possible. Don't 
 	create custom repositories unless it's really needed. Pre-defined repository 

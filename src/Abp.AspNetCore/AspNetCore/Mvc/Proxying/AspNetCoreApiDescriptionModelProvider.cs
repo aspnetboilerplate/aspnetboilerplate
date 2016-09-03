@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Abp.Application.Services;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Proxying.Utils;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Web.Api.Modeling;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -46,7 +48,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
         private void AddApiDescriptionToModel(ApiDescription apiDescription, ApplicationApiDescriptionModel model)
         {
             var moduleModel = model.GetOrAddModule(GetModuleName(apiDescription));
-            var controllerModel = moduleModel.GetOrAddController(apiDescription.GroupName);
+            var controllerModel = moduleModel.GetOrAddController(apiDescription.GroupName.RemovePostFix(ApplicationService.CommonPostfixes));
             var method = apiDescription.ActionDescriptor.GetMethodInfo();
 
             if (controllerModel.Actions.ContainsKey(method.Name))
@@ -55,8 +57,11 @@ namespace Abp.AspNetCore.Mvc.Proxying
                 return;
             }
 
+            var returnValue = new ReturnValueApiDescriptionModel(method.ReturnType);
+
             var actionModel = controllerModel.AddAction(new ActionApiDescriptionModel(
                 method.Name,
+                returnValue,
                 apiDescription.RelativePath,
                 apiDescription.HttpMethod
             ));

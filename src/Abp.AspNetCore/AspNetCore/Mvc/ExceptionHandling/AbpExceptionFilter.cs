@@ -4,6 +4,8 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Reflection;
 using Abp.Web.Models;
@@ -18,6 +20,8 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
     {
         public ILogger Logger { get; set; }
 
+        public IEventBus EventBus { get; set; }
+
         private readonly IErrorInfoBuilder _errorInfoBuilder;
         private readonly IAbpAspNetCoreConfiguration _configuration;
 
@@ -25,7 +29,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
         {
             _errorInfoBuilder = errorInfoBuilder;
             _configuration = configuration;
+
             Logger = NullLogger.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         public void OnException(ExceptionContext context)
@@ -53,9 +59,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             {
                 return;
             }
-            
+
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.HttpContext.Response.StatusCode = GetStatusCode(context);
             context.Result = new ObjectResult(
                 new AjaxResponse(
                     _errorInfoBuilder.BuildForException(context.Exception),
@@ -63,7 +69,21 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 )
             );
 
+            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+
             context.Exception = null; //Handled!
+        }
+
+        private int GetStatusCode(ExceptionContext context)
+        {
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return context.HttpContext.User.Identity.IsAuthenticated
+                    ? (int)HttpStatusCode.Forbidden
+                    : (int)HttpStatusCode.Unauthorized;
+            }
+
+            return (int)HttpStatusCode.InternalServerError;
         }
     }
 }

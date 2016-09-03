@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.UI;
-using Abp.Web.Mvc.Models;
+using Abp.Web.Models;
 using Shouldly;
 using Xunit;
 
@@ -36,7 +38,7 @@ namespace Abp.AspNetCore.Tests
         public async Task Should_Wrap_Json_By_Default()
         {
             // Act
-            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+            var response = await GetResponseAsObjectAsync<AjaxResponse<SimpleViewModel>>(
                                GetUrl<SimpleTestController>(
                                    nameof(SimpleTestController.SimpleJson)
                                )
@@ -52,8 +54,19 @@ namespace Abp.AspNetCore.Tests
         [InlineData(false, "This is an exception message")]
         public async Task Should_Wrap_Json_Exception_By_Default(bool userFriendly, string message)
         {
+            //Arrange
+
+            var exceptionEventRaised = false;
+            Resolve<IEventBus>().Register<AbpHandledExceptionData>(data =>
+            {
+                exceptionEventRaised = true;
+                data.Exception.ShouldNotBeNull();
+                data.Exception.Message.ShouldBe(message);
+            });
+
             // Act
-            var response = await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+
+            var response = await GetResponseAsObjectAsync<AjaxResponse<SimpleViewModel>>(
                                GetUrl<SimpleTestController>(
                                    nameof(SimpleTestController.SimpleJsonException),
                                    new
@@ -65,6 +78,7 @@ namespace Abp.AspNetCore.Tests
                            );
 
             //Assert
+
             response.Error.ShouldNotBeNull();
             if (userFriendly)
             {
@@ -74,6 +88,8 @@ namespace Abp.AspNetCore.Tests
             {
                 response.Error.Message.ShouldNotBe(message);
             }
+
+            exceptionEventRaised.ShouldBeTrue();
         }
 
         [Fact]
@@ -82,7 +98,7 @@ namespace Abp.AspNetCore.Tests
             //Act & Assert
             await Assert.ThrowsAsync<UserFriendlyException>(async () =>
             {
-                await GetResponseAsObjectAsync<MvcAjaxResponse<SimpleViewModel>>(
+                await GetResponseAsObjectAsync<AjaxResponse<SimpleViewModel>>(
                     GetUrl<SimpleTestController>(
                         nameof(SimpleTestController.SimpleJsonExceptionDownWrap)
                     ));
@@ -94,14 +110,38 @@ namespace Abp.AspNetCore.Tests
         {
             // Act
             var response = await GetResponseAsObjectAsync<SimpleViewModel>(
-                               GetUrl<SimpleTestController>(
-                                   nameof(SimpleTestController.SimpleJsonDontWrap)
-                               )
-                           );
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.SimpleJsonDontWrap)
+                ));
 
             //Assert
             response.StrValue.ShouldBe("Forty Two");
             response.IntValue.ShouldBe(42);
+        }
+
+        [Fact]
+        public async Task Should_Wrap_Void_Methods()
+        {
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse>(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetVoidTest)
+                ));
+
+            response.Success.ShouldBeTrue();
+            response.Result.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Void_Methods_If_Requested()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetVoidTestDontWrap)
+                ));
+
+            response.ShouldBeNullOrEmpty();
         }
     }
 }

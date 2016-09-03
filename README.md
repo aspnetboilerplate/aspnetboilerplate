@@ -26,3 +26,9 @@ Links
 
 * Web site: http://www.aspnetboilerplate.com
 * Official forum: http://forum.aspnetboilerplate.com
+
+How To Build
+-----
+
+Use Visual Studio 2015 with Update 3 and .NET Core 1.0 installed.
+Download from Microsoft's official website: https://www.microsoft.com/net/core

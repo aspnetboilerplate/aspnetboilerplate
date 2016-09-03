@@ -23,7 +23,7 @@ namespace Abp.Web.Tests
             configuration.Initialize();
             configuration.Localization.IsEnabled = false;
 
-            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebModuleConfiguration>());
+            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebCommonModuleConfiguration>());
             _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 

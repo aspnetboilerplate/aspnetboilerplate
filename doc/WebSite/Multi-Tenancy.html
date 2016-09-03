@@ -63,13 +63,13 @@ instance</strong> of the application with a <strong>single database</strong> int
 a <strong>TenantId</strong> (or similar) field in each table (for a RDBMS) which 
 is used to isolate a tenant's data from others.</p>
 			<p>This is easy to setup and maintain. But harder to create such an application. 
-Because, we must prevent a Tenant to read or write other tenant datas. We may 
+Because, we must prevent a Tenant to read or write other tenant data. We may 
 add <strong>TenantId filter</strong> for each database read (select) operation. Also, we may 
 check it every write, if this entity is related to the <strong>current tenant</strong>. This is 
 tedious and error-prone. But ASP.NET Boilerplate helps us here by using <strong>
 automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<p>This approach may have performance problems if we have many 
-			tenants with huge datas. We may use table partitioning or other 
+			tenants with huge data. We may use table partitioning or other 
 			database features to overcome this problem.</p>
 			<h4>Single Deployment - Hybrid Databases</h4>
 			<p>We may want to store tenants in single databases normally, but 
@@ -104,7 +104,7 @@ automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<h4>Session</h4>
 			<p>ASP.NET Boilerplate defines <strong>IAbpSession</strong> interface to obtain 
 current <strong>user</strong> and <strong>tenant</strong> ids. This interface is 
-used in multi-tenancy to get current tenant's id by default. Thus, it can filter datas 
+used in multi-tenancy to get current tenant's id by default. Thus, it can filter data 
 based on current tenant's id. We can say these rules: </p>
 			<ul>
 				<li>If both of UserId and TenantId is null, then current user is <strong>not logged 
@@ -194,7 +194,7 @@ carefully since it's harder to maintain a code shared by host and tenants.</p>
         }
     }
 }</pre>
-			<p>SetTenantId ensures that we are working on given tenant datas, 
+			<p>SetTenantId ensures that we are working on given tenant data, 
 			independent from database architecture:</p>
 			<ul>
 				<li>If given tenant has a dedicated database, it switches to 
@@ -211,8 +211,7 @@ carefully since it's harder to maintain a code shared by host and tenants.</p>
 				host.</li>
 				<li>Use SetTenantId within a <strong>using</strong> block as in 
 				the example if there is not a special case. Thus, it 
-				automatically restore tenantId at the end of the using block. 
-				Thus, the code calls GetProducts method works as before.</li>
+				automatically restore tenantId at the end of the using block and the code calls GetProducts method works as before.</li>
 				<li>You can use SetTenantId in <strong>nested blocks </strong>if 
 				it's needed.</li>
 				<li>Since <strong>_unitOfWorkManager.Current</strong> only 
