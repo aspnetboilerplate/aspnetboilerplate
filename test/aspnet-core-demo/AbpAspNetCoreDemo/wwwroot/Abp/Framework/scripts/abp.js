@@ -606,7 +606,7 @@
                 qs = qs + '&';
             }
 
-            qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value);
+            qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value);
         }
 
         return qs;
