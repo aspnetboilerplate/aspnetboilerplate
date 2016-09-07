@@ -41,12 +41,12 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Gets default UOW options.
         /// </summary>
-        protected IUnitOfWorkDefaultOptions DefaultOptions { get; private set; }
+        protected IUnitOfWorkDefaultOptions DefaultOptions { get; }
 
         /// <summary>
         /// Gets the connection string resolver.
         /// </summary>
-        protected IConnectionStringResolver ConnectionStringResolver { get; private set; }
+        protected IConnectionStringResolver ConnectionStringResolver { get; }
 
         /// <summary>
         /// Gets a value indicates that this unit of work is disposed or not.
@@ -56,7 +56,9 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Reference to current ABP session.
         /// </summary>
-        public IAbpSession AbpSession { private get; set; }
+        public IAbpSession AbpSession { protected get; set; }
+
+        protected IUnitOfWorkFilterExecuter FilterExecuter { get; }
 
         /// <summary>
         /// Is <see cref="Begin"/> method called before?
@@ -83,13 +85,18 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected UnitOfWorkBase(IConnectionStringResolver connectionStringResolver, IUnitOfWorkDefaultOptions defaultOptions)
+        protected UnitOfWorkBase(
+            IConnectionStringResolver connectionStringResolver, 
+            IUnitOfWorkDefaultOptions defaultOptions,
+            IUnitOfWorkFilterExecuter filterExecuter)
         {
+            FilterExecuter = filterExecuter;
             DefaultOptions = defaultOptions;
             ConnectionStringResolver = connectionStringResolver;
 
             Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
+
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -300,36 +307,19 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected abstract void DisposeUow();
 
-        /// <summary>
-        /// Concrete Unit of work classes should implement this
-        /// method in order to disable a filter.
-        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
-        /// </summary>
-        /// <param name="filterName">Filter name</param>
         protected virtual void ApplyDisableFilter(string filterName)
         {
-            //throw new NotImplementedException("DisableFilter is not implemented for " + GetType().FullName);
+            FilterExecuter.ApplyDisableFilter(this, filterName);
         }
 
-        /// <summary>
-        /// Concrete Unit of work classes should implement this
-        /// method in order to enable a filter.
-        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
-        /// </summary>
-        /// <param name="filterName">Filter name</param>
         protected virtual void ApplyEnableFilter(string filterName)
         {
-            //throw new NotImplementedException("EnableFilter is not implemented for " + GetType().FullName);
+            FilterExecuter.ApplyEnableFilter(this, filterName);
         }
-        
-        /// <summary>
-        /// Concrete Unit of work classes should implement this
-        /// method in order to set a parameter's value.
-        /// Should not call base method since it throws <see cref="NotImplementedException"/>.
-        /// </summary>
+
         protected virtual void ApplyFilterParameterValue(string filterName, string parameterName, object value)
         {
-            //throw new NotImplementedException("SetFilterParameterValue is not implemented for " + GetType().FullName);
+            FilterExecuter.ApplyFilterParameterValue(this, filterName, parameterName, value);
         }
 
         protected virtual string ResolveConnectionString(ConnectionStringResolveArgs args)

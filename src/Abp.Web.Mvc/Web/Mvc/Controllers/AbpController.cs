@@ -264,13 +264,28 @@ namespace Abp.Web.Mvc.Controllers
                 return base.Json(data, contentType, contentEncoding, behavior);
             }
 
-            if (data == null)
+            return AbpJson(data, contentType, contentEncoding, behavior);
+        }
+
+        protected virtual AbpJsonResult AbpJson(
+            object data,
+            string contentType = null,
+            Encoding contentEncoding = null,
+            JsonRequestBehavior behavior = JsonRequestBehavior.DenyGet,
+            bool wrapResult = true,
+            bool camelCase = true,
+            bool indented = false)
+        {
+            if (wrapResult)
             {
-                data = new AjaxResponse();
-            }
-            else if (!ReflectionHelper.IsAssignableToGenericType(data.GetType(), typeof(AjaxResponse<>)))
-            {
-                data = new AjaxResponse(data);
+                if (data == null)
+                {
+                    data = new AjaxResponse();
+                }
+                else if (!(data is AjaxResponseBase))
+                {
+                    data = new AjaxResponse(data);
+                }
             }
 
             return new AbpJsonResult
@@ -278,7 +293,9 @@ namespace Abp.Web.Mvc.Controllers
                 Data = data,
                 ContentType = contentType,
                 ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
+                JsonRequestBehavior = behavior,
+                CamelCase = camelCase,
+                Indented = indented
             };
         }
 
@@ -375,7 +392,7 @@ namespace Abp.Web.Mvc.Controllers
 
         protected virtual int GetStatusCodeForException(ExceptionContext context)
         {
-            
+
             if (context.Exception is AbpAuthorizationException)
             {
                 return context.HttpContext.User.Identity.IsAuthenticated
@@ -385,7 +402,7 @@ namespace Abp.Web.Mvc.Controllers
 
             return 500;
         }
-        
+
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
         {
             context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");

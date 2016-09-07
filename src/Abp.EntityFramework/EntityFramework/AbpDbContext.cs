@@ -7,7 +7,6 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
@@ -299,7 +298,7 @@ namespace Abp.EntityFramework
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
             //Only works for single tenant applications
-            if (MultiTenancyConfig.IsEnabled)
+            if (MultiTenancyConfig?.IsEnabled ?? false)
             {
                 return;
             }

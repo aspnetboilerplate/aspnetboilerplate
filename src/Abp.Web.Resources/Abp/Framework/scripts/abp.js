@@ -611,9 +611,9 @@
             }
 
             if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
-                qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value.toJSON());
+                qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value.toJSON());
             } else {
-                qs = qs + parameterInfo.name + '=' + escape(parameterInfo.value);
+                qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value);
             }
         }
 
