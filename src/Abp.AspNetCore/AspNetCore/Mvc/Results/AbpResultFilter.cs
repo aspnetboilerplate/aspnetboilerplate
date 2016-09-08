@@ -3,8 +3,6 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Results.Wrapping;
 using Abp.Dependency;
 using Abp.Reflection;
-using Abp.Web.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Results
@@ -20,6 +18,11 @@ namespace Abp.AspNetCore.Mvc.Results
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
+            if (_configuration.SetNoCacheForAjaxResponses && context.HttpContext.Request.IsAjaxRequest())
+            {
+                SetNoCache(context);
+            }
+
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
@@ -40,6 +43,14 @@ namespace Abp.AspNetCore.Mvc.Results
         public void OnResultExecuted(ResultExecutedContext context)
         {
             //no action
+        }
+        
+        private static void SetNoCache(ResultExecutingContext context)
+        {
+            //Based on http://stackoverflow.com/questions/49547/making-sure-a-web-page-is-not-cached-across-all-browsers
+            context.HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+            context.HttpContext.Response.Headers.Add("Pragma", "no-cache");
+            context.HttpContext.Response.Headers.Add("Expires", "0");
         }
     }
 }

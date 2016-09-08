@@ -38,5 +38,10 @@ namespace Abp.WebApi.Configuration
         /// Default: true.
         /// </summary>
         bool IsAutomaticAntiForgeryValidationEnabled { get; set; }
+
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool SetNoCacheForAllResponses { get; set; }
     }
 }

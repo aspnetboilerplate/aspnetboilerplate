@@ -15,6 +15,11 @@ namespace Abp.AspNetCore.Configuration
         /// </summary>
         bool IsValidationEnabledForControllers { get; set; }
 
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool SetNoCacheForAjaxResponses { get; set; }
+
         void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true);
     }
 }

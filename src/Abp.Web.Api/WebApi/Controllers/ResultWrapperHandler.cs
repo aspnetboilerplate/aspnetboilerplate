@@ -1,5 +1,7 @@
+using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
@@ -36,6 +38,18 @@ namespace Abp.WebApi.Controllers
             if (!response.IsSuccessStatusCode)
             {
                 return;
+            }
+
+            if (_webApiConfiguration.SetNoCacheForAllResponses)
+            {
+                //Based on http://stackoverflow.com/questions/49547/making-sure-a-web-page-is-not-cached-across-all-browsers
+                response.Headers.CacheControl = new CacheControlHeaderValue
+                {
+                    NoCache = true,
+                    NoStore = true,
+                    MaxAge = TimeSpan.Zero,
+                    MustRevalidate = true
+                };
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())

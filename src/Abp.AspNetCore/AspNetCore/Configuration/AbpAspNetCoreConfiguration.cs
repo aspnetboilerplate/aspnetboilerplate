@@ -13,6 +13,8 @@ namespace Abp.AspNetCore.Configuration
 
         public bool IsValidationEnabledForControllers { get; set; }
 
+        public bool SetNoCacheForAjaxResponses { get; set; }
+
         public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
 
         public AbpAspNetCoreConfiguration()
@@ -21,6 +23,7 @@ namespace Abp.AspNetCore.Configuration
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ServiceControllerSettings = new List<AbpServiceControllerSetting>();
             IsValidationEnabledForControllers = true;
+            SetNoCacheForAjaxResponses = true;
         }
 
         public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)
