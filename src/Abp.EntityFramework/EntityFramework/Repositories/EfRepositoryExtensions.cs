@@ -13,10 +13,16 @@ namespace Abp.EntityFramework.Repositories
             var repositoryWithDbContext = repository as IRepositoryWithDbContext;
             if (repositoryWithDbContext == null)
             {
-                throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", "repository");
+                throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
             }
 
             return repositoryWithDbContext.GetDbContext();
+        }
+
+        public static void DeteachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+            where TEntity : class, IEntity<TPrimaryKey>, new()
+        {
+            repository.GetDbContext().Entry(entity).State = EntityState.Detached;
         }
     }
 }

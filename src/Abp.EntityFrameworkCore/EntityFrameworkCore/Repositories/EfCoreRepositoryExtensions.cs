@@ -18,5 +18,11 @@ namespace Abp.EntityFrameworkCore.Repositories
 
             return repositoryWithDbContext.GetDbContext();
         }
+
+        public static void DeteachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+            where TEntity : class, IEntity<TPrimaryKey>, new()
+        {
+            repository.GetDbContext().Entry(entity).State = EntityState.Detached;
+        }
     }
 }
