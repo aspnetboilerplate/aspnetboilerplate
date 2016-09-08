@@ -1,7 +1,14 @@
-﻿namespace Abp.Web.Configuration
+﻿using Abp.Web.Security.AntiForgery;
+
+namespace Abp.Web.Configuration
 {
-    internal class AbpWebModuleConfiguration : IAbpWebModuleConfiguration
+    public class AbpWebModuleConfiguration : IAbpWebModuleConfiguration
     {
-        public bool SendAllExceptionsToClients { get; set; }
+        public IAbpAntiForgeryWebConfiguration AntiForgery { get; }
+
+        public AbpWebModuleConfiguration(IAbpAntiForgeryWebConfiguration antiForgery)
+        {
+            AntiForgery = antiForgery;
+        }
     }
 }

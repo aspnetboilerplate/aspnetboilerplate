@@ -29,7 +29,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="serviceNameSelector">Service name selector</param>
         /// <returns></returns>
         IBatchApiControllerBuilder<T> WithServiceName(Func<Type, string> serviceNameSelector);
-        
+
+        /// <summary>
+        /// Used to perform actions for each method of all dynamic api controllers.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The current Controller Builder</returns>
+        IBatchApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action);
+
         /// <summary>
         /// Use conventional Http Verbs by method names.
         /// By default, it uses <see cref="HttpVerb.Post"/> for all actions.

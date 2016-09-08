@@ -14,23 +14,27 @@
 		<div class="document-contents">
 
 			<h3 id="DocIntroduction">Introduction</h3>
-			<p>If an application requires login, it also needs to know the current user 
+			<p>If an application requires login, it also needs to know the 
+			<strong>current user</strong> 
 performing operations. While ASP.NET itself provides Session objects in the 
 presentation layer, ASP.NET Boilerplate provides <strong>IAbpSession</strong> 
-interface to obtain current user and tenant wherever needed.</p>
+			interface to obtain current user and tenant <strong>without</strong> 
+			using ASP.NET's Session.</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>About IAbpSession</h4>
 				<p>IAbpSession
 interface must be implemented in order to get actual session informations. While you can 
-implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
+implement it in your own way, it's fully implemented in <strong>
+				<a href="Zero/Overall.html">module-zero</a></strong> 
 project.</p>
 			</div>
 
 			<p>IAbpSession is also fully integrated and used by other structures in ASP.NET 
-Boilerplate (setting system and authorization system for instance).</p>
+Boilerplate (<a href="Setting-Management.html">setting</a> system and 
+			<a href="Authorization.html">authorization</a> system for instance).</p>
 
-			<h3 id="DocInjectingSession">Injecting session</h3>
+			<h3 id="DocInjectingSession">Injecting Session</h3>
 			<p>IAbpSession is generally <strong>
 					<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">
 property injected</a>
@@ -52,13 +56,13 @@ work without session informations. If we use property injection, we can use
         //...
     }
 }</pre>
-			<p>Since authorization is a application layer task, it's adviced to <strong>use 
+			<p>Since authentication/authorization is an application layer task, it's adviced to <strong>use 
 IAbpSession in application layer and upper layers</strong> (we don't use it in 
 domain layer normally). <strong>ApplicationService</strong>, <strong>
-AbpController</strong> and <strong>AbpApiController</strong> base classes has
+AbpController,</strong> <strong>AbpApiController</strong> and some other base classes has
 				<strong>AbpSession</strong> already injected. So, you can directly use 
 AbpSession property in an application service method for instance.</p>
-			<h3 id="DocUsingSession">Using session properties</h3>
+			<h3 id="DocUsingSession">Session Properties</h3>
 			<p>AbpSession defines a few key properties:</p>
 			<ul>
 				<li>
@@ -66,7 +70,7 @@ AbpSession property in an application service method for instance.</p>
 	is no current user. It can not be null if the calling code is authorized.</li>
 				<li>
 					<strong>TenantId</strong>: Id of the current tenant or null if there is 
-	no current tenant.</li>
+	no current tenant (in case of user has not logged in or he is a host user).</li>
 				<li>
 					<strong>ImpersonatorUserId</strong>: Id of the impersonator user if 
 	current session is impersonated by another user. It's null if this is not an 
@@ -86,6 +90,12 @@ is null, this method throws exception. GetTenantId() is also similar.</p>
 for <a href="/Pages/Documents/Audit-Logging">audit logging</a> purposes.</p>
 
 		</div>
+
+		<h3>User Identifier</h3>
+		<p>You can use <strong>.ToUserIdentifier()</strong> extension method to create a 
+		UserIdentifier object from IAbpSession. Since UserIdentifier is used in 
+		most API, this will simplify to create a UserIdentifier for current 
+		user.</p>
 
 	</body>
 

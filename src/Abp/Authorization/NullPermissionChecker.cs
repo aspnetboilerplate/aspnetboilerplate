@@ -29,7 +29,12 @@ namespace Abp.Authorization
             return Task.FromResult(true);
         }
 
-        private NullPermissionChecker()
+        public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+        {
+            return Task.FromResult(true);
+        }
+
+        public NullPermissionChecker()
         {
 
         }

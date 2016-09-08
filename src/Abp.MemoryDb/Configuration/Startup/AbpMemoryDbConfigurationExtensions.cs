@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpMemoryDbModuleConfiguration AbpMemoryDb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.MemoryDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMemoryDbModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpMemoryDbModuleConfiguration>();
         }
     }
 }

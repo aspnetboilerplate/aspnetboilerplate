@@ -29,7 +29,7 @@ forgettable task. So, there should be an automatic way of it.</p>
 to automatically filter queries based on some rules. There are some pre-defined 
 filters, but also you can create your own filters.</p>
 
-			<h3 id="DocPredefinedFilters">Pre-defined filters</h3>
+			<h3 id="DocPredefinedFilters">Pre-Defined Filters</h3>
 
 			<h4 id="DocSoftDelete">ISoftDelete</h4>
 			<p>Soft-delete filter is used to automatically filter (extract from results) 
@@ -37,11 +37,11 @@ deleted entities while querying database. If an
 				<a href="/Pages/Documents/Entities">entity</a> should be soft-deleted, it must 
 implement <strong>ISoftDelete</strong> interface which defines only <strong>IsDeleted</strong> 
 property. Example:</p>
-			<pre lang="cs">public class Person : Entity, ISoftDelete
+			<pre lang="cs">public class Person : Entity, <strong>ISoftDelete</strong>
 {
     public virtual string Name { get; set; }
 
-    public virtual bool IsDeleted { get; set; }
+    <strong>public virtual bool IsDeleted { get; set; }</strong>
 }</pre>
 			<p>A <strong>Person </strong>entity is not actually deleted from database, 
 instead <strong>IsDeleted </strong>property is set to true when need to delete 
@@ -73,7 +73,7 @@ We could add some other Where conditions, joins.. etc. It will automatically add
 IsDeleted = false condition properly to the generated SQL query.</p>
 
 			<div class="bs-callout bs-callout-warning">
-				<h4>When enabled?</h4>
+				<h4>When Enabled?</h4>
 				<p>ISoftDelete filter is always enabled unless you explicitly disable it.</p>
 			</div>
 
@@ -84,8 +84,8 @@ extends ISoftDelete) then deletion time and deleter user id are also
 automatically set by ASP.NET Boilerplate.</p>
 
 			<h4 id="DocMustHaveTenant">IMustHaveTenant</h4>
-			<p>If you are building multi-tenant applications (store all tenant datas in 
-single database), you definitely do not want a tenant accidently see other's 
+			<p>If you are building multi-tenant applications and store all tenant data in 
+single database, you definitely do not want a tenant accidently see other's 
 data. You can implement <strong>IMustHaveTenant</strong> in that case. Example:</p>
 			<pre lang="cs">public class Product : Entity, <strong>IMustHaveTenant</strong>
 {
@@ -97,13 +97,14 @@ data. You can implement <strong>IMustHaveTenant</strong> in that case. Example:<
 				<strong>IMustHaveTenant</strong> defines <strong>TenantId </strong>to 
 distinguish different tenant entities. ASP.NET Boilerplate uses
 				<a href="/Pages/Documents/Abp-Session">IAbpSession</a> to get current TenantId 
+				by default 
 and automatically filter query for the current tenant.</p>
 
 			<div class="bs-callout bs-callout-warning">
-				<h4>When enabled?</h4>
+				<h4>When Enabled?</h4>
 				<p>IMustHaveTenant is enabled by default.</p>
 				<p>If current user is not logged in to the system or current user is a <strong>host</strong> user (Host user is an upper level user that can 
-	manage tenants and tenant datas), ASP.NET Boilerplate automatically <strong>
+	manage tenants and tenant data), ASP.NET Boilerplate automatically <strong>
 	disables</strong> IMustHaveTenant filter. Thus, all data of all tenant's can be 
 	retrieved to the application. Notice that this is not about security, you should 
 	always <a href="/Pages/Documents/Authorization">authorize</a> sensitive data.</p>
@@ -123,21 +124,22 @@ nullable</strong>.</p>
 }</pre>
 			<p>A <strong>null</strong> value means this is a <strong>host</strong> entity, a <strong>non-null</strong> value means this entity 
 owned by a <strong>tenant</strong> which's Id is the TenantId. ASP.NET Boilerplate uses
-				<a href="/Pages/Documents/Abp-Session">IAbpSession</a> to get current TenantId. 
+				<a href="/Pages/Documents/Abp-Session">IAbpSession</a> to get current TenantId 
+			by default. 
 IMayHaveTenant filter is not common as much as 
-IMustHaveTenant. But you may need it for common structures used by host and tenants.</p>
+IMustHaveTenant. But you may need it for <strong>common entitiy types</strong> used by host and tenants.</p>
 
 			<div class="bs-callout bs-callout-warning">
-				<h4>When enabled?</h4>
+				<h4>When Enabled?</h4>
 				<p>IMayHaveTenant is always enabled unless you explicitly disable it.</p>
 			</div>
 
-			<h3 id="DocDisableFilters">Disable filters</h3>
+			<h3 id="DocDisableFilters">Disable Filters</h3>
 			<p>You can disable a filter per <a href="/Pages/Documents/Unit-Of-Work">unit of 
 work</a> by calling <strong>DisableFilter</strong> method as shown below:</p>
 			<pre lang="cs">var people1 = _personRepository.GetAllList();
 
-using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+using (<strong>_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete)</strong>)
 {
     var people2 = _personRepository.GetAllList();                
 }
@@ -148,18 +150,18 @@ AbpDataFilters.SoftDelete is a constant string that contains name of the
 standard soft 
 delete filter of ASP.NET Boilerplate.</p>
 			<p>
-				<strong>people2</strong> can also get deleted people while people1 and people3 will be only 
+				<strong>people2</strong> will also include deleted people while people1 and people3 will be only 
 non-deleted people. With <strong>using </strong>statement, you can disable a filter in a
 				<strong>scope</strong>. 
-If you don't use using stamement, the filter will be disabled until end of the&nbsp;current unit of work or you enable it again 
+If you don't use using stamement, filter will be disabled until end of the&nbsp;current unit of work or you enable it again 
 explicitly.</p>
 			<p>You can inject <strong>IUnitOfWorkManager </strong>and use as in the example. Also, you can 
-use <strong>CurrentUnitOfWork </strong>property as a shortcut in an application service (that 
-is derived 
-from ApplicationService class).</p>
+use <strong>CurrentUnitOfWork </strong>property as a shortcut if you class 
+			inherits some special base classes (like ApplicationService, 
+			AbpController, AbpApiController...).</p>
 
 			<div class="bs-callout bs-callout-warning">
-				<h4>About using statement</h4>
+				<h4>About using Statement</h4>
 				<p>If a filter is enabled when you call 
 	the DisableFilter method with a using statement, the filter is disabled, then 
 	automatically re-enabled after using statement.
@@ -169,12 +171,24 @@ from ApplicationService class).</p>
 	the using statement.</p>
 			</div>
 
-			<h3 id="DocEnableFilters">Enable filters</h3>
+			<div class="bs-callout bs-callout-warning">
+				<h4>About Multi Tenancy</h4>
+				<p>You can disable tenancy filters to query all tenant data. But 
+				remember that, this works only for single database approach. If 
+				you have seperated databases for each tenants, disabling filter 
+				does not help to query all data of all tenants, since they are 
+				in different databases, can be even in different servers. See
+				<a href="Multi-Tenancy.html">multi tenancy document</a> for more 
+				information.</p>
+			</div>
+
+			<h3 id="DocEnableFilters">Enable Filters</h3>
 			<p>You can enable a filter in a unit of work using <strong>EnableFilter </strong>
 method, as similar to (and opposite of) DisableFilter. EnableFilter also returns disposable to 
-automatically re-disable the filter.</p>
+			be used in a <strong>using</strong> statement to automatically re-disable the filter 
+			if needed.</p>
 
-			<h3 id="DocSetFilterParams">Setting filter parameters</h3>
+			<h3 id="DocSetFilterParams">Setting Filter Parameters</h3>
 			<p>A filter can be <strong>parametric</strong>. IMustHaveTenant filter is an 
 example of these types of filters since current tenant's Id is determined on 
 runtime. For such filters, we can change filter value if needed. Example:</p>
@@ -185,18 +199,29 @@ runtime. For such filters, we can change filter value if needed. Example:</p>
 			<p>SetFilterParameter method also returns an IDisposable. So, we can use it in a
 				<strong>using</strong> statement to automatically <strong>restore the old value</strong> 
 after using statement.</p>
+			<h4>SetTenantId Method</h4>
 
-			<h3 id="DocDefineCustomFilters">Defining custom filters</h3>
+			<p>While you can use SetFilterParameter method to change filter 
+			value for MayHaveTenant and MustHaveTenant filters, there is a 
+			better way to change tenant filter: <strong>SetTenantId()</strong>. 
+			SetTenantId changes parameter value for both filters, and also 
+			works for single database and database per tenant approaches. 
+			So, it's <strong>always suggested to use SetTenantId</strong> to change tenancy 
+			filter parameter values. See
+			<a href="Multi-Tenancy.html">multi tenancy document</a> for more 
+			information.</p>
+
+			<h3 id="DocDefineCustomFilters">Defining Custom Filters</h3>
 			<p>To create a custom filter and integrate to ASP.NET Boilerplate, first we 
 should define an interface that will be implemented by entities which use this 
 filter. Assume that we want to automatically filter entities by PersonId. 
 Example interface:</p>
 			<pre lang="cs">public interface IHasPerson
 {
-    int PersonId { get; set; }
-}</pre>
+    <strong>int PersonId { get; set; }
+</strong>}</pre>
 			<p>Then we can implement this interface for needed entities. Example entity:</p>
-			<pre lang="cs">public class Phone : Entity, IHasPerson
+			<pre lang="cs">public class Phone : Entity, <strong>IHasPerson</strong>
 {
     [ForeignKey("PersonId")]
     public virtual Person Person { get; set; }
@@ -205,8 +230,7 @@ Example interface:</p>
     public virtual string Number { get; set; }
 }</pre>
 			<p>Since ASP.NET Boilerplate uses <strong>
-					<a href="https://github.com/jcachat/EntityFramework.DynamicFilters" target="_blank">EntityFramework.DynamicFilters</a>
-				</strong>, we use it's 
+					<a href="https://github.com/jcachat/EntityFramework.DynamicFilters" target="_blank">EntityFramework.DynamicFilters</a></strong>, we use it's 
 rules to define the filter. In our <strong>DbContext </strong>class, we override 
 				<strong>OnModelCreating </strong>and define filter as shown below:</p>
 
@@ -214,28 +238,30 @@ rules to define the filter. In our <strong>DbContext </strong>class, we override
 {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Filter("PersonFilter", (IHasPerson entity, int personId) =&gt; entity.PersonId == personId, 0);
+    <strong>modelBuilder.Filter("PersonFilter", (IHasPerson entity, int personId) =&gt; entity.PersonId == personId, 0);</strong>
 }</pre>
 			<p>"PersonFilter" is the unique name of the filter here. Second parameter defines 
 filter interface and personId filter parameter (not needed if filter is not 
 parametric), last parameter is the default value of the personId.</p>
-			<p>As the last thing, we should register this filter to ASP.NET Boilerplate's 
+			<p>As the last thing, we must register this filter to ASP.NET Boilerplate's 
 unit of work system in PreInitialize method of our 
 				<a href="/Pages/Documents/Module-System">module</a>:</p>
-			<pre lang="cs">Configuration.UnitOfWork.RegisterFilter("PersonFilter", false);</pre>
+			<pre lang="cs"><strong>Configuration.UnitOfWork.RegisterFilter("PersonFilter", false);</strong></pre>
 			<p>First parameter is same unique name we defined before. Second parameter 
 indicates whether this filter is enabled or disabled by default. After declaring such a parametric filter, we 
 can use it by supplying it's value on 
 runtime.</p>
-			<pre lang="cs">using (CurrentUnitOfWork.EnableFilter("PersonFilter"))
+			<pre lang="cs">using (<strong>CurrentUnitOfWork.EnableFilter("PersonFilter")</strong>)
 {
-    CurrentUnitOfWork.SetFilterParameter("PersonFilter", "personId", 42);
-    var phones = _phoneRepository.GetAllList();
-    //...
+    using(<strong>CurrentUnitOfWork.SetFilterParameter("PersonFilter", "personId", 42)</strong>)
+    {
+        var phones = _phoneRepository.GetAllList();
+        //...
+    }
 }</pre>
 			<p>We could get the personId from some source instead of statically coded. The example above was for parametric filters. A filter can have zero or more 
-parameters. If it has no parameter, it's not needed to set the filter value. 
-Also, if it's enabled by default, no need to enable manually (surely, we can 
+parameters. If it has no parameter, it's not needed to set the filter parameter value. 
+Also, if it's enabled by default, no need to enable it manually (surely, we can 
 disable it).</p>
 
 			<div class="bs-callout bs-callout-warning">
@@ -250,7 +276,7 @@ disable it).</p>
 			<h3 id="DicOtherORMs">Other ORMs</h3>
 			<p>ASP.NET Boilerplate data filtering is implemented for EntityFramework and 
 NHibernate. 
-Not available for other ORMs yet. But, actually, you can mimic it for 
+Not available for other ORMs yet (including EntityFramework Core). But, actually, you can mimic it for 
 most cases as long as you're using <strong>repositories</strong> to get data. In this case, you 
 can create a custom <a href="/Pages/Documents/Repositories">repository</a> and 
 override <strong>GetAll</strong> and other data retrieve methods if needed.</p>

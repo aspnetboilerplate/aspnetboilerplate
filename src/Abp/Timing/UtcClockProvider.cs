@@ -7,10 +7,11 @@ namespace Abp.Timing
     /// </summary>
     public class UtcClockProvider : IClockProvider
     {
-        public DateTime Now
-        {
-            get { return DateTime.UtcNow; }
-        }
+        public DateTime Now => DateTime.UtcNow;
+
+        public DateTimeKind Kind => DateTimeKind.Utc;
+
+        public bool SupportsMultipleTimezone => true;
 
         public DateTime Normalize(DateTime dateTime)
         {
@@ -25,6 +26,11 @@ namespace Abp.Timing
             }
 
             return dateTime;
+        }
+
+        internal UtcClockProvider()
+        {
+
         }
     }
 }

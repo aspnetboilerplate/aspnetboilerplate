@@ -12,7 +12,7 @@
 		<div class="document-contents">
 
 
-			<p>ASP.NET Boilerplate provides an infrastructure to configure it and
+			<p>ASP.NET Boilerplate provides an infrastructure and a model to configure it and
 				<a href="/Pages/Documents/Module-System">modules</a> on startup.</p>
 
 			<h3 id="DocConfigureAbp">Configuring ASP.NET Boilerplate</h3>
@@ -35,7 +35,7 @@ module. Example configuration:</p>
             );
 
         //Configure navigation/menu
-        Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();
+        Configuration.Navigation.Providers.Add&lt;SimpleTaskSystemNavigationProvider&gt;();        
     }
 
     public override void Initialize()
@@ -43,12 +43,25 @@ module. Example configuration:</p>
         IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
-			<p>ASP.NET Boilerplate is designed <strong>modularity</strong> in mind. Different modules can 
+			<p>ASP.NET Boilerplate is designed <strong>
+			<a href="Module-System.html">modularity</a></strong> in mind. Different modules can 
 configure ASP.NET Boilerplate. For example, different modules can add navigation 
-provider to add their own menu items to the main menu. See
+provider to add their own menu items to the main menu. (See
 				<a href="/Pages/Documents/Localization">localization</a> and
-				<a href="/Pages/Documents/Navigation">navigation</a> documents for details.</p>
-
+				<a href="/Pages/Documents/Navigation">navigation</a> documents for details 
+			on configuring them).</p>
+			<h4>Replacing Built-In Services</h4>
+			<p><strong>Configuration.ReplaceService</strong> method can be used 
+			to <strong>override</strong> a built-in service. For example, you can replace 
+			IAbpSession service with your custom implementation as shown below:</p>
+			<pre lang="cs"><strong>Configuration.ReplaceService</strong>&lt;IAbpSession, MySession&gt;(DependencyLifeStyle.Transient);</pre>
+<p>ReplaceService method has an overload to pass an <strong>action</strong> to 
+make replacement in a custom way (you can directly use Castle Windsor for 
+advanced registration API).</p>
+			<p>Same service can be replaced multiple times (especially, in 
+			different modules). Last replaced will be valid (As you know, module 
+			PreInitialize methods are executed by <a href="Module-System.html">
+			dependency order</a>).</p>
 			<h3 id="DocConfigureModules">Configuring Modules</h3>
 
 			<p>Beside framework's own startup configuration, a module can extend 
@@ -59,15 +72,15 @@ using Abp.Web.Configuration;
 ...
 public override void PreInitialize() 
 {
-    Configuration.Modules.AbpWeb().SendAllExceptionsToClients = true;
+    Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
 }
 ...</pre>
-			<p>In this example, we configured AbpWeb module to send all exceptions to 
+			<p>In this example, we configured AbpWebCommon module to send all exceptions to 
 clients.</p>
 			<p>Not every module should define this type of configuration. It's generally needed when a 
 module will be re-usable in different applications and needs to be configured on 
 startup.</p>
-			<h3 id="DocCreateModuleConfig">Creating configuration for a module</h3>
+			<h3 id="DocCreateModuleConfig">Creating Configuration For a Module</h3>
 			<p>Assume that we have a module named MyModule and it has some configuration 
 properties. First, we create a class for these cofigurable properties:</p>
 			<pre lang="cs">public class MyModuleConfig
@@ -76,25 +89,32 @@ properties. First, we create a class for these cofigurable properties:</p>
 
     public string SampleConfig2 { get; set; }
 }</pre>
-			<p>Then we register this class to DI on PreInitialize event of MyModule (Thus, 
+			<p>Then we register this class to 
+			<a href="Dependency-Injection.html">Dependency Injection</a> on 
+			<strong>PreInitialize</strong> event of MyModule (Thus, 
 it will be injectable):</p>
 			<pre lang="cs">IocManager.Register&lt;MyModuleConfig&gt;();</pre>
-			<p>Finally, we create an extension method to IModuleConfigurations to get a 
-reference to the MyConfig:</p>
+			<p>It should be registered as <strong>Singleton</strong> as in this sample. 
+			Now, we can use the following code to configure MyModule in our 
+			module's PreInitialize method:</p>
+			<pre lang="cs">Configuration.<strong>Get&lt;MyModuleConfig&gt;()</strong>.SampleConfig1 = false;</pre>
+			<p>While we can use IAbpStartupConfiguration.Get method as shown 
+			below, we can create an extension method to IModuleConfigurations 
+			like that:</p>
 			<pre lang="cs">public static class MyModuleConfigurationExtensions
 {
-    public static MyModuleConfig MyModule(this IModuleConfigurations moduleConfigurations)
+    <strong>public static MyModuleConfig MyModule(this IModuleConfigurations moduleConfigurations)</strong>
     {
-        return moduleConfigurations.AbpConfiguration
-            .GetOrCreate(&quot;MyModuleConfig&quot;,
-                () =&gt; moduleConfigurations.AbpConfiguration.IocManager.Resolve&lt;MyModuleConfig&gt;()
-            );
+        return moduleConfigurations.AbpConfiguration.Get&lt;MyModuleConfig&gt;();
     }
 }</pre>
-			<p>Now, other modules can configure this module on startup (on PreInitialize 
-event of the module which need to configure MyModule):</p>
+			<p>Now, other modules can configure this module using the extension 
+			method:</p>
 			<pre lang="cs">Configuration.Modules.MyModule().SampleConfig1 = false;
 Configuration.Modules.MyModule().SampleConfig2 = &quot;test&quot;;</pre>
+			<p>This makes easy to investigate module configurations and collect 
+			them in a single place (Configuration.Modules...). ABP itself 
+			defines extension methods for it's own module configurations.</p>
 			<p>At some point, MyModule needs to this configuration. You can inject 
 MyModuleConfig and use configured values. Example:</p>
 			<pre lang="cs">public class MyService : ITransientDependency

@@ -3,7 +3,6 @@ using Abp.Web;
 using System.Web.Http.Filters;
 using System.Linq;
 using Abp.Reflection;
-using System;
 using System.Web.Http;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -20,29 +19,29 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public string ActionName { get; private set; }
 
         /// <summary>
+        /// Underlying proxying method.
+        /// </summary>
+        public MethodInfo Method { get; private set; }
+
+        /// <summary>
         /// Selected Http verb.
         /// </summary>
-        public HttpVerb? Verb { get; private set; }
+        public HttpVerb? Verb { get; set; }
+
+        /// <summary>
+        /// Action Filters for dynamic controller method.
+        /// </summary>
+        public IFilter[] Filters { get; set; }
+
+        /// <summary>
+        /// A flag to set if no action will be created for this method.
+        /// </summary>
+        public bool DontCreate { get; set; }
 
         /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
         /// </summary>
         private readonly ApiControllerBuilder<T> _controllerBuilder;
-
-        /// <summary>
-        /// Underlying proxying method.
-        /// </summary>
-        private readonly MethodInfo _methodInfo;
-
-        /// <summary>
-        /// Action Filters for dynamic controller method.
-        /// </summary>
-        private IFilter[] _filters;
-
-        /// <summary>
-        /// A flag to set if no action will be created for this method.
-        /// </summary>
-        public bool DontCreate { get; private set; }
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
@@ -52,8 +51,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
         {
             _controllerBuilder = apiControllerBuilder;
-            _methodInfo = methodInfo;
-            ActionName = _methodInfo.Name;
+            Method = methodInfo;
+            ActionName = Method.Name;
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="filters"> Action Filters to apply.</param>
         public IApiControllerActionBuilder<T> WithFilters(params IFilter[] filters)
         {
-            _filters = filters;
+            Filters = filters;
             return this;
         }
 
@@ -113,7 +112,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         internal DynamicApiActionInfo BuildActionInfo(bool conventionalVerbs)
         {
-            return new DynamicApiActionInfo(ActionName, GetNormalizedVerb(conventionalVerbs), _methodInfo, _filters);
+            return new DynamicApiActionInfo(ActionName, GetNormalizedVerb(conventionalVerbs), Method, Filters);
         }
 
         private HttpVerb GetNormalizedVerb(bool conventionalVerbs)
@@ -123,32 +122,37 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return Verb.Value;
             }
 
-            if(_methodInfo.IsDefined(typeof (HttpGetAttribute)))
+            if (Method.IsDefined(typeof(HttpGetAttribute)))
             {
                 return HttpVerb.Get;
             }
-            
-            if (_methodInfo.IsDefined(typeof (HttpPostAttribute)))
+
+            if (Method.IsDefined(typeof(HttpPostAttribute)))
             {
-                return HttpVerb.Post;                
+                return HttpVerb.Post;
             }
 
-            if (_methodInfo.IsDefined(typeof(HttpPutAttribute)))
+            if (Method.IsDefined(typeof(HttpPutAttribute)))
             {
                 return HttpVerb.Put;
             }
-            
-            if (_methodInfo.IsDefined(typeof(HttpDeleteAttribute)))
+
+            if (Method.IsDefined(typeof(HttpDeleteAttribute)))
             {
                 return HttpVerb.Delete;
             }
 
-            if (_methodInfo.IsDefined(typeof(HttpOptionsAttribute)))
+            if (Method.IsDefined(typeof(HttpPatchAttribute)))
+            {
+                return HttpVerb.Patch;
+            }
+
+            if (Method.IsDefined(typeof(HttpOptionsAttribute)))
             {
                 return HttpVerb.Options;
             }
 
-            if (_methodInfo.IsDefined(typeof(HttpHeadAttribute)))
+            if (Method.IsDefined(typeof(HttpHeadAttribute)))
             {
                 return HttpVerb.Head;
             }
@@ -156,7 +160,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             if (conventionalVerbs)
             {
                 var conventionalVerb = DynamicApiVerbHelper.GetConventionalVerbForMethodName(ActionName);
-                if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(_methodInfo))
+                if (conventionalVerb == HttpVerb.Get && !HasOnlyPrimitiveIncludingNullableTypeParameters(Method))
                 {
                     conventionalVerb = DynamicApiVerbHelper.GetDefaultHttpVerb();
                 }
@@ -169,7 +173,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         private static bool HasOnlyPrimitiveIncludingNullableTypeParameters(MethodInfo methodInfo)
         {
-            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof (FromUriAttribute)));
+            return methodInfo.GetParameters().All(p => TypeHelper.IsPrimitiveExtendedIncludingNullable(p.ParameterType) || p.IsDefined(typeof(FromUriAttribute)));
         }
     }
 }

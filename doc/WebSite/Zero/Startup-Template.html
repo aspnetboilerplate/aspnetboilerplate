@@ -64,7 +64,7 @@
 	http://localhost:6334/api/Account/Authenticate</strong> with <strong>
 	Context-Type="application/json"</strong> header as shown below:</p>
 			<p>
-				<img class="img-thumbnail" alt="Request for token" height="670" src="images/token-authenticate.png" width="673" />
+				<img class="img-thumbnail" alt="Request for token" height="670" src="../images/token-authenticate.png" width="673" />
 			</p>
 			<p>We sent a <strong>JSON request body</strong> includes <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. 
 	Also, <strong>tenancyName </strong>should be sent for <strong>tenant</strong> users. As seen 
@@ -76,7 +76,7 @@
 	example, we can use the <strong>Tenant service</strong> to get a <strong>list of
 	tenants</strong>:</p>
 			<p>
-				<img class="img-thumbnail" alt="Authorization via token" height="713" src="images/token-request.png" width="702" />
+				<img class="img-thumbnail" alt="Authorization via token" height="713" src="../images/token-request.png" width="702" />
 			</p>
 			<p>Just made a <strong>POST</strong> request to <strong>
 	http://localhost:6334/api/services/app/tenant/GetTenants</strong> with <strong>
@@ -89,8 +89,26 @@
 				<strong>"</strong>. 
 	Request body was just empty <strong>{}</strong>. Surely, request and response 
 	body will be different for different APIs.</p>
-			<p>Almost all operations available on UI also available as Web API (since UI 
+			<p>Almost all operations available on UI are also available as Web API (since UI 
 	uses the same Web API) and can be consumed easily.</p>
+			<h3>Migrator Console Application</h3>
+<p>Startup template includes a tool, Migrator.exe, to easily migrate your databases. 
+You can run this application to create/migrate host and tenant databases.</p>
+<p>
+<img class="img-thumbnail" alt="Database Migrator" height="230" src="../images/database-migrator.png" width="659" /></p>
+<p>This application gets host connection string from it's <strong>own .config 
+file</strong>. It will be same in the web.config at the beggining. Be sure that 
+the connection string in config file is the database you want. After getting
+<strong class="auto-style2">host </strong><strong>connection sring</strong>, it 
+first creates the host database or apply migrations if it does already exists. 
+Then it gets connection strings of tenant databases and runs migrations for 
+those databases. It skips a tenant if it has not a dedicated database or it's 
+database is already migrated for another tenant (for shared databases between 
+multiple tenants).</p>
+			<p>You can use this tool on development or on product environment to 
+			migrate databases on deployment, instead of EntityFramework's own 
+			Migrate.exe (which requires some configuration and can work for 
+			single database in one run).</p>
 			<h3>Unit Testing</h3>
 			<p>Startup template includes test infrastructure setup and a few tests under 
 	the .Test project. You can check them and write similar tests easily. 

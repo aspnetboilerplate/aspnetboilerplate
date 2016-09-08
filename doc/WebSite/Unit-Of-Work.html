@@ -11,84 +11,37 @@
 
 		<div class="document-contents">
 
-			<h3 id="DocCommonApproaches">Common connection &amp; transaction management approaches</h3>
+			<h3 id="DocCommonApproaches">Introduction</h3>
 			<p>Connection and transaction management is one of the most important concepts 
 in an application that uses a database. When to open a connection, when to 
-start a transaction, how to dispose the connection and so on.. </p>
-			<p>As probably you know, .NET uses connection pooling. So, creating a connection 
-actually gets a connection from the pool since creating a new connection has a 
-cost. If there is no free connection in the pool, a new one is 
-created and added to the pool. When you dispose the connection, it's actually 
-sent back to the pool. It's not disposed completely. This mechanism provided by 
-.NET as an out of the box feature. So, we should always dispose a connection 
-after using it and create a new connection when needed. This is the best 
-practice.</p>
-			<p>There are two common approach to create/dispose a database connection in an 
-application:</p>
+start a transaction, how to dispose the connection and so on.. ASP.NET Boilerplate manages database connection and transactions 
+			by it's <strong>unit of work</strong> system.</p>
+			<h3 id="DocAbpApproach">Connection &amp; Transaction Management in ASP.NET Boilerplate</h3>
 			<p>
-				<strong>First approach</strong>: Creating a connection when a web request begins (Application_BeginRequest 
-event in global.asax), using the same connection in all database operations and 
-closing/disposing the connection at end of the request (Application_EndRequest event). 
-This is simple but not efficient. Why?</p>
-			<ul>
-				<li>Maybe there is no database operation in a request, but a connection is 
-	opened anyway. An inefficient usage of the connection pool.</li>
-				<li>There maybe cases a request is very long and database operation takes a short time in that request. 
-	This is also an inefficient way of using connection pool.</li>
-				<li>This is possbile only in a web application. If your application is a 
-	Windows service, this can not be implemented.</li>
-			</ul>
-			<p>Also, it's considered as a best practice to perform database operations in a
-				<strong>transactional</strong> way. If one operation fails, all of them are 
-rolled back. Since a transaction may lock some rows (even tables) in database, 
-it must be short-lived.</p>
-			<p>
-				<strong>Second approach</strong>: Creating a connection when needed (just 
-before using it) and disposing it just after using it. This is the most 
-efficient but a tedious and repating work to create/dispose connections 
-everywhere.</p>
-			<h3 id="DocAbpApproach">Connection &amp; Transaction management in ASP.NET Boilerplate</h3>
-
-			<p>ASP.NET Boilerplate mixes both approach and provides a simple yet efficient model.</p>
-			<h4 id="DocRepositoryClasses">Repository classes</h4>
-			<p>
-				<a href="/Pages/Documents/Repositories">Repositories</a> are main classes 
-where database operations are performed. ASP.NET Boilerplate <strong>opens
+				ASP.NET Boilerplate <strong>opens
 				</strong>a database connection (it may not be opened immediately, but opened in 
 first database usage, based on ORM provider implementation) and begins a <strong>transaction </strong>when
-				<strong>entering </strong>a repository method. So, you can use connection safely 
-in a repository method. At the end of the method, the transaction is <strong>
+				<strong>entering </strong>a <strong>unit of work method</strong>. 
+				So, you can use connection safely in this method. At the end of the method, the transaction is <strong>
 commited</strong> and the connection is <strong>disposed</strong>. If the 
-repository method throws any <strong>exception</strong>, transaction is <strong>
-rolled back</strong> and the connection is disposed. In this way, a repository 
-method is <strong>atomic</strong> (a <strong>unit of work</strong>). ASP.NET Boilerplate does 
-all of these automatically. Here, a sample repository:</p>
-			<pre lang="cs">public class ContentRepository : NhRepositoryBase&lt;Content&gt;, IContentRepository
-{
-    public List&lt;Content&gt; GetActiveContents(string searchCondition)
-    {
-        var query = from content in Session.Query&lt;Content&gt;()
-                    where content.IsActive &amp;&amp; !content.IsDeleted
-                    select content;
-
-        if (string.IsNullOrEmpty(searchCondition))
-        {
-            query = query.Where(content =&gt; content.Text.Contains(searchCondition));
-        }
-
-        return query.ToList();
-    }
-}
-			</pre>
-			<p>This sample uses NHibernate as ORM. As shown above, no database connection 
-(Session in NHibernate) open/close code is written.</p>
-			<p>If a repository method calls another repository method (in general, if a unit 
-of work method calls another unit of work method), both uses same 
+method throws any <strong>exception</strong>, transaction is <strong>
+rolled back</strong> and the connection is disposed. In this way, a unit of work method is <strong>atomic</strong> (a <strong>unit of work</strong>). ASP.NET Boilerplate does 
+all of these automatically.</p>
+			<p>If a unit of work method calls another unit of work method, both uses same 
 connection &amp; transaction. The first entering method manages connection &amp; 
 transaction, others use it.</p>
-			<h4 id="DocAppServices">Application services</h4>
-			<p>An <a href="/Pages/Documents/Application-Services">application service</a> 
-method is also considered a unit of work. Assume that we have an <a href="/Pages/Documents/Application-Services">
+			<h4>Conventional Unit Of Work Methods</h4>
+			<p>Some methods are unit of work methods by default:</p>
+			<ul>
+				<li>All <a href="MVC-Controllers.html">MVC</a>,
+				<a href="Web-API-Controllers.html">Web API</a> and
+				<a href="AspNet-Core.html">ASP.NET Core MVC</a> Controller 
+				actions.</li>
+				<li>All <a href="Application-Services.html">Application Service</a> 
+				methods.</li>
+				<li>All <a href="Repositories.html">Repository</a> methods.</li>
+			</ul>
+			<p>&nbsp;Assume that we have an <a href="/Pages/Documents/Application-Services">
 application service</a> method like below:</p>
 			<pre lang="cs">public class PersonAppService : IPersonAppService
 {
@@ -112,18 +65,21 @@ application service</a> method like below:</p>
 			<p>In the CreatePerson method, we're inserting a person using person repository 
 and incrementing total people count using statistics repository. Both of 
 repositories <strong>shares </strong>same connection and transaction in this 
-example since this is an application service method. ASP.NET Boilerplate opens a 
+example since application service method is unit of work by default. ASP.NET Boilerplate opens a 
 database connection and starts a transaction when entering CreatePerson method 
-and commint the transaction at end of the method if no exception is thrown, 
+and commit the transaction at end of the method if no exception is thrown, 
 rolls back if any exception occurs. In that way, all database operations in 
-CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).</p>
-			<h4 id="DocUow">Unit Of Work</h4>
-			<p>Unit of work <strong>implicitly</strong> works for repository and application service methods. 
-You should <strong>explicitly </strong>use it if you want to control database connection and 
-transaction somewhere else. There are two approaches for this.</p>
-			<h5>UnitOfWork attribute</h5>
-			<p>First and preferred approach is using <strong>UnitOfWorkAttribute</strong>. Example:</p>
-			<pre lang="cs">[UnitOfWork]
+CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).&nbsp;</p>
+			<h4 id="DocUow">Controlling Unit Of Work</h4>
+			<p>Unit of work <strong>implicitly</strong> works for the methods 
+			defined above. 
+			In most cases you don't have to control unit of work manually for 
+			web applications. You can <strong>explicitly </strong>use it if you want to control unit of 
+			work somewhere else. There are two approaches for it.&nbsp;</p>
+			<h5>UnitOfWork Attribute</h5>
+			<p>First and preferred approach is using <strong>UnitOfWork</strong> 
+			attribute. Example:</p>
+			<pre lang="cs"><strong>[UnitOfWork]</strong>
 public void CreatePerson(CreatePersonInput input)
 {
     var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
@@ -132,7 +88,7 @@ public void CreatePerson(CreatePersonInput input)
 }</pre>
 			<p>Thus, CreatePerson methods becomes unit of work and manages database 
 connection and transaction, both repositories use same unit of work. Note that 
-no need to UnitOfWork attribute if this is an application service method. See '<a href="#DocUowRestrictions">unit 
+no need to UnitOfWork attribute if this is an application service method. Also see '<a href="#DocUowRestrictions">unit 
 of work method restrictions</a>' section.</p>
 			<p>There are some options of the UnitOfWork attribute. See 'unit of work in 
 detail' section.</p>
@@ -166,49 +122,46 @@ shown below:</p>
         }
     }
 }</pre>
-			<p>You can inject and use IUnitOfWorkManager as shown here (if you inherit your 
-application service from ApplicationService class, then you can directly use
-				<strong>CurrentUnitOfWork</strong> 
-property. If not, you should inject IUnitOfWorkManager). Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
+			<p>You can inject and use IUnitOfWorkManager as shown here (Some 
+			base classes have already <strong>UnitOfWorkManager</strong> 
+			injected by default: MVC Controllers,
+			<a href="Application-Services.html">application services</a>,
+			<a href="Domain-Services.html">domain services</a>...). Thus, you can create more <strong>limited scope</strong> unit of works. In this approach, you 
 should call <strong>Complete</strong> method manually. If you don't call, 
 transaction is rolled back and changes are not saved.</p>
 			<p>Begin method has overloads 
-to set <strong>unit of work options</strong>.</p>
-			<p>It's better and 
+to set <strong>unit of work options</strong>. It's better and 
 shorter to use <strong>UnitOfWork</strong> attribute if you don't have a good reason.</p>
 
-			<h3 id="DocUowDetails">Unit of work in detail</h3>
-			<h4 id="DocDisablingUow">Disabling unit of work</h4>
-			<p>You may want to disable unit of work for an <strong>application service method</strong> 
-(since it's enabled as default). To do 
-that, use UnitOfWorkAttribute's IsDisabled property. Example usage:</p>
-			<pre lang="cs">[UnitOfWork(IsDisabled = true)]
+			<h3 id="DocUowDetails">Unit Of Work in Detail</h3>
+			<h4 id="DocDisablingUow">Disabling Unit Of Work</h4>
+			<p>You may want to disable unit of work <strong>for conventional 
+			unit of work methods</strong> . To do 
+that, use UnitOfWorkAttribute's <strong>IsDisabled</strong> property. Example usage:</p>
+			<pre lang="cs"><strong>[UnitOfWork(IsDisabled = true)]</strong>
 public virtual void RemoveFriendship(RemoveFriendshipInput input)
 {
     _friendshipRepository.Delete(input.Id);
 }
 			</pre>
-			<p>Normally, you don't want to do that since an application service method 
-should be atomic and uses database in general. Some situations you may want to 
-disable unit of work for an application service method:</p>
+			<p>Normally, you don't want to do that, but in some situations you 
+			may want to disable unit of work:</p>
 			<ul>
-				<li>Your method does not perform any database operation at all and you don't 
-	want to open an unnecessary database connection.</li>
-				<li>You want to use unit of work in a limited scope with UnitOfWorkScope 
+				<li>You may want to use unit of work in a limited scope with UnitOfWorkScope 
 	class described above.</li>
 			</ul>
 			<p>Note that if a unit of work method calls this RemoveFriendship method, 
-disabling is ignored and it uses the same unit of work with the caller method. 
+disabling this method is ignored and it uses the same unit of work with the caller method. 
 So, use disabling by carefully. Also, the code above works well since repository 
-methods are unit of work as default.</p>
-			<h4 id="DocUowNoTransaction">Non-transactional unit of work</h4>
+methods are unit of work by default.</p>
+			<h4 id="DocUowNoTransaction">Non-Transactional Unit Of Work</h4>
 			<p>A unit of work is transactional as default (by it's nature). Thus, ASP.NET 
 Boilerplate starts/commits/rollbacks an explicit database-level transaction. In 
 some special cases, transaction may cause problems since it may lock some rows 
 or tables in the database. In this situations, you may want to disable 
 database-level transaction. UnitOfWork attribute can get a boolean value in it's 
 constructor to work as non-transactional. Example usage:</p>
-			<pre lang="cs">[UnitOfWork(<span lang="tr">isTransactional: </span>false)]
+			<pre lang="cs"><strong>[UnitOfWork(</strong><span lang="tr"><strong>isTransactional: </strong></span><strong>false)]</strong>
 public GetTasksOutput GetTasks(GetTasksInput input)
 {
     var tasks = _taskRepository.GetAllWithPeople(input.AssignedPersonId, input.State);
@@ -223,49 +176,48 @@ I think it's more readable and explicit. But you can use as [UnitOfWork(false)].
 saves changes in a single command. Assume that you updated a few Entities in a 
 non-transactional UOW. Even in this situation all updates are performed at end 
 of the unit of work with a single database command. But if you execute an SQL 
-query directly, it's performed immediately.</p>
+query directly, it's performed immediately and not rolled back if your UOW is 
+			not transactional.</p>
 			<p>There is a restriction for non-transactional UOWs. If you're already in a 
-transactional unit of work scope, setting isTransactional to false is ignored.</p>
+transactional unit of work scope, setting isTransactional to false is ignored 
+			(use Transaction Scope Option to create a non-transactional unit of 
+			work in a transactional unit of work).</p>
 			<p>Use non-transactional unit of works carefully since most of the times it 
 should be transactional for data integrity. If your method just reads data, not 
-changes it, it can be non-transactional of course.</p>
-			<h4 id="DocUowCallsOtherMethod">A unit of work method calls another</h4>
-			<p>If a unit of work method (a method declared with UnitOfWork attribute) calls 
-another unit of work method, they share same connection and transaction. First 
-method manages connection, others use it. This true for methods run in same
-				<strong>Thread</strong> (or in same request for web applications). Actually, when a unit of work scope begins, all codes 
-executing in same thread shares same connection and transaction until the unit of 
-work scope ends. This is true both for UnitOfWork attribute and UnitOfWorkScope 
-class.</p>
-			<h4>Unit of work scope</h4>
+changes it, it can be safely non-transactional.</p>
+			<h4 id="DocUowCallsOtherMethod">A Unit Of Work Method Calls Another</h4>
+			<p>Unit of work is ambient. If a unit of work method calls another 
+			unit of work method, they share same connection and transaction. 
+			First method manages connection, others use it.</p>
+			<h4>Unit Of Work Scope</h4>
 			<p>You can create a different and isolated transaction in another transaction or 
 can create a non-transactional scope in a transaction. .NET defines
 				<a href="https://msdn.microsoft.com/en-us/library/system.transactions.transactionscopeoption(v=vs.110).aspx" target="_blank">
 TransactionScopeOption</a> for that. You can set Scope option of the unit of 
-work. </p>
-			<h4 id="DocAutoSaveChanges">Automatically saving changes</h4>
-			<p>When we use unit of work for a method, ASP.NET Boilerplate saves 
+work to control it. </p>
+			<h4 id="DocAutoSaveChanges">Automatically Saving Changes</h4>
+			<p>If a method is unit of work, ASP.NET Boilerplate saves 
 all changes at the end of the method automatically. Assume that we need method to update name of a person:</p>
-			<pre lang="cs">[UnitOfWork]
+			<pre lang="cs"><strong>[UnitOfWork]</strong>
 public void UpdateName(UpdateNameInput input)
 {
     var person = _personRepository.Get(input.PersonId);
-    person.Name = input.NewName;
+    <strong>person.Name = input.NewName;</strong>
 }</pre>
 			<p>That's all, name was changed! We did not even called _personRepository.Update 
 method. O/RM framework keep track of all changes of entities in a unit of work 
 and reflects changes to the database.</p>
-			<p>Note that no need to declare UnitOfWork for application service methods since 
-they are unit of work as default.</p>
-			<h4 id="DocRepositoryGetAll">IRepository.GetAll() method</h4>
+			<p>Note that no need to declare UnitOfWork for conventional unit of 
+			work methods.</p>
+			<h4 id="DocRepositoryGetAll">IRepository.GetAll() Method</h4>
 			<p>When you call GetAll() out of a repository method, there must be an open database connection since it 
 returns IQueryable. This is needed because of deferred execution of IQueryable<T>. It does not perform database query unless you call ToList() method or use the IQueryable<T> in a foreach loop (or somehow access to queried items). So, when you call ToList() method, database connection must be alive.</p>
 					<p>Consider the example below:</p>
-					<pre lang="cs">[UnitOfWork]
+					<pre lang="cs"><strong>[UnitOfWork]</strong>
 public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
 {
     //Get IQueryable&lt;Person&gt;
-    var query = _personRepository.GetAll();
+    var query = <strong>_personRepository.GetAll();</strong>
 
     //Add some filters if selected
     if (!string.IsNullOrEmpty(input.SearchedName))
@@ -286,10 +238,11 @@ public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
 					<p>Here, SearchPeople method must be unit of work since ToList() method of IQueryable is 
 called in the method body, and database connection must be open when 
 IQueryable.ToList() is executed.</p>
-					<p>Like that for GetAll() method, you must use unit of work if a database 
-connection is needed out of the repository. Note that application service 
-methods are unit of work by default.&nbsp;</p>
-					<h4 id="DocUowRestrictions">UnitOfWork attribute restrictions</h4>
+					<p>In most cases you will use GetAll method safely in a web 
+					application, since all controller actions are unit of work 
+					by default and thus database connection is available in 
+					entire request.</p>
+					<h4 id="DocUowRestrictions">UnitOfWork Attribute Restrictions</h4>
 					<p>You can use UnitOfWork attribute for;</p>
 					<ul>
 						<li>All <strong>public</strong> or <strong>public virtual</strong> methods for classes 
@@ -300,7 +253,7 @@ methods are unit of work by default.&nbsp;</p>
 						<li>All <strong>protected virtual</strong> methods.</li>
 					</ul>
 					<p>It's suggested to always make the method <strong>virtual</strong>.&nbsp;You can 
-						<strong>not use for private methods</strong>. 
+						<strong>not use it for private methods</strong>. 
 Because, ASP.NET Boilerplate uses dynamic proxying for that and private methods 
 can not be seen by derived classes. UnitOfWork attribute (and any proxying) does 
 not work if you don't use <a href="/Pages/Documents/Dependency-Injection">
@@ -325,26 +278,39 @@ is generally done in PreInitialize method of our
 					<p>Second, we can override defaults for a particular unit of work. For that, <strong>
 UnitOfWork </strong> attribute constructor and IUnitOfWorkManager.<strong>Begin</strong> 
 method have overloads to get options.</p>
+			<p>And lastly, you can use startup configuration to configure 
+			default unit of work attributes for ASP.NET MVC, Web API and ASP.NET 
+			Core MVC Controllers (see their documentation).</p>
 					<h3 id="DocUowMethods">Methods</h3>
 					<p>UnitOfWork system works seamlessly and invisibly. But, in some special cases, 
 you need to call it's methods.</p>
+			<p>You can access to current unit of work in one of two ways:</p>
+			<ul>
+				<li>You can directly use <strong>CurrentUnitOfWork</strong> 
+				property if your class is derived from some specific base 
+				classes (ApplicationService, DomainService, AbpController, 
+				AbpApiController... etc.)</li>
+				<li>You can inject IUnitOfWorkManager into any class and&nbsp;use
+				<strong>IUnitOfWorkManager.Current</strong> property.</li>
+			</ul>
 					<h4 id="DocUowSaveChanges">SaveChanges</h4>
-					<p>ASP.NET Boilerplate saves all changes at end of a unit of work, you don't 
-have to do anything. But, sometimes, you may want to save changes to database in 
-middle of a unit of work operation. In this case, you can 
-inject IUnitOfWorkManager and&nbsp;call IUnitOfWorkManager.Current.<strong>SaveChanges()</strong> method. An example 
+					<p>ASP.NET Boilerplate saves all changes at end of a unit of 
+					work, you don't have to do anything. But, sometimes, you may 
+					want to save changes to database in middle of a unit of work 
+					operation. An example 
 usage may be saving changes to get Id of a new inserted
 						<a href="/Pages/Documents/Entities">Entity</a> in <a href="/Pages/Documents/EntityFramework-Integration">
-EntityFramework</a>. Note that: if current unit of work is transactional, all 
-changes in the transaction are rolled back if an exception occurs, even saved 
-changes.</p>
+EntityFramework</a>.</p>
+			<p>You can use <strong>SaveChanges </strong>or <strong>
+			SaveChangesAsync </strong>method of current unit of work.</p>
+			<p>&nbsp;Note that: if current unit of work is transactional, all 
+			changes in the transaction are rolled back if an exception occurs, 
+			even saved changes.</p>
 
 					<h3 id="DocEvents">Events</h3>
-					<p>A unit of work has <strong>Completed</strong>, <strong>Failed</strong> and <strong>Disposed</strong> events. 
-You can register to these events and perform needed operations. Inject 
-IUnitOfWorkManager and use IUnitOfWorkManager.Current property to get active 
-unit of work and register to it's events.</p>
-					<p>You may want to run some code when current unit of work successfully 
+					<p>A unit of work has <strong>Completed</strong>, <strong>Failed</strong> and <strong>Disposed</strong> 
+					events. You can register to these events and perform needed 
+					operations. For example,yYou may want to run some code when current unit of work successfully 
 completed. Example:</p>
 					<pre lang="cs">public void CreateTask(CreateTaskInput input)
 {
@@ -353,8 +319,7 @@ completed. Example:</p>
     if (input.AssignedPersonId.HasValue)
     {
         task.AssignedPersonId = input.AssignedPersonId.Value;
-
-        _unitOfWorkManager.Current.Completed += (sender, args) =&gt; { /* TODO: Send email to assigned person */ };
+        <strong>_unitOfWorkManager.Current.Completed</strong> += (sender, args) =&gt; { /* TODO: Send email to assigned person */ };
     }
 
     _taskRepository.Insert(task);

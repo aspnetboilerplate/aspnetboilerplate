@@ -23,7 +23,10 @@ namespace Abp.Application.Features
         {
             foreach (var providerType in _featureConfiguration.Providers)
             {
-                CreateProvider(providerType).SetFeatures(this);
+                using (var provider = CreateProvider(providerType))
+                {
+                    provider.Object.SetFeatures(this);
+                }
             }
 
             Features.AddAllFeatures();
@@ -45,10 +48,10 @@ namespace Abp.Application.Features
             return Features.Values.ToImmutableList();
         }
 
-        private FeatureProvider CreateProvider(Type providerType)
+        private IDisposableDependencyObjectWrapper<FeatureProvider> CreateProvider(Type providerType)
         {
-            _iocManager.RegisterIfNot(providerType);
-            return (FeatureProvider)_iocManager.Resolve(providerType);
+            _iocManager.RegisterIfNot(providerType); //TODO: Needed?
+            return _iocManager.ResolveAsDisposable<FeatureProvider>(providerType);
         }
     }
 }

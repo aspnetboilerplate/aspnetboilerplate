@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Abp.Web;
 
@@ -8,50 +9,36 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public static class HttpVerbExtensions
     {
-        /// <summary>
-        /// Compares a <see cref="HttpVerb"/> with a <see cref="HttpMethod"/>.
-        /// </summary>
-        /// <param name="verb">The Http verb</param>
-        /// <param name="method">The Http method</param>
-        /// <returns>True, if they are equal</returns>
-        public static bool IsEqualTo(this HttpVerb verb, HttpMethod method)
+        public static readonly HttpMethod HttpPatch = new HttpMethod("PATCH");
+
+        public static HttpMethod ToHttpMethod(this HttpVerb verb)
         {
-            if (verb == HttpVerb.Get && method == HttpMethod.Get)
+            switch (verb)
             {
-                return true;
+                case HttpVerb.Get:
+                    return HttpMethod.Get;
+                case HttpVerb.Post:
+                    return HttpMethod.Post;
+                case HttpVerb.Put:
+                    return HttpMethod.Put;
+                case HttpVerb.Delete:
+                    return HttpMethod.Delete;
+                case HttpVerb.Options:
+                    return HttpMethod.Options;
+                case HttpVerb.Trace:
+                    return HttpMethod.Trace;
+                case HttpVerb.Head:
+                    return HttpMethod.Head;
+                case HttpVerb.Patch:
+                    return HttpPatch;
+                default:
+                    throw new ArgumentException("Given HttpVerb is unknown: " + verb, nameof(verb));
             }
+        }
 
-            if (verb == HttpVerb.Post && method == HttpMethod.Post)
-            {
-                return true;
-            }
-
-            if (verb == HttpVerb.Put && method == HttpMethod.Put)
-            {
-                return true;
-            }
-
-            if (verb == HttpVerb.Delete && method == HttpMethod.Delete)
-            {
-                return true;
-            }
-
-            if (verb == HttpVerb.Options && method == HttpMethod.Options)
-            {
-                return true;
-            }
-
-            if (verb == HttpVerb.Trace && method == HttpMethod.Trace)
-            {
-                return true;
-            }
-
-            if (verb == HttpVerb.Head && method == HttpMethod.Head)
-            {
-                return true;
-            }
-
-            return false;
+        public static HttpVerb ToHttpVerb(this HttpMethod method)
+        {
+            return HttpVerbHelper.Create(method.Method);
         }
     }
 }

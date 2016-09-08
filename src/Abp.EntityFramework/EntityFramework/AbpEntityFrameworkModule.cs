@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
 using Abp.Collections.Extensions;
-using Abp.EntityFramework.Dependency;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Reflection;
-using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
@@ -16,19 +17,24 @@ namespace Abp.EntityFramework
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
-        public ILogger Logger { get; set; }
-
         private readonly ITypeFinder _typeFinder;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
-            Logger = NullLogger.Instance;
         }
 
         public override void PreInitialize()
         {
-            IocManager.AddConventionalRegistrar(new EntityFrameworkConventionalRegistrar());
+            Configuration.ReplaceService<IUnitOfWorkFilterExecuter>(() =>
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                    .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
+                    .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
+                    .LifestyleTransient()
+                );
+            });
         }
 
         public override void Initialize()
@@ -36,15 +42,15 @@ namespace Abp.EntityFramework
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             IocManager.IocContainer.Register(
-                Component.For(typeof (IDbContextProvider<>))
-                    .ImplementedBy(typeof (UnitOfWorkDbContextProvider<>))
+                Component.For(typeof(IDbContextProvider<>))
+                    .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
                 );
-            
-            RegisterGenericRepositories();
+
+            RegisterGenericRepositoriesAndMatchDbContexes();
         }
 
-        private void RegisterGenericRepositories()
+        private void RegisterGenericRepositoriesAndMatchDbContexes()
         {
             var dbContextTypes =
                 _typeFinder.Find(type =>
@@ -60,9 +66,18 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            foreach (var dbContextType in dbContextTypes)
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
             {
-                EntityFrameworkGenericRepositoryRegistrar.RegisterForDbContext(dbContextType, IocManager);
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
+                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
+                }
+            }
+
+            using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
+            {
+                dbContextMatcher.Object.Populate(dbContextTypes);
             }
         }
     }

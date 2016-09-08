@@ -14,7 +14,7 @@ namespace Abp.Hangfire
         private readonly IAbpHangfireConfiguration _hangfireConfiguration;
 
         public HangfireBackgroundJobManager(
-            IBackgroundJobConfiguration backgroundJobConfiguration, 
+            IBackgroundJobConfiguration backgroundJobConfiguration,
             IAbpHangfireConfiguration hangfireConfiguration)
         {
             _backgroundJobConfiguration = backgroundJobConfiguration;
@@ -51,7 +51,10 @@ namespace Abp.Hangfire
         public Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
             TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
         {
-            HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+            if (!delay.HasValue)
+                HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+            else
+                HangfireBackgroundJob.Schedule<TJob>(job => job.Execute(args), delay.Value);
             return Task.FromResult(0);
         }
     }

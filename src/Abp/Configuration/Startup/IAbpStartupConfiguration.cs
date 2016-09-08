@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using System;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
@@ -55,6 +56,11 @@ namespace Abp.Configuration.Startup
         IAuthorizationConfiguration Authorization { get; }
 
         /// <summary>
+        /// Used to configure validation.
+        /// </summary>
+        IValidationConfiguration Validation { get; }
+
+        /// <summary>
         /// Used to configure settings.
         /// </summary>
         ISettingsConfiguration Settings { get; }
@@ -90,5 +96,18 @@ namespace Abp.Configuration.Startup
         /// Used to configure notification system.
         /// </summary>
         INotificationConfiguration Notifications { get; }
+
+        /// <summary>
+        /// Used to replace a service type.
+        /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
+        /// </summary>
+        /// <param name="type">The type to be replaced.</param>
+        /// <param name="replaceAction">Replace action.</param>
+        void ReplaceService(Type type, Action replaceAction);
+
+        /// <summary>
+        /// Gets a configuration object.
+        /// </summary>
+        T Get<T>();
     }
 }

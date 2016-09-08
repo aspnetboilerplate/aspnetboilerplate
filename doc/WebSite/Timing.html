@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Timing</title>
+    <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="document-contents">
+
+        <h3 id="DocIntroduction">Introduction</h3>
+        <p>
+            While some applications target a single timezone, some others target
+            to many different timezones. To satisfy such needs and
+            centralize datetime operations,  Abp provides common infrastructure for datetime operations.</p>
+
+        <h3 id="DocAboutClock">Clock</h3>
+        <p><strong>Clock</strong> is the main class used to work with <strong>
+		DateTime</strong> values. It defines the following 
+		<strong>static </strong>properties/methods:</p>
+		<ul>
+			<li><strong>Now</strong>: Gets current time according to current 
+			provider.</li>
+			<li><strong>Kind</strong>: Gets DateTimeKind of current provider.</li>
+			<li><strong>SupportsMultipleTimezone</strong>: Gets a value 
+			indicates that current provider can be used for applications need to 
+			multiple timezones.</li>
+			<li><strong>Normalize</strong>: Normalizes/converts given DateTime 
+			upon current provider.</li>
+		</ul>
+		<p>So, instead of using <em>DateTime.Now</em>, we are using <strong>Clock.Now</strong>, 
+		which abstracts it:</p>
+		<pre lang="cs">DateTime now = <strong>Clock.Now</strong>;</pre>
+		<p>Clock uses clock providers inside it. There are three types of 
+		<strong>built-in clock providers</strong>:</p>
+		<ul>
+			<li><strong>ClockProviders.Unspecified</strong> 
+			(UnspecifiedClockProvider): This is the <strong>default</strong> 
+			clock provider and behaives just like <strong>DateTime.Now</strong>. 
+			It acts as you don't use Clock class at all.</li>
+			<li><strong>ClockProviders.Utc</strong> (UtcClockProvider): Works in 
+			UTC datetime. <strong>DateTime.UtcNow</strong> for Clock.Now. Normalize method converts a given datetime to utc datetime and set it's kind to DateTimeKind.UTC. 
+			It <strong>supports multiple timezones</strong>.</li>
+			<li><strong>ClockProviders.Local</strong> (LocalClockProvider): 
+			Works in Local computer's time. Normalize method converts a given 
+			datetime to local datetime and set it's kind to DateTimeKind.Local.</li>
+		</ul>
+		<p>You can set Clock.Provider in order to use a different clock 
+		provider:</p>
+		<pre lang="cs">Clock.Provider = <strong>ClockProviders.Utc</strong>;</pre>
+		<p>This is generally done at the beginning of an application (proper to 
+		do it Application_Start in a web application).</p>
+        <h4>Client Side</h4>
+        <p>
+            Clock can be used on the client side by
+            <strong>abp.clock </strong> object in javascript. When you set 
+			Clock.Provider on the server side, ABP automatically sets value of
+            <strong>abp.clock.provider</strong> on the client side.
+        </p>
+
+
+        <h3 id="DocTimeZones">Time Zones</h3>
+		<p>ABP defines a <a href="Setting-Management.html">setting</a> named <strong>Abp.Timing.TimeZone</strong> 
+		(<em>TimingSettingNames.TimeZone</em> constant) for 
+		storing selected timezone of host, tenant and user.  ABP assumes that value of timezone setting is a valid 
+		<strong>Windows timezone id</strong>. It also defines a timezone mapping file to convert a Windows Timezone to 
+		<strong>IANA</strong> timezone since some of the common libraries are using IANA timezone id. 
+		<strong>UtcClockProvider</strong> must be used in order to support
+		<strong>multiple timezones</strong>. Because if UtcClockProvider is used, all datetime values will be stored 
+		in UTC and all datetimes will be sent to clients in UTC format. Then on 
+		the client side we can convert UTC datetime to user's timezone by using 
+		user's current timezone setting.&nbsp; </p>
+
+<h4>Client Side</h4>
+<p>ABP creates an javascript object named <strong>abp.timing.timeZoneInfo</strong> which contains timezone information for current user. This information contains Windows and IANA timezone ids and some extra information for windows timezone info. This information can be used to make client side datetime convertions 
+and showing a datetime to user in his/her timezone.</p>
+
+<h3 id="DocBindersAndConverters">Binders and Converters</h3>
+
+		<ul>
+			<li>ABP automatically normalizes DateTimes received from <strong>
+			clients</strong> in MVC, Web API and ASP.NET Core applications, 
+			based on the current clock provider.</li>
+			<li>ABP automatically normalized DateTimes received from <strong>
+			database</strong> based on the current clock provider, when
+			<a href="EntityFramework-Integration.html">EntityFramework</a> or
+			<a href="NHibernate-Integration.html">NHibernate</a> modules used.</li>
+		</ul>
+		<p>If UTC clock provider is used, then all DateTimes stored in database 
+		assumed as UTC values, and all DateTimes received from clients assumed 
+		as UTC unless it's explicitly specified.</p>
+    </div>
+</body>
+
+</html>

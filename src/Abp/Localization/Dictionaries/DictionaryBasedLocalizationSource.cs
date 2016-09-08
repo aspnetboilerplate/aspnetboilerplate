@@ -68,7 +68,7 @@ namespace Abp.Localization.Dictionaries
 
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, culture);
             }
 
             return value;
@@ -194,9 +194,9 @@ namespace Abp.Localization.Dictionaries
             DictionaryProvider.Extend(dictionary);
         }
 
-        protected virtual string ReturnGivenNameOrThrowException(string name)
+        protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
-            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name, culture);
         }
 
         private static string GetBaseCultureName(string cultureName)
