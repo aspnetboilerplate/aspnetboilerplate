@@ -6,6 +6,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.ObjectMapping;
 
 namespace Abp.Application.Services
 {
@@ -89,21 +90,31 @@ namespace Abp.Application.Services
             return Repository.GetAll();
         }
 
-        protected virtual List<TEntityDto> MapToEntityDtoList(List<TEntity> entities)
-        {
-            return entities.Select(MapToEntityDto).ToList();
-        }
-
+        /// <summary>
+        /// Maps <see cref="TEntity"/> to <see cref="TEntityDto"/>.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
+        /// </summary>
         protected virtual TEntityDto MapToEntityDto(TEntity entity)
         {
             return ObjectMapper.Map<TEntityDto>(entity);
         }
 
+        /// <summary>
+        /// Maps <see cref="TEntity"/> to <see cref="TEntityDto"/> to create a new entity.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
+        /// </summary>
         protected virtual TEntity MapToEntity(TCreateInput createInput)
         {
             return ObjectMapper.Map<TEntity>(createInput);
         }
 
+        /// <summary>
+        /// Maps <see cref="TUpdateInput"/> to <see cref="TEntity"/> to update the entity.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
+        /// </summary>
         protected virtual void MapToEntity(TUpdateInput updateInput, TEntity entity)
         {
             ObjectMapper.Map(updateInput, entity);

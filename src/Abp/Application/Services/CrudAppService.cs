@@ -99,7 +99,7 @@ namespace Abp.Application.Services
 
             return new PagedResultOutput<TEntityDto>(
                 totalCount,
-                MapToEntityDtoList(entities)
+                entities.Select(MapToEntityDto).ToList()
             );
         }
 
