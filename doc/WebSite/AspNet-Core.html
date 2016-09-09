@@ -167,7 +167,7 @@ framework. ASP.NET Core integration is implemented in
 		attributes for methods and classes.</li>
 	</ul>
 	<h4>Result Filter</h4>
-	<p><strong>AbpResultFilter</strong> is used to wrap result action if action 
+	<p><strong>AbpResultFilter</strong> is mainly used to wrap result action if action 
 	is successfully executed.</p>
 	<ul>
 		<li>It only wraps results for JsonResult, ObjectResult and any object 
@@ -180,6 +180,11 @@ framework. ASP.NET Core integration is implemented in
 		<li>You can use startup configuration to change default behaviour for 
 		result wrapping.</li>
 	</ul>
+	<h5>Result Caching For Ajax Requests</h5>
+	<p>AbpResultFilter adds Cache-Control header (no-cache, no-store) to the 
+	response for AJAX Requests. Thus, it prevents browser caching of AJAX 
+	responses even for GET requests. This behaviour can be disabled by the 
+	configuration.</p>
 	<h3>Model Binders</h3>
 	<p><strong>AbpDateTimeModelBinder</strong> is used to normalize DateTime 
 	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 

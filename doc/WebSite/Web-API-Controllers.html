@@ -107,6 +107,11 @@ WrapResult/DontWrapResult to actions and controllers if you need.&nbsp;You can c
 <a href="Startup-Configuration.html">startup configuration</a> (using 
 Configuration.Modules.AbpWebApi()...). See <a href="Javascript-API/AJAX.html">
 AJAX document</a> for more about result wrapping.&nbsp;</p>
+			<h4>Result Caching</h4>
+			<p>ASP.NET Boilerplate adds Cache-Control header (no-cache, 
+			no-store) to the response for Web API requests. Thus, it prevents 
+			browser caching of responses even for GET requests. This behaviour 
+			can be disabled by the configuration.</p>
 			<h4>Validation</h4>
 			<p><strong>AbpApiValidationFilter</strong> automatically checks <strong>
 			ModelState.IsValid</strong> and prevents execution of the action if 

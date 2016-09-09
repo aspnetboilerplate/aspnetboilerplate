@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
