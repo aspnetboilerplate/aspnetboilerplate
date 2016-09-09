@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq;
 using Abp.Linq.Extensions;
 
 namespace Abp.Application.Services
@@ -10,7 +13,7 @@ namespace Abp.Application.Services
     public abstract class CrudAppService<TEntity, TEntityDto>
         : CrudAppService<TEntity, TEntityDto, int>
         where TEntity : class, IEntity<int>
-        where TEntityDto : EntityRequestInput<int>
+        where TEntityDto : IEntityDto<int>
     {
         protected CrudAppService(IRepository<TEntity, int> repository)
             : base(repository)
@@ -20,9 +23,9 @@ namespace Abp.Application.Services
     }
 
     public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey>
-        : CrudAppService<IRepository<TEntity, TPrimaryKey>, TEntity, TEntityDto, TPrimaryKey>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
         where TEntity : class, IEntity<TPrimaryKey>
-        where TEntityDto : EntityRequestInput<TPrimaryKey>
+        where TEntityDto : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
@@ -31,50 +34,37 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TRepository, TEntity, TEntityDto, TPrimaryKey>
-        : CrudAppService<TRepository, TEntity, TEntityDto, TPrimaryKey, PagedResultRequest>
-        where TRepository : IRepository<TEntity, TPrimaryKey>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
+        where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
-        where TEntityDto : EntityRequestInput<TPrimaryKey>
+        where TEntityDto : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(TRepository repository)
+        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TRepository, TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput>
-        : CrudAppService<TRepository, TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
-        where TSelectRequestInput : IPagedResultRequest
-        where TRepository : IRepository<TEntity, TPrimaryKey>
-        where TEntity : class, IEntity<TPrimaryKey>
-        where TEntityDto : EntityRequestInput<TPrimaryKey>
-    {
-        protected CrudAppService(TRepository repository)
-            : base(repository)
-        {
-
-        }
-    }
-
-    public abstract class CrudAppService<TRepository, TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
        : ApplicationService, ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
-       where TSelectRequestInput : IPagedResultRequest
-       where TRepository : IRepository<TEntity, TPrimaryKey>
+       where TSelectRequestInput : IPagedAndSortedResultRequest
        where TEntity : class, IEntity<TPrimaryKey>
-       where TUpdateInput : EntityRequestInput<TPrimaryKey>
+       where TEntityDto : IEntityDto<TPrimaryKey>
+       where TUpdateInput : IEntityDto<TPrimaryKey>
     {
-        protected readonly TRepository Repository;
+        protected readonly IRepository<TEntity, TPrimaryKey> Repository;
 
-        protected CrudAppService(TRepository repository)
+        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
         {
             Repository = repository;
         }
 
         public virtual TEntityDto Get(IdInput<TPrimaryKey> input)
         {
-            return ObjectMapper.Map<TEntityDto>(Repository.Get(input.Id));
+            var entity = GetEntityById(input.Id);
+            return ObjectMapper.Map<TEntityDto>(entity);
         }
 
         public virtual PagedResultOutput<TEntityDto> GetAll(TSelectRequestInput input)
@@ -82,7 +72,17 @@ namespace Abp.Application.Services
             var query = CreateQueryable(input);
 
             var totalCount = query.Count();
-            var items = query.OrderByDescending(e => e.Id).PageBy(input).ToList();
+
+            if (!input.Sorting.IsNullOrWhiteSpace())
+            {
+                query = query.OrderBy(input.Sorting);
+            }
+            else
+            {
+                query = query.OrderByDescending(e => e.Id);
+            }
+
+            var items = query.PageBy(input).ToList();
 
             return new PagedResultOutput<TEntityDto>(
                 totalCount,
@@ -92,18 +92,24 @@ namespace Abp.Application.Services
 
         public virtual TPrimaryKey Create(TCreateInput input)
         {
-            return Repository.InsertAndGetId(ObjectMapper.Map<TEntity>(input));
+            var entity = ObjectMapper.Map<TEntity>(input);
+            return Repository.InsertAndGetId(entity);
         }
 
         public virtual void Update(TUpdateInput input)
         {
-            var entity = Repository.Get(input.Id);
+            var entity = GetEntityById(input.Id);
             ObjectMapper.Map(input, entity);
         }
 
         public virtual void Delete(IdInput<TPrimaryKey> input)
         {
             Repository.Delete(input.Id);
+        }
+
+        protected virtual TEntity GetEntityById(TPrimaryKey id)
+        {
+            return Repository.Get(id);
         }
 
         protected virtual IQueryable<TEntity> CreateQueryable(TSelectRequestInput input)

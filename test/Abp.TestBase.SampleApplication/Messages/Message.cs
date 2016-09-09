@@ -2,7 +2,7 @@
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.TestBase.SampleApplication
+namespace Abp.TestBase.SampleApplication.Messages
 {
     [Table("Messages")]
     public class Message : FullAuditedEntity, IMayHaveTenant
@@ -13,7 +13,7 @@ namespace Abp.TestBase.SampleApplication
 
         public Message()
         {
-            
+
         }
 
         public Message(int? tenantId, string text)

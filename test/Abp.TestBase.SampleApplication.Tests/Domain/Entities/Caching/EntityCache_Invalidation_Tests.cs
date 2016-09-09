@@ -3,6 +3,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities.Caching;
 using Abp.Domain.Repositories;
 using Abp.Runtime.Caching;
+using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
 using Xunit;
 

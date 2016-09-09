@@ -4,6 +4,7 @@ using Abp.EntityFramework;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.GuidEntities;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework

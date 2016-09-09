@@ -1,3 +1,5 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
@@ -5,6 +7,7 @@ namespace Abp.Application.Services.Dto
     /// to pass an Id value to an application service method.
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
+    [Serializable]
     public class IdInput<TId>
     {
         public TId Id { get; set; }
@@ -23,6 +26,7 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// A shortcut of <see cref="IdInput{TPrimaryKey}"/> for <see cref="int"/>.
     /// </summary>
+    [Serializable]
     public class IdInput : IdInput<int>
     {
         public IdInput()

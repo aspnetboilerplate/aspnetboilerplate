@@ -8,6 +8,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
 using Xunit;

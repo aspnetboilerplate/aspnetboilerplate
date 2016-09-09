@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;

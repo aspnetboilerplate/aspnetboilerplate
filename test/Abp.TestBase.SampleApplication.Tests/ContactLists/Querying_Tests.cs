@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
 using Xunit;
 
