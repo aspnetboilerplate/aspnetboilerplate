@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
@@ -10,10 +11,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
     public class MessageAppService_Tests : SampleApplicationTestBase
     {
         private readonly MessageAppService _messageAppService;
+        private readonly AsyncMessageAppService _asyncMessageAppService;
 
         public MessageAppService_Tests()
         {
             _messageAppService = Resolve<MessageAppService>();
+            _asyncMessageAppService = Resolve<AsyncMessageAppService>();
         }
 
         protected override void CreateInitialData()
@@ -62,6 +65,20 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
             messages.TotalCount.ShouldBe(1);
             messages.Items.Count.ShouldBe(1);
             messages.Items[0].Text.ShouldBe("tenant-1-message-1");
+        }
+
+
+        [Fact]
+        public async Task Should_Get_All_Messages_With_Filtering_Async()
+        {
+            //Act
+
+            var messages = await _asyncMessageAppService.GetAll(new PagedAndSortedResultRequestInput());
+
+            //Assert
+
+            messages.TotalCount.ShouldBe(2);
+            messages.Items.Count.ShouldBe(2);
         }
 
         [Fact]

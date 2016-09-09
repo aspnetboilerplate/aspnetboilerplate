@@ -6,6 +6,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq;
 using Abp.Linq.Extensions;
 
 namespace Abp.Application.Services
@@ -83,11 +84,15 @@ namespace Abp.Application.Services
        where TUpdateInput : IEntityDto<TPrimaryKey>
         where TDeleteInput : IEntityDto<TPrimaryKey>
     {
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
 
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
         {
             Repository = repository;
+
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         public virtual async Task<TEntityDto> Get(IdInput<TPrimaryKey> input)
@@ -96,21 +101,21 @@ namespace Abp.Application.Services
             return ObjectMapper.Map<TEntityDto>(entity);
         }
 
-        public virtual Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input)
+        public virtual async Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input)
         {
             var query = CreateQueryable(input);
 
-            var totalCount = query.Count();
+            var totalCount = await AsyncQueryableExecuter.CountAsync(query);
 
             query = ApplySorting(query, input);
             query = ApplyPaging(query, input);
 
-            var items = query.ToList();
+            var items = await AsyncQueryableExecuter.ToListAsync(query);
 
-            return Task.FromResult(new PagedResultOutput<TEntityDto>(
+            return new PagedResultOutput<TEntityDto>(
                 totalCount,
                 ObjectMapper.Map<List<TEntityDto>>(items)
-            ));
+            );
         }
 
         public virtual async Task<TEntityDto> Create(TCreateInput input)
