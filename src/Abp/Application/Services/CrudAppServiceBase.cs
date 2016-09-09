@@ -13,7 +13,7 @@ namespace Abp.Application.Services
     /// This is a common base class for CrudAppService and AsyncCrudAppService classes.
     /// Inherit either from CrudAppService or AsyncCrudAppService, not from this class.
     /// </summary>
-    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput> : ApplicationService
+    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput> : ApplicationService
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -30,7 +30,7 @@ namespace Abp.Application.Services
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="input">The input.</param>
-        protected virtual IQueryable<TEntity> ApplySorting(IQueryable<TEntity> query, TSelectRequestInput input)
+        protected virtual IQueryable<TEntity> ApplySorting(IQueryable<TEntity> query, TGetAllInput input)
         {
             //Try to sort query if available
             var sortInput = input as ISortedResultRequest;
@@ -57,7 +57,7 @@ namespace Abp.Application.Services
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="input">The input.</param>
-        protected virtual IQueryable<TEntity> ApplyPaging(IQueryable<TEntity> query, TSelectRequestInput input)
+        protected virtual IQueryable<TEntity> ApplyPaging(IQueryable<TEntity> query, TGetAllInput input)
         {
             //Try to use paging if available
             var pagedInput = input as IPagedResultRequest;
@@ -84,7 +84,7 @@ namespace Abp.Application.Services
         /// methods.
         /// </summary>
         /// <param name="input">The input.</param>
-        protected virtual IQueryable<TEntity> CreateFilteredQuery(TSelectRequestInput input)
+        protected virtual IQueryable<TEntity> CreateFilteredQuery(TGetAllInput input)
         {
             return Repository.GetAll();
         }

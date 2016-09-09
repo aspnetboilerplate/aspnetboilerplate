@@ -31,9 +31,9 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TEntityDto, TEntityDto>
+        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
@@ -44,9 +44,9 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TCreateInput>
+        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
        where TCreateInput : IEntityDto<TPrimaryKey>
@@ -58,9 +58,9 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -72,10 +72,10 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>,
-        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       where TSelectRequestInput : IPagedAndSortedResultRequest
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TDeleteInput>
+       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
+        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TDeleteInput>
+       where TGetAllInput : IPagedAndSortedResultRequest
        where TEntity : class, IEntity<TPrimaryKey>
        where TEntityDto : IEntityDto<TPrimaryKey>
        where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -95,7 +95,7 @@ namespace Abp.Application.Services
             return MapToEntityDto(entity);
         }
 
-        public virtual async Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input)
+        public virtual async Task<PagedResultOutput<TEntityDto>> GetAll(TGetAllInput input)
         {
             var query = CreateFilteredQuery(input);
 

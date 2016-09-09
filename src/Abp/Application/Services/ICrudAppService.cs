@@ -16,30 +16,30 @@ namespace Abp.Application.Services
 
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput>
-        : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TEntityDto, TEntityDto>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
 
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput>
-        : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TCreateInput>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TCreateInput : IEntityDto<TPrimaryKey>
     {
 
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput>
-        : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
 
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput, in TDeleteInput>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput, in TDeleteInput>
         : IApplicationService
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -47,7 +47,7 @@ namespace Abp.Application.Services
     {
         TEntityDto Get(IEntityDto<TPrimaryKey> input);
 
-        PagedResultOutput<TEntityDto> GetAll(TSelectRequestInput input);
+        PagedResultOutput<TEntityDto> GetAll(TGetAllInput input);
 
         TEntityDto Create(TCreateInput input);
 
