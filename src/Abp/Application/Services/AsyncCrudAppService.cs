@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -9,73 +10,73 @@ using Abp.Linq.Extensions;
 
 namespace Abp.Application.Services
 {
-    public abstract class CrudAppService<TEntity, TEntityDto>
-        : CrudAppService<TEntity, TEntityDto, int>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto>
+        : AsyncCrudAppService<TEntity, TEntityDto, int>
         where TEntity : class, IEntity<int>
         where TEntityDto : IEntityDto<int>
     {
-        protected CrudAppService(IRepository<TEntity, int> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, int> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
         where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
         where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
        where TCreateInput : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
         where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       : ApplicationService, ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
+       : ApplicationService, IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
        where TSelectRequestInput : IPagedAndSortedResultRequest
        where TEntity : class, IEntity<TPrimaryKey>
        where TEntityDto : IEntityDto<TPrimaryKey>
@@ -84,18 +85,18 @@ namespace Abp.Application.Services
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
 
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
         {
             Repository = repository;
         }
 
-        public virtual TEntityDto Get(IdInput<TPrimaryKey> input)
+        public virtual async Task<TEntityDto> Get(IdInput<TPrimaryKey> input)
         {
-            var entity = GetEntityById(input.Id);
+            var entity = await GetEntityByIdAsync(input.Id);
             return ObjectMapper.Map<TEntityDto>(entity);
         }
 
-        public virtual PagedResultOutput<TEntityDto> GetAll(TSelectRequestInput input)
+        public virtual Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input)
         {
             var query = CreateQueryable(input);
 
@@ -106,37 +107,37 @@ namespace Abp.Application.Services
 
             var items = query.ToList();
 
-            return new PagedResultOutput<TEntityDto>(
+            return Task.FromResult(new PagedResultOutput<TEntityDto>(
                 totalCount,
                 ObjectMapper.Map<List<TEntityDto>>(items)
-            );
+            ));
         }
 
-        public virtual TEntityDto Create(TCreateInput input)
+        public virtual async Task<TEntityDto> Create(TCreateInput input)
         {
             var entity = ObjectMapper.Map<TEntity>(input);
 
-            Repository.Insert(entity);
-            CurrentUnitOfWork.SaveChanges();
+            await Repository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
 
             return ObjectMapper.Map<TEntityDto>(entity);
         }
 
-        public virtual TEntityDto Update(TUpdateInput input)
+        public virtual async Task<TEntityDto> Update(TUpdateInput input)
         {
-            var entity = GetEntityById(input.Id);
+            var entity = await GetEntityByIdAsync(input.Id);
 
             ObjectMapper.Map(input, entity);
-            CurrentUnitOfWork.SaveChanges();
+            await CurrentUnitOfWork.SaveChangesAsync();
 
             return ObjectMapper.Map<TEntityDto>(entity);
         }
 
-        public virtual void Delete(TDeleteInput input)
+        public virtual Task Delete(TDeleteInput input)
         {
-            Repository.Delete(input.Id);
+            return Repository.DeleteAsync(input.Id);
         }
-
+        
         protected virtual IQueryable<TEntity> ApplySorting(IQueryable<TEntity> query, TSelectRequestInput input)
         {
             if (!input.Sorting.IsNullOrWhiteSpace())
@@ -154,9 +155,9 @@ namespace Abp.Application.Services
             return query.PageBy(input);
         }
 
-        protected virtual TEntity GetEntityById(TPrimaryKey id)
+        protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
         {
-            return Repository.Get(id);
+            return Repository.GetAsync(id);
         }
 
         protected virtual IQueryable<TEntity> CreateQueryable(TSelectRequestInput input)

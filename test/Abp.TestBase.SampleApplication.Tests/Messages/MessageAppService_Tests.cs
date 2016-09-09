@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Abp.Application.Services.Dto;
-using Abp.Extensions;
-using Abp.Linq;
-using Abp.Linq.Extensions;
 using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
 using Xunit;
@@ -43,7 +40,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void Should_Get_All_Messages()
         {
+            //Act
+
             var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput());
+
+            //Assert
+
             messages.TotalCount.ShouldBe(2);
             messages.Items.Count.ShouldBe(2);
         }
@@ -51,7 +53,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void Should_Get_All_Messages_With_Filtering()
         {
+            //Act
+
             var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput { Text = "message-1" });
+            
+            //Assert
+
             messages.TotalCount.ShouldBe(1);
             messages.Items.Count.ShouldBe(1);
             messages.Items[0].Text.ShouldBe("tenant-1-message-1");
@@ -60,19 +67,30 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void Should_Get_Message()
         {
+            //Act
+
             var message = _messageAppService.Get(new IdInput(2));
+
+            //Assert
+
             message.Text.ShouldBe("tenant-1-message-2");
         }
 
         [Fact]
         public void Should_Delete_Message()
         {
+            //Arrange
+
             UsingDbContext(context =>
             {
                 context.Messages.FirstOrDefault(m => m.Text == "tenant-1-message-2").ShouldNotBeNull();
             });
 
-            _messageAppService.Delete(new IdInput(2));
+            //Act
+
+            _messageAppService.Delete(new EntityDto(2));
+
+            //Assert
 
             UsingDbContext(context =>
             {
@@ -83,16 +101,22 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void Should_Update_Message()
         {
+            //Arrange
+
             UsingDbContext(context =>
             {
                 context.Messages.Single(m => m.Id == 2).Text.ShouldBe("tenant-1-message-2");
             });
 
+            //Act
+
             var message = _messageAppService.Get(new IdInput(2));
-
             message.Text = "tenant-1-message-2-updated";
+            var updatedMessage = _messageAppService.Update(message);
 
-            _messageAppService.Update(message);
+            //Assert
+
+            updatedMessage.Text.ShouldBe("tenant-1-message-2-updated");
 
             UsingDbContext(context =>
             {
@@ -104,12 +128,18 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void Should_Create_Message()
         {
+            //Arrange
+
             var messageText = Guid.NewGuid().ToString("N");
 
-            _messageAppService.Create(new MessageDto
-            {
-                Text = messageText
-            });
+            //Act
+
+            var createdMessage = _messageAppService.Create(new MessageDto { Text = messageText });
+
+            //Assert
+
+            createdMessage.Id.ShouldBeGreaterThan(0);
+            createdMessage.Text.ShouldBe(messageText);
 
             UsingDbContext(context =>
             {

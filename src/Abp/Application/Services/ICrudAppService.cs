@@ -24,20 +24,39 @@ namespace Abp.Application.Services
 
     }
 
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
+        where TSelectRequestInput : IPagedAndSortedResultRequest
+        where TEntityDto : IEntityDto<TPrimaryKey>
+        where TCreateInput : IEntityDto<TPrimaryKey>
+    {
+
+    }
+
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+        where TSelectRequestInput : IPagedAndSortedResultRequest
+        where TEntityDto : IEntityDto<TPrimaryKey>
+        where TUpdateInput : IEntityDto<TPrimaryKey>
+    {
+
+    }
+
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput, in TDeleteInput>
         : IApplicationService
         where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
+        where TDeleteInput : IEntityDto<TPrimaryKey>
     {
         TEntityDto Get(IdInput<TPrimaryKey> input);
 
         PagedResultOutput<TEntityDto> GetAll(TSelectRequestInput input);
 
-        TPrimaryKey Create(TCreateInput input);
+        TEntityDto Create(TCreateInput input);
 
-        void Update(TUpdateInput input);
+        TEntityDto Update(TUpdateInput input);
 
-        void Delete(IdInput<TPrimaryKey> input);
+        void Delete(TDeleteInput input);
     }
 }
