@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Net.Http;
@@ -19,6 +20,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         private readonly DynamicApiActionInfo _actionInfo;
         private readonly Lazy<Collection<IFilter>> _filters;
         private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
+        private readonly object[] _attributes;
+        private readonly object[] _declaredOnlyAttributes;
+
 
         public DynamicHttpActionDescriptor(
             IAbpWebApiConfiguration configuration,
@@ -40,6 +44,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 
             _filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
             _parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
+
+            _declaredOnlyAttributes = _actionInfo.Method.GetCustomAttributes(inherit: false);
+            _attributes = _actionInfo.Method.GetCustomAttributes(inherit: true);
         }
 
         /// <summary>
@@ -49,6 +56,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         public override Collection<IFilter> GetFilters()
         {
             return _filters.Value;
+        }
+
+        public override Collection<T> GetCustomAttributes<T>(bool inherit)
+        {
+            object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
+            return new Collection<T>(FilterType<T>(attributes));
         }
 
         public override Collection<HttpParameterDescriptor> GetParameters()
@@ -94,6 +107,25 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             return parameters;
+        }
+
+        internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
+        {
+            int max = objects.Length;
+            List<T> list = new List<T>(max);
+            int idx = 0;
+            for (int i = 0; i < max; i++)
+            {
+                T attr = objects[i] as T;
+                if (attr != null)
+                {
+                    list.Add(attr);
+                    idx++;
+                }
+            }
+            list.Capacity = idx;
+
+            return new ReadOnlyCollection<T>(list);
         }
     }
 }
