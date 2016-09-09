@@ -8,16 +8,15 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
     [Serializable]
-    public class IdInput<TId>
+    public class IdInput<TId> : EntityDto<TId>
     {
-        public TId Id { get; set; }
-
         public IdInput()
         {
 
         }
 
         public IdInput(TId id)
+            : base(id)
         {
             Id = id;
         }

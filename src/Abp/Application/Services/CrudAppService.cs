@@ -68,7 +68,8 @@ namespace Abp.Application.Services
     }
 
     public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>, ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
+       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>,
+        ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
        where TEntity : class, IEntity<TPrimaryKey>
        where TEntityDto : IEntityDto<TPrimaryKey>
        where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -80,7 +81,7 @@ namespace Abp.Application.Services
 
         }
 
-        public virtual TEntityDto Get(IdInput<TPrimaryKey> input)
+        public virtual TEntityDto Get(IEntityDto<TPrimaryKey> input)
         {
             var entity = GetEntityById(input.Id);
             return MapToEntityDto(entity);

@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
 using Abp.Linq;
-using Abp.Linq.Extensions;
 
 namespace Abp.Application.Services
 {
@@ -77,7 +73,8 @@ namespace Abp.Application.Services
     }
 
     public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>, IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
+       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>,
+        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
        where TSelectRequestInput : IPagedAndSortedResultRequest
        where TEntity : class, IEntity<TPrimaryKey>
        where TEntityDto : IEntityDto<TPrimaryKey>
@@ -92,7 +89,7 @@ namespace Abp.Application.Services
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
-        public virtual async Task<TEntityDto> Get(IdInput<TPrimaryKey> input)
+        public virtual async Task<TEntityDto> Get(IEntityDto<TPrimaryKey> input)
         {
             var entity = await GetEntityByIdAsync(input.Id);
             return MapToEntityDto(entity);

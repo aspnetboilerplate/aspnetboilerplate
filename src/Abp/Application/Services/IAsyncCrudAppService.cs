@@ -50,7 +50,7 @@ namespace Abp.Application.Services
         where TUpdateInput : IEntityDto<TPrimaryKey>
         where TDeleteInput : IEntityDto<TPrimaryKey>
     {
-        Task<TEntityDto> Get(IdInput<TPrimaryKey> input);
+        Task<TEntityDto> Get(IEntityDto<TPrimaryKey> input);
 
         Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input);
 

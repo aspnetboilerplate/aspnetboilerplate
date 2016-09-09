@@ -18,7 +18,7 @@
 	ideally layered application, presentation layer never directly works with 
 	domain objects.</p>
 			<h3 id="DocIApplicationServiceInterface">
-    IApplicationService interface</h3>
+    IApplicationService Interface</h3>
 			<p>
     In ASP.NET Boilerplate, an application service <strong>should</strong> implement 
 				<strong>IApplicationService</strong> interface. It's good to create an 
@@ -82,7 +82,7 @@
 					<a href="/Pages/Documents/Validating-Data-Transfer-Objects">validation</a> 
 	documents for details.</li>
 			</ul>
-			<h4 id="DocAppServiceClass">ApplicationService class</h4>
+			<h3 id="DocAppServiceClass">ApplicationService Class</h3>
 			<p>An application service should implement IApplicationService interface 
 			as declared above. Also,
 				<strong>optionally</strong>, can be derived from <strong>ApplicationService</strong> 
@@ -115,7 +115,17 @@ constructor. Thus, you do not repeat it for all service classes. See
 				<a href="/Pages/Documents/Logging">logging</a> and
 				<a href="/Pages/Documents/Localization">localization</a> documents for more 
 informations on this topics.</p>
-			<h3 id="DocUsingUow">Unit of work</h3>
+			<h3>CrudAppService Class</h3>
+			<p>If you want to create an application service that will have
+			<strong>Create, Update, Delete, Get, GetAll</strong> methods for an 
+			entity, you can inherit from <strong>CrudAppService</strong> (or
+			<strong>AsyncCrudAppService</strong> if you want to create async 
+			methods) class to create it easier. CrudAppService base class is
+			<strong>generic </strong>which gets related <strong>Entity </strong>
+			and <strong>DTO </strong>types as generic arguments and is <strong>
+			extensible</strong> which allows you to override functionality when 
+			you need.</p>
+			<h3 id="DocUsingUow">Unit of Work</h3>
 			<p>An application service method is a <strong>
 					<a href="/Pages/Documents/Unit-Of-Work">unit of work</a>
 				</strong> by default in 
@@ -124,7 +134,7 @@ ASP.NET Boilerplate. Thus, any application service method is transactional and
 			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> documentation 
 for more.</p>
 
-			<h3 id="DocAppServiceLifecycle">Lifetime of an application service</h3>
+			<h3 id="DocAppServiceLifecycle">Lifetime of an Application Service</h3>
 			<p>All application service instances are <strong>Transient</strong>. It means, they are 
 instantiated per usage. See
 				<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> 

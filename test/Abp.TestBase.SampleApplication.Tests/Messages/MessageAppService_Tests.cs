@@ -113,7 +113,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         {
             //Act
 
-            var message = _messageAppService.Get(new IdInput(2));
+            var message = _messageAppService.Get(new EntityDto(2));
 
             //Assert
 
@@ -154,7 +154,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
 
             //Act
 
-            var message = _messageAppService.Get(new IdInput(2));
+            var message = _messageAppService.Get(new EntityDto(2));
             message.Text = "tenant-1-message-2-updated";
             var updatedMessage = _messageAppService.Update(message);
 
