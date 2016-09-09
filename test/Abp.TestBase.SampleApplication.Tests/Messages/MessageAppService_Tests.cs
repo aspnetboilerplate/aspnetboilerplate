@@ -11,12 +11,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
     public class MessageAppService_Tests : SampleApplicationTestBase
     {
         private readonly MessageAppService _messageAppService;
-        private readonly AsyncMessageAppService _asyncMessageAppService;
+        private readonly IAsyncMessageAppService _asyncMessageAppService;
 
         public MessageAppService_Tests()
         {
             _messageAppService = Resolve<MessageAppService>();
-            _asyncMessageAppService = Resolve<AsyncMessageAppService>();
+            _asyncMessageAppService = Resolve<IAsyncMessageAppService>();
         }
 
         protected override void CreateInitialData()
