@@ -18,7 +18,6 @@ namespace Abp.Application.Services
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput>
         : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TEntityDto, TEntityDto>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
 
@@ -26,7 +25,6 @@ namespace Abp.Application.Services
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput>
         : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TCreateInput>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TCreateInput : IEntityDto<TPrimaryKey>
     {
@@ -35,7 +33,6 @@ namespace Abp.Application.Services
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput>
         : ICrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
-        where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
@@ -44,7 +41,6 @@ namespace Abp.Application.Services
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TSelectRequestInput, in TCreateInput, in TUpdateInput, in TDeleteInput>
         : IApplicationService
-        where TSelectRequestInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
         where TDeleteInput : IEntityDto<TPrimaryKey>

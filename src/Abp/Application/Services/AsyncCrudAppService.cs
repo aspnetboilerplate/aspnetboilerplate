@@ -77,97 +77,72 @@ namespace Abp.Application.Services
     }
 
     public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
-       : ApplicationService, IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
+       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput>, IAsyncCrudAppService<TEntityDto, TPrimaryKey, TSelectRequestInput, TCreateInput, TUpdateInput, TDeleteInput>
        where TSelectRequestInput : IPagedAndSortedResultRequest
        where TEntity : class, IEntity<TPrimaryKey>
        where TEntityDto : IEntityDto<TPrimaryKey>
        where TUpdateInput : IEntityDto<TPrimaryKey>
-        where TDeleteInput : IEntityDto<TPrimaryKey>
+       where TDeleteInput : IEntityDto<TPrimaryKey>
     {
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        protected readonly IRepository<TEntity, TPrimaryKey> Repository;
-
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+            :base(repository)
         {
-            Repository = repository;
-
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         public virtual async Task<TEntityDto> Get(IdInput<TPrimaryKey> input)
         {
             var entity = await GetEntityByIdAsync(input.Id);
-            return ObjectMapper.Map<TEntityDto>(entity);
+            return MapToEntityDto(entity);
         }
 
         public virtual async Task<PagedResultOutput<TEntityDto>> GetAll(TSelectRequestInput input)
         {
-            var query = CreateQueryable(input);
+            var query = CreateFilteredQuery(input);
 
             var totalCount = await AsyncQueryableExecuter.CountAsync(query);
 
             query = ApplySorting(query, input);
             query = ApplyPaging(query, input);
 
-            var items = await AsyncQueryableExecuter.ToListAsync(query);
+            var entities = await AsyncQueryableExecuter.ToListAsync(query);
 
             return new PagedResultOutput<TEntityDto>(
                 totalCount,
-                ObjectMapper.Map<List<TEntityDto>>(items)
+                MapToEntityDtoList(entities)
             );
         }
 
         public virtual async Task<TEntityDto> Create(TCreateInput input)
         {
-            var entity = ObjectMapper.Map<TEntity>(input);
+            var entity = MapToEntity(input);
 
             await Repository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            return ObjectMapper.Map<TEntityDto>(entity);
+            return MapToEntityDto(entity);
         }
 
         public virtual async Task<TEntityDto> Update(TUpdateInput input)
         {
             var entity = await GetEntityByIdAsync(input.Id);
 
-            ObjectMapper.Map(input, entity);
+            MapToEntity(input, entity);
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            return ObjectMapper.Map<TEntityDto>(entity);
+            return MapToEntityDto(entity);
         }
 
         public virtual Task Delete(TDeleteInput input)
         {
             return Repository.DeleteAsync(input.Id);
         }
-        
-        protected virtual IQueryable<TEntity> ApplySorting(IQueryable<TEntity> query, TSelectRequestInput input)
-        {
-            if (!input.Sorting.IsNullOrWhiteSpace())
-            {
-                return query.OrderBy(input.Sorting);
-            }
-            else
-            {
-                return query.OrderByDescending(e => e.Id);
-            }
-        }
-
-        protected virtual IQueryable<TEntity> ApplyPaging(IQueryable<TEntity> query, TSelectRequestInput input)
-        {
-            return query.PageBy(input);
-        }
 
         protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
         {
             return Repository.GetAsync(id);
-        }
-
-        protected virtual IQueryable<TEntity> CreateQueryable(TSelectRequestInput input)
-        {
-            return Repository.GetAll();
         }
     }
 }

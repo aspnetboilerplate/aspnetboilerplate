@@ -59,7 +59,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
             //Act
 
             var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput { Text = "message-1" });
-            
+
             //Assert
 
             messages.TotalCount.ShouldBe(1);
@@ -67,6 +67,33 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
             messages.Items[0].Text.ShouldBe("tenant-1-message-1");
         }
 
+        [Fact]
+        public void Should_Get_All_Messages_With_Paging()
+        {
+            //Act
+
+            var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput { MaxResultCount = 1 });
+
+            //Assert
+
+            messages.TotalCount.ShouldBe(2);
+            messages.Items.Count.ShouldBe(1);
+            messages.Items[0].Text.ShouldBe("tenant-1-message-2");
+        }
+
+        [Fact]
+        public void Should_Get_All_Messages_With_Paging_And_Sorting()
+        {
+            //Act
+
+            var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput { MaxResultCount = 1, Sorting = "Text" });
+
+            //Assert
+
+            messages.TotalCount.ShouldBe(2);
+            messages.Items.Count.ShouldBe(1);
+            messages.Items[0].Text.ShouldBe("tenant-1-message-1");
+        }
 
         [Fact]
         public async Task Should_Get_All_Messages_With_Filtering_Async()

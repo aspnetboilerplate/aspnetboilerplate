@@ -14,9 +14,9 @@ namespace Abp.TestBase.SampleApplication.Messages
 
         }
 
-        protected override IQueryable<Message> CreateQueryable(GetMessagesWithFilterInput input)
+        protected override IQueryable<Message> CreateFilteredQuery(GetMessagesWithFilterInput input)
         {
-            return base.CreateQueryable(input)
+            return base.CreateFilteredQuery(input)
                 .WhereIf(!input.Text.IsNullOrWhiteSpace(), m => m.Text.Contains(input.Text));
         }
     }
