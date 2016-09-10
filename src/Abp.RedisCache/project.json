@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.11.3.0-*",
+  "version": "0.12.0.0-*",
 
   "dependencies": {
-    "Abp": "0.11.3.0-*",
+    "Abp": "0.12.0.0-*",
     "StackExchange.Redis": "1.1.603"
   },
 
