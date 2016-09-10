@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 
@@ -15,11 +17,11 @@ namespace Abp.WebApi.Controllers
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
-        private readonly IAbpWebApiConfiguration _webApiConfiguration;
+        private readonly IAbpWebApiConfiguration _configuration;
 
-        public ResultWrapperHandler(IAbpWebApiConfiguration webApiConfiguration)
+        public ResultWrapperHandler(IAbpWebApiConfiguration configuration)
         {
-            _webApiConfiguration = webApiConfiguration;
+            _configuration = configuration;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -40,7 +42,7 @@ namespace Abp.WebApi.Controllers
                 return;
             }
 
-            if (_webApiConfiguration.SetNoCacheForAllResponses)
+            if (_configuration.SetNoCacheForAllResponses)
             {
                 //Based on http://stackoverflow.com/questions/49547/making-sure-a-web-page-is-not-cached-across-all-browsers
                 response.Headers.CacheControl = new CacheControlHeaderValue
@@ -53,9 +55,14 @@ namespace Abp.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? _webApiConfiguration.DefaultWrapResultAttribute;
+                           ?? _configuration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
+            {
+                return;
+            }
+
+            if (IsIgnoredUrl(request.RequestUri))
             {
                 return;
             }
@@ -66,7 +73,7 @@ namespace Abp.WebApi.Controllers
                 response.StatusCode = HttpStatusCode.OK;
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
-                    _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                    _configuration.HttpConfiguration.Formatters.JsonFormatter
                     );
                 return;
             }
@@ -78,8 +85,18 @@ namespace Abp.WebApi.Controllers
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
-                _webApiConfiguration.HttpConfiguration.Formatters.JsonFormatter
+                _configuration.HttpConfiguration.Formatters.JsonFormatter
                 );
+        }
+
+        private bool IsIgnoredUrl(Uri uri)
+        {
+            if (uri == null || uri.AbsolutePath.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            return _configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }
     }
 }

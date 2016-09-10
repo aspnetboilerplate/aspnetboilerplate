@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Web.Http;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
@@ -11,6 +12,8 @@ namespace Abp.WebApi.Configuration
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
 
         public WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; }
+
+        public List<string> ResultWrappingIgnoreUrls { get; }
 
         public HttpConfiguration HttpConfiguration { get; set; }
 
@@ -26,6 +29,7 @@ namespace Abp.WebApi.Configuration
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             DefaultWrapResultAttribute = new WrapResultAttribute(false);
             DefaultDynamicApiWrapResultAttribute = new WrapResultAttribute();
+            ResultWrappingIgnoreUrls = new List<string>();
             IsValidationEnabledForControllers = true;
             IsAutomaticAntiForgeryValidationEnabled = true;
             SetNoCacheForAllResponses = true;

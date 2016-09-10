@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 
@@ -23,6 +24,11 @@ namespace Abp.WebApi.Configuration
         /// Default WrapResultAttribute for all dynamic web api actions.
         /// </summary>
         WrapResultAttribute DefaultDynamicApiWrapResultAttribute { get; }
+
+        /// <summary>
+        /// List of URLs to ignore on result wrapping.
+        /// </summary>
+        List<string> ResultWrappingIgnoreUrls { get; }
 
         /// <summary>
         /// Gets/sets <see cref="HttpConfiguration"/>.

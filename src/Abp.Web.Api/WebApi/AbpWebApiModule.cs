@@ -24,7 +24,6 @@ using Abp.WebApi.Auditing;
 using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers.Dynamic.Binders;
 using Abp.WebApi.ExceptionHandling;
-using Abp.WebApi.Security;
 using Abp.WebApi.Security.AntiForgery;
 using Abp.WebApi.Uow;
 using Abp.WebApi.Validation;
@@ -44,6 +43,8 @@ namespace Abp.WebApi
             IocManager.Register<IAbpWebApiConfiguration, AbpWebApiConfiguration>();
 
             Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
+
+            Configuration.Modules.AbpWebApi().ResultWrappingIgnoreUrls.Add("/swagger");
         }
 
         /// <inheritdoc/>

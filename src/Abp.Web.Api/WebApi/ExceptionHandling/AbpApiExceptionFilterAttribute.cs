@@ -1,9 +1,12 @@
+using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
+using Abp.Extensions;
 using Abp.Logging;
 using Abp.Runtime.Session;
 using Abp.Web.Models;
@@ -58,17 +61,24 @@ namespace Abp.WebApi.ExceptionHandling
                 LogHelper.LogException(Logger, context.Exception);
             }
 
-            if (wrapResultAttribute.WrapOnError)
+            if (!wrapResultAttribute.WrapOnError)
             {
-                context.Response = context.Request.CreateResponse(
-                    GetStatusCode(context),
-                    new AjaxResponse(
-                        SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
-                        context.Exception is Abp.Authorization.AbpAuthorizationException)
-                    );
-
-                EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+                return;
             }
+
+            if (IsIgnoredUrl(context.Request.RequestUri))
+            {
+                return;
+            }
+
+            context.Response = context.Request.CreateResponse(
+                GetStatusCode(context),
+                new AjaxResponse(
+                    SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
+                    context.Exception is Abp.Authorization.AbpAuthorizationException)
+            );
+
+            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
         private HttpStatusCode GetStatusCode(HttpActionExecutedContext context)
@@ -81,6 +91,16 @@ namespace Abp.WebApi.ExceptionHandling
             }
 
             return HttpStatusCode.InternalServerError;
+        }
+
+        private bool IsIgnoredUrl(Uri uri)
+        {
+            if (uri == null || uri.AbsolutePath.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            return _configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }
     }
 }
