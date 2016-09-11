@@ -1,5 +1,5 @@
 {
-  "version": "0.12.0.0-*",
+  "version": "0.12.0.1-*",
 
   "dependencies": {
     "Abp.Web.Common": "0.12.0.0-*",
