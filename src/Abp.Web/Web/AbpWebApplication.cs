@@ -66,6 +66,11 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
+            SetCurrentCulture();
+        }
+
+        protected virtual void SetCurrentCulture()
+        {
             var langCookie = Request.Cookies["Abp.Localization.CultureName"];
             if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
             {
@@ -74,10 +79,7 @@ namespace Abp.Web
             }
             else if (!Request.UserLanguages.IsNullOrEmpty())
             {
-                var firstValidLanguage = Request
-                    .UserLanguages
-                    .FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
-
+                var firstValidLanguage = Request?.UserLanguages?.FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
                 if (firstValidLanguage != null)
                 {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo(firstValidLanguage);
