@@ -190,7 +190,7 @@ public class TaskDto : EntityDto, IHasCreationTime
 			implementation and should not be included in public interface. Now, 
 			we can implement ITaskAppService interface for the TaskAppService 
 			class:</p>
-			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;, <strong>IAsyncCrudAppService</strong>
+			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;, <strong>ITaskAppService</strong>
 {
     public TaskAppService(IRepository&lt;Task&gt; repository) 
         : base(repository)
