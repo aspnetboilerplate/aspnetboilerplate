@@ -19,7 +19,6 @@ namespace Abp.Application.Services
 
     public interface IAsyncCrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput>
         : IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TEntityDto, TEntityDto>
-        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
 
@@ -27,7 +26,6 @@ namespace Abp.Application.Services
 
     public interface IAsyncCrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput>
         : IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TCreateInput>
-        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TCreateInput : IEntityDto<TPrimaryKey>
     {
@@ -36,7 +34,6 @@ namespace Abp.Application.Services
 
     public interface IAsyncCrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput>
         : IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
-        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
@@ -45,7 +42,6 @@ namespace Abp.Application.Services
 
     public interface IAsyncCrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput, in TDeleteInput>
         : IApplicationService
-        where TGetAllInput : IPagedAndSortedResultRequest
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
         where TDeleteInput : IEntityDto<TPrimaryKey>
