@@ -181,13 +181,23 @@ public class TaskDto : EntityDto, IHasCreationTime
 			now have simple CRUD methods. If you want to define an interface for 
 			the application service, you can create your interface as shown 
 			below:</p>
-			<pre lang="cs">public interface ITaskCrudAppService : <strong>IAsyncCrudAppService&lt;TaskDto&gt;</strong>
+			<pre lang="cs">public interface ITaskAppService : <strong>IAsyncCrudAppService&lt;TaskDto&gt;</strong>
 {
         
 }</pre>
 			<p>Notice that <strong>IAsyncCrudAppService</strong> does not get 
 			the entity (Task) as generic argument. Because, entity is related to 
-			implementation and should not be included in public interface.</p>
+			implementation and should not be included in public interface. Now, 
+			we can implement ITaskAppService interface for the TaskAppService 
+			class:</p>
+			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;, <strong>IAsyncCrudAppService</strong>
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository) 
+        : base(repository)
+    {
+
+    }
+}</pre>
 			<h4>Customize CRUD Application Services</h4>
 			<h5>Getting List</h5>
 			<p>Crud application service gets <strong>
@@ -263,9 +273,9 @@ public class UpdateTaskInput : <strong>CreateTaskInput</strong>, <strong>IEntity
 			which is not in CreateTaskInput.</p>
 			<p>Now, we can use these DTO classes as generic arguments for 
 			AsyncCrudAppService class, as shown below:</p>
-			<pre lang="cs">public class TaskCrudAppService : AsyncCrudAppService&lt;Task, TaskDto, int, GetAllTasksInput<strong>, CreateTaskInput, UpdateTaskInput</strong>&gt;
+			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto, int, GetAllTasksInput<strong>, CreateTaskInput, UpdateTaskInput</strong>&gt;
 {
-    public TaskCrudAppService(IRepository&lt;Task&gt; repository)
+    public TaskAppService(IRepository&lt;Task&gt; repository)
         : base(repository)
     {
 
