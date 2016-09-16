@@ -1,19 +1,36 @@
-﻿namespace Abp.Auditing
+﻿using Abp.Dependency;
+using Abp.Extensions;
+
+namespace Abp.Auditing
 {
     /// <summary>
-    /// Null implementation of <see cref="IAuditInfoProvider"/>.
+    /// Default implementation of <see cref="IAuditInfoProvider" />.
     /// </summary>
-    internal class NullAuditInfoProvider : IAuditInfoProvider
+    public class DefaultAuditInfoProvider : IAuditInfoProvider, ITransientDependency
     {
-        /// <summary>
-        /// Singleton instance.
-        /// </summary>
-        public static NullAuditInfoProvider Instance { get { return SingletonInstance; } }
-        private static readonly NullAuditInfoProvider SingletonInstance = new NullAuditInfoProvider();
+        public IClientInfoProvider ClientInfoProvider { get; set; }
+
+        public DefaultAuditInfoProvider()
+        {
+            ClientInfoProvider = NullClientInfoProvider.Instance;
+        }
 
         public void Fill(AuditInfo auditInfo)
         {
-            
+            if (auditInfo.ClientIpAddress.IsNullOrEmpty())
+            {
+                auditInfo.ClientIpAddress = ClientInfoProvider.ClientIpAddress;
+            }
+
+            if (auditInfo.BrowserInfo.IsNullOrEmpty())
+            {
+                auditInfo.BrowserInfo = ClientInfoProvider.BrowserInfo;
+            }
+
+            if (auditInfo.ClientName.IsNullOrEmpty())
+            {
+                auditInfo.ClientName = ClientInfoProvider.ComputerName;
+            }
         }
     }
 }
