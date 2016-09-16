@@ -54,6 +54,29 @@ type as Id, you should explicitly declare it as shown below:</p>
 			<p>Entity class overrides <strong>equality</strong> operator (==) to easily 
 check if two entities are equal (their Id is equal). It also defines the <strong>
 IsTransient()</strong> method to check if it has an Id or not.</p>
+			<h3>AggregateRoot Class</h3>
+			<p>"<em>Aggregate is a pattern in Domain-Driven Design. A DDD 
+			aggregate is a cluster of domain objects that can be treated as a 
+			single unit. An example may be an order and its line-items, these 
+			will be separate objects, but it's useful to treat the order 
+			(together with its line items) as a single aggregate.</em>" (Martin 
+			Fowler - see
+			<a href="http://martinfowler.com/bliki/DDD_Aggregate.html" target="_blank">
+			full description</a>)</p>
+			<p>While ABP does not enforce you to use aggregates, you may want to 
+			create aggregates and aggregate roots in your application. ABP 
+			defines <strong>AggregateRoot</strong> class that extends Entity to 
+			create aggregate root entities for an aggregate.</p>
+			<h4>Domain Events</h4>
+			<p>AggregateRoot defines <a href="EventBus-Domain-Events.html">
+			<strong>DomainEvents</strong></a> collection to generate domain 
+			events by the aggregate root class. These events are automatically 
+			triggered just before the current <a href="Unit-Of-Work.html">unit 
+			of work</a> is completed. Actually, any entity can generate domain 
+			events by implementing <strong>IGeneratesDomainEvents</strong> 
+			interface, but it's common (best practice) to generate domain events 
+			in aggregate roots. That's why it's default for AggregateRoot but 
+			not for Entity class.</p>
 			<h3 id="DocConventionalInterfaces">Conventional Interfaces</h3>
 			<p>In many application, similar entity properties (and database table fields) 
 are used like CreationTime indicates that when this entity is created. ASP.NET 
