@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.Modules;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;

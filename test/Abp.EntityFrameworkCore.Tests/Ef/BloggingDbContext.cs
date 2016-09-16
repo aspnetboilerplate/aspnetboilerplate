@@ -1,7 +1,7 @@
 ﻿using Abp.EntityFrameworkCore.Tests.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFrameworkCore.Tests
+namespace Abp.EntityFrameworkCore.Tests.Ef
 {
     public class BloggingDbContext : AbpDbContext
     {
