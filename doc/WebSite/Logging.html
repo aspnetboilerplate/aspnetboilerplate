@@ -190,6 +190,8 @@ So, you can easily change to another library without changing your logging code.
         base.Application_Start(sender, e);
     }
 }</pre>
+			<p>The only difference is that we used "<strong>UseAbpLog4Net()</strong>" 
+			method (defined in Abp.Castle.Logging.Log4Net namespace) instead of 
 			"UseLog4Net()". When we use Abp.Castle.Log4Net package, it's <strong>
 			not needed</strong> to use
 			<a href="https://www.nuget.org/packages/Castle.Windsor-log4net" target="_blank">
