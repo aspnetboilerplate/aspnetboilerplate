@@ -172,9 +172,33 @@ log4net.config file:</p>
 Also, only the web project depends on log4net library's
 				<a href="https://www.nuget.org/packages/log4net/" target="_blank">nuget package</a>. 
 So, you can easily change to another library without changing your logging code.</p>
+			<h4>Abp.Castle.Log4Net Package</h4>
+			<p>ABP uses Castle Logging Facility for logging and it does not 
+			directly depend on log4net, as declared above. But there is a 
+			problem with Castle's Log4Net integration. It does not support the 
+			latest log4net. We created a nuget package,
+			<a href="http://nuget.org/packages/Abp.Castle.Log4Net" target="_blank">
+			<strong>Abp.Castle.Log4Net</strong></a>, to solve this issue. After adding this 
+			package to our solution, all we should do is to change the code in 
+			application start like that:</p>
+
+			<pre lang="cs">public class MvcApplication : AbpWebApplication
+{
+    protected override void Application_Start(object sender, EventArgs e)
+    {
+        IocManager.Instance.IocContainer.AddFacility&lt;LoggingFacility&gt;(f =&gt; f.<strong>UseAbpLog4Net()</strong>.WithConfig(&quot;log4net.config&quot;));
+        base.Application_Start(sender, e);
+    }
+}</pre>
+			"UseLog4Net()". When we use Abp.Castle.Log4Net package, it's <strong>
+			not needed</strong> to use
+			<a href="https://www.nuget.org/packages/Castle.Windsor-log4net" target="_blank">
+			Castle.Windsor-log4net</a> and
+			<a href="https://www.nuget.org/packages/Castle.Core-log4net/" target="_blank">
+			Castle.Core-log4net</a> packages.</p>
 
 			<h3 id="DocClient">Client Side</h3>
-			<p>ASP.NET Boilerplate defines a javascript logging API for client side. It logs 
+			<p>ASP.NET Boilerplate defines a simple javascript logging API for client side. It logs 
 to browser's console as default. Sample javascript code to write logs:</p>
 			<pre lang="js">abp.log.warn('a sample log message...');</pre>
 			<p>For more information, see <a href="/Pages/Documents/Javascript-API/Logging">
