@@ -15,12 +15,10 @@ namespace Abp.WebApi.Auditing
     {
         public bool AllowMultiple => false;
 
-        private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IAuditingHelper _auditingHelper;
 
-        public AbpApiAuditFilter(IAuditingConfiguration auditingConfiguration, IAuditingHelper auditingHelper)
+        public AbpApiAuditFilter(IAuditingHelper auditingHelper)
         {
-            _auditingConfiguration = auditingConfiguration;
             _auditingHelper = auditingHelper;
         }
 
@@ -58,11 +56,6 @@ namespace Abp.WebApi.Auditing
 
         private bool ShouldSaveAudit(HttpActionContext context)
         {
-            if (!_auditingConfiguration.IsEnabled)
-            {
-                return false;
-            }
-
             if (context.ActionDescriptor.IsDynamicAbpAction())
             {
                 return false;

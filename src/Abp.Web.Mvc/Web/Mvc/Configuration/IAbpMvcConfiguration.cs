@@ -24,5 +24,17 @@ namespace Abp.Web.Mvc.Configuration
         /// Default: true.
         /// </summary>
         bool IsAutomaticAntiForgeryValidationEnabled { get; set; }
+
+        /// <summary>
+        /// Used to enable/disable auditing for MVC controllers.
+        /// Default: true.
+        /// </summary>
+        bool IsAuditingEnabled { get; set; }
+
+        /// <summary>
+        /// Used to enable/disable auditing for child MVC actions.
+        /// Default: false.
+        /// </summary>
+        bool IsAuditingEnabledForChildActions { get; set; }
     }
 }

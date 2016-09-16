@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Abp.Aspects;
+using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
 using Abp.Dependency;
@@ -11,12 +12,12 @@ namespace Abp.AspNetCore.Mvc.Auditing
 {
     public class AbpAuditActionFilter : IAsyncActionFilter, ITransientDependency
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
+        private readonly IAbpAspNetCoreConfiguration _configuration;
         private readonly IAuditingHelper _auditingHelper;
 
-        public AbpAuditActionFilter(IAuditingConfiguration auditingConfiguration, IAuditingHelper auditingHelper)
+        public AbpAuditActionFilter(IAbpAspNetCoreConfiguration configuration, IAuditingHelper auditingHelper)
         {
-            _auditingConfiguration = auditingConfiguration;
+            _configuration = configuration;
             _auditingHelper = auditingHelper;
         }
 
@@ -61,12 +62,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         private bool ShouldSaveAudit(ActionExecutingContext actionContext)
         {
-            if (!_auditingConfiguration.IsEnabled || !_auditingConfiguration.MvcControllers.IsEnabled)
-            {
-                return false;
-            }
-
-            return _auditingHelper.ShouldSaveAudit(actionContext.ActionDescriptor.GetMethodInfo(), true);
+            return _configuration.IsAuditingEnabled &&
+                   _auditingHelper.ShouldSaveAudit(actionContext.ActionDescriptor.GetMethodInfo(), true);
         }
     }
 }

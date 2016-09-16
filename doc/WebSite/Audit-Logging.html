@@ -74,16 +74,6 @@ disable it as shown below.</p>
 	audit logs are saved also for users those are not logged in to the system. 
 	Default: <strong>false</strong>.</li>
 				<li>
-					<strong>MvcControllers</strong>: Used to configure auditing for ASP.NET MVC Controllers.<ul>
-						<li>
-							<strong>IsEnabled</strong>: Used to enable/disable auditing for MVC controllers. 
-		Default: <strong>true</strong>.</li>
-						<li>
-							<strong>IsEnabledForChildActions</strong>: Used to enable/disable auditing for child MVC actions. 
-		Default: <strong>false</strong>.</li>
-					</ul>
-				</li>
-				<li>
 					<strong>Selectors</strong>: Used to select other classes to save audit logs.</li>
 			</ul>
 			<p>
@@ -101,6 +91,9 @@ predicate</strong>. The only <strong>default</strong> selector in this list is u
 can remove the selector above by name if you don't like to save audit logs for 
 application services. That's why it has a unique name (Use simple LINQ to find 
 the selector in Selectors and remove it if you want).</p>
+			<p>Note: In addition to standard audit configuration, MVC and 
+			ASP.NET Core modules define configuration to enable/disable audit 
+			logging for actions.</p>
 
 			<h3 id="DocEnableDisableByAttrs">Enable/Disable by attributes</h3>
 			<p>While you can select auditing classes by configuration, you can use <strong>

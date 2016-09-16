@@ -9,8 +9,6 @@ namespace Abp.Auditing
 
         public bool IsEnabledForAnonymousUsers { get; set; }
 
-        public IMvcControllersAuditingConfiguration MvcControllers { get; } //TODO: Move to it's own package
-
         public IAuditingSelectorList Selectors { get; }
 
         public List<Type> IgnoredTypes { get; }
@@ -19,7 +17,6 @@ namespace Abp.Auditing
         {
             IsEnabled = true;
             Selectors = new AuditingSelectorList();
-            MvcControllers = new MvcControllersAuditingConfiguration();
             IgnoredTypes = new List<Type>();
         }
     }

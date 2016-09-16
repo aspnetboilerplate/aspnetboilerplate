@@ -13,6 +13,8 @@ namespace Abp.AspNetCore.Configuration
 
         public bool IsValidationEnabledForControllers { get; set; }
 
+        public bool IsAuditingEnabled { get; set; }
+
         public bool SetNoCacheForAjaxResponses { get; set; }
 
         public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
@@ -24,6 +26,7 @@ namespace Abp.AspNetCore.Configuration
             ServiceControllerSettings = new List<AbpServiceControllerSetting>();
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;
+            IsAuditingEnabled = true;
         }
 
         public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)

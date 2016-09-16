@@ -16,6 +16,12 @@ namespace Abp.AspNetCore.Configuration
         bool IsValidationEnabledForControllers { get; set; }
 
         /// <summary>
+        /// Used to enable/disable auditing for MVC controllers.
+        /// Default: true.
+        /// </summary>
+        bool IsAuditingEnabled { get; set; }
+
+        /// <summary>
         /// Default: true.
         /// </summary>
         bool SetNoCacheForAjaxResponses { get; set; }
