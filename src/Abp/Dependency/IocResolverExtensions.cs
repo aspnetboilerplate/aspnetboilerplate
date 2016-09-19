@@ -93,9 +93,25 @@ namespace Abp.Dependency
         /// <param name="action">An action that can use the resolved object</param>
         public static void Using<T>(this IIocResolver iocResolver, Action<T> action)
         {
-            using (var wrapper = new DisposableDependencyObjectWrapper<T>(iocResolver, iocResolver.Resolve<T>()))
+            using (var wrapper = iocResolver.ResolveAsDisposable<T>())
             {
                 action(wrapper.Object);
+            }
+        }
+
+        /// <summary>
+        /// This method can be used to resolve and release an object automatically.
+        /// You can use the object in <see cref="func"/> and return a value.
+        /// </summary> 
+        /// <typeparam name="TService">Type of the service to use</typeparam>
+        /// <typeparam name="TReturn">Return type</typeparam>
+        /// <param name="iocResolver">IIocResolver object</param>
+        /// <param name="func">A function that can use the resolved object</param>
+        public static TReturn Using<TService, TReturn>(this IIocResolver iocResolver, Func<TService, TReturn> func)
+        {
+            using (var obj = iocResolver.ResolveAsDisposable<TService>())
+            {
+                return func(obj.Object);
             }
         }
 

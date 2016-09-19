@@ -18,7 +18,7 @@ namespace Abp
         /// <summary>
         /// Reference to the setting manager.
         /// </summary>
-        public ISettingManager SettingManager { protected get; set; }
+        public ISettingManager SettingManager { get; set; }
 
         /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
@@ -46,7 +46,7 @@ namespace Abp
         /// <summary>
         /// Reference to the localization manager.
         /// </summary>
-        public ILocalizationManager LocalizationManager { protected get; set; }
+        public ILocalizationManager LocalizationManager { get; set; }
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this application service.

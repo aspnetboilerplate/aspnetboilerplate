@@ -10,8 +10,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static NullPermissionChecker Instance { get { return SingletonInstance; } }
-        private static readonly NullPermissionChecker SingletonInstance = new NullPermissionChecker();
+        public static NullPermissionChecker Instance { get; } = new NullPermissionChecker();
 
         public Task<bool> IsGrantedAsync(string permissionName)
         {
@@ -32,11 +31,6 @@ namespace Abp.Authorization
         public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
             return Task.FromResult(true);
-        }
-
-        public NullPermissionChecker()
-        {
-
         }
     }
 }
