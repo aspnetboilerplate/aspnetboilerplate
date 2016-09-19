@@ -57,5 +57,15 @@ namespace Abp.Reflection
                    type == typeof (TimeSpan) ||
                    type == typeof (Guid);
         }
+
+        public static bool IsFormBodyProhibited(Type type)
+        {
+            if (type.ToString() == "Microsoft.AspNetCore.Http.IFormFile")
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
