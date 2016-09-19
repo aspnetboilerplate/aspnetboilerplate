@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Runtime.Session;
@@ -35,14 +36,24 @@ namespace Abp.AspNetCore
 
         public override void PostInitialize()
         {
+            AddApplicationParts();
+            ConfigureAntiforgery();
+        }
+
+        private void AddApplicationParts()
+        {
             var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
             var partManager = IocManager.Resolve<ApplicationPartManager>();
 
-            foreach (var controllerSetting in configuration.ServiceControllerSettings)
+            var assemblies = configuration.ServiceControllerSettings.Select(s => s.Assembly).Distinct();
+            foreach (var assembly in assemblies)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(controllerSetting.Assembly));
+                partManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
+        }
 
+        private void ConfigureAntiforgery()
+        {
             IocManager.Using<IOptions<AntiforgeryOptions>>(optionsAccessor =>
             {
                 optionsAccessor.Value.HeaderName = Configuration.Modules.AbpWebCommon().AntiForgery.TokenHeaderName;

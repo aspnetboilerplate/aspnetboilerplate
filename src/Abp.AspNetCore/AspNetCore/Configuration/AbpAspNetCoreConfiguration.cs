@@ -29,7 +29,10 @@ namespace Abp.AspNetCore.Configuration
             IsAuditingEnabled = true;
         }
 
-        public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)
+        public void CreateControllersForAppServices(
+            Assembly assembly, 
+            string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, 
+            bool useConventionalHttpVerbs = true)
         {
             ServiceControllerSettings.Add(new AbpServiceControllerSetting(moduleName, assembly, useConventionalHttpVerbs));
         }
