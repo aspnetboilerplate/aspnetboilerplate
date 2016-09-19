@@ -7,7 +7,6 @@ using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;
 using Abp.Reflection;
-using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFrameworkCore
@@ -18,14 +17,11 @@ namespace Abp.EntityFrameworkCore
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkCoreModule : AbpModule
     {
-        public ILogger Logger { get; set; }
-
         private readonly ITypeFinder _typeFinder;
 
         public AbpEntityFrameworkCoreModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
-            Logger = NullLogger.Instance;
         }
 
         public override void PreInitialize()

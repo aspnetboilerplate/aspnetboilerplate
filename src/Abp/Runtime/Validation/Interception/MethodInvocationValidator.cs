@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
@@ -94,7 +95,7 @@ namespace Abp.Runtime.Validation.Interception
 
             foreach (var parameterValue in ParameterValues)
             {
-                NormalizeParameter(parameterValue);
+                (parameterValue as IShouldNormalize)?.Normalize();
             }
         }
 
@@ -156,10 +157,7 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            if (validatingObject is ICustomValidate)
-            {
-                (validatingObject as ICustomValidate).AddValidationErrors(ValidationErrors);
-            }
+            (validatingObject as ICustomValidate)?.AddValidationErrors(ValidationErrors);
 
             //Do not recursively validate for enumerable objects
             if (validatingObject is IEnumerable)
@@ -221,13 +219,11 @@ namespace Abp.Runtime.Validation.Interception
                     }
                 }
             }
-        }
 
-        protected virtual void NormalizeParameter(object parameterValue)
-        {
-            if (parameterValue is IShouldNormalize)
+            if (validatingObject is IValidatableObject)
             {
-                (parameterValue as IShouldNormalize).Normalize();
+                var results = (validatingObject as IValidatableObject).Validate(new ValidationContext(validatingObject));
+                ValidationErrors.AddRange(results);
             }
         }
     }
