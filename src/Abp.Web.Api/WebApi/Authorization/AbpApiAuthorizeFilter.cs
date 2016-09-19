@@ -7,7 +7,11 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.Logging;
+using Abp.Web;
+using Abp.Web.Models;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Validation;
 
 namespace Abp.WebApi.Authorization
@@ -17,10 +21,17 @@ namespace Abp.WebApi.Authorization
         public bool AllowMultiple => false;
 
         private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IAbpWebApiConfiguration _configuration;
+        private readonly ILocalizationManager _localizationManager;
 
-        public AbpApiAuthorizeFilter(IAuthorizationHelper authorizationHelper)
+        public AbpApiAuthorizeFilter(
+            IAuthorizationHelper authorizationHelper, 
+            IAbpWebApiConfiguration configuration,
+            ILocalizationManager localizationManager)
         {
             _authorizationHelper = authorizationHelper;
+            _configuration = configuration;
+            _localizationManager = localizationManager;
         }
 
         public virtual async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
@@ -53,11 +64,33 @@ namespace Abp.WebApi.Authorization
 
         protected virtual HttpResponseMessage CreateUnAuthorizedResponse(HttpActionContext actionContext)
         {
-            var response = new HttpResponseMessage(
-                actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false
-                    ? HttpStatusCode.Forbidden
-                    : HttpStatusCode.Unauthorized
-            );
+            HttpStatusCode statusCode;
+            ErrorInfo error;
+
+            if (actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false)
+            {
+                statusCode = HttpStatusCode.Forbidden;
+                error = new ErrorInfo(
+                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403"),
+                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
+                );
+            }
+            else
+            {
+                statusCode = HttpStatusCode.Unauthorized;
+                error = new ErrorInfo(
+                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401"),
+                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
+                );
+            }
+
+            var response = new HttpResponseMessage(statusCode)
+            {
+                Content = new ObjectContent<AjaxResponse>(
+                    new AjaxResponse(error, true),
+                    _configuration.HttpConfiguration.Formatters.JsonFormatter
+                )
+            };
 
             return response;
         }

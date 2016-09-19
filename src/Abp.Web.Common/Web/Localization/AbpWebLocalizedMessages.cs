@@ -10,8 +10,6 @@ namespace Abp.Web.Localization
     /// </summary>
     internal static class AbpWebLocalizedMessages
     {
-        public const string SourceName = "AbpWeb";
-
         public static string InternalServerError { get { return L("InternalServerError"); } }
 
         public static string ValidationError { get { return L("ValidationError"); } }
@@ -22,7 +20,7 @@ namespace Abp.Web.Localization
 
         static AbpWebLocalizedMessages()
         {
-            Source = LocalizationHelper.GetSource(SourceName);
+            Source = LocalizationHelper.GetSource(AbpWebConsts.LocalizaionSourceName);
         }
 
         private static string L(string name)

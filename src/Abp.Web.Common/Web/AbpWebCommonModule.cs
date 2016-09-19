@@ -28,7 +28,7 @@ namespace Abp.Web
 
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource(
-                    AbpWebLocalizedMessages.SourceName,
+                    AbpWebConsts.LocalizaionSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(), "Abp.Web.Common.Web.Localization.AbpWebXmlSource"
                         )));

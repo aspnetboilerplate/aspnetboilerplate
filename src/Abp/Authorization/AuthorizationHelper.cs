@@ -39,7 +39,9 @@ namespace Abp.Authorization
 
             if (!AbpSession.UserId.HasValue)
             {
-                throw new AbpAuthorizationException(LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication"));
+                throw new AbpAuthorizationException(
+                    LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication")
+                    );
             }
 
             foreach (var authorizeAttribute in authorizeAttributes)
