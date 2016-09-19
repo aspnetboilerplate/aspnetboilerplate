@@ -120,10 +120,10 @@ namespace Abp.AspNetCore.Mvc.Proxying
             var controllerType = apiDescription.ActionDescriptor.AsControllerActionDescriptor().ControllerTypeInfo.AsType();
             if (controllerType == null)
             {
-                return AbpServiceControllerSetting.DefaultServiceModuleName;
+                return AbpControllerAssemblySetting.DefaultServiceModuleName;
             }
 
-            foreach (var controllerSetting in _configuration.ServiceControllerSettings)
+            foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
             {
                 if (controllerType.Assembly == controllerSetting.Assembly)
                 {
@@ -131,7 +131,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
                 }
             }
 
-            return AbpServiceControllerSetting.DefaultServiceModuleName;
+            return AbpControllerAssemblySetting.DefaultServiceModuleName;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureArea(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
+        private void ConfigureArea(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             if (configuration == null)
             {
@@ -73,7 +73,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             controller.RouteValues["area"] = configuration.ModuleName;
         }
 
-        private void ConfigureRemoteService(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
+        private void ConfigureRemoteService(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             ConfigureApiExplorer(controller);
             ConfigureSelector(controller, configuration);
@@ -156,7 +156,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureSelector(ControllerModel controller, [CanBeNull] AbpServiceControllerSetting configuration)
+        private void ConfigureSelector(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             RemoveEmptySelectors(controller.Selectors);
 
@@ -173,7 +173,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpServiceControllerSetting configuration)
+        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             RemoveEmptySelectors(action.Selectors);
 
@@ -187,7 +187,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpServiceControllerSetting configuration)
+        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             var abpServiceSelectorModel = new SelectorModel
             {
@@ -221,20 +221,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
         private string GetModuleNameOrDefault(Type controllerType)
         {
             return GetControllerSettingOrNull(controllerType)?.ModuleName ??
-                   AbpServiceControllerSetting.DefaultServiceModuleName;
+                   AbpControllerAssemblySetting.DefaultServiceModuleName;
         }
 
-        private AbpServiceControllerSetting GetControllerSettingOrNull(Type controllerType)
+        private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
-            foreach (var controllerSetting in _configuration.Value.ServiceControllerSettings)
-            {
-                if (controllerSetting.Assembly == controllerType.Assembly)
-                {
-                    return controllerSetting;
-                }
-            }
-
-            return null;
+            return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
         }
 
         private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

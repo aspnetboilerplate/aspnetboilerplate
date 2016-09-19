@@ -1,8 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Abp.AspNetCore.Configuration
 {
-    public class AbpServiceControllerSetting
+    public class AbpControllerAssemblySetting
     {
         /// <summary>
         /// "app".
@@ -15,11 +16,14 @@ namespace Abp.AspNetCore.Configuration
 
         public bool UseConventionalHttpVerbs { get; }
 
-        public AbpServiceControllerSetting(string moduleName, Assembly assembly, bool useConventionalHttpVerbs)
+        public Func<Type, bool> TypePredicate { get; set; }
+
+        public AbpControllerAssemblySetting(string moduleName, Assembly assembly, bool useConventionalHttpVerbs)
         {
             ModuleName = moduleName;
             Assembly = assembly;
             UseConventionalHttpVerbs = useConventionalHttpVerbs;
+            TypePredicate = type => true;
         }
     }
 }
