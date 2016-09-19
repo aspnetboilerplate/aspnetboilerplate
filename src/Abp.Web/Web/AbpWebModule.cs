@@ -24,6 +24,7 @@ namespace Abp.Web
         public override void PreInitialize()
         {
             IocManager.Register<IAbpAntiForgeryWebConfiguration, AbpAntiForgeryWebConfiguration>();
+            IocManager.Register<IAbpWebLocalizationConfiguration, AbpWebLocalizationConfiguration>();
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
             
             if (HttpContext.Current != null)

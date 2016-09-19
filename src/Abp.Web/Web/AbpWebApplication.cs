@@ -7,6 +7,7 @@ using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Threading;
+using Abp.Web.Configuration;
 
 namespace Abp.Web
 {
@@ -23,6 +24,8 @@ namespace Abp.Web
         /// </summary>
         protected AbpBootstrapper AbpBootstrapper { get; }
 
+        private IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
+
         protected AbpWebApplication()
         {
             AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
@@ -34,7 +37,10 @@ namespace Abp.Web
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
+
             AbpBootstrapper.Initialize();
+
+            _webLocalizationConfiguration = AbpBootstrapper.IocManager.Resolve<IAbpWebLocalizationConfiguration>();
         }
 
         /// <summary>
@@ -71,7 +77,7 @@ namespace Abp.Web
 
         protected virtual void SetCurrentCulture()
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
+            var langCookie = Request.Cookies[_webLocalizationConfiguration.CookieName];
             if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
