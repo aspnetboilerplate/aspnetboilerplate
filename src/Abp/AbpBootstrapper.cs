@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
