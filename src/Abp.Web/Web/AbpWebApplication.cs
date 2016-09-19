@@ -22,9 +22,14 @@ namespace Abp.Web
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        protected AbpBootstrapper AbpBootstrapper { get; }
+        protected AbpBootstrapper AbpBootstrapper
+        {
+            get { return _abpBootstrapper; }
+            set { _abpBootstrapper = value; }
+        }
 
-        private IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
+        private static AbpBootstrapper _abpBootstrapper;
+        private static IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
 
         protected AbpWebApplication()
         {
