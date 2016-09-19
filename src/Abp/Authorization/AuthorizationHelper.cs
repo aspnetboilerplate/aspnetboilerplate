@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
 using Abp.Application.Features;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Reflection;
@@ -18,10 +19,12 @@ namespace Abp.Authorization
         public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly IFeatureChecker _featureChecker;
+        private readonly IAuthorizationConfiguration _configuration;
 
-        public AuthorizationHelper(IFeatureChecker featureChecker)
+        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration configuration)
         {
             _featureChecker = featureChecker;
+            _configuration = configuration;
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
@@ -29,6 +32,11 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
+            if (!_configuration.IsEnabled)
+            {
+                return;
+            }
+
             if (!AbpSession.UserId.HasValue)
             {
                 throw new AbpAuthorizationException(LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication"));
@@ -42,6 +50,11 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(MethodInfo methodInfo)
         {
+            if (!_configuration.IsEnabled)
+            {
+                return;
+            }
+
             if (AllowAnonymous(methodInfo))
             {
                 return;

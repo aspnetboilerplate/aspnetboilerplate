@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Configuration.Startup;
 using NSubstitute;
 using Xunit;
 
@@ -18,7 +19,10 @@ namespace Abp.Tests.Authorization
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(false);
 
-            _authorizeHelper = new AuthorizationHelper(featureChecker)
+            var configuration = Substitute.For<IAuthorizationConfiguration>();
+            configuration.IsEnabled.Returns(true);
+
+            _authorizeHelper = new AuthorizationHelper(featureChecker, configuration)
             {
                 PermissionChecker = permissionChecker
             };
