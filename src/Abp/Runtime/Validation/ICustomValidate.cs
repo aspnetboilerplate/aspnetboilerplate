@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
 namespace Abp.Runtime.Validation
 {
     /// <summary>
@@ -12,7 +9,7 @@ namespace Abp.Runtime.Validation
         /// <summary>
         /// This method is used to validate the object.
         /// </summary>
-        /// <param name="results">List of validation results (errors). Add validation errors to this list.</param>
-        void AddValidationErrors(List<ValidationResult> results);
+        /// <param name="context">Validation context.</param>
+        void AddValidationErrors(CustomValidatationContext context);
     }
 }

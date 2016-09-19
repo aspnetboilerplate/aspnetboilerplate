@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 
 namespace Abp.WebApi.Validation
@@ -13,8 +14,8 @@ namespace Abp.WebApi.Validation
 
         private bool _isValidatedBefore;
 
-        public WebApiActionInvocationValidator(IValidationConfiguration configuration) 
-            : base(configuration)
+        public WebApiActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
+            : base(configuration, iocResolver)
         {
 
         }

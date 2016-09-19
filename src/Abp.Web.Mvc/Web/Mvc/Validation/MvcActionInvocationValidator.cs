@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Runtime.Validation.Interception;
 
@@ -14,8 +15,8 @@ namespace Abp.Web.Mvc.Validation
 
         private bool _isValidatedBefore;
 
-        public MvcActionInvocationValidator(IValidationConfiguration configuration) 
-            : base(configuration)
+        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver) 
+            : base(configuration, iocResolver)
         {
 
         }

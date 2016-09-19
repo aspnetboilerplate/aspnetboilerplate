@@ -112,7 +112,7 @@ namespace Abp.TestBase.Tests.Application.Services
         }
 
         [Fact]
-        public void Should_Use_IValidatableObject_On_Validation()
+        public void Should_Use_IValidatableObject_And_ICustomValidate_On_Validation()
         {
             Assert.Throws<AbpValidationException>(() =>
             {
@@ -210,7 +210,7 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyClassInList[] ArrayItems { get; set; }
         }
 
-        public class MyMethod6Input : IValidatableObject
+        public class MyMethod6Input : IValidatableObject, ICustomValidate
         {
             [Required]
             [MinLength(2)]
@@ -224,6 +224,12 @@ namespace Abp.TestBase.Tests.Application.Services
                 {
                     yield return new ValidationResult("MyIntValue must be greather than or equal to 18");
                 }
+            }
+
+            public void AddValidationErrors(CustomValidatationContext context)
+            {
+                //a (meaningless) example of resolving dependency in custom validation
+                context.IocResolver.Resolve<IIocManager>().ShouldNotBeNull();
             }
         }
 

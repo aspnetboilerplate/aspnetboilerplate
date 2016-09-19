@@ -24,13 +24,16 @@ namespace Abp.Runtime.Validation.Interception
         protected List<ValidationResult> ValidationErrors { get; }
 
         private readonly IValidationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        public MethodInvocationValidator(IValidationConfiguration configuration)
+        public MethodInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
         {
             _configuration = configuration;
+            _iocResolver = iocResolver;
+
             ValidationErrors = new List<ValidationResult>();
         }
 
@@ -157,7 +160,10 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            (validatingObject as ICustomValidate)?.AddValidationErrors(ValidationErrors);
+            //Custom validations
+            (validatingObject as ICustomValidate)?.AddValidationErrors(
+                new CustomValidatationContext(ValidationErrors, _iocResolver)
+            );
 
             //Do not recursively validate for enumerable objects
             if (validatingObject is IEnumerable)
