@@ -80,7 +80,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             ConfigureParameters(controller);
         }
 
-        private void ConfigureParameters(ControllerModel controller)
+       private void ConfigureParameters(ControllerModel controller)
         {
             foreach (var action in controller.Actions)
             {
@@ -93,14 +93,19 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
                     if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
                     {
-                        if (CanUseFormBodyBinding(action))
+                        if (!TypeHelper.IsFormBodyProhibited(prm.ParameterInfo.ParameterType))
                         {
-                            prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
+                            if (CanUseFormBodyBinding(action))
+                            {
+                                prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
+                            }
                         }
+
                     }
                 }
             }
         }
+		
 
         private static bool CanUseFormBodyBinding(ActionModel action)
         {
