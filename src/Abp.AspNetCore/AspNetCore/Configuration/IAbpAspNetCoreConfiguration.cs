@@ -27,8 +27,9 @@ namespace Abp.AspNetCore.Configuration
         bool SetNoCacheForAjaxResponses { get; set; }
 
         AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
-            Assembly assembly, 
-            string moduleName = AbpControllerAssemblySetting.DefaultServiceModuleName, 
-            bool useConventionalHttpVerbs = true);
+            Assembly assembly,
+            string moduleName = AbpControllerAssemblySetting.DefaultServiceModuleName,
+            bool useConventionalHttpVerbs = true
+        );
     }
 }

@@ -37,12 +37,13 @@ namespace Abp.AspNetCore.Mvc.Conventions
             foreach (var controller in application.Controllers)
             {
                 var type = controller.ControllerType.AsType();
+                var configuration = GetControllerSettingOrNull(type);
 
                 if (typeof(IApplicationService).IsAssignableFrom(type))
                 {
                     controller.ControllerName = controller.ControllerName.RemovePostFix(ApplicationService.CommonPostfixes);
+                    configuration?.ControllerModelConfigurer(controller);
 
-                    var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
                     ConfigureArea(controller, configuration);
                     ConfigureRemoteService(controller, configuration);
                 }
@@ -51,7 +52,6 @@ namespace Abp.AspNetCore.Mvc.Conventions
                     var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
                     if (remoteServiceAtt != null && remoteServiceAtt.IsEnabledFor(type))
                     {
-                        var configuration = GetControllerSettingOrNull(controller.ControllerType.AsType());
                         ConfigureRemoteService(controller, configuration);
                     }
                 }
@@ -224,6 +224,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
                    AbpControllerAssemblySetting.DefaultServiceModuleName;
         }
 
+        [CanBeNull]
         private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
             return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);

@@ -1,8 +1,9 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Abp.AspNetCore.Configuration
 {
-    public class AbpControllerAssemblySettingBuilder: IAbpControllerAssemblySettingBuilder
+    public class AbpControllerAssemblySettingBuilder : IAbpControllerAssemblySettingBuilder
     {
         private readonly AbpControllerAssemblySetting _setting;
 
@@ -14,6 +15,12 @@ namespace Abp.AspNetCore.Configuration
         public AbpControllerAssemblySettingBuilder Where(Func<Type, bool> predicate)
         {
             _setting.TypePredicate = predicate;
+            return this;
+        }
+
+        public AbpControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer)
+        {
+            _setting.ControllerModelConfigurer = configurer;
             return this;
         }
     }
