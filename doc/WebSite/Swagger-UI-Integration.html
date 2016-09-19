@@ -11,9 +11,71 @@
 
 <div class="document-contents">
 
-<h3>Introduction</h3>
+<h2>Introduction</h2>
 <p>From it's web site: "....with a Swagger-enabled API, you get <strong>
 interactive documentation</strong>, client SDK generation and discoverability."</p>
+<h2>ASP.NET Core</h2>
+	<h3>Installation</h3>
+	<p>It's easy to integrate Swagger into your ASP.NET Boilerplate based ASP.NET Core application.</p>
+	<h4>Install Nuget Package</h4>	
+<p>Install <strong>
+	<a href="https://www.nuget.org/packages/Swashbuckle/6.0.0-beta902">Swashbuckle</a></strong> 
+	nuget package to your <strong>Web</strong> project.</p>
+	<h4>Configure</h4>
+<p>Add configuration code for Swagger into <strong>ConfigureServices</strong> method of your <strong>Startup.cs</strong></p>
+<pre lang="cs">
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+    //your other code...
+    
+    <strong>services.AddSwaggerGen();</strong>
+    
+    //your other code...
+}
+</pre>
+
+<p>Then, add below code into <strong>Configure </strong>method of <strong>Startup.cs</strong> to use Swagger</p>
+<pre lang="cs">
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+    //your other code...
+
+    <strong>app.UseSwagger();
+    app.UseSwaggerUi(); //URL: /swagger/ui
+</strong>}
+</pre>
+<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.htmlhttps://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
+Then you need to change <strong>onComplete </strong>method of swagger ui definition like this in 
+<strong>index.html</strong>.</p>
+<pre lang="js">
+onComplete: function(swaggerApi, swaggerUi){
+  if(typeof initOAuth == "function") {
+    initOAuth({
+      clientId: "your-client-id",
+      clientSecret: "your-client-secret-if-required",
+      realm: "your-realms",
+      appName: "your-app-name",
+      scopeSeparator: " ",
+      additionalQueryStringParams: {}
+    });
+  }
+
+  if(window.SwaggerTranslator) {
+    window.SwaggerTranslator.translate();
+  }
+
+<strong>  var csrfToken = abp.security.antiForgery.getToken();
+  var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization(abp.security.antiForgery.tokenHeaderName, csrfToken, "header");
+  swaggerUi.api.clientAuthorizations.add(abp.security.antiForgery.tokenHeaderName, csrfCookieAuth);
+</strong>
+}</pre>
+<p>See Swashbuckle <a href="https://github.com/domaindrivendev/Ahoy">documentation</a> for more configuration options.</p>
+<h4>Test</h4>
+	<p>That's all. You can browse swagger ui under "<strong>/swagger/ui/index</strong>".</p>
+
+
+
+<h2>ASP.NET 5.x</h2>
 	<h3>Installation</h3>
 	<p>It's easy to integrate <a href="http://swagger.io/">Swagger</a> into your 
 	ASP.NET Boilerplate based application.</p>
@@ -42,11 +104,41 @@ interactive documentation</strong>, client SDK generation and discoverability."<
                 c.SingleApiVersion(&quot;v1&quot;, &quot;SwaggerIntegrationDemo.WebApi&quot;);
                 c.ResolveConflictingActions(apiDescriptions =&gt; apiDescriptions.First());
             })
-            .EnableSwaggerUi();
+            .EnableSwaggerUi(c =>
+            {
+                c.InjectJavaScript(Assembly.GetAssembly(typeof(AbpProjectNameWebApiModule)), "AbpCompanyName.AbpProjectName.Api.Scripts.Swagger-Custom.js");
+            });
     }</strong>
 }
 </pre>
-	<p>See it's own
+<p>Notice that, we inject a javascript file named "<strong>Swagger-Custom.js</strong>" while configuring swagger ui. This script file is used to add CSRF token to requests while testing api services on swagger ui. You also need to add this file to your WebApi project and use it's Logical Name in InjectJavaScript method while injecting it. It's content is:</p>
+<pre lang="js">
+var getCookieValue = function(key) {
+    var equalities = document.cookie.split('; ');
+    for (var i = 0; i < equalities.length; i++) {
+        if (!equalities[i]) {
+            continue;
+        }
+
+        var splitted = equalities[i].split('=');
+        if (splitted.length !== 2) {
+            continue;
+        }
+
+        if (decodeURIComponent(splitted[0]) === key) {
+            return decodeURIComponent(splitted[1] || '');
+        }
+    }
+
+    return null;
+};
+
+var csrfCookie = getCookieValue("XSRF-TOKEN");
+var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("X-XSRF-TOKEN", csrfCookie, "header");
+swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);
+</pre>
+<p></p>
+	<p>See Swashbuckle 
 	<a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank">
 	documentation</a> for more configuration options.</p>
 	<h4>Test</h4>
