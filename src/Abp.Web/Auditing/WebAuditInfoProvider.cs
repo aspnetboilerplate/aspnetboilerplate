@@ -2,16 +2,18 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Web;
-using Abp.Dependency;
 using Castle.Core.Logging;
 
 namespace Abp.Auditing
 {
-    /// <summary>
-    /// Implements <see cref="IAuditInfoProvider"/> to fill web specific audit informations.
-    /// </summary>
-    public class WebAuditInfoProvider : IAuditInfoProvider, ITransientDependency
+    public class WebAuditInfoProvider : IClientInfoProvider
     {
+        public string BrowserInfo => GetBrowserInfo();
+
+        public string ClientIpAddress => GetClientIpAddress();
+
+        public string ComputerName => GetComputerName();
+
         public ILogger Logger { get; set; }
 
         private readonly HttpContext _httpContext;
@@ -25,36 +27,27 @@ namespace Abp.Auditing
             Logger = NullLogger.Instance;
         }
 
-        public virtual void Fill(AuditInfo auditInfo)
+        protected virtual string GetBrowserInfo()
         {
             var httpContext = HttpContext.Current ?? _httpContext;
-            if (httpContext == null)
+            if (httpContext?.Request.Browser == null)
             {
-                return;
+                return null;
             }
 
-            try
-            {
-                auditInfo.BrowserInfo = GetBrowserInfo(httpContext);
-                auditInfo.ClientIpAddress = GetClientIpAddress(httpContext);
-                auditInfo.ClientName = GetComputerName(httpContext);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Could not obtain web parameters for audit info.");
-                Logger.Warn(ex.ToString(), ex);
-            }
-        }
-
-        protected virtual string GetBrowserInfo(HttpContext httpContext)
-        {
             return httpContext.Request.Browser.Browser + " / " +
                    httpContext.Request.Browser.Version + " / " +
                    httpContext.Request.Browser.Platform;
         }
 
-        protected virtual string GetClientIpAddress(HttpContext httpContext)
+        protected virtual string GetClientIpAddress()
         {
+            var httpContext = HttpContext.Current ?? _httpContext;
+            if (httpContext?.Request.ServerVariables == null)
+            {
+                return null;
+            }
+
             var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
                            httpContext.Request.ServerVariables["REMOTE_ADDR"];
 
@@ -84,17 +77,18 @@ namespace Abp.Auditing
             return clientIp;
         }
 
-        protected virtual string GetComputerName(HttpContext httpContext)
+        protected virtual string GetComputerName()
         {
-            if (!httpContext.Request.IsLocal)
+            var httpContext = HttpContext.Current ?? _httpContext;
+            if (httpContext == null || !httpContext.Request.IsLocal)
             {
                 return null;
             }
 
             try
             {
-                var clientIp = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
-                               HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+                var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
+                               httpContext.Request.ServerVariables["REMOTE_ADDR"];
                 return Dns.GetHostEntry(IPAddress.Parse(clientIp)).HostName;
             }
             catch
