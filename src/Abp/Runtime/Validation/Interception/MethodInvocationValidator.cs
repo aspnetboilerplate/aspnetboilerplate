@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
@@ -22,6 +21,7 @@ namespace Abp.Runtime.Validation.Interception
         protected object[] ParameterValues { get; private set; }
         protected ParameterInfo[] Parameters { get; private set; }
         protected List<ValidationResult> ValidationErrors { get; }
+        protected List<IShouldNormalize> ObjectsToBeNormalized { get; }
 
         private readonly IValidationConfiguration _configuration;
         private readonly IIocResolver _iocResolver;
@@ -35,6 +35,7 @@ namespace Abp.Runtime.Validation.Interception
             _iocResolver = iocResolver;
 
             ValidationErrors = new List<ValidationResult>();
+            ObjectsToBeNormalized = new List<IShouldNormalize>();
         }
 
         /// <param name="method">Method to be validated</param>
@@ -96,9 +97,9 @@ namespace Abp.Runtime.Validation.Interception
                     );
             }
 
-            foreach (var parameterValue in ParameterValues)
+            foreach (var objectToBeNormalized in ObjectsToBeNormalized)
             {
-                (parameterValue as IShouldNormalize)?.Normalize();
+                objectToBeNormalized.Normalize();
             }
         }
 
@@ -162,8 +163,17 @@ namespace Abp.Runtime.Validation.Interception
 
             //Custom validations
             (validatingObject as ICustomValidate)?.AddValidationErrors(
-                new CustomValidatationContext(ValidationErrors, _iocResolver)
+                new CustomValidatationContext(
+                    ValidationErrors,
+                    _iocResolver
+                )
             );
+
+            //Add list to be normalized later
+            if (validatingObject is IShouldNormalize)
+            {
+                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
+            }
 
             //Do not recursively validate for enumerable objects
             if (validatingObject is IEnumerable)

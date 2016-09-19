@@ -123,6 +123,22 @@ namespace Abp.TestBase.Tests.Application.Services
             });
         }
 
+        [Fact]
+        public void Should_Normalize_Nested_Dtos()
+        {
+            var input = new MyMethod7Input
+            {
+                Inner = new MyMethod7Input.MyMethod7InputInner
+                {
+                    Value = 10
+                }
+            };
+
+            _myAppService.MyMethod7(input);
+
+            input.Inner.Value.ShouldBe(12);
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -133,6 +149,7 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod4(MyMethod4Input input);
             MyMethodOutput MyMethod5(MyMethod5Input input);
             MyMethodOutput MyMethod6(MyMethod6Input input);
+            MyMethodOutput MyMethod7(MyMethod7Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -163,6 +180,11 @@ namespace Abp.TestBase.Tests.Application.Services
             }
 
             public MyMethodOutput MyMethod6(MyMethod6Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod7(MyMethod7Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
@@ -230,6 +252,26 @@ namespace Abp.TestBase.Tests.Application.Services
             {
                 //a (meaningless) example of resolving dependency in custom validation
                 context.IocResolver.Resolve<IIocManager>().ShouldNotBeNull();
+            }
+        }
+
+        public class MyMethod7Input : IShouldNormalize
+        {
+            public MyMethod7InputInner Inner { get; set; }
+
+            public void Normalize()
+            {
+                Inner.Value++;
+            }
+
+            public class MyMethod7InputInner: IShouldNormalize
+            {
+                public int Value { get; set; }
+
+                public void Normalize()
+                {
+                    Value++;
+                }
             }
         }
 
