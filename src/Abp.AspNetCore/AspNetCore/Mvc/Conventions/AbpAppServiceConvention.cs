@@ -143,7 +143,18 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
             if (controller.ApiExplorer.IsVisible == null)
             {
-                controller.ApiExplorer.IsVisible = true;
+                var controllerType = controller.ControllerType.AsType();
+                var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(controllerType);
+                if (remoteServiceAtt != null)
+                {
+                    controller.ApiExplorer.IsVisible =
+                        remoteServiceAtt.IsEnabledFor(controllerType) &&
+                        remoteServiceAtt.IsMetadataEnabledFor(controllerType);
+                }
+                else
+                {
+                    controller.ApiExplorer.IsVisible = true;
+                }
             }
 
             foreach (var action in controller.Actions)
@@ -157,7 +168,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
             if (action.ApiExplorer.IsVisible == null)
             {
                 var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
-                action.ApiExplorer.IsVisible = remoteServiceAtt?.IsEnabledFor(action.ActionMethod);
+                if (remoteServiceAtt != null)
+                {
+                    action.ApiExplorer.IsVisible =
+                        remoteServiceAtt.IsEnabledFor(action.ActionMethod) &&
+                        remoteServiceAtt.IsMetadataEnabledFor(action.ActionMethod);
+                }
             }
         }
 

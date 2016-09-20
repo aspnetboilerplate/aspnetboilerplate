@@ -80,7 +80,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
             
             //Create the controller descriptor
-            var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo.ServiceName, controllerInfo.ApiControllerType, controllerInfo.Filters);
+            var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo);
             controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;
             controllerDescriptor.Properties["__AbpDynamicApiHasActionName"] = hasActionName;
             return controllerDescriptor;
