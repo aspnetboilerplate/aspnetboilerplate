@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 
@@ -9,6 +11,8 @@ namespace Abp.AspNetCore.Configuration
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
+
+        List<Type> FormBodyBindingIgnoredTypes { get; }
 
         /// <summary>
         /// Default: true.

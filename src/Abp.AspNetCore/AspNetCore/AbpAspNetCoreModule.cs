@@ -12,6 +12,7 @@ using Abp.Runtime.Session;
 using Abp.Web;
 using Abp.Web.Security.AntiForgery;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +28,8 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
+
+            Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
         }
 
         public override void Initialize()

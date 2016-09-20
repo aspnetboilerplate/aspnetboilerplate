@@ -93,7 +93,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
                     if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
                     {
-                        if (CanUseFormBodyBinding(action))
+                        if (CanUseFormBodyBinding(action, prm))
                         {
                             prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
                         }
@@ -102,8 +102,13 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
         }
 
-        private static bool CanUseFormBodyBinding(ActionModel action)
+        private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
         {
+            if (_configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
+            {
+                return false;
+            }
+
             foreach (var selector in action.Selectors)
             {
                 if (selector.ActionConstraints == null)
