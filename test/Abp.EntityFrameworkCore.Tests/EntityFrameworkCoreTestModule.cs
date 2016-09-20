@@ -40,7 +40,14 @@ namespace Abp.EntityFrameworkCore.Tests
                     .LifestyleSingleton()
             );
 
-            Configuration.ReplaceService<IRepository<Post, Guid>, PostRepository>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
+            {
+                IocManager.IocContainer.Register(
+                    Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
+                        .ImplementedBy<PostRepository>()
+                        .LifestyleTransient()
+                );
+            });
         }
 
         public override void Initialize()
