@@ -7,10 +7,11 @@ namespace Abp.Timing
     /// </summary>
     public class LocalClockProvider : IClockProvider
     {
-        public DateTime Now
-        {
-            get { return DateTime.Now; }
-        }
+        public DateTime Now => DateTime.Now;
+
+        public DateTimeKind Kind => DateTimeKind.Local;
+
+        public bool SupportsMultipleTimezone => false;
 
         public DateTime Normalize(DateTime dateTime)
         {
@@ -25,6 +26,11 @@ namespace Abp.Timing
             }
 
             return dateTime;
+        }
+
+        internal LocalClockProvider()
+        {
+
         }
     }
 }

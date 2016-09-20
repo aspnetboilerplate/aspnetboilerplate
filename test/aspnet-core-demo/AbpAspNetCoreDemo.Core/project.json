@@ -1,0 +1,25 @@
+﻿{
+  "version": "0.12.0.2-*",
+
+  "dependencies": {
+    "Abp.AutoMapper": "0.12.0.2-*"
+  },
+
+  "tools": {
+
+  },
+
+  "frameworks": {
+    "net452": {
+
+    }
+  },
+
+  "buildOptions": {
+    "embed": {
+      "include": [
+        "Localization/SourceFiles/*.json"
+      ]
+    }
+  }
+}

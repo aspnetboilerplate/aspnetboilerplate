@@ -1,28 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
-using System.Web.Mvc.Async;
 using Abp.Application.Features;
-using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Collections.Extensions;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.Logging;
 using Abp.Reflection;
 using Abp.Runtime.Session;
-using Abp.Timing;
 using Abp.Web.Models;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
+using Abp.Web.Mvc.Extensions;
+using Abp.Web.Mvc.Helpers;
+using Abp.Web.Mvc.Models;
 using Castle.Core.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -35,6 +36,11 @@ namespace Abp.Web.Mvc.Controllers
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
+
+        /// <summary>
+        /// Gets the event bus.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
 
         /// <summary>
         /// Reference to the permission manager.
@@ -65,6 +71,11 @@ namespace Abp.Web.Mvc.Controllers
         /// Reference to the localization manager.
         /// </summary>
         public ILocalizationManager LocalizationManager { protected get; set; }
+
+        /// <summary>
+        /// Reference to the error info builder.
+        /// </summary>
+        public IErrorInfoBuilder ErrorInfoBuilder { protected get; set; }
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this application service.
@@ -103,7 +114,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <summary>
         /// Gets current session information.
         /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
+        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
         protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
@@ -129,18 +140,19 @@ namespace Abp.Web.Mvc.Controllers
         /// </summary>
         protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
-        public IAuditingConfiguration AuditingConfiguration { get; set; }
+        public IIocResolver IocResolver { get; set; }
 
-        public IAuditInfoProvider AuditInfoProvider { get; set; }
-
-        public IAuditingStore AuditingStore { get; set; }
+        public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
 
         /// <summary>
-        /// This object is used to measure an action execute duration.
+        /// MethodInfo for currently executing action.
         /// </summary>
-        private Stopwatch _actionStopwatch;
+        private MethodInfo _currentMethodInfo;
 
-        private AuditInfo _auditInfo;
+        /// <summary>
+        /// WrapResultAttribute for currently executing action.
+        /// </summary>
+        private WrapResultAttribute _wrapResultAttribute;
 
         /// <summary>
         /// Constructor.
@@ -151,7 +163,8 @@ namespace Abp.Web.Mvc.Controllers
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
-            AuditingStore = SimpleLogAuditingStore.Instance;
+            EventBus = NullEventBus.Instance;
+            IocResolver = IocManager.Instance;
         }
 
         /// <summary>
@@ -246,13 +259,33 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            if (data == null)
+            if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
             {
-                data = new AjaxResponse();
+                return base.Json(data, contentType, contentEncoding, behavior);
             }
-            else if (!ReflectionHelper.IsAssignableToGenericType(data.GetType(), typeof(AjaxResponse<>)))
+
+            return AbpJson(data, contentType, contentEncoding, behavior);
+        }
+
+        protected virtual AbpJsonResult AbpJson(
+            object data,
+            string contentType = null,
+            Encoding contentEncoding = null,
+            JsonRequestBehavior behavior = JsonRequestBehavior.DenyGet,
+            bool wrapResult = true,
+            bool camelCase = true,
+            bool indented = false)
+        {
+            if (wrapResult)
             {
-                data = new AjaxResponse(data);
+                if (data == null)
+                {
+                    data = new AjaxResponse();
+                }
+                else if (!(data is AjaxResponseBase))
+                {
+                    data = new AjaxResponse(data);
+                }
             }
 
             return new AbpJsonResult
@@ -260,146 +293,136 @@ namespace Abp.Web.Mvc.Controllers
                 Data = data,
                 ContentType = contentType,
                 ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
+                JsonRequestBehavior = behavior,
+                CamelCase = camelCase,
+                Indented = indented
             };
         }
+
+        #region OnActionExecuting / OnActionExecuted
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            HandleAuditingBeforeAction(filterContext);
-
+            SetCurrentMethodInfoAndWrapResultAttribute(filterContext);
             base.OnActionExecuting(filterContext);
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
-            base.OnActionExecuted(filterContext);
-
-            HandleAuditingAfterAction(filterContext);
-        }
-
-        #region Auditing
-
-        private static MethodInfo GetMethodInfo(ActionDescriptor actionDescriptor)
-        {
-            if (actionDescriptor is ReflectedActionDescriptor)
-            {
-                return ((ReflectedActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is ReflectedAsyncActionDescriptor)
-            {
-                return ((ReflectedAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            if (actionDescriptor is TaskAsyncActionDescriptor)
-            {
-                return ((TaskAsyncActionDescriptor)actionDescriptor).MethodInfo;
-            }
-
-            throw new AbpException("Could not get MethodInfo for the action '" + actionDescriptor.ActionName + "' of controller '" + actionDescriptor.ControllerDescriptor.ControllerName + "'.");
-        }
-
-        private void HandleAuditingBeforeAction(ActionExecutingContext filterContext)
-        {
-            if (!ShouldSaveAudit(filterContext))
-            {
-                _auditInfo = null;
-                return;
-            }
-
-            var methodInfo = GetMethodInfo(filterContext.ActionDescriptor);
-
-            _actionStopwatch = Stopwatch.StartNew();
-            _auditInfo = new AuditInfo
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = methodInfo.DeclaringType != null
-                                ? methodInfo.DeclaringType.FullName
-                                : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                MethodName = methodInfo.Name,
-                Parameters = ConvertArgumentsToJson(filterContext.ActionParameters),
-                ExecutionTime = Clock.Now
-            };
-        }
-
-        private void HandleAuditingAfterAction(ActionExecutedContext filterContext)
-        {
-            if (_auditInfo == null || _actionStopwatch == null)
+            //Prevent overriding for child actions
+            if (_currentMethodInfo != null)
             {
                 return;
             }
 
-            _actionStopwatch.Stop();
-
-            _auditInfo.ExecutionDuration = Convert.ToInt32(_actionStopwatch.Elapsed.TotalMilliseconds);
-            _auditInfo.Exception = filterContext.Exception;
-
-            if (AuditInfoProvider != null)
-            {
-                AuditInfoProvider.Fill(_auditInfo);
-            }
-
-            AuditingStore.Save(_auditInfo);
-        }
-
-        private bool ShouldSaveAudit(ActionExecutingContext filterContext)
-        {
-            if (AuditingConfiguration == null)
-            {
-                return false;
-            }
-
-            if (!AuditingConfiguration.MvcControllers.IsEnabled)
-            {
-                return false;
-            }
-
-            if (filterContext.IsChildAction && !AuditingConfiguration.MvcControllers.IsEnabledForChildActions)
-            {
-                return false;
-            }
-
-            return AuditingHelper.ShouldSaveAudit(
-                GetMethodInfo(filterContext.ActionDescriptor),
-                AuditingConfiguration,
-                AbpSession,
-                true
+            _currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
+            _wrapResultAttribute =
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+                    _currentMethodInfo,
+                    AbpMvcConfiguration.DefaultWrapResultAttribute
                 );
         }
 
-        private string ConvertArgumentsToJson(IDictionary<string, object> arguments)
+        #endregion
+
+        #region Exception handling
+
+        protected override void OnException(ExceptionContext context)
         {
-            try
+            if (context == null)
             {
-                if (arguments.IsNullOrEmpty())
-                {
-                    return "{}";
-                }
-
-                var dictionary = new Dictionary<string, object>();
-
-                foreach (var argument in arguments)
-                {
-                    dictionary[argument.Key] = argument.Value;
-                }
-
-                return JsonConvert.SerializeObject(
-                    dictionary,
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
+                throw new ArgumentNullException(nameof(context));
             }
-            catch (Exception ex)
+
+            //If exception handled before, do nothing.
+            //If this is child action, exception should be handled by main action.
+            if (context.ExceptionHandled || context.IsChildAction)
             {
-                Logger.Warn("Could not serialize arguments for method: " + _auditInfo.ServiceName + "." + _auditInfo.MethodName);
-                Logger.Warn(ex.ToString(), ex);
-                return "{}";
+                base.OnException(context);
+                return;
             }
+
+            //Log exception
+            if (_wrapResultAttribute == null || _wrapResultAttribute.LogError)
+            {
+                LogHelper.LogException(Logger, context.Exception);
+            }
+
+            // If custom errors are disabled, we need to let the normal ASP.NET exception handler
+            // execute so that the user can see useful debugging information.
+            if (!context.HttpContext.IsCustomErrorEnabled)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
+            // ignore it.
+            if (new HttpException(null, context.Exception).GetHttpCode() != 500)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            //Check WrapResultAttribute
+            if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
+            {
+                base.OnException(context);
+                return;
+            }
+
+            //We handled the exception!
+            context.ExceptionHandled = true;
+
+            //Return an error response to the client.
+            context.HttpContext.Response.Clear();
+            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
+            context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
+                ? GenerateJsonExceptionResult(context)
+                : GenerateNonJsonExceptionResult(context);
+
+            // Certain versions of IIS will sometimes use their own error page when
+            // they detect a server error. Setting this property indicates that we
+            // want it to try to render ASP.NET MVC's error page instead.
+            context.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+            //Trigger an event, so we can register it.
+            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+        }
+
+        protected virtual int GetStatusCodeForException(ExceptionContext context)
+        {
+
+            if (context.Exception is AbpAuthorizationException)
+            {
+                return context.HttpContext.User.Identity.IsAuthenticated
+                    ? 403
+                    : 401;
+            }
+
+            return 500;
+        }
+
+        protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)
+        {
+            context.HttpContext.Items.Add("IgnoreJsonRequestBehaviorDenyGet", "true");
+            return new AbpJsonResult(
+                new AjaxResponse(
+                    ErrorInfoBuilder.BuildForException(context.Exception),
+                    context.Exception is AbpAuthorizationException
+                    )
+                );
+        }
+
+        protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
+        {
+            return new ViewResult
+            {
+                ViewName = "Error",
+                MasterName = string.Empty,
+                ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(ErrorInfoBuilder.BuildForException(context.Exception), context.Exception)),
+                TempData = context.Controller.TempData
+            };
         }
 
         #endregion

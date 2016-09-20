@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pt-BR">
+  <texts>
+    <text name="InternalServerError" value="Ocorreu um erro interno durante sua requisição!" />
+    <text name="ValidationError" value="O seu pedido está inválido!" />
+    <text name="AreYouSure" value="Você tem certeza?" />
+    <text name="Cancel" value="Cancelar" />
+    <text name="Yes" value="Sim" />
+    <text name="ValidationNarrativeTitle" value="Os seguintes erros foram detectados durante a validação." />
+  </texts>
+</localizationDictionary>

@@ -1,69 +1,90 @@
 ﻿using Abp.Localization;
 using Abp.Modules;
 using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Reflection;
 using AutoMapper;
-using Castle.Core.Logging;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.AutoMapper
 {
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpAutoMapperModule : AbpModule
     {
-        public ILogger Logger { get; set; }
-
         private readonly ITypeFinder _typeFinder;
 
         private static bool _createdMappingsBefore;
-        private static readonly object _syncObj = new object();
+
+        private static readonly object SyncObj = new object();
 
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
-            Logger = NullLogger.Instance;
+        }
+
+        public override void PreInitialize()
+        {
+            IocManager.Register<IAbpAutoMapperConfiguration, AbpAutoMapperConfiguration>();
+
+            Configuration.ReplaceService<ObjectMapping.IObjectMapper, AutoMapperObjectMapper>();
+
+            Configuration.Modules.AbpAutoMapper().Configurators.Add(CreateCoreMappings);
         }
 
         public override void PostInitialize()
         {
             CreateMappings();
+
+            IocManager.IocContainer.Register(
+                Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
+            );
         }
 
-        private void CreateMappings()
+        public void CreateMappings()
         {
-            lock (_syncObj)
+            lock (SyncObj)
             {
-                //We should prevent duplicate mapping in an application, since AutoMapper is static.
+                //We should prevent duplicate mapping in an application, since Mapper is static.
                 if (_createdMappingsBefore)
                 {
                     return;
                 }
 
-                FindAndAutoMapTypes();
-                CreateOtherMappings();
+                Mapper.Initialize(configuration =>
+                {
+                    FindAndAutoMapTypes(configuration);
+                    foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
+                    {
+                        configurator(configuration);
+                    }
+                });
 
                 _createdMappingsBefore = true;
             }
         }
 
-        private void FindAndAutoMapTypes()
+        private void FindAndAutoMapTypes(IMapperConfigurationExpression configuration)
         {
             var types = _typeFinder.Find(type =>
-                type.IsDefined(typeof(AutoMapAttribute)) ||
-                type.IsDefined(typeof(AutoMapFromAttribute)) ||
-                type.IsDefined(typeof(AutoMapToAttribute))
-                );
+                    type.IsDefined(typeof(AutoMapAttribute)) ||
+                    type.IsDefined(typeof(AutoMapFromAttribute)) ||
+                    type.IsDefined(typeof(AutoMapToAttribute))
+            );
 
             Logger.DebugFormat("Found {0} classes defines auto mapping attributes", types.Length);
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
-                AutoMapperHelper.CreateMap(type);
+                configuration.CreateAbpAttributeMaps(type);
             }
         }
 
-        private void CreateOtherMappings()
+        private void CreateCoreMappings(IMapperConfigurationExpression configuration)
         {
-            var localizationManager = IocManager.Resolve<ILocalizationManager>();
-            Mapper.CreateMap<LocalizableString, string>().ConvertUsing(ls => localizationManager.GetString(ls));
+            var localizationContext = IocManager.Resolve<ILocalizationContext>();
+
+            configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
+            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }
 }

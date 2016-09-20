@@ -5,14 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
 
 [assembly: AssemblyTitle("ASP.NET Boilerplate - Web")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - Web Layer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.Web")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -37,5 +36,5 @@ using Abp;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AbpConsts.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpConsts.CurrentVersion)]
+
+

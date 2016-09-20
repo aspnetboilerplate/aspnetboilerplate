@@ -90,5 +90,17 @@ namespace Abp.Domain.Uow
         /// <param name="parameterName">Parameter's name</param>
         /// <param name="value">Value of the parameter to be set</param>
         IDisposable SetFilterParameter(string filterName, string parameterName, object value);
+
+        /// <summary>
+        /// Sets/Changes Tenant's Id for this UOW.
+        /// </summary>
+        /// <param name="tenantId">The tenant id.</param>
+        IDisposable SetTenantId(int? tenantId);
+
+        /// <summary>
+        /// Gets Tenant Id for this UOW.
+        /// </summary>
+        /// <returns></returns>
+        int? GetTenantId();
     }
 }

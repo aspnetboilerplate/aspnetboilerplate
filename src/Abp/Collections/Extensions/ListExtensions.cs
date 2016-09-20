@@ -15,7 +15,7 @@ namespace Abp.Collections.Extensions
         /// <param name="source">A list of objects to sort</param>
         /// <param name="getDependencies">Function to resolve the dependencies</param>
         /// <returns></returns>
-        public static IList<T> SortByDependencies<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getDependencies)
+        public static List<T> SortByDependencies<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getDependencies)
         {
             /* See: http://www.codeproject.com/Articles/869059/Topological-sorting-in-Csharp
              *      http://en.wikipedia.org/wiki/Topological_sorting
@@ -49,7 +49,7 @@ namespace Abp.Collections.Extensions
             {
                 if (inProcess)
                 {
-                    throw new ArgumentException("Cyclic dependency found!");
+                    throw new ArgumentException("Cyclic dependency found! Item: " + item);
                 }
             }
             else

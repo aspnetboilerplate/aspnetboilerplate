@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="it">
+  <texts>
+    <text name="SmtpHost">Server SMTP</text>
+    <text name="SmtpPort">Porta SMTP</text>
+    <text name="Username">Nome Utente</text>
+    <text name="Password">Password</text>
+    <text name="DomainName">Dominio</text>
+    <text name="UseSSL">Usa SSL</text>
+    <text name="UseDefaultCredentials">Usa credenziali di default</text>
+    <text name="DefaultFromSenderEmailAddress">Indirizzo email mittente(default)</text>
+    <text name="DefaultFromSenderDisplayName">Nome visualizzato come mittente</text>
+    <text name="DefaultLanguage">Lingua Predefinita</text>
+    <text name="ReceiveNotifications" value="Ricevi Notifiche" />
+  </texts>
+</localizationDictionary>

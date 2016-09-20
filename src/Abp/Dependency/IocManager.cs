@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -120,7 +121,7 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Registers a class as self registration.
+        /// Registers a type with it's implementation.
         /// </summary>
         /// <param name="type">Type of the class</param>
         /// <param name="impl">The type that implements <paramref name="type"/></param>
@@ -161,6 +162,18 @@ namespace Abp.Dependency
 
         /// <summary>
         /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to cast</typeparam>
+        /// <param name="type">Type of the object to resolve</param>
+        /// <returns>The object instance</returns>
+        public T Resolve<T>(Type type)
+        {
+            return (T)IocContainer.Resolve(type);
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
@@ -192,6 +205,30 @@ namespace Abp.Dependency
         public object Resolve(Type type, object argumentsAsAnonymousType)
         {
             return IocContainer.Resolve(type, argumentsAsAnonymousType);
+        }
+
+        ///<inheritdoc/>
+        public T[] ResolveAll<T>()
+        {
+            return IocContainer.ResolveAll<T>();
+        }
+
+        ///<inheritdoc/>
+        public T[] ResolveAll<T>(object argumentsAsAnonymousType)
+        {
+            return IocContainer.ResolveAll<T>(argumentsAsAnonymousType);
+        }
+
+        ///<inheritdoc/>
+        public object[] ResolveAll(Type type)
+        {
+            return IocContainer.ResolveAll(type).Cast<object>().ToArray();
+        }
+
+        ///<inheritdoc/>
+        public object[] ResolveAll(Type type, object argumentsAsAnonymousType)
+        {
+            return IocContainer.ResolveAll(type, argumentsAsAnonymousType).Cast<object>().ToArray();
         }
 
         /// <summary>

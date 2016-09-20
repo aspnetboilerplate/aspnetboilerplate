@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Castle.MicroKernel;
+using Abp.Dependency;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -14,15 +14,15 @@ namespace Abp.Web.Mvc.Controllers
         /// <summary>
         /// Reference to DI kernel.
         /// </summary>
-        private readonly IKernel _kernel; //TODO: Remove this and use IocHelper?
+        private readonly IIocResolver _iocManager;
 
         /// <summary>
         /// Creates a new instance of WindsorControllerFactory.
         /// </summary>
-        /// <param name="kernel">Reference to DI kernel</param>
-        public WindsorControllerFactory(IKernel kernel)
+        /// <param name="iocManager">Reference to DI kernel</param>
+        public WindsorControllerFactory(IIocResolver iocManager)
         {
-            _kernel = kernel;
+            _iocManager = iocManager;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="controller">Controller instance</param>
         public override void ReleaseController(IController controller)
         {
-            _kernel.ReleaseComponent(controller);
+            _iocManager.Release(controller);
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (controllerType == null)
             {
-                throw new HttpException(404, string.Format("The controller for path '{0}' could not be found.", requestContext.HttpContext.Request.Path));
+                return base.GetControllerInstance(requestContext, controllerType);
             }
 
-            return (IController)_kernel.Resolve(controllerType);
+            return _iocManager.Resolve<IController>(controllerType);
         }
     }
 }

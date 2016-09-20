@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Abp.Application.Features;
@@ -20,20 +19,16 @@ namespace Abp.Authorization
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
-        private readonly FeatureDependencyContext _featureDependencyContext;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public PermissionManager(
-            IIocManager iocManager, 
-            IAuthorizationConfiguration authorizationConfiguration,
-            FeatureDependencyContext featureDependencyContext
-            )
+            IIocManager iocManager,
+            IAuthorizationConfiguration authorizationConfiguration)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
-            _featureDependencyContext = featureDependencyContext;
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -42,7 +37,11 @@ namespace Abp.Authorization
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
-                CreateAuthorizationProvider(providerType).SetPermissions(this);
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
+                using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
+                {
+                    provider.Object.SetPermissions(this);
+                }
             }
 
             Permissions.AddAllPermissions();
@@ -61,34 +60,34 @@ namespace Abp.Authorization
 
         public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
-            return Permissions.Values
-                .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
-                .Where(p =>
-                    p.DependedFeature == null ||
-                    AbpSession.MultiTenancySide == MultiTenancySides.Host ||
-                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
-                ).ToImmutableList();
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+            {
+                var featureDependencyContextObject = featureDependencyContext.Object;
+                return Permissions.Values
+                    .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+                    .Where(p =>
+                        p.FeatureDependency == null ||
+                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
+                    ).ToImmutableList();
+            }
         }
 
         public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
-            return Permissions.Values
-                .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
-                .Where(p =>
-                    p.DependedFeature == null ||
-                    (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) && multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
-                    p.DependedFeature.IsSatisfied(_featureDependencyContext)
-                ).ToImmutableList();
-        }
-        
-        private AuthorizationProvider CreateAuthorizationProvider(Type providerType)
-        {
-            if (!_iocManager.IsRegistered(providerType))
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
-                _iocManager.Register(providerType);
+                var featureDependencyContextObject = featureDependencyContext.Object;
+                return Permissions.Values
+                    .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
+                    .Where(p =>
+                        p.FeatureDependency == null ||
+                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
+                         multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
+                        p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
+                    ).ToImmutableList();
             }
-
-            return (AuthorizationProvider)_iocManager.Resolve(providerType);
         }
     }
 }

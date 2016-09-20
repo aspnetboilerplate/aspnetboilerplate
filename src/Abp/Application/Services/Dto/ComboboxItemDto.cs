@@ -6,7 +6,7 @@ namespace Abp.Application.Services.Dto
     /// This DTO can be used as a simple item for a combobox/list.
     /// </summary>
     [Serializable]
-    public class ComboboxItemDto : IDto
+    public class ComboboxItemDto
     {
         /// <summary>
         /// Value of the item.

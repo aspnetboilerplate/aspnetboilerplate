@@ -14,10 +14,6 @@ namespace Abp.NHibernate.Uow
     public class NhUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         /// <summary>
-        /// Used to get current session values.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-        /// <summary>
         /// Gets NHibernate session object to perform queries.
         /// </summary>
         public ISession Session { get; private set; }
@@ -34,10 +30,16 @@ namespace Abp.NHibernate.Uow
         /// <summary>
         /// Creates a new instance of <see cref="NhUnitOfWork"/>.
         /// </summary>
-        public NhUnitOfWork(ISessionFactory sessionFactory, IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NhUnitOfWork(
+            ISessionFactory sessionFactory, 
+            IConnectionStringResolver connectionStringResolver, 
+            IUnitOfWorkDefaultOptions defaultOptions,
+            IUnitOfWorkFilterExecuter filterExecuter)
+            : base(
+                  connectionStringResolver, 
+                  defaultOptions,
+                  filterExecuter)
         {
-            AbpSession = NullAbpSession.Instance;
             _sessionFactory = sessionFactory;
         }
 
@@ -47,8 +49,6 @@ namespace Abp.NHibernate.Uow
                 ? _sessionFactory.OpenSession(DbConnection)
                 : _sessionFactory.OpenSession();
 
-            
-
             if (Options.IsTransactional == true)
             {
                 _transaction = Options.IsolationLevel.HasValue
@@ -56,29 +56,40 @@ namespace Abp.NHibernate.Uow
                     : Session.BeginTransaction();
             }
             
-            this.CheckAndSetMayHaveTenant();
-            this.CheckAndSetMustHaveTenant();
-
+            CheckAndSetMayHaveTenant();
+            CheckAndSetMustHaveTenant();
         }
 
         protected virtual void CheckAndSetMustHaveTenant()
         {
-            if (this.IsFilterEnabled(AbpDataFilters.MustHaveTenant)) return;
-            if (AbpSession.TenantId == null) return;
+            if (IsFilterEnabled(AbpDataFilters.MustHaveTenant))
+            {
+                return;
+            }
+
+            if (AbpSession.TenantId == null)
+            {
+                return;
+            }
+
             ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
-            ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant,
-                AbpDataFilters.Parameters.TenantId,
-                AbpSession.GetTenantId()); //ApplyFilter
+            ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
         }
 
         protected virtual void CheckAndSetMayHaveTenant()
         {
-            if (this.IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
-            if (AbpSession.TenantId == null) return;
+            if (IsFilterEnabled(AbpDataFilters.MayHaveTenant))
+            {
+                return;
+            }
+
+            if (AbpSession.TenantId == null)
+            {
+                return;
+            }
+
             ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
-            ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant,
-                AbpDataFilters.Parameters.TenantId,
-                AbpSession.TenantId); //ApplyFilter
+            ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
         }
 
         public override void SaveChanges()
@@ -122,23 +133,6 @@ namespace Abp.NHibernate.Uow
             }
 
             Session.Dispose();
-        }
-
-        protected override void ApplyEnableFilter(string filterName)
-        {
-            if( Session.GetEnabledFilter(filterName) == null )
-                Session.EnableFilter(filterName);
-        }
-        protected override void ApplyDisableFilter(string filterName)
-        {
-            if ( Session.GetEnabledFilter(filterName) != null )
-                Session.DisableFilter(filterName);
-        }
-
-        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
-        {
-            Session.GetEnabledFilter(filterName)
-                .SetParameter(parameterName, value);
         }
     }
 }

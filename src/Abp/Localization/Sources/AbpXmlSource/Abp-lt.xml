@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lt">
+  <texts>
+    <text name="SmtpHost">SMTP serverio adresas</text>
+    <text name="SmtpPort">SMTP prievadas</text>
+    <text name="Username">Vartotojo vardas</text>
+    <text name="Password">Slaptažodis</text>
+    <text name="DomainName">Domeno vardas</text>
+    <text name="UseSSL">Naudoti SSL</text>
+    <text name="UseDefaultCredentials">Naudoti prisijungimo duomenis pagal nutylėjimą</text>
+    <text name="DefaultFromSenderEmailAddress">Pagal nutylėjimą iš (siuntėjo) el. pašto adresas</text>
+    <text name="DefaultFromSenderDisplayName">Pagal nutylėjimą rodomas iš (siuntėjo) pavadinimas</text>
+    <text name="DefaultLanguage">Kalba pagal nutylėjimą</text>
+    <text name="ReceiveNotifications">Gauti pranešimus</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Dabartinis vartotojas neprisijungė prie programos!</text>
+    <text name="TimeZone">Laiko juosta</text>
+  </texts>
+</localizationDictionary>

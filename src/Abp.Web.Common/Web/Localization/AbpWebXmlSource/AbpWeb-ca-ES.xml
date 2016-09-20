@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ca-ES">
+  <texts>
+    <text name="InternalServerError" value="S'ha produït un error intern durant la seva sol·licitud!" />
+    <text name="ValidationError" value="La seva sol·licitud no és vàlida!" />
+    <text name="AreYouSure" value="Estàs segur?" />
+    <text name="Cancel" value="Cancel·lar" />
+    <text name="Yes" value="Si" />
+    <text name="ValidationNarrativeTitle" value="Es van detectar els següents errors durant la validació." />
+  </texts>
+</localizationDictionary>

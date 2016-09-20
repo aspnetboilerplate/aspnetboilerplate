@@ -1,5 +1,5 @@
 ﻿var abp = abp || {};
-(function () {
+(function ($) {
 
     /* Application paths *****************************************/
 
@@ -70,17 +70,32 @@
 
     abp.auth.grantedPermissions = abp.auth.grantedPermissions || {};
 
+    //Deprecated. Use abp.auth.isGranted instead.
     abp.auth.hasPermission = function (permissionName) {
+        return abp.auth.isGranted.apply(this, arguments);
+    };
+
+    //Deprecated. Use abp.auth.isAnyGranted instead.
+    abp.auth.hasAnyOfPermissions = function () {
+        return abp.auth.isAnyGranted.apply(this, arguments);
+    };
+
+    //Deprecated. Use abp.auth.areAllGranted instead.
+    abp.auth.hasAllOfPermissions = function () {
+        return abp.auth.areAllGranted.apply(this, arguments);
+    };
+
+    abp.auth.isGranted = function (permissionName) {
         return abp.auth.allPermissions[permissionName] != undefined && abp.auth.grantedPermissions[permissionName] != undefined;
     };
 
-    abp.auth.hasAnyOfPermissions = function () {
+    abp.auth.isAnyGranted = function () {
         if (!arguments || arguments.length <= 0) {
             return true;
         }
 
         for (var i = 0; i < arguments.length; i++) {
-            if (abp.auth.hasPermission(arguments[i])) {
+            if (abp.auth.isGranted(arguments[i])) {
                 return true;
             }
         }
@@ -88,13 +103,13 @@
         return false;
     };
 
-    abp.auth.hasAllOfPermissions = function () {
+    abp.auth.areAllGranted = function () {
         if (!arguments || arguments.length <= 0) {
             return true;
         }
 
         for (var i = 0; i < arguments.length; i++) {
-            if (!abp.auth.hasPermission(arguments[i])) {
+            if (!abp.auth.isGranted(arguments[i])) {
                 return false;
             }
         }
@@ -108,8 +123,8 @@
     abp.features = abp.features || {};
 
     abp.features.allFeatures = abp.features.allFeatures || {};
-    
-    abp.features.get = function(name) {
+
+    abp.features.get = function (name) {
         return abp.features.allFeatures[name];
     }
 
@@ -121,7 +136,7 @@
 
         return feature.value;
     }
-    
+
     abp.features.isEnabled = function (name) {
         var value = abp.features.getValue(name);
         return value == 'true' || value == 'True';
@@ -146,6 +161,102 @@
     abp.setting.getInt = function (name) {
         return parseInt(abp.setting.values[name]);
     };
+
+    /* REALTIME NOTIFICATIONS ************************************/
+
+    abp.notifications = abp.notifications || {};
+
+    abp.notifications.severity = {
+        INFO: 0,
+        SUCCESS: 1,
+        WARN: 2,
+        ERROR: 3,
+        FATAL: 4
+    };
+
+    abp.notifications.userNotificationState = {
+        UNREAD: 0,
+        READ: 1
+    };
+
+    abp.notifications.getUserNotificationStateAsString = function (userNotificationState) {
+        switch (userNotificationState) {
+            case abp.notifications.userNotificationState.READ:
+                return 'READ';
+            case abp.notifications.userNotificationState.UNREAD:
+                return 'UNREAD';
+            default:
+                abp.log.warn('Unknown user notification state value: ' + userNotificationState)
+                return '?';
+        }
+    };
+
+    abp.notifications.getUiNotifyFuncBySeverity = function (severity) {
+        switch (severity) {
+            case abp.notifications.severity.SUCCESS:
+                return abp.notify.success;
+            case abp.notifications.severity.WARN:
+                return abp.notify.warn;
+            case abp.notifications.severity.ERROR:
+                return abp.notify.error;
+            case abp.notifications.severity.FATAL:
+                return abp.notify.error;
+            case abp.notifications.severity.INFO:
+            default:
+                return abp.notify.info;
+        }
+    };
+
+    abp.notifications.messageFormatters = {};
+
+    abp.notifications.messageFormatters['Abp.Notifications.MessageNotificationData'] = function (userNotification) {
+        return userNotification.notification.data.message;
+    };
+
+    abp.notifications.messageFormatters['Abp.Notifications.LocalizableMessageNotificationData'] = function (userNotification) {
+        var localizedMessage = abp.localization.localize(
+            userNotification.notification.data.message.name,
+            userNotification.notification.data.message.sourceName
+        );
+
+        if (userNotification.notification.data.properties) {
+            if ($) {
+                //Prefer to use jQuery if possible
+                $.each(userNotification.notification.data.properties, function (key, value) {
+                    localizedMessage = localizedMessage.replace('{' + key + '}', value);
+                });
+            } else {
+                //alternative for $.each
+                var properties = Object.keys(userNotification.notification.data.properties);
+                for (var i = 0; i < properties.length; i++) {
+                    localizedMessage = localizedMessage.replace('{' + properties[i] + '}', userNotification.notification.data.properties[properties[i]]);
+                }
+            }
+        }
+
+        return localizedMessage;
+    };
+
+    abp.notifications.getFormattedMessageFromUserNotification = function (userNotification) {
+        var formatter = abp.notifications.messageFormatters[userNotification.notification.data.type];
+        if (!formatter) {
+            abp.log.warn('No message formatter defined for given data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        if (!abp.utils.isFunction(formatter)) {
+            abp.log.warn('Message formatter should be a function! It is invalid for data type: ' + userNotification.notification.data.type)
+            return '?';
+        }
+
+        return formatter(userNotification);
+    }
+
+    abp.notifications.showUiNotifyForUserNotification = function (userNotification, options) {
+        var message = abp.notifications.getFormattedMessageFromUserNotification(userNotification);
+        var uiNotifyFunc = abp.notifications.getUiNotifyFuncBySeverity(userNotification.notification.severity);
+        uiNotifyFunc(message, undefined, options);
+    }
 
     /* LOGGING ***************************************************/
     //Implements Logging API that provides secure & controlled usage of console.log
@@ -204,19 +315,19 @@
 
     abp.notify = abp.notify || {};
 
-    abp.notify.success = function (message, title) {
+    abp.notify.success = function (message, title, options) {
         abp.log.warn('abp.notify.success is not implemented!');
     };
 
-    abp.notify.info = function (message, title) {
+    abp.notify.info = function (message, title, options) {
         abp.log.warn('abp.notify.info is not implemented!');
     };
 
-    abp.notify.warn = function (message, title) {
+    abp.notify.warn = function (message, title, options) {
         abp.log.warn('abp.notify.warn is not implemented!');
     };
 
-    abp.notify.error = function (message, title) {
+    abp.notify.error = function (message, title, options) {
         abp.log.warn('abp.notify.error is not implemented!');
     };
 
@@ -306,11 +417,11 @@
 
     /* SIMPLE EVENT BUS *****************************************/
 
-    abp.event = (function() {
+    abp.event = (function () {
 
         var _callbacks = {};
 
-        var on = function(eventName, callback) {
+        var on = function (eventName, callback) {
             if (!_callbacks[eventName]) {
                 _callbacks[eventName] = [];
             }
@@ -318,7 +429,28 @@
             _callbacks[eventName].push(callback);
         };
 
-        var trigger = function(eventName) {
+        var off = function (eventName, callback) {
+            var callbacks = _callbacks[eventName];
+            if (!callbacks) {
+                return;
+            }
+
+            var index = -1;
+            for (var i = 0; i < callbacks.length; i++) {
+                if (callbacks[i] === callback) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index < 0) {
+                return;
+            }
+
+            _callbacks[eventName].splice(index, 1);
+        };
+
+        var trigger = function (eventName) {
             var callbacks = _callbacks[eventName];
             if (!callbacks || !callbacks.length) {
                 return;
@@ -334,6 +466,7 @@
 
         return {
             on: on,
+            off: off,
             trigger: trigger
         };
     })();
@@ -362,9 +495,19 @@
         return root;
     };
 
+    /* Find and replaces a string (search) to another string (replacement) in
+    *  given string (str).
+    *  Example:
+    *  abp.utils.replaceAll('This is a test string', 'is', 'X') = 'ThX X a test string'
+    ************************************************************/
+    abp.utils.replaceAll = function (str, search, replacement) {
+        var fix = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return str.replace(new RegExp(fix, 'g'), replacement);
+    };
+
     /* Formats a string just like string.format in C#.
     *  Example:
-    *  _formatString('Hello {0}','Halil') = 'Hello Halil'
+    *  abp.utils.formatString('Hello {0}','Tuana') = 'Hello Tuana'
     ************************************************************/
     abp.utils.formatString = function () {
         if (arguments.length < 1) {
@@ -375,10 +518,274 @@
 
         for (var i = 1; i < arguments.length; i++) {
             var placeHolder = '{' + (i - 1) + '}';
-            str = str.replace(placeHolder, arguments[i]);
+            str = abp.utils.replaceAll(str, placeHolder, arguments[i]);
         }
 
         return str;
     };
 
-})();
+    abp.utils.toPascalCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toUpperCase();
+        }
+
+        return str.charAt(0).toUpperCase() + str.substr(1);
+    }
+
+    abp.utils.toCamelCase = function (str) {
+        if (!str || !str.length) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.charAt(0).toLowerCase();
+        }
+
+        return str.charAt(0).toLowerCase() + str.substr(1);
+    }
+
+    abp.utils.truncateString = function (str, maxLength) {
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        return str.substr(0, maxLength);
+    };
+
+    abp.utils.truncateStringWithPostfix = function (str, maxLength, postfix) {
+        postfix = postfix || '...';
+
+        if (!str || !str.length || str.length <= maxLength) {
+            return str;
+        }
+
+        if (maxLength <= postfix.length) {
+            return postfix.substr(0, maxLength);
+        }
+
+        return str.substr(0, maxLength - postfix.length) + postfix;
+    };
+
+    abp.utils.isFunction = function (obj) {
+        if ($) {
+            //Prefer to use jQuery if possible
+            return $.isFunction(obj);
+        }
+
+        //alternative for $.isFunction
+        return !!(obj && obj.constructor && obj.call && obj.apply);
+    };
+
+    /**
+     * parameterInfos should be an array of { name, value } objects
+     * where name is query string parameter name and value is it's value.
+     * includeQuestionMark is true by default.
+     */
+    abp.utils.buildQueryString = function (parameterInfos, includeQuestionMark) {
+        if (includeQuestionMark === undefined) {
+            includeQuestionMark = true;
+        }
+
+        var qs = '';
+
+        for (var i = 0; i < parameterInfos.length; ++i) {
+            var parameterInfo = parameterInfos[i];
+            if (parameterInfo.value === undefined) {
+                continue;
+            }
+
+            if (parameterInfo.value === null) {
+                parameterInfo.value = '';
+            }
+
+            if (!qs.length) {
+                if (includeQuestionMark) {
+                    qs = qs + '?';
+                }
+            } else {
+                qs = qs + '&';
+            }
+
+            if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
+                qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value.toJSON());
+            } else {
+                qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value);
+            }
+        }
+
+        return qs;
+    }
+
+    /**
+     * Sets a cookie value for given key.
+     * @param {string} key
+     * @param {string} value 
+     * @param {Date} expireDate Optional expire date (default: 30 days).
+     */
+    abp.utils.setCookieValue = function (key, value, expireDate) {
+        if (!expireDate) {
+            expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 30);
+        }
+
+        document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value) + "; expires=" + expireDate.toUTCString();
+    };
+
+    /**
+     * Gets a cookie with given key.
+     * @param {string} key
+     * @returns {string} Cookie value
+     */
+    abp.utils.getCookieValue = function (key) {
+        var equalities = document.cookie.split('; ');
+        for (var i = 0; i < equalities.length; i++) {
+            if (!equalities[i]) {
+                continue;
+            }
+
+            var splitted = equalities[i].split('=');
+            if (splitted.length != 2) {
+                continue;
+            }
+
+            if (decodeURIComponent(splitted[0]) === key) {
+                return decodeURIComponent(splitted[1] || '');
+            }
+        }
+
+        return null;
+    };
+
+    /* TIMING *****************************************/
+    abp.timing = abp.timing || {};
+
+    abp.timing.utcClockProvider = (function () {
+
+        var toUtc = function (date) {
+            return Date.UTC(
+                date.getUTCFullYear()
+                , date.getUTCMonth()
+                , date.getUTCDate()
+                , date.getUTCHours()
+                , date.getUTCMinutes()
+                , date.getUTCSeconds()
+                , date.getUTCMilliseconds()
+            );
+        }
+
+        var now = function () {
+            return new Date();
+        };
+
+        var normalize = function (date) {
+            if (!date) {
+                return date;
+            }
+
+            return new Date(toUtc(date));
+        };
+
+        // Public interface ///////////////////////////////////////////////////
+
+        return {
+            now: now,
+            normalize: normalize
+        };
+    })();
+
+    abp.timing.localClockProvider = (function () {
+
+        var toLocal = function (date) {
+            return new Date(
+                date.getFullYear()
+                , date.getMonth()
+                , date.getDate()
+                , date.getHours()
+                , date.getMinutes()
+                , date.getSeconds()
+                , date.getMilliseconds()
+            );
+        }
+
+        var now = function () {
+            return toLocal(new Date());
+        }
+
+        var normalize = function (date) {
+            if (!date) {
+                return date;
+            }
+
+            return toLocal(date);
+        }
+
+        // Public interface ///////////////////////////////////////////////////
+
+        return {
+            now: now,
+            normalize: normalize
+        };
+    })();
+
+    abp.timing.unspecifiedClockProvider = (function () {
+
+        var now = function () {
+            return new Date();
+        }
+
+        var normalize = function (date) {
+            return date;
+        }
+
+        // Public interface ///////////////////////////////////////////////////
+
+        return {
+            now: now,
+            normalize: normalize
+        };
+    })();
+
+    abp.timing.convertToUserTimezone = function (date) {
+        var localTime = date.getTime();
+        var utcTime = localTime + (date.getTimezoneOffset() * 60000);
+        var targetTime = parseInt(utcTime) + parseInt(abp.timing.timeZoneInfo.windows.currentUtcOffsetInMilliseconds);
+        return new Date(targetTime);
+    };
+
+    /* CLOCK *****************************************/
+    abp.clock = abp.clock || {};
+
+    abp.clock.now = function () {
+        if (abp.clock.provider) {
+            return abp.clock.provider.now();
+        }
+
+        return new Date();
+    }
+
+    abp.clock.normalize = function (date) {
+        if (abp.clock.provider) {
+            return abp.clock.provider.normalize(date);
+        }
+
+        return date;
+    }
+
+    abp.clock.provider = abp.timing.unspecifiedClockProvider;
+
+    /* SECURITY ***************************************/
+    abp.security = abp.security || {};
+    abp.security.antiForgery = abp.security.antiForgery || {};
+
+    abp.security.antiForgery.tokenCookieName = 'XSRF-TOKEN';
+    abp.security.antiForgery.tokenHeaderName = 'X-XSRF-TOKEN';
+
+    abp.security.antiForgery.getToken = function () {
+        return abp.utils.getCookieValue(abp.security.antiForgery.tokenCookieName);
+    };
+
+})(jQuery);

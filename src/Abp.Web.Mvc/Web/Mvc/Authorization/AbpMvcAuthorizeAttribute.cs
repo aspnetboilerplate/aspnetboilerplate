@@ -1,7 +1,5 @@
 ﻿using System.Web.Mvc;
 using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.Web.Mvc.Authorization
 {
@@ -26,28 +24,22 @@ namespace Abp.Web.Mvc.Authorization
             Permissions = permissions;
         }
 
-        /// <inheritdoc/>
-        protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            if (!base.AuthorizeCore(httpContext))
+            var httpContext = filterContext.HttpContext;
+
+            if (!httpContext.Request.IsAjaxRequest())
             {
-                return false;
+                base.HandleUnauthorizedRequest(filterContext);
+                return;
             }
 
-            try
-            {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-                {
-                    authorizationAttributeHelper.Object.Authorize(this);
-                }
+            httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
+                                      ? (int)System.Net.HttpStatusCode.Unauthorized
+                                      : (int)System.Net.HttpStatusCode.Forbidden;
 
-                return true;
-            }
-            catch (AbpAuthorizationException ex)
-            {
-                LogHelper.Logger.Warn(ex.ToString(), ex);
-                return false;
-            }
+            httpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            httpContext.Response.End();
         }
     }
 }

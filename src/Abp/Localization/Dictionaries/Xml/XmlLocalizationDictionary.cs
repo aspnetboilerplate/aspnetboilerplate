@@ -49,10 +49,10 @@ namespace Abp.Localization.Dictionaries.Xml
         /// <param name="xmlString">XML string</param>
         public static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
         {
-            var settingsXmlDoc = new XmlDocument();
-            settingsXmlDoc.LoadXml(xmlString);
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xmlString);
 
-            var localizationDictionaryNode = settingsXmlDoc.SelectNodes("/localizationDictionary");
+            var localizationDictionaryNode = xmlDocument.SelectNodes("/localizationDictionary");
             if (localizationDictionaryNode == null || localizationDictionaryNode.Count <= 0)
             {
                 throw new AbpException("A Localization Xml must include localizationDictionary as root node.");
@@ -68,7 +68,7 @@ namespace Abp.Localization.Dictionaries.Xml
 
             var dublicateNames = new List<string>();
 
-            var textNodes = settingsXmlDoc.SelectNodes("/localizationDictionary/texts/text");
+            var textNodes = xmlDocument.SelectNodes("/localizationDictionary/texts/text");
             if (textNodes != null)
             {
                 foreach (XmlNode node in textNodes)

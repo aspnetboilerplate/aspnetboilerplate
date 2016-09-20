@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>Startup Template</title>
+		<link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+	</head>
+
+	<body>
+
+		<div class="document-contents">
+
+			<h3>Introduction</h3>
+			<p>The easiest way of starting a new project using ABP and module-zero is to create a 
+	template on <a href="/Templates">templates page</a>. Remember to check "<strong>Include 
+		module zero</strong>".</p>
+			<p>After creating and downloading your project,</p>
+			<ul>
+				<li>Open your solution on Visual Studio 2013+.</li>
+				<li>Select the '<strong>Web</strong>' project as startup project.</li>
+				<li>Open Package Manager Console, select '<strong>EntityFramework</strong>' project as 
+					<strong>Default project</strong> and run the EntityFramework's '<strong>Update-Database</strong>' command. This will create the database. 
+		You can change <strong>connection string</strong> from web.config.</li>
+				<li>Run the application. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default.</li>
+			</ul>
+
+			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
+	can disable it in Core project's module class if you don't need.</p>
+
+			<h3>Social Logins</h3>
+			<p>Startup template supports <strong>Facebook</strong>, <strong>Twitter</strong> 
+	and <strong>Google+ </strong>logins. In the web.config, you can see the 
+	following settings:</p>
+			<pre lang="xml">&lt;add key=&quot;ExternalAuth.Facebook.IsEnabled&quot; value=&quot;false&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Facebook.AppId&quot; value=&quot;&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Facebook.AppSecret&quot; value=&quot;&quot; /&gt;
+
+&lt;add key=&quot;ExternalAuth.Twitter.IsEnabled&quot; value=&quot;false&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Twitter.ConsumerKey&quot; value=&quot;&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Twitter.ConsumerSecret&quot; value=&quot;&quot; /&gt;
+
+&lt;add key=&quot;ExternalAuth.Google.IsEnabled&quot; value=&quot;false&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Google.ClientId&quot; value=&quot;&quot; /&gt;
+&lt;add key=&quot;ExternalAuth.Google.ClientSecret&quot; value=&quot;&quot; /&gt;</pre>
+			<p>Here, you can enable which you need. Surely, you must have application 
+	keys and passwords which you need to get from related social web site. You 
+	can find guides from web to learn how to obtain this keys. Once you enable a 
+	social login and enter true keys, you will see a button in the login page. 
+	You can implement other logins as similar.</p>
+			<h3>Token Based Authentication</h3>
+			<p>Startup template uses cookie based authentication for browsers. However, if you 
+	want to consume Web APIs or application services (those are exposed via 
+				<a href="/Pages/Documents/Dynamic-Web-API">dynamic 
+	web api</a>) from a mobile application, you probably want a token based 
+	authentication mechanism. Startup template includes bearer token authentication 
+	infrastructure. <strong>AccountController</strong> in <strong>.WebApi</strong> 
+	project contains <strong>Authenticate</strong> action to get the token. Then we 
+	can use the token for next requests.</p>
+			<p>Here, <strong>Postman</strong> (chrome extension) will be used to demonstrate 
+	requests and responses.</p>
+			<h4>Authentication</h4>
+			<p>Just send a <strong>POST</strong> request to <strong>
+	http://localhost:6334/api/Account/Authenticate</strong> with <strong>
+	Context-Type="application/json"</strong> header as shown below:</p>
+			<p>
+				<img class="img-thumbnail" alt="Request for token" height="670" src="../images/token-authenticate.png" width="673" />
+			</p>
+			<p>We sent a <strong>JSON request body</strong> includes <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. 
+	Also, <strong>tenancyName </strong>should be sent for <strong>tenant</strong> users. As seen 
+	above, <strong>result</strong> property of returning JSON contains the token. We 
+	can save it and use for next requests.</p>
+			<h4>Use API</h4>
+			<p>After authenticate and get the <strong>token</strong>, we can use it to call any <strong>authorized</strong> 
+	action. All <strong>application services </strong>are available to be used remotely. For 
+	example, we can use the <strong>Tenant service</strong> to get a <strong>list of
+	tenants</strong>:</p>
+			<p>
+				<img class="img-thumbnail" alt="Authorization via token" height="713" src="../images/token-request.png" width="702" />
+			</p>
+			<p>Just made a <strong>POST</strong> request to <strong>
+	http://localhost:6334/api/services/app/tenant/GetTenants</strong> with <strong>
+	Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
+	your-</em>
+				</strong>
+				<em>
+					<strong>auth-token</strong>
+				</em>
+				<strong>"</strong>. 
+	Request body was just empty <strong>{}</strong>. Surely, request and response 
+	body will be different for different APIs.</p>
+			<p>Almost all operations available on UI are also available as Web API (since UI 
+	uses the same Web API) and can be consumed easily.</p>
+			<h3>Migrator Console Application</h3>
+<p>Startup template includes a tool, Migrator.exe, to easily migrate your databases. 
+You can run this application to create/migrate host and tenant databases.</p>
+<p>
+<img class="img-thumbnail" alt="Database Migrator" height="230" src="../images/database-migrator.png" width="659" /></p>
+<p>This application gets host connection string from it's <strong>own .config 
+file</strong>. It will be same in the web.config at the beggining. Be sure that 
+the connection string in config file is the database you want. After getting
+<strong class="auto-style2">host </strong><strong>connection sring</strong>, it 
+first creates the host database or apply migrations if it does already exists. 
+Then it gets connection strings of tenant databases and runs migrations for 
+those databases. It skips a tenant if it has not a dedicated database or it's 
+database is already migrated for another tenant (for shared databases between 
+multiple tenants).</p>
+			<p>You can use this tool on development or on product environment to 
+			migrate databases on deployment, instead of EntityFramework's own 
+			Migrate.exe (which requires some configuration and can work for 
+			single database in one run).</p>
+			<h3>Unit Testing</h3>
+			<p>Startup template includes test infrastructure setup and a few tests under 
+	the .Test project. You can check them and write similar tests easily. 
+	Actually, they are integration tests rather than unit tests since they tests 
+	your code with all ASP.NET Boilerplate infrastructure (including validation, 
+	authorization, unit of work...).</p>
+
+		</div>
+
+	</body>
+
+</html>

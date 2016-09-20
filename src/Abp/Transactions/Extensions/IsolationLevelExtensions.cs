@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Abp.Transactions.Extensions
 {
-    internal static class IsolationLevelExtensions
+    public static class IsolationLevelExtensions
     {
         /// <summary>
         /// Converts <see cref="System.Transactions.IsolationLevel"/> to <see cref="IsolationLevel"/>.

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Collections.Extensions;
-using Abp.Extensions;
 
 namespace Abp.Modules
 {
@@ -33,7 +32,20 @@ namespace Abp.Modules
         /// <returns>Sorted list</returns>
         public List<AbpModuleInfo> GetSortedModuleListByDependency()
         {
-            return this.SortByDependencies(x => x.Dependencies).ToList();
+            var sortedModules = this.SortByDependencies(x => x.Dependencies);
+            EnsureKernelModuleToBeFirst(sortedModules);
+            return sortedModules;
+        }
+
+        public static void EnsureKernelModuleToBeFirst(List<AbpModuleInfo> modules)
+        {
+            var kernelModuleIndex = modules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            if (kernelModuleIndex > 0)
+            {
+                var kernelModule = modules[kernelModuleIndex];
+                modules.RemoveAt(kernelModuleIndex);
+                modules.Insert(0, kernelModule);
+            }
         }
     }
 }

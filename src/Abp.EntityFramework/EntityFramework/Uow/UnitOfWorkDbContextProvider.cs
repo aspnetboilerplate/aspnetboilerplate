@@ -1,5 +1,6 @@
 using System.Data.Entity;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -14,7 +15,7 @@ namespace Abp.EntityFramework.Uow
         /// <summary>
         /// Gets the DbContext.
         /// </summary>
-        public TDbContext DbContext { get { return _currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(); } }
+        public TDbContext DbContext { get { return GetDbContext(null); } }
 
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
@@ -25,6 +26,16 @@ namespace Abp.EntityFramework.Uow
         public UnitOfWorkDbContextProvider(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+        }
+
+        public TDbContext GetDbContext()
+        {
+            return GetDbContext(null);
+        }
+
+        public TDbContext GetDbContext(MultiTenancySides? multiTenancySide)
+        {
+            return _currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
         }
     }
 }

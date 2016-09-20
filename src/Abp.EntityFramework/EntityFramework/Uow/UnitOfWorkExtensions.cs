@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -18,17 +19,23 @@ namespace Abp.EntityFramework.Uow
         public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork) 
             where TDbContext : DbContext
         {
+            return GetDbContext<TDbContext>(unitOfWork, null);
+        }
+
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide)
+            where TDbContext : DbContext
+        {
             if (unitOfWork == null)
             {
-                throw new ArgumentNullException("unitOfWork");
+                throw new ArgumentNullException(nameof(unitOfWork));
             }
 
             if (!(unitOfWork is EfUnitOfWork))
             {
-                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, "unitOfWork");
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
             }
 
-            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>();
+            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Abp.Domain.Uow
 
         }
 
-        public async override Task SaveChangesAsync()
+        public override Task SaveChangesAsync()
         {
-
+            return Task.FromResult(0);
         }
 
         protected override void BeginUow()
@@ -29,9 +29,9 @@ namespace Abp.Domain.Uow
 
         }
 
-        protected async override Task CompleteUowAsync()
+        protected override Task CompleteUowAsync()
         {
-
+            return Task.FromResult(0);
         }
 
         protected override void DisposeUow()
@@ -39,8 +39,14 @@ namespace Abp.Domain.Uow
 
         }
 
-        public NullUnitOfWork(IUnitOfWorkDefaultOptions defaultOptions)
-            : base(defaultOptions)
+        public NullUnitOfWork(
+            IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkDefaultOptions defaultOptions,
+            IUnitOfWorkFilterExecuter filterExecuter
+            ) : base(
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
         }
     }

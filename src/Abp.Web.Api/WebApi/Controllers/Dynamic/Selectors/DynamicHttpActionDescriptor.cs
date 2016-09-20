@@ -1,85 +1,131 @@
 using System;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
+using System.Collections.Generic;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Web.Http;
 using System.Web.Http.Filters;
 using Abp.Collections.Extensions;
+using Abp.Reflection;
+using Abp.Web;
+using Abp.WebApi.Configuration;
 using Abp.Extensions;
-using Abp.Web.Models;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
     public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {
-        /// <summary>
-        /// The Action filters for the Action Descriptor.
-        /// </summary>
-        private readonly IFilter[] _filters;
+        public override Collection<HttpMethod> SupportedHttpMethods { get; }
 
-        public override Type ReturnType
+        private readonly DynamicApiActionInfo _actionInfo;
+        private readonly Lazy<Collection<IFilter>> _filters;
+        private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
+        private readonly object[] _attributes;
+        private readonly object[] _declaredOnlyAttributes;
+
+
+        public DynamicHttpActionDescriptor(
+            IAbpWebApiConfiguration configuration,
+            HttpControllerDescriptor controllerDescriptor,
+            DynamicApiActionInfo actionInfo)
+            : base(
+                  controllerDescriptor,
+                  actionInfo.Method)
         {
-            get
-            {
-                return typeof(AjaxResponse);
-            }
-        }
+            _actionInfo = actionInfo;
+            SupportedHttpMethods = new Collection<HttpMethod> { actionInfo.Verb.ToHttpMethod() };
 
-        public DynamicHttpActionDescriptor(HttpControllerDescriptor controllerDescriptor, MethodInfo methodInfo, IFilter[] filters = null)
-            : base(controllerDescriptor, methodInfo)
-        {
-            _filters = filters;
-        }
+            Properties["__AbpDynamicApiActionInfo"] = actionInfo;
+            Properties["__AbpDynamicApiDontWrapResultAttribute"] =
+                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+                    actionInfo.Method,
+                    configuration.DefaultDynamicApiWrapResultAttribute
+                );
 
-        public override System.Threading.Tasks.Task<object> ExecuteAsync(HttpControllerContext controllerContext, System.Collections.Generic.IDictionary<string, object> arguments, System.Threading.CancellationToken cancellationToken)
-        {
-            return base
-                .ExecuteAsync(controllerContext, arguments, cancellationToken)
-                .ContinueWith(task =>
-                {
-                    try
-                    {
-                        if (task.Result == null)
-                        {
-                            return new AjaxResponse();
-                        }
+            _filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
+            _parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
 
-                        if (task.Result is AjaxResponse)
-                        {
-                            return task.Result;
-                        }
-                        
-                        return new AjaxResponse(task.Result);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        ex.InnerException.ReThrow();
-                        throw; // The previous line will throw, but we need this to make compiler happy
-                    }
-                }, cancellationToken);
+            _declaredOnlyAttributes = _actionInfo.Method.GetCustomAttributes(inherit: false);
+            _attributes = _actionInfo.Method.GetCustomAttributes(inherit: true);
         }
 
         /// <summary>
-        /// The overrides the GetFilters for the action and adds the Dynamic Action filters.
+        /// Overrides the GetFilters for the action and adds the Dynamic Action filters.
         /// </summary>
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()
         {
+            return _filters.Value;
+        }
+
+        public override Collection<T> GetCustomAttributes<T>(bool inherit)
+        {
+            object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
+            return new Collection<T>(FilterType<T>(attributes));
+        }
+
+        public override Collection<HttpParameterDescriptor> GetParameters()
+        {
+            return _parameters.Value;
+        }
+
+        private Collection<IFilter> GetFiltersInternal()
+        {
+            if (_actionInfo.Filters.IsNullOrEmpty())
+            {
+                return base.GetFilters();
+            }
+
             var actionFilters = new Collection<IFilter>();
 
-            if (!_filters.IsNullOrEmpty())
+            foreach (var filter in _actionInfo.Filters)
             {
-                foreach (var filter in _filters)
-                {
-                    actionFilters.Add(filter);
-                }
+                actionFilters.Add(filter);
             }
 
             foreach (var baseFilter in base.GetFilters())
             {
                 actionFilters.Add(baseFilter);
             }
+
             return actionFilters;
+        }
+
+        private Collection<HttpParameterDescriptor> GetParametersInternal()
+        {
+            var parameters = base.GetParameters();
+
+            if (_actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
+            {
+                foreach (var parameter in parameters)
+                {
+                    if (parameter.ParameterBinderAttribute == null)
+                    {
+                        parameter.ParameterBinderAttribute = new FromUriAttribute();
+                    }
+                }
+            }
+
+            return parameters;
+        }
+
+        internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
+        {
+            int max = objects.Length;
+            List<T> list = new List<T>(max);
+            int idx = 0;
+            for (int i = 0; i < max; i++)
+            {
+                T attr = objects[i] as T;
+                if (attr != null)
+                {
+                    list.Add(attr);
+                    idx++;
+                }
+            }
+            list.Capacity = idx;
+
+            return new ReadOnlyCollection<T>(list);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Abp.Application.Services.Dto
     /// A shortcut of <see cref="FullAuditedEntityDto{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
     [Serializable]
-    public class FullAuditedEntityDto : FullAuditedEntityDto<int>
+    public abstract class FullAuditedEntityDto : FullAuditedEntityDto<int>
     {
 
     }

@@ -51,12 +51,23 @@ namespace Abp.Runtime.Caching
 
         public static TValue GetOrDefault<TKey, TValue>(this ICache cache, TKey key)
         {
-            return (TValue)cache.GetOrDefault(key.ToString());
+            var value = cache.GetOrDefault(key.ToString());
+            if (value == null)
+            {
+                return default(TValue);
+            }
+
+            return (TValue) value;
         }
 
         public static async Task<TValue> GetOrDefaultAsync<TKey, TValue>(this ICache cache, TKey key)
         {
             var value = await cache.GetOrDefaultAsync(key.ToString());
+            if (value == null)
+            {
+                return default(TValue);
+            }
+
             return (TValue)value;
         }
     }

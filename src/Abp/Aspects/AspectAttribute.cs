@@ -61,7 +61,7 @@ namespace Abp.Aspects
         }
     }
 
-    internal class Test_Acpects
+    internal class Test_Aspects
     {
         internal class MyAspectAttribute : AspectAttribute
         {

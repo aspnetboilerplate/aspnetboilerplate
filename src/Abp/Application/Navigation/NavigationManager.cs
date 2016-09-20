@@ -34,8 +34,10 @@ namespace Abp.Application.Navigation
 
             foreach (var providerType in _configuration.Providers)
             {
-                var provider = (NavigationProvider)_iocResolver.Resolve(providerType);
-                provider.SetNavigation(context);
+                using (var provider = _iocResolver.ResolveAsDisposable<NavigationProvider>(providerType))
+                {
+                    provider.Object.SetNavigation(context);
+                }
             }
         }
     }

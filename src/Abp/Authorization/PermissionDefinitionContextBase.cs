@@ -20,14 +20,14 @@ namespace Abp.Authorization
             bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency dependedFeature = null)
+            IFeatureDependency featureDependency = null)
         {
             if (Permissions.ContainsKey(name))
             {
                 throw new AbpException("There is already a permission with name: " + name);
             }
 
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, dependedFeature);
+            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, featureDependency);
             Permissions[permission.Name] = permission;
             return permission;
         }
