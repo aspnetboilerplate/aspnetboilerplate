@@ -7,6 +7,7 @@ using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Threading;
+using Abp.Web.Configuration;
 
 namespace Abp.Web
 {
@@ -21,12 +22,8 @@ namespace Abp.Web
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        protected AbpBootstrapper AbpBootstrapper { get; }
-
-        protected AbpWebApplication()
-        {
-            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
-        }
+        public static AbpBootstrapper AbpBootstrapper { get; } = AbpBootstrapper.Create<TStartupModule>();
+        private static IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
 
         /// <summary>
         /// This method is called by ASP.NET system on web application's startup.
@@ -34,7 +31,10 @@ namespace Abp.Web
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
+
             AbpBootstrapper.Initialize();
+
+            _webLocalizationConfiguration = AbpBootstrapper.IocManager.Resolve<IAbpWebLocalizationConfiguration>();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Abp.Web
 
         protected virtual void SetCurrentCulture()
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
+            var langCookie = Request.Cookies[_webLocalizationConfiguration.CookieName];
             if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
@@ -98,7 +98,7 @@ namespace Abp.Web
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            
+
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)

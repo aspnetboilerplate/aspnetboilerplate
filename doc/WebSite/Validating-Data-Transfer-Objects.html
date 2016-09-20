@@ -96,19 +96,24 @@ can work even out of a web application.</p>
     [Required]
     public string Description { get; set; }
 
-<strong>    public void AddValidationErrors(List&lt;ValidationResult&gt; results)
+<strong>    public void AddValidationErrors(CustomValidatationContext context)
     {
         if (SendEmailToAssignedPerson &amp;&amp; (!AssignedPersonId.HasValue || AssignedPersonId.Value &lt;= 0))
         {
-            results.Add(new ValidationResult(&quot;AssignedPersonId must be set if SendEmailToAssignedPerson is true!&quot;));
+            context.Results.Add(new ValidationResult(&quot;AssignedPersonId must be set if SendEmailToAssignedPerson is true!&quot;));
         }
     }</strong>
 }</pre>
 			<p>ICustomValidate interface declares <strong>AddValidationErrors</strong> 
-method to be implemented. Here, we have a <strong>SendEmailToAssignedPerson</strong> property. If it's 
-true, <strong>AssignedPersonId</strong> should be supplied, else it can be null. 
-We must add <strong>ValidationResult</strong> objects to <strong>results</strong> list if there are 
-validation errors.</p>
+			method to be implemented. 
+We must add <strong>ValidationResult</strong> objects to <strong>context.Results</strong> list if there are 
+validation errors. You can also use context.IocResolver to
+			<a href="Dependency-Injection.html">resolve dependencies</a> if 
+			needed in validation progress.&nbsp;</p>
+			<p>In addition to ICustomValidate, ABP also supports .NET's standard 
+			IValidatableObject interface. You can also implement it to perform 
+			additional custom validations. If you implement both interfaces, 
+			both of them will be called.</p>
 			<h3>Disabling Validation</h3>
 			<p>For automatically validated classes (see Introduction section), 
 			you can use these attributes to control validation:</p>

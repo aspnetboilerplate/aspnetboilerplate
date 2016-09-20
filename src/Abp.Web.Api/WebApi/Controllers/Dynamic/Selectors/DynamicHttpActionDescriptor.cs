@@ -13,6 +13,28 @@ using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
+    internal static class DynamicApiDescriptorHelper
+    {
+        internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
+        {
+            int max = objects.Length;
+            List<T> list = new List<T>(max);
+            int idx = 0;
+            for (int i = 0; i < max; i++)
+            {
+                T attr = objects[i] as T;
+                if (attr != null)
+                {
+                    list.Add(attr);
+                    idx++;
+                }
+            }
+            list.Capacity = idx;
+
+            return new ReadOnlyCollection<T>(list);
+        }
+    }
+
     public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
     {
         public override Collection<HttpMethod> SupportedHttpMethods { get; }
@@ -20,10 +42,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         private readonly DynamicApiActionInfo _actionInfo;
         private readonly Lazy<Collection<IFilter>> _filters;
         private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
+
         private readonly object[] _attributes;
         private readonly object[] _declaredOnlyAttributes;
-
-
+        
         public DynamicHttpActionDescriptor(
             IAbpWebApiConfiguration configuration,
             HttpControllerDescriptor controllerDescriptor,
@@ -61,7 +83,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         public override Collection<T> GetCustomAttributes<T>(bool inherit)
         {
             object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
-            return new Collection<T>(FilterType<T>(attributes));
+            return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
         }
 
         public override Collection<HttpParameterDescriptor> GetParameters()
@@ -107,25 +129,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             return parameters;
-        }
-
-        internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
-        {
-            int max = objects.Length;
-            List<T> list = new List<T>(max);
-            int idx = 0;
-            for (int i = 0; i < max; i++)
-            {
-                T attr = objects[i] as T;
-                if (attr != null)
-                {
-                    list.Add(attr);
-                    idx++;
-                }
-            }
-            list.Capacity = idx;
-
-            return new ReadOnlyCollection<T>(list);
         }
     }
 }

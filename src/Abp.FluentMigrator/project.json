@@ -1,8 +1,8 @@
 {
-  "version": "0.12.0.2-*",
+  "version": "0.13.0.0-*",
 
   "dependencies": {
-    "Abp": "0.12.0.2-*",
+    "Abp": "0.13.0.0-*",
     "FluentMigrator": "1.6.2"
   },
 

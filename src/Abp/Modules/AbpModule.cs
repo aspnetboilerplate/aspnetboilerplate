@@ -91,7 +91,7 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// Finds direct depended modules of a module.
+        /// Finds direct depended modules of a module (excluding given module).
         /// </summary>
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
@@ -117,11 +117,7 @@ namespace Abp.Modules
             return list;
         }
 
-
-        /// <summary>
-        /// Finds all depended modules (and their dependencies recursively) for a module.
-        /// </summary>
-        public static List<Type> FindDependedModuleTypesRecursively(Type moduleType)
+        public static List<Type> FindDependedModuleTypesRecursivelyIncludingGivenModule(Type moduleType)
         {
             var list = new List<Type>();
             AddModuleAndDependenciesResursively(list, moduleType);

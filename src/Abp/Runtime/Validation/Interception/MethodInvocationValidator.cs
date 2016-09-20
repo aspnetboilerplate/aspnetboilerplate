@@ -21,16 +21,21 @@ namespace Abp.Runtime.Validation.Interception
         protected object[] ParameterValues { get; private set; }
         protected ParameterInfo[] Parameters { get; private set; }
         protected List<ValidationResult> ValidationErrors { get; }
+        protected List<IShouldNormalize> ObjectsToBeNormalized { get; }
 
         private readonly IValidationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        public MethodInvocationValidator(IValidationConfiguration configuration)
+        public MethodInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
         {
             _configuration = configuration;
+            _iocResolver = iocResolver;
+
             ValidationErrors = new List<ValidationResult>();
+            ObjectsToBeNormalized = new List<IShouldNormalize>();
         }
 
         /// <param name="method">Method to be validated</param>
@@ -92,9 +97,9 @@ namespace Abp.Runtime.Validation.Interception
                     );
             }
 
-            foreach (var parameterValue in ParameterValues)
+            foreach (var objectToBeNormalized in ObjectsToBeNormalized)
             {
-                NormalizeParameter(parameterValue);
+                objectToBeNormalized.Normalize();
             }
         }
 
@@ -156,9 +161,18 @@ namespace Abp.Runtime.Validation.Interception
                 }
             }
 
-            if (validatingObject is ICustomValidate)
+            //Custom validations
+            (validatingObject as ICustomValidate)?.AddValidationErrors(
+                new CustomValidationContext(
+                    ValidationErrors,
+                    _iocResolver
+                )
+            );
+
+            //Add list to be normalized later
+            if (validatingObject is IShouldNormalize)
             {
-                (validatingObject as ICustomValidate).AddValidationErrors(ValidationErrors);
+                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
             }
 
             //Do not recursively validate for enumerable objects
@@ -221,13 +235,11 @@ namespace Abp.Runtime.Validation.Interception
                     }
                 }
             }
-        }
 
-        protected virtual void NormalizeParameter(object parameterValue)
-        {
-            if (parameterValue is IShouldNormalize)
+            if (validatingObject is IValidatableObject)
             {
-                (parameterValue as IShouldNormalize).Normalize();
+                var results = (validatingObject as IValidatableObject).Validate(new ValidationContext(validatingObject));
+                ValidationErrors.AddRange(results);
             }
         }
     }

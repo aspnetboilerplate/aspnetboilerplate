@@ -21,6 +21,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private Func<Type, bool> _typePredicate;
         private bool _conventionalVerbs;
         private Action<IApiControllerActionBuilder<T>> _forMethodsAction;
+        private bool? _isApiExplorerEnabled;
 
         public BatchApiControllerBuilder(Assembly assembly, string servicePrefix)
         {
@@ -37,6 +38,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IBatchApiControllerBuilder<T> WithFilters(params IFilter[] filters)
         {
             _filters = filters;
+            return this;
+        }
+
+        public IBatchApiControllerBuilder<T> WithApiExplorer(bool isEnabled)
+        {
+            _isApiExplorerEnabled = isEnabled;
             return this;
         }
 
@@ -98,6 +105,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     builder.GetType()
                         .GetMethod("WithFilters", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _filters });
+                }
+
+                if (_isApiExplorerEnabled != null)
+                {
+                    builder.GetType()
+                        .GetMethod("WithApiExplorer", BindingFlags.Public | BindingFlags.Instance)
+                        .Invoke(builder, new object[] { _isApiExplorerEnabled });
                 }
 
                 if (_conventionalVerbs)

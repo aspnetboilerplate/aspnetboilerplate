@@ -37,10 +37,8 @@ namespace Abp.AspNetCore.Mvc.Providers
                 return false;
             }
 
-            var configuration = _iocResolver.Resolve<AbpAspNetCoreConfiguration>();
-            return configuration.ServiceControllerSettings.Any(
-                controllerSetting => controllerSetting.Assembly == type.Assembly
-                );
+            var configuration = _iocResolver.Resolve<AbpAspNetCoreConfiguration>().ControllerAssemblySettings.GetSettingOrNull(type);
+            return configuration != null && configuration.TypePredicate(type);
         }
     }
 }

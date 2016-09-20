@@ -38,11 +38,11 @@ namespace Abp.TestBase.Tests.Application.Services
         public void Should_Work_With_Right_Nesned_Inputs()
         {
             var output = _myAppService.MyMethod2(new MyMethod2Input
-                            {
-                                MyStringValue2 = "test 1",
-                                Input1 = new MyMethodInput { MyStringValue = "test 2" },
-                                DateTimeValue = Clock.Now
-                            });
+            {
+                MyStringValue2 = "test 1",
+                Input1 = new MyMethodInput { MyStringValue = "test 2" },
+                DateTimeValue = Clock.Now
+            });
             output.Result.ShouldBe(42);
         }
 
@@ -62,9 +62,9 @@ namespace Abp.TestBase.Tests.Application.Services
         {
             Assert.Throws<AbpValidationException>(() =>
                 _myAppService.MyMethod2(new MyMethod2Input //Input1 is not set
-                                        {
-                                            MyStringValue2 = "test 1"
-                                        }));
+                {
+                    MyStringValue2 = "test 1"
+                }));
         }
 
         [Fact]
@@ -111,6 +111,34 @@ namespace Abp.TestBase.Tests.Application.Services
             _myAppService.MyMethod5(new MyMethod5Input());
         }
 
+        [Fact]
+        public void Should_Use_IValidatableObject_And_ICustomValidate_On_Validation()
+        {
+            Assert.Throws<AbpValidationException>(() =>
+            {
+                _myAppService.MyMethod6(new MyMethod6Input
+                {
+                    MyStringValue = "test value" //MyIntValue has not set!
+                });
+            });
+        }
+
+        [Fact]
+        public void Should_Normalize_Nested_Dtos()
+        {
+            var input = new MyMethod7Input
+            {
+                Inner = new MyMethod7Input.MyMethod7InputInner
+                {
+                    Value = 10
+                }
+            };
+
+            _myAppService.MyMethod7(input);
+
+            input.Inner.Value.ShouldBe(12);
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -120,6 +148,8 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod3(MyMethod3Input input);
             MyMethodOutput MyMethod4(MyMethod4Input input);
             MyMethodOutput MyMethod5(MyMethod5Input input);
+            MyMethodOutput MyMethod6(MyMethod6Input input);
+            MyMethodOutput MyMethod7(MyMethod7Input input);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -145,6 +175,16 @@ namespace Abp.TestBase.Tests.Application.Services
             }
 
             public MyMethodOutput MyMethod5(MyMethod5Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod6(MyMethod6Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod7(MyMethod7Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
@@ -190,6 +230,49 @@ namespace Abp.TestBase.Tests.Application.Services
         {
             [DisableValidation]
             public MyClassInList[] ArrayItems { get; set; }
+        }
+
+        public class MyMethod6Input : IValidatableObject, ICustomValidate
+        {
+            [Required]
+            [MinLength(2)]
+            public string MyStringValue { get; set; }
+
+            public int MyIntValue { get; set; }
+
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                if (MyIntValue < 18)
+                {
+                    yield return new ValidationResult("MyIntValue must be greather than or equal to 18");
+                }
+            }
+
+            public void AddValidationErrors(CustomValidationContext context)
+            {
+                //a (meaningless) example of resolving dependency in custom validation
+                context.IocResolver.Resolve<IIocManager>().ShouldNotBeNull();
+            }
+        }
+
+        public class MyMethod7Input : IShouldNormalize
+        {
+            public MyMethod7InputInner Inner { get; set; }
+
+            public void Normalize()
+            {
+                Inner.Value++;
+            }
+
+            public class MyMethod7InputInner: IShouldNormalize
+            {
+                public int Value { get; set; }
+
+                public void Normalize()
+                {
+                    Value++;
+                }
+            }
         }
 
         public class MyClassInList

@@ -2,6 +2,7 @@
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -13,8 +14,8 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         private bool _isValidatedBefore;
 
-        public MvcActionInvocationValidator(IValidationConfiguration configuration)
-            : base(configuration)
+        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
+            : base(configuration, iocResolver)
         {
 
         }

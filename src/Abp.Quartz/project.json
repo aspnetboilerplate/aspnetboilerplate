@@ -1,9 +1,9 @@
 {
-  "version": "0.12.0.2-*",
+  "version": "0.13.0.0-*",
 
   "dependencies": {
-    "Abp": "0.12.0.2-*",
-    "Quartz": "2.3.3"
+    "Abp": "0.13.0.0-*",
+    "Quartz": "2.4.1"
   },
 
   "frameworks": {

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
-using Abp.Utils;
 using NHibernate;
 using NHibernate.Type;
-using NHibernate.Util;
 
 namespace Abp.NHibernate.Interceptors
 {
@@ -22,22 +22,34 @@ namespace Abp.NHibernate.Interceptors
         private readonly IIocManager _iocManager;
         private readonly Lazy<IAbpSession> _abpSession;
         private readonly Lazy<IGuidGenerator> _guidGenerator;
+        private readonly Lazy<IEventBus> _eventBus;
 
         public AbpNHibernateInterceptor(IIocManager iocManager)
         {
             _iocManager = iocManager;
+
             _abpSession =
                 new Lazy<IAbpSession>(
                     () => _iocManager.IsRegistered(typeof(IAbpSession))
                         ? _iocManager.Resolve<IAbpSession>()
-                        : NullAbpSession.Instance
+                        : NullAbpSession.Instance,
+                    isThreadSafe: true
                     );
             _guidGenerator =
                 new Lazy<IGuidGenerator>(
                     () => _iocManager.IsRegistered(typeof(IGuidGenerator))
                         ? _iocManager.Resolve<IGuidGenerator>()
-                        : SequentialGuidGenerator.Instance
+                        : SequentialGuidGenerator.Instance,
+                    isThreadSafe: true
                     );
+
+            _eventBus =
+                new Lazy<IEventBus>(
+                    () => _iocManager.IsRegistered(typeof(IEventBus))
+                        ? _iocManager.Resolve<IEventBus>()
+                        : NullEventBus.Instance,
+                    isThreadSafe: true
+                );
         }
 
         public override bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
@@ -78,6 +90,8 @@ namespace Abp.NHibernate.Interceptors
 
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
+
+            TriggerDomainEvents(entity);
 
             return base.OnSave(entity, id, state, propertyNames, types);
         }
@@ -161,6 +175,8 @@ namespace Abp.NHibernate.Interceptors
                 EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
             }
 
+            TriggerDomainEvents(entity);
+
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types);
         }
 
@@ -168,6 +184,8 @@ namespace Abp.NHibernate.Interceptors
         {
             EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
             EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
+
+            TriggerDomainEvents(entity);
 
             base.OnDelete(entity, id, state, propertyNames, types);
         }
@@ -231,6 +249,28 @@ namespace Abp.NHibernate.Interceptors
 
                     componentObject.GetType().GetProperty(propertyName).SetValue(componentObject, Clock.Normalize(dateTime.Value));
                 }
+            }
+        }
+
+        protected virtual void TriggerDomainEvents(object entityAsObj)
+        {
+            var generatesDomainEventsEntity = entityAsObj as IGeneratesDomainEvents;
+            if (generatesDomainEventsEntity == null)
+            {
+                return;
+            }
+
+            if (generatesDomainEventsEntity.DomainEvents.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var domainEvents = generatesDomainEventsEntity.DomainEvents.ToList();
+            generatesDomainEventsEntity.DomainEvents.Clear();
+
+            foreach (var domainEvent in domainEvents)
+            {
+                _eventBus.Value.Trigger(domainEvent.GetType(), entityAsObj, domainEvent);
             }
         }
     }

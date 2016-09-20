@@ -27,7 +27,7 @@ namespace Abp.Configuration
 
         public void Initialize()
         {
-            var context = new SettingDefinitionProviderContext();
+            var context = new SettingDefinitionProviderContext(this);
 
             foreach (var providerType in _settingsConfiguration.Providers)
             {

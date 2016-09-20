@@ -112,6 +112,10 @@ or Student is inserted.</p>
 EventBus.Trigger(this, new TaskCompletedEventData { TaskId = 42 }); //Set 'event source' as 'this'
 EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)</pre>
 
+<p>Another way of triggering events can be using DomainEvents collection of 
+AggregateRoot class (see related section in the <a href="Entities.html">Entity 
+documentation</a>).</p>
+
 			<h3 id="DocHandleEvents">Handling Events</h3>
 
 			<p>To handle an event, you should implement <strong>IEventHandler&lt;T&gt;</strong> 

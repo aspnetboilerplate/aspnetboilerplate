@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.EntityFrameworkCore.Tests.Domain;
+using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.TestBase;
 
 namespace Abp.EntityFrameworkCore.Tests
@@ -17,7 +18,7 @@ namespace Abp.EntityFrameworkCore.Tests
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog {Name = "test-blog-1", Url = "http://testblog1.myblogs.com"};
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
 
                     context.Blogs.Add(blog1);
 

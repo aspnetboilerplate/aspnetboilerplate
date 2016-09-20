@@ -82,11 +82,6 @@ DynamicApiControllerBuilder
 			<p>In this code, we created dynamic web api controllers for all application 
 services in an assembly. Then overrided configuration for a single application 
 service (ITaskAppService) to ignore CreateTask method. </p>
-			<h5>DisableDynamicWebApiAttribute</h5>
-			<p>You can also use DisableDynamicWebApiAttribute for any <strong>
-			interface</strong> or 
-			<strong>method</strong> definition to ignore this service or method while creating 
-			dynamic web api.</p>
 			<h5>ForMethods</h5>
 			<p>We can use <strong>ForMethods</strong> method to better adjust 
 			each method while using ForAll method. Example:</p>
@@ -158,6 +153,16 @@ WithConventionalVerbs</strong> method as shown below:</p>
 	HTTP verb.</li>
 			</ul>
 			<p>We can override it for a specific method as described before.</p>
+			<h4>API Explorer</h4>
+			<p>All dynamic web api controllers are visible to API explorer by 
+			default (They are available in <a href="Swagger-UI-Integration.html">
+			Swagger</a> for example). You can control this behaviour with fluent DynamicApiControllerBuilder 
+			API or using RemoteService attribute defined below.</p>
+			<h4>RemoteService Attribute</h4>
+			<p>You can also use <strong>RemoteService</strong> attribute for any <strong>
+			interface</strong> or 
+			<strong>method</strong> definition to enable/disable (<strong>IsEnabled</strong>) 
+			dynamic API or API explorer setting (<strong>IsMetadataEnabled</strong>).</p>
 			<h3 id="DocDynamicProxy">
     Dynamic Javascript Proxies</h3>
 			<p>

@@ -10,11 +10,6 @@ namespace Abp.Auditing
         public static void Initialize(IIocManager iocManager)
         {
             var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
-            if (!auditingConfiguration.IsEnabled)
-            {
-                return;
-            }
-
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
                 if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
@@ -31,12 +26,12 @@ namespace Abp.Auditing
                 return true;
             }
 
-            if (type.IsDefined(typeof(AuditedAttribute), true)) //TODO: true or false?
+            if (type.IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true))) //TODO: true or false?
+            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true)))
             {
                 return true;
             }

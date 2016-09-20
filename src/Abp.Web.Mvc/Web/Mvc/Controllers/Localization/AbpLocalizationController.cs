@@ -5,12 +5,20 @@ using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
+        private readonly IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
+
+        public AbpLocalizationController(IAbpWebLocalizationConfiguration webLocalizationConfiguration)
+        {
+            _webLocalizationConfiguration = webLocalizationConfiguration;
+        }
+
         [DisableAuditing]
         public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
@@ -19,7 +27,12 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 throw new AbpException("Unknown language: " + cultureName + ". It must be a valid culture!");
             }
 
-            Response.Cookies.Add(new HttpCookie("Abp.Localization.CultureName", cultureName) { Expires = Clock.Now.AddYears(2) });
+            Response.Cookies.Add(
+                new HttpCookie(_webLocalizationConfiguration.CookieName, cultureName)
+                {
+                    Expires = Clock.Now.AddYears(2)
+                }
+            );
 
             if (AbpSession.UserId.HasValue)
             {

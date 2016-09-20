@@ -5,9 +5,11 @@
     /// </summary>
     public class SettingDefinitionProviderContext
     {
-        internal SettingDefinitionProviderContext()
+        public ISettingDefinitionManager Manager { get; }
+
+        internal SettingDefinitionProviderContext(ISettingDefinitionManager manager)
         {
-            
+            Manager = manager;
         }
     }
 }

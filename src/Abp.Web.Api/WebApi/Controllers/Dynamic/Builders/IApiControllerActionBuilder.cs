@@ -7,6 +7,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     public interface IApiControllerActionBuilder
     {
         /// <summary>
+        /// The controller builder related to this action.
+        /// </summary>
+        IApiControllerBuilder Controller { get; }
+
+        /// <summary>
         /// Gets name of the action.
         /// </summary>
         string ActionName { get; }
@@ -20,6 +25,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// Gets current HttpVerb setting.
         /// </summary>
         HttpVerb? Verb { get; set; }
+
+        /// <summary>
+        /// Is API Explorer enabled.
+        /// </summary>
+        bool? IsApiExplorerEnabled { get; set; }
 
         /// <summary>
         /// Gets current filters.
@@ -44,6 +54,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="verb">Http very</param>
         /// <returns>Action builder</returns>
         IApiControllerActionBuilder<T> WithVerb(HttpVerb verb);
+
+        /// <summary>
+        /// Enables/Disables API Explorer for the action.
+        /// </summary>
+        IApiControllerActionBuilder<T> WithApiExplorer(bool isEnabled);
 
         /// <summary>
         /// Used to specify another method definition.

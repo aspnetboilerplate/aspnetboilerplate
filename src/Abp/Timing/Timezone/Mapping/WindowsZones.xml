@@ -700,6 +700,7 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Bougainville Standard Time" territory="001" type="Pacific/Bougainville"/>
       <mapZone other="Norfolk Standard Time" territory="001" type="Pacific/Norfolk"/>
       <mapZone other="Chatham Islands Standard Time" territory="001" type="Pacific/Chatham"/>
+      <mapZone other="Omsk Standard Time" territory="001" type="Asia/Omsk"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

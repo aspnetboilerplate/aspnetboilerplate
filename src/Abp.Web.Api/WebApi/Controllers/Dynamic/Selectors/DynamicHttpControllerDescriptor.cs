@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Collections.ObjectModel;
 using System.Web.Http.Filters;
@@ -15,19 +14,23 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <summary>
         /// The Dynamic Controller Action filters.
         /// </summary>
-        private readonly IFilter[] _filters;
+        private readonly DynamicApiControllerInfo _controllerInfo;
+
+        private readonly object[] _attributes;
+        private readonly object[] _declaredOnlyAttributes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicHttpControllerDescriptor"/> class. Add the argument for action filters to the controller.
         /// </summary>
         /// <param name="configuration">The Http Configuration.</param>
-        /// <param name="controllerName"> The controller name.</param>
-        /// <param name="controllerType">The controller type.</param>
-        /// <param name="filters">The Dynamic Controller action filters.</param>
-        public DynamicHttpControllerDescriptor(HttpConfiguration configuration, string controllerName, Type controllerType, IFilter[] filters = null)
-            : base(configuration, controllerName, controllerType)
+        /// <param name="controllerInfo">Controller info</param>
+        public DynamicHttpControllerDescriptor(HttpConfiguration configuration, DynamicApiControllerInfo controllerInfo)
+            : base(configuration, controllerInfo.ServiceName, controllerInfo.ApiControllerType)
         {
-            _filters = filters;
+            _controllerInfo = controllerInfo;
+
+            _attributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(true);
+            _declaredOnlyAttributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(false);
         }
 
         /// <summary>
@@ -36,14 +39,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()
         {
-            if (_filters.IsNullOrEmpty())
+            if (_controllerInfo.Filters.IsNullOrEmpty())
             {
                 return base.GetFilters();
             }
 
             var actionFilters = new Collection<IFilter>();
 
-            foreach (var filter in _filters)
+            foreach (var filter in _controllerInfo.Filters)
             {
                 actionFilters.Add(filter);
             }
@@ -54,6 +57,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             return actionFilters;
+        }
+
+        public override Collection<T> GetCustomAttributes<T>(bool inherit)
+        {
+            var attributes = inherit ? _attributes : _declaredOnlyAttributes;
+            return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = FindAllModules();
+            var moduleTypes = FindAllModules().Distinct().ToList();
 
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
@@ -80,20 +80,14 @@ namespace Abp.Modules
 
         private List<Type> FindAllModules()
         {
-            var modules = AbpModule.FindDependedModuleTypesRecursively(_startupModuleType);
-            AddPlugInModules(modules);
-            return modules;
-        }
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_startupModuleType);
 
-        private void AddPlugInModules(List<Type> modules)
-        {
-            foreach (var plugInSource in _abpPlugInManager.PlugInSources)
-            {
-                foreach (var module in plugInSource.GetModules())
-                {
-                    modules.AddIfNotContains(module);
-                }
-            }
+            _abpPlugInManager
+                .PlugInSources
+                .GetAllModules()
+                .ForEach(m => modules.AddIfNotContains(m));
+
+            return modules;
         }
 
         private void CreateModules(ICollection<Type> moduleTypes)

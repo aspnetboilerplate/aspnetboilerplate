@@ -21,11 +21,6 @@ namespace Abp.Auditing
         bool IsEnabledForAnonymousUsers { get; set; }
 
         /// <summary>
-        /// Used to configure auditing for MVC Controllers.
-        /// </summary>
-        IMvcControllersAuditingConfiguration MvcControllers { get; }
-
-        /// <summary>
         /// List of selectors to select classes/interfaces which should be audited as default.
         /// </summary>
         IAuditingSelectorList Selectors { get; }

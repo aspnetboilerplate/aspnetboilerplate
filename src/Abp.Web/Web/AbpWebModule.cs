@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
+using Abp.Auditing;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Runtime.Session;
@@ -9,6 +10,7 @@ using Abp.Configuration.Startup;
 using Abp.Web.Configuration;
 using Abp.Web.Security.AntiForgery;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
 
 namespace Abp.Web
 {
@@ -22,6 +24,7 @@ namespace Abp.Web
         public override void PreInitialize()
         {
             IocManager.Register<IAbpAntiForgeryWebConfiguration, AbpAntiForgeryWebConfiguration>();
+            IocManager.Register<IAbpWebLocalizationConfiguration, AbpWebLocalizationConfiguration>();
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
             
             if (HttpContext.Current != null)
@@ -29,7 +32,8 @@ namespace Abp.Web
                 XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
             }
 
-            Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>();
+            Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IClientInfoProvider, WebAuditInfoProvider>(DependencyLifeStyle.Transient);
 
             AddIgnoredTypes();
         }

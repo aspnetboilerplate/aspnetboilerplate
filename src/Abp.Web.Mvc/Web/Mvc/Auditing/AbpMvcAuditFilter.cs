@@ -3,18 +3,19 @@ using System.Diagnostics;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Dependency;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Auditing
 {
     public class AbpMvcAuditFilter : IActionFilter, ITransientDependency
     {
-        private readonly IAuditingConfiguration _auditingConfiguration;
+        private readonly IAbpMvcConfiguration _configuration;
         private readonly IAuditingHelper _auditingHelper;
 
-        public AbpMvcAuditFilter(IAuditingConfiguration auditingConfiguration, IAuditingHelper auditingHelper)
+        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration, IAuditingHelper auditingHelper)
         {
-            _auditingConfiguration = auditingConfiguration;
+            _configuration = configuration;
             _auditingHelper = auditingHelper;
         }
 
@@ -66,22 +67,22 @@ namespace Abp.Web.Mvc.Auditing
                 return false;
             }
 
-            if (_auditingConfiguration == null)
+            if (_configuration == null)
             {
                 return false;
             }
 
-            if (!_auditingConfiguration.MvcControllers.IsEnabled)
+            if (!_configuration.IsAuditingEnabled)
             {
                 return false;
             }
 
-            if (filterContext.IsChildAction && !_auditingConfiguration.MvcControllers.IsEnabledForChildActions)
+            if (filterContext.IsChildAction && !_configuration.IsAuditingEnabledForChildActions)
             {
                 return false;
             }
 
-            return _auditingHelper.ShouldSaveAudit(currentMethodInfo,true);
+            return _auditingHelper.ShouldSaveAudit(currentMethodInfo, true);
         }
     }
 }

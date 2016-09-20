@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
@@ -11,24 +12,35 @@ namespace Abp.AspNetCore.Configuration
 
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
+        public List<Type> FormBodyBindingIgnoredTypes { get; }
+
+        public ControllerAssemblySettingList ControllerAssemblySettings { get; }
+
         public bool IsValidationEnabledForControllers { get; set; }
 
-        public bool SetNoCacheForAjaxResponses { get; set; }
+        public bool IsAuditingEnabled { get; set; }
 
-        public List<AbpServiceControllerSetting> ServiceControllerSettings { get; }
+        public bool SetNoCacheForAjaxResponses { get; set; }
 
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
-            ServiceControllerSettings = new List<AbpServiceControllerSetting>();
+            ControllerAssemblySettings = new ControllerAssemblySettingList();
+            FormBodyBindingIgnoredTypes = new List<Type>();
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;
+            IsAuditingEnabled = true;
         }
 
-        public void CreateControllersForAppServices(Assembly assembly, string moduleName = AbpServiceControllerSetting.DefaultServiceModuleName, bool useConventionalHttpVerbs = true)
+        public AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
+            Assembly assembly,
+            string moduleName = AbpControllerAssemblySetting.DefaultServiceModuleName,
+            bool useConventionalHttpVerbs = true)
         {
-            ServiceControllerSettings.Add(new AbpServiceControllerSetting(moduleName, assembly, useConventionalHttpVerbs));
+            var setting = new AbpControllerAssemblySetting(moduleName, assembly, useConventionalHttpVerbs);
+            ControllerAssemblySettings.Add(setting);
+            return new AbpControllerAssemblySettingBuilder(setting);
         }
     }
 }

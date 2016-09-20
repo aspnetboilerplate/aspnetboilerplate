@@ -9,11 +9,13 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
+using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Reflection;
@@ -43,6 +45,11 @@ namespace Abp.EntityFramework
         /// Reference to the logger.
         /// </summary>
         public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Reference to the event bus.
+        /// </summary>
+        public IEventBus EventBus { get; set; }
 
         /// <summary>
         /// Reference to GUID generator.
@@ -152,9 +159,9 @@ namespace Abp.EntityFramework
                     CheckAndSetMustHaveTenantIdProperty(entry.Entity);
                     SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                     break;
-                //case EntityState.Deleted: //It's not going here at all
-                //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-                //    break;
+                    //case EntityState.Deleted: //It's not going here at all
+                    //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
+                    //    break;
             }
         }
 
@@ -164,6 +171,7 @@ namespace Abp.EntityFramework
             AbpSession = NullAbpSession.Instance;
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
             GuidGenerator = SequentialGuidGenerator.Instance;
+            EventBus = NullEventBus.Instance;
         }
 
         public virtual void Initialize()
@@ -248,6 +256,30 @@ namespace Abp.EntityFramework
                         EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
                         break;
                 }
+
+                TriggerDomainEvents(entry.Entity);
+            }
+        }
+
+        protected virtual void TriggerDomainEvents(object entityAsObj)
+        {
+            var generatesDomainEventsEntity = entityAsObj as IGeneratesDomainEvents;
+            if (generatesDomainEventsEntity == null)
+            {
+                return;
+            }
+
+            if (generatesDomainEventsEntity.DomainEvents.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var domainEvents = generatesDomainEventsEntity.DomainEvents.ToList();
+            generatesDomainEventsEntity.DomainEvents.Clear();
+
+            foreach (var domainEvent in domainEvents)
+            {
+                EventBus.Trigger(domainEvent.GetType(), entityAsObj, domainEvent);
             }
         }
 

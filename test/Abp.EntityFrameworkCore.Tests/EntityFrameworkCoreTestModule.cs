@@ -1,10 +1,16 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Abp.Domain.Repositories;
+using Abp.EntityFrameworkCore.Tests.Domain;
+using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.Modules;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -33,6 +39,15 @@ namespace Abp.EntityFrameworkCore.Tests
                     .Instance(builder.Options)
                     .LifestyleSingleton()
             );
+
+            Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
+            {
+                IocManager.IocContainer.Register(
+                    Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
+                        .ImplementedBy<PostRepository>()
+                        .LifestyleTransient()
+                );
+            });
         }
 
         public override void Initialize()

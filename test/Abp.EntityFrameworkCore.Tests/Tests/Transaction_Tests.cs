@@ -6,7 +6,7 @@ using Abp.EntityFrameworkCore.Tests.Domain;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 
-namespace Abp.EntityFrameworkCore.Tests
+namespace Abp.EntityFrameworkCore.Tests.Tests
 {
     //WE CAN NOT TEST TRANSACTIONS SINCE INMEMORY DB DOES NOT SUPPORT IT! TODO: Use SQLite
     public class Transaction_Tests : EntityFrameworkCoreModuleTestBase

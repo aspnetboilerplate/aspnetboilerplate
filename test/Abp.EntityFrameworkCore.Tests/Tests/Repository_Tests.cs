@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 
-namespace Abp.EntityFrameworkCore.Tests
+namespace Abp.EntityFrameworkCore.Tests.Tests
 {
     public class Repository_Tests : EntityFrameworkCoreModuleTestBase
     {

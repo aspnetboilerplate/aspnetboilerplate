@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
+using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
@@ -9,6 +12,7 @@ using Abp.Runtime.Session;
 using Abp.Web;
 using Abp.Web.Security.AntiForgery;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Options;
 
@@ -21,8 +25,11 @@ namespace Abp.AspNetCore
         {
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
 
-            Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>();
+            Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
+
+            Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
         }
 
         public override void Initialize()
@@ -32,14 +39,24 @@ namespace Abp.AspNetCore
 
         public override void PostInitialize()
         {
+            AddApplicationParts();
+            ConfigureAntiforgery();
+        }
+
+        private void AddApplicationParts()
+        {
             var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
             var partManager = IocManager.Resolve<ApplicationPartManager>();
 
-            foreach (var controllerSetting in configuration.ServiceControllerSettings)
+            var assemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
+            foreach (var assembly in assemblies)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(controllerSetting.Assembly));
+                partManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
+        }
 
+        private void ConfigureAntiforgery()
+        {
             IocManager.Using<IOptions<AntiforgeryOptions>>(optionsAccessor =>
             {
                 optionsAccessor.Value.HeaderName = Configuration.Modules.AbpWebCommon().AntiForgery.TokenHeaderName;

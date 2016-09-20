@@ -6,10 +6,10 @@ using Xunit;
 
 namespace Abp.Tests.Modules
 {
-    public class AbpModuleManager_Tests : TestBaseWithLocalIocManager
+    public class PlugInModuleLoading_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
-        public void Should_Get_Load_Depended_Modules()
+        public void Should_Load_All_Modules()
         {
             //Arrange
             var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
@@ -22,13 +22,14 @@ namespace Abp.Tests.Modules
             var modules = bootstrapper.IocManager.Resolve<IAbpModuleManager>().Modules;
 
             //Assert
-            modules.Count.ShouldBe(5);
+            modules.Count.ShouldBe(6);
 
             modules.Any(m => m.Type == typeof(AbpKernelModule)).ShouldBeTrue();
             modules.Any(m => m.Type == typeof(MyStartupModule)).ShouldBeTrue();
             modules.Any(m => m.Type == typeof(MyModule1)).ShouldBeTrue();
             modules.Any(m => m.Type == typeof(MyModule2)).ShouldBeTrue();
             modules.Any(m => m.Type == typeof(MyPlugInModule)).ShouldBeTrue();
+            modules.Any(m => m.Type == typeof(MyPlugInDependedModule)).ShouldBeTrue();
 
             modules.Any(m => m.Type == typeof(MyNotDependedModule)).ShouldBeFalse();
         }
@@ -54,7 +55,13 @@ namespace Abp.Tests.Modules
 
         }
 
+        [DependsOn(typeof(MyPlugInDependedModule))]
         public class MyPlugInModule : AbpModule
+        {
+            
+        }
+
+        public class MyPlugInDependedModule : AbpModule
         {
             
         }

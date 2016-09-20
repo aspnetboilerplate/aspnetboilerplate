@@ -11,7 +11,6 @@ using Abp.AspNetCore.Mvc.Providers;
 using Abp.Json;
 using Abp.Modules;
 using Abp.MsDependencyInjection.Extensions;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
