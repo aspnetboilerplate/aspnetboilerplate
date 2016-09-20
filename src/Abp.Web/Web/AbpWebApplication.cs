@@ -28,13 +28,8 @@ namespace Abp.Web
             set { _abpBootstrapper = value; }
         }
 
-        private static AbpBootstrapper _abpBootstrapper;
+        private static AbpBootstrapper _abpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
         private static IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
-
-        protected AbpWebApplication()
-        {
-            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
-        }
 
         /// <summary>
         /// This method is called by ASP.NET system on web application's startup.
@@ -109,7 +104,7 @@ namespace Abp.Web
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            
+
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)
