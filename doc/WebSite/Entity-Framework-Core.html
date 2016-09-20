@@ -207,6 +207,27 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 	</strong>it in the <strong>EntityFrameworkCore </strong>project for layered 
 	applications. Thus, you can inject the interface from any project without 
 	referencing to EF Core.</p>
+	<h5>Replacing Default Repositories</h5>
+	<p>Even you have created a TaskRepository as shown above, any class can 
+	still <a href="Dependency-Injection.html">inject</a> IRepository&lt;Task, long&gt; 
+	and use it. That's not a problem in most cases. But, what if you <strong>
+	overrided</strong> a base method in your custom repository? Say that you 
+	have overrided Delete method in your custom repository to add a custom 
+	behaviour on delete. If a class injects IRepository&lt;Task, long&gt; and use the 
+	default repository to Delete a task, your custom behaviour will not work. To 
+	overcome this issue, you can replace your custom repository implementation 
+	with the default one like shown below:</p>
+	<pre lang="cs">Configuration.ReplaceService&lt;<strong>IRepository&lt;Task, Guid&gt;</strong>&gt;(() =&gt;
+{
+    IocManager.IocContainer.Register(
+        Component.For&lt;<strong>IRepository&lt;Task, Guid&gt;, ITaskRepository, TaskRepository</strong>&gt;()
+            .ImplementedBy&lt;<strong>TaskRepository</strong>&gt;()
+            .<strong>LifestyleTransient</strong>()
+    );
+});</pre>
+	<p>We registered TaskRepository for IRepository&lt;Task, Guid&gt;, 
+	ITaskRepository and TaskRepository. So, any one of these can be injected to 
+	use the TaskRepository.</p>
 			<h4>Repository Best Practices</h4>
 			<ul>
 				<li><strong>Use default repositories</strong> wherever it's 
