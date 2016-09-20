@@ -81,21 +81,13 @@ namespace Abp.Modules
         private List<Type> FindAllModules()
         {
             var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_startupModuleType);
-            AddPlugInModules(modules);
-            return modules;
-        }
 
-        private void AddPlugInModules(List<Type> modules)
-        {
-            foreach (var plugInSource in _abpPlugInManager.PlugInSources)
-            {
-                foreach (var module in plugInSource.GetModules())
-                {
-                    AbpModule
-                        .FindDependedModuleTypesRecursivelyIncludingGivenModule(module)
-                        .ForEach(m => modules.AddIfNotContains(m));
-                }
-            }
+            _abpPlugInManager
+                .PlugInSources
+                .GetAllModules()
+                .ForEach(m => modules.AddIfNotContains(m));
+
+            return modules;
         }
 
         private void CreateModules(ICollection<Type> moduleTypes)

@@ -71,7 +71,7 @@ namespace Abp.AutoMapper
                     type.IsDefined(typeof(AutoMapToAttribute))
             );
 
-            Logger.DebugFormat("Found {0} classes defines auto mapping attributes", types.Length);
+            Logger.DebugFormat("Found {0} classes define auto mapping attributes", types.Length);
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
