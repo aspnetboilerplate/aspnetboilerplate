@@ -163,7 +163,7 @@ namespace Abp.Runtime.Validation.Interception
 
             //Custom validations
             (validatingObject as ICustomValidate)?.AddValidationErrors(
-                new CustomValidatationContext(
+                new CustomValidationContext(
                     ValidationErrors,
                     _iocResolver
                 )

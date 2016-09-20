@@ -248,7 +248,7 @@ namespace Abp.TestBase.Tests.Application.Services
                 }
             }
 
-            public void AddValidationErrors(CustomValidatationContext context)
+            public void AddValidationErrors(CustomValidationContext context)
             {
                 //a (meaningless) example of resolving dependency in custom validation
                 context.IocResolver.Resolve<IIocManager>().ShouldNotBeNull();

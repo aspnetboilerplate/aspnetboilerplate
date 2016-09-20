@@ -4,7 +4,7 @@ using Abp.Dependency;
 
 namespace Abp.Runtime.Validation
 {
-    public class CustomValidatationContext
+    public class CustomValidationContext
     {
         /// <summary>
         /// List of validation results (errors). Add validation errors to this list.
@@ -16,7 +16,7 @@ namespace Abp.Runtime.Validation
         /// </summary>
         public IIocResolver IocResolver { get; }
 
-        public CustomValidatationContext(List<ValidationResult> results, IIocResolver iocResolver)
+        public CustomValidationContext(List<ValidationResult> results, IIocResolver iocResolver)
         {
             Results = results;
             IocResolver = iocResolver;

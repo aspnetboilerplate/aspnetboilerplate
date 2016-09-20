@@ -10,6 +10,6 @@ namespace Abp.Runtime.Validation
         /// This method is used to validate the object.
         /// </summary>
         /// <param name="context">Validation context.</param>
-        void AddValidationErrors(CustomValidatationContext context);
+        void AddValidationErrors(CustomValidationContext context);
     }
 }
