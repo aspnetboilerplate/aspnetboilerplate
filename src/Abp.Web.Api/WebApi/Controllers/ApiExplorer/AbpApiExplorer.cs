@@ -50,14 +50,14 @@ namespace Abp.WebApi.Controllers.ApiExplorer
             var dynamicApiControllerInfos = DynamicApiControllerManager.GetAll();
             foreach (var dynamicApiControllerInfo in dynamicApiControllerInfos)
             {
-                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiControllerInfo.ServiceInterfaceType))
+                if (IsApiExplorerDisabled(dynamicApiControllerInfo))
                 {
                     continue;
                 }
 
                 foreach (var dynamicApiActionInfo in dynamicApiControllerInfo.Actions.Values)
                 {
-                    if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiActionInfo.Method))
+                    if (IsApiExplorerDisabled(dynamicApiActionInfo))
                     {
                         continue;
                     }
@@ -88,6 +88,46 @@ namespace Abp.WebApi.Controllers.ApiExplorer
             }
 
             return apiDescriptions;
+        }
+
+        private static bool IsApiExplorerDisabled(DynamicApiControllerInfo dynamicApiControllerInfo)
+        {
+            if (dynamicApiControllerInfo.IsApiExplorerEnabled == false)
+            {
+                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(dynamicApiControllerInfo.ServiceInterfaceType))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiControllerInfo.ServiceInterfaceType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsApiExplorerDisabled(DynamicApiActionInfo dynamicApiActionInfo)
+        {
+            if (dynamicApiActionInfo.IsApiExplorerEnabled == false)
+            {
+                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(dynamicApiActionInfo.Method))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiActionInfo.Method))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void SetResponseDescription(ApiDescription apiDescription, DynamicHttpActionDescriptor actionDescriptor)

@@ -16,22 +16,27 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        public string ServiceName { get; private set; }
+        public string ServiceName { get; }
 
         /// <summary>
         /// Gets type of the service interface for this dynamic controller.
         /// </summary>
-        public Type ServiceInterfaceType { get; private set; }
+        public Type ServiceInterfaceType { get; }
 
         /// <summary>
         /// Action Filters to apply to this dynamic controller.
         /// </summary>
-        public IFilter[] Filters { get; private set; }
+        public IFilter[] Filters { get; set; }
+
+        /// <summary>
+        /// Is API Explorer enabled.
+        /// </summary>
+        public bool? IsApiExplorerEnabled { get; set; }
 
         /// <summary>
         /// True, if using conventional verbs for this dynamic controller.
         /// </summary>
-        public bool ConventionalVerbs { get; private set; }
+        public bool ConventionalVerbs { get; set; }
 
         /// <summary>
         /// List of all action builders for this controller.
@@ -115,6 +120,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return this;
         }
 
+        public IApiControllerBuilder<T> WithApiExplorer(bool isEnabled)
+        {
+            IsApiExplorerEnabled = isEnabled;
+            return this;
+        }
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
@@ -126,7 +137,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 ServiceInterfaceType,
                 typeof(DynamicApiController<T>),
                 typeof(AbpDynamicApiControllerInterceptor<T>),
-                Filters
+                Filters,
+                IsApiExplorerEnabled
                 );
             
             foreach (var actionBuilder in _actionBuilders.Values)

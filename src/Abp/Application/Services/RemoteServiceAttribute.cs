@@ -56,6 +56,12 @@ namespace Abp.Application.Services
             return remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(type);
         }
 
+        public static bool IsMetadataExplicitlyEnabledFor(Type type)
+        {
+            var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            return remoteServiceAttr != null && remoteServiceAttr.IsMetadataEnabledFor(type);
+        }
+
         public static bool IsMetadataExplicitlyDisabledFor(Type type)
         {
             var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
@@ -66,6 +72,12 @@ namespace Abp.Application.Services
         {
             var remoteServiceAttr = method.GetSingleAttributeOrNull<RemoteServiceAttribute>();
             return remoteServiceAttr != null && !remoteServiceAttr.IsMetadataEnabledFor(method);
+        }
+
+        public static bool IsMetadataExplicitlyEnabledFor(MethodInfo method)
+        {
+            var remoteServiceAttr = method.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            return remoteServiceAttr != null && remoteServiceAttr.IsMetadataEnabledFor(method);
         }
     }
 }
