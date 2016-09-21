@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -17,6 +20,7 @@ using Abp.WebApi.Runtime.Caching;
 using Castle.MicroKernel.Registration;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.WebApi.Auditing;
@@ -52,7 +56,7 @@ namespace Abp.WebApi
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
-        
+
         public override void PostInitialize()
         {
             var httpConfiguration = IocManager.Resolve<IAbpWebApiConfiguration>().HttpConfiguration;
@@ -104,7 +108,8 @@ namespace Abp.WebApi
             //Remove formatters except JsonFormatter.
             foreach (var currentFormatter in httpConfiguration.Formatters.ToList())
             {
-                if (!(currentFormatter is JsonMediaTypeFormatter))
+                if (!(currentFormatter is JsonMediaTypeFormatter || 
+                    currentFormatter is JQueryMvcFormUrlEncodedFormatter))
                 {
                     httpConfiguration.Formatters.Remove(currentFormatter);
                 }
