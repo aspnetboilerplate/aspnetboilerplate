@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Web;
 using Abp.Auditing;
-using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Runtime.Session;
 using Abp.Web.Session;
@@ -27,11 +26,6 @@ namespace Abp.Web
             IocManager.Register<IAbpWebLocalizationConfiguration, AbpWebLocalizationConfiguration>();
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
             
-            if (HttpContext.Current != null)
-            {
-                XmlLocalizationSource.RootDirectoryOfApplication = HttpContext.Current.Server.MapPath("~");
-            }
-
             Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, WebAuditInfoProvider>(DependencyLifeStyle.Transient);
 

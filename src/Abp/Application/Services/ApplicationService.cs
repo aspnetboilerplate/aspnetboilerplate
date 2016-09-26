@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -38,12 +37,6 @@ namespace Abp.Application.Services
         /// Reference to the feature checker.
         /// </summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
-
-        /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
 
         /// <summary>
         /// Gets the applied cross cutting concerns.

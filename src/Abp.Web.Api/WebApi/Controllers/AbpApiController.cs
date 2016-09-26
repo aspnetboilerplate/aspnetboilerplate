@@ -94,12 +94,6 @@ namespace Abp.WebApi.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
-
-        /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager

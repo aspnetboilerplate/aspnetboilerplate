@@ -6,7 +6,7 @@ namespace Abp.EntityFrameworkCore
     public sealed class SimpleDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : DbContext
     {
-        public TDbContext DbContext { get; private set; }
+        public TDbContext DbContext { get; }
 
         public SimpleDbContextProvider(TDbContext dbContext)
         {

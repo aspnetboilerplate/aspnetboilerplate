@@ -111,12 +111,6 @@ namespace Abp.Web.Mvc.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
-
-        /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager

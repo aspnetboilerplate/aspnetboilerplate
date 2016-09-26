@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Extensions;
 using Abp.Threading;
@@ -217,21 +216,6 @@ namespace Abp.Configuration
         /// If you want to get current values of all settings, use <see cref="GetAllSettingValues"/> method.
         /// </summary>
         /// <param name="settingManager">Setting manager</param>
-        /// <param name="userId">User to get settings</param>
-        /// <returns>All settings of the user</returns>
-        [Obsolete("Use GetAllSettingValuesForUser(UserIdentifier) instead.")]
-        public static IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(this ISettingManager settingManager, long userId)
-        {
-            return AsyncHelper.RunSync(() => settingManager.GetAllSettingValuesForUserAsync(userId));
-        }
-
-        /// <summary>
-        /// Gets a list of all setting values specified for a user.
-        /// It returns only settings those are explicitly set for the user.
-        /// If a setting's value is not set for the user (for example if user uses the default value), it's not included the result list.
-        /// If you want to get current values of all settings, use <see cref="GetAllSettingValues"/> method.
-        /// </summary>
-        /// <param name="settingManager">Setting manager</param>
         /// <param name="user">User to get settings</param>
         /// <returns>All settings of the user</returns>
         public static IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(this ISettingManager settingManager, UserIdentifier user)
@@ -260,19 +244,6 @@ namespace Abp.Configuration
         public static void ChangeSettingForTenant(this ISettingManager settingManager, int tenantId, string name, string value)
         {
             AsyncHelper.RunSync(() => settingManager.ChangeSettingForTenantAsync(tenantId, name, value));
-        }
-
-        /// <summary>
-        /// Changes setting for a user.
-        /// </summary>
-        /// <param name="settingManager">Setting manager</param>
-        /// <param name="userId">UserId</param>
-        /// <param name="name">Unique name of the setting</param>
-        /// <param name="value">Value of the setting</param>
-        [Obsolete("Use ChangeSettingForUser(UserIdentifier) instead.")]
-        public static void ChangeSettingForUser(this ISettingManager settingManager, long userId, string name, string value)
-        {
-            AsyncHelper.RunSync(() => settingManager.ChangeSettingForUserAsync(userId, name, value));
         }
 
         /// <summary>

@@ -83,17 +83,6 @@ namespace Abp.Configuration
         /// If a setting's value is not set for the user (for example if user uses the default value), it's not included the result list.
         /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync()"/> method.
         /// </summary>
-        /// <param name="userId">User to get settings</param>
-        /// <returns>All settings of the user</returns>
-        [Obsolete("Use GetAllSettingValuesForUserAsync(UserIdentifier) instead.")]
-        Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForUserAsync(long userId);
-
-        /// <summary>
-        /// Gets a list of all setting values specified for a user.
-        /// It returns only settings those are explicitly set for the user.
-        /// If a setting's value is not set for the user (for example if user uses the default value), it's not included the result list.
-        /// If you want to get current values of all settings, use <see cref="GetAllSettingValuesAsync()"/> method.
-        /// </summary>
         /// <param name="user">User to get settings</param>
         /// <returns>All settings of the user</returns>
         Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForUserAsync(UserIdentifier user);
@@ -112,15 +101,6 @@ namespace Abp.Configuration
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
         Task ChangeSettingForTenantAsync(int tenantId, string name, string value);
-
-        /// <summary>
-        /// Changes setting for a user.
-        /// </summary>
-        /// <param name="userId">UserId</param>
-        /// <param name="name">Unique name of the setting</param>
-        /// <param name="value">Value of the setting</param>
-        [Obsolete("Use ChangeSettingForUserAsync(UserIdentifier) instead.")]
-        Task ChangeSettingForUserAsync(long userId, string name, string value);
 
         /// <summary>
         /// Changes setting for a user.

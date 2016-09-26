@@ -17,17 +17,6 @@ namespace Abp.Authorization
             return Task.FromResult(true);
         }
 
-        /// <summary>
-        /// Checks if a user is granted for a permission.
-        /// </summary>
-        /// <param name="userId">Id of the user to check</param>
-        /// <param name="permissionName">Name of the permission</param>
-        /// <returns><c>true</c> if this instance is granted the specified userId permissionName; otherwise, <c>false</c>.</returns>
-        public Task<bool> IsGrantedAsync(long userId, string permissionName)
-        {
-            return Task.FromResult(true);
-        }
-
         public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
             return Task.FromResult(true);
