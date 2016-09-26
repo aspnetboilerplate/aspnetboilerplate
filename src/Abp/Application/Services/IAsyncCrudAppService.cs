@@ -11,7 +11,7 @@ namespace Abp.Application.Services
     }
 
     public interface IAsyncCrudAppService<TEntityDto, TPrimaryKey>
-        : IAsyncCrudAppService<TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
+        : IAsyncCrudAppService<TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
 
@@ -58,7 +58,7 @@ namespace Abp.Application.Services
     {
         Task<TEntityDto> Get(TGetInput input);
 
-        Task<PagedResultOutput<TEntityDto>> GetAll(TGetAllInput input);
+        Task<PagedResultDto<TEntityDto>> GetAll(TGetAllInput input);
 
         Task<TEntityDto> Create(TCreateInput input);
 

@@ -20,7 +20,7 @@ namespace Abp.Application.Services
     }
 
     public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
@@ -107,7 +107,7 @@ namespace Abp.Application.Services
             return MapToEntityDto(entity);
         }
 
-        public virtual async Task<PagedResultOutput<TEntityDto>> GetAll(TGetAllInput input)
+        public virtual async Task<PagedResultDto<TEntityDto>> GetAll(TGetAllInput input)
         {
             var query = CreateFilteredQuery(input);
 
@@ -118,7 +118,7 @@ namespace Abp.Application.Services
 
             var entities = await AsyncQueryableExecuter.ToListAsync(query);
 
-            return new PagedResultOutput<TEntityDto>(
+            return new PagedResultDto<TEntityDto>(
                 totalCount,
                 entities.Select(MapToEntityDto).ToList()
             );

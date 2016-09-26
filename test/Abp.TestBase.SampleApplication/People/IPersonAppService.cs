@@ -7,12 +7,12 @@ namespace Abp.TestBase.SampleApplication.People
 {
     public interface IPersonAppService : IApplicationService
     {
-        ListResultOutput<PersonDto> GetPeople(GetPeopleInput input);
+        ListResultDto<PersonDto> GetPeople(GetPeopleInput input);
 
         Task CreatePersonAsync(CreatePersonInput input);
 
-        Task DeletePerson(EntityRequestInput input);
+        Task DeletePerson(EntityDto input);
 
-        string TestPrimitiveMethod(int a, string b, EntityRequestInput c);
+        string TestPrimitiveMethod(int a, string b, EntityDto c);
     }
 }

@@ -18,7 +18,7 @@ namespace Abp.Application.Services
     }
 
     public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
@@ -102,7 +102,7 @@ namespace Abp.Application.Services
             return MapToEntityDto(entity);
         }
 
-        public virtual PagedResultOutput<TEntityDto> GetAll(TGetAllInput input)
+        public virtual PagedResultDto<TEntityDto> GetAll(TGetAllInput input)
         {
             var query = CreateFilteredQuery(input);
 
@@ -113,7 +113,7 @@ namespace Abp.Application.Services
 
             var entities = query.ToList();
 
-            return new PagedResultOutput<TEntityDto>(
+            return new PagedResultDto<TEntityDto>(
                 totalCount,
                 entities.Select(MapToEntityDto).ToList()
             );

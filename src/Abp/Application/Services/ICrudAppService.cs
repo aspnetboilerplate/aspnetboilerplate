@@ -10,7 +10,7 @@ namespace Abp.Application.Services
     }
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey>
-        : ICrudAppService<TEntityDto, TPrimaryKey, PagedAndSortedResultRequestInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
 
@@ -57,7 +57,7 @@ namespace Abp.Application.Services
     {
         TEntityDto Get(TGetInput input);
 
-        PagedResultOutput<TEntityDto> GetAll(TGetAllInput input);
+        PagedResultDto<TEntityDto> GetAll(TGetAllInput input);
 
         TEntityDto Create(TCreateInput input);
 

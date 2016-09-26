@@ -100,7 +100,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         {
             //Act
 
-            var messages = await _asyncMessageAppService.GetAll(new PagedAndSortedResultRequestInput());
+            var messages = await _asyncMessageAppService.GetAll(new PagedAndSortedResultRequestDto());
 
             //Assert
 
