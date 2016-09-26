@@ -22,9 +22,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private bool _conventionalVerbs;
         private Action<IApiControllerActionBuilder<T>> _forMethodsAction;
         private bool? _isApiExplorerEnabled;
+        private readonly IIocResolver _iocResolver;
+        private readonly IDynamicApiControllerBuilder _dynamicApiControllerBuilder;
 
-        public BatchApiControllerBuilder(Assembly assembly, string servicePrefix)
+        public BatchApiControllerBuilder(
+            IIocResolver iocResolver,
+            IDynamicApiControllerBuilder dynamicApiControllerBuilder, 
+            Assembly assembly, 
+            string servicePrefix)
         {
+            _iocResolver = iocResolver;
+            _dynamicApiControllerBuilder = dynamicApiControllerBuilder;
             _assembly = assembly;
             _servicePrefix = servicePrefix;
         }
@@ -73,8 +81,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 where
                     (type.IsPublic || type.IsNestedPublic) && 
                     type.IsInterface && 
-                    typeof(T).IsAssignableFrom(type) && 
-                    IocManager.Instance.IsRegistered(type) &&
+                    typeof(T).IsAssignableFrom(type) &&
+                    _iocResolver.IsRegistered(type) &&
                     !RemoteServiceAttribute.IsExplicitlyDisabledFor(type)
                 select
                     type;
@@ -95,10 +103,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     serviceName = _servicePrefix + "/" + serviceName;
                 }
 
-                var builder = typeof(DynamicApiControllerBuilder)
-                    .GetMethod("For", BindingFlags.Public | BindingFlags.Static)
+                var builder = typeof(IDynamicApiControllerBuilder)
+                    .GetMethod("For", BindingFlags.Public | BindingFlags.Instance)
                     .MakeGenericMethod(type)
-                    .Invoke(null, new object[] { serviceName });
+                    .Invoke(_dynamicApiControllerBuilder, new object[] { serviceName });
 
                 if (_filters != null)
                 {

@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
 using Abp.Application.Services;
+using Abp.Dependency;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
@@ -16,18 +17,20 @@ using Abp.WebApi.Controllers.Dynamic.Selectors;
 
 namespace Abp.WebApi.Controllers.ApiExplorer
 {
-    public class AbpApiExplorer : System.Web.Http.Description.ApiExplorer, IApiExplorer
+    public class AbpApiExplorer : System.Web.Http.Description.ApiExplorer, IApiExplorer, ISingletonDependency
     {
         private readonly Lazy<Collection<ApiDescription>> _apiDescriptions;
         private readonly IAbpWebApiConfiguration _abpWebApiConfiguration;
-        private readonly HttpConfiguration _config;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
-        public AbpApiExplorer(IAbpWebApiConfiguration abpWebApiConfiguration, HttpConfiguration config) : base(config)
+        public AbpApiExplorer(
+            IAbpWebApiConfiguration abpWebApiConfiguration,
+            DynamicApiControllerManager dynamicApiControllerManager
+            ) : base(abpWebApiConfiguration.HttpConfiguration)
         {
             _apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);
             _abpWebApiConfiguration = abpWebApiConfiguration;
-            _config = config;
-
+            _dynamicApiControllerManager = dynamicApiControllerManager;
         }
 
         public new Collection<ApiDescription> ApiDescriptions
@@ -47,7 +50,7 @@ namespace Abp.WebApi.Controllers.ApiExplorer
                 apiDescriptions.Add(item);
             }
 
-            var dynamicApiControllerInfos = DynamicApiControllerManager.GetAll();
+            var dynamicApiControllerInfos = _dynamicApiControllerManager.GetAll();
             foreach (var dynamicApiControllerInfo in dynamicApiControllerInfos)
             {
                 if (IsApiExplorerDisabled(dynamicApiControllerInfo))
@@ -64,13 +67,13 @@ namespace Abp.WebApi.Controllers.ApiExplorer
 
                     var apiDescription = new ApiDescription();
 
-                    var controllerDescriptor = new DynamicHttpControllerDescriptor(_config, dynamicApiControllerInfo);
+                    var controllerDescriptor = new DynamicHttpControllerDescriptor(_abpWebApiConfiguration.HttpConfiguration, dynamicApiControllerInfo);
                     var actionDescriptor = new DynamicHttpActionDescriptor(_abpWebApiConfiguration, controllerDescriptor, dynamicApiActionInfo);
 
                     apiDescription.ActionDescriptor = actionDescriptor;
                     apiDescription.HttpMethod = actionDescriptor.SupportedHttpMethods[0];
 
-                    var actionValueBinder = _config.Services.GetActionValueBinder();
+                    var actionValueBinder = _abpWebApiConfiguration.HttpConfiguration.Services.GetActionValueBinder();
                     var actionBinding = actionValueBinder.GetBinding(actionDescriptor);
 
                     apiDescription.ParameterDescriptions.Clear();

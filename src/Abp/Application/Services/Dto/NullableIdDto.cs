@@ -8,34 +8,34 @@ namespace Abp.Application.Services.Dto
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
     [Serializable]
-    public class NullableIdInput<TId>
+    public class NullableIdDto<TId>
         where TId : struct
     {
         public TId? Id { get; set; }
 
-        public NullableIdInput()
+        public NullableIdDto()
         {
 
         }
 
-        public NullableIdInput(TId? id)
+        public NullableIdDto(TId? id)
         {
             Id = id;
         }
     }
 
     /// <summary>
-    /// A shortcut of <see cref="NullableIdInput{TPrimaryKey}"/> for <see cref="int"/>.
+    /// A shortcut of <see cref="NullableIdDto{TId}"/> for <see cref="int"/>.
     /// </summary>
     [Serializable]
-    public class NullableIdInput : NullableIdInput<int>
+    public class NullableIdDto : NullableIdDto<int>
     {
-        public NullableIdInput()
+        public NullableIdDto()
         {
 
         }
 
-        public NullableIdInput(int? id)
+        public NullableIdDto(int? id)
             : base(id)
         {
 

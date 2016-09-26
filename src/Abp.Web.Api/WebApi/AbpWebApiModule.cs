@@ -22,11 +22,13 @@ using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Json;
 using Abp.WebApi.Auditing;
 using Abp.WebApi.Authorization;
 using Abp.WebApi.Controllers.ApiExplorer;
 using Abp.WebApi.Controllers.Dynamic.Binders;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 using Abp.WebApi.ExceptionHandling;
 using Abp.WebApi.Security.AntiForgery;
 using Abp.WebApi.Uow;
@@ -44,6 +46,8 @@ namespace Abp.WebApi
         public override void PreInitialize()
         {
             IocManager.AddConventionalRegistrar(new ApiControllerConventionalRegistrar());
+
+            IocManager.Register<IDynamicApiControllerBuilder, DynamicApiControllerBuilder>();
             IocManager.Register<IAbpWebApiConfiguration, AbpWebApiConfiguration>();
 
             Configuration.Settings.Providers.Add<ClearCacheSettingProvider>();
@@ -67,7 +71,7 @@ namespace Abp.WebApi
             InitializeRoutes(httpConfiguration);
             InitializeModelBinders(httpConfiguration);
 
-            foreach (var controllerInfo in DynamicApiControllerManager.GetAll())
+            foreach (var controllerInfo in IocManager.Resolve<DynamicApiControllerManager>().GetAll())
             {
                 IocManager.IocContainer.Register(
                     Component.For(controllerInfo.InterceptorType).LifestyleTransient(),
@@ -85,10 +89,10 @@ namespace Abp.WebApi
 
         private void InitializeAspNetServices(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IHttpControllerSelector), new AbpHttpControllerSelector(httpConfiguration, IocManager.Resolve<DynamicApiControllerManager>()));
             httpConfiguration.Services.Replace(typeof(IHttpActionSelector), new AbpApiControllerActionSelector(IocManager.Resolve<IAbpWebApiConfiguration>()));
             httpConfiguration.Services.Replace(typeof(IHttpControllerActivator), new AbpApiControllerActivator(IocManager));
-            httpConfiguration.Services.Replace(typeof(IApiExplorer), new AbpApiExplorer(IocManager.Resolve<IAbpWebApiConfiguration>(), httpConfiguration));
+            httpConfiguration.Services.Replace(typeof(IApiExplorer), IocManager.Resolve<AbpApiExplorer>());
         }
 
         private void InitializeFilters(HttpConfiguration httpConfiguration)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Configuration
 {
@@ -23,8 +24,12 @@ namespace Abp.WebApi.Configuration
 
         public bool SetNoCacheForAllResponses { get; set; }
 
-        public AbpWebApiConfiguration()
+        public IDynamicApiControllerBuilder DynamicApiControllerBuilder { get; }
+
+        public AbpWebApiConfiguration(IDynamicApiControllerBuilder dynamicApiControllerBuilder)
         {
+            DynamicApiControllerBuilder = dynamicApiControllerBuilder;
+
             HttpConfiguration = GlobalConfiguration.Configuration;
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             DefaultWrapResultAttribute = new WrapResultAttribute(false);

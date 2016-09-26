@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
+using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Configuration
 {
@@ -49,5 +50,10 @@ namespace Abp.WebApi.Configuration
         /// Default: true.
         /// </summary>
         bool SetNoCacheForAllResponses { get; set; }
+
+        /// <summary>
+        /// Used to configure dynamic Web API controllers.
+        /// </summary>
+        IDynamicApiControllerBuilder DynamicApiControllerBuilder { get; }
     }
 }
