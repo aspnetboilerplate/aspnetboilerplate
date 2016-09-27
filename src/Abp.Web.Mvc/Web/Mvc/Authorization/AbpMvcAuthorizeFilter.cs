@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Web.Mvc;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Controllers.Results;
@@ -15,11 +17,16 @@ namespace Abp.Web.Mvc.Authorization
     {
         private readonly IAuthorizationHelper _authorizationHelper;
         private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IEventBus _eventBus;
 
-        public AbpMvcAuthorizeFilter(IAuthorizationHelper authorizationHelper, IErrorInfoBuilder errorInfoBuilder)
+        public AbpMvcAuthorizeFilter(
+            IAuthorizationHelper authorizationHelper, 
+            IErrorInfoBuilder errorInfoBuilder,
+            IEventBus eventBus)
         {
             _authorizationHelper = authorizationHelper;
             _errorInfoBuilder = errorInfoBuilder;
+            _eventBus = eventBus;
         }
 
         public virtual void OnAuthorization(AuthorizationContext filterContext)
@@ -66,6 +73,8 @@ namespace Abp.Web.Mvc.Authorization
             {
                 filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
             }
+
+            _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
         }
 
         protected virtual AbpJsonResult CreateUnAuthorizedJsonResult(AbpAuthorizationException ex)

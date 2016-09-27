@@ -7,6 +7,8 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Logging;
 using Abp.Web;
@@ -23,15 +25,18 @@ namespace Abp.WebApi.Authorization
         private readonly IAuthorizationHelper _authorizationHelper;
         private readonly IAbpWebApiConfiguration _configuration;
         private readonly ILocalizationManager _localizationManager;
+        private readonly IEventBus _eventBus;
 
         public AbpApiAuthorizeFilter(
             IAuthorizationHelper authorizationHelper, 
             IAbpWebApiConfiguration configuration,
-            ILocalizationManager localizationManager)
+            ILocalizationManager localizationManager,
+            IEventBus eventBus)
         {
             _authorizationHelper = authorizationHelper;
             _configuration = configuration;
             _localizationManager = localizationManager;
+            _eventBus = eventBus;
         }
 
         public virtual async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
@@ -58,6 +63,7 @@ namespace Abp.WebApi.Authorization
             catch (AbpAuthorizationException ex)
             {
                 LogHelper.Logger.Warn(ex.ToString(), ex);
+                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
                 return CreateUnAuthorizedResponse(actionContext);
             }
         }

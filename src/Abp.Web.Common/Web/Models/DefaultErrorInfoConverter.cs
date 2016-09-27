@@ -38,6 +38,18 @@ namespace Abp.Web.Models
 
         public ErrorInfo Convert(Exception exception)
         {
+            var errorInfo = CreateErrorInfoWithoutCode(exception);
+
+            if (exception is IHasErrorCode)
+            {
+                errorInfo.Code = (exception as IHasErrorCode).Code;
+            }
+
+            return errorInfo;
+        }
+
+        private ErrorInfo CreateErrorInfoWithoutCode(Exception exception)
+        {
             if (SendAllExceptionsToClients)
             {
                 return CreateDetailedErrorInfoFromException(exception);
@@ -46,7 +58,8 @@ namespace Abp.Web.Models
             if (exception is AggregateException && exception.InnerException != null)
             {
                 var aggException = exception as AggregateException;
-                if (aggException.InnerException is UserFriendlyException || aggException.InnerException is AbpValidationException)
+                if (aggException.InnerException is UserFriendlyException ||
+                    aggException.InnerException is AbpValidationException)
                 {
                     exception = aggException.InnerException;
                 }
@@ -55,16 +68,16 @@ namespace Abp.Web.Models
             if (exception is UserFriendlyException)
             {
                 var userFriendlyException = exception as UserFriendlyException;
-                return new ErrorInfo(userFriendlyException.Code, userFriendlyException.Message, userFriendlyException.Details);
+                return new ErrorInfo(userFriendlyException.Message, userFriendlyException.Details);
             }
 
             if (exception is AbpValidationException)
             {
                 return new ErrorInfo(L("ValidationError"))
-                       {
-                           ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
-                           Details = GetValidationErrorNarrative(exception as AbpValidationException)
-                       };
+                {
+                    ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
+                    Details = GetValidationErrorNarrative(exception as AbpValidationException)
+                };
             }
 
             if (exception is EntityNotFoundException)
