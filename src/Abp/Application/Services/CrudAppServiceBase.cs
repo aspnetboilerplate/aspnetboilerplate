@@ -100,7 +100,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Maps <see cref="TEntity"/> to <see cref="TEntityDto"/> to create a new entity.
+        /// Maps <see cref="TEntityDto"/> to <see cref="TEntity"/> to create a new entity.
         /// It uses <see cref="IObjectMapper"/> by default.
         /// It can be overrided for custom mapping.
         /// </summary>
