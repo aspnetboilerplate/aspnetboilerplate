@@ -146,7 +146,7 @@ namespace Abp.Application.Services
 
         protected virtual TEntity GetEntityById(TPrimaryKey id)
         {
-            return Repository.Get(id);
+            return Repository.FirstOrDefault(id);
         }
     }
 }
