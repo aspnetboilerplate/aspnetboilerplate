@@ -52,10 +52,12 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.pdb",
+        "tools/": "install.ps1"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.pdb"
   }
 }
