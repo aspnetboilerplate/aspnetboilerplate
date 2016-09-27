@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Abp.RealTime
 {
@@ -14,20 +15,33 @@ namespace Abp.RealTime
         /// </summary>
         /// <param name="onlineClientManager">The online client manager.</param>
         /// <param name="user">User.</param>
-        public static bool IsOnline(this IOnlineClientManager onlineClientManager, UserIdentifier user)
+        public static bool IsOnline(
+            [NotNull] this IOnlineClientManager onlineClientManager,
+            [NotNull] UserIdentifier user)
         {
             return onlineClientManager.GetAllByUserId(user).Any();
         }
 
-        public static IReadOnlyList<IOnlineClient> GetAllByUserId(this IOnlineClientManager onlineClientManager, IUserIdentifier user)
+        [NotNull]
+        public static IReadOnlyList<IOnlineClient> GetAllByUserId(
+            [NotNull] this IOnlineClientManager onlineClientManager, 
+            [NotNull] IUserIdentifier user)
         {
+            Check.NotNull(onlineClientManager, nameof(onlineClientManager));
+            Check.NotNull(user, nameof(user));
+
             return onlineClientManager.GetAllClients()
-                 .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
+                 .Where(c => (c.UserId == user.UserId && c.TenantId == user.TenantId))
                  .ToImmutableList();
         }
 
-        public static bool Remove(this IOnlineClientManager onlineClientManager, IOnlineClient client)
+        public static bool Remove(
+            [NotNull] this IOnlineClientManager onlineClientManager,
+            [NotNull] IOnlineClient client)
         {
+            Check.NotNull(onlineClientManager, nameof(onlineClientManager));
+            Check.NotNull(client, nameof(client));
+
             return onlineClientManager.Remove(client.ConnectionId);
         }
     }

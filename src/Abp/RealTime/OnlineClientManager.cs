@@ -38,7 +38,7 @@ namespace Abp.RealTime
             lock (_syncObj)
             {
                 var userWasAlreadyOnline = false;
-                var user = client.ToUserIdentifier();
+                var user = client.ToUserIdentifierOrNull();
 
                 if (user != null)
                 {
@@ -65,9 +65,9 @@ namespace Abp.RealTime
 
                 if (isRemoved)
                 {
-                    var user = client.ToUserIdentifier();
+                    var user = client.ToUserIdentifierOrNull();
 
-                    if (!this.IsOnline(user))
+                    if (user != null && !this.IsOnline(user))
                     {
                         UserDisconnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
                     }

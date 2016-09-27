@@ -1,8 +1,11 @@
-﻿namespace Abp.RealTime
+﻿using JetBrains.Annotations;
+
+namespace Abp.RealTime
 {
     public static class OnlineClientExtensions
     {
-        public static UserIdentifier ToUserIdentifier(this IOnlineClient onlineClient)
+        [CanBeNull]
+        public static UserIdentifier ToUserIdentifierOrNull(this IOnlineClient onlineClient)
         {
             return onlineClient.UserId.HasValue
                 ? new UserIdentifier(onlineClient.TenantId, onlineClient.UserId.Value)

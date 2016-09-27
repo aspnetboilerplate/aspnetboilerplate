@@ -41,25 +41,4 @@ namespace Abp.RealTime
         /// </summary>
         IReadOnlyList<IOnlineClient> GetAllClients();
     }
-    
-    public class OnlineClientEventArgs : EventArgs
-    {
-        public IOnlineClient Client { get; }
-
-        public OnlineClientEventArgs(IOnlineClient client)
-        {
-            Client = client;
-        }
-    }
-
-    public class OnlineUserEventArgs : OnlineClientEventArgs
-    {
-        public UserIdentifier User { get; }
-
-        public OnlineUserEventArgs(UserIdentifier user,IOnlineClient client) 
-            : base(client)
-        {
-            User = user;
-        }
-    }
 }
