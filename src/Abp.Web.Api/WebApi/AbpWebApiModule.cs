@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -22,7 +19,6 @@ using Newtonsoft.Json.Serialization;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.Json;
 using Abp.WebApi.Auditing;
 using Abp.WebApi.Authorization;
