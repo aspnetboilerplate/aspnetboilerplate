@@ -1,9 +1,9 @@
 {
-  "version": "0.13.0.0-*",
+  "version": "1.0.0.0-*",
 
   "dependencies": {
-    "Abp.AspNetCore": "0.13.0.0-*",
-    "Abp.TestBase": "0.13.0.0-*",
+    "Abp.AspNetCore": "1.0.0.0-*",
+    "Abp.TestBase": "1.0.0.0-*",
     "Microsoft.AspNetCore.TestHost": "1.0.0"
   },
 
