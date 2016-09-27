@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Abp": "0.13.0.0-*",
-    "mongocsharpdriver": "2.2.4"
+    "mongocsharpdriver": "2.3.0"
   },
 
   "frameworks": {
@@ -22,7 +22,7 @@
   "packOptions": {
     "summary": "MongoDB integration package for ASP.NET Boilerplate.",
     "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "MongoDB", "NoSQL" ],
-    "owners": [ "Halil Ýbrahim Kalkan" ],
+    "owners": [ "Halil ï¿½brahim Kalkan" ],
     "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
     "projectUrl": "http://www.aspnetboilerplate.com/",
     "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",

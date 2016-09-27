@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Abp": "0.13.0.0-*",
-    "Hangfire.Core": "1.6.4"
+    "Hangfire.Core": "1.6.5"
   },
 
   "frameworks": {
