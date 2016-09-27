@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Validation;
@@ -64,6 +65,19 @@ namespace Abp.Web.Models
                            ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
                            Details = GetValidationErrorNarrative(exception as AbpValidationException)
                        };
+            }
+
+            if (exception is EntityNotFoundException)
+            {
+                var entityNotFoundException = exception as EntityNotFoundException;
+
+                return new ErrorInfo(
+                    string.Format(
+                        L("EntityNotFound"),
+                        entityNotFoundException.EntityType.Name,
+                        entityNotFoundException.Id
+                    )
+                );
             }
 
             if (exception is Abp.Authorization.AbpAuthorizationException)

@@ -15,5 +15,6 @@
     <text name="DefaultErrorDetail403" value="Bu işlemi gerçekleştirmek için gereken izne sahip değilsiniz." />
     <text name="DefaultError404" value="Kaynak bulunamadı!" />
     <text name="DefaultErrorDetail404" value="İstenilen kaynak sunucuda bulunamadı." />
+    <text name="EntityNotFound" value="Id değeri {1} olan {0} türünden bir nesne bulunamadı!" />
   </texts>
 </localizationDictionary>

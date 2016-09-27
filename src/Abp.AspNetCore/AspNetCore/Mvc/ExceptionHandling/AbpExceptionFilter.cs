@@ -4,6 +4,7 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
@@ -62,6 +63,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCode(context);
+
             context.Result = new ObjectResult(
                 new AjaxResponse(
                     _errorInfoBuilder.BuildForException(context.Exception),
@@ -81,6 +83,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return context.HttpContext.User.Identity.IsAuthenticated
                     ? (int)HttpStatusCode.Forbidden
                     : (int)HttpStatusCode.Unauthorized;
+            }
+
+            if (context.Exception is EntityNotFoundException)
+            {
+                return (int)HttpStatusCode.NotFound;
             }
 
             return (int)HttpStatusCode.InternalServerError;

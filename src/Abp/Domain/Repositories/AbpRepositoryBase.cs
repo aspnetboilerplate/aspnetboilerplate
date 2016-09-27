@@ -72,7 +72,7 @@ namespace Abp.Domain.Repositories
             var entity = FirstOrDefault(id);
             if (entity == null)
             {
-                throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
+                throw new EntityNotFoundException(typeof(TEntity), id);
             }
 
             return entity;
@@ -83,7 +83,7 @@ namespace Abp.Domain.Repositories
             var entity = await FirstOrDefaultAsync(id);
             if (entity == null)
             {
-                throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
+                throw new EntityNotFoundException(typeof(TEntity), id);
             }
 
             return entity;

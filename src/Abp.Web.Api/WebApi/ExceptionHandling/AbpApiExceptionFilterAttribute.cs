@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Extensions;
@@ -88,6 +89,11 @@ namespace Abp.WebApi.ExceptionHandling
                 return AbpSession.UserId.HasValue
                     ? HttpStatusCode.Forbidden
                     : HttpStatusCode.Unauthorized;
+            }
+
+            if (context.Exception is EntityNotFoundException)
+            {
+                return HttpStatusCode.NotFound;
             }
 
             return HttpStatusCode.InternalServerError;
