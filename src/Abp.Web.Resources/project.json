@@ -28,11 +28,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "content/Abp/": "Abp/**/*"
+      }
     }
-  },
-
-  "packInclude": {
-    "content/Abp/": "Abp/**/*",
-    "lib/net452/": "bin/Release/net452/Abp.Web.SignalR.pdb"
   }
 }

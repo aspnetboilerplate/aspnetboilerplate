@@ -32,10 +32,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net461/": "bin/Release/net461/Abp.EntityFrameworkCore.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net461/": "bin/Release/net461/Abp.EntityFrameworkCore.pdb"
   }
 }

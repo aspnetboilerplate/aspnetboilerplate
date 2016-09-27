@@ -30,10 +30,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.HangFire.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.HangFire.pdb"
   }
 }
