@@ -8,7 +8,7 @@ namespace Abp.Domain.Values
     /// Base class for value objects.
     /// </summary>
     /// <typeparam name="TValueObject">The type of the value object.</typeparam>
-    public class ValueObject<TValueObject> : IEquatable<TValueObject>
+    public abstract class ValueObject<TValueObject> : IEquatable<TValueObject>
         where TValueObject : ValueObject<TValueObject>
     {
         public bool Equals(TValueObject other)
