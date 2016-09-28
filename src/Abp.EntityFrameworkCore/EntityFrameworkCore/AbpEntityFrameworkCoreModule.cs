@@ -58,7 +58,7 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<EfCoreGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEfCoreGenericRepositoryRegistrar>())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {

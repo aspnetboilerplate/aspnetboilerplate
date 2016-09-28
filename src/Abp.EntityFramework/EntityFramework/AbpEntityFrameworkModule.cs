@@ -66,7 +66,7 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEntityFrameworkGenericRepositoryRegistrar>())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
