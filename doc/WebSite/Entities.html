@@ -11,8 +11,9 @@
 
 		<div class="document-contents">
 
-			<p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". So, entities have Id's and stored in a database. 
-An entity is generally mapped to a table in the database.</p>
+			<p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". 
+			So, entities have Id's and stored in a database. An entity is 
+			generally mapped to a table for relational databases.</p>
 			<h3 id="DocEntityClasses">Entity Classes</h3>
 			<p>In ASP.NET Boilerplate, Entities are derived from <strong>Entity </strong>
 class. See the sample below:</p>
@@ -172,11 +173,17 @@ since it inherits all:</p>
 {
 
 }</pre>
-			<p>&nbsp;As a shortcut, you can derive your entity from <strong>
+			<p>As a shortcut, you can derive your entity from <strong>
 FullAuditedEntity</strong> class that implements all.</p>
-			<p>NOTE: All audit interfaces and classes have a generic version for defining navigation property 
+			<ul>
+				<li>NOTE 1: All audit interfaces and classes have a generic version for defining navigation property 
 to your <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt; and 
-FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).&nbsp;</p>
+				FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).</li>
+				<li>
+				<p>NOTE 2: Also, all of them has an <strong>AggregateRoot</strong> 
+				version, like AuditedAggregateRoot.</p>
+				</li>
+			</ul>
 			<h4 id="DocActivePassive">Active/Passive Entities</h4>
 			<p>Some entities need to be marked as Active or Passive. Then you may take 
 action upon active/passive state of the entity. You can implement <strong>
