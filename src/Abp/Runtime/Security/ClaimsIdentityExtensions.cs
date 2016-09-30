@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using Abp.Extensions;
 using JetBrains.Annotations;
 
 namespace Abp.Runtime.Security
@@ -28,12 +29,12 @@ namespace Abp.Runtime.Security
             var claimsIdentity = identity as ClaimsIdentity;
 
             var userIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdOrNull == null)
+            if (userIdOrNull == null || userIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            return Convert.ToInt64(userIdOrNull);
+            return Convert.ToInt64(userIdOrNull.Value);
         }
 
         public static int? GetTenantId(this IIdentity identity)
@@ -43,12 +44,12 @@ namespace Abp.Runtime.Security
             var claimsIdentity = identity as ClaimsIdentity;
 
             var tenantIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
-            if (tenantIdOrNull == null)
+            if (tenantIdOrNull == null || tenantIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            return Convert.ToInt32(tenantIdOrNull);
+            return Convert.ToInt32(tenantIdOrNull.Value);
         }
 
         public static long? GetImpersonatorUserId(this IIdentity identity)
@@ -58,12 +59,12 @@ namespace Abp.Runtime.Security
             var claimsIdentity = identity as ClaimsIdentity;
 
             var userIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
-            if (userIdOrNull == null)
+            if (userIdOrNull == null || userIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            return Convert.ToInt64(userIdOrNull);
+            return Convert.ToInt64(userIdOrNull.Value);
         }
 
         public static int? GetImpersonatorTenantId(this IIdentity identity)
@@ -73,12 +74,12 @@ namespace Abp.Runtime.Security
             var claimsIdentity = identity as ClaimsIdentity;
 
             var tenantIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
-            if (tenantIdOrNull == null)
+            if (tenantIdOrNull == null || tenantIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            return Convert.ToInt32(tenantIdOrNull);
+            return Convert.ToInt32(tenantIdOrNull.Value);
         }
     }
 }
