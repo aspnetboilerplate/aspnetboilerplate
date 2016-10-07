@@ -1,5 +1,4 @@
-﻿
-declare namespace abp {
+﻿declare namespace abp {
 
     let appPath: string;
 
@@ -248,4 +247,48 @@ declare namespace abp {
         */
         function getCookieValue(key: string): string;
     }
+
+    namespace timing {
+
+        interface IClockProvider {
+
+            now(): Date;
+
+            normalize(date: Date): Date;
+
+        }
+
+        const utcClockProvider: IClockProvider;
+
+        const localClockProvider: IClockProvider;
+
+        const unspecifiedClockProvider: IClockProvider;
+
+        function convertToUserTimezone(date: Date): Date;
+
+    }
+
+    namespace clock {
+
+        function now(): Date;
+
+        function normalize(date: Date): Date;
+
+        let provider: timing.IClockProvider;
+
+    }
+
+    namespace security {
+
+        namespace antiForgery {
+
+            let tokenCookieName: string;
+
+            let tokenHeaderName: string;
+
+            function getToken(): string;
+        }
+
+    }
+
 }
