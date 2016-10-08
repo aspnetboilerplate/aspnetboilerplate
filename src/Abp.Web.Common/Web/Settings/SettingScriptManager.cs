@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Abp.Configuration;
 using Abp.Dependency;
 
@@ -48,7 +49,7 @@ namespace Abp.Web.Settings
 
                 script.Append("        '" +
                               settingDefinition.Name .Replace("'", @"\'") + "': " +
-                              (settingValue == null ? "null" : "'" + settingValue.Replace(@"\", @"\\").Replace("'", @"\'") + "'"));
+                              (settingValue == null ? "null" : "'" + HttpUtility.JavaScriptStringEncode(settingValue) + "'"));
 
                 ++added;
             }
