@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>CSRF/XSRF Protection</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+<p>"<em><strong>Cross-Site Request Forgery</strong> (CSRF) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user’s web browser to perform an unwanted action on a trusted site for which the user is currently authenticated</em>" 
+(<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet" target="_blank">OWASP</a>).</p>
+	<p>It's also briefly described
+	<a href="http://www.asp.net/web-api/overview/security/preventing-cross-site-request-forgery-csrf-attacks" target="_blank">
+	here</a> to explain how to implement it in ASP.NET Web API.</p>
+	<p>ABP framework <strong>simplifies </strong>and <strong>automates </strong>
+	CSRF protection as much as possible. <a href="/Templates">Startup templates</a> 
+	comes with <strong>pre-configured</strong> and working out of the box. In 
+	this document, we will explain how it's integrated to ASP.NET platforms and 
+	how it works.</p>
+	
+	<div class="bs-callout bs-callout-warning">
+	<h4>Http Verbs</h4>
+		<p>It's not needed to protect our actions for <strong>GET</strong>, <strong>
+		HEAD</strong>,
+		<strong>OPTIONS</strong> 
+		and <strong>TRACE</strong> HTTP verbs since they should be side effect free (don't 
+		change database) normally. While ABP assumes that (and implements Anti 
+		Forgery protection for only <strong>POST</strong>, <strong>PUT, PATCH </strong>
+		and <strong>DELETE</strong> verbs), you can change this 
+		behaviour using attrbiutes defined in this document.</p>
+	</div>
+
+	
+	<h3>ASP.NET MVC</h3>
+	<h4>Features</h4>
+	<p>ASP.NET MVC has it's own built-in AntiForgery system as you probably 
+	know. But it has a few weeknesses:</p>
+	<ul>
+		<li>Requires to add <strong>ValidateAntiForgeryToken</strong> attribute to all 
+	actions need to be protected. We may <strong>forget </strong>to add it for 
+		all needed actions.</li>
+		<li>ValidateAntiForgeryToken attribute only checks <strong>
+		__RequestVerificationToken</strong> in the HTML <strong>form fields</strong>. 
+		This makes very hard or impossible to use it for <strong>AJAX </strong>
+		requests, especially if you are sending "<strong>application/json</strong>" 
+		as content-type. In AJAX requests, it's common to set token in the
+		<strong>request header</strong>.</li>
+		<li>It's <strong>hard to access</strong> to the verification token in
+		<strong>javascript</strong> code (especially if you don't write your 
+		javascript in .cshtml files). We need to access it to use it in our
+		<strong>AJAX</strong> requests.</li>
+		<li>Even we can access to the token in javascript, we should <strong>
+		manually add</strong> it to the header for every request.</li>
+	</ul>
+	<p>ABP does followings to overcome this difficulties:</p>
+	<ul>
+		<li>No need to add <strong>ValidateAntiForgeryToken</strong> attribute 
+		for <strong>POST</strong>, <strong>PUT, PATCH</strong> and <strong>DELETE</strong> 
+		actions anymore, because they are <strong>automatically protected</strong> 
+		(by <strong>AbpAntiForgeryMvcFilter</strong>). Automatic protection will 
+		be enough for most cases. But you can disable it for an action or 
+		controller using <strong>DisableAbpAntiForgeryTokenValidation</strong> 
+		attribute and you can enable it for any action/controller using <strong>
+		ValidateAbpAntiForgeryToken</strong> attribute.</li>
+		<li><strong>AbpAntiForgeryMvcFilter</strong> also checks token in the
+		<strong>header </strong>in addition to HTML <strong>form field</strong>. 
+		Thus, we can easily use anti forgery token protection for AJAX requests.</li>
+		<li>Provides <strong>abp.security.antiForgery.getToken()</strong> 
+		function to get the token in the javascript, even you will not need it 
+		much.</li>
+		<li><strong>Automatically</strong> adds anti forgery token to the
+		<strong>header </strong>for all AJAX requests.</li>
+	</ul>
+	<p>Thus, it almost seamlessly works.</p>
+	<h4>Integration</h4>
+	<p>Startup templates already integrated to CSRF protection out of the box. 
+	If you need to manually add it to your project (maybe you created your 
+	project before we added it), follow this guide.</p>
+	<h5>Layout View</h5>
+	<p>We should add the following code in our <strong>Layout</strong> view:</p>
+	<pre lang="cs">@{
+    SetAntiForgeryCookie();
+}</pre>
+	<p>Thus, all pages use this layout will include it. This method is defined in base ABP 
+	view class. It creates and sets appropriate token cookies and 
+	makes javascript side working. If you have more than one layout, add this to 
+	all of them.</p>
+	<p>That's all we should do for ASP.NET MVC applications. All AJAX requests 
+	will work automatically. But we should still use <strong>
+	@Html.AntiForgeryToken()</strong> 
+	HTML helper for our <strong>HTML forms</strong> which are <strong>not posted via AJAX</strong> 
+	(But <strong>no need</strong> to
+		ValidateAbpAntiForgeryToken attribute for the corresponding action).</p>
+	<h4>Configuration</h4>
+	<p>XSRF protection is <strong>enabled by default</strong>. You can disable or configure it in 
+	your <a href="Module-System.html">module</a>'s PreInitialize method. 
+	Example:</p>
+	<pre lang="cs">Configuration.Modules.AbpWeb().AntiForgery.IsEnabled = false;</pre>
+	<p>You can also configure token and cookie names using <em>
+	Configuration.Modules.AbpWebCommon().AntiForgery</em> object.</p>
+	<h3>ASP.NET Web API</h3>
+	<h4>Features</h4>
+	<p>ASP.NET Web API <strong>does not</strong> include an anti forgery 
+	mechanism. ASP.NET Boilerplate provides infrastructure to add CSRF 
+	protection for ASP.NET Web API Controllers and completely automates it.</p>
+	<h4>Integration</h4>
+	<h5>With ASP.NET MVC Clients</h5>
+	<p>If you are using Web API inside an MVC project, <strong>no additional 
+	configuration needed</strong>. Even if you are self-hosting your Web API 
+	layer in another process, no configuration needed as long as you are making 
+	AJAX requests from a configured MVC application.</p>
+	<h5>With Other Clients</h5>
+	<p>If your clients are diffrent kind of applications (say, an independent 
+	angularjs application which can not use SetAntiForgeryCookie() method as 
+	described before), then you should provide a way of setting the anti forgery 
+	token cookie. One possible way of doing that is to create an api 
+	controller like that:</p>
+	<pre lang="cs">using System.Net.Http;
+using Abp.Web.Security.AntiForgery;
+using Abp.WebApi.Controllers;
+
+namespace AngularForgeryDemo.Controllers
+{
+    public class AntiForgeryController : AbpApiController
+    {
+        private readonly IAbpAntiForgeryManager _antiForgeryManager;
+
+        public AntiForgeryController(<strong>IAbpAntiForgeryManager antiForgeryManager</strong>)
+        {
+            _antiForgeryManager = antiForgeryManager;
+        }
+
+        public HttpResponseMessage GetTokenCookie()
+        {
+            var response = new HttpResponseMessage();
+
+            <strong>_antiForgeryManager.SetCookie(response.Headers);
+</strong>
+            return response;
+        }
+    }
+}</pre>
+	<p>Then you can call this action from client to set the cookie.</p>
+	<h3>ASP.NET Core</h3>
+	<h4>Features</h4>
+	<p><strong>ASP.NET Core</strong> MVC has a better
+	<a href="https://docs.asp.net/en/latest/security/anti-request-forgery.html" target="_blank">
+	Anti Forgery</a> mechanism compared to previous version (ASP.NET MVC 5.x):</p>
+	<ul>
+		<li>It has <strong>AutoValidateAntiforgeryTokenAttribute</strong> class 
+		that automates anti forgery validation for all <strong>POST</strong>,
+		<strong>PUT, PATCH</strong> and <strong>DELETE</strong> actions.</li>
+		<li>It has <strong>ValidateAntiForgeryToken</strong> and <strong>
+		IgnoreAntiforgeryToken</strong> attributes to control token validation.</li>
+		<li>Automatically adds anti forgery security token to HTML forms if you 
+		don't explicitly disable it. So, no need to call
+	@Html.AntiForgeryToken() in most cases.</li>
+		<li>It can read request token from HTTP <strong>header </strong>and the
+		<strong>form field</strong>.</li>
+	</ul>
+	<p>ABP adds the following features:</p>
+	<ul>
+		<li><strong>Automatically</strong> adds anti forgery token to the
+		<strong>header </strong>for all AJAX requests.</li>
+		<li>Provides <strong>abp.security.antiForgery.getToken()</strong> 
+		function to get the token in the javascript, even you will not need it 
+		much.</li>
+	</ul>
+	<h4>Integration</h4>
+	<p>Startup templates already integrated to CSRF protection out of the box. 
+	If you need to manually add it to your project (maybe you created your 
+	project before we added it), follow this guide.</p>
+	<h5>Startup Class</h5>
+	<p>First, we should add AutoValidateAntiforgeryTokenAttribute to global 
+	filters while adding MVC in ConfigureServices of Startup class:</p>
+	<pre lang="cs">services.AddMvc(options =&gt;
+{
+    <strong>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());</strong>
+});</pre>
+	<p>Thus, all MVC actions (except GET, HEAD, OPTIONS and TRACE as declared 
+	before) will be automatically validated for anti forgery token.</p>
+	<h5>Layout View</h5>
+	<p>We should add the following code in our <strong>Layout</strong> view:</p>
+	<pre lang="cs">@using Abp.Web.Security.AntiForgery
+@inject <strong>IAbpAntiForgeryManager</strong> AbpAntiForgeryManager
+@{
+    <strong>AbpAntiForgeryManager.SetCookie(Context);</strong>
+}</pre>
+	<p>Thus, all pages use this layout will include it. It creates and sets appropriate token cookies and 
+	makes javascript side working. If you have more than one layout, add this to 
+	all of them.</p>
+	<p>That's all we should do for ASP.NET Core MVC applications. All AJAX 
+	requests will work automatically. For non-ajax form submits, ASP.NET Core 
+	automatically adds anti forgery token field if you use one of asp-* tags in 
+	your form. So, no need to use
+	@Html.AntiForgeryToken() normally.</p>
+	<h3>Client Side Libraries</h3>
+	<p>Anti forgery token should be provided in the request header for all AJAX 
+	requests, as we declared before. We will see how it's done here.</p>
+	<h4>jQuery</h4>
+	<p>abp.jquery.js defines an AJAX interceptor which adds the anti forgery 
+	token to the request header for every request. It gets the token from <strong>abp.security.antiForgery.getToken()</strong> 
+	javascript function.</p>
+	<h4>Angularjs</h4>
+	<p>Angularjs automatically adds the anti forgery token to all AJAX requests. 
+	See <em>Cross Site Request Forgery (XSRF) Protection</em> section in Angularjs
+	<a href="https://docs.angularjs.org/api/ng/service/$http" target="_blank">
+	$http document</a>. ABP uses the same cookie and header names as default. 
+	So, Angularjs integration works out of the box.</p>
+	<h4>Other Libraries</h4>
+	<p>If you are using any other library for AJAX requests, you have three 
+	options:</p>
+	<h5>Intercept XMLHttpRequest</h5>
+	<p>Since all libraries use the javascript's native AJAX object, 
+	XMLHttpRequest, you can define such a simple interceptor to add token to the 
+	header:</p>
+	<pre lang="js">(function (send) {
+    XMLHttpRequest.prototype.send = function (data) {
+        this.setRequestHeader(abp.security.antiForgery.tokenHeaderName, abp.security.antiForgery.getToken());
+        return send.call(this, data);
+    };
+})(XMLHttpRequest.prototype.send);</pre>
+	<h5>Use Library Interceptor</h5>
+	<p>A good library provide interception points (like jquery and angularjs). 
+	So, follow your vendor's documentation to learn how to intercept requests 
+	and manipulate headers.</p>
+	<h5>Add the Header Manually</h5>
+	<p>The last option, you can use abp.security.antiForgery.getToken() to get 
+	the token and add to the request header manually for every request. But you 
+	probably do not need this and solve the problem as descibed above.</p>
+	<h3>Internals</h3>
+	<p>You may wonder how ABP handles it. Actually, we are using the same 
+	mechanism described in the angularjs documentation mentioned before. ABP 
+	stores the token into a cookie (as described above) and sets requests 
+	headers using that cookie. It also well integrates to ASP.NET MVC, Web API 
+	and Core frameworks for validating it.</p>
+
+</div>
+
+</body>
+
+</html>

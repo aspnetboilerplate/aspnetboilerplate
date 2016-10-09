@@ -4,11 +4,11 @@ namespace Abp.Domain.Uow
 {
     public class DataFilterConfiguration
     {
-        public string FilterName { get; private set; }
+        public string FilterName { get; }
 
-        public bool IsEnabled { get; private set; }
+        public bool IsEnabled { get; }
 
-        public IDictionary<string, object> FilterParameters { get; private set; }
+        public IDictionary<string, object> FilterParameters { get; }
 
         public DataFilterConfiguration(string filterName, bool isEnabled)
         {
@@ -17,8 +17,8 @@ namespace Abp.Domain.Uow
             FilterParameters = new Dictionary<string, object>();
         }
 
-        internal DataFilterConfiguration(DataFilterConfiguration filterToClone)
-            : this(filterToClone.FilterName, filterToClone.IsEnabled)
+        internal DataFilterConfiguration(DataFilterConfiguration filterToClone, bool? isEnabled = null)
+            : this(filterToClone.FilterName, isEnabled ?? filterToClone.IsEnabled)
         {
             foreach (var filterParameter in filterToClone.FilterParameters)
             {

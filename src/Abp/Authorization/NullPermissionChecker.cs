@@ -34,7 +34,7 @@ namespace Abp.Authorization
             return Task.FromResult(true);
         }
 
-        private NullPermissionChecker()
+        public NullPermissionChecker()
         {
 
         }

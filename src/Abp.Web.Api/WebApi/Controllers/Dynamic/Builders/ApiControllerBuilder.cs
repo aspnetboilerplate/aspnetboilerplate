@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Reflection.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -62,7 +63,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             {
                 var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
 
-                if (methodInfo.IsDefined(typeof (DisableDynamicWebApiAttribute), true))
+                var remoteServiceAttr = methodInfo.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+                if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(methodInfo))
                 {
                     actionBuilder.DontCreateAction();
                 }

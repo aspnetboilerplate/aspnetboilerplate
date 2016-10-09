@@ -26,13 +26,12 @@
   in a <strong>queued and persistent</strong> manner. You may need background 
   jobs for several reasons. Some examples:</p>
       <ul>
-        <li>To perform <strong>long-running tasks</strong> to now wait users. 
+        <li>To perform <strong>long-running tasks</strong> to not wait users. 
     For example; A user presses a 'report' button to start a long running 
     reporting job. You add this job to the <strong>queue</strong> and send 
     report result to your user via email when it's completed.</li>
-        <li>To create <strong>re-trying</strong> and <strong>persistent taks</strong> 
-    to <b>g</b>
-          <span class="auto-style1">uarantee</span> a code will be
+        <li>To create <strong>re-trying</strong> and <strong>persistent tasks</strong> 
+    to <b>g</b><span class="auto-style1">uarantee</span> a code will be
           <strong>successfully executed</strong>. 
     For example; You can send emails in a background job to overcome <strong>
     temporary failures</strong> and <strong>guarantie</strong> that it's 
@@ -108,9 +107,10 @@ public class SimpleSendEmailJobArgs
   Boilerplate default background job manager uses <strong>JSON</strong> 
   serialization (which does not need [Serializable] attribute), it's better to 
   define <strong>[Serializable]</strong> attribute since we may switch to 
-  another job manager in the future, which may use binary serialization.</p>
+  another job manager in the future, which may use .NET's built-in binary serialization.</p>
       <p>
-        <strong>Keep your arguments simple</strong>, do not include
+        <strong>Keep your arguments simple</strong> (like
+		<a href="Data-Transfer-Objects.html">DTO</a>s), do not include
         <a href="/Pages/Documents/Entities">entities</a> or other non serializable 
   objects. As shown in the SimpleSendEmailJob sample, we can only store
         <strong>Id</strong> of an entity and get the entity from repository inside 
@@ -161,14 +161,15 @@ public class MyEmailAppService : ApplicationService, IMyEmailAppService
 and <strong>delay</strong>.</p>
       <h4>Default Background Job Manager</h4>
       <p>IBackgroundJobManager is implemented by <strong>BackgroundJobManager</strong> 
-  default. It can be replaced by another background job provider (see hangfire 
-  integration section). Some information on default BackgroundJobManager:</p>
+  default. It can be replaced by another background job provider (see 
+	  <a href="Hangfire-Integration.html">hangfire 
+  integration</a>). Some information on default BackgroundJobManager:</p>
       <ul>
         <li>It's a simple job queue works as <strong>FIFO</strong> in a <strong>
     single thread</strong>. It uses <strong>IBackgroundJobStore</strong> to 
     persist jobs (see next section).</li>
         <li>It <strong>retries </strong>job execution until job <strong>
-    successfully runs</strong> (does not throw any exception) or <strong>
+    successfully runs</strong> (does not throw any exception but logs them) or <strong>
     timeouts</strong>. Default 
     timeout is 2 days for a job.</li>
         <li>It <strong>deletes</strong> a job from store (database) when it's 
@@ -178,7 +179,7 @@ and <strong>delay</strong>.</p>
     Waits 1 minute for first retry, 2 minutes for second retry, 4 minutes 
     for third retry and so on..</li>
         <li>It <strong>polls</strong> the store for jobs in fixed intervals. 
-    Queries jobs ordering by priority then by try count.</li>
+    Queries jobs ordering by priority (asc) then by try count (asc).</li>
       </ul>
       <h5>Background Job Store</h5>
       <p>Default BackgroundJobManager needs a data store to save and get jobs. If 
@@ -189,7 +190,8 @@ and <strong>delay</strong>.</p>
           <a href="/Pages/Documents/Zero/Overall">module-zero</a>
         </strong> 
   which already implements it.</p>
-      <p>If you are using a 3rd party job manager (like Hanfgire), no need to 
+      <p>If you are using a 3rd party job manager (like 
+	  <a href="Hangfire-Integration.html">Hanfgire</a>), no need to 
   implement IBackgroundJobStore.</p>
       <h4>Configuration</h4>
       <p>You can use <strong>Configuration.BackgroundJobs</strong> in
@@ -308,7 +310,7 @@ and <strong>delay</strong>.</p>
 that. You can inject IBackgroundWorkerManager anywhere and add workers on 
 runtime. IBackgroundWorkerManager will stop and release all registered workers 
 when your applications is being shutdown.</p>
-      <h4>Background Worker Lifecycles</h4>
+      <h4>Background Worker Lifestyles</h4>
       <p>Background workers are generally implemented as <strong>singleton</strong>. 
   But there is no restriction. If you need multiple instance of same worker 
   class, you can make it transient and add more than one instance to

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -8,10 +8,9 @@ using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
+using Abp.Extensions;
 using Abp.MultiTenancy;
-using Abp.Reflection;
 using Castle.Core.Internal;
-using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -26,6 +25,7 @@ namespace Abp.EntityFramework.Uow
 
         protected TransactionScope CurrentTransaction;
         private readonly IDbContextResolver _dbContextResolver;
+        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
@@ -34,11 +34,18 @@ namespace Abp.EntityFramework.Uow
             IIocResolver iocResolver,
             IConnectionStringResolver connectionStringResolver,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions)
-            : base(connectionStringResolver, defaultOptions)
+            IEfUnitOfWorkFilterExecuter filterExecuter,
+            IUnitOfWorkDefaultOptions defaultOptions, 
+            IDbContextTypeMatcher dbContextTypeMatcher)
+            : base(
+                  connectionStringResolver, 
+                  defaultOptions,
+                  filterExecuter)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
+            _dbContextTypeMatcher = dbContextTypeMatcher;
+
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
@@ -77,6 +84,11 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        public IReadOnlyList<DbContext> GetAllActiveDbContexts()
+        {
+            return ActiveDbContexts.Values.ToImmutableList();
+        }
+
         protected override void CompleteUow()
         {
             SaveChanges();
@@ -99,45 +111,17 @@ namespace Abp.EntityFramework.Uow
             DisposeUow();
         }
 
-        protected override void ApplyDisableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.DisableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyEnableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.EnableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                if (TypeHelper.IsFunc<object>(value))
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
-                }
-                else
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
-                }
-            }
-        }
-
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
+            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof(TDbContext).FullName + "#" + connectionString;
+            var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
@@ -150,29 +134,7 @@ namespace Abp.EntityFramework.Uow
                     ObjectContext_ObjectMaterialized(dbContext, args);
                 };
 
-                foreach (var filter in Filters)
-                {
-                    if (filter.IsEnabled)
-                    {
-                        dbContext.EnableFilter(filter.FilterName);
-                    }
-                    else
-                    {
-                        dbContext.DisableFilter(filter.FilterName);
-                    }
-
-                    foreach (var filterParameter in filter.FilterParameters)
-                    {
-                        if (TypeHelper.IsFunc<object>(filterParameter.Value))
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
-                        }
-                        else
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
-                        }
-                    }
-                }
+                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
 
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
@@ -211,11 +173,14 @@ namespace Abp.EntityFramework.Uow
         private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
         {
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
+
+            dbContext.Configuration.AutoDetectChangesEnabled = false;
             var previousState = dbContext.Entry(e.Entity).State;
 
             DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
 
             dbContext.Entry(e.Entity).State = previousState;
+            dbContext.Configuration.AutoDetectChangesEnabled = true;
         }
     }
 }

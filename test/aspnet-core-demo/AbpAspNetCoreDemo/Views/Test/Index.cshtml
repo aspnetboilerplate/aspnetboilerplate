@@ -1,0 +1,20 @@
+﻿<button id="GetProductsButton">GetAllProducts</button>
+<p id="ProductList"></p>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#GetProductsButton')
+                .click(function (e) {
+                    e.preventDefault();
+                    console.log('making request...1');
+                    abp.services.app.product.getAll().done(function (result) {
+                        console.log('making request...2');
+                        $('#ProductList').text(JSON.stringify(result) + " --- " + new Date().getTime());
+                        console.log('making request...3');
+                    });
+                });
+        });
+    </script>
+}

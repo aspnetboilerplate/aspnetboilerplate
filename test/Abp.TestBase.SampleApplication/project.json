@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Abp.AutoMapper": "0.12.0.2-*",
+    "Abp.EntityFramework": "0.12.0.2-*",
+    "Abp.TestBase": "0.12.0.2-*",
+    "Abp.EntityFramework.GraphDiff": "0.12.0.2-*"
+  },
+
+  "frameworks": {
+    "net452": {
+      
+    }
+  }
+}

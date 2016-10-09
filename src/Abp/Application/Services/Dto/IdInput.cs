@@ -1,20 +1,22 @@
+using System;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// This <see cref="IInputDto"/> can be directly used (or inherited)
+    /// This DTO can be directly used (or inherited)
     /// to pass an Id value to an application service method.
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
-    public class IdInput<TId> : IInputDto
+    [Serializable]
+    public class IdInput<TId> : EntityDto<TId>
     {
-        public TId Id { get; set; }
-
         public IdInput()
         {
 
         }
 
         public IdInput(TId id)
+            : base(id)
         {
             Id = id;
         }
@@ -23,6 +25,7 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// A shortcut of <see cref="IdInput{TPrimaryKey}"/> for <see cref="int"/>.
     /// </summary>
+    [Serializable]
     public class IdInput : IdInput<int>
     {
         public IdInput()

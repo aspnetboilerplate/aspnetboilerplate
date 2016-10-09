@@ -13,7 +13,7 @@ namespace Abp.BackgroundJobs
     /// <summary>
     /// Default implementation of <see cref="IBackgroundJobManager"/>.
     /// </summary>
-    public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager
+    public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager, ISingletonDependency
     {
         /// <summary>
         /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.

@@ -7,17 +7,17 @@ namespace Abp.AutoMapper
 {
     internal static class AutoMapperHelper
     {
-        public static void CreateMap(Type type)
+        public static void CreateAbpAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
-            CreateMap<AutoMapFromAttribute>(type);
-            CreateMap<AutoMapToAttribute>(type);
-            CreateMap<AutoMapAttribute>(type);
+            configuration.CreateAbpAttributeMap<AutoMapFromAttribute>(type);
+            configuration.CreateAbpAttributeMap<AutoMapToAttribute>(type);
+            configuration.CreateAbpAttributeMap<AutoMapAttribute>(type);
         }
 
-        public static void CreateMap<TAttribute>(Type type)
+        private static void CreateAbpAttributeMap<TAttribute>(this IMapperConfigurationExpression configuration, Type type)
             where TAttribute : AutoMapAttribute
         {
-            if (!type.IsDefined(typeof (TAttribute)))
+            if (!type.IsDefined(typeof(TAttribute)))
             {
                 return;
             }
@@ -33,12 +33,12 @@ namespace Abp.AutoMapper
                 {
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.To))
                     {
-                        Mapper.CreateMap(type, targetType);
+                        configuration.CreateMap(type, targetType);
                     }
 
                     if (autoMapToAttribute.Direction.HasFlag(AutoMapDirection.From))
                     {
-                        Mapper.CreateMap(targetType, type);                                
+                        configuration.CreateMap(targetType, type);
                     }
                 }
             }

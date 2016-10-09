@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Web.Http.Controllers;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
@@ -9,6 +10,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public class AbpApiControllerActionSelector : ApiControllerActionSelector
     {
+        private readonly IAbpWebApiConfiguration _configuration;
+
+        public AbpApiControllerActionSelector(IAbpWebApiConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         /// <summary>
         /// This class is called by Web API system to select action method from given controller.
         /// </summary>
@@ -52,11 +60,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 );
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
+        private HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
         {
             //Check if there is only one action with the current http verb
             var actionsByVerb = controllerInfo.Actions.Values
-                .Where(action => action.Verb.IsEqualTo(controllerContext.Request.Method))
+                .Where(action => action.Verb == controllerContext.Request.Method.ToHttpVerb())
                 .ToArray();
 
             if (actionsByVerb.Length == 0)
@@ -78,10 +86,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             }
 
             //Return the single action by the current http verb
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionsByVerb[0].Method, actionsByVerb[0].Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionsByVerb[0]);
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
+        private HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
         {
             //Get action information by action name
             DynamicApiActionInfo actionInfo;
@@ -90,7 +98,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
             }
 
-            if (!actionInfo.Verb.IsEqualTo(controllerContext.Request.Method))
+            if (actionInfo.Verb != controllerContext.Request.Method.ToHttpVerb())
             {
                 throw new AbpException(
                     "There is an action " + actionName +
@@ -99,7 +107,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                     ". It should be " + actionInfo.Verb);
             }
 
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionInfo.Method, actionInfo.Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo);
         }
 
         private HttpActionDescriptor GetDefaultActionDescriptor(HttpControllerContext controllerContext)
