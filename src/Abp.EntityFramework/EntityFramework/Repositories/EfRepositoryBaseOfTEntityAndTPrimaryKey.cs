@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 
@@ -15,7 +16,7 @@ namespace Abp.EntityFramework.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
+    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
@@ -43,6 +44,23 @@ namespace Abp.EntityFramework.Repositories
         public override IQueryable<TEntity> GetAll()
         {
             return Table;
+        }
+
+        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return GetAll();
+            }
+
+            var query = GetAll();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                query = query.Include(propertySelector);
+            }
+
+            return query;
         }
 
         public override async Task<List<TEntity>> GetAllListAsync()
@@ -189,6 +207,11 @@ namespace Abp.EntityFramework.Repositories
             {
                 Table.Attach(entity);
             }
+        }
+
+        public DbContext GetDbContext()
+        {
+            return Context;
         }
     }
 }

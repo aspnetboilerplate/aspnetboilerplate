@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
@@ -23,6 +24,8 @@ namespace Abp.Domain.Repositories
         /// </summary>
         public static MultiTenancySides? MultiTenancySide { get; private set; }
 
+        public IIocResolver IocResolver { get; set; }
+
         static AbpRepositoryBase()
         {
             var attr = typeof (TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
@@ -33,7 +36,12 @@ namespace Abp.Domain.Repositories
         }
 
         public abstract IQueryable<TEntity> GetAll();
-        
+
+        public virtual IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return GetAll();
+        }
+
         public virtual List<TEntity> GetAllList()
         {
             return GetAll().ToList();

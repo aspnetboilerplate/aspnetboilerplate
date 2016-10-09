@@ -5,9 +5,13 @@
 # Logs
 Logs/
 
+# Generated files
+project.lock.json
+.vs/
+
 # Nuget packages
 nupkg/*.nupkg
-nupkg/push_abp_framework.bat
+nupkg/push.bat
 
 # Profile images
 ProfileImages/
@@ -120,3 +124,5 @@ src/.vs/config/applicationhost.config
 
 # GitLink
 !GitLink.exe
+!nuget.exe
+!SQLite.Interop.dll

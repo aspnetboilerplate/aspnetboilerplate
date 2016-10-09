@@ -9,6 +9,7 @@ using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
 using Abp.Events.Bus.Handlers.Internals;
+using Abp.Extensions;
 using Abp.Threading.Extensions;
 using Castle.Core.Logging;
 
@@ -22,8 +23,7 @@ namespace Abp.Events.Bus
         /// <summary>
         /// Gets the default <see cref="EventBus"/> instance.
         /// </summary>
-        public static EventBus Default { get { return DefaultInstance; } }
-        private static readonly EventBus DefaultInstance = new EventBus();
+        public static EventBus Default { get; } = new EventBus();
 
         /// <summary>
         /// Reference to the Logger.
@@ -91,27 +91,27 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
+            Check.NotNull(action, nameof(action));
+
             GetOrCreateHandlerFactories(typeof(TEventData))
                 .Locking(factories =>
                 {
                     factories.RemoveAll(
                         factory =>
                         {
-                            if (factory is SingleInstanceHandlerFactory)
+                            var singleInstanceFactory = factory as SingleInstanceHandlerFactory;
+                            if (singleInstanceFactory == null)
                             {
-                                var singleInstanceFactoru = factory as SingleInstanceHandlerFactory;
-                                if (singleInstanceFactoru.HandlerInstance is ActionEventHandler<TEventData>)
-                                {
-                                    var actionHandler =
-                                        singleInstanceFactoru.HandlerInstance as ActionEventHandler<TEventData>;
-                                    if (actionHandler.Action == action)
-                                    {
-                                        return true;
-                                    }
-                                }
+                                return false;
                             }
 
-                            return false;
+                            var actionHandler = singleInstanceFactory.HandlerInstance as ActionEventHandler<TEventData>;
+                            if (actionHandler == null)
+                            {
+                                return false;
+                            }
+
+                            return actionHandler.Action == action;
                         });
                 });
         }
@@ -181,6 +181,23 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
+            var exceptions = new List<Exception>();
+
+            TriggerHandlingException(eventType, eventSource, eventData, exceptions);
+
+            if (exceptions.Any())
+            {
+                if (exceptions.Count == 1)
+                {
+                    exceptions[0].ReThrow();
+                }
+
+                throw new AggregateException("More than one error has occurred while triggering the event: " + eventType, exceptions);
+            }
+        }
+
+        private void TriggerHandlingException(Type eventType, object eventSource, IEventData eventData, List<Exception> exceptions)
+        {
             //TODO: This method can be optimized by adding all possibilities to a dictionary.
 
             eventData.EventSource = eventSource;
@@ -190,7 +207,8 @@ namespace Abp.Events.Bus
                 var eventHandler = factoryToTrigger.GetHandler();
                 if (eventHandler == null)
                 {
-                    throw new Exception("Registered event handler for event type " + eventType.Name + " does not implement IEventHandler<" + eventType.Name + "> interface!");
+                    throw new Exception("Registered event handler for event type " + eventType.Name +
+                                        " does not implement IEventHandler<" + eventType.Name + "> interface!");
                 }
 
                 var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
@@ -198,8 +216,16 @@ namespace Abp.Events.Bus
                 try
                 {
                     handlerType
-                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] { eventType }, null)
-                        .Invoke(eventHandler, new object[] { eventData });
+                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] {eventType}, null)
+                        .Invoke(eventHandler, new object[] {eventData});
+                }
+                catch (TargetInvocationException ex)
+                {
+                    exceptions.Add(ex.InnerException);
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
                 }
                 finally
                 {
@@ -216,9 +242,9 @@ namespace Abp.Events.Bus
                 var baseArg = genericArg.BaseType;
                 if (baseArg != null)
                 {
-                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(genericArg.BaseType);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
-                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
+                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument) eventData).GetConstructorArgs();
+                    var baseEventData = (IEventData) Activator.CreateInstance(baseEventType, constructorArgs);
                     baseEventData.EventTime = eventData.EventTime;
                     Trigger(baseEventType, eventData.EventSource, baseEventData);
                 }

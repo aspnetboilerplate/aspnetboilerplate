@@ -14,8 +14,7 @@
 			<h3>Introduction</h3>
 			<p>ASP.NET Boilerplate is integrated to <strong>ASP.NET MVC Controllers</strong> via <strong>
 Abp.Web.Mvc</strong> nuget package. You can create regular MVC Controllers as 
-you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> properly works for regular MVC Controllers.</p>
-			<p>But you should derive your controllers from <strong>
+you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> properly works for regular MVC Controllers. But you should derive your controllers from <strong>
 	AbpController</strong>, which provides several benefits 
 	and better integrates to ASP.NET Boilerplate.</p>
 			<h3>AbpController Base Class</h3>
@@ -48,72 +47,9 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 			<p>You should set <strong>LocalizationSourceName</strong> to make <strong>L</strong> method 
 	working. You can set it in your own base controller class, to not repeat for 
 	each controller.</p>
-			<h4>Exception Handling</h4>
-			<p>Exceptions are automatically handled, logged and a proper response is 
-	returned to the client. See <a href="/Pages/Documents/Handling-Exceptions">
-	exception handling</a> documentation for more.</p>
-			<h4>Result Wrapping&nbsp;</h4>
-			<p>ASP.NET Boilerplate <strong>wraps</strong> action results by default if 
-	return type is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async 
-	actions). You can change this by using <strong>WrapResult</strong> and
-				<strong>DontWrapResult</strong> 
-	attributes for controllers or actions. See
-				<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for more.</p>
-			<h4>Audit Logging</h4>
-			<p>Audit logs are automatically written if you derive from AbpController. 
-	See <a href="/Pages/Documents/Audit-Logging">audit logs</a> documentation 
-	for more.</p>
-			<h4>Authorization</h4>
-			<p>You can use <strong>AbpMvcAuthorize</strong> attribute for your 
-	controllers or actions to prevent unauthorized users to use your controllers 
-	and actions. Example:</p>
-			<pre lang="cs">public class HomeController : AbpController
-{
-    <strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
-    public ActionResult Index()
-    {
-        return View();
-    }
-}</pre>
-			<p>AbpController also defines <strong>IsGranted</strong> method as a 
-	shortcut to check permissions.</p>
-			<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
-	documentation for more.</p>
-			<h4>Unit Of Work</h4>
-			<p>MVC actions are <strong>not</strong>
-				<a href="/Pages/Documents/Unit-Of-Work">unit of work</a> by default. For 
-	example, if you 
-	need database connection to be open in your action, you need to explicitly 
-	declare <strong>UnitOfWork</strong> attribute as shown below:</p>
-			<pre lang="cs">public class HomeController : AbpController
-{
-    private readonly IRepository&lt;User, long&gt; _userRepository;
 
-    public HomeController(IRepository&lt;User, long&gt; userRepository)
-    {
-        _userRepository = userRepository;
-    }
+		<div class="document-contents">
 
-    <strong>[UnitOfWork]</strong>
-    public <strong>virtual</strong> ActionResult Users(string filter)
-    {
-        var users = _userRepository
-            .GetAll()
-            .Where(u =&gt; u.UserName.StartsWith(filter))
-            .ToList();
-
-        return View(users);
-    }
-}
-			</pre>
-			<p>We declared <strong>UnitOfWork</strong> attribute. This is needed since 
-	repository's <strong>GetAll()</strong> method returns <strong>IQueryable</strong>, 
-	which requires an open database connection while using <strong>ToList()</strong> 
-	method (because of deferred execution of IQueryable). Notice that it should 
-	also be <strong>virtual</strong> (because interception can not work 
-	otherwise).</p>
-			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
-	documentation for more.</p>
 			<h4>Others</h4>
 			<p>You can also use pre-injected <a href="/Pages/Documents/Abp-Session">AbpSession</a>, 
 				<a href="/Pages/Documents/EventBus-Domain-Events">EventBus</a>, 
@@ -126,6 +62,66 @@ you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Inject
 	properties and more.</p>
 
 		</div>
+
+			<h3>Filters</h3>
+			<h4>Exception Handling &amp; Result Wrapping</h4>
+			<p>All exceptions are automatically handled, logged and a proper response is 
+	returned to the client. See <a href="/Pages/Documents/Handling-Exceptions">
+	exception handling</a> documentation for more.</p>
+			<p>ASP.NET Boilerplate also <strong>wraps</strong> action results by default if 
+	return type is <strong>JsonResult</strong> (or Task&lt;JsonResult&gt; for async 
+	actions).</p>
+			<p>You can change exception handling and wrapping by using <strong>WrapResult</strong> and
+				<strong>DontWrapResult</strong> 
+	attributes for controllers or actions or from
+			<a href="Startup-Configuration.html">startup configuration</a> 
+			(using Configuration.Modules.AbpMvc()...) globally. See
+				<a href="/Pages/Documents/Javascript-API/AJAX">ajax documentation</a> for more.</p>
+			<h4>Audit Logging</h4>
+			<strong>AbpMvcAuditFilter</strong> is used to integrate to
+	<a href="Audit-Logging.html">audit logging system</a>. It logs all requests 
+	to all actions by default (if auditing is not disabled). You can control audit logging using <strong>Audited</strong> and <strong>
+	DisableAuditing</strong> attributes for actions and controllers.<h4>Validation</h4>
+			<p><strong>AbpMvcValidationFilter</strong> automatically checks <strong>
+			ModelState.IsValid</strong> and prevents execution of the action if 
+			it's not valid. Also, implements input DTO validation described in 
+			the <a href="Validating-Data-Transfer-Objects.html">validation 
+			documentation</a>.</p>
+			<h4>Authorization</h4>
+			<p>You can use <strong>AbpMvcAuthorize</strong> attribute for your 
+	controllers or actions to prevent unauthorized users to use your controllers 
+	and actions. Example:</p>
+			<pre lang="cs">public class HomeController : AbpController
+{
+    <strong>[AbpMvcAuthorize(&quot;MyPermissionName&quot;)]</strong>
+    public ActionResult Index()
+    {
+        return View();
+    }
+}</pre>
+			<p>You can define <strong>AllowAnonymous</strong> attribute for actions or controllers to suppress 
+		authentication/authorization. AbpController also defines <strong>IsGranted</strong> method as a 
+	shortcut to check permissions.</p>
+			<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
+	documentation for more.</p>
+			<h4>Unit Of Work</h4>
+
+		</div>
+	<p><strong>AbpMvcUowFilter</strong> is used to integrate to
+	<a href="Unit-Of-Work.html">Unit of Work</a> system. It automatically begins 
+	a new unit of work before an action execution and completes unit of work 
+	after action exucition (if no exception is thrown).</p>
+	<p>You can use <strong>UnitOfWork</strong> attribute to control behaviour of 
+	UOW for an action. You can also use startup configuration to change default 
+	unit of work attribute for all actions.</p>
+		<h4>Anti Forgery</h4>
+		<p><strong>AbpAntiForgeryMvcFilter</strong> is used to auto protect MVC 
+		actions for POST, PUT and DELETE requests from CSRF/XSRF attacks. See
+		<a href="XSRF-CSRF-Protection.html">CSRF documentation</a> for more.</p>
+		<h3>Model Binders</h3>
+		<p><strong>AbpMvcDateTimeBinder</strong> is used to normalize DateTime 
+	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
+	method.</p>
 
 	</body>
 

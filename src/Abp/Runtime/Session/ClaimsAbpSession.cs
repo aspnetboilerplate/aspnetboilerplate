@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 
@@ -11,28 +12,14 @@ namespace Abp.Runtime.Session
     /// <summary>
     /// Implements <see cref="IAbpSession"/> to get session properties from claims of <see cref="Thread.CurrentPrincipal"/>.
     /// </summary>
-    public class ClaimsAbpSession : IAbpSession
+    public class ClaimsAbpSession : IAbpSession, ISingletonDependency
     {
-        private const int DefaultTenantId = 1;
-
         public virtual long? UserId
         {
             get
             {
-                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-                if (claimsPrincipal == null)
-                {
-                    return null;
-                }
-
-                var claimsIdentity = claimsPrincipal.Identity as ClaimsIdentity;
-                if (claimsIdentity == null)
-                {
-                    return null;
-                }
-
-                var userIdClaim = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;
                 }
@@ -51,19 +38,13 @@ namespace Abp.Runtime.Session
         {
             get
             {
-                if (!_multiTenancy.IsEnabled)
+                if (!MultiTenancy.IsEnabled)
                 {
-                    return DefaultTenantId;
+                    return MultiTenancyConsts.DefaultTenantId;
                 }
 
-                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-                if (claimsPrincipal == null)
-                {
-                    return null;
-                }
-
-                var tenantIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
-                if (tenantIdClaim == null || string.IsNullOrEmpty(tenantIdClaim.Value))
+                var tenantIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
+                if (string.IsNullOrEmpty(tenantIdClaim?.Value))
                 {
                     return null;
                 }
@@ -72,28 +53,12 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public virtual MultiTenancySides MultiTenancySide
-        {
-            get
-            {
-                return _multiTenancy.IsEnabled && !TenantId.HasValue
-                    ? MultiTenancySides.Host
-                    : MultiTenancySides.Tenant;
-            }
-        }
-
         public virtual long? ImpersonatorUserId
         {
             get
             {
-                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-                if (claimsPrincipal == null)
-                {
-                    return null;
-                }
-
-                var impersonatorUserIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
-                if (impersonatorUserIdClaim == null || string.IsNullOrEmpty(impersonatorUserIdClaim.Value))
+                var impersonatorUserIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
+                if (string.IsNullOrEmpty(impersonatorUserIdClaim?.Value))
                 {
                     return null;
                 }
@@ -106,19 +71,13 @@ namespace Abp.Runtime.Session
         {
             get
             {
-                if (!_multiTenancy.IsEnabled)
+                if (!MultiTenancy.IsEnabled)
                 {
-                    return DefaultTenantId;
+                    return MultiTenancyConsts.DefaultTenantId;
                 }
 
-                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-                if (claimsPrincipal == null)
-                {
-                    return null;
-                }
-
-                var impersonatorTenantIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
-                if (impersonatorTenantIdClaim == null || string.IsNullOrEmpty(impersonatorTenantIdClaim.Value))
+                var impersonatorTenantIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
+                if (string.IsNullOrEmpty(impersonatorTenantIdClaim?.Value))
                 {
                     return null;
                 }
@@ -127,14 +86,24 @@ namespace Abp.Runtime.Session
             }
         }
 
-        private readonly IMultiTenancyConfig _multiTenancy;
+        public virtual MultiTenancySides MultiTenancySide
+        {
+            get
+            {
+                return MultiTenancy.IsEnabled && !TenantId.HasValue
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
+            }
+        }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
+        public IPrincipalAccessor PrincipalAccessor { get; set; } //TODO: Convert to constructor-injection
+
+        protected readonly IMultiTenancyConfig MultiTenancy;
+
         public ClaimsAbpSession(IMultiTenancyConfig multiTenancy)
         {
-            _multiTenancy = multiTenancy;
+            MultiTenancy = multiTenancy;
+            PrincipalAccessor = DefaultPrincipalAccessor.Instance;
         }
     }
 }

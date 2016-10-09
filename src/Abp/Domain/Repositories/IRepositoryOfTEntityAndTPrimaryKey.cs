@@ -19,11 +19,17 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Used to get a IQueryable that is used to retrieve entities from entire table.
-        /// <see cref="UnitOfWorkAttribute"/> attribute must be used to be able to call this method since this method
-        /// returns IQueryable and it requires open database connection to use it.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
         IQueryable<TEntity> GetAll();
+
+        /// <summary>
+        /// Used to get a IQueryable that is used to retrieve entities from entire table.
+        /// One or more 
+        /// </summary>
+        /// <param name="propertySelectors">A list of include expressions.</param>
+        /// <returns>IQueryable to be used to select entities from database</returns>
+        IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
 
         /// <summary>
         /// Used to get all entities.

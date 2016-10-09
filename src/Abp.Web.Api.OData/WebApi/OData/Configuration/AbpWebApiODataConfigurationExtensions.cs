@@ -12,7 +12,7 @@ namespace Abp.WebApi.OData.Configuration
         /// </summary>
         public static IAbpWebApiODataModuleConfiguration AbpWebApiOData(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.Web.Api.OData", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpWebApiODataModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpWebApiODataModuleConfiguration>();
         }
     }
 }

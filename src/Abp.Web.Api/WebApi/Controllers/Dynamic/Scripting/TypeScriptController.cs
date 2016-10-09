@@ -1,13 +1,17 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http;
+using Abp.Auditing;
 using Abp.Web.Models;
+using Abp.Web.Security;
+using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
 using Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
-    [DontWrapResult]    
+    [DontWrapResult]
+    [DisableAuditing]
+    [DisableAbpAntiForgeryTokenValidation]
     public class TypeScriptController : AbpApiController
     {
         readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -15,6 +16,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
@@ -51,6 +53,11 @@ namespace Abp.EntityFramework
         /// Reference to the current UOW provider.
         /// </summary>
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
+
+        /// <summary>
+        /// Reference to multi tenancy configuration.
+        /// </summary>
+        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -170,7 +177,7 @@ namespace Abp.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null, 0);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null, 0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
 
@@ -212,6 +219,10 @@ namespace Abp.EntityFramework
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        CheckAndSetId(entry.Entity);
+                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+                        CheckAndSetMayHaveTenantIdProperty(entry.Entity);
+                        SetCreationAuditProperties(entry.Entity, userId);
                         EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
                         EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
                         break;
@@ -246,7 +257,13 @@ namespace Abp.EntityFramework
             var entity = entityAsObj as IEntity<Guid>;
             if (entity != null && entity.Id == Guid.Empty)
             {
-                entity.Id = GuidGenerator.Create();
+                var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
+                var idProperty = entityType.GetProperty("Id");
+                var dbGeneratedAttr = ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
+                if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                {
+                    entity.Id = GuidGenerator.Create();
+                }
             }
         }
 
@@ -278,19 +295,62 @@ namespace Abp.EntityFramework
             }
         }
 
+        protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
+        {
+            //Only works for single tenant applications
+            if (MultiTenancyConfig?.IsEnabled ?? false)
+            {
+                return;
+            }
+
+            //Only set IMayHaveTenant entities
+            if (!(entityAsObj is IMayHaveTenant))
+            {
+                return;
+            }
+
+            var entity = entityAsObj.As<IMayHaveTenant>();
+
+            //Don't set if it's already set
+            if (entity.TenantId != null)
+            {
+                return;
+            }
+
+            entity.TenantId = GetCurrentTenantIdOrNull();
+        }
+
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
         {
-            if (entityAsObj is IHasCreationTime)
+            var entityWithCreationTime = entityAsObj as IHasCreationTime;
+            if (entityWithCreationTime == null)
             {
-                entityAsObj.As<IHasCreationTime>().CreationTime = Clock.Now;
+                return;
+            }
+
+            if (entityWithCreationTime.CreationTime == default(DateTime))
+            {
+                entityWithCreationTime.CreationTime = Clock.Now;
             }
 
             if (userId.HasValue && entityAsObj is ICreationAudited)
             {
-                var entity = entityAsObj.As<ICreationAudited>();
+                var entity = entityAsObj as ICreationAudited;
                 if (entity.CreatorUserId == null)
                 {
-                    entity.CreatorUserId = userId;
+                    if (entity is IMayHaveTenant || entity is IMustHaveTenant)
+                    {
+                        //Sets CreatorUserId only if current user is in same tenant/host with the given entity
+                        if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
+                            (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
+                        {
+                            entity.CreatorUserId = userId;
+                        }
+                    }
+                    else
+                    {
+                        entity.CreatorUserId = userId;
+                    }
                 }
             }
         }
@@ -418,8 +478,7 @@ namespace Abp.EntityFramework
 
         protected virtual int? GetCurrentTenantIdOrNull()
         {
-            if (CurrentUnitOfWorkProvider != null &&
-                CurrentUnitOfWorkProvider.Current != null)
+            if (CurrentUnitOfWorkProvider?.Current != null)
             {
                 return CurrentUnitOfWorkProvider.Current.GetTenantId();
             }

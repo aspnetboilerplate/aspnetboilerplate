@@ -19,8 +19,9 @@
 			<p>ASP.NET Boilerplate provides a <strong>feature system</strong> to make 
 	it easier. We can <strong>define</strong> features, <strong>check </strong>
 	if a feature is <strong>enabled</strong> for a tenant and <strong>integrate
-				</strong>feature system to other ASP.NET Boilerplate concepts (like permissions 
-	and menus).</p>
+				</strong>feature system to other ASP.NET Boilerplate concepts (like 
+			<a href="Authorization.html">authorization</a> 
+	and <a href="Navigation.html">navigation</a>).</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>About IFeatureValueStore</h4>
@@ -39,7 +40,7 @@
 	or <strong>disabled</strong> (for an edition or for a tenant).</p>
 			<h4>Value Feature</h4>
 			<p>Can be an <strong>arbitrary value</strong>. While it's stored and 
-	retrieved a string, numbers also can be easily stored as strings.</p>
+	retrieved a string, numbers also can be stored as strings.</p>
 			<p>For example, 
 	our application may be a task management application and we may have a limit for 
 	creating tasks in a month. Say that we have two different edition/package; one allows 
@@ -51,21 +52,21 @@
 				<a href="/Pages/Documents/Module-System">module</a> can define it's own 
 	features by deriving from <strong>FeatureProvider</strong> class. Here, a 
 	very simple feature provider that defines 3 features:</p>
-			<pre lang="cs">public class AppFeatureProvider : FeatureProvider
+			<pre lang="cs">public class AppFeatureProvider : <strong>FeatureProvider</strong>
 {
     public override void SetFeatures(IFeatureDefinitionContext context)
     {
-        var sampleBooleanFeature = context.Create(&#x22;SampleBooleanFeature&#x22;, defaultValue: &#x22;false&#x22;);
-        sampleBooleanFeature.CreateChildFeature(&#x22;SampleNumericFeature&#x22;, defaultValue: &#x22;10&#x22;);
-        context.Create(&#x22;SampleSelectionFeature&#x22;, defaultValue: &#x22;B&#x22;);
+        var sampleBooleanFeature = context.<strong>Create</strong>(&#x22;SampleBooleanFeature&#x22;, defaultValue: &#x22;false&#x22;);
+        sampleBooleanFeature.<strong>CreateChildFeature</strong>(&#x22;SampleNumericFeature&#x22;, defaultValue: &#x22;10&#x22;);
+        context.<strong>Create</strong>(&#x22;SampleSelectionFeature&#x22;, defaultValue: &#x22;B&#x22;);
     }
 }</pre>
 			<p>After creating a feature provider, we should register it in our module's
 				<a href="/Pages/Documents/Module-System#DocModulePreInit">PreInitialize</a> 
 	method as shown below:</p>
-			<pre lang="cs">Configuration.Features.Providers.Add&#x3C;AppFeatureProvider&#x3E;();</pre>
+			<pre lang="cs"><strong>Configuration.Features</strong>.Providers.Add&#x3C;AppFeatureProvider&#x3E;();</pre>
 			<h4>Basic Feature Properties</h4>
-			<p>A feature definition requires two properties at minimum:</p>
+			<p>A feature definition requires two properties at least:</p>
 			<ul>
 				<li>
 					<strong>Name</strong>: A unique name (as string) to identify the 
@@ -81,8 +82,8 @@
 			<p>Tip: Create a const string for a feature name and use it everywhere to 
 	prevent typing errors.</p>
 			<h4>Other Feature Properties</h4>
-			<p>While unique name and default value properties are enough for ASP.NET 
-	Boilerplate, there are somre other feature properties for a detailed 
+			<p>While unique name and default value properties are required, there are somre 
+			optional properties for a detailed 
 	control.</p>
 			<ul>
 				<li>
@@ -107,7 +108,7 @@
 		key-value pairs those can be related to the feature.</li>
 			</ul>
 			<p>Let's see more detailed definitions for the features above:</p>
-			<pre lang="cs">public class AppFeatureProvider : FeatureProvider
+			<pre lang="cs">public class AppFeatureProvider : <strong>FeatureProvider</strong>
 {
     public override void SetFeatures(IFeatureDefinitionContext context)
     {
@@ -144,9 +145,9 @@
         return new LocalizableString(name, AbpZeroTemplateConsts.LocalizationSourceName);
     }
 }</pre>
-			<p>Note that; This input type definitions are not used by ASP.NET 
-	Boilerplate. They can be used by applications while creating inputs for 
-	features. ASP.NET Boilerplate just provides these options to make it easier.</p>
+			<p>Note that: Input type definitions are not used by ASP.NET 
+			Boilerplate. They can be used by applications while creating inputs 
+			for features. ASP.NET Boilerplate just provides infrastructure to make it easier.</p>
 			<h4>Feature Hierarchy</h4>
 			<p>As shown in the sample feature providers, a feature can have <strong>
 	child features</strong>. A Parent feature is generally defined as <strong>
@@ -160,7 +161,7 @@
 			<h4>Using RequiresFeature Attribute</h4>
 			<p>We can use <strong>RequiredFeature</strong> attribute for a method or a 
 	class as shown below:</p>
-			<pre>[RequiresFeature(&#x22;ExportToExcel&#x22;)]
+			<pre><strong>[RequiresFeature(&#x22;ExportToExcel&#x22;)]</strong>
 public async Task&#x3C;FileDto&#x3E; GetReportToExcel(...)
 {
     ...
@@ -201,14 +202,14 @@ public async Task&#x3C;FileDto&#x3E; GetReportToExcel(...)
 			<p>Used to simply check if given feature is enabled or not. Example:</p>
 			<pre lang="cs">public async Task&#x3C;FileDto&#x3E; GetReportToExcel(...)
 {
-    if (await FeatureChecker.IsEnabledAsync(&#x22;ExportToExcel&#x22;))
+    if (<strong>await FeatureChecker.IsEnabledAsync(&#x22;ExportToExcel&#x22;)</strong>)
     {
         throw new AbpAuthorizationException(&#x22;You don&#x27;t have this feature: ExportToExcel&#x22;);
     }
 
     ...
 }</pre>
-			<p>IsEnabledAsync and other methods have sync versions.</p>
+			<p>IsEnabledAsync and other methods have also sync versions.</p>
 			<p>Surely, IsEnabled 
 	method should be used for <strong>boolean type 
 	features</strong>. Otherwise, you may get exceptions.</p>
@@ -221,10 +222,10 @@ if (createdTaskCountInThisMonth &#x3E;= <strong>FeatureChecker.GetValue(&#x22;Ma
 {
     throw new AbpAuthorizationException(&#x22;You exceed task creation limit for this month, sorry :(&#x22;);
 }</pre>
-			<p>FeatureChecker methods has also overrides to work features for a 
-	specified tenantId, not only current tenantId.</p>
+			<p>FeatureChecker methods have also overrides to work features for a 
+	specified tenantId, not only for the current tenantId.</p>
 			<h4>Client Side</h4>
-			<p>In the client side, we can use <strong>abp.features</strong> namespace to 
+			<p>In the client side (javascript), we can use <strong>abp.features</strong> namespace to 
 	get current values of the features.</p>
 			<h5>isEnabled</h5>
 			<pre lang="js">var isEnabled = abp.features.isEnabled('SampleBooleanFeature');</pre>

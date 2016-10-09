@@ -7,12 +7,12 @@ using Abp.Runtime.Caching;
 
 namespace Abp.Domain.Entities.Caching
 {
-    public abstract class EntityCache<TEntity, TCacheItem> :
+    public class EntityCache<TEntity, TCacheItem> :
         EntityCache<TEntity, TCacheItem, int>,
         IEntityCache<TCacheItem>
         where TEntity : class, IEntity<int>
     {
-        protected EntityCache(
+        public EntityCache(
             ICacheManager cacheManager,
             IRepository<TEntity, int> repository,
             string cacheName = null)
@@ -24,7 +24,7 @@ namespace Abp.Domain.Entities.Caching
         }
     }
 
-    public abstract class EntityCache<TEntity, TCacheItem, TPrimaryKey> :
+    public class EntityCache<TEntity, TCacheItem, TPrimaryKey> :
         IEventHandler<EntityChangedEventData<TEntity>>, IEntityCache<TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
@@ -49,7 +49,7 @@ namespace Abp.Domain.Entities.Caching
 
         protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
 
-        protected EntityCache(
+        public EntityCache(
             ICacheManager cacheManager, 
             IRepository<TEntity, TPrimaryKey> repository, 
             string cacheName = null)
@@ -60,17 +60,17 @@ namespace Abp.Domain.Entities.Caching
             ObjectMapper = NullObjectMapper.Instance;
         }
 
-        public TCacheItem Get(TPrimaryKey id)
+        public virtual TCacheItem Get(TPrimaryKey id)
         {
             return InternalCache.Get(id, () => GetCacheItemFromDataSource(id));
         }
 
-        public Task<TCacheItem> GetAsync(TPrimaryKey id)
+        public virtual Task<TCacheItem> GetAsync(TPrimaryKey id)
         {
             return InternalCache.GetAsync(id, () => GetCacheItemFromDataSourceAsync(id));
         }
 
-        public void HandleEvent(EntityChangedEventData<TEntity> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<TEntity> eventData)
         {
             InternalCache.Remove(eventData.Entity.Id);
         }
