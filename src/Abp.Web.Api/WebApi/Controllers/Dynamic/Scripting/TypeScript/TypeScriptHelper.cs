@@ -14,7 +14,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private static readonly string[] _basicTypes =
         {
             "guid", "string", "bool",
-            "datetime", "int16", "int32", "int64", "single", "double", "boolean", "void","byte"
+            "datetime", "int16", "int32", "int64", "single", "double", "decimal", "boolean", "void","byte"
         };
 
         private static readonly string[] _typesToIgnore =
@@ -88,6 +88,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 case "int64":
                 case "single":
                 case "double":
+                case "decimal":
                 case "byte":
                     return "number";
                 case "boolean":
