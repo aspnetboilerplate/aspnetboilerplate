@@ -8,7 +8,35 @@
 
     namespace localization {
 
+        interface ILanguageInfo {
+
+            name: string;
+
+            displayName: string;
+
+            icon: string;
+
+            isDefault: boolean;
+
+        }
+
+        interface ILocalizationSource {
+
+            name: string;
+
+            type: string;
+
+        }
+
+        let languages: ILanguageInfo[];
+
+        let currentLanguage: ILanguageInfo;
+
+        let sources: ILocalizationSource[];
+
         let defaultSourceName: string;
+
+        let values: any;
 
         let abpWeb: (key: string) => string;
 

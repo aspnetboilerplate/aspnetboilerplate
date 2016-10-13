@@ -22,6 +22,14 @@
 
     abp.localization = abp.localization || {};
 
+    abp.localization.languages = [];
+
+    abp.localization.currentLanguage = {};
+
+    abp.localization.sources = [];
+
+    abp.localization.values = {};
+
     abp.localization.localize = function (key, sourceName) {
         sourceName = sourceName || abp.localization.defaultSourceName;
 
