@@ -6,6 +6,36 @@
 
     function toAbsAppPath(path: string): string;
 
+    namespace multiTenancy {
+
+        enum sides {
+
+            TENANT = 1,
+
+            HOST = 2
+
+        }
+
+        let isEnabled: boolean;
+
+    }
+
+    interface IAbpSession {
+
+        userId?: number;
+
+        tenantId?: number;
+
+        impersonatorUserId?: number;
+
+        impersonatorTenantId?: number;
+
+        multiTenancySide: multiTenancy.sides;
+
+    }
+
+    let session: IAbpSession;
+
     namespace localization {
 
         interface ILanguageInfo {
@@ -36,7 +66,7 @@
 
         let defaultSourceName: string;
 
-        let values: any;
+        let values: { [key: string]: string };
 
         let abpWeb: (key: string) => string;
 
@@ -49,9 +79,9 @@
 
     namespace auth {
 
-        let allPermissions: any;
+        let allPermissions: { [name: string]: boolean };
 
-        let grantedPermissions: any;
+        let grantedPermissions: { [name: string]: boolean };
 
         function isGranted(permissionName: string): boolean;
 
@@ -69,7 +99,7 @@
 
         }
 
-        let allFeatures: any;
+        let allFeatures: { [name: string]: IFeature };
 
         function get(name: string): IFeature;
 
@@ -81,13 +111,49 @@
 
     namespace settings {
 
-        let values: any;
+        let values: { [name: string]: string };
 
         function get(name: string): string;
 
         function getBoolean(name: string): boolean;
 
         function getInt(name: string): number;
+
+    }
+
+    namespace nav {
+
+        interface IMenu {
+
+            name: string;
+
+            displayName?: string;
+
+            customData?: any;
+
+            items: IMenuItem[];
+
+        }
+
+        interface IMenuItem {
+
+            name: string;
+
+            order: number;
+
+            displayName?: string;
+
+            icon?: string;
+
+            url?: string;
+
+            customData?: any;
+
+            items: IMenuItem[];
+
+        }
+
+        let menus: { [name: string]: IMenu };
 
     }
 
@@ -280,9 +346,33 @@
 
         interface IClockProvider {
 
+            supportsMultipleTimezone: boolean;
+
             now(): Date;
 
             normalize(date: Date): Date;
+
+        }
+
+        interface ITimeZoneInfo {
+
+            windows: {
+
+                timeZoneId: string;
+
+                baseUtcOffsetInMilliseconds: number;
+
+                currentUtcOffsetInMilliseconds: number;
+
+                isDaylightSavingTimeNow: boolean;
+
+            },
+
+            iana: {
+
+                timeZoneId: string;
+
+            }
 
         }
 
@@ -294,15 +384,16 @@
 
         function convertToUserTimezone(date: Date): Date;
 
+        let timeZoneInfo: ITimeZoneInfo;
     }
 
     namespace clock {
 
+        let provider: timing.IClockProvider;
+
         function now(): Date;
 
         function normalize(date: Date): Date;
-
-        let provider: timing.IClockProvider;
 
     }
 
