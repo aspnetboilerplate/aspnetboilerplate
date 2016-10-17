@@ -22,15 +22,15 @@
 
     interface IAbpSession {
 
-        userId?: number;
+        readonly userId?: number;
 
-        tenantId?: number;
+        readonly tenantId?: number;
 
-        impersonatorUserId?: number;
+        readonly impersonatorUserId?: number;
 
-        impersonatorTenantId?: number;
+        readonly impersonatorTenantId?: number;
 
-        multiTenancySide: multiTenancy.sides;
+        readonly multiTenancySide: multiTenancy.sides;
 
     }
 
