@@ -24,9 +24,7 @@ namespace Abp.Runtime.Caching.Redis
         public override object GetOrDefault(string key)
         {
             var objbyte = _database.StringGet(GetLocalizedKey(key));
-            return objbyte.HasValue
-                ? JsonSerializationHelper.DeserializeWithType(objbyte)
-                : null;
+            return objbyte.HasValue ? Deserialize(objbyte) : null;
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
@@ -46,7 +44,7 @@ namespace Abp.Runtime.Caching.Redis
 
             _database.StringSet(
                 GetLocalizedKey(key),
-                JsonSerializationHelper.SerializeWithType(value, type),
+                Serialize(value, type),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
         }
@@ -61,7 +59,17 @@ namespace Abp.Runtime.Caching.Redis
             _database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
-        private string GetLocalizedKey(string key)
+        protected virtual string Serialize(object value, Type type)
+        {
+            return JsonSerializationHelper.SerializeWithType(value, type);
+        }
+
+        protected virtual object Deserialize(RedisValue objbyte)
+        {
+            return JsonSerializationHelper.DeserializeWithType(objbyte);
+        }
+
+        protected virtual string GetLocalizedKey(string key)
         {
             return "n:" + Name + ",c:" + key;
         }
