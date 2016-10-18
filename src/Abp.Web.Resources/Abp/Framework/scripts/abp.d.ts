@@ -89,6 +89,12 @@
 
         function areAllGranted(...args: string[]): boolean;
 
+        let tokenCookieName: string;
+
+        function setToken(authToken: string, expireDate?: Date): void;
+
+        function getToken(): string;
+
     }
 
     namespace features {
