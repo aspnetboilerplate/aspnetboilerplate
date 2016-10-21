@@ -13,7 +13,7 @@ namespace Abp.EntityFrameworkCore.Repositories
     /// <summary>
     /// Implements IRepository for Entity Framework.
     /// </summary>
-    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
+    /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext

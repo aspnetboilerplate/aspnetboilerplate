@@ -9,7 +9,7 @@ namespace Abp.Web.Models
     public class AjaxResponse<TResult>: AjaxResponseBase
     {
         /// <summary>
-        /// The actual result object.
+        /// The actual result object of AJAX request.
         /// It is set if <see cref="AjaxResponseBase.Success"/> is true.
         /// </summary>
         public TResult Result { get; set; }
@@ -18,7 +18,7 @@ namespace Abp.Web.Models
         /// Creates an <see cref="AjaxResponse"/> object with <see cref="Result"/> specified.
         /// <see cref="AjaxResponseBase.Success"/> is set as true.
         /// </summary>
-        /// <param name="result">The actual result object</param>
+        /// <param name="result">The actual result object of AJAX request</param>
         public AjaxResponse(TResult result)
         {
             Result = result;

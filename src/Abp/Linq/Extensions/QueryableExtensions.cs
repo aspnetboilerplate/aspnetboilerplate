@@ -39,7 +39,7 @@ namespace Abp.Linq.Extensions
         /// <param name="query">Queryable to apply filtering</param>
         /// <param name="condition">A boolean value</param>
         /// <param name="predicate">Predicate to filter the query</param>
-        /// <returns>Filtered or not filtered query based on <see cref="condition"/></returns>
+        /// <returns>Filtered or not filtered query based on <paramref name="condition"/></returns>
         public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> predicate)
         {
             return condition
@@ -53,7 +53,7 @@ namespace Abp.Linq.Extensions
         /// <param name="query">Queryable to apply filtering</param>
         /// <param name="condition">A boolean value</param>
         /// <param name="predicate">Predicate to filter the query</param>
-        /// <returns>Filtered or not filtered query based on <see cref="condition"/></returns>
+        /// <returns>Filtered or not filtered query based on <paramref name="condition"/></returns>
         public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, int, bool>> predicate)
         {
             return condition

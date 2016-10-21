@@ -26,8 +26,10 @@ namespace Abp.EntityFramework.Tests.Utils
         {
             public string Name { get; set; }
 
+            #pragma warning disable
             public DateTime CreationDate { get { return _creationDate; } }
             private DateTime _creationDate;
+            #pragma warning restore
 
             public DateTime? ModificationDate { get; set; }
 
