@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Dependency;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
@@ -7,7 +8,7 @@ namespace Abp.Runtime.Caching.Redis
     ///     Interface to be implemented by all custom (de)serialization methods used when persisting and retrieving
     ///     objects from the Redis cache.
     /// </summary>
-    public interface IRedisCacheSerialization
+    public interface IRedisCacheSerializer
     {
         /// <summary>
         ///     Creates an instance of the object from its serialized string representation.

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using Abp.Dependency;
 using ProtoBuf;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
 {
-    public class ProtoBufRedisCacheSerializer : IRedisCacheSerialization
+    public class ProtoBufRedisCacheSerializer : IRedisCacheSerializer, ITransientDependency
     {
         private const string TypeSeperator = "|";
 
@@ -14,7 +15,7 @@ namespace Abp.Runtime.Caching.Redis
         /// </summary>
         /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
-        /// <seealso cref="IRedisCacheSerialization.Serialize" />
+        /// <seealso cref="IRedisCacheSerializer.Serialize" />
         public object Deserialize(RedisValue objbyte)
         {
             string serializedObj = objbyte;
@@ -39,7 +40,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="value">Instance to serialize.</param>
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
-        /// <seealso cref="IRedisCacheSerialization.Deserialize" />
+        /// <seealso cref="IRedisCacheSerializer.Deserialize" />
         public string Serialize(object value, Type type)
         {
             MemoryStream msTestString = new MemoryStream();
