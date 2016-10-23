@@ -11,12 +11,15 @@ namespace Abp.Runtime.Caching.Redis
     public class AbpRedisCache : CacheBase
     {
         private readonly IDatabase _database;
-        private IRedisCacheSerializer _serializer;
+        private readonly IRedisCacheSerializer _serializer;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, IRedisCacheSerializer redisCacheSerializer)
+        public AbpRedisCache(
+            string name, 
+            IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, 
+            IRedisCacheSerializer redisCacheSerializer)
             : base(name)
         {
             _database = redisCacheDatabaseProvider.GetDatabase();

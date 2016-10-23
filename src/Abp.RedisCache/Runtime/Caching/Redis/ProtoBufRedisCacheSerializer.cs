@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using Abp.Dependency;
 using ProtoBuf;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
 {
-    public class ProtoBufRedisCacheSerializer : IRedisCacheSerializer, ITransientDependency
+    public class ProtoBufRedisCacheSerializer : IRedisCacheSerializer
     {
         private const string TypeSeperator = "|";
 
@@ -20,18 +19,15 @@ namespace Abp.Runtime.Caching.Redis
         {
             string serializedObj = objbyte;
 
-            int typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator);
-            Type type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
-            string serialized = serializedObj.Substring(typeSeperatorIndex + 1);
+            var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.InvariantCultureIgnoreCase);
+            var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
+            var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
+            var byteAfter64 = Convert.FromBase64String(serialized);
 
-            byte[] byteAfter64 = Convert.FromBase64String(serialized);
-            MemoryStream afterStream = new MemoryStream(byteAfter64);
-
-            return Serializer.Deserialize(type, afterStream);
-
-            //MethodInfo method = typeof(Serializer).GetMethod(nameof(Serializer.Deserialize));
-            //MethodInfo generic = method.MakeGenericMethod(type);
-            //return generic.Invoke(null, new object[]{afterStream});
+            using (var memoryStream = new MemoryStream(byteAfter64))
+            {
+                return Serializer.Deserialize(type, memoryStream);
+            }
         }
 
         /// <summary>
@@ -43,11 +39,13 @@ namespace Abp.Runtime.Caching.Redis
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
         public string Serialize(object value, Type type)
         {
-            MemoryStream msTestString = new MemoryStream();
-            Serializer.Serialize(msTestString, value);
-            string serialized = Convert.ToBase64String(msTestString.GetBuffer(), 0, (int) msTestString.Length);
+            using (var memoryStream = new MemoryStream())
+            {
+                Serializer.Serialize(memoryStream, value);
+                var serialized = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
 
-            return $"{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
+                return $"{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
+            }
         }
     }
 }

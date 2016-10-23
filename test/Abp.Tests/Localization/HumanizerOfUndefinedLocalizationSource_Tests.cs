@@ -23,9 +23,6 @@ namespace Abp.Tests.Localization
         [Fact]
         public void Undefined_Localization_Source_Should_Be_Humanized()
         {
-            // Default configuration
-            _localizationConfiguration = new LocalizationConfiguration();
-
             // Fallback to the same text as It's already in sentence case
             _resourceFileLocalizationSource
                 .GetString("Lorem ipsum dolor sit amet", new CultureInfo("en-US"))
