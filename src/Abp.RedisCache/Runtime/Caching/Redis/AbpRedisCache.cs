@@ -11,14 +11,16 @@ namespace Abp.Runtime.Caching.Redis
     public class AbpRedisCache : CacheBase
     {
         private readonly IDatabase _database;
+        private IRedisCacheSerializer _serializer;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider)
+        public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, IRedisCacheSerializer redisCacheSerializer)
             : base(name)
         {
             _database = redisCacheDatabaseProvider.GetDatabase();
+            _serializer = redisCacheSerializer;
         }
 
         public override object GetOrDefault(string key)
@@ -61,12 +63,12 @@ namespace Abp.Runtime.Caching.Redis
 
         protected virtual string Serialize(object value, Type type)
         {
-            return JsonSerializationHelper.SerializeWithType(value, type);
+            return _serializer.Serialize(value, type);
         }
 
         protected virtual object Deserialize(RedisValue objbyte)
         {
-            return JsonSerializationHelper.DeserializeWithType(objbyte);
+            return _serializer.Deserialize(objbyte);
         }
 
         protected virtual string GetLocalizedKey(string key)
