@@ -97,16 +97,36 @@ namespace Abp.AutoMapper.Tests
             obj2.TestProp.ShouldBe(null);
         }
 
+        [Fact]
+        public void Should_Map_Nullable_Value_To_Null_If_It_Is_Null_On_Source()
+        {
+            var obj1 = new MyClass1();
+            var obj2 = _mapper.Map<MyClass2>(obj1);
+            obj2.NullableValue.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_Map_Nullable_Value_To__Not_Null_If_It_Is__Not_Null_On_Source()
+        {
+            var obj1 = new MyClass1 { NullableValue = 42 };
+            var obj2 = _mapper.Map<MyClass2>(obj1);
+            obj2.NullableValue.ShouldBe(42);
+        }
+
         [AutoMap(typeof(MyClass2), typeof(MyClass3))]
         private class MyClass1
         {
             public string TestProp { get; set; }
+
+            public long? NullableValue { get; set; }
         }
 
         [AutoMapTo(typeof(MyClass3))]
         private class MyClass2
         {
             public string TestProp { get; set; }
+
+            public long? NullableValue { get; set; }
         }
 
         private class MyClass3
