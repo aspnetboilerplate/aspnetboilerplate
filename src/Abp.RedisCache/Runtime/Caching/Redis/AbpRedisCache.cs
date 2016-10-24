@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.Domain.Entities;
-using Abp.Json;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
