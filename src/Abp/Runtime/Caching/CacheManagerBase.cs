@@ -45,10 +45,7 @@ namespace Abp.Runtime.Caching
 
                 foreach (var configurator in configurators)
                 {
-                    if (configurator.InitAction != null)
-                    {
-                        configurator.InitAction(cache);
-                    }
+                    configurator.InitAction?.Invoke(cache);
                 }
 
                 return cache;
