@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Abp.Runtime.Caching
 {
@@ -16,10 +17,13 @@ namespace Abp.Runtime.Caching
         IReadOnlyList<ICache> GetAllCaches();
 
         /// <summary>
-        /// Gets (or creates) a cache.
+        /// Gets a <see cref="ICache"/> instance.
+        /// It may create the cache if it does not already exists.
         /// </summary>
-        /// <param name="name">Unique name of the cache</param>
+        /// <param name="name">
+        /// Unique and case sensitive name of the cache.
+        /// </param>
         /// <returns>The cache reference</returns>
-        ICache GetCache(string name);
+        [NotNull] ICache GetCache([NotNull] string name);
     }
 }
