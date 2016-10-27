@@ -120,7 +120,7 @@
 
     }
 
-    namespace settings {
+    namespace setting {
 
         let values: { [name: string]: string };
 
