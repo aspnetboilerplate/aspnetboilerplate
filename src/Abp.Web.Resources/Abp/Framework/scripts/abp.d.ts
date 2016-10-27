@@ -91,6 +91,11 @@
 
         let tokenCookieName: string;
 
+        /**
+         * Saves auth token.
+         * @param authToken The token to be saved.
+         * @param expireDate Optional expire date. If not specified, token will be deleted at end of the session.
+         */
         function setToken(authToken: string, expireDate?: Date): void;
 
         function getToken(): string;
@@ -336,14 +341,14 @@
         * Sets a cookie value for given key.
         * @param {string} key
         * @param {string} value 
-        * @param {Date} expireDate Optional expire date (default: 30 days).
+        * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
         */
         function setCookieValue(key: string, value: string, expireDate?: Date): void;
 
         /**
         * Gets a cookie with given key.
         * @param {string} key
-        * @returns {string} Cookie value
+        * @returns {string} Cookie value or null.
         */
         function getCookieValue(key: string): string;
     }

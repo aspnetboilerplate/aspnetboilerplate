@@ -649,21 +649,22 @@
      * Sets a cookie value for given key.
      * @param {string} key
      * @param {string} value 
-     * @param {Date} expireDate Optional expire date (default: 30 days).
+     * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
      */
     abp.utils.setCookieValue = function (key, value, expireDate) {
-        if (!expireDate) {
-            expireDate = new Date();
-            expireDate.setDate(expireDate.getDate() + 30);
+        var cookieValue = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+
+        if (expireDate) {
+            cookieValue = cookieValue + "; expires=" + expireDate.toUTCString();
         }
 
-        document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value) + "; expires=" + expireDate.toUTCString();
+        document.cookie = cookieValue;
     };
 
     /**
      * Gets a cookie with given key.
      * @param {string} key
-     * @returns {string} Cookie value
+     * @returns {string} Cookie value or null
      */
     abp.utils.getCookieValue = function (key) {
         var equalities = document.cookie.split('; ');
