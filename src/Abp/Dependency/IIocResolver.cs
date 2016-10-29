@@ -67,12 +67,12 @@ namespace Abp.Dependency
         /// <returns>Object instances</returns>
         T[] ResolveAll<T>(object argumentsAsAnonymousType);
 
-        ///// <summary>
-        ///// Gets all implementations for given type.
-        ///// Returning objects must be Released (see <see cref="Release"/>) after usage.
-        ///// </summary> 
-        ///// <param name="type">Type of the objects to resolve</param>
-        ///// <returns>Object instances</returns>
+        /// <summary>
+        /// Gets all implementations for given type.
+        /// Returning objects must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the objects to resolve</param>
+        /// <returns>Object instances</returns>
         object[] ResolveAll(Type type);
 
         /// <summary>

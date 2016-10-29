@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Abp.Extensions;
-
 namespace Abp.Dependency
 {
-    internal class DisposableScopedDependencyObjectWrapper : IDisposableScopedDependencyObjectWrapper
+    internal class IocScopedResolver : IIocScopedResolver
     {
         private readonly IIocResolver _iocResolver;
         private readonly List<object> _resolvedObjects;
 
-        public DisposableScopedDependencyObjectWrapper(IIocResolver iocResolver)
+        public IocScopedResolver(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
             _resolvedObjects = new List<object>();
-        }
-
-        public void Dispose()
-        {
-            _resolvedObjects.ForEach(resolvedObject => { _iocResolver.Release(resolvedObject); });
         }
 
         public T Resolve<T>()
@@ -75,6 +68,11 @@ namespace Abp.Dependency
 
             _resolvedObjects.AddRange(resolvedObjects);
             return resolvedObjects;
+        }
+
+        public void Dispose()
+        {
+            _resolvedObjects.ForEach(_iocResolver.Release);
         }
     }
 }

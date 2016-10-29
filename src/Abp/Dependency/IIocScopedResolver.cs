@@ -7,7 +7,7 @@ namespace Abp.Dependency
     /// It inherits <see cref="IDisposable"/>, so resolved objects can be easily released by IocResolver.
     /// In <see cref="IDisposable.Dispose"/> method, <see cref="IIocResolver.Release"/> is called to dispose the object.
     /// </summary>
-    public interface IDisposableScopedDependencyObjectWrapper : IDisposable
+    public interface IIocScopedResolver : IDisposable
     {
         /// <summary>
         ///     Gets an object from scoped IOC resolver.

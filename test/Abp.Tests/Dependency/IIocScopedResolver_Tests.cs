@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Abp.Dependency;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class DisposableScopedDependencyObjectWrapper_Tests : TestBaseWithLocalIocManager
+    public class IIocScopedResolver_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void UsingScope_Test_ShouldWork()
@@ -46,7 +43,7 @@ namespace Abp.Tests.Dependency
             SimpleDisposableObject2 simpleObj2;
             SimpleDisposableObject3 simpleObj3;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleObj = scope.Resolve<SimpleDisposableObject>();
                 simpleObj2 = scope.Resolve<SimpleDisposableObject2>();
@@ -69,7 +66,7 @@ namespace Abp.Tests.Dependency
             SimpleDisposableObject2 simpleObj2;
             SimpleDisposableObject3 simpleObj3;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleObj = scope.Resolve<SimpleDisposableObject>(new { myData = 40 });
                 simpleObj2 = scope.Resolve<SimpleDisposableObject2>(new { myData = 4040 });
@@ -90,7 +87,7 @@ namespace Abp.Tests.Dependency
 
             IEnumerable<ISimpleDependency> simpleDependendcies;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleDependendcies = scope.ResolveAll<ISimpleDependency>();
             }
@@ -107,7 +104,7 @@ namespace Abp.Tests.Dependency
 
             IEnumerable<ISimpleDependency> simpleDependendcies;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleDependendcies = scope.ResolveAll<ISimpleDependency>(new { myData = 40 });
             }
@@ -126,7 +123,7 @@ namespace Abp.Tests.Dependency
             IEnumerable<ISimpleDependency> simpleDependendcies;
             SimpleDisposableObject simpleObject;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleDependendcies = scope.ResolveAll<ISimpleDependency>();
                 simpleObject = scope.Resolve<SimpleDisposableObject>();
@@ -147,7 +144,7 @@ namespace Abp.Tests.Dependency
             IEnumerable<ISimpleDependency> simpleDependendcies;
             SimpleDisposableObject simpleObject;
 
-            using (var scope = LocalIocManager.ResolveAsDisposableScope())
+            using (var scope = LocalIocManager.CreateScope())
             {
                 simpleDependendcies = scope.ResolveAll<ISimpleDependency>(new { myData = 40 });
                 simpleObject = scope.Resolve<SimpleDisposableObject>(new { myData = 40 });
