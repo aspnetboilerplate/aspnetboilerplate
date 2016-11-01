@@ -130,6 +130,14 @@
 
         function getInt(name: string): number;
 
+        enum settingScopes {
+
+            Application = 1,
+
+            Tenant = 2,
+
+            User = 4
+        }
     }
 
     namespace nav {
