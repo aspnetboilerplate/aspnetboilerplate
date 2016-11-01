@@ -70,6 +70,22 @@ namespace Abp.Dependency
             return resolvedObjects;
         }
 
+        public void Release(object obj)
+        {
+            _resolvedObjects.Remove(obj);
+            _iocResolver.Release(obj);
+        }
+
+        public bool IsRegistered(Type type)
+        {
+            return _iocResolver.IsRegistered(type);
+        }
+
+        public bool IsRegistered<T>()
+        {
+            return IsRegistered(typeof(T));
+        }
+
         public void Dispose()
         {
             _resolvedObjects.ForEach(_iocResolver.Release);

@@ -33,7 +33,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_ShouldWork()
+        public void IIocScopedResolver_Test_ShouldWork()
         {
             LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<SimpleDisposableObject2>(DependencyLifeStyle.Transient);
@@ -56,7 +56,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_With_ConstructorArgs_ShouldWork()
+        public void IIocScopedResolver_Test_With_ConstructorArgs_ShouldWork()
         {
             LocalIocManager.Register<SimpleDisposableObject>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<SimpleDisposableObject2>(DependencyLifeStyle.Transient);
@@ -79,7 +79,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_ResolveAll_Should_DisposeAll_Registrants()
+        public void IIocScopedResolver_Test_ResolveAll_Should_DisposeAll_Registrants()
         {
             LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<ISimpleDependency, SimpleDependency2>(DependencyLifeStyle.Transient);
@@ -96,7 +96,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_ResolveAll_Should_Work_WithConstructor()
+        public void IIocScopedResolver_Test_ResolveAll_Should_Work_WithConstructor()
         {
             LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<ISimpleDependency, SimpleDependency2>(DependencyLifeStyle.Transient);
@@ -113,7 +113,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_ResolveAll_Should_Work_With_OtherResolvings()
+        public void IIocScopedResolver_Test_ResolveAll_Should_Work_With_OtherResolvings()
         {
             LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<ISimpleDependency, SimpleDependency2>(DependencyLifeStyle.Transient);
@@ -134,7 +134,7 @@ namespace Abp.Tests.Dependency
         }
 
         [Fact]
-        public void ResolveAsDisposableScope_Test_ResolveAll_Should_Work_With_OtherResolvings_ConstructorArguments()
+        public void IIocScopedResolver_Test_ResolveAll_Should_Work_With_OtherResolvings_ConstructorArguments()
         {
             LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<ISimpleDependency, SimpleDependency2>(DependencyLifeStyle.Transient);
@@ -152,6 +152,34 @@ namespace Abp.Tests.Dependency
 
             simpleDependendcies.ShouldAllBe(x => x.MyData == 40);
             simpleObject.MyData.ShouldBe(40);
+        }
+
+        [Fact]
+        public void IIocScopedResolver_Test_IsRegistered_ShouldWork()
+        {
+            LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
+
+            using (var scope = LocalIocManager.CreateScope())
+            {
+                scope.IsRegistered<ISimpleDependency>().ShouldBe(true);
+                scope.IsRegistered(typeof(ISimpleDependency)).ShouldBe(true);
+            }
+        }
+
+        [Fact]
+        public void IIocScopedResolver_Test_Custom_Release_ShouldWork()
+        {
+            LocalIocManager.Register<ISimpleDependency, SimpleDependency>(DependencyLifeStyle.Transient);
+
+            ISimpleDependency simpleDependency;
+
+            using (var scope = LocalIocManager.CreateScope())
+            {
+                simpleDependency = scope.Resolve<ISimpleDependency>();
+                scope.Release(simpleDependency);
+            }
+
+            simpleDependency.DisposeCount.ShouldBe(1);
         }
     }
 
