@@ -7,8 +7,6 @@ namespace Abp.Dependency
     /// </summary>
     public static class IocResolverExtensions
     {
-        #region ResolveAsDisposable
-
         /// <summary>
         /// Gets an <see cref="DisposableDependencyObjectWrapper{T}"/> object that wraps resolved object to be Disposable.
         /// </summary> 
@@ -80,9 +78,15 @@ namespace Abp.Dependency
             return new DisposableDependencyObjectWrapper(iocResolver, iocResolver.Resolve(type, argumentsAsAnonymousType));
         }
 
-        #endregion
-
-        #region Using
+        /// <summary>
+        /// Gets a <see cref="IocScopedResolver"/> object that starts a scope to resolved objects to be Disposable.
+        /// </summary>
+        /// <param name="iocResolver"></param>
+        /// <returns>The instance object wrapped by <see cref="IocScopedResolver"/></returns>
+        public static IIocScopedResolver CreateScope(this IIocResolver iocResolver)
+        {
+            return new IocScopedResolver(iocResolver);
+        }
 
         /// <summary>
         /// This method can be used to resolve and release an object automatically.
@@ -114,7 +118,19 @@ namespace Abp.Dependency
                 return func(obj.Object);
             }
         }
-
-        #endregion
+        
+        /// <summary>
+        /// This method starts a scope to resolve and release all objects automatically.
+        /// You can use the <c>scope</c> in <see cref="action"/>.
+        /// </summary> 
+        /// <param name="iocResolver">IIocResolver object</param>
+        /// <param name="action">An action that can use the resolved object</param>
+        public static void UsingScope(this IIocResolver iocResolver, Action<IIocScopedResolver> action)
+        {
+            using (var scope = iocResolver.CreateScope())
+            {
+                action(scope);
+            }
+        }
     }
 }
