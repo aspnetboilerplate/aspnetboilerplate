@@ -719,7 +719,8 @@
 
         return {
             now: now,
-            normalize: normalize
+            normalize: normalize,
+            supportsMultipleTimezone: true
         };
     })();
 
@@ -753,7 +754,8 @@
 
         return {
             now: now,
-            normalize: normalize
+            normalize: normalize,
+            supportsMultipleTimezone: false
         };
     })();
 
@@ -771,7 +773,8 @@
 
         return {
             now: now,
-            normalize: normalize
+            normalize: normalize,
+            supportsMultipleTimezone: false
         };
     })();
 
