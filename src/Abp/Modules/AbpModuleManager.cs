@@ -38,7 +38,7 @@ namespace Abp.Modules
         public virtual void Initialize(Type startupModule)
         {
             _startupModuleType = startupModule;
-            AbpModuleCollection.SetStartupModuleType(_startupModuleType);
+            _modules.SetStartupModuleType(_startupModuleType);
             LoadAllModules();
         }
 
@@ -73,7 +73,7 @@ namespace Abp.Modules
             CreateModules(moduleTypes);
 
             AbpModuleCollection.EnsureKernelModuleToBeFirst(_modules);
-            AbpModuleCollection.EnsureStartupModuleToBeLast(_modules);
+            AbpModuleCollection.EnsureStartupModuleToBeLast(_modules, _modules.StartupModuleType);
 
             SetDependencies();
 

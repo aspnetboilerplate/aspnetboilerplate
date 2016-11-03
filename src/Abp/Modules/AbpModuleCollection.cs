@@ -10,7 +10,7 @@ namespace Abp.Modules
     /// </summary>
     internal class AbpModuleCollection : List<AbpModuleInfo>
     {
-        public static Type StartupModuleType { get; private set; }
+        public Type StartupModuleType { get; private set; }
 
         /// <summary>
         /// Gets a reference to a module instance.
@@ -37,7 +37,7 @@ namespace Abp.Modules
         {
             var sortedModules = this.SortByDependencies(x => x.Dependencies);
             EnsureKernelModuleToBeFirst(sortedModules);
-            EnsureStartupModuleToBeLast(sortedModules);
+            EnsureStartupModuleToBeLast(sortedModules, StartupModuleType);
             return sortedModules;
         }
 
@@ -45,7 +45,7 @@ namespace Abp.Modules
         ///  Sets actual <see cref="StartupModuleType"/> and holds its reference to future use.
         /// </summary>
         /// <param name="startupModuleType"></param>
-        internal static void SetStartupModuleType(Type startupModuleType)
+        internal void SetStartupModuleType(Type startupModuleType)
         {
             StartupModuleType = startupModuleType;
         }
@@ -61,9 +61,9 @@ namespace Abp.Modules
             }
         }
 
-        public static void EnsureStartupModuleToBeLast(List<AbpModuleInfo> modules)
+        public static void EnsureStartupModuleToBeLast(List<AbpModuleInfo> modules, Type startupModuleType)
         {
-            var startupModuleIndex = modules.FindIndex(m => m.Type == StartupModuleType);
+            var startupModuleIndex = modules.FindIndex(m => m.Type == startupModuleType);
             if (startupModuleIndex > 0)
             {
                 var startupModule = modules[startupModuleIndex];
