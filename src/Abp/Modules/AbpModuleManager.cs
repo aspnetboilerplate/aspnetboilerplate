@@ -17,19 +17,17 @@ namespace Abp.Modules
     {
         public AbpModuleInfo StartupModule { get; private set; }
 
-        private Type _startupModuleType;
-
         public IReadOnlyList<AbpModuleInfo> Modules => _modules.ToImmutableList();
 
         public ILogger Logger { get; set; }
 
+        private AbpModuleCollection _modules;
+
         private readonly IIocManager _iocManager;
         private readonly IAbpPlugInManager _abpPlugInManager;
-        private readonly AbpModuleCollection _modules;
 
         public AbpModuleManager(IIocManager iocManager, IAbpPlugInManager abpPlugInManager)
         {
-            _modules = new AbpModuleCollection();
             _iocManager = iocManager;
             _abpPlugInManager = abpPlugInManager;
             Logger = NullLogger.Instance;
@@ -37,8 +35,7 @@ namespace Abp.Modules
 
         public virtual void Initialize(Type startupModule)
         {
-            _startupModuleType = startupModule;
-            _modules.SetStartupModuleType(_startupModuleType);
+            _modules = new AbpModuleCollection(startupModule);
             LoadAllModules();
         }
 
@@ -72,8 +69,8 @@ namespace Abp.Modules
             RegisterModules(moduleTypes);
             CreateModules(moduleTypes);
 
-            AbpModuleCollection.EnsureKernelModuleToBeFirst(_modules);
-            AbpModuleCollection.EnsureStartupModuleToBeLast(_modules, _modules.StartupModuleType);
+            _modules.EnsureKernelModuleToBeFirst();
+            _modules.EnsureStartupModuleToBeLast();
 
             SetDependencies();
 
@@ -82,7 +79,7 @@ namespace Abp.Modules
 
         private List<Type> FindAllModules()
         {
-            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_startupModuleType);
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
 
             _abpPlugInManager
                 .PlugInSources
@@ -109,7 +106,7 @@ namespace Abp.Modules
 
                 _modules.Add(moduleInfo);
 
-                if (moduleType == _startupModuleType)
+                if (moduleType == _modules.StartupModuleType)
                 {
                     StartupModule = moduleInfo;
                 }

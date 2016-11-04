@@ -10,7 +10,12 @@ namespace Abp.Modules
     /// </summary>
     internal class AbpModuleCollection : List<AbpModuleInfo>
     {
-        public Type StartupModuleType { get; private set; }
+        public Type StartupModuleType { get; }
+
+        public AbpModuleCollection(Type startupModuleType)
+        {
+            StartupModuleType = startupModuleType;
+        }
 
         /// <summary>
         /// Gets a reference to a module instance.
@@ -41,36 +46,42 @@ namespace Abp.Modules
             return sortedModules;
         }
 
-        /// <summary>
-        ///  Sets actual <see cref="StartupModuleType"/> and holds its reference to future use.
-        /// </summary>
-        /// <param name="startupModuleType"></param>
-        internal void SetStartupModuleType(Type startupModuleType)
-        {
-            StartupModuleType = startupModuleType;
-        }
-
         public static void EnsureKernelModuleToBeFirst(List<AbpModuleInfo> modules)
         {
             var kernelModuleIndex = modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
-            if (kernelModuleIndex > 0)
+            if (kernelModuleIndex <= 0)
             {
-                var kernelModule = modules[kernelModuleIndex];
-                modules.RemoveAt(kernelModuleIndex);
-                modules.Insert(0, kernelModule);
+                //It's already the first!
+                return;
             }
+
+            var kernelModule = modules[kernelModuleIndex];
+            modules.RemoveAt(kernelModuleIndex);
+            modules.Insert(0, kernelModule);
         }
 
         public static void EnsureStartupModuleToBeLast(List<AbpModuleInfo> modules, Type startupModuleType)
         {
             var startupModuleIndex = modules.FindIndex(m => m.Type == startupModuleType);
-            if (startupModuleIndex > 0)
+            if (startupModuleIndex >= modules.Count - 1)
             {
-                var startupModule = modules[startupModuleIndex];
-                modules.RemoveAt(startupModuleIndex);
-                modules.Add(startupModule);
+                //It's already the last!
+                return;
             }
 
+            var startupModule = modules[startupModuleIndex];
+            modules.RemoveAt(startupModuleIndex);
+            modules.Add(startupModule);
+        }
+
+        public void EnsureKernelModuleToBeFirst()
+        {
+            EnsureKernelModuleToBeFirst(this);
+        }
+
+        public void EnsureStartupModuleToBeLast()
+        {
+            EnsureStartupModuleToBeLast(this, StartupModuleType);
         }
     }
 }
