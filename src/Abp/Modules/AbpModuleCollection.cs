@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Collections.Extensions;
@@ -9,6 +10,8 @@ namespace Abp.Modules
     /// </summary>
     internal class AbpModuleCollection : List<AbpModuleInfo>
     {
+        public Type StartupModuleType { get; private set; }
+
         /// <summary>
         /// Gets a reference to a module instance.
         /// </summary>
@@ -34,18 +37,40 @@ namespace Abp.Modules
         {
             var sortedModules = this.SortByDependencies(x => x.Dependencies);
             EnsureKernelModuleToBeFirst(sortedModules);
+            EnsureStartupModuleToBeLast(sortedModules, StartupModuleType);
             return sortedModules;
+        }
+
+        /// <summary>
+        ///  Sets actual <see cref="StartupModuleType"/> and holds its reference to future use.
+        /// </summary>
+        /// <param name="startupModuleType"></param>
+        internal void SetStartupModuleType(Type startupModuleType)
+        {
+            StartupModuleType = startupModuleType;
         }
 
         public static void EnsureKernelModuleToBeFirst(List<AbpModuleInfo> modules)
         {
-            var kernelModuleIndex = modules.FindIndex(m => m.Type == typeof (AbpKernelModule));
+            var kernelModuleIndex = modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
             if (kernelModuleIndex > 0)
             {
                 var kernelModule = modules[kernelModuleIndex];
                 modules.RemoveAt(kernelModuleIndex);
                 modules.Insert(0, kernelModule);
             }
+        }
+
+        public static void EnsureStartupModuleToBeLast(List<AbpModuleInfo> modules, Type startupModuleType)
+        {
+            var startupModuleIndex = modules.FindIndex(m => m.Type == startupModuleType);
+            if (startupModuleIndex > 0)
+            {
+                var startupModule = modules[startupModuleIndex];
+                modules.RemoveAt(startupModuleIndex);
+                modules.Add(startupModule);
+            }
+
         }
     }
 }
