@@ -4,7 +4,7 @@
   "dependencies": {
     "Abp.AspNetCore": "1.0.0.0-*",
     "Abp.TestBase": "1.0.0.0-*",
-    "Microsoft.AspNetCore.TestHost": "1.0.0"
+    "Microsoft.AspNetCore.TestHost": "1.1.0"
   },
 
   "frameworks": {
