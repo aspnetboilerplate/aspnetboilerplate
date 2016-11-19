@@ -178,7 +178,7 @@ framework. ASP.NET Core integration is implemented in
 	is successfully executed.</p>
 	<ul>
 		<li>It only wraps results for JsonResult, ObjectResult and any object 
-		which does not implement IActionResult. If your 
+		which does not implement IActionResult (and also their async versions). If your 
 		action is returning a view or any other type of result, it's not 
 		wrapped.</li>
 		<li><strong>WrapResult</strong> and <strong>DontWrapResult</strong> 

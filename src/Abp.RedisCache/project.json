@@ -1,10 +1,11 @@
 {
   "version": "1.0.0.0-*",
 
-  "dependencies": {
-    "Abp": "1.0.0.0-*",
-    "StackExchange.Redis": "1.1.605"
-  },
+    "dependencies": {
+        "Abp": "1.0.0.0-*",
+        "protobuf-net": "2.1.0",
+        "StackExchange.Redis": "1.1.605"
+    },
 
   "frameworks": {
     "net452": {

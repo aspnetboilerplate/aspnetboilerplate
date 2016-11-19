@@ -6,9 +6,67 @@
 
     function toAbsAppPath(path: string): string;
 
+    namespace multiTenancy {
+
+        enum sides {
+
+            TENANT = 1,
+
+            HOST = 2
+
+        }
+
+        let isEnabled: boolean;
+
+    }
+
+    interface IAbpSession {
+
+        readonly userId?: number;
+
+        readonly tenantId?: number;
+
+        readonly impersonatorUserId?: number;
+
+        readonly impersonatorTenantId?: number;
+
+        readonly multiTenancySide: multiTenancy.sides;
+
+    }
+
+    let session: IAbpSession;
+
     namespace localization {
 
+        interface ILanguageInfo {
+
+            name: string;
+
+            displayName: string;
+
+            icon: string;
+
+            isDefault: boolean;
+
+        }
+
+        interface ILocalizationSource {
+
+            name: string;
+
+            type: string;
+
+        }
+
+        let languages: ILanguageInfo[];
+
+        let currentLanguage: ILanguageInfo;
+
+        let sources: ILocalizationSource[];
+
         let defaultSourceName: string;
+
+        let values: { [key: string]: string };
 
         let abpWeb: (key: string) => string;
 
@@ -21,15 +79,26 @@
 
     namespace auth {
 
-        let allPermissions: any;
+        let allPermissions: { [name: string]: boolean };
 
-        let grantedPermissions: any;
+        let grantedPermissions: { [name: string]: boolean };
 
         function isGranted(permissionName: string): boolean;
 
         function isAnyGranted(...args: string[]): boolean;
 
         function areAllGranted(...args: string[]): boolean;
+
+        let tokenCookieName: string;
+
+        /**
+         * Saves auth token.
+         * @param authToken The token to be saved.
+         * @param expireDate Optional expire date. If not specified, token will be deleted at end of the session.
+         */
+        function setToken(authToken: string, expireDate?: Date): void;
+
+        function getToken(): string;
 
     }
 
@@ -41,7 +110,7 @@
 
         }
 
-        let allFeatures: any;
+        let allFeatures: { [name: string]: IFeature };
 
         function get(name: string): IFeature;
 
@@ -51,15 +120,59 @@
 
     }
 
-    namespace settings {
+    namespace setting {
 
-        let values: any;
+        let values: { [name: string]: string };
 
         function get(name: string): string;
 
         function getBoolean(name: string): boolean;
 
         function getInt(name: string): number;
+
+        enum settingScopes {
+
+            Application = 1,
+
+            Tenant = 2,
+
+            User = 4
+        }
+    }
+
+    namespace nav {
+
+        interface IMenu {
+
+            name: string;
+
+            displayName?: string;
+
+            customData?: any;
+
+            items: IMenuItem[];
+
+        }
+
+        interface IMenuItem {
+
+            name: string;
+
+            order: number;
+
+            displayName?: string;
+
+            icon?: string;
+
+            url?: string;
+
+            customData?: any;
+
+            items: IMenuItem[];
+
+        }
+
+        let menus: { [name: string]: IMenu };
 
     }
 
@@ -236,14 +349,14 @@
         * Sets a cookie value for given key.
         * @param {string} key
         * @param {string} value 
-        * @param {Date} expireDate Optional expire date (default: 30 days).
+        * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
         */
         function setCookieValue(key: string, value: string, expireDate?: Date): void;
 
         /**
         * Gets a cookie with given key.
         * @param {string} key
-        * @returns {string} Cookie value
+        * @returns {string} Cookie value or null.
         */
         function getCookieValue(key: string): string;
     }
@@ -252,9 +365,33 @@
 
         interface IClockProvider {
 
+            supportsMultipleTimezone: boolean;
+
             now(): Date;
 
             normalize(date: Date): Date;
+
+        }
+
+        interface ITimeZoneInfo {
+
+            windows: {
+
+                timeZoneId: string;
+
+                baseUtcOffsetInMilliseconds: number;
+
+                currentUtcOffsetInMilliseconds: number;
+
+                isDaylightSavingTimeNow: boolean;
+
+            },
+
+            iana: {
+
+                timeZoneId: string;
+
+            }
 
         }
 
@@ -266,15 +403,16 @@
 
         function convertToUserTimezone(date: Date): Date;
 
+        let timeZoneInfo: ITimeZoneInfo;
     }
 
     namespace clock {
 
+        let provider: timing.IClockProvider;
+
         function now(): Date;
 
         function normalize(date: Date): Date;
-
-        let provider: timing.IClockProvider;
 
     }
 
