@@ -100,6 +100,7 @@
 
         function getToken(): string;
 
+        function clearToken(): void;
     }
 
     namespace features {
