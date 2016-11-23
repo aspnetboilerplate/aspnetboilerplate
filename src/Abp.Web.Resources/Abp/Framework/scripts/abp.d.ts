@@ -339,7 +339,7 @@
 
         function truncateString(str: string, maxLength: number): string;
 
-        function truncateStringWithPostfix(str: string, maxLength: number, postfix: string): string;
+        function truncateStringWithPostfix(str: string, maxLength: number, postfix?: string): string;
 
         function isFunction(obj: any): boolean;
 
