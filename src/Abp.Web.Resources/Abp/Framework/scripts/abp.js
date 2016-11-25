@@ -135,11 +135,15 @@
     abp.auth.tokenCookieName = 'Abp.AuthToken';
 
     abp.auth.setToken = function (authToken, expireDate) {
-        abp.utils.setCookieValue(abp.auth.tokenCookieName, authToken, expireDate);
+        abp.utils.setCookieValue(abp.auth.tokenCookieName, authToken, expireDate, abp.appPath);
     };
 
     abp.auth.getToken = function () {
         return abp.utils.getCookieValue(abp.auth.tokenCookieName);
+    }
+
+    abp.auth.clearToken = function () {
+        abp.auth.setToken();
     }
 
     /* FEATURE SYSTEM *********************************************/
@@ -651,11 +655,15 @@
      * @param {string} value 
      * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
      */
-    abp.utils.setCookieValue = function (key, value, expireDate) {
+    abp.utils.setCookieValue = function (key, value, expireDate, path) {
         var cookieValue = encodeURIComponent(key) + '=' + encodeURIComponent(value);
 
         if (expireDate) {
             cookieValue = cookieValue + "; expires=" + expireDate.toUTCString();
+        }
+
+        if (path) {
+            cookieValue = cookieValue + "; path='" + path + "'";
         }
 
         document.cookie = cookieValue;

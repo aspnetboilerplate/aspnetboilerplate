@@ -100,6 +100,7 @@
 
         function getToken(): string;
 
+        function clearToken(): void;
     }
 
     namespace features {
@@ -339,7 +340,7 @@
 
         function truncateString(str: string, maxLength: number): string;
 
-        function truncateStringWithPostfix(str: string, maxLength: number, postfix: string): string;
+        function truncateStringWithPostfix(str: string, maxLength: number, postfix?: string): string;
 
         function isFunction(obj: any): boolean;
 
@@ -350,8 +351,9 @@
         * @param {string} key
         * @param {string} value 
         * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
+        * @param {string} path Optional.
         */
-        function setCookieValue(key: string, value: string, expireDate?: Date): void;
+        function setCookieValue(key: string, value: string, expireDate?: Date, path?: string): void;
 
         /**
         * Gets a cookie with given key.
