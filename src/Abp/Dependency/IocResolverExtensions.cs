@@ -79,13 +79,13 @@ namespace Abp.Dependency
         }
 
         /// <summary>
-        /// Gets a <see cref="IocScopedResolver"/> object that starts a scope to resolved objects to be Disposable.
+        /// Gets a <see cref="ScopedIocResolver"/> object that starts a scope to resolved objects to be Disposable.
         /// </summary>
         /// <param name="iocResolver"></param>
-        /// <returns>The instance object wrapped by <see cref="IocScopedResolver"/></returns>
-        public static IIocScopedResolver CreateScope(this IIocResolver iocResolver)
+        /// <returns>The instance object wrapped by <see cref="ScopedIocResolver"/></returns>
+        public static IScopedIocResolver CreateScope(this IIocResolver iocResolver)
         {
-            return new IocScopedResolver(iocResolver);
+            return new ScopedIocResolver(iocResolver);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Abp.Dependency
         /// </summary> 
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="action">An action that can use the resolved object</param>
-        public static void UsingScope(this IIocResolver iocResolver, Action<IIocScopedResolver> action)
+        public static void UsingScope(this IIocResolver iocResolver, Action<IScopedIocResolver> action)
         {
             using (var scope = iocResolver.CreateScope())
             {

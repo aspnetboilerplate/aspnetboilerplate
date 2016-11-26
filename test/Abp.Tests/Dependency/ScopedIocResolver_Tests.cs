@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Abp.Tests.Dependency
 {
-    public class IIocScopedResolver_Tests : TestBaseWithLocalIocManager
+    public class ScopedIocResolver_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void UsingScope_Test_ShouldWork()

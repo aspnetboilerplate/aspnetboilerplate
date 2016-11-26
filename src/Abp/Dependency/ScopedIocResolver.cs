@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Abp.Dependency
 {
-    internal class IocScopedResolver : IIocScopedResolver
+    public class ScopedIocResolver : IScopedIocResolver
     {
         private readonly IIocResolver _iocResolver;
         private readonly List<object> _resolvedObjects;
 
-        public IocScopedResolver(IIocResolver iocResolver)
+        public ScopedIocResolver(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
             _resolvedObjects = new List<object>();
