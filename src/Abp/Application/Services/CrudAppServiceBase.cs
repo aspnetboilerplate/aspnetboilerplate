@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Linq.Dynamic;
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -19,6 +20,12 @@ namespace Abp.Application.Services
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
+
+        protected string GetPermission { get; set; }
+        protected string GetAllPermission { get; set; }
+        protected string CreatePermission { get; set; }
+        protected string UpdatePermission { get; set; }
+        protected string DeletePermission { get; set; }
 
         protected CrudAppServiceBase(IRepository<TEntity, TPrimaryKey> repository)
         {
@@ -117,6 +124,39 @@ namespace Abp.Application.Services
         protected virtual void MapToEntity(TUpdateInput updateInput, TEntity entity)
         {
             ObjectMapper.Map(updateInput, entity);
+        }
+
+        protected virtual void CheckPermission(string permissionName)
+        {
+            if (!string.IsNullOrEmpty(permissionName))
+            {
+                PermissionChecker.Authorize(permissionName);
+            }
+        }
+
+        protected virtual void CheckGetPermission()
+        {
+            CheckPermission(GetPermission);
+        }
+
+        protected virtual void CheckGetAllPermission()
+        {
+            CheckPermission(GetAllPermission);
+        }
+
+        protected virtual void CheckCreatePermission()
+        {
+            CheckPermission(CreatePermission);
+        }
+
+        protected virtual void CheckUpdatePermission()
+        {
+            CheckPermission(UpdatePermission);
+        }
+
+        protected virtual void CheckDeletePermission()
+        {
+            CheckPermission(DeletePermission);
         }
     }
 }
