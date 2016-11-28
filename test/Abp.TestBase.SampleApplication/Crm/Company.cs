@@ -16,7 +16,7 @@ namespace Abp.TestBase.SampleApplication.Crm
         public Address ShippingAddress { get; set; }
 
         public Address BillingAddress { get; set; }
-        
+
         [ForeignKey("CompanyId")]
         public virtual ICollection<Branch> Branches { get; set; }
     }
