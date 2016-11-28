@@ -9,6 +9,7 @@ namespace Abp.TestBase
         public override void PreInitialize()
         {
             Configuration.EventBus.UseDefaultEventBus = false;
+            Configuration.DefaultNameOrConnectionString = "Default";
         }
 
         public override void Initialize()
