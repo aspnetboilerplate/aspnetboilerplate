@@ -23,7 +23,7 @@ namespace Abp.Dependency
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
-        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
+        /// <param name="type">Type of the object to resolve. This type must be convertible <typeparamref name="T"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
         public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocResolver iocResolver, Type type)
         {
@@ -58,12 +58,12 @@ namespace Abp.Dependency
         /// </summary> 
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
-        /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
+        /// <param name="type">Type of the object to resolve. This type must be convertible <typeparamref name="T"/>.</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
         public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocResolver iocResolver, Type type, object argumentsAsAnonymousType)
         {
-            return new DisposableDependencyObjectWrapper<T>(iocResolver, (T)iocResolver.Resolve(type, argumentsAsAnonymousType));
+            return new DisposableDependencyObjectWrapper<T>(iocResolver, (T)iocResolver.Resolve(type, argumentsAsAnonymousType)); 
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// This method can be used to resolve and release an object automatically.
-        /// You can use the object in <see cref="action"/>.
+        /// You can use the object in <paramref name="action"/>.
         /// </summary> 
         /// <typeparam name="T">Type of the object to use</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
@@ -105,7 +105,7 @@ namespace Abp.Dependency
 
         /// <summary>
         /// This method can be used to resolve and release an object automatically.
-        /// You can use the object in <see cref="func"/> and return a value.
+        /// You can use the object in <paramref name="func"/> and return a value.
         /// </summary> 
         /// <typeparam name="TService">Type of the service to use</typeparam>
         /// <typeparam name="TReturn">Return type</typeparam>

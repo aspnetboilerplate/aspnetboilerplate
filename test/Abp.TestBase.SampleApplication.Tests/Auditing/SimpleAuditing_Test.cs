@@ -32,12 +32,16 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         #region CASES WRITE AUDIT LOGS
 
         [Fact]
+   
         public async Task Should_Write_Audits_For_Conventional_Methods()
         {
             /* All application service methods are audited as conventional. */
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = 1, Name = "john" });
+
+            #pragma warning disable
             _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
+            #pragma warning restore
         }
 
         [Fact]
