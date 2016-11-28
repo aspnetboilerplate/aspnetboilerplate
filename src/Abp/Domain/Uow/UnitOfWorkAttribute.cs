@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Transactions;
 
@@ -140,10 +141,10 @@ namespace Abp.Domain.Uow
         /// <returns>The UnitOfWorkAttribute object</returns>
         internal static UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MemberInfo methodInfo)
         {
-            var attrs = methodInfo.GetCustomAttributes(typeof(UnitOfWorkAttribute), false);
+            var attrs = methodInfo.GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
             if (attrs.Length > 0)
             {
-                return (UnitOfWorkAttribute)attrs[0];
+                return attrs[0];
             }
 
             if (UnitOfWorkHelper.IsConventionalUowClass(methodInfo.DeclaringType))

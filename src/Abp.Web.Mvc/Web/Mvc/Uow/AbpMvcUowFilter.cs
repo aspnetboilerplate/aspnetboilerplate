@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -37,7 +36,6 @@ namespace Abp.Web.Mvc.Uow
             }
 
             var unitOfWorkAttr =
-                filterContext.ActionDescriptor.GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().FirstOrDefault() ??
                 UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
                 _configuration.DefaultUnitOfWorkAttribute;
 
