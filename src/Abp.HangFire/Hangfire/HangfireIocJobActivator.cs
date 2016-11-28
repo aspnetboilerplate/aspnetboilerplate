@@ -13,7 +13,7 @@ namespace Abp.Hangfire
         {
             if (iocResolver == null)
             {
-                throw new ArgumentNullException("iocResolver");
+                throw new ArgumentNullException(nameof(iocResolver));
             }
 
             _iocResolver = iocResolver;
@@ -24,13 +24,10 @@ namespace Abp.Hangfire
             return _iocResolver.Resolve(jobType);
         }
 
-        #pragma warning disable
-        //TODO: Implement/use the BeginScope(JobActivatorContext) method instead. Will be removed in 2.0.0.
-        public override JobActivatorScope BeginScope()
+        public override JobActivatorScope BeginScope(JobActivatorContext context)
         {
             return new HangfireIocJobActivatorScope(this, _iocResolver);
         }
-        #pragma warning restore
 
         class HangfireIocJobActivatorScope : JobActivatorScope
         {

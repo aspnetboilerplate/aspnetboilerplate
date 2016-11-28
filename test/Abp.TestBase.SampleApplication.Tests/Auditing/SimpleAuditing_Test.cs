@@ -39,9 +39,9 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = 1, Name = "john" });
 
-            #pragma warning disable
+            #pragma warning disable 4014
             _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
-            #pragma warning restore
+            #pragma warning restore 4014
         }
 
         [Fact]

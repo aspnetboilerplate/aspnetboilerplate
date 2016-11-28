@@ -38,7 +38,7 @@ namespace Abp.MongoDb.Uow
         protected override void BeginUow()
         {
             //TODO: MongoClientExtensions.GetServer(MongoClient)' is obsolete: 'Use the new API instead.
-                         Database = new MongoClient(_configuration.ConnectionString)
+            Database = new MongoClient(_configuration.ConnectionString)
                 .GetServer()
                 .GetDatabase(_configuration.DatatabaseName);
         }
