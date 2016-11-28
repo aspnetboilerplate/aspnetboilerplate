@@ -5,9 +5,10 @@ using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
 {
-    public class ProtoBufRedisCacheSerializer : IRedisCacheSerializer
+    public class ProtoBufRedisCacheSerializer : DefaultRedisCacheSerializer
     {
         private const string TypeSeperator = "|";
+        private const string ProtoBufPrefix = "PB^";
 
         /// <summary>
         ///     Creates an instance of the object from its serialized string representation.
@@ -15,10 +16,15 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
         /// <seealso cref="IRedisCacheSerializer.Serialize" />
-        public object Deserialize(RedisValue objbyte)
+        public override object Deserialize(RedisValue objbyte)
         {
             string serializedObj = objbyte;
+            if (!serializedObj.StartsWith(ProtoBufPrefix))
+            {
+                return base.Deserialize(objbyte);
+            }
 
+            serializedObj = serializedObj.Substring(ProtoBufPrefix.Length);
             var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.InvariantCultureIgnoreCase);
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
             var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
@@ -37,14 +43,18 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
-        public string Serialize(object value, Type type)
+        public override string Serialize(object value, Type type)
         {
+            if (!type.IsDefined(typeof(ProtoContractAttribute), false))
+            {
+                return base.Serialize(value, type);
+            }
+
             using (var memoryStream = new MemoryStream())
             {
                 Serializer.Serialize(memoryStream, value);
                 var serialized = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
-
-                return $"{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
+                return $"{ProtoBufPrefix}{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
             }
         }
     }
