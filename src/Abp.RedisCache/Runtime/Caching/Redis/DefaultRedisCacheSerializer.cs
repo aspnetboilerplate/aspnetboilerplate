@@ -16,7 +16,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
         /// <seealso cref="IRedisCacheSerializer.Serialize" />
-        public object Deserialize(RedisValue objbyte)
+        public virtual object Deserialize(RedisValue objbyte)
         {
             return JsonSerializationHelper.DeserializeWithType(objbyte);
         }
@@ -28,7 +28,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
-        public string Serialize(object value, Type type)
+        public virtual string Serialize(object value, Type type)
         {
             return JsonSerializationHelper.SerializeWithType(value, type);
         }

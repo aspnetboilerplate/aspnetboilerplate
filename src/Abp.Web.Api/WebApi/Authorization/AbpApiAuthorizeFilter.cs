@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Authorization;
@@ -44,6 +46,12 @@ namespace Abp.WebApi.Authorization
             CancellationToken cancellationToken,
             Func<Task<HttpResponseMessage>> continuation)
         {
+            if (actionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any() ||
+                actionContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any())
+            {
+                return await continuation();
+            }
+            
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
             {

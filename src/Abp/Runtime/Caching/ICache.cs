@@ -58,7 +58,7 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
-        /// Use one of the expire times at most (<see cref="slidingExpireTime"/> or <see cref="absoluteExpireTime"/>).
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
         /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
         /// will be used.
@@ -71,7 +71,7 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
-        /// Use one of the expire times at most (<see cref="slidingExpireTime"/> or <see cref="absoluteExpireTime"/>).
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
         /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
         /// will be used.
