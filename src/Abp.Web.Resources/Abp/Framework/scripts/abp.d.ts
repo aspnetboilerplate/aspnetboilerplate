@@ -18,6 +18,8 @@
 
         let isEnabled: boolean;
 
+        let tenantIdCookieName: string;
+
     }
 
     interface IAbpSession {

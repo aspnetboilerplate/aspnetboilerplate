@@ -17,11 +17,24 @@
         return abp.appPath + path;
     };
 
+    /* MULTITENANCY */
+
+    abp.multiTenancy = abp.multiTenancy || {};
+
+    abp.multiTenancy.isEnabled = false;
+
+    abp.multiTenancy.sides = {
+        TENANT: 1,
+        HOST: 2
+    };
+
+    abp.multiTenancy.tenantIdCookieName = 'Abp.TenantId';
+
     /* SESSION */
 
     abp.session = abp.session ||
     {
-        multiTenancySide: 2 //TODO: Get from abp.multiTenancy
+        multiTenancySide: abp.multiTenancy.sides.HOST
     };
 
     /* LOCALIZATION ***********************************************/
