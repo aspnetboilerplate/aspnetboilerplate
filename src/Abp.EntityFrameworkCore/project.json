@@ -4,8 +4,8 @@
   "dependencies": {
     "Abp": "1.0.0.0-*",
     "Abp.EntityFramework.Common": "1.0.0.0-*",
-    "Microsoft.EntityFrameworkCore": "1.0.1",
-    "Microsoft.EntityFrameworkCore.Relational": "1.0.1"
+    "Microsoft.EntityFrameworkCore": "1.1.0",
+    "Microsoft.EntityFrameworkCore.Relational": "1.1.0"
   },
 
   "frameworks": {
