@@ -632,7 +632,18 @@
             includeQuestionMark = true;
         }
 
+
         var qs = '';
+
+        function addSeperator() {
+            if (!qs.length) {
+                if (includeQuestionMark) {
+                    qs = qs + '?';
+                }
+            } else {
+                qs = qs + '&';
+            }
+        }
 
         for (var i = 0; i < parameterInfos.length; ++i) {
             var parameterInfo = parameterInfos[i];
@@ -644,16 +655,18 @@
                 parameterInfo.value = '';
             }
 
-            if (!qs.length) {
-                if (includeQuestionMark) {
-                    qs = qs + '?';
-                }
-            } else {
-                qs = qs + '&';
-            }
+            addSeperator();
 
             if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
                 qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value.toJSON());
+            } else if (Array.isArray(parameterInfo.value) && parameterInfo.value.length) {
+                for (var j = 0; j < parameterInfo.value.length; j++) {
+                    if (j > 0) {
+                        addSeperator();
+                    }
+
+                    qs = qs + parameterInfo.name + '[' + j + ']=' + encodeURIComponent(parameterInfo.value[j]);
+                }
             } else {
                 qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value);
             }
