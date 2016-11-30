@@ -21,11 +21,15 @@ namespace Abp.Application.Services
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
 
-        protected string GetPermission { get; set; }
-        protected string GetAllPermission { get; set; }
-        protected string CreatePermission { get; set; }
-        protected string UpdatePermission { get; set; }
-        protected string DeletePermission { get; set; }
+        protected string GetPermissionName { get; set; }
+
+        protected string GetAllPermissionName { get; set; }
+
+        protected string CreatePermissionName { get; set; }
+
+        protected string UpdatePermissionName { get; set; }
+
+        protected string DeletePermissionName { get; set; }
 
         protected CrudAppServiceBase(IRepository<TEntity, TPrimaryKey> repository)
         {
@@ -136,27 +140,27 @@ namespace Abp.Application.Services
 
         protected virtual void CheckGetPermission()
         {
-            CheckPermission(GetPermission);
+            CheckPermission(GetPermissionName);
         }
 
         protected virtual void CheckGetAllPermission()
         {
-            CheckPermission(GetAllPermission);
+            CheckPermission(GetAllPermissionName);
         }
 
         protected virtual void CheckCreatePermission()
         {
-            CheckPermission(CreatePermission);
+            CheckPermission(CreatePermissionName);
         }
 
         protected virtual void CheckUpdatePermission()
         {
-            CheckPermission(UpdatePermission);
+            CheckPermission(UpdatePermissionName);
         }
 
         protected virtual void CheckDeletePermission()
         {
-            CheckPermission(DeletePermission);
+            CheckPermission(DeletePermissionName);
         }
     }
 }

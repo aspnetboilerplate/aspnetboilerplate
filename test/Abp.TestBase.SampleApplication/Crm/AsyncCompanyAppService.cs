@@ -8,11 +8,11 @@ namespace Abp.TestBase.SampleApplication.Crm
         public AsyncCompanyAppService(IRepository<Company> repository)
             : base(repository)
         {
-            GetPermission = "GetCompanyPermission";
-            GetAllPermission = "GetAllCompaniesPermission";
-            CreatePermission = "CreateCompanyPermission";
-            UpdatePermission = "UpdateCompanyPermission";
-            DeletePermission = "DeleteCompanyPermission";
+            GetPermissionName = "GetCompanyPermission";
+            GetAllPermissionName = "GetAllCompaniesPermission";
+            CreatePermissionName = "CreateCompanyPermission";
+            UpdatePermissionName = "UpdateCompanyPermission";
+            DeletePermissionName = "DeleteCompanyPermission";
         }
     }
 }
