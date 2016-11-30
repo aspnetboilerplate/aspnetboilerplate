@@ -4,8 +4,8 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.RedisCache": "1.1.0.0-*",
-    "Abp.RedisCache.ProtoBuf": "1.1.0.0-*",
+    "Abp.RedisCache": "1.1.1.0-*",
+    "Abp.RedisCache.ProtoBuf": "1.1.1.0-*",
     "Abp.Tests": "1.0.0-*",
     "Shouldly": "2.8.2"
   },
