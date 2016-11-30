@@ -1,4 +1,6 @@
-﻿using System.Web.OData.Builder;
+﻿using System;
+using System.Web.OData.Builder;
+using Abp.Configuration.Startup;
 
 namespace Abp.WebApi.OData.Configuration
 {
@@ -10,6 +12,11 @@ namespace Abp.WebApi.OData.Configuration
         /// <summary>
         /// Gets ODataConventionModelBuilder.
         /// </summary>
-        ODataConventionModelBuilder ODataModelBuilder { get; }
+        ODataConventionModelBuilder ODataModelBuilder { get; set; }
+
+        /// <summary>
+        /// Allows overriding OData mapping.
+        /// </summary>
+        Action<IAbpStartupConfiguration> MapAction { get; set; }
     }
 }

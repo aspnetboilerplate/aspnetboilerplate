@@ -329,12 +329,6 @@ namespace Abp.EntityFramework
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
-            //Only works for single tenant applications
-            if (MultiTenancyConfig?.IsEnabled ?? false)
-            {
-                return;
-            }
-
             //Only set IMayHaveTenant entities
             if (!(entityAsObj is IMayHaveTenant))
             {
@@ -345,6 +339,18 @@ namespace Abp.EntityFramework
 
             //Don't set if it's already set
             if (entity.TenantId != null)
+            {
+                return;
+            }
+
+            //Only works for single tenant applications
+            if (MultiTenancyConfig?.IsEnabled ?? false)
+            {
+                return;
+            }
+
+            //Don't set if MayHaveTenant filter is disabled
+            if (!this.IsFilterEnabled(AbpDataFilters.MayHaveTenant))
             {
                 return;
             }

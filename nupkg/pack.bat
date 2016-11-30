@@ -17,6 +17,7 @@ dotnet "pack" "..\src\Abp.MemoryDb" -c "Release" -o "." --version-suffix "%VERSI
 dotnet "pack" "..\src\Abp.MongoDB" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.NHibernate" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.RedisCache" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.RedisCache.ProtoBuf" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Owin" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Web.Common" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Web" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"

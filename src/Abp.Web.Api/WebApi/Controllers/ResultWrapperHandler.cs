@@ -31,7 +31,6 @@ namespace Abp.WebApi.Controllers
                 {
                     WrapResultIfNeeded(request, task.Result);
                     return task.Result;
-
                 }, cancellationToken);
         }
 

@@ -1,8 +1,11 @@
-﻿namespace Abp.Notifications
+﻿using System;
+
+namespace Abp.Notifications
 {
     /// <summary>
     /// Notification severity.
     /// </summary>
+    [Serializable]
     public enum NotificationSeverity : byte
     {
         /// <summary>

@@ -60,12 +60,12 @@ namespace Abp.Auditing
                 return false;
             }
 
-            if (methodInfo.IsDefined(typeof(AuditedAttribute)))
+            if (methodInfo.IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute)))
+            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
@@ -73,12 +73,12 @@ namespace Abp.Auditing
             var classType = methodInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.IsDefined(typeof(AuditedAttribute)))
+                if (classType.IsDefined(typeof(AuditedAttribute), true))
                 {
                     return true;
                 }
 
-                if (classType.IsDefined(typeof(DisableAuditingAttribute)))
+                if (classType.IsDefined(typeof(DisableAuditingAttribute), true))
                 {
                     return false;
                 }

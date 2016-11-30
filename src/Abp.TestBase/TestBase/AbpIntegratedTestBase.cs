@@ -62,7 +62,7 @@ namespace Abp.TestBase
 
         /// <summary>
         /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="T"/> as transient if it's not registered before.
+        /// Also registers <typeparamref name="T"/> as transient if it's not registered before.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The object instance</returns>
@@ -74,7 +74,7 @@ namespace Abp.TestBase
 
         /// <summary>
         /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="T"/> as transient if it's not registered before.
+        /// Also registers <typeparamref name="T"/> as transient if it's not registered before.
         /// </summary>
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
@@ -87,7 +87,7 @@ namespace Abp.TestBase
 
         /// <summary>
         /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="type"/> as transient if it's not registered before.
+        /// Also registers <paramref name="type"/> as transient if it's not registered before.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <returns>The object instance</returns>
@@ -99,7 +99,7 @@ namespace Abp.TestBase
 
         /// <summary>
         /// A shortcut to resolve an object from <see cref="LocalIocManager"/>.
-        /// Also registers <see cref="type"/> as transient if it's not registered before.
+        /// Also registers <paramref name="type"/> as transient if it's not registered before.
         /// </summary>
         /// <param name="type">Type of the object to get</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>

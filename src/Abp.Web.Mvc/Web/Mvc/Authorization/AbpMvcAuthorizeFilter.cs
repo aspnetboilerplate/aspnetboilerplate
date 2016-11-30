@@ -31,6 +31,12 @@ namespace Abp.Web.Mvc.Authorization
 
         public virtual void OnAuthorization(AuthorizationContext filterContext)
         {
+            if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true) ||
+                filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
+            {
+                return;
+            }
+
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
             {

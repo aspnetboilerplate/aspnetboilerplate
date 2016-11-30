@@ -314,7 +314,7 @@ can either use <strong>IocManager</strong> or <strong>Castle Windsor</strong> to
 			<a href="https://github.com/castleproject/Home/blob/master/README.md">Windsor's 
 documentation</a>&nbsp;<h4 id="DocResolvingDependencies">Resolving</h4>
 			<p>Registration informs IOC (Inversion of Control) Container (a.k.a. DI 
-frameowk) about your classes, their dependencies and lifetimes. Somewhere in 
+framework) about your classes, their dependencies and lifetimes. Somewhere in 
 your application you need to create objects using IOC Container. ASP.NET 
 Provides a few options for resolving dependencies.</p>
 			<h4 id="DocResolveConstAndProp">Constructor &amp; Property Injection</h4>
@@ -344,7 +344,8 @@ it's possible. An example:</p>
 			<p>IPersonRepository is injected from constructor and ILogger is injected with 
 public property. In that way, your code will be unaware of dependency injection 
 system at all. This is the most proper way of using DI system.</p>
-			<h4 id="DocIocHelper">IIocResolver and IIocManager</h4>
+			<h4 id="DocIocHelper">IIocResolver, IIocManager and 
+			IScopedIocResolver</h4>
 			<p>You may have to directly resolve your dependency instead of 
 constructor &amp; property injection. This should be avoided when possible, but it 
 may be impossible. ASP.NET Boilerplate provides some services those can be injected 
@@ -361,14 +362,14 @@ and used easily. Example:</p>
     public void DoIt()
     {
         //Resolving, using and releasing manually
-        var personService1 = _iocResolver.Resolve&lt;PersonAppService&gt;();
+        var personService1 = <strong>_iocResolver.Resolve&lt;PersonAppService&gt;()</strong>;
         personService1.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
-        _iocResolver.Release(personService1);
+        <strong>_iocResolver.Release(personService1);</strong>
 
         //Resolving and using in a safe way
-        using (var personService2 = _iocResolver.ResolveAsDisposable&lt;PersonAppService&gt;())
+        using (var personService2 = <strong>_iocResolver.ResolveAsDisposable&lt;PersonAppService&gt;()</strong>)
         {
-            personService2.Object.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
+            <strong>personService2.Object</strong>.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
         }
     }
 }</pre>
@@ -380,6 +381,24 @@ to call Release if you're manually resolving an object. Otherwise, your
 application may have memory leak problem. To be sure of releasing the object, 
 use <strong>ResolveAsDisposable</strong> (as shown in the example above) 
 wherever it's possible. It automatically calls Release at the end of the using block.</p>
+			<p>IIocResolver (and IIocManager) have also <strong>CreateScope</strong> extension 
+			method (defined in Abp.Dependency namespace) to safely release all 
+			resolved 
+			dependencies. Example:</p>
+			<pre lang="xml">using (var scope = <strong>_iocResolver.CreateScope()</strong>)
+{
+    var simpleObj1 = scope.Resolve&lt;SimpleService1&gt;();
+    var simpleObj2 = scope.Resolve&lt;SimpleService2&gt;();
+    //...
+}</pre>
+			<p>In the end of using block, all resolved dependencies 
+			automatically removed. A scope is also injectable using <strong>
+			IScopedIocResolver</strong>. You can inject this interface and 
+			resolve dependencies. When your class is released, all resolved 
+			dependencies will be released. But use it carefully; For example, if 
+			your class has a long life (say it&#39;s a singleton) and you are 
+			resolving too many objects, then all of them will remain in the 
+			memory until your class is released.</p>
 			<p>If you want to directly reach to IOC Container (Castle Windsor) to resolve dependencies, you 
 can consturctor-inject <strong>IIocManager</strong> and use <strong>IIocManager.IocContainer</strong> 
 property. If you are in a static context or can not inject IIocManager, as a 

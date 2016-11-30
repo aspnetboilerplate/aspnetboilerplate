@@ -218,7 +218,7 @@ namespace Abp.EntityFrameworkCore
             {
                 var dbGeneratedAttr = ReflectionHelper
                     .GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(
-                    entry.Property("Id").Metadata.GetPropertyInfo()
+                    entry.Property("Id").Metadata.PropertyInfo
                     );
 
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)

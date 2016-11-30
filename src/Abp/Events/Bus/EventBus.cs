@@ -202,34 +202,43 @@ namespace Abp.Events.Bus
 
             eventData.EventSource = eventSource;
 
-            foreach (var factoryToTrigger in GetHandlerFactories(eventType))
+            foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
-                var eventHandler = factoryToTrigger.GetHandler();
-                if (eventHandler == null)
+                foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
-                    throw new Exception("Registered event handler for event type " + eventType.Name +
-                                        " does not implement IEventHandler<" + eventType.Name + "> interface!");
-                }
+                    var eventHandler = handlerFactory.GetHandler();
 
-                var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
+                    try
+                    {
+                        if (eventHandler == null)
+                        {
+                            throw new Exception($"Registered event handler for event type {handlerFactories.EventType.Name} does not implement IEventHandler<{handlerFactories.EventType.Name}> interface!");
+                        }
 
-                try
-                {
-                    handlerType
-                        .GetMethod("HandleEvent", BindingFlags.Public | BindingFlags.Instance, null, new[] {eventType}, null)
-                        .Invoke(eventHandler, new object[] {eventData});
-                }
-                catch (TargetInvocationException ex)
-                {
-                    exceptions.Add(ex.InnerException);
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-                finally
-                {
-                    factoryToTrigger.ReleaseHandler(eventHandler);
+                        var handlerType = typeof(IEventHandler<>).MakeGenericType(handlerFactories.EventType);
+
+                        var method = handlerType.GetMethod(
+                            "HandleEvent",
+                            BindingFlags.Public | BindingFlags.Instance,
+                            null,
+                            new[] { handlerFactories.EventType },
+                            null
+                        );
+
+                        method.Invoke(eventHandler, new object[] { eventData });
+                    }
+                    catch (TargetInvocationException ex)
+                    {
+                        exceptions.Add(ex.InnerException);
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Add(ex);
+                    }
+                    finally
+                    {
+                        handlerFactory.ReleaseHandler(eventHandler);
+                    }
                 }
             }
 
@@ -251,13 +260,13 @@ namespace Abp.Events.Bus
             }
         }
 
-        private IEnumerable<IEventHandlerFactory> GetHandlerFactories(Type eventType)
+        private IEnumerable<EventTypeWithEventHandlerFactories> GetHandlerFactories(Type eventType)
         {
-            var handlerFactoryList = new List<IEventHandlerFactory>();
+            var handlerFactoryList = new List<EventTypeWithEventHandlerFactories>();
 
             foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
             {
-                handlerFactoryList.AddRange(handlerFactory.Value);
+                handlerFactoryList.Add(new EventTypeWithEventHandlerFactories(handlerFactory.Key, handlerFactory.Value));
             }
 
             return handlerFactoryList.ToArray();
@@ -341,6 +350,19 @@ namespace Abp.Events.Bus
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
             return _handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
+        }
+
+        private class EventTypeWithEventHandlerFactories
+        {
+            public Type EventType { get; }
+
+            public List<IEventHandlerFactory> EventHandlerFactories { get; }
+
+            public EventTypeWithEventHandlerFactories(Type eventType, List<IEventHandlerFactory> eventHandlerFactories)
+            {
+                EventType = eventType;
+                EventHandlerFactories = eventHandlerFactories;
+            }
         }
     }
 }

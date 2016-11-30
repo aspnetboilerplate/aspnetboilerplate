@@ -46,5 +46,16 @@ namespace Abp.Tests.Domain.Values
 
             Assert.True(new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42) != null);
         }
+
+        [Fact]
+        public void Value_Object_Nullable_Guid_Property_Test()
+        {
+            var anAddress = new Address2(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
+            var anotherAddress = new Address2(null, "Another street", 42);
+
+            Assert.NotEqual(anAddress, anotherAddress);
+            Assert.False(anotherAddress.Equals(anAddress));
+            Assert.True(anAddress != anotherAddress);
+        }
     }
 }

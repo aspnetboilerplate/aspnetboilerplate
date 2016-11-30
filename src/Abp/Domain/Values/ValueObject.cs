@@ -24,9 +24,7 @@ namespace Abp.Domain.Values
                 return true;
             }
 
-            return publicProperties.All(
-                property => property.GetValue(this, null).Equals(property.GetValue(other, null))
-            );
+            return publicProperties.All(property => Equals(property.GetValue(this, null), property.GetValue(other, null)));
         }
 
         public override bool Equals(object obj)
