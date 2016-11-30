@@ -21,15 +21,15 @@ namespace Abp.Application.Services
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
 
-        protected string GetPermissionName { get; set; }
+        protected virtual string GetPermissionName { get; set; }
 
-        protected string GetAllPermissionName { get; set; }
+        protected virtual string GetAllPermissionName { get; set; }
 
-        protected string CreatePermissionName { get; set; }
+        protected virtual string CreatePermissionName { get; set; }
 
-        protected string UpdatePermissionName { get; set; }
+        protected virtual string UpdatePermissionName { get; set; }
 
-        protected string DeletePermissionName { get; set; }
+        protected virtual string DeletePermissionName { get; set; }
 
         protected CrudAppServiceBase(IRepository<TEntity, TPrimaryKey> repository)
         {
