@@ -689,7 +689,7 @@
         }
 
         if (path) {
-            cookieValue = cookieValue + "; path='" + path + "'";
+            cookieValue = cookieValue + "; path=" + path;
         }
 
         document.cookie = cookieValue;
