@@ -30,6 +30,28 @@
 
     abp.multiTenancy.tenantIdCookieName = 'Abp.TenantId';
 
+    abp.multiTenancy.setTenantIdCookie = function (tenantId) {
+        if (tenantId) {
+            abp.utils.setCookieValue(
+                abp.multiTenancy.tenantIdCookieName,
+                tenantId.toString(),
+                new Date(new Date().getTime() + 5 * 365 * 86400000), //5 years
+                abp.appPath
+            );
+        } else {
+            abp.utils.deleteCookie(abp.multiTenancy.tenantIdCookieName, abp.appPath);
+        }
+    };
+
+    abp.multiTenancy.getTenantIdCookie = function () {
+        var value = abp.utils.getCookieValue(abp.multiTenancy.tenantIdCookieName);
+        if (!value) {
+            return null;
+        }
+
+        return parseInt(value);
+    }
+
     /* SESSION */
 
     abp.session = abp.session ||
@@ -677,12 +699,19 @@
 
     /**
      * Sets a cookie value for given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
      * @param {string} key
      * @param {string} value 
-     * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
+     * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
+     * @param {string} path (optional)
      */
     abp.utils.setCookieValue = function (key, value, expireDate, path) {
-        var cookieValue = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+        var cookieValue = encodeURIComponent(key) + '=';
+
+        if (value) {
+            cookieValue = cookieValue + encodeURIComponent(value);
+        }
 
         if (expireDate) {
             cookieValue = cookieValue + "; expires=" + expireDate.toUTCString();
@@ -697,6 +726,8 @@
 
     /**
      * Gets a cookie with given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
      * @param {string} key
      * @returns {string} Cookie value or null
      */
@@ -719,6 +750,25 @@
 
         return null;
     };
+
+    /**
+     * Deletes cookie for given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
+     * @param {string} key
+     * @param {string} path (optional)
+     */
+    abp.utils.deleteCookie = function (key, path) {
+        var cookieValue = encodeURIComponent(key) + '=';
+
+        cookieValue = cookieValue + "; expires=" + (new Date(new Date().getTime() - 86400000)).toUTCString();
+
+        if (path) {
+            cookieValue = cookieValue + "; path=" + path;
+        }
+
+        document.cookie = cookieValue;
+    }
 
     /* TIMING *****************************************/
     abp.timing = abp.timing || {};
