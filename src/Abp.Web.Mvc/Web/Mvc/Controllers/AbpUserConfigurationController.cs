@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Abp.Web.Configuration;
-using Abp.Web.Models.AbpUserConfiguration;
 
 namespace Abp.Web.Mvc.Controllers
 {
@@ -13,10 +13,10 @@ namespace Abp.Web.Mvc.Controllers
             _abpUserConfigurationBuilder = abpUserConfigurationBuilder;
         }
 
-        public async Task<AbpUserConfigurationDto> GetAll()
+        public async Task<JsonResult> GetAll()
         {
             var userConfig = await _abpUserConfigurationBuilder.GetAll();
-            return userConfig;
+            return Json(userConfig);
         }
     }
 }
