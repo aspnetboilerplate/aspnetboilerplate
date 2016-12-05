@@ -120,6 +120,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.CreatorUserId.ShouldNotBeNull();
+                    eventData.Entity.CreatorUserId.ShouldBe(42);
                     triggerCount++;
                 });
 

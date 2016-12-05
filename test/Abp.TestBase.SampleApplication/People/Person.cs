@@ -1,14 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.TestBase.SampleApplication.ContacLists;
 
 namespace Abp.TestBase.SampleApplication.People
 {
     [Table("People")]
-    public class Person : Entity, IDeletionAudited
+    public class Person : AuditedEntity, IDeletionAudited
     {
         public const int MaxNameLength = 64;
 
