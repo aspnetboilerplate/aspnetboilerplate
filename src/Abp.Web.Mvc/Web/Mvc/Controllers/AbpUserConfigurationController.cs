@@ -16,7 +16,7 @@ namespace Abp.Web.Mvc.Controllers
         public async Task<JsonResult> GetAll()
         {
             var userConfig = await _abpUserConfigurationBuilder.GetAll();
-            return Json(userConfig);
+            return Json(userConfig, JsonRequestBehavior.AllowGet);
         }
     }
 }
