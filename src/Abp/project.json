@@ -55,8 +55,7 @@
     },
     "files": {
       "mappings": {
-        "lib/net452/": "bin/Release/net452/Abp.pdb",
-        "tools/": "install.ps1"
+        "lib/net452/": "bin/Release/net452/Abp.pdb"
       }
     }
   }
