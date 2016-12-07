@@ -61,7 +61,6 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
-            context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCode(context);
 
             context.Result = new ObjectResult(
