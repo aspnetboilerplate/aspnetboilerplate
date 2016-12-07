@@ -24,14 +24,11 @@ namespace Abp.WebApi.Controllers
             _configuration = configuration;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return base.SendAsync(request, cancellationToken).ContinueWith(
-                task =>
-                {
-                    WrapResultIfNeeded(request, task.Result);
-                    return task.Result;
-                }, cancellationToken);
+            var result = await base.SendAsync(request, cancellationToken);
+            WrapResultIfNeeded(request, result);
+            return result;
         }
 
         protected virtual void WrapResultIfNeeded(HttpRequestMessage request, HttpResponseMessage response)
