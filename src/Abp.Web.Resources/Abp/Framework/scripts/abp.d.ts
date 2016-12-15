@@ -323,7 +323,7 @@
 
         function off(eventName: string, callback: (...args: any[]) => void): void;
 
-        function trigger(eventName: string): void;
+        function trigger(eventName: string, ...args: any[]): void;
 
     }
 
