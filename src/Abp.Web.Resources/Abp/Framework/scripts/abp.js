@@ -274,13 +274,14 @@
     abp.notifications.messageFormatters = {};
 
     abp.notifications.messageFormatters['Abp.Notifications.MessageNotificationData'] = function (userNotification) {
-        return userNotification.notification.data.properties.Message;
+        return userNotification.notification.data.message || userNotification.notification.data.properties.Message;
     };
 
     abp.notifications.messageFormatters['Abp.Notifications.LocalizableMessageNotificationData'] = function (userNotification) {
+        var message = userNotification.notification.data.message || userNotification.notification.data.properties.Message;
         var localizedMessage = abp.localization.localize(
-            userNotification.notification.data.properties.Message.name,
-            userNotification.notification.data.properties.Message.sourceName
+            message.name,
+            message.sourceName
         );
 
         if (userNotification.notification.data.properties) {
