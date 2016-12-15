@@ -15,7 +15,7 @@ namespace Abp.Auditing
             ClientInfoProvider = NullClientInfoProvider.Instance;
         }
 
-        public void Fill(AuditInfo auditInfo)
+        public virtual void Fill(AuditInfo auditInfo)
         {
             if (auditInfo.ClientIpAddress.IsNullOrEmpty())
             {
