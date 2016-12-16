@@ -1,12 +1,18 @@
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
+using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
+using Abp.Localization;
 using Abp.UI;
 using Abp.Web.Models;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -195,6 +201,21 @@ namespace Abp.AspNetCore.Tests
                         nameof(SimpleTestController.GetActionResultExceptionTestAsync)
                     ), HttpStatusCode.InternalServerError);
             })).Message.ShouldBe("GetActionResultExceptionTestAsync-Exception");
+        }
+
+        [Fact]
+        public async Task SettingRequestCultureProvider_Test()
+        {
+            //Arrange
+            var settingManager = ServiceProvider.GetService<ISettingDefinitionManager>();
+            settingManager.GetSettingDefinition(LocalizationSettingNames.DefaultLanguage).DefaultValue = "it";
+
+            var culture = await GetResponseAsStringAsync(
+                    GetUrl<SimpleTestController>(
+                        nameof(SimpleTestController.GetCurrentCultureNameTest)
+                    ));
+
+            culture.ShouldBe("it");
         }
     }
 }

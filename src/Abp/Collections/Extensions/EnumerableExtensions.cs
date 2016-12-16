@@ -40,7 +40,7 @@ namespace Abp.Collections.Extensions
         /// <param name="source">Enumerable to apply filtering</param>
         /// <param name="condition">A boolean value</param>
         /// <param name="predicate">Predicate to filter the enumerable</param>
-        /// <returns>Filtered or not filtered enumerable based on <see cref="condition"/></returns>
+        /// <returns>Filtered or not filtered enumerable based on <paramref name="condition"/></returns>
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
         {
             return condition
@@ -54,7 +54,7 @@ namespace Abp.Collections.Extensions
         /// <param name="source">Enumerable to apply filtering</param>
         /// <param name="condition">A boolean value</param>
         /// <param name="predicate">Predicate to filter the enumerable</param>
-        /// <returns>Filtered or not filtered enumerable based on <see cref="condition"/></returns>
+        /// <returns>Filtered or not filtered enumerable based on <paramref name="condition"/></returns>
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, int, bool> predicate)
         {
             return condition

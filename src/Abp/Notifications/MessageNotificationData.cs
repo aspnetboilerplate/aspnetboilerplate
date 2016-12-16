@@ -11,7 +11,11 @@ namespace Abp.Notifications
         /// <summary>
         /// The message.
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get { return Properties[nameof(Message)] as string; }
+            set { Properties[nameof(Message)] = value;}
+        }
 
         /// <summary>
         /// Needed for serialization.

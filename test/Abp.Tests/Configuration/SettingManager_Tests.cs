@@ -217,15 +217,19 @@ namespace Abp.Tests.Configuration
                 return Task.FromResult(_settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name));
             }
 
+            #pragma warning disable 1998
             public async Task DeleteAsync(SettingInfo setting)
             {
                 _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
+            #pragma warning restore 1998
 
+            #pragma warning disable 1998
             public async Task CreateAsync(SettingInfo setting)
             {
                 _settings.Add(setting);
             }
+            #pragma warning restore 1998
 
             public async Task UpdateAsync(SettingInfo setting)
             {

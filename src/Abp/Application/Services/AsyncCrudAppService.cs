@@ -103,12 +103,16 @@ namespace Abp.Application.Services
 
         public virtual async Task<TEntityDto> Get(TGetInput input)
         {
+            CheckGetPermission();
+
             var entity = await GetEntityByIdAsync(input.Id);
             return MapToEntityDto(entity);
         }
 
         public virtual async Task<PagedResultDto<TEntityDto>> GetAll(TGetAllInput input)
         {
+            CheckGetAllPermission();
+
             var query = CreateFilteredQuery(input);
 
             var totalCount = await AsyncQueryableExecuter.CountAsync(query);
@@ -126,6 +130,8 @@ namespace Abp.Application.Services
 
         public virtual async Task<TEntityDto> Create(TCreateInput input)
         {
+            CheckCreatePermission();
+
             var entity = MapToEntity(input);
 
             await Repository.InsertAsync(entity);
@@ -136,6 +142,8 @@ namespace Abp.Application.Services
 
         public virtual async Task<TEntityDto> Update(TUpdateInput input)
         {
+            CheckUpdatePermission();
+
             var entity = await GetEntityByIdAsync(input.Id);
 
             MapToEntity(input, entity);
@@ -146,6 +154,8 @@ namespace Abp.Application.Services
 
         public virtual Task Delete(TDeleteInput input)
         {
+            CheckDeletePermission();
+
             return Repository.DeleteAsync(input.Id);
         }
 

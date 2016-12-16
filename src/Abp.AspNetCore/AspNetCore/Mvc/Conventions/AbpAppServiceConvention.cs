@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Abp.Application.Services;
 using Abp.AspNetCore.Configuration;
 using Abp.Extensions;
-using Abp.MsDependencyInjection.Extensions;
+using Castle.Windsor.MsDependencyInjection;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;

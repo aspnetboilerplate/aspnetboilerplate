@@ -43,7 +43,7 @@ namespace Abp.TestBase.SampleApplication.Tests
                             Name = "List of Tenant-1",
                             People = new List<Person>
                                      {
-                                         new Person {Name = "halil"},
+                                         new Person {Name = "halil", CreatorUserId = 42 },
                                          new Person {Name = "emre", IsDeleted = true}
                                      }
                         });

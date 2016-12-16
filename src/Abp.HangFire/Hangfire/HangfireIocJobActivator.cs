@@ -13,7 +13,7 @@ namespace Abp.Hangfire
         {
             if (iocResolver == null)
             {
-                throw new ArgumentNullException("iocResolver");
+                throw new ArgumentNullException(nameof(iocResolver));
             }
 
             _iocResolver = iocResolver;
@@ -24,7 +24,7 @@ namespace Abp.Hangfire
             return _iocResolver.Resolve(jobType);
         }
 
-        public override JobActivatorScope BeginScope()
+        public override JobActivatorScope BeginScope(JobActivatorContext context)
         {
             return new HangfireIocJobActivatorScope(this, _iocResolver);
         }

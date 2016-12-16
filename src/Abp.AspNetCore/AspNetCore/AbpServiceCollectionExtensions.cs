@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
 using Abp.Json;
 using Abp.Modules;
-using Abp.MsDependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 

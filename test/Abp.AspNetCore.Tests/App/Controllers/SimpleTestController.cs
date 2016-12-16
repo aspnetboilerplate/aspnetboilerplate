@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Models;
 using Abp.AspNetCore.Mvc.Controllers;
@@ -80,6 +81,12 @@ namespace Abp.AspNetCore.App.Controllers
         {
             await Task.Delay(0);
             throw new UserFriendlyException("GetActionResultExceptionTestAsync-Exception");
+        }
+
+        [HttpGet]
+        public ActionResult GetCurrentCultureNameTest()
+        {
+            return Content(Thread.CurrentThread.CurrentCulture.Name);
         }
     }
 }

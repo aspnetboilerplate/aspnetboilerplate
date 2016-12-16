@@ -35,8 +35,9 @@ namespace Abp.Web.Mvc.Uow
                 return;
             }
 
-            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 _configuration.DefaultUnitOfWorkAttribute;
+            var unitOfWorkAttr =
+                UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
+                _configuration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {

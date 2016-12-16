@@ -108,6 +108,7 @@ namespace Abp.Notifications
                 //Remove invalid subscriptions
                 var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
+                //TODO: Group subscriptions per tenant for potential performance improvement
                 foreach (var subscription in subscriptions)
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))

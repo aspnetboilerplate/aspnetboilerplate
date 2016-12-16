@@ -1,0 +1,40 @@
+﻿{
+  "version": "1.1.3.0-*",
+
+  "dependencies": {
+    "Abp.RedisCache": "1.1.3.0-*",
+    "protobuf-net": "2.1.0"
+  },
+
+  "frameworks": {
+    "net452": {
+
+    }
+  },
+
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "xmlDoc": true
+  },
+
+  "packOptions": {
+    "summary": "Redis Cache integration ProtoBuf serialization support package for ASP.NET Boilerplate.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "Redis", "Caching", "Protobuf" ],
+    "owners": [ "Halil İbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.RedisCache.ProtoBuf.pdb"
+      }
+    }
+  }
+}

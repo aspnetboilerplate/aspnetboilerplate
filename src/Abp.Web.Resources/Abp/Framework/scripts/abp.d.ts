@@ -18,6 +18,12 @@
 
         let isEnabled: boolean;
 
+        let tenantIdCookieName: string;
+
+        function setTenantIdCookie(tenantId?: number): void;
+
+        function getTenantIdCookie(): number;
+
     }
 
     interface IAbpSession {
@@ -317,7 +323,7 @@
 
         function off(eventName: string, callback: (...args: any[]) => void): void;
 
-        function trigger(eventName: string): void;
+        function trigger(eventName: string, ...args: any[]): void;
 
     }
 
@@ -348,19 +354,32 @@
 
         /**
         * Sets a cookie value for given key.
+        * This is a simple implementation created to be used by ABP.
+        * Please use a complete cookie library if you need.
         * @param {string} key
         * @param {string} value 
-        * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
-        * @param {string} path Optional.
+        * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
+        * @param {string} path (optional)
         */
         function setCookieValue(key: string, value: string, expireDate?: Date, path?: string): void;
 
         /**
         * Gets a cookie with given key.
+        * This is a simple implementation created to be used by ABP.
+        * Please use a complete cookie library if you need.
         * @param {string} key
-        * @returns {string} Cookie value or null.
+        * @returns {string} Cookie value or null
         */
         function getCookieValue(key: string): string;
+
+        /**
+         * Deletes cookie for given key.
+         * This is a simple implementation created to be used by ABP.
+         * Please use a complete cookie library if you need.
+         * @param {string} key
+         * @param {string} path (optional)
+         */
+        function deleteCookie(key: string, path?: string): void;
     }
 
     namespace timing {

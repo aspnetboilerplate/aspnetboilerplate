@@ -17,11 +17,46 @@
         return abp.appPath + path;
     };
 
+    /* MULTITENANCY */
+
+    abp.multiTenancy = abp.multiTenancy || {};
+
+    abp.multiTenancy.isEnabled = false;
+
+    abp.multiTenancy.sides = {
+        TENANT: 1,
+        HOST: 2
+    };
+
+    abp.multiTenancy.tenantIdCookieName = 'Abp.TenantId';
+
+    abp.multiTenancy.setTenantIdCookie = function (tenantId) {
+        if (tenantId) {
+            abp.utils.setCookieValue(
+                abp.multiTenancy.tenantIdCookieName,
+                tenantId.toString(),
+                new Date(new Date().getTime() + 5 * 365 * 86400000), //5 years
+                abp.appPath
+            );
+        } else {
+            abp.utils.deleteCookie(abp.multiTenancy.tenantIdCookieName, abp.appPath);
+        }
+    };
+
+    abp.multiTenancy.getTenantIdCookie = function () {
+        var value = abp.utils.getCookieValue(abp.multiTenancy.tenantIdCookieName);
+        if (!value) {
+            return null;
+        }
+
+        return parseInt(value);
+    }
+
     /* SESSION */
 
     abp.session = abp.session ||
     {
-        multiTenancySide: 2 //TODO: Get from abp.multiTenancy
+        multiTenancySide: abp.multiTenancy.sides.HOST
     };
 
     /* LOCALIZATION ***********************************************/
@@ -239,13 +274,14 @@
     abp.notifications.messageFormatters = {};
 
     abp.notifications.messageFormatters['Abp.Notifications.MessageNotificationData'] = function (userNotification) {
-        return userNotification.notification.data.message;
+        return userNotification.notification.data.message || userNotification.notification.data.properties.Message;
     };
 
     abp.notifications.messageFormatters['Abp.Notifications.LocalizableMessageNotificationData'] = function (userNotification) {
+        var message = userNotification.notification.data.message || userNotification.notification.data.properties.Message;
         var localizedMessage = abp.localization.localize(
-            userNotification.notification.data.message.name,
-            userNotification.notification.data.message.sourceName
+            message.name,
+            message.sourceName
         );
 
         if (userNotification.notification.data.properties) {
@@ -619,7 +655,18 @@
             includeQuestionMark = true;
         }
 
+
         var qs = '';
+
+        function addSeperator() {
+            if (!qs.length) {
+                if (includeQuestionMark) {
+                    qs = qs + '?';
+                }
+            } else {
+                qs = qs + '&';
+            }
+        }
 
         for (var i = 0; i < parameterInfos.length; ++i) {
             var parameterInfo = parameterInfos[i];
@@ -631,16 +678,18 @@
                 parameterInfo.value = '';
             }
 
-            if (!qs.length) {
-                if (includeQuestionMark) {
-                    qs = qs + '?';
-                }
-            } else {
-                qs = qs + '&';
-            }
+            addSeperator();
 
             if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
                 qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value.toJSON());
+            } else if (Array.isArray(parameterInfo.value) && parameterInfo.value.length) {
+                for (var j = 0; j < parameterInfo.value.length; j++) {
+                    if (j > 0) {
+                        addSeperator();
+                    }
+
+                    qs = qs + parameterInfo.name + '[' + j + ']=' + encodeURIComponent(parameterInfo.value[j]);
+                }
             } else {
                 qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value);
             }
@@ -651,19 +700,26 @@
 
     /**
      * Sets a cookie value for given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
      * @param {string} key
      * @param {string} value 
-     * @param {Date} expireDate Optional. If not specified the cookie will expire at the end of session.
+     * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
+     * @param {string} path (optional)
      */
     abp.utils.setCookieValue = function (key, value, expireDate, path) {
-        var cookieValue = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+        var cookieValue = encodeURIComponent(key) + '=';
+
+        if (value) {
+            cookieValue = cookieValue + encodeURIComponent(value);
+        }
 
         if (expireDate) {
             cookieValue = cookieValue + "; expires=" + expireDate.toUTCString();
         }
 
         if (path) {
-            cookieValue = cookieValue + "; path='" + path + "'";
+            cookieValue = cookieValue + "; path=" + path;
         }
 
         document.cookie = cookieValue;
@@ -671,6 +727,8 @@
 
     /**
      * Gets a cookie with given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
      * @param {string} key
      * @returns {string} Cookie value or null
      */
@@ -693,6 +751,25 @@
 
         return null;
     };
+
+    /**
+     * Deletes cookie for given key.
+     * This is a simple implementation created to be used by ABP.
+     * Please use a complete cookie library if you need.
+     * @param {string} key
+     * @param {string} path (optional)
+     */
+    abp.utils.deleteCookie = function (key, path) {
+        var cookieValue = encodeURIComponent(key) + '=';
+
+        cookieValue = cookieValue + "; expires=" + (new Date(new Date().getTime() - 86400000)).toUTCString();
+
+        if (path) {
+            cookieValue = cookieValue + "; path=" + path;
+        }
+
+        document.cookie = cookieValue;
+    }
 
     /* TIMING *****************************************/
     abp.timing = abp.timing || {};

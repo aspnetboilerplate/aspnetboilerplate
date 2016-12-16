@@ -27,7 +27,7 @@ namespace Abp.Web
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
             
             Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
-            Configuration.ReplaceService<IClientInfoProvider, WebAuditInfoProvider>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IClientInfoProvider, WebClientInfoProvider>(DependencyLifeStyle.Transient);
 
             AddIgnoredTypes();
         }
