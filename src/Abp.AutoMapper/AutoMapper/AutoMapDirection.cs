@@ -5,7 +5,7 @@ namespace Abp.AutoMapper
     [Flags]
     public enum AutoMapDirection
     {
-        From,
-        To
+        From = 1,
+        To = 2
     }
 }

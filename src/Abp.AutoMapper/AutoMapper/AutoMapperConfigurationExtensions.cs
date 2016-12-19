@@ -9,20 +9,7 @@ namespace Abp.AutoMapper
     {
         public static void CreateAbpAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
-            configuration.CreateAbpAttributeMap<AutoMapFromAttribute>(type);
-            configuration.CreateAbpAttributeMap<AutoMapToAttribute>(type);
-            configuration.CreateAbpAttributeMap<AutoMapAttribute>(type);
-        }
-
-        private static void CreateAbpAttributeMap<TAttribute>(this IMapperConfigurationExpression configuration, Type type)
-            where TAttribute : AutoMapAttributeBase
-        {
-            if (!type.IsDefined(typeof(TAttribute)))
-            {
-                return;
-            }
-
-            foreach (var autoMapToAttribute in type.GetCustomAttributes<TAttribute>())
+            foreach (var autoMapToAttribute in type.GetCustomAttributes<AutoMapAttributeBase>())
             {
                 if (autoMapToAttribute.TargetTypes.IsNullOrEmpty())
                 {
