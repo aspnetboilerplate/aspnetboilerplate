@@ -5,7 +5,7 @@ namespace Abp.AutoMapper
     /// <summary>
     /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.AutoMapper module.
     /// </summary>
-    public static class AbpWebApiConfigurationExtensions
+    public static class AbpAutoMapperConfigurationExtensions
     {
         /// <summary>
         /// Used to configure Abp.AutoMapper module.

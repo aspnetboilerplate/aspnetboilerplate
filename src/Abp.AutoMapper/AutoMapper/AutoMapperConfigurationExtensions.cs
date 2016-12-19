@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    internal static class AutoMapperHelper
+    internal static class AutoMapperConfigurationExtensions
     {
         public static void CreateAbpAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
@@ -15,7 +15,7 @@ namespace Abp.AutoMapper
         }
 
         private static void CreateAbpAttributeMap<TAttribute>(this IMapperConfigurationExpression configuration, Type type)
-            where TAttribute : AutoMapAttribute
+            where TAttribute : AutoMapAttributeBase
         {
             if (!type.IsDefined(typeof(TAttribute)))
             {

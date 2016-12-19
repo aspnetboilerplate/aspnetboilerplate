@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Shouldly;
 using Xunit;
@@ -7,9 +8,9 @@ namespace Abp.AutoMapper.Tests
 {
     public class AutoMapping_Tests
     {
-        private static IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        static AutoMapping_Tests()
+        public AutoMapping_Tests()
         {
             var config = new MapperConfiguration(configuration =>
             {
@@ -62,6 +63,11 @@ namespace Abp.AutoMapper.Tests
             var obj3 = new MyClass3();
             _mapper.Map(obj2, obj3);
             obj3.TestProp.ShouldBe("Test value");
+
+            Assert.ThrowsAny<Exception>(() => //Did not define reverse mapping!
+            {
+                _mapper.Map(obj3, obj2);
+            });
         }
 
         [Fact]

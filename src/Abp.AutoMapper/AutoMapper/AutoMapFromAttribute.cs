@@ -2,12 +2,9 @@
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapFromAttribute : AutoMapAttribute
+    public class AutoMapFromAttribute : AutoMapAttributeBase
     {
-        internal override AutoMapDirection Direction
-        {
-            get { return AutoMapDirection.From; }
-        }
+        internal override AutoMapDirection Direction => AutoMapDirection.From;
 
         public AutoMapFromAttribute(params Type[] targetTypes)
             : base(targetTypes)
