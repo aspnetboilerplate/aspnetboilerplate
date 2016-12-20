@@ -38,5 +38,21 @@ namespace Abp.Tests.Notifications
             data.Message.Name.ShouldBe("Hello");
             data.Message.SourceName.ShouldBe("MySource");
         }
+
+        [Fact]
+        public void MessageNotificationData_Backward_Compatibility_Test()
+        {
+            const string serialized = "{\"Message\":\"a test message\",\"Type\":\"Abp.Notifications.MessageNotificationData\",\"Properties\":{}}";
+
+            var data = JsonConvert
+                .DeserializeObject(
+                    serialized,
+                    typeof(MessageNotificationData)
+                ) as MessageNotificationData;
+
+            Assert.NotNull(data);
+            data.Message.ShouldBe("a test message");
+            data.Properties["Message"].ShouldBe("a test message");
+        }
     }
 }

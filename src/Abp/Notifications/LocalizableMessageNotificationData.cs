@@ -16,11 +16,11 @@ namespace Abp.Notifications
         {
             get
             {
-                return _message ?? (Properties[nameof(Message)] as LocalizableString);
+                return _message ?? (this[nameof(Message)] as LocalizableString);
             }
             set
             {
-                Properties[nameof(Message)] = value;
+                this[nameof(Message)] = value;
                 _message = value;
             }
         }
