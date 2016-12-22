@@ -12,9 +12,9 @@ namespace Abp.AutoMapper.Tests
         {
             var config = new MapperConfiguration(configuration =>
             {
-                configuration.CreateAbpAttributeMaps(typeof(MyTargetClassToMap));
-                configuration.CreateAbpAttributeMaps(typeof(EntityDto));
-                configuration.CreateAbpAttributeMaps(typeof(DerivedEntityDto));
+                configuration.CreateAutoAttributeMaps(typeof(MyTargetClassToMap));
+                configuration.CreateAutoAttributeMaps(typeof(EntityDto));
+                configuration.CreateAutoAttributeMaps(typeof(DerivedEntityDto));
             });
 
             _mapper = config.CreateMapper();

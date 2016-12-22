@@ -76,7 +76,7 @@ namespace Abp.AutoMapper
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
-                configuration.CreateAbpAttributeMaps(type);
+                configuration.CreateAutoAttributeMaps(type);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 
 namespace Abp.AutoMapper
 {
@@ -6,11 +7,11 @@ namespace Abp.AutoMapper
     {
         public Type[] TargetTypes { get; private set; }
 
-        internal abstract AutoMapDirection Direction { get; }
-
         protected AutoMapAttributeBase(params Type[] targetTypes)
         {
             TargetTypes = targetTypes;
         }
+
+        public abstract void CreateMap(IMapperConfigurationExpression configuration, Type type);
     }
 }

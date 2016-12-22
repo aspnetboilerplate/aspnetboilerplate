@@ -14,8 +14,8 @@ namespace Abp.AutoMapper.Tests
         {
             var config = new MapperConfiguration(configuration =>
             {
-                configuration.CreateAbpAttributeMaps(typeof(MyClass1));
-                configuration.CreateAbpAttributeMaps(typeof(MyClass2));
+                configuration.CreateAutoAttributeMaps(typeof(MyClass1));
+                configuration.CreateAutoAttributeMaps(typeof(MyClass2));
             });
 
             _mapper = config.CreateMapper();
