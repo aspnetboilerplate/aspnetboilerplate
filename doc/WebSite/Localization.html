@@ -212,6 +212,45 @@ DictionaryBasedLocalizationSource</strong>
 class to make implementation easier (json and xml localization sources also use 
 it). <a href="Zero/Language-Management.html">Module zero</a> implements source 
 			in the database for example.</p>
+			<h3>How Current Language Is Determined</h3>
+			<h4>ASP.NET Core</h4>
+			<p>ASP.NET Core has it's own mechanism to determine the current 
+			language. Abp.AspNetCore package automatically adds ASP.NET Core's
+			<strong>UseRequestLocalization</strong> middleware to request 
+			pipeline. It also adds a special provider to get current language 
+			from default language settings (setting name is 
+			"Abp.Localization.DefaultLanguageName", which is a constant defined 
+			in Abp.Localization.LocalizationSettingNames.DefaultLanguage and can 
+			be changed using <a href="Setting-Management.html">setting 
+			management</a>), just before 
+			AcceptLanguageHeaderRequestCultureProvider. See ASP.NET Core
+			<a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization" target="_blank">
+			localization document</a> to understand it better.</p>
+			<p>Most of time, you don't need to care about if you are using ABP's 
+			localization system properly.</p>
+			<h4>ASP.NET MVC 5.x</h4>
+			<p>ABP automatically determines current language in every web 
+			request and sets
+				<strong>current thread's culture (and UI culture)</strong>. This 
+			is how ABP determines it by default:</p>
+			<ul>
+				<li>Tries to get from a special <strong>header</strong> value, named 
+				"Abp.Localization.CultureName" by default.</li>
+				<li>If not found, tries to get from a special <strong>cookie</strong> value, 
+				named "Abp.Localization.CultureName" by default.</li>
+				<li>If not found, tries to get from <strong>default culture</strong> setting 
+				(setting name is "Abp.Localization.DefaultLanguageName", which 
+				is a constant defined in 
+				Abp.Localization.LocalizationSettingNames.DefaultLanguage and 
+				can be changed using <a href="Setting-Management.html">setting 
+				management</a>).</li>
+				<li>If not found, tries to get from <strong>browser's default language</strong> 
+				(HttpContext.Request.UserLanguages).</li>
+			</ul>
+			<p>If you need, you can change special cookie name (it's also the header 
+			name) in your 
+			module's PreInitialize method. Example:</p>
+			<pre lang="cs">Configuration.Modules.AbpWeb().Localization.CookieName = "YourCustomName";</pre>
 			<h3 id="DocGetText">Getting A Localized Text</h3>
 			<p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
