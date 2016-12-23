@@ -9,6 +9,7 @@ using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization;
+using Abp.Timing;
 using Abp.Web.Configuration;
 
 namespace Abp.Web.Localization
@@ -31,7 +32,7 @@ namespace Abp.Web.Localization
                 return;
             }
 
-            var culture = GetCultureFromCookie(httpContext);
+            var culture = GetCultureFromHeader(httpContext) ?? GetCultureFromCookie(httpContext);
             if (culture != null)
             {
                 SetCurrentCulture(culture);
@@ -70,12 +71,29 @@ namespace Abp.Web.Localization
 
         protected virtual void SetCultureToCookie(HttpContext context, string culture)
         {
-            context.Response.SetCookie(new HttpCookie(_webLocalizationConfiguration.CookieName, culture));
+            context.Response.SetCookie(
+                new HttpCookie(_webLocalizationConfiguration.CookieName, culture)
+                {
+                    Expires = Clock.Now.AddYears(1),
+                    Path = context.Request.ApplicationPath
+                }
+            );
         }
 
         protected virtual string GetDefaultCulture()
         {
             var culture = _settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
+            {
+                return null;
+            }
+
+            return culture;
+        }
+
+        protected virtual string GetCultureFromHeader(HttpContext httpContext)
+        {
+            var culture = httpContext.Request.Headers[_webLocalizationConfiguration.CookieName];
             if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
             {
                 return null;
