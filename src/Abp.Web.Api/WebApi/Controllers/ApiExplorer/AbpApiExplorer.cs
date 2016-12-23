@@ -13,8 +13,6 @@ using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic;
 using Abp.WebApi.Controllers.Dynamic.Selectors;
 
-//TODO: This code need to be refactored.
-
 namespace Abp.WebApi.Controllers.ApiExplorer
 {
     public class AbpApiExplorer : System.Web.Http.Description.ApiExplorer, IApiExplorer, ISingletonDependency
@@ -68,6 +66,7 @@ namespace Abp.WebApi.Controllers.ApiExplorer
                     var apiDescription = new ApiDescription();
 
                     var controllerDescriptor = new DynamicHttpControllerDescriptor(_abpWebApiConfiguration.HttpConfiguration, dynamicApiControllerInfo);
+                    controllerDescriptor.ControllerName = controllerDescriptor.ControllerName.Replace("/", "_");
                     var actionDescriptor = new DynamicHttpActionDescriptor(_abpWebApiConfiguration, controllerDescriptor, dynamicApiActionInfo);
 
                     apiDescription.ActionDescriptor = actionDescriptor;

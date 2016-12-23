@@ -106,7 +106,8 @@ onComplete: function(swaggerApi, swaggerUi){
     }</strong>
 }
 </pre>
-<p>Notice that, we inject a javascript file named "<strong>Swagger-Custom.js</strong>" while configuring swagger ui. This script file is used to add CSRF token to requests while testing api services on swagger ui. You also need to add this file to your WebApi project and use it's Logical Name in InjectJavaScript method while injecting it. It's content is:</p>
+<p>Notice that, we inject a javascript file named "<strong>Swagger-Custom.js</strong>" while configuring swagger ui. This script file is used to add CSRF token to requests while testing api services on swagger ui. You also need to add this file to your WebApi project 
+(as embedded resource) and use it's Logical Name in InjectJavaScript method while injecting it. It's content is:</p>
 <pre lang="js">
 var getCookieValue = function(key) {
     var equalities = document.cookie.split('; ');
