@@ -40,7 +40,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
-                    eventData.Entity.IsTransient().ShouldBe(true);
+                    eventData.Entity.IsTransient().ShouldBe(false);
                     changingTriggerCount++;
                     changedTriggerCount.ShouldBe(0);
                 });
@@ -49,7 +49,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
-                    eventData.Entity.IsTransient().ShouldBe(true);
+                    eventData.Entity.IsTransient().ShouldBe(false);
                     creatingTriggerCount++;
                     createdTriggerCount.ShouldBe(0);
                 });
@@ -183,6 +183,20 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
+        public async Task Should_Insert_A_New_Entity_On_EntityCreating_Event()
+        {
+            var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
+            person.IsTransient().ShouldBeFalse();
+
+            var text = string.Format("{0} is being created with Id = {1}!", person.Name, person.Id);
+            UsingDbContext(context =>
+            {
+                var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
+                message.ShouldNotBeNull();
+            });
+        }
+
+        [Fact]
         public async Task Should_Insert_A_New_Entity_On_EntityCreated_Event()
         {
             var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
@@ -196,7 +210,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             });
         }
 
-        public class PersonHandler : IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
+        public class PersonHandler : IEventHandler<EntityCreatingEventData<Person>>, IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
         {
             public const int FakeTenantId = 65910381;
 
@@ -205,6 +219,11 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             public PersonHandler(IRepository<Message> messageRepository)
             {
                 _messageRepository = messageRepository;
+            }
+
+            public void HandleEvent(EntityCreatingEventData<Person> eventData)
+            {
+                _messageRepository.Insert(new Message(FakeTenantId, string.Format("{0} is being created with Id = {1}!", eventData.Entity.Name, eventData.Entity.Id)));
             }
 
             public void HandleEvent(EntityCreatedEventData<Person> eventData)

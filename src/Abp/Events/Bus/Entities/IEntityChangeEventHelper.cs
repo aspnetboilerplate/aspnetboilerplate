@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Abp.Events.Bus.Entities
 {
     /// <summary>
@@ -5,6 +7,10 @@ namespace Abp.Events.Bus.Entities
     /// </summary>
     public interface IEntityChangeEventHelper
     {
+        void TriggerEvents(EntityChangeReport changeReport);
+
+        Task TriggerEventsAsync(EntityChangeReport changeReport);
+
         void TriggerEntityCreatingEvent(object entity);
 
         void TriggerEntityCreatedEventOnUowCompleted(object entity);
