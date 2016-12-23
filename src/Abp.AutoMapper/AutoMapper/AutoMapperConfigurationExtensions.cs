@@ -8,9 +8,9 @@ namespace Abp.AutoMapper
     {
         public static void CreateAutoAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
-            foreach (var autoMapToAttribute in type.GetCustomAttributes<AutoMapAttributeBase>())
+            foreach (var autoMapAttribute in type.GetCustomAttributes<AutoMapAttributeBase>())
             {
-                autoMapToAttribute.CreateMap(configuration, type);
+                autoMapAttribute.CreateMap(configuration, type);
             }
         }
     }
