@@ -439,8 +439,7 @@ namespace Abp.EntityFramework
             }
 
             var softDeleteEntry = entry.Cast<ISoftDelete>();
-
-            softDeleteEntry.State = EntityState.Unchanged; //TODO: Or Modified? IsDeleted = true makes it modified?
+            softDeleteEntry.Reload();
             softDeleteEntry.Entity.IsDeleted = true;
         }
 
