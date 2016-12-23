@@ -21,8 +21,7 @@ namespace Abp.AutoMapper
 
             foreach (var targetType in TargetTypes)
             {
-                configuration.CreateMap(type, targetType);
-                configuration.CreateMap(targetType, type);
+                configuration.CreateMap(targetType, type, MemberList.Destination);
             }
         }
     }
