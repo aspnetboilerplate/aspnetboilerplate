@@ -11,12 +11,10 @@
 
 <div class="document-contents">
 
-<h2>Introduction</h2>
+<h3>Introduction</h3>
 <p>From it's web site: "....with a Swagger-enabled API, you get <strong>
 interactive documentation</strong>, client SDK generation and discoverability."</p>
-<h2>ASP.NET Core</h2>
-	<h3>Installation</h3>
-	<p>It's easy to integrate Swagger into your ASP.NET Boilerplate based ASP.NET Core application.</p>
+<h3>ASP.NET Core</h3>
 	<h4>Install Nuget Package</h4>	
 <p>Install <strong>
 	<a href="https://www.nuget.org/packages/Swashbuckle/6.0.0-beta902">Swashbuckle</a></strong> 
@@ -75,10 +73,7 @@ onComplete: function(swaggerApi, swaggerUi){
 
 
 
-<h2>ASP.NET 5.x</h2>
-	<h3>Installation</h3>
-	<p>It's easy to integrate <a href="http://swagger.io/">Swagger</a> into your 
-	ASP.NET Boilerplate based application.</p>
+<h3>ASP.NET 5.x</h3>
 	<h4>Install Nuget Package</h4>
 	<p>Install <strong>
 	<a href="https://www.nuget.org/packages/Swashbuckle.Core/">Swashbuckle.Core</a></strong> 
@@ -137,7 +132,6 @@ var csrfCookie = getCookieValue("XSRF-TOKEN");
 var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("X-XSRF-TOKEN", csrfCookie, "header");
 swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);
 </pre>
-<p></p>
 	<p>See Swashbuckle 
 	<a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank">
 	documentation</a> for more configuration options.</p>
