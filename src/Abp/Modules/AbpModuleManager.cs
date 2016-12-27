@@ -30,6 +30,7 @@ namespace Abp.Modules
         {
             _iocManager = iocManager;
             _abpPlugInManager = abpPlugInManager;
+
             Logger = NullLogger.Instance;
         }
 
@@ -62,12 +63,13 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = FindAllModules().Distinct().ToList();
+            List<Type> plugInModuleTypes;
+            var moduleTypes = FindAllModuleTypes(out plugInModuleTypes).Distinct().ToList();
 
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
             RegisterModules(moduleTypes);
-            CreateModules(moduleTypes);
+            CreateModules(moduleTypes, plugInModuleTypes);
 
             _modules.EnsureKernelModuleToBeFirst();
             _modules.EnsureStartupModuleToBeLast();
@@ -77,19 +79,24 @@ namespace Abp.Modules
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
         }
 
-        private List<Type> FindAllModules()
+        private List<Type> FindAllModuleTypes(out List<Type> plugInModuleTypes)
         {
-            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
+            plugInModuleTypes = new List<Type>();
 
-            _abpPlugInManager
-                .PlugInSources
-                .GetAllModules()
-                .ForEach(m => modules.AddIfNotContains(m));
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
+            
+            foreach (var plugInModuleType in _abpPlugInManager.PlugInSources.GetAllModules())
+            {
+                if (modules.AddIfNotContains(plugInModuleType))
+                {
+                    plugInModuleTypes.Add(plugInModuleType);
+                }
+            }
 
             return modules;
         }
 
-        private void CreateModules(ICollection<Type> moduleTypes)
+        private void CreateModules(ICollection<Type> moduleTypes, List<Type> plugInModuleTypes)
         {
             foreach (var moduleType in moduleTypes)
             {
@@ -102,7 +109,7 @@ namespace Abp.Modules
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
 
-                var moduleInfo = new AbpModuleInfo(moduleType, moduleObject);
+                var moduleInfo = new AbpModuleInfo(moduleType, moduleObject, plugInModuleTypes.Contains(moduleType));
 
                 _modules.Add(moduleInfo);
 

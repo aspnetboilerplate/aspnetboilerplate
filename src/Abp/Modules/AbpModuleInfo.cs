@@ -26,6 +26,11 @@ namespace Abp.Modules
         public AbpModule Instance { get; }
 
         /// <summary>
+        /// Is this module loaded as a plugin.
+        /// </summary>
+        public bool IsLoadedAsPlugIn { get; }
+
+        /// <summary>
         /// All dependent modules of this module.
         /// </summary>
         public List<AbpModuleInfo> Dependencies { get; }
@@ -33,13 +38,14 @@ namespace Abp.Modules
         /// <summary>
         /// Creates a new AbpModuleInfo object.
         /// </summary>
-        public AbpModuleInfo([NotNull] Type type, [NotNull] AbpModule instance)
+        public AbpModuleInfo([NotNull] Type type, [NotNull] AbpModule instance, bool isLoadedAsPlugIn)
         {
             Check.NotNull(type, nameof(type));
             Check.NotNull(instance, nameof(instance));
 
             Type = type;
             Instance = instance;
+            IsLoadedAsPlugIn = isLoadedAsPlugIn;
             Assembly = Type.Assembly;
 
             Dependencies = new List<AbpModuleInfo>();
