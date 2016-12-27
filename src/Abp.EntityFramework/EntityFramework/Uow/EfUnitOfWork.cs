@@ -3,13 +3,16 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
 using Abp.Extensions;
 using Abp.MultiTenancy;
+using Abp.Transactions.Extensions;
 using Castle.Core.Internal;
 
 namespace Abp.EntityFramework.Uow
@@ -19,12 +22,14 @@ namespace Abp.EntityFramework.Uow
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
+        protected IDictionary<string, ActiveDbContextInfo> ActiveDbContexts { get; }
 
-        protected IIocResolver IocResolver { get; private set; }
+        protected IDictionary<string, ActiveTransactionInfo> ActiveTransactions { get; }
 
-        protected TransactionScope CurrentTransaction;
+        protected IIocResolver IocResolver { get; }
+
         private readonly IDbContextResolver _dbContextResolver;
+
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
 
         /// <summary>
@@ -46,7 +51,8 @@ namespace Abp.EntityFramework.Uow
             _dbContextResolver = dbContextResolver;
             _dbContextTypeMatcher = dbContextTypeMatcher;
 
-            ActiveDbContexts = new Dictionary<string, DbContext>();
+            ActiveDbContexts = new Dictionary<string, ActiveDbContextInfo>();
+            ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>();
         }
 
         protected override void BeginUow()
@@ -63,22 +69,22 @@ namespace Abp.EntityFramework.Uow
                     transactionOptions.Timeout = Options.Timeout.Value;
                 }
 
-                CurrentTransaction = new TransactionScope(
-                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
-                    transactionOptions,
-                    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
-                    );
+                //CurrentTransaction = new TransactionScope(
+                //    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
+                //    transactionOptions,
+                //    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
+                //    );
             }
         }
 
         public override void SaveChanges()
         {
-            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
+            ActiveDbContexts.Values.Select(c => c.DbContext).ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in ActiveDbContexts.Values.Select(c => c.DbContext))
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -86,29 +92,29 @@ namespace Abp.EntityFramework.Uow
 
         public IReadOnlyList<DbContext> GetAllActiveDbContexts()
         {
-            return ActiveDbContexts.Values.ToImmutableList();
+            return ActiveDbContexts.Values.Select(c => c.DbContext).ToImmutableList();
         }
 
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Complete();
-            }
-
+            CommitTransactions();
             DisposeUow();
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Complete();
-            }
-
+            CommitTransactions();
             DisposeUow();
+        }
+
+        private void CommitTransactions()
+        {
+            foreach (var activeTransaction in ActiveTransactions.Values)
+            {
+                activeTransaction.DbContextTransaction.Commit();
+            }
         }
 
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
@@ -123,11 +129,10 @@ namespace Abp.EntityFramework.Uow
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
-            DbContext dbContext;
-            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
+            ActiveDbContextInfo dbContextInfo;
+            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContextInfo))
             {
-
-                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                var dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
 
                 ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
                 {
@@ -136,22 +141,65 @@ namespace Abp.EntityFramework.Uow
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
 
-                ActiveDbContexts[dbContextKey] = dbContext;
+                if (Options.IsTransactional == true)
+                {
+                    InitTransaction(dbContext, connectionString);
+                }
+
+                ActiveDbContexts[dbContextKey] = dbContextInfo = new ActiveDbContextInfo(dbContext);
             }
 
-            return (TDbContext)dbContext;
+            return (TDbContext)dbContextInfo.DbContext;
+        }
+
+        private void InitTransaction(DbContext dbContext, string connectionString)
+        {
+            var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
+            if (activeTransaction == null)
+            {
+                activeTransaction = new ActiveTransactionInfo(
+                    dbContext.Database.BeginTransaction(
+                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
+                    ),
+                    dbContext
+                );
+
+                ActiveTransactions[connectionString] = activeTransaction;
+            }
+            else
+            {
+                dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
+                activeTransaction.AttendeDbContexts.Add(dbContext);
+            }
         }
 
         protected override void DisposeUow()
         {
-            ActiveDbContexts.Values.ForEach(Release);
-            ActiveDbContexts.Clear();
+            //TODO: Handle exceptions?
 
-            if (CurrentTransaction != null)
+            if (Options.IsTransactional == true)
             {
-                CurrentTransaction.Dispose();
-                CurrentTransaction = null;
+                foreach (var activeTransaction in ActiveTransactions.Values)
+                {
+                    foreach (var attendeDbContext in activeTransaction.AttendeDbContexts)
+                    {
+                        Release(attendeDbContext);
+                    }
+
+                    activeTransaction.DbContextTransaction.Dispose();
+                    activeTransaction.StarterDbContext.Dispose();
+                }
             }
+            else
+            {
+                foreach (var activeDbContext in ActiveDbContexts.Values)
+                {
+                    Release(activeDbContext.DbContext);
+                }
+            }
+
+            ActiveTransactions.Clear();
+            ActiveDbContexts.Clear();
         }
 
         protected virtual void SaveChangesInDbContext(DbContext dbContext)
