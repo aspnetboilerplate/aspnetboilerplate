@@ -440,6 +440,7 @@ namespace Abp.EntityFramework
 
             var softDeleteEntry = entry.Cast<ISoftDelete>();
             softDeleteEntry.Reload();
+            softDeleteEntry.State = EntityState.Modified;
             softDeleteEntry.Entity.IsDeleted = true;
         }
 

@@ -362,6 +362,7 @@ namespace Abp.EntityFrameworkCore
             }
 
             entry.Reload();
+            entry.State = EntityState.Modified;
             entry.Entity.As<ISoftDelete>().IsDeleted = true;
         }
 
