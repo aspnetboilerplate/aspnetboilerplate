@@ -9,14 +9,14 @@ namespace Abp.EntityFramework.Uow
 
         public DbContext StarterDbContext { get; }
 
-        public List<DbContext> AttendeDbContexts { get; }
+        public List<DbContext> AttendedDbContexts { get; }
 
         public ActiveTransactionInfo(DbContextTransaction dbContextTransaction, DbContext starterDbContext)
         {
             DbContextTransaction = dbContextTransaction;
             StarterDbContext = starterDbContext;
 
-            AttendeDbContexts = new List<DbContext>();
+            AttendedDbContexts = new List<DbContext>();
         }
     }
 }
