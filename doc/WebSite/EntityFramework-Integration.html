@@ -196,6 +196,21 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 				<strong>.EntityFramework</strong> project if you want to 
 				abstract EF from your domain/application.</li>
 			</ul>
+			<h3>Transaction Management</h3>
+			<p>ASP.NET Boilerplate has a built-in <a href="Unit-Of-Work.html">
+			unit of work</a> system to manage database connection and 
+			transactions. Entity framework has different
+			<a href="https://msdn.microsoft.com/en-us/library/dn456843(v=vs.113).aspx" target="_blank">
+			transaction management approaches</a>. ASP.NET Boilerplate uses 
+			ambient TransactionScope approach by default, but also has a 
+			built-in implementation for DbContext transaction API. If you want 
+			to switch to DbContext transaction API, you can configure it in 
+			PreInitialize method of your <a href="Module-System.html">module</a> 
+			like that:</p>
+			<pre lang="cs">Configuration.ReplaceService&lt;IEfTransactionStrategy, <strong>DbContextEfTransactionStrategy</strong>&gt;(DependencyLifeStyle.Transient);</pre>
+			<p>Remember to add "<em>using Abp.Configuration.Startup;</em>" to 
+			your code file to be able to use ReplaceService generic extension 
+			method.</p>
 		</div>
 	</body>
 
