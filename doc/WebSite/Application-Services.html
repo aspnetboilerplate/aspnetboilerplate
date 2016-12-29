@@ -201,13 +201,13 @@ public class TaskDto : EntityDto, IHasCreationTime
 			<h4>Customize CRUD Application Services</h4>
 			<h5>Getting List</h5>
 			<p>Crud application service gets <strong>
-			PagedAndSortedResultRequestInput</strong> as argument 
+			PagedAndSortedResultRequestDto</strong> as argument 
 			for <strong>GetAll</strong> method as 
 			default, which provides optional sorting and paging parameters. But you may 
 			want to add another parameters for GetAll method. For example, you 
 			may want to add some <strong>custom filters</strong>. In that case, you can create a 
 			DTO for GetAll method. Example:</p>
-			<pre lang="cs">public class GetAllTasksInput : <strong>PagedAndSortedResultRequestInput</strong>
+			<pre lang="cs">public class GetAllTasksInput : <strong>PagedAndSortedResultRequestDto</strong>
 {
     public TaskState? State { get; set; }
 }</pre>
