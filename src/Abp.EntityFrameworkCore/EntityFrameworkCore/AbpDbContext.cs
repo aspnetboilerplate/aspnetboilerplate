@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading;
@@ -134,18 +135,24 @@ namespace Abp.EntityFrameworkCore
 
         public override int SaveChanges()
         {
-            ApplyAbpConcepts();
-            return base.SaveChanges();
+            var changeReport = ApplyAbpConcepts();
+            var result = base.SaveChanges();
+            EntityChangeEventHelper.TriggerEvents(changeReport);
+            return result;
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ApplyAbpConcepts();
-            return await base.SaveChangesAsync(cancellationToken);
+            var changeReport = ApplyAbpConcepts();
+            var result = await base.SaveChangesAsync(cancellationToken);
+            await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
+            return result;
         }
 
-        protected virtual void ApplyAbpConcepts()
+        protected virtual EntityChangeReport ApplyAbpConcepts()
         {
+            var changeReport = new EntityChangeReport();
+
             var userId = GetAuditUserId();
 
             var entries = ChangeTracker.Entries().ToList();
@@ -158,37 +165,35 @@ namespace Abp.EntityFrameworkCore
                         CheckAndSetMustHaveTenantIdProperty(entry.Entity);
                         CheckAndSetMayHaveTenantIdProperty(entry.Entity);
                         SetCreationAuditProperties(entry.Entity, userId);
-                        EntityChangeEventHelper.TriggerEntityCreatingEvent(entry.Entity);
-                        EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entry.Entity);
+                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
                         break;
                     case EntityState.Modified:
                         SetModificationAuditProperties(entry, userId);
                         if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
                         {
                             SetDeletionAuditProperties(entry.Entity, userId);
-                            EntityChangeEventHelper.TriggerEntityDeletingEvent(entry.Entity);
-                            EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
+                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
                         }
                         else
                         {
-                            EntityChangeEventHelper.TriggerEntityUpdatingEvent(entry.Entity);
-                            EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entry.Entity);
+                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
                         }
 
                         break;
                     case EntityState.Deleted:
                         CancelDeletionForSoftDelete(entry);
                         SetDeletionAuditProperties(entry.Entity, userId);
-                        EntityChangeEventHelper.TriggerEntityDeletingEvent(entry.Entity);
-                        EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entry.Entity);
+                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
                         break;
                 }
 
-                TriggerDomainEvents(entry.Entity);
+                AddDomainEvents(changeReport.DomainEvents, entry.Entity);
             }
+
+            return changeReport;
         }
 
-        protected virtual void TriggerDomainEvents(object entityAsObj)
+        protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
         {
             var generatesDomainEventsEntity = entityAsObj as IGeneratesDomainEvents;
             if (generatesDomainEventsEntity == null)
@@ -201,13 +206,8 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            var domainEvents = generatesDomainEventsEntity.DomainEvents.ToList();
+            domainEvents.AddRange(generatesDomainEventsEntity.DomainEvents.Select(eventData => new DomainEventEntry(entityAsObj, eventData)));
             generatesDomainEventsEntity.DomainEvents.Clear();
-
-            foreach (var domainEvent in domainEvents)
-            {
-                EventBus.Trigger(domainEvent.GetType(), entityAsObj, domainEvent);
-            }
         }
 
         protected virtual void CheckAndSetId(EntityEntry entry)
@@ -361,7 +361,8 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            entry.State = EntityState.Unchanged; //TODO: Or Modified? IsDeleted = true makes it modified?
+            entry.Reload();
+            entry.State = EntityState.Modified;
             entry.Entity.As<ISoftDelete>().IsDeleted = true;
         }
 

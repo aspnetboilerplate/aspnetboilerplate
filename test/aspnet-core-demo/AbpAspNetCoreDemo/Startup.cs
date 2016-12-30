@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
+using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,11 @@ namespace AbpAspNetCoreDemo
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
+
+            //Some test classes
+            services.AddTransient<MyTransientClass1>();
+            services.AddTransient<MyTransientClass2>();
+            services.AddScoped<MyScopedClass>();
 
             //Add framework services
             services.AddMvc(options =>

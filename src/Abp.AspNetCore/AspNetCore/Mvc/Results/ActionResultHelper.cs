@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.Mvc.Results
 {
-    internal static class ActionResultHelper
+    public static class ActionResultHelper
     {
         public static bool IsObjectResult(Type returnType)
         {

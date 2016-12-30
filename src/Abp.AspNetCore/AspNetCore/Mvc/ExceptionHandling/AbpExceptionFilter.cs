@@ -11,7 +11,6 @@ using Abp.Logging;
 using Abp.Reflection;
 using Abp.Web.Models;
 using Castle.Core.Logging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -61,7 +60,6 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
-            context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCode(context);
 
             context.Result = new ObjectResult(

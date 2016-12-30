@@ -1,19 +1,29 @@
 ﻿using System;
+using Abp.Collections.Extensions;
+using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapAttribute : Attribute
+    public class AutoMapAttribute : AutoMapAttributeBase
     {
-        public Type[] TargetTypes { get; private set; }
-
-        internal virtual AutoMapDirection Direction
+        public AutoMapAttribute(params Type[] targetTypes)
+            : base(targetTypes)
         {
-            get { return AutoMapDirection.From | AutoMapDirection.To; }
+
         }
 
-        public AutoMapAttribute(params Type[] targetTypes)
+        public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
         {
-            TargetTypes = targetTypes;
+            if (TargetTypes.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            foreach (var targetType in TargetTypes)
+            {
+                configuration.CreateMap(type, targetType, MemberList.Source);
+                configuration.CreateMap(targetType, type, MemberList.Destination);
+            }
         }
     }
 }

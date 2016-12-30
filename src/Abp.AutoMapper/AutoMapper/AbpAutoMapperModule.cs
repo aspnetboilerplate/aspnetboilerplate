@@ -72,10 +72,11 @@ namespace Abp.AutoMapper
             );
 
             Logger.DebugFormat("Found {0} classes define auto mapping attributes", types.Length);
+
             foreach (var type in types)
             {
                 Logger.Debug(type.FullName);
-                configuration.CreateAbpAttributeMaps(type);
+                configuration.CreateAutoAttributeMaps(type);
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Json;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
@@ -15,6 +17,8 @@ namespace Abp.BackgroundJobs
     /// </summary>
     public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager, ISingletonDependency
     {
+        public IEventBus EventBus { get; set; }
+        
         /// <summary>
         /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.
         /// Default value: 5000 (5 seconds).
@@ -40,6 +44,8 @@ namespace Abp.BackgroundJobs
         {
             _store = store;
             _iocResolver = iocResolver;
+
+            EventBus = NullEventBus.Instance;
 
             Timer.Period = JobPollPeriod;
         }
@@ -107,6 +113,19 @@ namespace Abp.BackgroundJobs
                         }
 
                         TryUpdate(jobInfo);
+
+                        EventBus.Trigger(
+                            this,
+                            new AbpHandledExceptionData(
+                                new BackgroundJobException(
+                                    "A background job execution is failed. See inner exception for details. See BackgroundJob property to get information on the background job.", 
+                                    ex
+                                    )
+                                {
+                                    BackgroundJob = jobInfo
+                                }
+                            )
+                        );
                     }
                 }
             }
