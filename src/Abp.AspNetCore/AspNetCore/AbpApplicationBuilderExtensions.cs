@@ -70,26 +70,9 @@ namespace Abp.AspNetCore
                     SupportedUICultures = supportedCultures
                 };
 
-                var settingManager = iocResolver.Resolve<ISettingManager>();
-                var settingRequestCultureProvider = new SettingRequestCultureProvider(settingManager);
-                AddSettingRequestCultureProvider(options, settingRequestCultureProvider);
+                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
 
                 app.UseRequestLocalization(options);
-            }
-        }
-
-        private static void AddSettingRequestCultureProvider(RequestLocalizationOptions options, SettingRequestCultureProvider settingRequestCultureProvider)
-        {
-            var acceptLanguageHeaderRequestCultureProvider = options.RequestCultureProviders.FirstOrDefault(rcp => rcp.GetType() == typeof(AcceptLanguageHeaderRequestCultureProvider));
-
-            if (acceptLanguageHeaderRequestCultureProvider != null)
-            {
-                var acceptLanguageHeaderRequestCultureProviderIndex = options.RequestCultureProviders.IndexOf(acceptLanguageHeaderRequestCultureProvider);
-                options.RequestCultureProviders.Insert(acceptLanguageHeaderRequestCultureProviderIndex, settingRequestCultureProvider);
-            }
-            else
-            {
-                options.RequestCultureProviders.Add(settingRequestCultureProvider);
             }
         }
     }

@@ -12,6 +12,7 @@ using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.UI;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Localization;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -204,11 +205,10 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
-        public async Task SettingRequestCultureProvider_Test()
+        public async Task AbpLocalizationHeaderRequestCultureProvider_Test()
         {
             //Arrange
-            var settingManager = ServiceProvider.GetService<ISettingDefinitionManager>();
-            settingManager.GetSettingDefinition(LocalizationSettingNames.DefaultLanguage).DefaultValue = "it";
+            Client.DefaultRequestHeaders.Add(CookieRequestCultureProvider.DefaultCookieName, "c=it|uic=it");
 
             var culture = await GetResponseAsStringAsync(
                     GetUrl<SimpleTestController>(
@@ -217,5 +217,6 @@ namespace Abp.AspNetCore.Tests
 
             culture.ShouldBe("it");
         }
+
     }
 }
