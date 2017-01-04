@@ -1,8 +1,8 @@
 ﻿{
-  "version": "1.2.0.0-*",
+  "version": "1.2.1.0-*",
 
   "dependencies": {
-    "Abp.RedisCache": "1.2.0.0-*",
+    "Abp.RedisCache": "1.2.1.0-*",
     "protobuf-net": "2.1.0"
   },
 
