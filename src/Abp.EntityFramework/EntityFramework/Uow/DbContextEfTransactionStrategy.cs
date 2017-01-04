@@ -38,13 +38,8 @@ namespace Abp.EntityFramework.Uow
             var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
             if (activeTransaction == null)
             {
-                activeTransaction = new ActiveTransactionInfo(
-                    dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
-                    ),
-                    dbContext
-                );
-
+                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else
@@ -52,7 +47,6 @@ namespace Abp.EntityFramework.Uow
                 dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }
-
         }
 
         public void Dispose(IIocResolver iocResolver)
