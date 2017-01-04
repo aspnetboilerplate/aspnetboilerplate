@@ -4,9 +4,9 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Abp.Web.Api": "1.2.0.0-*",
+    "Abp.Web.Api": "1.2.1.0-*",
     "Abp.Tests": "1.0.0-*",
-    "Abp.TestBase": "1.2.0.0-*"
+    "Abp.TestBase": "1.2.1.0-*"
   },
 
   "frameworks": {
