@@ -1,3 +1,5 @@
+using System;
+using System.Data.Common;
 using Abp.Dependency;
 
 namespace Abp.EntityFramework
@@ -15,23 +17,29 @@ namespace Abp.EntityFramework
 
         public TDbContext Resolve<TDbContext>(string connectionString)
         {
-            var dbContextType = typeof(TDbContext);
+            var dbContextType = GetConcreteType<TDbContext>();
+            return (TDbContext) _iocResolver.Resolve(dbContextType, new
+            {
+                nameOrConnectionString = connectionString
+            });
+        }
 
-            if (!dbContextType.IsAbstract)
+        public TDbContext Resolve<TDbContext>(DbConnection existingConnection, bool contextOwnsConnection)
+        {
+            var dbContextType = GetConcreteType<TDbContext>();
+            return (TDbContext)_iocResolver.Resolve(dbContextType, new
             {
-                return _iocResolver.Resolve<TDbContext>(new
-                {
-                    nameOrConnectionString = connectionString
-                });
-            }
-            else
-            {
-                var concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
-                return (TDbContext)_iocResolver.Resolve(concreteType, new
-                {
-                    nameOrConnectionString = connectionString
-                });
-            }
+                existingConnection = existingConnection,
+                contextOwnsConnection = contextOwnsConnection
+            });
+        }
+
+        protected virtual Type GetConcreteType<TDbContext>()
+        {
+            var dbContextType = typeof(TDbContext);
+            return !dbContextType.IsAbstract
+                ? dbContextType
+                : _dbContextTypeMatcher.GetConcreteType(dbContextType);
         }
     }
 }
