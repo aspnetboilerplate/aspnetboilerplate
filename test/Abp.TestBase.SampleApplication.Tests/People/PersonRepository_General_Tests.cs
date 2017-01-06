@@ -61,7 +61,6 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 person.IsTransient().ShouldBeFalse();
             }
-
         }
     }
 }
