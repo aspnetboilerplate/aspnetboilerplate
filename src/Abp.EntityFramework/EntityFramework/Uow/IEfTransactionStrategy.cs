@@ -1,4 +1,3 @@
-using System;
 using System.Data.Entity;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -9,9 +8,10 @@ namespace Abp.EntityFramework.Uow
     {
         void InitOptions(UnitOfWorkOptions options);
 
-        void Commit();
+        DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
+            where TDbContext : DbContext;
 
-        void InitDbContext(DbContext dbContext, string connectionString);
+        void Commit();
 
         void Dispose(IIocResolver iocResolver);
     }

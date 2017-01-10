@@ -29,10 +29,14 @@ namespace Abp.EntityFramework.Uow
             CurrentTransaction?.Complete();
         }
 
-        public virtual void InitDbContext(DbContext dbContext, string connectionString)
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
+            where TDbContext : DbContext
         {
             EnsureCurrentTransactionInitialized();
+
+            var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
             DbContexts.Add(dbContext);
+            return dbContext;
         }
 
         private void EnsureCurrentTransactionInitialized()
