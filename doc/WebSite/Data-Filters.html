@@ -181,7 +181,11 @@ use <strong>CurrentUnitOfWork </strong>property as a shortcut if you class
 				<a href="Multi-Tenancy.html">multi tenancy document</a> for more 
 				information.</p>
 			</div>
-
+<h4>Disable Filters Globally</h4>
+			<p>If you need, you can disable pre-defined filters globally. For 
+			example, to disable soft delete filter globally, add this code to 
+			PreInitialize method of your module:</p>
+			<pre lang="cs">Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.SoftDelete, false);</pre>
 			<h3 id="DocEnableFilters">Enable Filters</h3>
 			<p>You can enable a filter in a unit of work using <strong>EnableFilter </strong>
 method, as similar to (and opposite of) DisableFilter. EnableFilter also returns disposable to 
