@@ -47,11 +47,18 @@ namespace Abp.AspNetCore
         {
             var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
             var partManager = IocManager.Resolve<ApplicationPartManager>();
+            var moduleManager = IocManager.Resolve<IAbpModuleManager>();
 
-            var assemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
-            foreach (var assembly in assemblies)
+            var controllerAssemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
+            foreach (var controllerAssembly in controllerAssemblies)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                partManager.ApplicationParts.Add(new AssemblyPart(controllerAssembly));
+            }
+
+            var plugInAssemblies = moduleManager.Modules.Where(m => m.IsLoadedAsPlugIn).Select(m => m.Assembly).Distinct();
+            foreach (var plugInAssembly in plugInAssemblies)
+            {
+                partManager.ApplicationParts.Add(new AssemblyPart(plugInAssembly));
             }
         }
 

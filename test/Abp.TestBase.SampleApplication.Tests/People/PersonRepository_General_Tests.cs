@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
@@ -62,7 +61,6 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 person.IsTransient().ShouldBeFalse();
             }
-
         }
     }
 }
