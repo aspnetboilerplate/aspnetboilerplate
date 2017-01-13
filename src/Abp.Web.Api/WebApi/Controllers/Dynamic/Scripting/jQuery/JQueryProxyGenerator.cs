@@ -33,7 +33,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
             //generate amd module definition
             if (_defineAmdModule)
             {
-                script.AppendLine("    if(define && typeof define === 'function' && define.amd){");
+                script.AppendLine("    if(typeof define === 'function' && define.amd){");
                 script.AppendLine("        define(function (require, exports, module) {");
                 script.AppendLine("            return {");
 
