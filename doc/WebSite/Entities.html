@@ -11,9 +11,10 @@
 
 		<div class="document-contents">
 
-			<p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". So, entities have Id's and stored in a database. 
-An entity is generally mapped to a table in the database.</p>
-			<h3 id="DocEntityClasses">Entity classes</h3>
+			<p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". 
+			So, entities have Id's and stored in a database. An entity is 
+			generally mapped to a table for relational databases.</p>
+			<h3 id="DocEntityClasses">Entity Classes</h3>
 			<p>In ASP.NET Boilerplate, Entities are derived from <strong>Entity </strong>
 class. See the sample below:</p>
 
@@ -54,7 +55,30 @@ type as Id, you should explicitly declare it as shown below:</p>
 			<p>Entity class overrides <strong>equality</strong> operator (==) to easily 
 check if two entities are equal (their Id is equal). It also defines the <strong>
 IsTransient()</strong> method to check if it has an Id or not.</p>
-			<h3 id="DocConventionalInterfaces">Conventional interfaces</h3>
+			<h3>AggregateRoot Class</h3>
+			<p>"<em>Aggregate is a pattern in Domain-Driven Design. A DDD 
+			aggregate is a cluster of domain objects that can be treated as a 
+			single unit. An example may be an order and its line-items, these 
+			will be separate objects, but it's useful to treat the order 
+			(together with its line items) as a single aggregate.</em>" (Martin 
+			Fowler - see
+			<a href="http://martinfowler.com/bliki/DDD_Aggregate.html" target="_blank">
+			full description</a>)</p>
+			<p>While ABP does not enforce you to use aggregates, you may want to 
+			create aggregates and aggregate roots in your application. ABP 
+			defines <strong>AggregateRoot</strong> class that extends Entity to 
+			create aggregate root entities for an aggregate.</p>
+			<h4>Domain Events</h4>
+			<p>AggregateRoot defines <a href="EventBus-Domain-Events.html">
+			<strong>DomainEvents</strong></a> collection to generate domain 
+			events by the aggregate root class. These events are automatically 
+			triggered just before the current <a href="Unit-Of-Work.html">unit 
+			of work</a> is completed. Actually, any entity can generate domain 
+			events by implementing <strong>IGeneratesDomainEvents</strong> 
+			interface, but it's common (best practice) to generate domain events 
+			in aggregate roots. That's why it's default for AggregateRoot but 
+			not for Entity class.</p>
+			<h3 id="DocConventionalInterfaces">Conventional Interfaces</h3>
 			<p>In many application, similar entity properties (and database table fields) 
 are used like CreationTime indicates that when this entity is created. ASP.NET 
 Boilerplate provides some useful interfaces to make this common properties 
@@ -117,7 +141,7 @@ instead of direcly implementing <strong>IAudited</strong>. AuditedEntity class h
 also a generic version for different type of Id properties.</p>
 			<p>Note: ASP.NET Boilerplate gets current user's Id from
 				<a href="/Pages/Documents/Abp-Session">ABP Session</a>.</p>
-			<h4 id="DocSoftDelete">Soft delete</h4>
+			<h4 id="DocSoftDelete">Soft Delete</h4>
 			<p>Soft delete is a commonly used pattern to mark an Entity as deleted instead 
 of actually deleting it from database. For instace, you may not want to hard 
 delete a User from database since it has many releations to other tables. 
@@ -149,12 +173,18 @@ since it inherits all:</p>
 {
 
 }</pre>
-			<p>&nbsp;As a shortcut, you can derive your entity from <strong>
+			<p>As a shortcut, you can derive your entity from <strong>
 FullAuditedEntity</strong> class that implements all.</p>
-			<p>NOTE: All audit interfaces and classes have a generic version for defining navigation property 
+			<ul>
+				<li>NOTE 1: All audit interfaces and classes have a generic version for defining navigation property 
 to your <strong>User</strong> entity (like ICreationAudited&lt;TUser&gt; and 
-FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).&nbsp;</p>
-			<h4 id="DocActivePassive">Active/Passive</h4>
+				FullAuditedEntity&lt;TPrimaryKey, TUser&gt;).</li>
+				<li>
+				<p>NOTE 2: Also, all of them has an <strong>AggregateRoot</strong> 
+				version, like AuditedAggregateRoot.</p>
+				</li>
+			</ul>
+			<h4 id="DocActivePassive">Active/Passive Entities</h4>
 			<p>Some entities need to be marked as Active or Passive. Then you may take 
 action upon active/passive state of the entity. You can implement <strong>
 IPassivable</strong> interface that is created for this reason. It defines
@@ -170,7 +200,7 @@ inserted, updated or deleted. Thus, you can register to these events and perform
 any logic you need. See Predefined Events section in
 				<a href="/Pages/Documents/EventBus-Domain-Events">event bus documentation</a> 
 for more information.</p>
-			<h3>IEntity interfaces</h3>
+			<h3>IEntity Interfaces</h3>
 			<p>Actually, <strong>Entity </strong>class implements <strong>IEntity </strong>interface (and <strong>Entity&lt;TPrimaryKey&gt;</strong> implements <strong>IEntity&lt;TPrimaryKey&gt;</strong>). 
 If you do not want to derive from Entity class, you can implement these 
 interfaces directly. There are also corresponding interfaces for other entity 

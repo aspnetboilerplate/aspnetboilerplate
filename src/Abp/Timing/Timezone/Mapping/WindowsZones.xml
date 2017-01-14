@@ -684,6 +684,23 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Kamchatka Standard Time" territory="001" type="Asia/Kamchatka"/>
       <mapZone other="Easter Island Standard Time" territory="001" type="Pacific/Easter"/>
       <mapZone other="Haiti Standard Time" territory="001" type="America/Port-au-Prince"/>
+      <mapZone other="Aleutian Standard Time" territory="001" type="America/Adak"/>
+      <mapZone other="Marquesas Standard Time" territory="001" type="Pacific/Marquesas"/>
+      <mapZone other="UTC-09" territory="001" type="Etc/GMT-9"/>
+      <mapZone other="UTC-08" territory="001" type="Etc/GMT-8"/>
+      <mapZone other="Cuba Standard Time" territory="001" type="America/Havana"/>
+      <mapZone other="Turks And Caicos Standard Time" territory="001" type="America/Halifax"/>
+      <mapZone other="Tocantins Standard Time" territory="001" type="America/Araguaina"/>
+      <mapZone other="Saint Pierre Standard Time" territory="001" type="America/Miquelon"/>
+      <mapZone other="West Bank Standard Time" territory="001" type="Asia/Hebron"/>
+      <mapZone other="W. Mongolia Standard Time" territory="001" type="Asia/Ulaanbaatar"/>
+      <mapZone other="Tomsk Standard Time" territory="001" type="Asia/Tomsk"/>
+      <mapZone other="Aus Central W. Standard Time" territory="001" type="Australia/Eucla"/>
+      <mapZone other="Lord Howe Standard Time" territory="001" type="Australia/Lord_Howe"/>
+      <mapZone other="Bougainville Standard Time" territory="001" type="Pacific/Bougainville"/>
+      <mapZone other="Norfolk Standard Time" territory="001" type="Pacific/Norfolk"/>
+      <mapZone other="Chatham Islands Standard Time" territory="001" type="Pacific/Chatham"/>
+      <mapZone other="Omsk Standard Time" territory="001" type="Asia/Omsk"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

@@ -18,7 +18,7 @@ namespace Abp.Notifications
         /// <param name="severity">Notification severity</param>
         /// <param name="userIds">
         /// Target user id(s). 
-        /// Used to send notification to specific user(s). 
+        /// Used to send notification to specific user(s) (without checking the subscription). 
         /// If this is null/empty, the notification is sent to subscribed users.
         /// </param>
         /// <param name="excludedUserIds">

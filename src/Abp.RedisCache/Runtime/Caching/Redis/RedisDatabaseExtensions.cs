@@ -12,12 +12,12 @@ namespace Abp.Runtime.Caching.Redis
         {
             if (database == null)
             {
-                throw new ArgumentException("Database cannot be null", "database");
+                throw new ArgumentException("Database cannot be null", nameof(database));
             }
 
             if (string.IsNullOrWhiteSpace(prefix))
             {
-                throw new ArgumentException("Prefix cannot be empty", "database");
+                throw new ArgumentException("Prefix cannot be empty", nameof(database));
             }
 
             database.ScriptEvaluate(@"
@@ -31,12 +31,12 @@ namespace Abp.Runtime.Caching.Redis
         {
             if (database == null)
             {
-                throw new ArgumentException("Database cannot be null", "database");
+                throw new ArgumentException("Database cannot be null", nameof(database));
             }
 
             if (string.IsNullOrWhiteSpace(prefix))
             {
-                throw new ArgumentException("Prefix cannot be empty", "database");
+                throw new ArgumentException("Prefix cannot be empty", nameof(database));
             }
 
             var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))", values: new RedisValue[] { prefix });

@@ -5,7 +5,7 @@
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 		<title>Application Services</title>
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
-	</head>
+		</head>
 
 	<body>
 		<div class="document-contents">
@@ -18,30 +18,30 @@
 	ideally layered application, presentation layer never directly works with 
 	domain objects.</p>
 			<h3 id="DocIApplicationServiceInterface">
-    IApplicationService interface</h3>
+    IApplicationService Interface</h3>
 			<p>
     In ASP.NET Boilerplate, an application service <strong>should</strong> implement 
 				<strong>IApplicationService</strong> interface. It's good to create an 
 				<strong>interface</strong> for each 
 	Application Service. So, we first define an interface for an application 
 	service as shown below:</p>
-			<pre lang="cs">public interface IPersonAppService : IApplicationService
+			<pre lang="cs">public interface IPersonAppService : <strong>IApplicationService</strong>
 {
-    void CreatePerson(CreatePersonInput input);
+    void CreatePerson(<strong>CreatePersonInput</strong> input);
 }</pre>
 			<p>
 				<strong>IPersonAppService</strong> has only one method. It's used by 
 	presentation layer to create a new person.<strong> CreatePersonInput</strong> 
 	is a DTO object as shown below:</p>
-			<pre lang="cd">public class CreatePersonInput : IInputDto
+			<pre lang="cd">public class CreatePersonInput
 {
-    [Required]
+    <strong>[Required]</strong>
     public string Name { get; set; }
 
     public string EmailAddress { get; set; }
 }</pre>
 			<p>Then we can implement the IPersonAppService:</p>
-			<pre lang="cs">public class PersonAppService : IPersonAppService
+			<pre lang="cs">public class <strong>PersonAppService</strong> : <strong>IPersonAppService</strong>
 {
     private readonly IRepository&lt;Person&gt; _personRepository;
 
@@ -72,21 +72,23 @@
 				<li>PersonAppService implements <strong>IApplicationService</strong> (since 
 	IPersonAppService extends IApplicationService), it's automatically 
 	registered to Dependency Injection system by ASP.NET Boilerplate and can be 
-	injected and used by other classes.</li>
+	injected and used by other classes. Naming convention is important here. See
+				<a href="Dependency-Injection.html">dependency injection</a> 
+				document for more.</li>
 				<li>
 					<strong>CreatePerson</strong> method gets <strong>CreatePersonInput</strong>. 
-	It's an input DTO and automatically validated by ASP.NET Boilerplate. See
+	It's an <strong>input DTO</strong> and automatically validated by ASP.NET Boilerplate. See
 					<a href="/Pages/Documents/Data-Transfer-Objects">DTO</a> and
 					<a href="/Pages/Documents/Validating-Data-Transfer-Objects">validation</a> 
 	documents for details.</li>
 			</ul>
-			<h4 id="DocAppServiceClass">ApplicationService class</h4>
-			<p>An application service should implement IApplicationService interface. Also,
+			<h3 id="DocAppServiceClass">ApplicationService Class</h3>
+			<p>An application service should implement IApplicationService interface 
+			as declared above. Also,
 				<strong>optionally</strong>, can be derived from <strong>ApplicationService</strong> 
 base class. Thus, IApplicationService is inherently implemented. Also, 
-ApplicationService class has some base functionality that makes easy to <strong>logging</strong> 
-and 
-				<strong>localization</strong>. It's suggested to create a special base class for your application 
+ApplicationService class has some base functionality that makes easy to <strong>logging,</strong> 
+				<strong>localization</strong> and so on... It's suggested to create a special base class for your application 
 services that extends ApplicationService class. Thus, you can add some common 
 functionality for all your application services. A sample application service 
 class is shown below:</p>
@@ -108,93 +110,221 @@ class is shown below:</p>
         //TODO: Add new task to database...
     }
 }</pre>
-			<p>You can have a base class which defines LocalizationSourceName in it's 
+			<p>You can have a base class which defines <strong>LocalizationSourceName</strong> in it's 
 constructor. Thus, you do not repeat it for all service classes. See
 				<a href="/Pages/Documents/Logging">logging</a> and
 				<a href="/Pages/Documents/Localization">localization</a> documents for more 
 informations on this topics.</p>
-			<h3 id="DocUsingUow">Unit of work</h3>
+			<h3>CrudAppService and AsyncCrudAppService Classes</h3>
+			<p>If you need to create an application service that will have
+			<strong>Create, Update, Delete, Get, GetAll</strong> methods for a
+			<strong>specific 
+			entity</strong>, you can inherit from <strong>CrudAppService</strong> (or
+			<strong>AsyncCrudAppService</strong> if you want to create async 
+			methods) class to create it easier. CrudAppService base class is
+			<strong>generic </strong>which gets related <strong>Entity </strong>
+			and <strong>DTO </strong>types as generic arguments and is <strong>
+			extensible</strong> which allows you to override functionality when 
+			you need to customize it.</p>
+			<h4>Simple CRUD Application Service Example</h4>
+			<p>Assume that we have a Task <a href="Entities.html">entity</a> defined below:</p>
+			<pre lang="cs">public class Task : Entity, IHasCreationTime
+{
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTime CreationTime { get; set; }
+
+    public TaskState State { get; set; }
+
+    public Person AssignedPerson { get; set; }
+    public Guid? AssignedPersonId { get; set; }
+
+    public Task()
+    {
+        CreationTime = Clock.Now;
+        State = TaskState.Open;
+    }
+}</pre>
+			<p>And we created a <a href="Data-Transfer-Objects.html">DTO</a> for 
+			this entity:</p>
+			<pre lang="cs"><strong>[AutoMap(typeof(Task))]</strong>
+public class TaskDto : EntityDto, IHasCreationTime
+{
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTime CreationTime { get; set; }
+
+    public TaskState State { get; set; }
+
+    public Guid? AssignedPersonId { get; set; }
+
+    public string AssignedPersonName { get; set; }
+}</pre>
+			<p>AutoMap attribute creates auto mapping configuration between 
+			entity and dto. Now, we can create an application service as shown below:</p>
+			<pre lang="cs">public class TaskAppService : <strong>AsyncCrudAppService&lt;Task, TaskDto&gt;</strong>
+{
+    public TaskAppService(<strong>IRepository&lt;Task&gt; repository</strong>) 
+        : base(repository)
+    {
+
+    }
+}</pre>
+			<p>We <a href="Dependency-Injection.html">injected</a> the
+			<a href="Repositories.html">repository</a> and passed it to the base 
+			class (We could inherit from CrudAppService if we want to create 
+			sync methods instead of async methods). <strong>That's all!</strong> TaskAppService 
+			now have simple CRUD methods. If you want to define an interface for 
+			the application service, you can create your interface as shown 
+			below:</p>
+			<pre lang="cs">public interface ITaskAppService : <strong>IAsyncCrudAppService&lt;TaskDto&gt;</strong>
+{
+        
+}</pre>
+			<p>Notice that <strong>IAsyncCrudAppService</strong> does not get 
+			the entity (Task) as generic argument. Because, entity is related to 
+			implementation and should not be included in public interface. Now, 
+			we can implement ITaskAppService interface for the TaskAppService 
+			class:</p>
+			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;, <strong>ITaskAppService</strong>
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository) 
+        : base(repository)
+    {
+
+    }
+}</pre>
+			<h4>Customize CRUD Application Services</h4>
+			<h5>Getting List</h5>
+			<p>Crud application service gets <strong>
+			PagedAndSortedResultRequestDto</strong> as argument 
+			for <strong>GetAll</strong> method as 
+			default, which provides optional sorting and paging parameters. But you may 
+			want to add another parameters for GetAll method. For example, you 
+			may want to add some <strong>custom filters</strong>. In that case, you can create a 
+			DTO for GetAll method. Example:</p>
+			<pre lang="cs">public class GetAllTasksInput : <strong>PagedAndSortedResultRequestDto</strong>
+{
+    public TaskState? State { get; set; }
+}</pre>
+			<p>We inherit from
+			<strong>PagedAndSortedResultRequestInput</strong> (which is <strong>not required</strong>, but wanted 
+			to use paging &amp; sorting parameters form the base class) and added an
+			<strong>optional State</strong> property to filter tasks by state. Now, we should 
+			change TaskAppService in order to apply the <strong>custom filter</strong>:</p>
+			<pre lang="cs">public class TaskAppService : <strong>AsyncCrudAppService&lt;Task, TaskDto, int, GetAllTasksInput&gt;</strong>
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository)
+        : base(repository)
+    {
+
+    }
+
+<strong>    protected override IQueryable&lt;Task&gt; CreateFilteredQuery(GetAllTasksInput input)
+    {
+        return base.CreateFilteredQuery(input)
+            .WhereIf(input.State.HasValue, t =&gt; t.State == input.State.Value);
+    }</strong>
+}</pre>
+			<p>First, we added <strong>GetAllTasksInput</strong> as 4th generic 
+			parameter to AsyncCrudAppService class (3rd one is PK type of the 
+			entity). Then overrided <strong>CreateFilteredQuery</strong> method 
+			to apply custom filters. This method is an extension point for 
+			AsyncCrudAppService class (WhereIf is an extension method of ABP to 
+			simplify conditional filtering. But actually what we do is to simply 
+			filter an IQueryable).</p>
+			<p>Note that: If you have created application service interface, you 
+			need to add same generic arguments to that interface too.</p>
+			<h5>Create and Update</h5>
+			<p>Notice that we are using same DTO (TaskDto) for 
+			getting, <strong>creating</strong> and <strong>updating</strong> tasks which may not be good for real 
+			life applications. So, we may want to <strong>customize create and update 
+			DTOs</strong>. Let's start by creating a <strong>CreateTaskInput</strong> class:</p>
+			<pre lang="cs"><strong>[AutoMapTo(typeof(Task))]</strong>
+public class CreateTaskInput
+{
+    [Required]
+    [MaxLength(Task.MaxTitleLength)]
+    public string Title { get; set; }
+
+    [MaxLength(Task.MaxDescriptionLength)]
+    public string Description { get; set; }
+
+    public Guid? AssignedPersonId { get; set; }
+}</pre>
+			<p>And create an <strong>UpdateTaskInput</strong> DTO:</p>
+			<pre lang="cs"><strong>[AutoMapTo(typeof(Task))]</strong>
+public class UpdateTaskInput : <strong>CreateTaskInput</strong>, <strong>IEntityDto</strong>
+{
+    <strong>public int Id { get; set; }
+</strong>
+    public TaskState State { get; set; }
+}</pre>
+			<p>I wanted to inherit from <strong>CreateTaskInput</strong> to 
+			include all properties for Update operation (but you may want 
+			different). Implementing <strong>IEntity</strong> (or 
+			IEntity&lt;PrimaryKey&gt; for different PK than int) is <strong>required</strong> 
+			here, because we need to know which entity is being updated. Lastly, 
+			I added an additional property, <strong>State</strong>, 
+			which is not in CreateTaskInput.</p>
+			<p>Now, we can use these DTO classes as generic arguments for 
+			AsyncCrudAppService class, as shown below:</p>
+			<pre lang="cs">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto, int, GetAllTasksInput<strong>, CreateTaskInput, UpdateTaskInput</strong>&gt;
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository)
+        : base(repository)
+    {
+
+    }
+
+    protected override IQueryable&lt;Task&gt; CreateFilteredQuery(GetAllTasksInput input)
+    {
+        return base.CreateFilteredQuery(input)
+            .WhereIf(input.State.HasValue, t =&gt; t.State == input.State.Value);
+    }
+}</pre>
+			<p>No need to an additional code change.</p>
+			<h5>Other Method Arguments</h5>
+			<p>AsyncCrudAppService can get 
+			more generic arguments if you want to customize input DTOs for 
+			<strong>Get</strong> 
+			and <strong>Delete</strong> methods. Also, all methods of the base class is virtual, so you 
+			can override them to customize the behaviour.</p>
+			<h4>CRUD Permissions</h4>
+			<p>You probably need to <a href="Authorization.html">authorize</a> 
+			your CRUD methods. There are pre-defined permission properties you 
+			can set: GetPermissionName, GetAllPermissionName, 
+			CreatePermissionName, UpdatePermissionName and DeletePermissionName. 
+			Base CRUD class automatically checks permissions if you set them. You can set it in the constructor as shown below:</p>
+			<pre lang="xml">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository) 
+        : base(repository)
+    {
+        <strong>CreatePermissionName = "MyTaskCreationPermission";
+</strong>    }
+}</pre>
+<p>Alternatively, you can override appropriate permission checker methods to 
+manually check permissions: CheckGetPermission(), CheckGetAllPermission(), 
+CheckCreatePermission(), CheckUpdatePermission(), CheckDeletePermission(). As 
+default, they all calls CheckPermission(...) method with related permission name 
+which simply calls IPermissionChecker.Authorize(...) method.</p>
+			<h3 id="DocUsingUow">Unit of Work</h3>
 			<p>An application service method is a <strong>
 					<a href="/Pages/Documents/Unit-Of-Work">unit of work</a>
 				</strong> by default in 
-ASP.NET Boilerplate.</p>
-			<h4 id="DocUowTransactions">For connection &amp; transaction management</h4>
-			<p>Say that we want to call two repository method in an application service 
-method those must be transactional. Example:</p>
-			<pre lang="cs">public void CreatePerson(CreatePersonInput input)
-{
-    var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };    
-    _personRepository.Insert(person);
-    _statisticsRepository.IncrementPeopleCount();
-}</pre>
-			<p>We inserted an item to People table, then incremented people count that is 
-stored in another table field. These methods are implemented in different 
-repositories but shares same connection and transaction. So, how?</p>
-
-			<p>A database connection is opened and a transaction is started at the beginning 
-of CreatePerson method by ASP.NET Boilerplate automatically. At the end of the 
-method, the transaction is commited if no exception occurs and the connection is 
-closed. Thus, all database operations in CreatePerson method is <strong>transactional</strong> 
-(<strong>atomic</strong>) and rolled back if any exception is thrown. Thus, two repository methods in 
-this example shares same connection and transaction.</p>
-			<p>When you call
-				<a href="/Pages/Documents/Repositories#DocGettingListOfEntities">
-					<strong>GetAll()</strong>
-				</a> 
-method of a repository, it returns an IQueryable&lt;T&gt;. Database connection should 
-be open after calling the repository method. This is because of deferred 
-execution of IQueryable&lt;T&gt; and LINQ. Database query is actually performed when you call 
-				<strong>ToList()</strong> method. See the example below:</p>
-			<pre lang="cs">public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
-{
-    //Get IQueryable&lt;Person&gt;
-    var query = _personRepository.GetAll();
-
-    //Add some filters if selected
-    if (!string.IsNullOrEmpty(input.SearchedName))
-    {
-        query = query.Where(person =&gt; person.Name.StartsWith(input.SearchedName));
-    }
-
-    if (input.IsActive.HasValue)
-    {
-        query = query.Where(person =&gt; person.IsActive == input.IsActive.Value);
-    }
-
-    //Get paged result list
-    var people = query.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
-
-    return new SearchPeopleOutput {People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(people)};
-}</pre>
-			<p>Since an application service method is a unit of work, database connection is 
-open during the method execution. If you use GetAll() in a class that is not an 
-application service, you should explicitly use
-				<a href="/Pages/Documents/Unit-Of-Work">unit of work</a>.</p>
-			<p>Note that I used AutoMapper library to convert List&lt;Person&gt; to 
-List&lt;PersonDto&gt;. See
-				<a href="/Pages/Documents/Data-Transfer-Objects#DocAutoMapping">DTO document</a> 
-for details.</p>
-			<h4 id="UowAutoSave">For automatically saving changes</h4>
-			<p>For a unit of work method, ASP.NET Boilerplate saves 
-all changes at the end of the method automatically. Assume that we need an 
-application service method to update name of a person:</p>
-			<pre lang="cs">public void UpdateName(UpdateNameInput input)
-{
-    var person = _personRepository.Get(input.PersonId);
-    person.Name = input.NewName;
-}</pre>
-			<p>That's all, name was changed! We did not even called _personRepository.Update 
-method. O/RM framework keep track of all changes of entities in a unit of work 
-and reflects changes to the database.</p>
-			<h4 id="DocUowMore">More</h4>
+ASP.NET Boilerplate. Thus, any application service method is transactional and 
+			automatically saves all database changes at the end of the method.&nbsp;</p>
 			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> documentation 
 for more.</p>
 
-			<h3 id="DocAppServiceLifecycle">Lifecycle of an application service</h3>
+			<h3 id="DocAppServiceLifecycle">Lifetime of an Application Service</h3>
 			<p>All application service instances are <strong>Transient</strong>. It means, they are 
-instantiated per usage. ASP.NET Boilerplate strongly uses Dependency Injection 
-technique. When an application service class needed to be injected, a new instance of the 
-class is created automatically by dependency injection container. See
+instantiated per usage. See
 				<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> 
 documentation for more information.</p>
 		</div>

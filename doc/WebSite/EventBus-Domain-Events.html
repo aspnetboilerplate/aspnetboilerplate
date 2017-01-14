@@ -17,38 +17,41 @@ standalone windows service. But, for a web application it's a bit problematic
 since objects are created in a web request and they are short-lived. It's hard 
 to register some class's events. Also, directly registering to another class's 
 event makes classes tightly coupled.</p>
-			<p>Domain events are used to decouple and re-use business logic in an 
+			<p>Domain events can be used to decouple business logic and react to 
+			important domain changes in an 
 application.</p>
 			<h3 id="DocEventBus">EventBus</h3>
-			<p>EventBus is a singleton object that is shared by all other classes to trigger and 
+			<p>EventBus is a <strong>singleton</strong> object that is shared by all other classes to trigger and 
 handle events. To use the event bus, you should get a reference to it. You can 
 do it in two way.</p>
-			<h4 id="DocGetDefaultEventBus">Getting The Default Instance</h4>
-			<p>You can directly use <strong>EventBus.Default</strong>. It's the global event 
-bus and can be used as shown below:</p>
-			<pre lang="cs">EventBus.Default.Trigger(...); //trigger an event</pre>
 			<h4 id="DocInjectEventBus">Injecting IEventBus</h4>
-			<p>Instead of directly using EventBus.Default, you can use 
+			<p>You can use 
 				<a href="/Pages/Documents/Dependency-Injection">dependency injection</a> to get 
-a reference to <strong>IEventBus</strong>. 
-This is better for unit tests. Here, we use property injection pattern:</p>
+a reference to <strong>IEventBus</strong>. Here, we used property injection pattern:</p>
 			<pre lang="cs">public class TaskAppService : ApplicationService
 {
-    public IEventBus EventBus { get; set; }
+    <strong>public IEventBus EventBus { get; set; }</strong>
 
     public TaskAppService()
     {
-        EventBus = NullEventBus.Instance;
+        <strong>EventBus = NullEventBus.Instance;</strong>
     }
 }</pre>
 			<p>Property injection is more proper than constructor injection to inject the 
 event bus. Thus, your class can work without event bus. NullEventBus implements 
 				<a href="http://en.wikipedia.org/wiki/Null_Object_pattern" target="_blank">null object pattern</a>. When you call it's methods, it does nothing at all.</p>
+			<h4 id="DocGetDefaultEventBus">Getting The Default Instance</h4>
+			<p>If you can not inject it, you can directly use <strong>EventBus.Default</strong>. It's the global event 
+bus and can be used as shown below:</p>
+			<pre lang="cs"><strong>EventBus.Default</strong>.Trigger(...); //trigger an event</pre>
+			<p>It's <strong>not suggested</strong> to directly use 
+			EventBus.Default wherever possible since it makes unit testing 
+			harder.</p>
 			<h3 id="DocDefineEvents">Defining Events</h3>
 			<p>Before trigger an event, you should define the event first. An event is 
 represented by a class that is derived from <strong>EventData</strong>. Assume 
 that we want to trigger an event when a task is completed:</p>
-			<pre lang="cs">public class TaskCompletedEventData : EventData
+			<pre lang="cs">public class TaskCompletedEventData : <strong>EventData</strong>
 {
     public int TaskId { get; set; }
 }</pre>
@@ -63,7 +66,7 @@ triggers this event when it automatically handles any exception. This is
 especially useful if you want to get more information about exceptions (even 
 ASP.NET Boilerplate automatically logs all exceptions). You can register to this 
 event to be informed when an exception occurs.</p>
-			<p>Entity Changes</p>
+			<h5>Entity Changes</h5>
 			<p>There are also generic event data classes for entity changes: <strong>
 EntityCreatingEventData&lt;TEntity&gt;, 
 EntityCreatedEventData&lt;TEntity&gt;</strong>, <strong>
@@ -74,7 +77,7 @@ EntityDeletedEventData&lt;TEntity&gt;</strong>. Also, there are <strong>
 EntityChangingEventData&lt;TEntity&gt;</strong> and <strong>
 EntityChangedEventData&lt;TEntity&gt;</strong>. A change can be insert, update 
 or delete.</p>
-			<p>'ing' events (ex: EntityUpdating) are triggered befor saving changes. So, 
+			<p>'ing' events (ex: EntityUpdating) are triggered before saving changes. So, 
 	you can rollback the <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
 	to prevent the operation by throwing exceptions in these events. 'ed' events 
 	(ex: EntityUpdated) are triggered after saving changes and no chance to 
@@ -86,12 +89,12 @@ If you have a Person entity, can register to EntityCreatedEventData&lt;Person&gt
 be informed when a new Person created and inserted to database. These events 
 also supports inheritance. If Student class derived from Person class and you 
 registered to EntityCreatedEventData&lt;Person&gt;, you will be informed when a Person 
-or Student inserted.</p>
+or Student is inserted.</p>
 			<h3 id="DocTriggerEvents">Triggering Events</h3>
 			<p>Triggering an event is simple:</p>
 			<pre lang="cs">public class TaskAppService : ApplicationService
 {
-    public IEventBus EventBus { get; set; }
+    <strong>public IEventBus EventBus { get; set; }</strong>
 
     public TaskAppService()
     {
@@ -101,26 +104,32 @@ or Student inserted.</p>
     public void CompleteTask(CompleteTaskInput input)
     {
         //TODO: complete the task on database...
-        EventBus.Trigger(new TaskCompletedEventData {TaskId = 42});
+        <strong>EventBus.Trigger(new TaskCompletedEventData {TaskId = 42});</strong>
     }
 }</pre>
 			<p>There are some overloads of the trigger method:</p>
 			<pre lang="cs">EventBus.Trigger&lt;TaskCompletedEventData&gt;(new TaskCompletedEventData { TaskId = 42 }); //Explicitly declare generic argument
 EventBus.Trigger(this, new TaskCompletedEventData { TaskId = 42 }); //Set 'event source' as 'this'
-EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)
-			</pre>
+EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)</pre>
+
+<p>Another way of triggering events can be using DomainEvents collection of 
+AggregateRoot class (see related section in the <a href="Entities.html">Entity 
+documentation</a>).</p>
+
 			<h3 id="DocHandleEvents">Handling Events</h3>
 
 			<p>To handle an event, you should implement <strong>IEventHandler&lt;T&gt;</strong> 
 interface as shown below:</p>
-			<pre lang="cs">public class ActivityWriter : IEventHandler&lt;TaskCompletedEventData&gt;, ITransientDependency
+			<pre lang="cs">public class ActivityWriter : <strong>IEventHandler&lt;TaskCompletedEventData&gt;</strong>, ITransientDependency
 {
-    public void HandleEvent(TaskCompletedEventData eventData)
+    <strong>public void HandleEvent(TaskCompletedEventData eventData)</strong>
     {
         WriteActivity(&quot;A task is completed by id = &quot; + eventData.TaskId);
     }
 }</pre>
-			<p>EventBus is integrated with dependency injection system. As we implemented 
+			<p>IEventHandler defines HandleEvent method and we implemented it as 
+			shown above.</p>
+			<p>EventBus is integrated to dependency injection system. As we implemented 
 ITransientDependency above, when a TaskCompleted event occured, it creates a new 
 instance of ActivityWriter class and calls it's HandleEvent method, then 
 disposes it. See
@@ -130,25 +139,25 @@ more.</p>
 			<p>Eventbus supports <strong>inheritance</strong> of events. For example, you can create a 
 				<strong>TaskEventData</strong> and two derived classes: <strong>TaskCompletedEventData</strong> and
 				<strong>TaskCreatedEventData</strong>:</p>
-			<pre lang="cs">public class TaskEventData : EventData
+			<pre lang="cs">public class TaskEventData : <strong>EventData</strong>
 {
     public Task Task { get; set; }
 }
 
-public class TaskCreatedEventData : TaskEventData
+public class TaskCreatedEventData : <strong>TaskEventData</strong>
 {
     public User CreatorUser { get; set; }
 }
 
-public class TaskCompletedEventData : TaskEventData
+public class TaskCompletedEventData : <strong>TaskEventData</strong>
 {
     public User CompletorUser { get; set; }
 }</pre>
 			<p>Then you can implement <strong>IEventHandler&lt;TaskEventData&gt;</strong> to 
 handle both of the events:</p>
-			<pre lang="cs">public class ActivityWriter : IEventHandler&lt;TaskEventData&gt;, ITransientDependency
+			<pre lang="cs">public class ActivityWriter : <strong>IEventHandler&lt;TaskEventData&gt;</strong>, ITransientDependency
 {
-    public void HandleEvent(TaskEventData eventData)
+    <strong>public void HandleEvent(TaskEventData eventData)</strong>
     {
         if (eventData is TaskCreatedEventData)
         {
@@ -160,22 +169,28 @@ handle both of the events:</p>
         }
     }
 }</pre>
-			<p>Surely, you can implement IEventHandler&lt;EventData&gt; to handle all of events 
-if you want.</p>
+			<p>That also means you can implement IEventHandler&lt;EventData&gt; to handle all events 
+			in the application. You probably don't want that, but it's possible.</p>
+			<h4>Handler Exceptions</h4>
+			<p>EventBus <strong>triggers all handlers</strong> even one/some of 
+			them throws exception. If only one of them throws exception, then 
+			it's directly thrown by the Trigger method. If more than one handler 
+			throws exception, EventBus throws a single <strong>
+			AggregateException</strong> for all of them.</p>
 			<h4 id="DocHandleMultipleEvents">Handling Multiple Events</h4>
-			<p>You can handle multiple events in a single handler. In this time, you should 
+			<p>You can handle <strong>multiple events</strong> in a single handler. In this time, you should 
 implement IEventHandler&lt;T&gt; for each event. Example:</p>
 			<pre lang="cs">public class ActivityWriter : 
-    IEventHandler&lt;TaskCompletedEventData&gt;, 
-    IEventHandler&lt;TaskCreatedEventData&gt;, 
+    <strong>IEventHandler&lt;TaskCompletedEventData&gt;,</strong> 
+    <strong>IEventHandler&lt;TaskCreatedEventData&gt;, </strong>
     ITransientDependency
 {
-    public void HandleEvent(TaskCompletedEventData eventData)
+    <strong>public void HandleEvent(TaskCompletedEventData eventData)</strong>
     {
         //TODO: handle the event...
     }
 
-    public void HandleEvent(TaskCreatedEventData eventData)
+    <strong>public void HandleEvent(TaskCreatedEventData eventData)</strong>
     {
         //TODO: handle the event...
     }
@@ -183,13 +198,16 @@ implement IEventHandler&lt;T&gt; for each event. Example:</p>
 			<h3 id="DocHandlerRegistration">Registration Of Handlers</h3>
 			<p>We must register the handler to the event bus in order to handle events.</p>
 			<h4 id="DocAutoRegister">Automatically</h4>
-			<p>ASP.NET Boilerplate scans all classes those implement IEventHandler and 
+			<p>ASP.NET Boilerplate finds all classes those implement <strong>IEventHandler</strong> 
+			and registered to <strong>dependency injection</strong> (for 
+			example, by implementing ITransientDependency as the samples above). 
+			Then it 
 registers them to the eventbus <strong>automatically</strong>. When an event 
 occures, it uses dependency injection to get a reference to the handler and 
 releases the handler after handling the event. This is the <strong>suggested</strong> 
 way of using event bus in ASP.NET Boilerplate. </p>
 			<h4 id="DocManualRegister">Manually</h4>
-			<p>It is also possible to manually register to events but use it with caution. In a web application, event registration should be done at application start. It's not a good approach to register to an event in a web request since registered classes remain registered after request completion and keep re-registering for each request. This may cause problems for your application since registered class can be called multiple times. Also keep in mind that manual registration does not use dependency injection system.</p>
+			<p>It is also possible to manually register to events but use it with caution. In a web application, event registration should be done at application start. It's not a good approach to register to an event in a web request since registered classes remain registered after request completion and re-registering for each request. This may cause problems for your application since registered class can be called multiple times. Also keep in mind that manual registration does not use dependency injection system.</p>
 			<p>There are some overloads of register method of the event bus. The simplest 
 one waits a delegate (or a lambda):</p>
 			<pre lang="cs">EventBus.Register&lt;TaskCompletedEventData&gt;(eventData =&gt;
@@ -200,15 +218,15 @@ one waits a delegate (or a lambda):</p>
 			<p>Thus, then a 'task completed' event occurs, this lambda method is called. 
 Second one waits an object that implements IEventHandler&lt;T&gt;:</p>
 			<pre lang="cs">EventBus.Register&lt;TaskCompletedEventData&gt;(new ActivityWriter());</pre>
-			<p>Same instance ıf ActivityWriter is called for events. This method has also a 
+			<p>Same instance of ActivityWriter is called for events. This method has also a 
 non-generic overload. Another overload 
 accepts two generic arguments:</p>
 			<pre lang="cs">EventBus.Register&lt;TaskCompletedEventData, ActivityWriter&gt;();</pre>
-			<p>In this time, event bus created a new ActivityWriter for each event. It calls 
+			<p>In this time, event bus creates a new ActivityWriter for each event. It calls 
 ActivityWriter.Dispose method if it's
 				<a href="http://msdn.microsoft.com/en-us/library/system.idisposable.aspx" target="_blank">
 disposable</a>.</p>
-			<p>Lastly, you can register a <strong>event handler factory</strong> to handle 
+			<p>Lastly, you can register an <strong>event handler factory</strong> to handle 
 creation of handlers. A handler factory has two methods: <strong>GetHandler</strong> and 
 				<strong>ReleaseHandler</strong>. Example:</p>
 			<pre lang="cs">public class ActivityWriterFactory : IEventHandlerFactory
@@ -225,9 +243,9 @@ creation of handlers. A handler factory has two methods: <strong>GetHandler</str
 }</pre>
 			<p>There is also a special factory class, the <strong>IocHandlerFactory</strong>, 
 that can be used to use dependency injection system to create/release handlers. 
-ASP.NET Boilerplate also uses this class in automatic registration mode. So, if 
+ASP.NET Boilerplate also uses this class in automatic registration. So, if 
 you want to use dependency injection system, directly use automatic 
-registration.</p>
+registration defined before.</p>
 			<h3 id="DocUnregister">Unregistration</h3>
 			<p>When you <strong>manually</strong> register to event bus, you may want to 
 				<strong>unregister</strong> to the event later. Simplest way of unregistering an event is 

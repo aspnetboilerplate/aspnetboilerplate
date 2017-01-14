@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Extensions;
 
@@ -10,9 +7,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     public class TypeScriptDefinitionGenerator : ITransientDependency
     {
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
+
+        public TypeScriptDefinitionGenerator(DynamicApiControllerManager dynamicApiControllerManager)
+        {
+            _dynamicApiControllerManager = dynamicApiControllerManager;
+        }
+
         public string GetScript()
         {
-            var dynamicControllers = DynamicApiControllerManager.GetAll();
+            var dynamicControllers = _dynamicApiControllerManager.GetAll();
             
             StringBuilder script = new StringBuilder();
             if (dynamicControllers == null || dynamicControllers.Count == 0)

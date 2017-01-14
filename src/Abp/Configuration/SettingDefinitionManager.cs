@@ -27,14 +27,16 @@ namespace Abp.Configuration
 
         public void Initialize()
         {
-            var context = new SettingDefinitionProviderContext();
+            var context = new SettingDefinitionProviderContext(this);
 
             foreach (var providerType in _settingsConfiguration.Providers)
             {
-                var provider = CreateProvider(providerType);
-                foreach (var settings in provider.GetSettingDefinitions(context))
+                using (var provider = CreateProvider(providerType))
                 {
-                    _settings[settings.Name] = settings;
+                    foreach (var settings in provider.Object.GetSettingDefinitions(context))
+                    {
+                        _settings[settings.Name] = settings;
+                    }
                 }
             }
         }
@@ -55,14 +57,10 @@ namespace Abp.Configuration
             return _settings.Values.ToImmutableList();
         }
 
-        private SettingProvider CreateProvider(Type providerType)
+        private IDisposableDependencyObjectWrapper<SettingProvider> CreateProvider(Type providerType)
         {
-            if (!_iocManager.IsRegistered(providerType))
-            {
-                _iocManager.Register(providerType);
-            }
-
-            return (SettingProvider)_iocManager.Resolve(providerType);
+            _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
+            return _iocManager.ResolveAsDisposable<SettingProvider>(providerType);
         }
     }
 }

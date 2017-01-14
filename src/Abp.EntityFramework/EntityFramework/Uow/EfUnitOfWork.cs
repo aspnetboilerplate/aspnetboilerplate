@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -8,10 +8,9 @@ using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
+using Abp.Extensions;
 using Abp.MultiTenancy;
-using Abp.Reflection;
 using Castle.Core.Internal;
-using EntityFramework.DynamicFilters;
 
 namespace Abp.EntityFramework.Uow
 {
@@ -20,25 +19,34 @@ namespace Abp.EntityFramework.Uow
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
+        protected IDictionary<string, DbContext> ActiveDbContexts { get; }
+        protected IIocResolver IocResolver { get; }
 
-        protected IIocResolver IocResolver { get; private set; }
-
-        protected TransactionScope CurrentTransaction;
         private readonly IDbContextResolver _dbContextResolver;
+        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
+        private readonly IEfTransactionStrategy _transactionStrategy;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
         public EfUnitOfWork(
-            IIocResolver iocResolver, 
-            IConnectionStringResolver connectionStringResolver, 
-            IDbContextResolver dbContextResolver, 
-            IUnitOfWorkDefaultOptions defaultOptions)
-            : base(connectionStringResolver, defaultOptions)
+            IIocResolver iocResolver,
+            IConnectionStringResolver connectionStringResolver,
+            IDbContextResolver dbContextResolver,
+            IEfUnitOfWorkFilterExecuter filterExecuter,
+            IUnitOfWorkDefaultOptions defaultOptions,
+            IDbContextTypeMatcher dbContextTypeMatcher,
+            IEfTransactionStrategy transactionStrategy)
+            : base(
+                  connectionStringResolver,
+                  defaultOptions,
+                  filterExecuter)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
+            _dbContextTypeMatcher = dbContextTypeMatcher;
+            _transactionStrategy = transactionStrategy;
+
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
 
@@ -46,21 +54,7 @@ namespace Abp.EntityFramework.Uow
         {
             if (Options.IsTransactional == true)
             {
-                var transactionOptions = new TransactionOptions
-                {
-                    IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
-                };
-
-                if (Options.Timeout.HasValue)
-                {
-                    transactionOptions.Timeout = Options.Timeout.Value;
-                }
-
-                CurrentTransaction = new TransactionScope(
-                    Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
-                    transactionOptions,
-                    Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
-                    );
+                _transactionStrategy.InitOptions(Options);
             }
         }
 
@@ -77,12 +71,18 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
+        public IReadOnlyList<DbContext> GetAllActiveDbContexts()
+        {
+            return ActiveDbContexts.Values.ToImmutableList();
+        }
+
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (CurrentTransaction != null)
+
+            if (Options.IsTransactional == true)
             {
-                CurrentTransaction.Complete();
+                _transactionStrategy.Commit();
             }
 
             DisposeUow();
@@ -91,85 +91,46 @@ namespace Abp.EntityFramework.Uow
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            if (CurrentTransaction != null)
+
+            if (Options.IsTransactional == true)
             {
-                CurrentTransaction.Complete();
+                _transactionStrategy.Commit();
             }
 
             DisposeUow();
         }
-
-        protected override void ApplyDisableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.DisableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyEnableFilter(string filterName)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                activeDbContext.EnableFilter(filterName);
-            }
-        }
-
-        protected override void ApplyFilterParameterValue(string filterName, string parameterName, object value)
-        {
-            foreach (var activeDbContext in ActiveDbContexts.Values)
-            {
-                if (TypeHelper.IsFunc<object>(value))
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
-                }
-                else
-                {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, value);
-                }
-            }
-        }
-
+        
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
+            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
-            var dbContextKey = typeof (TDbContext).FullName + "#" + connectionString;
+            var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
-
-                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
-
-                foreach (var filter in Filters)
+                if (Options.IsTransactional == true)
                 {
-                    if (filter.IsEnabled)
-                    {
-                        dbContext.EnableFilter(filter.FilterName);
-                    }
-                    else
-                    {
-                        dbContext.DisableFilter(filter.FilterName);
-                    }
-
-                    foreach (var filterParameter in filter.FilterParameters)
-                    {
-                        if (TypeHelper.IsFunc<object>(filterParameter.Value))
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
-                        }
-                        else
-                        {
-                            dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
-                        }
-                    }
+                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+                }
+                else
+                {
+                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
                 }
 
+                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                {
+                    ObjectContext_ObjectMaterialized(dbContext, args);
+                };
+
+                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
+                
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
@@ -178,14 +139,19 @@ namespace Abp.EntityFramework.Uow
 
         protected override void DisposeUow()
         {
-            ActiveDbContexts.Values.ForEach(Release);
-            ActiveDbContexts.Clear();
-
-            if (CurrentTransaction != null)
+            if (Options.IsTransactional == true)
             {
-                CurrentTransaction.Dispose();
-                CurrentTransaction = null;
+                _transactionStrategy.Dispose(IocResolver);
             }
+            else
+            {
+                foreach (var activeDbContext in ActiveDbContexts.Values)
+                {
+                    Release(activeDbContext);
+                }
+            }
+
+            ActiveDbContexts.Clear();
         }
 
         protected virtual void SaveChangesInDbContext(DbContext dbContext)
@@ -197,17 +163,24 @@ namespace Abp.EntityFramework.Uow
         {
             await dbContext.SaveChangesAsync();
         }
-        
+
         protected virtual void Release(DbContext dbContext)
         {
             dbContext.Dispose();
             IocResolver.Release(dbContext);
         }
 
-        private static void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
         {
             var entityType = ObjectContext.GetObjectType(e.Entity.GetType());
-            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity,entityType);
+
+            dbContext.Configuration.AutoDetectChangesEnabled = false;
+            var previousState = dbContext.Entry(e.Entity).State;
+
+            DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(e.Entity, entityType);
+
+            dbContext.Entry(e.Entity).State = previousState;
+            dbContext.Configuration.AutoDetectChangesEnabled = true;
         }
     }
 }

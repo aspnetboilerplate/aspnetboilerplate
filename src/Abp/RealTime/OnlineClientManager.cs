@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.Extensions;
+using JetBrains.Annotations;
 
 namespace Abp.RealTime
 {
@@ -12,49 +15,96 @@ namespace Abp.RealTime
     /// </summary>
     public class OnlineClientManager : IOnlineClientManager, ISingletonDependency
     {
+        public event EventHandler<OnlineClientEventArgs> ClientConnected;
+        public event EventHandler<OnlineClientEventArgs> ClientDisconnected;
+        public event EventHandler<OnlineUserEventArgs> UserConnected;
+        public event EventHandler<OnlineUserEventArgs> UserDisconnected;
+
         /// <summary>
         /// Online clients.
         /// </summary>
-        private readonly ConcurrentDictionary<string, IOnlineClient> _clients;
+        protected ConcurrentDictionary<string, IOnlineClient> Clients { get; }
+
+        protected readonly object SyncObj = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
         /// </summary>
         public OnlineClientManager()
         {
-            _clients = new ConcurrentDictionary<string, IOnlineClient>();
+            Clients = new ConcurrentDictionary<string, IOnlineClient>();
         }
 
-        public void Add(IOnlineClient client)
+        public virtual void Add(IOnlineClient client)
         {
-            _clients[client.ConnectionId] = client;
+            lock (SyncObj)
+            {
+                var userWasAlreadyOnline = false;
+                var user = client.ToUserIdentifierOrNull();
+
+                if (user != null)
+                {
+                    userWasAlreadyOnline = this.IsOnline(user);
+                }
+
+                Clients[client.ConnectionId] = client;
+
+                ClientConnected.InvokeSafely(this, new OnlineClientEventArgs(client));
+
+                if (user != null && !userWasAlreadyOnline)
+                {
+                    UserConnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
+                }
+            }
         }
 
-        public bool Remove(IOnlineClient client)
+        public virtual bool Remove(string connectionId)
         {
-            return Remove(client.ConnectionId);
+            lock (SyncObj)
+            {
+                IOnlineClient client;
+                var isRemoved = Clients.TryRemove(connectionId, out client);
+
+                if (isRemoved)
+                {
+                    var user = client.ToUserIdentifierOrNull();
+
+                    if (user != null && !this.IsOnline(user))
+                    {
+                        UserDisconnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
+                    }
+
+                    ClientDisconnected.InvokeSafely(this, new OnlineClientEventArgs(client));
+                }
+
+                return isRemoved;
+            }
         }
 
-        public bool Remove(string connectionId)
+        public virtual IOnlineClient GetByConnectionIdOrNull(string connectionId)
         {
-            IOnlineClient client;
-            return _clients.TryRemove(connectionId, out client);
+            lock (SyncObj)
+            {
+                return Clients.GetOrDefault(connectionId);
+            }
+        }
+        
+        public virtual IReadOnlyList<IOnlineClient> GetAllClients()
+        {
+            lock (SyncObj)
+            {
+                return Clients.Values.ToImmutableList();
+            }
         }
 
-        public IOnlineClient GetByConnectionIdOrNull(string connectionId)
+        [NotNull]
+        public virtual IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user)
         {
-            return _clients.GetOrDefault(connectionId);
-        }
+            Check.NotNull(user, nameof(user));
 
-        public IOnlineClient GetByUserIdOrNull(IUserIdentifier user)
-        {
-            //TODO: We can create a dictionary for a faster lookup.
-            return GetAllClients().FirstOrDefault(c => c.UserId == user.UserId && c.TenantId == user.TenantId);
-        }
-
-        public IReadOnlyList<IOnlineClient> GetAllClients()
-        {
-            return _clients.Values.ToImmutableList();
+            return GetAllClients()
+                 .Where(c => (c.UserId == user.UserId && c.TenantId == user.TenantId))
+                 .ToImmutableList();
         }
     }
 }

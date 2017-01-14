@@ -25,7 +25,7 @@ namespace Abp.Configuration
         public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
             var value = ConfigurationManager.AppSettings[name];
-            
+
             if (value == null)
             {
                 return Task.FromResult<SettingInfo>(null);
@@ -33,24 +33,32 @@ namespace Abp.Configuration
 
             return Task.FromResult(new SettingInfo(tenantId, userId, name, value));
         }
-
+#pragma warning disable 1998
         /// <inheritdoc/>
         public async Task DeleteAsync(SettingInfo setting)
         {
+            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support DeleteAsync.");
         }
+        #pragma warning restore 1998
 
+        #pragma warning disable 1998
         /// <inheritdoc/>
         public async Task CreateAsync(SettingInfo setting)
         {
+            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support CreateAsync.");
         }
+        #pragma warning restore 1998
 
+        #pragma warning disable 1998
         /// <inheritdoc/>
         public async Task UpdateAsync(SettingInfo setting)
         {
+            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support UpdateAsync.");
         }
+        #pragma warning restore 1998
 
         /// <inheritdoc/>
         public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)

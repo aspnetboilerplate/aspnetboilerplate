@@ -1,13 +1,12 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.EntityFramework.Extensions;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 
 namespace Abp.EntityFramework.Repositories
 {
-    internal class EntityFrameworkGenericRepositoryRegistrar : ITransientDependency
+    public class EntityFrameworkGenericRepositoryRegistrar : IEntityFrameworkGenericRepositoryRegistrar, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
@@ -19,7 +18,7 @@ namespace Abp.EntityFramework.Repositories
         public void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
             var autoRepositoryAttr = dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
-                                     AutoRepositoryTypesAttribute.Default;
+                                     EfAutoRepositoryTypes.Default;
 
             foreach (var entityTypeInfo in DbContextHelper.GetEntityTypeInfos(dbContextType))
             {

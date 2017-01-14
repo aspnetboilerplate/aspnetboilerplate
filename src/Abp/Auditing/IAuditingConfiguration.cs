@@ -1,4 +1,7 @@
-﻿namespace Abp.Auditing
+﻿using System;
+using System.Collections.Generic;
+
+namespace Abp.Auditing
 {
     /// <summary>
     /// Used to configure auditing.
@@ -18,13 +21,13 @@
         bool IsEnabledForAnonymousUsers { get; set; }
 
         /// <summary>
-        /// Used to configure auditing for MVC Controllers.
-        /// </summary>
-        IMvcControllersAuditingConfiguration MvcControllers { get; }
-
-        /// <summary>
         /// List of selectors to select classes/interfaces which should be audited as default.
         /// </summary>
         IAuditingSelectorList Selectors { get; }
+
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        List<Type> IgnoredTypes { get; }
     }
 }

@@ -11,5 +11,10 @@
     <text name="DefaultFromSenderEmailAddress">默认发件人邮箱地址</text>
     <text name="DefaultFromSenderDisplayName">默认发件人名字</text>
     <text name="DefaultLanguage">预设语言</text>
+    <text name="ReceiveNotifications">接收通知</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">当前用户没有登录到系统！</text>
+    <text name="TimeZone">时区</text>
+    <text name="AllOfThesePermissionsMustBeGranted">您没有权限进行此操作,您需要以下权限: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">您没有权限进行此操作,您至少需要下列权限的其中一项: {0}</text>
   </texts>
 </localizationDictionary>

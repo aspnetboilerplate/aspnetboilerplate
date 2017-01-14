@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -33,12 +32,6 @@ namespace Abp.Application.Navigation
             AbpSession = NullAbpSession.Instance;
         }
 
-        [Obsolete("Use GetMenuAsync(UserIdentifier) instead.")]
-        public Task<UserMenu> GetMenuAsync(string menuName, long? userId, int? tenantId = null)
-        {
-            return GetMenuAsync(menuName, GetNormalizedUserIdentifier(tenantId, userId));
-        }
-
         public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
@@ -50,12 +43,6 @@ namespace Abp.Application.Navigation
             var userMenu = new UserMenu(menuDefinition, _localizationContext);
             await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
             return userMenu;
-        }
-
-        [Obsolete("Use GetMenusAsync(UserIdentifier) instead.")]
-        public Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId, int? tenantId = null)
-        {
-            return GetMenusAsync(GetNormalizedUserIdentifier(tenantId, userId));
         }
 
         public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(UserIdentifier user)
@@ -109,30 +96,6 @@ namespace Abp.Application.Navigation
             }
 
             return addedMenuItemCount;
-        }
-
-        private UserIdentifier GetNormalizedUserIdentifier(int? tenantId, long? userId)
-        {
-            if (userId == null)
-            {
-                //No identifier
-                return null;
-            }
-
-            if (tenantId != null)
-            {
-                //known tenant id
-                return new UserIdentifier(tenantId, userId.Value);
-            }
-
-            if (userId == AbpSession.UserId)
-            {
-                //normalized tenant id
-                return new UserIdentifier(AbpSession.TenantId, userId.Value);
-            }
-
-            //assumed as host user
-            return new UserIdentifier(null, userId.Value);
         }
     }
 }

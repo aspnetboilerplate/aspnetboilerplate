@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lv">
+  <texts>
+    <text name="InternalServerError" value="Jūsu pieprasījuma laikā radās iekšēja kļūda!" />
+    <text name="ValidationError" value="Jūsu pieprasījums nav derīgs!" />
+    <text name="AreYouSure" value="Vai jūs esat pārliecināts?" />
+    <text name="Cancel" value="Atsaukt" />
+    <text name="Yes" value="Jā" />
+    <text name="ValidationNarrativeTitle" value="Validēšanas laikā ir konstatētas šādas kļūdas." />
+  </texts>
+</localizationDictionary>

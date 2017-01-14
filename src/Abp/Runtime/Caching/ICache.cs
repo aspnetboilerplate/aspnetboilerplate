@@ -15,9 +15,16 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Default sliding expire time of cache items.
-        /// Default value: 60 minutes. Can be changed by configuration.
+        /// Default value: 60 minutes (1 hour).
+        /// Can be changed by configuration.
         /// </summary>
         TimeSpan DefaultSlidingExpireTime { get; set; }
+
+        /// <summary>
+        /// Default absolute expire time of cache items.
+        /// Default value: null (not used).
+        /// </summary>
+        TimeSpan? DefaultAbsoluteExpireTime { get; set; }
 
         /// <summary>
         /// Gets an item from the cache.
@@ -51,19 +58,29 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
+        /// If none of them is specified, then
+        /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
+        /// will be used.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
-        void Set(string key, object value, TimeSpan? slidingExpireTime = null);
+        /// <param name="absoluteExpireTime">Absolute expire time</param>
+        void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
+        /// If none of them is specified, then
+        /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
+        /// will be used.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
-        Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null);
+        /// <param name="absoluteExpireTime">Absolute expire time</param>
+        Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
 
         /// <summary>
         /// Removes a cache item by it's key.

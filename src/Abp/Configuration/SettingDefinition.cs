@@ -18,18 +18,18 @@ namespace Abp.Configuration
         /// Display name of the setting.
         /// This can be used to show setting to the user.
         /// </summary>
-        public ILocalizableString DisplayName { get; private set; }
+        public ILocalizableString DisplayName { get; set; }
 
         /// <summary>
         /// A brief description for this setting.
         /// </summary>
-        public ILocalizableString Description { get; private set; }
+        public ILocalizableString Description { get; set; }
 
         /// <summary>
         /// Scopes of this setting.
         /// Default value: <see cref="SettingScopes.Application"/>.
         /// </summary>
-        public SettingScopes Scopes { get; private set; }
+        public SettingScopes Scopes { get; set; }
 
         /// <summary>
         /// Is this setting inherited from parent scopes.
@@ -40,19 +40,19 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets/sets group for this setting.
         /// </summary>
-        public SettingDefinitionGroup Group { get; private set; }
+        public SettingDefinitionGroup Group { get; set; }
 
         /// <summary>
         /// Default value of the setting.
         /// </summary>
-        public string DefaultValue { get; private set; }
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Can clients see this setting and it's value.
         /// It maybe dangerous for some settings to be visible to clients (such as email server password).
         /// Default: false.
         /// </summary>
-        public bool IsVisibleToClients { get; private set; }
+        public bool IsVisibleToClients { get; set; }
 
         /// <summary>
         /// Can be used to store a custom object related to this setting.
@@ -84,7 +84,7 @@ namespace Abp.Configuration
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             Name = name;

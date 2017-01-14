@@ -22,9 +22,10 @@ namespace Abp.Domain.Uow
             _isCompleteCalled = true;
         }
 
-        public async Task CompleteAsync()
+        public Task CompleteAsync()
         {
-            _isCompleteCalled = true;           
+            _isCompleteCalled = true;
+            return Task.FromResult(0);
         }
 
         public void Dispose()

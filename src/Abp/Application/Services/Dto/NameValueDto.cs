@@ -40,7 +40,7 @@ namespace Abp.Application.Services.Dto
     /// Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
     [Serializable]
-    public class NameValueDto<T> : NameValue<T>, IDto
+    public class NameValueDto<T> : NameValue<T>
     {
         /// <summary>
         /// Creates a new <see cref="NameValueDto"/>.

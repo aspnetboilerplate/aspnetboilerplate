@@ -10,9 +10,11 @@ namespace Abp.Runtime.Caching
     /// </summary>
     public abstract class CacheBase : ICache
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public TimeSpan DefaultSlidingExpireTime { get; set; }
+
+        public TimeSpan? DefaultAbsoluteExpireTime { get; set; }
 
         protected readonly object SyncObj = new object();
 
@@ -85,9 +87,9 @@ namespace Abp.Runtime.Caching
             return Task.FromResult(GetOrDefault(key));
         }
 
-        public abstract void Set(string key, object value, TimeSpan? slidingExpireTime = null);
+        public abstract void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
 
-        public virtual Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null)
+        public virtual Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             Set(key, value, slidingExpireTime);
             return Task.FromResult(0);

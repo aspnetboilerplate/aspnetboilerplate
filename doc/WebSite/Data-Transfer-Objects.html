@@ -6,9 +6,6 @@
 		<title>Data Transfer Objects</title>
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 		<style type="text/css">
-.auto-style1 {
-	text-decoration: underline;
-}
 .auto-style2 {
 	background-color: #F5F5F5;
 }
@@ -56,20 +53,22 @@ serialized in somewhere. For example, in an MVC method that returns JSON, your
 object can be serialized to JSON and sent to the client. Returning an Entity to 
 the presentation layer can be problematic in that case. How?</p>
 			<p>In a real application, your entities will have references to each other. User 
-entity can has a reference to it's Role. So, if you want to serialize User, it's 
-Role is serialized also. And even Role class can has a List&lt;Permission&gt; and 
-Permission class can has a reference to a PermissionGroup class and so on... Can 
+entity can have a reference to its Roles. So, if you want to serialize User, its 
+Roles are also serialized. And even Role class may have a List&lt;Permission&gt; and 
+Permission class can have a reference to a PermissionGroup class and so on... Can 
 you think that all of these objects are serialized? You can easily serialize 
-your whole database accidently. What's the solution? Marking properties as 
+your whole database accidently. Also, if your objects has circcular references, 
+			it can not be serialized.</p>
+			<p>What's the solution? Marking properties as 
 NonSerialized? No, you can not know when it should be serialized and when it 
-shouldn't be. It may needed in one application service method, may not needed in 
+shouldn't be. It may be needed in one application service method, may not be needed in 
 other. So, returning a safely serializable, specially designed DTOs are a good 
 choice in this situation.</p>
 			<p>Almost all O/RM frameworks support lazy-loading. It's a feature to load 
 entities from database when it's needed. Say User class has a reference to Role 
 class. When you get a User from database, Role property is not filled. When you 
 first read the Role property, it's loaded from database. So, if you return such 
-an Entity to presentation layer, it can easily cause to retrieve additonal 
+an Entity to presentation layer, it will cause to retrieve additonal 
 entities from database. If a serialization tool reads the entity, it reads all 
 properties recursively and again your complete database can be retrieved (if 
 there are suitable relations between entities).</p>
@@ -92,7 +91,7 @@ Person</strong> <a href="/Pages/Documents/Entities">entity</a> as shown below:</
     public virtual string EmailAddress { get; set; }
     public virtual string <span lang="tr">P<span class="auto-style2">assword</span></span> { get; set; }
 }</pre>
-			<p>First, we define interface for the 
+			<p>And we can define an interface for our 
 				<a href="/Pages/Documents/Application-Services">application service</a>:</p>
 			<pre lang="cs">public interface IPersonAppService : IApplicationService
 {
@@ -106,17 +105,17 @@ code will be more extensible. You can add more properties later without changing
 signature of your method and without breaking existing client applications.</p>
 			<p>Surely, your method can return <strong>void </strong>if there is no return 
 value. It will not break existing applications if you add a return value later. 
-If your method does not gets any argument, you do not have to define an input 
+If your method does not get any argument, you do not have to define an input 
 DTO. But it maybe better to write an input DTO class if it's probable to add 
 parameter in the future. This is up to you.</p>
 			<p>Let's see input and output DTO classes defined for this example:</p>
-			<pre lang="cs">public class SearchPeopleInput : IInputDto
+			<pre lang="cs">public class SearchPeopleInput
 {
     [StringLength(40, MinimumLength = 1)]
     public string SearchedName { get; set; }
 }
 
-public class SearchPeopleOutput : IOutputDto
+public class SearchPeopleOutput
 {
     public List&lt;PersonDto&gt; People { get; set; }
 }
@@ -127,12 +126,7 @@ public class PersonDto : EntityDto
     public string EmailAddress { get; set; }
 }</pre>
 			<p>
-				<span class="auto-style1">
-					<strong>Validation</strong>
-				</span>: An input DTO 
-implements <strong>IInputDto</strong> interface, an output DTO implements <strong>IOutputDto </strong>
-interface as convention. When you declare 
-IInputDto, ASP.NET Boilerplate automatically validates input, before execution 
+				ASP.NET Boilerplate <strong>automatically validates</strong> input before execution 
 of the method. It's similar to ASP.NET MVC's validation, but notice that 
 application service is not a Controller, it's a plain C# class. ASP.NET 
 Boilerplate makes interception and check input automatically. There are much 
@@ -140,9 +134,13 @@ more about validation. See
 				<a href="/Pages/Documents/Validating-Data-Transfer-Objects">DTO validation</a> 
 document.</p>
 			<p>
-				<strong>EntityDto</strong> is a simple class that declares Id property since 
-they are common for entities. Has a generic version if your entity's primary key 
-is not int. It also marked by <strong>IDto</strong> interface. PersonDto does 
+				<strong>EntityDto</strong> is a simple class that declares
+				<strong>Id property</strong> since they are common for entities. 
+				Has a generic version if your entity's primary key is not int. 
+				You don't have to use it, but can be better to define an Id 
+				property.</p>
+			<p>
+				<strong>PersonDto</strong> does 
 not include Password property as you see, since it's not needed for presentation 
 layer. Even it can be dangerous to send all people's password to presentation 
 layer. Think that a Javascript client requested it, anyone can easily grab all 
@@ -176,7 +174,7 @@ passwords.</p>
 }</pre>
 			<p>We get entities from database, <strong>convert </strong>them to DTOs and 
 return output. Notice that we did not validated input. ASP.NET Boilerplate
-				<strong>validate</strong>s it. It even checks if input parameter is <strong>null
+				<strong>validate</strong>s it. It even checks <strong>if input parameter is null
 				</strong>and throws exception if so. This saves us to write guard clauses in 
 every method.</p>
 			<p>But, probably you did not like converting code from a Person entity to a 
@@ -194,13 +192,15 @@ write SearchPeople method again but using AutoMapper:</p>
     return new SearchPeopleOutput { People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(peopleEntityList) };
 }</pre>
 			<p>That's all. You can add more properties to entity and DTO but converting code 
-does not changes. The only thing to do is define a mapping before using it:</p>
+does not change. The only thing to do is define a mapping before using it:</p>
 			<pre lang="cs">Mapper.CreateMap<span lang="tr">&lt;</span>Person, PersonDto<span lang="tr">&gt;</span>();</pre>
 			<p>AutoMapper creates mapping code. Thus, dynamic mapping does not become 
 a performance problem. It's fast &amp; easy. AutoMapper creates a PersonDto for a Person entity and assign DTO's properties 
 using naming conventions. Naming conventions can be complex and configurable. Also, 
 you can define custom maps and much more. See <a href="http://automapper.org/" target="_blank">AutoMapper</a>'s documentation 
 for more information.</p>
+			<p>You can define mappings in <a href="Module-System.html">
+			PostInitialize</a> of your module for example.</p>
 
 			<h4 id="DocAutoMappingHelpers">Mapping using attributes and extension methods</h4>
 
@@ -249,7 +249,7 @@ result set.</p>
 by adding <strong>SkipCount</strong>. So, we can implement this interface in
 SearchPeopleInput for paging:</p>
 
-			<pre lang="cs">public class SearchPeopleInput : IInputDto, IPagedResultRequest
+			<pre lang="cs">public class SearchPeopleInput : IPagedResultRequest
 {
     [StringLength(40, MinimumLength = 1)]
     public string SearchedName { get; set; }

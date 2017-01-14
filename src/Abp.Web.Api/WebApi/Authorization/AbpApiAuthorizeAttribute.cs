@@ -1,8 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Logging;
 
 namespace Abp.WebApi.Authorization
 {
@@ -10,6 +10,7 @@ namespace Abp.WebApi.Authorization
     /// This attribute is used on a method of an <see cref="ApiController"/>
     /// to make that method usable only by authorized users.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class AbpApiAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
         /// <inheritdoc/>
@@ -27,28 +28,21 @@ namespace Abp.WebApi.Authorization
             Permissions = permissions;
         }
 
-        /// <inheritdoc/>
-        protected override bool IsAuthorized(HttpActionContext actionContext)
+        protected override void HandleUnauthorizedRequest(HttpActionContext actionContext)
         {
-            if (!base.IsAuthorized(actionContext))
+            var httpContext = HttpContext.Current;
+            if (httpContext == null)
             {
-                return false;
+                base.HandleUnauthorizedRequest(actionContext);
+                return;
             }
 
-            try
-            {
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-                {
-                    authorizationAttributeHelper.Object.Authorize(this);
-                }
+            httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
+                                      ? (int)System.Net.HttpStatusCode.Unauthorized
+                                      : (int)System.Net.HttpStatusCode.Forbidden;
 
-                return true;
-            }
-            catch (AbpAuthorizationException ex)
-            {
-                LogHelper.Logger.Warn(ex.ToString(), ex);
-                return false;
-            }
+            httpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            httpContext.Response.End();
         }
     }
 }

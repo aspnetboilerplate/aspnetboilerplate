@@ -18,16 +18,15 @@ namespace Abp.Timing
         DateTimeKind Kind { get; }
 
         /// <summary>
+        /// Is that provider supports multiple time zone.
+        /// </summary>
+        bool SupportsMultipleTimezone { get; }
+
+        /// <summary>
         /// Normalizes given <see cref="DateTime"/>.
         /// </summary>
         /// <param name="dateTime">DateTime to be normalized.</param>
         /// <returns>Normalized DateTime</returns>
         DateTime Normalize(DateTime dateTime);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        bool SupportsMultipleTimezone();
     }
 }

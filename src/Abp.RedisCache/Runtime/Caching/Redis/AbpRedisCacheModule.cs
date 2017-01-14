@@ -9,6 +9,11 @@ namespace Abp.Runtime.Caching.Redis
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpRedisCacheModule : AbpModule
     {
+        public override void PreInitialize()
+        {
+            IocManager.Register<AbpRedisCacheOptions>();
+        }
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

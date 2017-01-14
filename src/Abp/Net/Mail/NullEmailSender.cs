@@ -4,7 +4,6 @@ using Castle.Core.Logging;
 
 namespace Abp.Net.Mail
 {
-    //TODO: Move this to Abp.TestBase?
     /// <summary>
     /// This class is an implementation of <see cref="IEmailSender"/> as similar to null pattern.
     /// It does not send emails but logs them.
@@ -25,6 +24,7 @@ namespace Abp.Net.Mail
 
         protected override Task SendEmailAsync(MailMessage mail)
         {
+            Logger.Warn("USING NullEmailSender!");
             Logger.Debug("SendEmailAsync:");
             LogEmail(mail);
             return Task.FromResult(0);
@@ -32,6 +32,7 @@ namespace Abp.Net.Mail
 
         protected override void SendEmail(MailMessage mail)
         {
+            Logger.Warn("USING NullEmailSender!");
             Logger.Debug("SendEmail:");
             LogEmail(mail);
         }
