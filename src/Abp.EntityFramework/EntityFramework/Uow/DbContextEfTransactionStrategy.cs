@@ -48,6 +48,7 @@ namespace Abp.EntityFramework.Uow
             else
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
+                dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }
 

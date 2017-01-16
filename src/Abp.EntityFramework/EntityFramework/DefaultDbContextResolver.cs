@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Data.Entity;
 using Abp.Dependency;
 
 namespace Abp.EntityFramework
@@ -16,6 +17,7 @@ namespace Abp.EntityFramework
         }
 
         public TDbContext Resolve<TDbContext>(string connectionString)
+            where TDbContext : DbContext
         {
             var dbContextType = GetConcreteType<TDbContext>();
             return (TDbContext) _iocResolver.Resolve(dbContextType, new
@@ -25,6 +27,7 @@ namespace Abp.EntityFramework
         }
 
         public TDbContext Resolve<TDbContext>(DbConnection existingConnection, bool contextOwnsConnection)
+            where TDbContext : DbContext
         {
             var dbContextType = GetConcreteType<TDbContext>();
             return (TDbContext)_iocResolver.Resolve(dbContextType, new

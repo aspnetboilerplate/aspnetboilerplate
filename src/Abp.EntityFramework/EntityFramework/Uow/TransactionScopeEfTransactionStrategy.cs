@@ -56,7 +56,6 @@ namespace Abp.EntityFramework.Uow
                 transactionOptions.Timeout = Options.Timeout.Value;
             }
 
-            //TODO: LAZY!
             CurrentTransaction = new TransactionScope(
                 Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                 transactionOptions,

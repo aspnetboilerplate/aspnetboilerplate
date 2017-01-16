@@ -1,10 +1,14 @@
 {
+<<<<<<< HEAD
   "version": "1.2.0.0-*",
+=======
+  "version": "1.2.1.0-*",
+>>>>>>> refs/remotes/aspnetboilerplate/dev
 
   "dependencies": {
-    "Abp": "1.2.0.0-*",
-    "NHibernate": "4.0.4.4000",
-    "FluentNHibernate": "2.0.3"
+    "Abp": "1.2.1.0-*",
+    "FluentNHibernate": "2.0.3",
+    "NHibernate": "4.1.0.4000"
   },
 
   "frameworks": {

@@ -70,7 +70,7 @@ namespace Abp.Runtime.Security
 
         public string Decrypt(string cipherText, string passPhrase = DefaultPassPhrase)
         {
-            if (cipherText == null)
+            if (string.IsNullOrEmpty(cipherText))
             {
                 return null;
             }
