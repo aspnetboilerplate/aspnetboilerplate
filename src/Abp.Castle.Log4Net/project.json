@@ -30,7 +30,7 @@
   "packOptions": {
     "summary": "ASP.NET Boilerplate is a general-purpose, web focused application framework.",
     "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "log4net", "castle" ],
-    "owners": [ "Halil Ýbrahim Kalkan" ],
+    "owners": [ "Halil ï¿½brahim Kalkan" ],
     "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
     "projectUrl": "http://www.aspnetboilerplate.com/",
     "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
