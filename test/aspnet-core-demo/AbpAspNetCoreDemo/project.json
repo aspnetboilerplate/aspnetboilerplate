@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "Abp.AspNetCore": "1.2.1.0-*",
-    "Abp.EntityFrameworkCore": "1.2.1.0-*",
-    "Abp.Castle.Log4Net": "1.2.1.0-*",
-    "AbpAspNetCoreDemo.Core": "1.2.1.0-*",
+    "Abp.AspNetCore": "1.2.2.0-*",
+    "Abp.EntityFrameworkCore": "1.2.2.0-*",
+    "Abp.Castle.Log4Net": "1.2.2.0-*",
+    "AbpAspNetCoreDemo.Core": "1.2.2.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.0.0-preview2-final",
       "type": "build"
