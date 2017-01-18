@@ -49,43 +49,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 script.AppendLine();
             }
             script.AppendLine("}");
-            #region Create Script for Abp common objects
-
-            script.AppendLine("declare module abp {");
-            script.AppendLine("class ui {");
-            script.AppendLine("static setBusy(element, IPromise);");
-            script.AppendLine("}");
-            script.AppendLine("class nav {");
-            script.AppendLine("static menus: any;");
-            script.AppendLine("}");
-            script.AppendLine("class message{");
-            script.AppendLine("static info(message: string, title: string);");
-            script.AppendLine("static success(message: string, title: string);");
-            script.AppendLine("static warn(message: string, title: string);");
-            script.AppendLine("static error(message: string, title: string);");
-            script.AppendLine("}");
-            script.AppendLine("class notify {");
-            script.AppendLine("static info(message: string, title?: string);");
-            script.AppendLine("static success(message: string, title?: string);");
-            script.AppendLine("static warn(message: string, title?: string);");
-            script.AppendLine("static error(message: string, title?: string);");
-            script.AppendLine("}");
-            script.AppendLine("class localization{");
-            script.AppendLine("static languages: any;");
-            script.AppendLine("static currentLanguage: any;");
-            script.AppendLine("}");
-            script.AppendLine("interface IGenericPromise<T> {");
-            script.AppendLine("success(successCallback: (promiseValue: T) => any) : any;");
-            script.AppendLine("error(errorCallback: () => any) : any;");
-            script.AppendLine("}");
-            script.AppendLine("interface IPromise {");
-            script.AppendLine("success(successCallback: () => any) : any;");
-            script.AppendLine("error(errorCallback: () => any) : any;");
-            script.AppendLine("}");
-            script.AppendLine("}");
-
-            #endregion
-
             return script.ToString();
         }
 

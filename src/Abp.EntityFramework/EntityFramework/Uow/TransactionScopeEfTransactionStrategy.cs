@@ -22,6 +22,7 @@ namespace Abp.EntityFramework.Uow
         public virtual void InitOptions(UnitOfWorkOptions options)
         {
             Options = options;
+            StartTransaction();
         }
 
         public virtual void Commit()
@@ -32,14 +33,12 @@ namespace Abp.EntityFramework.Uow
         public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
             where TDbContext : DbContext
         {
-            EnsureCurrentTransactionInitialized();
-
             var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
             DbContexts.Add(dbContext);
             return dbContext;
         }
 
-        private void EnsureCurrentTransactionInitialized()
+        private void StartTransaction()
         {
             if (CurrentTransaction != null)
             {
@@ -56,7 +55,6 @@ namespace Abp.EntityFramework.Uow
                 transactionOptions.Timeout = Options.Timeout.Value;
             }
 
-            //TODO: LAZY!
             CurrentTransaction = new TransactionScope(
                 Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
                 transactionOptions,
