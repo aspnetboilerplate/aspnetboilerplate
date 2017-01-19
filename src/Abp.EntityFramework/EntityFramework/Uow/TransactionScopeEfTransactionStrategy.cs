@@ -69,6 +69,8 @@ namespace Abp.EntityFramework.Uow
                 iocResolver.Release(dbContext);
             }
 
+            DbContexts.Clear();
+
             if (CurrentTransaction != null)
             {
                 CurrentTransaction.Dispose();

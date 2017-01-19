@@ -83,8 +83,6 @@ namespace Abp.EntityFramework.Uow
             {
                 _transactionStrategy.Commit();
             }
-
-            DisposeUow();
         }
 
         protected override async Task CompleteUowAsync()
@@ -95,8 +93,6 @@ namespace Abp.EntityFramework.Uow
             {
                 _transactionStrategy.Commit();
             }
-
-            DisposeUow();
         }
         
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)

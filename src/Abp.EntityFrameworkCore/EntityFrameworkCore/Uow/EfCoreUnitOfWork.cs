@@ -69,7 +69,6 @@ namespace Abp.EntityFrameworkCore.Uow
         {
             SaveChanges();
             CommitTransaction();
-            DisposeUow(); //TODO: Is that needed?
         }
 
         private void CommitTransaction()
@@ -97,7 +96,6 @@ namespace Abp.EntityFrameworkCore.Uow
         {
             await SaveChangesAsync();
             CommitTransaction();
-            DisposeUow(); //TODO: Is that needed?
         }
 
        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
