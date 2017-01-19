@@ -43,7 +43,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 return Json(new AjaxResponse());
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }

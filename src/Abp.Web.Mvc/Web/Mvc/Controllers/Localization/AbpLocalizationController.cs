@@ -48,7 +48,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
