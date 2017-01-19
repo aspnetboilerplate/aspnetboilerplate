@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -72,12 +73,28 @@ namespace Abp.WebApi.ExceptionHandling
                 return;
             }
 
-            context.Response = context.Request.CreateResponse(
-                GetStatusCode(context),
-                new AjaxResponse(
-                    SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
-                    context.Exception is Abp.Authorization.AbpAuthorizationException)
-            );
+            if (context.Exception is HttpException)
+            {
+                var httpException = context.Exception as HttpException;
+                var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
+
+                context.Response = context.Request.CreateResponse(
+                    httpStatusCode,
+                    new AjaxResponse(
+                        new ErrorInfo(httpException.Message),
+                        httpStatusCode == HttpStatusCode.Unauthorized || httpStatusCode == HttpStatusCode.Forbidden
+                    )
+                );
+            }
+            else
+            {
+                context.Response = context.Request.CreateResponse(
+                    GetStatusCode(context),
+                    new AjaxResponse(
+                        SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
+                        context.Exception is Abp.Authorization.AbpAuthorizationException)
+                );
+            }
 
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
