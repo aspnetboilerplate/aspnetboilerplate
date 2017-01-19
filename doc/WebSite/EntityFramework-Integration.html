@@ -29,13 +29,31 @@ and depend on that package from this assembly.</p>
 			<h3 id="DocDbContext">DbContext</h3>
 			<p>As you know, to work with EntityFramework, you should define a <strong>DbContext</strong> 
 class for your application. An example DbContext is shown below:</p>
-			<pre lang="cs">public class SimpleTaskSystemDbContext : <strong>AbpDbContext</strong>
+			<pre lang="cs">public class SimpleTaskSystemDbContext : AbpDbContext
 {
     public virtual IDbSet&lt;Person&gt; People { get; set; }
     public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
 
     public SimpleTaskSystemDbContext()
-        : base(&quot;<strong>MyConnectionStringName</strong>&quot;)
+        : base("Default")
+    {
+
+    }
+    
+    public SimpleTaskSystemDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
+    {
+
+    }
+
+    public SimpleTaskSystemDbContext(DbConnection existingConnection)
+        : base(existingConnection, false)
+    {
+
+    }
+
+    public SimpleTaskSystemDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+        : base(existingConnection, contextOwnsConnection)
     {
 
     }
@@ -44,13 +62,35 @@ class for your application. An example DbContext is shown below:</p>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity&lt;Person&gt;().ToTable(&quot;StsPeople&quot;);
-        modelBuilder.Entity&lt;Task&gt;().ToTable(&quot;StsTasks&quot;).HasOptional(t =&gt; t.AssignedPerson);
+        modelBuilder.Entity&lt;Person&gt;().ToTable("StsPeople");
+        modelBuilder.Entity&lt;Task&gt;().ToTable("StsTasks").HasOptional(t =&gt; t.AssignedPerson);
     }
 }</pre>
-			<p>It's a regular DbContext class except it's derived from <strong>AbpDbContext</strong> 
-instead of DbContext. There are many overloaded constructors of AbpDbContext. 
-You can use which you need.</p>
+			<p>It's a regular DbContext class except following rules:</p>
+			<ul>
+				<li>It's derived from <strong>AbpDbContext</strong> instead of 
+				DbContext.</li>
+				<li>It should have constructors as the sample above (constructor 
+				parameter names should also be same). Explanation:<ul>
+					<li><strong>Default</strong> consturctor passes "Default" to 
+					base bass as the connection string. So, it expects a 
+					"Default" named connection string in the 
+					web.config/app.config file. This constructor is not used by 
+					ABP, but used by EF command line migration tool commands 
+					(like update-database).</li>
+					<li>The constructor gets <strong>nameOrConnectionString</strong> 
+					is used by ABP to pass the connection name or string on 
+					runtime.</li>
+					<li>The constructor get <strong>existingConnection</strong> 
+					can be used for unit test and not directly used by ABP.</li>
+					<li>The constructor gets <strong>existingConnection </strong>
+					and <strong>contextOwnsConnection </strong>is used by ABP on 
+					single database multiple dbcontext scenarios to share same 
+					connection &amp; transaction () when <strong>DbContextEfTransactionStrategy</strong> 
+					is used (see Transaction Management section below).</li>
+				</ul>
+				</li>
+			</ul>
 			<p>EntityFramework can map classes to database tables in a 
 conventional way. You even don't need to make any configuration unless you make 
 some custom stuff. In this example, we mapped entities to different tables. As 
@@ -211,6 +251,8 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 			<p>Remember to add "<em>using Abp.Configuration.Startup;</em>" to 
 			your code file to be able to use ReplaceService generic extension 
 			method.</p>
+			<p>In addition, your DbContext <strong>should have constructors</strong> 
+			as described in DbContext section of this document.</p>
 		</div>
 	</body>
 
