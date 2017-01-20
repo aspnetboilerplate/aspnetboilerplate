@@ -5,11 +5,11 @@ using Quartz.Spi;
 
 namespace Abp.Quartz.Quartz
 {
-    public class AbpQuartzWindsorFactory : IJobFactory
+    public class AbpQuartzJobFactory : IJobFactory
     {
         private readonly IIocResolver _iocResolver;
 
-        public AbpQuartzWindsorFactory(IIocResolver iocResolver)
+        public AbpQuartzJobFactory(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
         }
