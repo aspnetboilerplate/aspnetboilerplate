@@ -102,6 +102,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Quartz", "src\Abp.Quart
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.RedisCache.ProtoBuf", "src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.xproj", "{DA281194-390E-40E4-861B-A034CD6943B7}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Quartz.Tests", "test\Abp.Quartz.Tests\Abp.Quartz.Tests.xproj", "{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -284,6 +286,10 @@ Global
 		{DA281194-390E-40E4-861B-A034CD6943B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA281194-390E-40E4-861B-A034CD6943B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA281194-390E-40E4-861B-A034CD6943B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -334,5 +340,6 @@ Global
 		{FB797CC0-A394-4977-86B0-47F16672DDE8} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{F90B1606-F375-4C84-9118-AB0C1DDEB0DF} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{DA281194-390E-40E4-861B-A034CD6943B7} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{5023EDC4-AC43-4E11-9D9A-021F0F51EE78} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 	EndGlobalSection
 EndGlobal

@@ -15,19 +15,10 @@ namespace Abp.Quartz.Quartz
         public override void PreInitialize()
         {
             IocManager.Register<IAbpQuartzConfiguration, AbpQuartzConfiguration>();
-            IocManager.RegisterIfNot<IJobListener, AbpQuartzJobListener>();
 
-            Configuration.Modules
-                         .AbpQuartz()
-                         .Scheduler
-                         .JobFactory = new AbpQuartzWindsorFactory(IocManager);
-
-            Configuration.Modules
-                         .AbpQuartz()
-                         .Scheduler
-                         .ListenerManager.AddJobListener(IocManager.Resolve<IJobListener>());
+            Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzWindsorFactory(IocManager);
         }
-                
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
@@ -35,6 +26,9 @@ namespace Abp.Quartz.Quartz
 
         public override void PostInitialize()
         {
+            IocManager.RegisterIfNot<IJobListener, AbpQuartzJobListener>();
+            Configuration.Modules.AbpQuartz().Scheduler.ListenerManager.AddJobListener(IocManager.Resolve<IJobListener>());
+
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
                 var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
