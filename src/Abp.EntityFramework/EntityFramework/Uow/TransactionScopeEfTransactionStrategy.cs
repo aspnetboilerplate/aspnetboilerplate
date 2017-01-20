@@ -22,12 +22,21 @@ namespace Abp.EntityFramework.Uow
         public virtual void InitOptions(UnitOfWorkOptions options)
         {
             Options = options;
+
             StartTransaction();
         }
 
         public virtual void Commit()
         {
-            CurrentTransaction?.Complete();
+            if (CurrentTransaction == null)
+            {
+                return;
+            }
+
+            CurrentTransaction.Complete();
+
+            CurrentTransaction.Dispose();
+            CurrentTransaction = null;
         }
 
         public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
