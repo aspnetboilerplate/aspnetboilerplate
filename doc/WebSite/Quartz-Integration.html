@@ -14,206 +14,82 @@
 
     <h3>Introduction</h3>
     <p>
-        <a href="http://www.quartz-scheduler.net/" target="_blank">Quartz</a> is a
-        is a full-featured, open source job scheduling system that can be used from smallest apps to large scale
-        enterprise systems..
-    </p>
-    <h3>
-        Project Foldering For Quartz Example
-    </h3>
+        <a href="http://www.quartz-scheduler.net/" target="_blank">Quartz</a> is 
+		a is a full-featured, open source job scheduling system that can be used 
+		from smallest apps to large scale enterprise systems. 
+		<a href="https://www.nuget.org/packages/Abp.Quartz" target="_blank">Abp.Quartz</a> package 
+		simply integrates Quartz to ASP.NET Boilerplate.</p>
+	<h3>Installation</h3>
     <p>
-        Generally <a href="http://www.quartz-scheduler.net/" target="_blank">Quartz</a> job projects are located in
-        different solutions or different project foldering hierarchies.
-        So, let we assume that;
-
-    <li>ScheduleJobs</li>
-    <ul>
-        <li> Jobs
-            <ul>
-                <li>HelloJob.csproj</li>
-                <ul>
-                    <li> HelloJob.cs</li>
-                    <li> IHelloJob.cs</li>
-                    <li> HelloJobModule.cs</li>
-
-                </ul>
-            </ul>
-            <ul>
-                <li>GoodbyeJob.csproj</li>
-            </ul>
-        </li>
-        <li>Scheduler
-            <ul>
-                <li> AbpQuartzJobExecuter.csproj</li>
-                <ul>
-                    <li>AbpQuartzJobExecuteModule.cs</li>
-                    <li>Program.cs</li>
-                </ul>
-            </ul>
-        </li>
-    </ul>
-    <li> Core</li>
-    <li> Domain</li>
-    <li> Application</li>
-    <li> Web</li>
-    </p>
-    <h3>InMemory Integration</h3>
-    <p>
-        First, install
+        Install
         <a href="https://www.nuget.org/packages/Abp.Quartz" target="_blank">
             <strong>Abp.Quartz</strong>
-        </a> nuget package to your project. After you installed these nuget packages, you can
-        <strong>configure</strong> ASP.NET Boilerplate to use Quartz as shown below:
+        </a> nuget package to your project and add a <strong>DependsOn</strong> 
+		attribute to your <a href="Module-System.html">module</a> for <strong>AbpQuartzModule</strong>:
     </p>
     <pre lang="cs">
 <strong>[DependsOn(typeof (AbpQuartzModule))]</strong>
-public class AbpQuartzJobExecuterModule : AbpModule
+public class YourModule : AbpModule
 {
-    public override void PreInitialize()
-    {
-        <strong>Configuration.BackgroundJobs.UseQuartz();</strong>
-    }
-
     //...
 }</pre>
-    <p>We added <strong>AbpQuartzModule</strong> as a dependency and used
-        Configuration.BackgroundJobs.<strong>UseQuartz</strong> method to enable
-        and configure Quartz.With that way, Abp allows us to register jobs which will be work on Quartz Scheduler.</p>
 
-    Let's write some Job examples:
-    Firstly, define a job which will be invoked on a time definition. This is standard <strong>IJob</strong>
-    Exceute implementation of Quartz. If you are using IJob interface, you need to reference <a
-        href="https://www.nuget.org/packages/Quartz"><strong>Quartz package</strong></a> to your project.
-    <pre lang="cs">
-public class HelloJob : <strong>IJob</strong>, ITransientDependency
+	<h3>Creating Jobs</h3>
+	<p>To create a new job, you can either implement Quartz's IJob interface, or 
+	derive from JobBase class (defined in Abp.Quartz package) that has some 
+	helper properties/methods (for logging and localization for example). A 
+	simple job class is shown below:</p>
+    <pre lang="cs">public class MyLogJob : <strong>JobBase, ITransientDependency
+</strong>{
+    public override void <strong>Execute</strong>(IJobExecutionContext context)
+    {
+        Logger.Info("Executed MyLogJob :)");
+    }
+}</pre>
+
+<p>We simply implemented the <strong>Execute</strong> method to write a log. You 
+can see Quartz's <a href="http://www.quartz-scheduler.net/" target="_blank">
+documentation</a> for more.</p>
+	<h3>Schedule Jobs</h3>
+	<p><strong>IQuartzScheduleJobManager</strong> is used to schedule jobs. You can inject it 
+	to your class (or you can Resolve and use it in your module's PostInitialize 
+	method) to schedule jobs. An example Controller that schedules a job:</p>
+
+    <pre lang="cs">public class HomeController : AbpController
 {
-    public ILogger Logger { get; set; }
+    private readonly IQuartzScheduleJobManager _jobManager;
 
-    public HelloJob()
+    public HomeController(<strong>IQuartzScheduleJobManager jobManager</strong>)
     {
-        Logger = NullLogger.Instance;
+        _jobManager = jobManager;
     }
-
-    public void Execute(IJobExecutionContext context)
+        
+    public async Task&lt;ActionResult&gt; ScheduleJob()
     {
-        Console.WriteLine($"I'am in the {context.JobDetail.Description} now :)");
-        Logger.Debug($"I'am in the {context.JobDetail.Description} now :)");
-
-        //..
+<strong>        await _jobManager.ScheduleAsync&lt;MyLogJob&gt;(
+            job =&gt;
+            {
+                job.WithIdentity("MyLogJobIdentity", "MyGroup")
+                    .WithDescription("A job to simply write logs.");
+            },
+            trigger =&gt;
+            {
+                trigger.StartNow()
+                    .WithSimpleSchedule(schedule =&gt;
+                    {
+                        schedule.RepeatForever()
+                            .WithIntervalInSeconds(5)
+                            .Build();
+                    });
+            });
+</strong>
+        return Content("OK, scheduled!");
     }
-}
-</pre>
-    <pre lang="cs">
-<strong>[DependsOn(typeof(AbpQuartzModule))]</strong>
-public class HelloJobModule : AbpModule
-{
-    public override void Initialize()
-    {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-    }
+}   </pre>
 
-    public override void PostInitialize()
-    {
-        using (var quartzJobManager = IocManager.ResolveAsDisposable&lt;IQuartzScheduleJobManager&gt;())
-        {
-            quartzJobManager.Object.ScheduleAsync&lt;HelloJob&gt;(
-                                 <strong>job</strong> =>
-                                 {
-                                     job.WithIdentity("Hello", "Group1")
-                                         .WithDescription("HelloJob");
-                                 },
-                                 <strong>trigger</strong> =>
-                                 {
-                                     trigger.StartNow()
-                                             .WithSimpleSchedule(schedule =>
-                                                 schedule.RepeatForever()
-                                                          .WithIntervalInSeconds(3)
-                                                          .Build());
-                                 });
-        }
-    }
-}
-
-    </pre>
-    <strong>AbpQuartzJobExecuterModule</strong> need to know that which jobs are would be scheduled on Quartz, that's
-    why JobModules(i.e
-    <strong>HelloJobModule</strong>) should be added
-    to <strong>DependsOn</strong> statement of your <strong>ExecuterModule.</strong>
-    <pre lang="cs">
-<strong>[DependsOn(
-    typeof(AbpQuartzModule),
-    typeof(HelloJobModule),
-    typeof(GoodByeJobModule),
-    typeof(GoodMorningJobModule),
-    typeof(HaveANiceDayJobModule)
-    //..
-    )]</strong>
-public class AbpQuartzJobExecuterModule : AbpModule
-{
-    public override void PreInitialize()
-    {
-        <strong>Configuration.BackgroundJobs.UseQuartz();</strong>
-    }
-
-    public override void Initialize()
-    {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-    }
-}
-    </pre>
-
-    <p>After job setups; we need to initialize bootstrapper. As it understood from the below example. We have a simply
-        created inmemory Quartz Job and one Executer that belonging to Jobs.
-    </p>
-
-    <pre lang="cs">
-internal class Program
-{
-    private static void Main(string[] args)
-    {
-        var bootstrapper = AbpBootstrapper.Create<strong>&lt;AbpQuartzJobExecuterModule&gt;</strong>();
-        bootstrapper.Initialize();
-    }
-}
-    </pre>
-
-    If there is no Program.cs in your project, it can define in your web composition root as below;
-    <pre lang="cs">
-[DependsOn(
-    typeof(BackgroundJobAndNotificationsDemoDataModule),
-    typeof(BackgroundJobAndNotificationsDemoApplicationModule),
-    typeof(BackgroundJobAndNotificationsDemoWebApiModule),
-    typeof(AbpWebMvcModule),
-    typeof(AbpWebSignalRModule), //Add AbpWebSignalRModule dependency
-    typeof(AbpHangfireModule),   //Add AbpHangfireModule dependency
-   <strong> typeof(AbpQuartzJobExecuterModule)</strong>)] //Add AbpQuartzJobs modules dependencies
-public class BackgroundJobAndNotificationsDemoWebModule : AbpModule
-{
-    public override void PreInitialize()
-    {
-        //Enable database based localization
-        Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
-
-        //Configure navigation/menu
-        Configuration.Navigation.Providers.Add<BackgroundJobAndNotificationsDemoNavigationProvider>();
-
-        Configuration.BackgroundJobs.UseHangfire(configuration => //Configure to use hangfire for background jobs.
-        {
-            configuration.GlobalConfiguration.UseSqlServerStorage("Default"); //Set database connection
-        });
-    }
-
-    public override void Initialize()
-    {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
-        AreaRegistration.RegisterAllAreas();
-        RouteConfig.RegisterRoutes(RouteTable.Routes);
-        BundleConfig.RegisterBundles(BundleTable.Bundles);
-    }
-}
-
-    </pre>
+<h3>More</h3>
+<p>Please see Quartz's <a href="http://www.quartz-scheduler.net/" target="_blank">
+documentation</a> for more information about Quartz.</p>
 
 </div>
 

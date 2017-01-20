@@ -45,6 +45,8 @@ namespace Abp.Quartz.Quartz
             {
                 _quartzConfiguration.Scheduler.Start();
             }
+
+            Logger.Info("Started QuartzScheduleJobManager");
         }
 
         public override void WaitToStop()
@@ -62,6 +64,8 @@ namespace Abp.Quartz.Quartz
             }
 
             base.WaitToStop();
+
+            Logger.Info("Stopped QuartzScheduleJobManager");
         }
     }
 }
