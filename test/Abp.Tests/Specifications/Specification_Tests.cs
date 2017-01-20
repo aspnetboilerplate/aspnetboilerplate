@@ -102,6 +102,11 @@ namespace Abp.Tests.Specifications
                .Where(new EuropeanCustomerSpecification().Not().And(new Age18PlusCustomerSpecification()).ToExpression())
                .Count()
                .ShouldBe(2);
+
+            _customers
+                .Where(new Age18PlusCustomerSpecification().AndNot(new EuropeanCustomerSpecification()).ToExpression())
+                .Count()
+                .ShouldBe(2);
         }
 
         private class Customer

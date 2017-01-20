@@ -26,13 +26,11 @@ namespace Abp.Specifications
         /// <returns>The LINQ expression.</returns>
         public override Expression<Func<T, bool>> ToExpression()
         {
-            return c => !_specification.ToExpression().Compile()(c);
-
-            //Not working.
-            //return Expression.Lambda<Func<T, bool>>(
-            //    Expression.Not(_specification.ToExpression().Body),
-            //    _specification.ToExpression().Parameters
-            //);
+            var expression = _specification.ToExpression();
+            return Expression.Lambda<Func<T, bool>>(
+                Expression.Not(expression.Body),
+                expression.Parameters
+            );
         }
     }
 }

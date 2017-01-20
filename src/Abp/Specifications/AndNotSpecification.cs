@@ -23,8 +23,10 @@ namespace Abp.Specifications
         /// <returns>The LINQ expression.</returns>
         public override Expression<Func<T, bool>> ToExpression()
         {
-            var bodyNot = Expression.Not(this.Right.ToExpression().Body);
-            var bodyNotExpression = Expression.Lambda<Func<T, bool>>(bodyNot, this.Right.ToExpression().Parameters);
+            var rightExpression = Right.ToExpression();
+
+            var bodyNot = Expression.Not(rightExpression.Body);
+            var bodyNotExpression = Expression.Lambda<Func<T, bool>>(bodyNot, rightExpression.Parameters);
 
             return Left.ToExpression().And(bodyNotExpression);
         }
