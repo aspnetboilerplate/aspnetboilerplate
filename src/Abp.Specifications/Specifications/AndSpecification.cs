@@ -23,7 +23,7 @@ namespace Abp.Specifications
         /// <returns>The LINQ expression.</returns>
         public override Expression<Func<T, bool>> GetExpression()
         {
-            return Left.GetExpression().And(this.Right.GetExpression());
+            return Left.GetExpression().And(Right.GetExpression());
         }
     }
 }
