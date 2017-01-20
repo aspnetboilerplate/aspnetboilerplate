@@ -1,5 +1,4 @@
-﻿
-namespace Abp.Specifications
+﻿namespace Abp.Specifications
 {
     /// <summary>
     /// Represents that the implemented classes are specification parsers that

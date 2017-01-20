@@ -1,8 +1,8 @@
-﻿namespace Abp.Specifications
+﻿using System;
+using System.Linq.Expressions;
+
+namespace Abp.Specifications
 {
-    using System;
-    using System.Linq.Expressions;
-    
     /// <summary>
     /// Represents the specification which is represented by the corresponding
     /// LINQ expression.
@@ -10,11 +10,8 @@
     /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
     internal sealed class ExpressionSpecification<T> : Specification<T>
     {
-        #region Private Fields
-        private Expression<Func<T, bool>> expression;
-        #endregion
+        private readonly Expression<Func<T, bool>> _expression;
 
-        #region Ctor
         /// <summary>
         /// Initializes a new instance of <c>ExpressionSpecification&lt;T&gt;</c> class.
         /// </summary>
@@ -22,19 +19,16 @@
         /// specification.</param>
         public ExpressionSpecification(Expression<Func<T, bool>> expression)
         {
-            this.expression = expression;
+            _expression = expression;
         }
-        #endregion
 
-        #region Public Methods
         /// <summary>
         /// Gets the LINQ expression which represents the current specification.
         /// </summary>
         /// <returns>The LINQ expression.</returns>
         public override Expression<Func<T, bool>> GetExpression()
         {
-            return this.expression;
+            return _expression;
         }
-        #endregion
     }
 }

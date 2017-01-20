@@ -11,6 +11,7 @@ namespace Abp.Specifications
         /// Gets the left side of the specification.
         /// </summary>
         ISpecification<T> Left { get; }
+
         /// <summary>
         /// Gets the right side of the specification.
         /// </summary>

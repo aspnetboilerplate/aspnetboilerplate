@@ -1,20 +1,18 @@
-﻿
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+
 namespace Abp.Specifications
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
     
     /// <summary>
     /// Represents the extender for Expression[Func[T, bool]] type.
     /// This is part of the solution which solves
-    /// the expression parameter problem when going to Entity Framework by using
-    /// Apworks specifications. For more information about this solution please
-    /// refer to http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx.
+    /// the expression parameter problem when going to Entity Framework.
+    /// For more information about this solution please refer to http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx.
     /// </summary>
     public static class ExpressionFuncExtender
     {
-        #region Private Methods
         private static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
         {
             // build parameter map (from parameters of second to parameters of first)
@@ -26,9 +24,7 @@ namespace Abp.Specifications
             // apply composition of lambda expression bodies to parameters from the first expression 
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
         }
-        #endregion
 
-        #region Public Methods
         /// <summary>
         /// Combines two given expressions by using the AND semantics.
         /// </summary>
@@ -51,6 +47,5 @@ namespace Abp.Specifications
         {
             return first.Compose(second, Expression.OrElse);
         }
-        #endregion
     }
 }
