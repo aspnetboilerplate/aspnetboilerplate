@@ -4,31 +4,20 @@ using System.Linq.Expressions;
 namespace Abp.Specifications
 {
     /// <summary>
-    /// Represents the base class for specifications.
+    /// Represents that the implemented classes are specifications. For more
+    /// information about the specification pattern, please refer to
+    /// http://martinfowler.com/apsupp/spec.pdf.
     /// </summary>
     /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public abstract class Specification<T> : ISpecification<T>
+    public interface ISpecification<T>
     {
-        /// <summary>
-        /// Evaluates a LINQ expression to its corresponding specification.
-        /// </summary>
-        /// <param name="expression">The LINQ expression to be evaluated.</param>
-        /// <returns>The specification which represents the same semantics as the given LINQ expression.</returns>
-        public static Specification<T> Eval(Expression<Func<T, bool>> expression)
-        {
-            return new ExpressionSpecification<T>(expression);
-        }
-
         /// <summary>
         /// Returns a <see cref="bool"/> value which indicates whether the specification
         /// is satisfied by the given object.
         /// </summary>
         /// <param name="obj">The object to which the specification is applied.</param>
         /// <returns>True if the specification is satisfied, otherwise false.</returns>
-        public virtual bool IsSatisfiedBy(T obj)
-        {
-            return GetExpression().Compile()(obj);
-        }
+        bool IsSatisfiedBy(T obj);
 
         /// <summary>
         /// Combines the current specification instance with another specification instance
@@ -38,10 +27,7 @@ namespace Abp.Specifications
         /// <param name="other">The specification instance with which the current specification
         /// is combined.</param>
         /// <returns>The combined specification instance.</returns>
-        public ISpecification<T> And(ISpecification<T> other)
-        {
-            return new AndSpecification<T>(this, other);
-        }
+        ISpecification<T> And(ISpecification<T> other);
 
         /// <summary>
         /// Combines the current specification instance with another specification instance
@@ -51,10 +37,7 @@ namespace Abp.Specifications
         /// <param name="other">The specification instance with which the current specification
         /// is combined.</param>
         /// <returns>The combined specification instance.</returns>
-        public ISpecification<T> Or(ISpecification<T> other)
-        {
-            return new OrSpecification<T>(this, other);
-        }
+        ISpecification<T> Or(ISpecification<T> other);
 
         /// <summary>
         /// Combines the current specification instance with another specification instance
@@ -64,25 +47,19 @@ namespace Abp.Specifications
         /// <param name="other">The specification instance with which the current specification
         /// is combined.</param>
         /// <returns>The combined specification instance.</returns>
-        public ISpecification<T> AndNot(ISpecification<T> other)
-        {
-            return new AndNotSpecification<T>(this, other);
-        }
+        ISpecification<T> AndNot(ISpecification<T> other);
 
         /// <summary>
         /// Reverses the current specification instance and returns a specification which represents
         /// the semantics opposite to the current specification.
         /// </summary>
         /// <returns>The reversed specification instance.</returns>
-        public ISpecification<T> Not()
-        {
-            return new NotSpecification<T>(this);
-        }
+        ISpecification<T> Not();
 
         /// <summary>
         /// Gets the LINQ expression which represents the current specification.
         /// </summary>
         /// <returns>The LINQ expression.</returns>
-        public abstract Expression<Func<T, bool>> GetExpression();
+        Expression<Func<T, bool>> ToExpression();
     }
 }

@@ -24,12 +24,15 @@ namespace Abp.Specifications
         /// Gets the LINQ expression which represents the current specification.
         /// </summary>
         /// <returns>The LINQ expression.</returns>
-        public override Expression<Func<T, bool>> GetExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
-            return Expression.Lambda<Func<T, bool>>(
-                Expression.Not(_specification.GetExpression().Body),
-                _specification.GetExpression().Parameters
-            );
+            return c => !_specification.ToExpression().Compile()(c);
+
+            //Not working.
+            //return Expression.Lambda<Func<T, bool>>(
+            //    Expression.Not(_specification.ToExpression().Body),
+            //    _specification.ToExpression().Parameters
+            //);
         }
     }
 }

@@ -21,9 +21,9 @@ namespace Abp.Specifications
         /// Gets the LINQ expression which represents the current specification.
         /// </summary>
         /// <returns>The LINQ expression.</returns>
-        public override Expression<Func<T, bool>> GetExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
-            return Left.GetExpression().And(Right.GetExpression());
+            return Left.ToExpression().And(Right.ToExpression());
         }
     }
 }

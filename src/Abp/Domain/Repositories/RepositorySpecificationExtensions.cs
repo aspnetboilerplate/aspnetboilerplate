@@ -6,7 +6,6 @@ namespace Abp.Domain.Repositories
 {
     //TODO: Sync versions of the methods!
     //TODO: Other methods of the IRepository takes expression and returns list/entity?
-    //TODO: Create Where extension method for the IQueryable that takes Specification!
 
     /// <summary>
     /// The repository extension.
@@ -18,7 +17,7 @@ namespace Abp.Domain.Repositories
         {
             Check.NotNull(specification, nameof(specification));
 
-            return repository.FirstOrDefaultAsync(specification.GetExpression());
+            return repository.FirstOrDefaultAsync(specification.ToExpression());
         }
 
         public static Task<int> Count<T, TPrimaryKey>(this IRepository<T, TPrimaryKey> repository, ISpecification<T> specification)
@@ -26,7 +25,7 @@ namespace Abp.Domain.Repositories
         {
             Check.NotNull(specification, nameof(specification));
 
-            return repository.CountAsync(specification.GetExpression());
+            return repository.CountAsync(specification.ToExpression());
         }
     }
 }
