@@ -84,5 +84,14 @@ namespace Abp.Specifications
         /// </summary>
         /// <returns>The LINQ expression.</returns>
         public abstract Expression<Func<T, bool>> ToExpression();
+
+        /// <summary>
+        /// Implicitly converts a specification to expression.
+        /// </summary>
+        /// <param name="specification"></param>
+        public static implicit operator Expression<Func<T, bool>>(Specification<T> specification)
+        {
+            return specification.ToExpression();
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace Abp.Tests.Specifications
         public void Any_Should_Return_All()
         {
             _customers
-                .Where(new AnySpecification<Customer>())
+                .Where(new AnySpecification<Customer>()) //Implicitly converted to Expression!
                 .Count()
                 .ShouldBe(_customers.Count());
         }
@@ -43,7 +43,7 @@ namespace Abp.Tests.Specifications
         public void None_Should_Return_Empty()
         {
             _customers
-                .Where(new NoneSpecification<Customer>())
+                .Where(new NoneSpecification<Customer>().ToExpression())
                 .Count()
                 .ShouldBe(0);
         }
@@ -52,7 +52,7 @@ namespace Abp.Tests.Specifications
         public void Not_Should_Return_Reverse_Result()
         {
             _customers
-                .Where(new EuropeanCustomerSpecification().Not())
+                .Where(new EuropeanCustomerSpecification().Not().ToExpression())
                 .Count()
                 .ShouldBe(3);
         }
@@ -61,22 +61,22 @@ namespace Abp.Tests.Specifications
         public void CustomSpecification_Test()
         {
             _customers
-                .Where(new EuropeanCustomerSpecification())
+                .Where(new EuropeanCustomerSpecification().ToExpression())
                 .Count()
                 .ShouldBe(7);
 
             _customers
-                .Where(new Age18PlusCustomerSpecification())
+                .Where(new Age18PlusCustomerSpecification().ToExpression())
                 .Count()
                 .ShouldBe(6);
 
             _customers
-                .Where(new BalanceCustomerSpecification(10000, 30000))
+                .Where(new BalanceCustomerSpecification(10000, 30000).ToExpression())
                 .Count()
                 .ShouldBe(2);
 
             _customers
-                .Where(new PremiumCustomerSpecification())
+                .Where(new PremiumCustomerSpecification().ToExpression())
                 .Count()
                 .ShouldBe(3);
         }
@@ -94,12 +94,12 @@ namespace Abp.Tests.Specifications
         public void CustomSpecification_Composite_Tests()
         {
             _customers
-                .Where(new EuropeanCustomerSpecification().And(new Age18PlusCustomerSpecification()))
+                .Where(new EuropeanCustomerSpecification().And(new Age18PlusCustomerSpecification()).ToExpression())
                 .Count()
                 .ShouldBe(4);
 
             _customers
-               .Where(new EuropeanCustomerSpecification().Not().And(new Age18PlusCustomerSpecification()))
+               .Where(new EuropeanCustomerSpecification().Not().And(new Age18PlusCustomerSpecification()).ToExpression())
                .Count()
                .ShouldBe(2);
         }
