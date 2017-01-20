@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using JetBrains.Annotations;
 
 namespace Abp
 {
@@ -8,25 +10,24 @@ namespace Abp
     /// </summary>
     public class DisposeAction : IDisposable
     {
-        private readonly Action _action;
+        public static readonly DisposeAction Empty = new DisposeAction(null);
+
+        private Action _action;
 
         /// <summary>
         /// Creates a new <see cref="DisposeAction"/> object.
         /// </summary>
         /// <param name="action">Action to be executed when this object is disposed.</param>
-        public DisposeAction(Action action)
+        public DisposeAction([CanBeNull] Action action)
         {
-            if (action == null)
-            {
-                throw new ArgumentNullException("action");
-            }
-
             _action = action;
         }
 
         public void Dispose()
         {
-            _action();
+            // Interlocked prevents multiple execution of the _action.
+            var action = Interlocked.Exchange(ref _action, null);
+            action?.Invoke();
         }
     }
 }
