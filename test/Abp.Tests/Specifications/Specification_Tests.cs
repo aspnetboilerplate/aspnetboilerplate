@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Abp.Linq.Extensions;
 using Abp.Specifications;
 using Shouldly;
 using Xunit;
@@ -55,6 +54,20 @@ namespace Abp.Tests.Specifications
                 .Where(new EuropeanCustomerSpecification().Not().ToExpression())
                 .Count()
                 .ShouldBe(3);
+        }
+
+        [Fact]
+        public void Should_Support_Native_Expressions_And_Combinations()
+        {
+            _customers
+                .Where(new ExpressionSpecification<Customer>(c => c.Age >= 18).ToExpression())
+                .Count()
+                .ShouldBe(6);
+
+            _customers
+                .Where(new EuropeanCustomerSpecification().And(new ExpressionSpecification<Customer>(c => c.Age >= 18)).ToExpression())
+                .Count()
+                .ShouldBe(4);
         }
 
         [Fact]
