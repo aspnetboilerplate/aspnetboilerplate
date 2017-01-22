@@ -15,9 +15,7 @@ namespace Abp.EntityFramework.GraphDiff.Configuration
         /// </summary>
         public static IAbpEntityFrameworkGraphDiffModuleConfiguration AbpEfGraphDiff(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate(
-                "Modules.Abp.EntityFramework.GraphDiff",
-                () => configurations.AbpConfiguration.IocManager.Resolve<IAbpEntityFrameworkGraphDiffModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpEntityFrameworkGraphDiffModuleConfiguration>();
         }
 
         /// <summary>

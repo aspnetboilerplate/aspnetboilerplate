@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.Domain.Entities;
-using Abp.Json;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
@@ -11,25 +10,28 @@ namespace Abp.Runtime.Caching.Redis
     public class AbpRedisCache : CacheBase
     {
         private readonly IDatabase _database;
+        private readonly IRedisCacheSerializer _serializer;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider)
+        public AbpRedisCache(
+            string name, 
+            IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, 
+            IRedisCacheSerializer redisCacheSerializer)
             : base(name)
         {
             _database = redisCacheDatabaseProvider.GetDatabase();
+            _serializer = redisCacheSerializer;
         }
 
         public override object GetOrDefault(string key)
         {
             var objbyte = _database.StringGet(GetLocalizedKey(key));
-            return objbyte.HasValue
-                ? JsonSerializationHelper.DeserializeWithType(objbyte)
-                : null;
+            return objbyte.HasValue ? Deserialize(objbyte) : null;
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             if (value == null)
             {
@@ -46,8 +48,8 @@ namespace Abp.Runtime.Caching.Redis
 
             _database.StringSet(
                 GetLocalizedKey(key),
-                JsonSerializationHelper.SerializeWithType(value, type),
-                slidingExpireTime
+                Serialize(value, type),
+                absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
         }
 
@@ -61,7 +63,17 @@ namespace Abp.Runtime.Caching.Redis
             _database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
-        private string GetLocalizedKey(string key)
+        protected virtual string Serialize(object value, Type type)
+        {
+            return _serializer.Serialize(value, type);
+        }
+
+        protected virtual object Deserialize(RedisValue objbyte)
+        {
+            return _serializer.Deserialize(objbyte);
+        }
+
+        protected virtual string GetLocalizedKey(string key)
         {
             return "n:" + Name + ",c:" + key;
         }

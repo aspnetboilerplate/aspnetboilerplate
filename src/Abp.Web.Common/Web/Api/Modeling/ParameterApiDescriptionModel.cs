@@ -5,6 +5,8 @@ namespace Abp.Web.Api.Modeling
     [Serializable]
     public class ParameterApiDescriptionModel
     {
+        public string NameOnMethod { get; }
+
         public string Name { get; }
 
         public Type Type { get; }
@@ -17,22 +19,23 @@ namespace Abp.Web.Api.Modeling
 
         public string[] ConstraintTypes { get; }
 
-        public string Source { get; }
+        public string BindingSourceId { get; }
 
         private ParameterApiDescriptionModel()
         {
             
         }
 
-        public ParameterApiDescriptionModel(string name, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string source = null)
+        public ParameterApiDescriptionModel(string name, string nameOnMethod, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
         {
             Name = name;
+            NameOnMethod = nameOnMethod;
             Type = type;
             TypeAsString = type.FullName;
             IsOptional = isOptional;
             DefaultValue = defaultValue;
             ConstraintTypes = constraintTypes;
-            Source = source;
+            BindingSourceId = bindingSourceId;
         }
     }
 }

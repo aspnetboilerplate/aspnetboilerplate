@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using AbpAspNetCoreDemo.EntityFrameworkCore;
+using AbpAspNetCoreDemo.Db;
 
 namespace AbpAspNetCoreDemo.Migrations
 {
@@ -13,7 +13,7 @@ namespace AbpAspNetCoreDemo.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("AbpAspNetCoreDemo.Core.Domain.Product", b =>

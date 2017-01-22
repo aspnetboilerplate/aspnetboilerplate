@@ -1,9 +1,9 @@
-﻿{
-  "version": "0.9.6.1-*",
+{
+  "version": "1.3.1.0-*",
 
   "dependencies": {
-    "Abp": "0.9.6.1-*",
-    "AutoMapper": "3.3.1"
+    "Abp": "1.3.1.0-*",
+    "AutoMapper": "5.2.0"
   },
 
   "frameworks": {
@@ -30,10 +30,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.AutoMapper.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.AutoMapper.pdb"
   }
 }

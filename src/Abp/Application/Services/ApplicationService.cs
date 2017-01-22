@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -9,8 +9,10 @@ namespace Abp.Application.Services
     /// <summary>
     /// This class can be used as a base class for application services. 
     /// </summary>
-    public abstract class ApplicationService : AbpServiceBase, IApplicationService
+    public abstract class ApplicationService : AbpServiceBase, IApplicationService, IAvoidDuplicateCrossCuttingConcerns
     {
+        public static string[] CommonPostfixes = { "AppService", "ApplicationService" };
+
         /// <summary>
         /// Gets current session information.
         /// </summary>
@@ -37,10 +39,9 @@ namespace Abp.Application.Services
         public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
-        /// Gets current session information.
+        /// Gets the applied cross cutting concerns.
         /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
+        public List<string> AppliedCrossCuttingConcerns { get; } = new List<string>();
 
         /// <summary>
         /// Constructor.

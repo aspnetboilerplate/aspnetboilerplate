@@ -118,14 +118,14 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 );
 
             var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
-            await _personAppService.DeletePerson(new EntityRequestInput(halil.Id));
+            await _personAppService.DeletePerson(new EntityDto(halil.Id));
             (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted.ShouldBe(true);
         }
 
         [Fact]
         public void Test_TestPrimitiveMethod()
         {
-            _personAppService.TestPrimitiveMethod(42, "adana", new EntityRequestInput(7)).ShouldBe("42#adana#7");
+            _personAppService.TestPrimitiveMethod(42, "adana", new EntityDto(7)).ShouldBe("42#adana#7");
         }
     }
 }

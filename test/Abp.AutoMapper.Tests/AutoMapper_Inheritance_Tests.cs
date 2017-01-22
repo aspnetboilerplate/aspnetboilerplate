@@ -1,22 +1,30 @@
-﻿using Shouldly;
+﻿using AutoMapper;
+using Shouldly;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests
 {
     public class AutoMapper_Inheritance_Tests
     {
+        private readonly IMapper _mapper;
+
         public AutoMapper_Inheritance_Tests()
         {
-            AutoMapperHelper.CreateMap(typeof(MyTargetClassToMap));
-            AutoMapperHelper.CreateMap(typeof(EntityDto));
-            AutoMapperHelper.CreateMap(typeof(DerivedEntityDto));
+            var config = new MapperConfiguration(configuration =>
+            {
+                configuration.CreateAutoAttributeMaps(typeof(MyTargetClassToMap));
+                configuration.CreateAutoAttributeMaps(typeof(EntityDto));
+                configuration.CreateAutoAttributeMaps(typeof(DerivedEntityDto));
+            });
+
+            _mapper = config.CreateMapper();
         }
 
         [Fact]
         public void Should_Map_Derived_To_Target()
         {
             var derived = new MyDerivedClass { Value = "fortytwo" };
-            var target = derived.MapTo<MyTargetClassToMap>();
+            var target = _mapper.Map<MyTargetClassToMap>(derived);
             target.Value.ShouldBe("fortytwo");
         }
 
@@ -40,8 +48,8 @@ namespace Abp.AutoMapper.Tests
         public void Should_Map_EntityProxy_To_EntityDto_And_To_DrivedEntityDto()
         {
             var proxy = new EntityProxy() { Value = "42"};
-            var target = proxy.MapTo<EntityDto>();
-            var target2 = proxy.MapTo<DerivedEntityDto>();
+            var target = _mapper.Map<EntityDto>(proxy);
+            var target2 = _mapper.Map<DerivedEntityDto>(proxy);
             target.Value.ShouldBe("42");
             target2.Value.ShouldBe("42");
         }

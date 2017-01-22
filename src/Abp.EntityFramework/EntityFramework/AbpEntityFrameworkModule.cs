@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Reflection;
-using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
@@ -16,14 +17,24 @@ namespace Abp.EntityFramework
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
-        public ILogger Logger { get; set; }
-
         private readonly ITypeFinder _typeFinder;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
-            Logger = NullLogger.Instance;
+        }
+
+        public override void PreInitialize()
+        {
+            Configuration.ReplaceService<IUnitOfWorkFilterExecuter>(() =>
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                    .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
+                    .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
+                    .LifestyleTransient()
+                );
+            });
         }
 
         public override void Initialize()
@@ -55,7 +66,7 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEntityFrameworkGenericRepositoryRegistrar>())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {

@@ -1,29 +1,41 @@
-﻿using Abp.Dependency;
+﻿using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Aspects;
+using Abp.AspNetCore.Configuration;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Validation
 {
-    public class AbpValidationActionFilter : IActionFilter, ITransientDependency
+    public class AbpValidationActionFilter : IAsyncActionFilter, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
+        private readonly IAbpAspNetCoreConfiguration _configuration;
 
-        public AbpValidationActionFilter(IIocResolver iocResolver)
+        public AbpValidationActionFilter(IIocResolver iocResolver, IAbpAspNetCoreConfiguration configuration)
         {
             _iocResolver = iocResolver;
+            _configuration = configuration;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+            if (!_configuration.IsValidationEnabledForControllers)
             {
-                validator.Object.Initialize(context);
-                validator.Object.Validate();
+                await next();
+                return;
             }
-        }
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
+            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Validation))
+            {
+                using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+                {
+                    validator.Object.Initialize(context);
+                    validator.Object.Validate();
+                }
 
+                await next();
+            }
         }
     }
 }

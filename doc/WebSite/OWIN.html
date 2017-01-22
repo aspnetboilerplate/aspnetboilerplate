@@ -11,7 +11,8 @@
 
 		<div class="document-contents">
 
-			<p>If you're using <strong>OWIN</strong> in your applications, you need to add
+			<p>If you are using both of <strong>ASP.NET MVC</strong> and <strong>ASP.NET Web API</strong> 
+			in your application, you need to add
 				<a href="https://www.nuget.org/packages/Abp.Owin">
 					<strong>Abp.Owin</strong>
 				</a> 
@@ -28,9 +29,13 @@ public class Startup
         //your other configuration...
     }
 }</pre>
-			<p>&nbsp;</p>
 
 		</div>
+
+		<p>If you are only using OWIN (say, in a self hosted Web API project), 
+		you can use override of UseAbp which takes a startup module to 
+		initialize ABP framework. Notice that; this should be done only if ABP 
+		is not initialized in another way.</p>
 
 	</body>
 

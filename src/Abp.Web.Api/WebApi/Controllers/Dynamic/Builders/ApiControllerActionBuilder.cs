@@ -16,17 +16,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Selected action name.
         /// </summary>
-        public string ActionName { get; private set; }
+        public string ActionName { get; }
 
         /// <summary>
         /// Underlying proxying method.
         /// </summary>
-        public MethodInfo Method { get; private set; }
+        public MethodInfo Method { get; }
 
         /// <summary>
         /// Selected Http verb.
         /// </summary>
         public HttpVerb? Verb { get; set; }
+
+        /// <summary>
+        /// Is API Explorer enabled.
+        /// </summary>
+        public bool? IsApiExplorerEnabled { get; set; }
 
         /// <summary>
         /// Action Filters for dynamic controller method.
@@ -41,16 +46,20 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
         /// </summary>
-        private readonly ApiControllerBuilder<T> _controllerBuilder;
+        public IApiControllerBuilder Controller
+        {
+            get { return _controller; }
+        }
+        private readonly ApiControllerBuilder<T> _controller;
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
         /// </summary>
         /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
-        /// <param name="methodInfo"> </param>
+        /// <param name="methodInfo">Method</param>
         public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
         {
-            _controllerBuilder = apiControllerBuilder;
+            _controller = apiControllerBuilder;
             Method = methodInfo;
             ActionName = Method.Name;
         }
@@ -67,13 +76,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         }
 
         /// <summary>
+        /// Enables/Disables API Explorer for the action.
+        /// </summary>
+        public IApiControllerActionBuilder<T> WithApiExplorer(bool isEnabled)
+        {
+            IsApiExplorerEnabled = isEnabled;
+            return this;
+        }
+
+        /// <summary>
         /// Used to specify another method definition.
         /// </summary>
         /// <param name="methodName">Name of the method in proxied type</param>
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
-            return _controllerBuilder.ForMethod(methodName);
+            return _controller.ForMethod(methodName);
         }
 
         /// <summary>
@@ -93,7 +111,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IApiControllerBuilder<T> DontCreateAction()
         {
             DontCreate = true;
-            return _controllerBuilder;
+            return _controller;
         }
 
         /// <summary>
@@ -102,7 +120,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            _controllerBuilder.Build();
+            _controller.Build();
         }
 
         /// <summary>
@@ -112,7 +130,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <returns></returns>
         internal DynamicApiActionInfo BuildActionInfo(bool conventionalVerbs)
         {
-            return new DynamicApiActionInfo(ActionName, GetNormalizedVerb(conventionalVerbs), Method, Filters);
+            return new DynamicApiActionInfo(
+                ActionName,
+                GetNormalizedVerb(conventionalVerbs),
+                Method,
+                Filters,
+                IsApiExplorerEnabled
+            );
         }
 
         private HttpVerb GetNormalizedVerb(bool conventionalVerbs)
@@ -140,6 +164,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             if (Method.IsDefined(typeof(HttpDeleteAttribute)))
             {
                 return HttpVerb.Delete;
+            }
+
+            if (Method.IsDefined(typeof(HttpPatchAttribute)))
+            {
+                return HttpVerb.Patch;
             }
 
             if (Method.IsDefined(typeof(HttpOptionsAttribute)))

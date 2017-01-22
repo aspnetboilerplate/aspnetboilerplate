@@ -1,39 +1,38 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.Castle.Logging.Log4Net;
 using Abp.EntityFrameworkCore;
-using Abp.Localization;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Json;
+using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
 using AbpAspNetCoreDemo.Core;
+using AbpAspNetCoreDemo.Db;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace AbpAspNetCoreDemo
 {
     [DependsOn(
         typeof(AbpAspNetCoreModule), 
-        typeof(AbpAspNetCoreDemoCoreModule), 
-        typeof(AbpEntityFrameworkCoreModule)
+        typeof(AbpAspNetCoreDemoCoreModule),
+        typeof(AbpEntityFrameworkCoreModule),
+        typeof(AbpCastleLog4NetModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {
         public override void PreInitialize()
         {
-            Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+            Configuration.DefaultNameOrConnectionString = IocManager.Resolve<IConfigurationRoot>().GetConnectionString("Default");
 
-            Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", isDefault: true));
-            Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe"));
+            Configuration.Modules.AbpEfCore().AddDbContext<MyDbContext>(options =>
+            {
+                options.DbContextOptions.UseSqlServer(options.ConnectionString);
+            });
 
-            Configuration.Localization.Sources.Add(
-                new DictionaryBasedLocalizationSource("AbpAspNetCoreDemoModule",
-                    new JsonEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(),
-                        "AbpAspNetCoreDemo.Localization.SourceFiles"
-                    )
-                )
-            );
-
-            Configuration.Modules.AbpAspNetCore().CreateControllersForAppServices(typeof(AbpAspNetCoreDemoCoreModule).Assembly);
+            Configuration.Modules.AbpAspNetCore()
+                .CreateControllersForAppServices(
+                    typeof(AbpAspNetCoreDemoCoreModule).Assembly
+                );
         }
 
         public override void Initialize()

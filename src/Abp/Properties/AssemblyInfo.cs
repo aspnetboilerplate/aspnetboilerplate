@@ -26,9 +26,11 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 [assembly: InternalsVisibleTo("Abp.Web.Resources")]
+[assembly: InternalsVisibleTo("Abp.Specifications")]
 
 [assembly: InternalsVisibleTo("Abp.Tests")]
 [assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
+[assembly: InternalsVisibleTo("Abp.EntityFrameworkCore.Tests")]
 [assembly: InternalsVisibleTo("Abp.RedisCache.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]

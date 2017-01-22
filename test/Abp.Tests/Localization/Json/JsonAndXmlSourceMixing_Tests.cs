@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
 using System.Threading;
 using Abp.Localization;
@@ -20,12 +18,10 @@ namespace Abp.Tests.Localization.Json
 
         public JsonAndXmlSourceMixing_Tests()
         {
-            LocalIocManager.Register<IModuleFinder, MyTestModuleFinder>();
-
             LocalIocManager.Register<ILanguageManager, LanguageManager>();
             LocalIocManager.Register<ILanguageProvider, DefaultLanguageProvider>();
 
-            _bootstrapper = new AbpBootstrapper(LocalIocManager);
+            _bootstrapper = AbpBootstrapper.Create<MyLangModule>(LocalIocManager);
             _bootstrapper.Initialize();
         }
 
@@ -35,7 +31,6 @@ namespace Abp.Tests.Localization.Json
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en");
 
             var mananger = LocalIocManager.Resolve<LocalizationManager>();
-            mananger.Initialize();
 
             var source = mananger.GetSource("Lang");
 
@@ -50,17 +45,6 @@ namespace Abp.Tests.Localization.Json
             source.GetString("Banana").ShouldBe("香蕉");
             source.GetString("ThisIsATest").ShouldBe("这是一个测试.");
             source.GetString("HowAreYou").ShouldBe("你好吗?");
-        }
-    }
-
-    public class MyTestModuleFinder : IModuleFinder
-    {
-        public ICollection<Type> FindAll()
-        {
-            return new List<Type>
-                   {
-                       typeof (MyLangModule)
-                   };
         }
     }
 

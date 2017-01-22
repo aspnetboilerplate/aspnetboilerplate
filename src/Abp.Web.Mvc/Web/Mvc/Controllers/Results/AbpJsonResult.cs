@@ -1,6 +1,7 @@
 using System;
 using System.Web.Mvc;
 using Abp.Json;
+using Newtonsoft.Json;
 
 /* This class is inspired from http://www.matskarlsson.se/blog/serialize-net-objects-as-camelcase-json */
 
@@ -12,11 +13,24 @@ namespace Abp.Web.Mvc.Controllers.Results
     public class AbpJsonResult : JsonResult
     {
         /// <summary>
+        /// Gets or sets a value indicating whether this JSON result is camel cased on serialization.
+        /// Default: true.
+        /// </summary>
+        public bool CamelCase { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this JSON result uses <see cref="Formatting.Indented"/> on serialization.
+        /// Default: false.
+        /// </summary>
+        public bool Indented { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public AbpJsonResult()
         {
             JsonRequestBehavior = JsonRequestBehavior.DenyGet;
+            CamelCase = true;
         }
 
         /// <summary>
@@ -50,7 +64,7 @@ namespace Abp.Web.Mvc.Controllers.Results
 
             var response = context.HttpContext.Response;
 
-            response.ContentType = !String.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
+            response.ContentType = !string.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
             if (ContentEncoding != null)
             {
                 response.ContentEncoding = ContentEncoding;
@@ -58,7 +72,7 @@ namespace Abp.Web.Mvc.Controllers.Results
 
             if (Data != null)
             {
-                response.Write(Data.ToJsonString(true, true));
+                response.Write(Data.ToJsonString(CamelCase, Indented));
             }
         }
     }

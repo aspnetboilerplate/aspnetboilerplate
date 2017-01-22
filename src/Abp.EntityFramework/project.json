@@ -1,9 +1,9 @@
 {
-  "version": "0.9.6.1-*",
+  "version": "1.3.1.0-*",
 
   "dependencies": {
-    "Abp": "0.9.6.1-*",
-    "Abp.EntityFramework.Common": "0.9.6.1-*",
+    "Abp": "1.3.1.0-*",
+    "Abp.EntityFramework.Common": "1.3.1.0-*",
     "EntityFramework": "6.1.3",
     "EntityFramework.DynamicFilters": "1.4.11"
   },
@@ -32,10 +32,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.EntityFramework.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.EntityFramework.pdb"
   }
 }

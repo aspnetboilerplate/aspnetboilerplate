@@ -1,4 +1,5 @@
 using System;
+using Abp.AspNetCore.Mvc;
 using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -7,19 +8,34 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
-using Abp.MsDependencyInjection.Extensions;
+using Abp.Json;
+using Abp.Modules;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore
 {
     public static class AbpServiceCollectionExtensions
     {
-        public static IServiceProvider AddAbp(this IServiceCollection services)
+        /// <summary>
+        /// Integrates ABP to AspNet Core.
+        /// </summary>
+        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+        /// <param name="services">Services.</param>
+        public static IServiceProvider AddAbp<TStartupModule>(this IServiceCollection services)
+            where TStartupModule : AbpModule
         {
-            return services.AddAbp(options => { });
+            return services.AddAbp<TStartupModule>(options => { });
         }
 
-        public static IServiceProvider AddAbp(this IServiceCollection services, Action<AbpServiceOptions> optionsAction)
+        /// <summary>
+        /// Integrates ABP to AspNet Core.
+        /// </summary>
+        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+        /// <param name="services">Services.</param>
+        /// <param name="optionsAction">An action to get/modify options</param>
+        public static IServiceProvider AddAbp<TStartupModule>(this IServiceCollection services, Action<AbpServiceOptions> optionsAction)
+            where TStartupModule : AbpModule
         {
             var options = new AbpServiceOptions
             {
@@ -28,14 +44,15 @@ namespace Abp.AspNetCore
 
             optionsAction(options);
 
-            ConfigureMvc(services);
+            ConfigureAspNetCore(services, options.IocManager);
 
-            var abpBootstrapper = AddAbpBootstrapper(services, options.IocManager);
-
+            var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, options.IocManager);
+            abpBootstrapper.PlugInSources.AddRange(options.PlugInSources);
+            
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
-        private static void ConfigureMvc(IServiceCollection services)
+        private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -45,13 +62,26 @@ namespace Abp.AspNetCore
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
 
             //Add feature providers
-            var partManager = services.GetSingletonService<ApplicationPartManager>();
-            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider());
+            var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
+            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
+
+            //Configure JSON serializer
+            services.Configure<MvcJsonOptions>(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+            });
+
+            //Configure MVC
+            services.Configure<MvcOptions>(mvcOptions =>
+            {
+                mvcOptions.AddAbp(services);
+            });
         }
 
-        private static AbpBootstrapper AddAbpBootstrapper(IServiceCollection services, IIocManager iocManager)
+        private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services, IIocManager iocManager)
+            where TStartupModule : AbpModule
         {
-            var abpBootstrapper = new AbpBootstrapper(iocManager);
+            var abpBootstrapper = AbpBootstrapper.Create<TStartupModule>(iocManager);
             services.AddSingleton(abpBootstrapper);
             return abpBootstrapper;
         }

@@ -1,21 +1,19 @@
 ﻿using System;
 using Abp.AspNetCore;
-using Abp.AspNetCore.Mvc;
-using AbpAspNetCoreDemo.EntityFrameworkCore;
+using Abp.Castle.Logging.Log4Net;
+using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 
 namespace AbpAspNetCoreDemo
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -26,23 +24,30 @@ namespace AbpAspNetCoreDemo
             Configuration = builder.Build();
         }
 
+        public IConfigurationRoot Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Default"))
-            );
+            services.AddSingleton(Configuration);
 
-            services.AddMvc(mvcOptions =>
+            //Some test classes
+            services.AddTransient<MyTransientClass1>();
+            services.AddTransient<MyTransientClass2>();
+            services.AddScoped<MyScopedClass>();
+
+            //Add framework services
+            services.AddMvc(options =>
             {
-                mvcOptions.AddAbp(); //Add ABP infrastructure to MVC
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
-            return services.AddAbp(abpBootstrapper =>
+            return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 //Configure Log4Net logging
-                abpBootstrapper.IocManager.IocContainer.AddFacility<LoggingFacility>(
-                    f => f.UseLog4Net().WithConfig("log4net.config")
+                options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
                 );
             });
         }
@@ -52,14 +57,17 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -68,8 +76,7 @@ namespace AbpAspNetCoreDemo
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
-                    );
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

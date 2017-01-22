@@ -84,8 +84,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                         };
 
                         throw new ApplicationException("This is throwed to make uow failed");
-
-                        uow.Complete();
                     }
                 }));
 

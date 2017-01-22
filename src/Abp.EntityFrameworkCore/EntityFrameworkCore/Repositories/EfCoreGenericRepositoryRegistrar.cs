@@ -1,14 +1,13 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
 using Abp.EntityFramework;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
-    internal class EfCoreGenericRepositoryRegistrar : ITransientDependency
+    public class EfCoreGenericRepositoryRegistrar : IEfCoreGenericRepositoryRegistrar, ITransientDependency
     {
         public ILogger Logger { get; set; }
 

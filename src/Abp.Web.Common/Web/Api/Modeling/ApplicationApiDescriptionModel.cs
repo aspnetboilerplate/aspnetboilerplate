@@ -13,7 +13,6 @@ namespace Abp.Web.Api.Modeling
         public ApplicationApiDescriptionModel()
         {
             Modules = new Dictionary<string, ModuleApiDescriptionModel>();
-            GetOrAddModule("app");
         }
 
         public ModuleApiDescriptionModel AddModule(ModuleApiDescriptionModel module)

@@ -6,7 +6,7 @@ namespace Abp.AspNetCore.Mvc.Extensions
 {
     public static class ActionDescriptorExtensions
     {
-        public static MethodInfo GetMethodInfo(this ActionDescriptor actionDescriptor)
+        public static ControllerActionDescriptor AsControllerActionDescriptor(this ActionDescriptor actionDescriptor)
         {
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor == null)
@@ -14,7 +14,12 @@ namespace Abp.AspNetCore.Mvc.Extensions
                 throw new AbpException($"{nameof(actionDescriptor)} should be type of {typeof(ControllerActionDescriptor).AssemblyQualifiedName}");
             }
 
-            return controllerActionDescriptor.MethodInfo;
+            return controllerActionDescriptor;
+        }
+
+        public static MethodInfo GetMethodInfo(this ActionDescriptor actionDescriptor)
+        {
+            return actionDescriptor.AsControllerActionDescriptor().MethodInfo;
         }
     }
 }

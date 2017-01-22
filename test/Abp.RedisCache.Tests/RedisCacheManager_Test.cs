@@ -17,6 +17,7 @@ namespace Abp.RedisCache.Tests
 
         public RedisCacheManager_Test()
         {
+            LocalIocManager.Register<AbpRedisCacheOptions>();
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();

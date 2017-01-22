@@ -83,7 +83,11 @@ namespace Abp.Auditing
                                    ? "user " + UserId.Value
                                    : "an anonymous user";
 
-            return $"AUDIT LOG: {ServiceName}.{MethodName} is executed by {loggedUserId} in {ExecutionDuration} ms from {ClientIpAddress} IP address.";
+            var exceptionOrSuccessMessage = Exception != null
+                ? "exception: " + Exception.Message
+                : "succeed";
+
+            return $"AUDIT LOG: {ServiceName}.{MethodName} is executed by {loggedUserId} in {ExecutionDuration} ms from {ClientIpAddress} IP address with {exceptionOrSuccessMessage}.";
         }
     }
 }

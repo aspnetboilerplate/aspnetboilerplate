@@ -3,38 +3,22 @@
 namespace Abp.Web.Models
 {
     /// <summary>
-    /// This class is used to create standard responses for ajax requests.
+    /// This class is used to create standard responses for AJAX requests.
     /// </summary>
     [Serializable]
-    public class AjaxResponse<TResult>
+    public class AjaxResponse<TResult>: AjaxResponseBase
     {
         /// <summary>
-        /// Indicates success status of the result.
-        /// Set <see cref="Error"/> if this value is false.
-        /// </summary>
-        public bool Success { get; set; }
-
-        /// <summary>
-        /// The actual result object of ajax request.
-        /// It is set if <see cref="Success"/> is true.
+        /// The actual result object of AJAX request.
+        /// It is set if <see cref="AjaxResponseBase.Success"/> is true.
         /// </summary>
         public TResult Result { get; set; }
 
         /// <summary>
-        /// Error details (Must and only set if <see cref="Success"/> is false).
-        /// </summary>
-        public ErrorInfo Error { get; set; }
-
-        /// <summary>
-        /// This property can be used to indicate that the current user has no privilege to perform this request.
-        /// </summary>
-        public bool UnAuthorizedRequest { get; set; }
-
-        /// <summary>
         /// Creates an <see cref="AjaxResponse"/> object with <see cref="Result"/> specified.
-        /// <see cref="Success"/> is set as true.
+        /// <see cref="AjaxResponseBase.Success"/> is set as true.
         /// </summary>
-        /// <param name="result">The actual result object of ajax request</param>
+        /// <param name="result">The actual result object of AJAX request</param>
         public AjaxResponse(TResult result)
         {
             Result = result;
@@ -43,7 +27,7 @@ namespace Abp.Web.Models
 
         /// <summary>
         /// Creates an <see cref="AjaxResponse"/> object.
-        /// <see cref="Success"/> is set as true.
+        /// <see cref="AjaxResponseBase.Success"/> is set as true.
         /// </summary>
         public AjaxResponse()
         {
@@ -51,7 +35,7 @@ namespace Abp.Web.Models
         }
 
         /// <summary>
-        /// Creates an <see cref="AjaxResponse"/> object with <see cref="Success"/> specified.
+        /// Creates an <see cref="AjaxResponse"/> object with <see cref="AjaxResponseBase.Success"/> specified.
         /// </summary>
         /// <param name="success">Indicates success status of the result</param>
         public AjaxResponse(bool success)
@@ -60,8 +44,8 @@ namespace Abp.Web.Models
         }
 
         /// <summary>
-        /// Creates an <see cref="AjaxResponse"/> object with <see cref="Error"/> specified.
-        /// <see cref="Success"/> is set as false.
+        /// Creates an <see cref="AjaxResponse"/> object with <see cref="AjaxResponseBase.Error"/> specified.
+        /// <see cref="AjaxResponseBase.Success"/> is set as false.
         /// </summary>
         /// <param name="error">Error details</param>
         /// <param name="unAuthorizedRequest">Used to indicate that the current user has no privilege to perform this request</param>

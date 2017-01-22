@@ -1,9 +1,9 @@
 ﻿using System;
 using Abp.Configuration.Startup;
 using Abp.Dependency.Installers;
+using Abp.Localization;
 using Abp.Tests;
 using Abp.UI;
-using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.Configuration;
 using Abp.Web.Models;
 using NSubstitute;
@@ -23,7 +23,7 @@ namespace Abp.Web.Tests
             configuration.Initialize();
             configuration.Localization.IsEnabled = false;
 
-            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebModuleConfiguration>());
+            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebCommonModuleConfiguration>(), NullLocalizationManager.Instance);
             _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 

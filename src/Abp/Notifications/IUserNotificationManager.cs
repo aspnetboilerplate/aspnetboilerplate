@@ -35,6 +35,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Updates a user notification state.
         /// </summary>
+        /// <param name="tenantId">Tenant Id.</param>
         /// <param name="userNotificationId">The user notification id.</param>
         /// <param name="state">New state.</param>
         Task UpdateUserNotificationStateAsync(int? tenantId, Guid userNotificationId, UserNotificationState state);
@@ -49,6 +50,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Deletes a user notification.
         /// </summary>
+        /// <param name="tenantId">Tenant Id.</param>
         /// <param name="userNotificationId">The user notification id.</param>
         Task DeleteUserNotificationAsync(int? tenantId, Guid userNotificationId);
 

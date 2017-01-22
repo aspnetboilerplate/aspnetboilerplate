@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("Abp.AspNetCore")]
+[assembly: InternalsVisibleTo("Abp.Web.Common.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 

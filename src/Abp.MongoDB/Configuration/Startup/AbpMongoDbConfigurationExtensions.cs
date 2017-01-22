@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpMongoDbModuleConfiguration AbpMongoDb(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.MongoDb", () => configurations.AbpConfiguration.IocManager.Resolve<IAbpMongoDbModuleConfiguration>());
+            return configurations.AbpConfiguration.Get<IAbpMongoDbModuleConfiguration>();
         }
     }
 }

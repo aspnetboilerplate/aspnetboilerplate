@@ -15,7 +15,7 @@ namespace Abp.Runtime.Validation
         /// <summary>
         /// Detailed list of validation errors for this exception.
         /// </summary>
-        public List<ValidationResult> ValidationErrors { get; set; }
+        public IList<ValidationResult> ValidationErrors { get; set; }
 
         /// <summary>
         /// Exception severity.
@@ -59,7 +59,7 @@ namespace Abp.Runtime.Validation
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="validationErrors">Validation errors</param>
-        public AbpValidationException(string message, List<ValidationResult> validationErrors)
+        public AbpValidationException(string message, IList<ValidationResult> validationErrors)
             : base(message)
         {
             ValidationErrors = validationErrors;

@@ -1,11 +1,11 @@
 {
-  "version": "0.9.6.1-*",
+  "version": "1.3.1.0-*",
 
   "dependencies": {
-    "Abp.Web.Common": "0.9.6.1-*",
-    "Castle.LoggingFacility.MsLogging": "0.1.0",
-    "Castle.Windsor.MsDependencyInjection": "0.2.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
+    "Abp.Web.Common": "1.3.1.0-*",
+    "Castle.LoggingFacility.MsLogging": "1.1.0",
+    "Castle.Windsor.MsDependencyInjection": "1.3.0",
+    "Microsoft.AspNetCore.Mvc": "1.1.0"
   },
 
   "frameworks": {
@@ -32,10 +32,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net461/": "bin/Release/net461/Abp.AspNetCore.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net461/": "bin/Release/net461/Abp.AspNetCore.pdb"
   }
 }

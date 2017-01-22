@@ -3,6 +3,8 @@ using System.Data.Entity;
 using Abp.EntityFramework;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
+using Abp.TestBase.SampleApplication.GuidEntities;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
@@ -19,6 +21,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
 
         public virtual IDbSet<Branch> Branches { get; set; }
 
+        public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
+
+        public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }
+
         public SampleApplicationDbContext()
         {
 
@@ -31,7 +37,13 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         }
 
         public SampleApplicationDbContext(DbConnection connection)
-            : base(connection, true)
+            : base(connection, false)
+        {
+
+        }
+
+        public SampleApplicationDbContext(DbConnection connection, bool contextOwnsConnection)
+            : base(connection, contextOwnsConnection)
         {
 
         }

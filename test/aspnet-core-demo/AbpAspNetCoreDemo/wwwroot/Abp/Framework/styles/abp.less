@@ -1,0 +1,41 @@
+﻿@import "abp.mixings.less";
+
+// COMMON STYLES //////////////////////////////////////////////////////////////
+
+.abp-clickable {
+    cursor: pointer;
+}
+
+// Docking
+
+.abp-dock-top {
+    .abp-dock(top);
+}
+
+.abp-dock-right {
+    .abp-dock(right);
+}
+
+.abp-dock-bottom {
+    .abp-dock(bottom);
+}
+
+.abp-dock-left {
+    .abp-dock(left);
+}
+
+//Busy indicator
+
+.abp-busy-indicator {
+
+}
+
+.abp-busy-indicator-small {
+    width: 36px;
+    height: 36px;
+
+    &.abp-dock-left, 
+    &.abp-dock-right {
+        height: auto;
+    }
+}

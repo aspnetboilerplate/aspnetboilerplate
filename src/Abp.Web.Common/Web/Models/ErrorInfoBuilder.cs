@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.Localization;
 using Abp.Web.Configuration;
 
 namespace Abp.Web.Models
@@ -10,9 +11,9 @@ namespace Abp.Web.Models
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
         /// <inheritdoc/>
-        public ErrorInfoBuilder(IAbpWebModuleConfiguration configuration)
+        public ErrorInfoBuilder(IAbpWebCommonModuleConfiguration configuration, ILocalizationManager localizationManager)
         {
-            Converter = new DefaultErrorInfoConverter(configuration);
+            Converter = new DefaultErrorInfoConverter(configuration, localizationManager);
         }
 
         /// <inheritdoc/>

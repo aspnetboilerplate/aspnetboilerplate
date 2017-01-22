@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
-using Abp.Collections;
 using Abp.Localization;
-using Abp.Modules;
 using Abp.TestBase;
 using Abp.Web.Localization;
 using Shouldly;
@@ -10,7 +8,7 @@ using Xunit;
 
 namespace Abp.Web.Tests.Localization
 {
-    public class AbpWebLocalizationTests : AbpIntegratedTestBase
+    public class AbpWebLocalizationTests : AbpIntegratedTestBase<AbpWebModule>
     {
         private readonly ILocalizationManager _localizationManager;
 
@@ -19,18 +17,12 @@ namespace Abp.Web.Tests.Localization
             _localizationManager = Resolve<ILocalizationManager>();
         }
 
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add(typeof(AbpWebModule));
-        }
-
         [Fact]
         public void Should_Get_Localized_Strings()
         {
             var names = Assembly.GetAssembly(typeof(AbpWebModule)).GetManifestResourceNames();
 
-            var source = _localizationManager.GetSource(AbpWebLocalizedMessages.SourceName);
+            var source = _localizationManager.GetSource(AbpWebConsts.LocalizaionSourceName);
             source.GetString("Yes", new CultureInfo("en-US")).ShouldBe("Yes");
             source.GetString("Yes", new CultureInfo("tr-TR")).ShouldBe("Evet");
         }

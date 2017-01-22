@@ -39,5 +39,18 @@ namespace Abp.Configuration.Startup
                 configuration.IocManager.Register<TType, TImpl>(lifeStyle);
             });
         }
+
+
+        /// <summary>
+        /// Used to replace a service type.
+        /// </summary>
+        /// <typeparam name="TType">Type of the service.</typeparam>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="replaceAction">Replace action.</param>
+        public static void ReplaceService<TType>(this IAbpStartupConfiguration configuration, Action replaceAction)
+            where TType : class
+        {
+            configuration.ReplaceService(typeof(TType), replaceAction);
+        }
     }
 }

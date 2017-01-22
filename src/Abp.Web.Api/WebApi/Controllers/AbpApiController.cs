@@ -94,12 +94,6 @@ namespace Abp.WebApi.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSetting will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
-
-        /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager
@@ -195,8 +189,7 @@ namespace Abp.WebApi.Controllers
         {
             return PermissionChecker.IsGranted(permissionName);
         }
-
-
+        
         /// <summary>
         /// Checks if given feature is enabled for current tenant.
         /// </summary>

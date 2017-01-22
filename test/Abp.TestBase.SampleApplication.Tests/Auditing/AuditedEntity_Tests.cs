@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Domain.Repositories;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.Timing;
 using Shouldly;
 using Xunit;

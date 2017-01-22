@@ -14,11 +14,16 @@ namespace Abp.Web.Localization
     {
         private readonly ILocalizationManager _localizationManager;
         private readonly ICacheManager _cacheManager;
+        private readonly ILanguageManager _languageManager;
 
-        public LocalizationScriptManager(ILocalizationManager localizationManager, ICacheManager cacheManager)
+        public LocalizationScriptManager(
+            ILocalizationManager localizationManager, 
+            ICacheManager cacheManager,
+            ILanguageManager languageManager)
         {
             _localizationManager = localizationManager;
             _cacheManager = cacheManager;
+            _languageManager = languageManager;
         }
 
         /// <inheritdoc/>
@@ -50,7 +55,7 @@ namespace Abp.Web.Localization
             script.AppendLine();
             script.Append("    abp.localization.languages = [");
 
-            var languages = _localizationManager.GetAllLanguages();
+            var languages = _languageManager.GetLanguages();
             for (var i = 0; i < languages.Count; i++)
             {
                 var language = languages[i];
@@ -73,7 +78,7 @@ namespace Abp.Web.Localization
 
             if (languages.Count > 0)
             {
-                var currentLanguage = _localizationManager.CurrentLanguage;
+                var currentLanguage = _languageManager.CurrentLanguage;
                 script.AppendLine("    abp.localization.currentLanguage = {");
                 script.AppendLine("        name: '" + currentLanguage.Name + "',");
                 script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");

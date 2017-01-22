@@ -1,5 +1,4 @@
 ﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Shouldly;
 using Xunit;
@@ -9,7 +8,7 @@ namespace Abp.TestBase.Tests.Application.Services
     /// <summary>
     /// Should support working without database or a unit of work.
     /// </summary>
-    public class ApplicationWithoutDb_Tests : AbpIntegratedTestBase
+    public class ApplicationWithoutDb_Tests : AbpIntegratedTestBase<AbpKernelModule>
     {
         private readonly IMyAppService _myAppService;
         public ApplicationWithoutDb_Tests()
@@ -40,12 +39,12 @@ namespace Abp.TestBase.Tests.Application.Services
             }
         }
 
-        public class MyMethodInput : IInputDto
+        public class MyMethodInput 
         {
             public string MyStringValue { get; set; }
         }
 
-        public class MyMethodOutput : IOutputDto
+        public class MyMethodOutput
         {
             public int Result { get; set; }
         }

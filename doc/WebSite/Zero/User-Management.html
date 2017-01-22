@@ -112,11 +112,9 @@ some usages of the UserManager:</p>
     }
 }</pre>
 			<h4>User Login</h4>
-			<p>UserManager has a <strong>LoginAsync</strong> method used to login to the 
-application. It checks all logic for login and returns a login result. See
-				<a href="/Pages/Documents/Zero/Installation#DocAccountController">sample account 
-controller</a> for example usage of the Login method.</p>
-			<p>LoginAsync method also <strong>automatically saves all login 
+			<p>Module-zero defines LoginManager which has a <strong>LoginAsync</strong> 
+			method used to login to the application. It checks all logic for 
+			login and returns a login result. LoginAsync method also <strong>automatically saves all login 
 			attempts </strong>to the database (even it's a failed attempt). You 
 			can use <strong>UserLoginAttempt</strong> entity to query it.</p>
 			<h4>About IdentityResults</h4>

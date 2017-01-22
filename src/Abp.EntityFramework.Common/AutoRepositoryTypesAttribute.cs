@@ -4,6 +4,7 @@ namespace Abp.EntityFramework
 {
     /// <summary>
     /// Used to define auto-repository types for entities.
+    /// This can be used for DbContext types.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class AutoRepositoryTypesAttribute : Attribute

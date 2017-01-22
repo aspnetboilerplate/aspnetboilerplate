@@ -16,7 +16,6 @@ namespace Abp.Domain.Uow
 
         private const string ContextKey = "Abp.UnitOfWork.Current";
 
-        //TODO: Clear periodically..?
         private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary = new ConcurrentDictionary<string, IUnitOfWork>();
 
         public CallContextCurrentUnitOfWorkProvider()

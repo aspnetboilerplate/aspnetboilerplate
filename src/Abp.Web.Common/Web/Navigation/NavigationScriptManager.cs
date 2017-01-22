@@ -111,6 +111,11 @@ namespace Abp.Web.Navigation
                 sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + menuItem.CustomData.ToJsonString(true) + ",");
             }
 
+            if (menuItem.Target != null)
+            {
+                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + menuItem.Target.Replace("'", @"\'") + "',");
+            }
+
             sb.Append(new string(' ', indentLength + 4) + "items: [");
 
             for (int i = 0; i < menuItem.Items.Count; i++)

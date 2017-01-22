@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
@@ -18,8 +19,13 @@ namespace Abp.Tests.Authorization
         public AuthorizationInterceptor_Tests()
         {
             //SUT: AuthorizationInterceptor and AuthorizeAttributeHelper
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureChecker>().Instance(Substitute.For<IFeatureChecker>())
+                );
+
+            LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
-            LocalIocManager.Register<IAuthorizeAttributeHelper, AuthorizeAttributeHelper>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
                 Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
                 Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
