@@ -108,11 +108,13 @@ onComplete: function(swaggerApi, swaggerUi){
 }
 </pre>
 <p>Notice that, we inject a javascript file named "<strong>Swagger-Custom.js</strong>" while configuring swagger ui. This script file is used to add CSRF token to requests while testing api services on swagger ui. You also need to add this file to your WebApi project 
-(as embedded resource) and use it's Logical Name in InjectJavaScript method while injecting it. It's content is:</p>
-<pre lang="js">
-var getCookieValue = function(key) {
+as <strong>embedded resource</strong> and use it's Logical Name in InjectJavaScript method while injecting it. </p>
+	<p><strong>IMPORTANT</strong>: The code above will be slightly different for 
+	your project (Namespace will not be AbpCompanyName.AbpProjectName... and AbpProjectNameWebApiModule will be	<em>YourProjectName</em>WebApiModule).</p>
+	<p>Content of the <strong>Swagger-Custom.js</strong> here:</p>
+<pre lang="js">var getCookieValue = function(key) {
     var equalities = document.cookie.split('; ');
-    for (var i = 0; i < equalities.length; i++) {
+    for (var i = 0; i &lt; equalities.length; i++) {
         if (!equalities[i]) {
             continue;
         }
@@ -132,8 +134,7 @@ var getCookieValue = function(key) {
 
 var csrfCookie = getCookieValue("XSRF-TOKEN");
 var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("X-XSRF-TOKEN", csrfCookie, "header");
-swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);
-</pre>
+swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);</pre>
 	<p>See Swashbuckle 
 	<a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank">
 	documentation</a> for more configuration options.</p>
