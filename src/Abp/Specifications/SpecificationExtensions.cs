@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 
 namespace Abp.Specifications
 {
@@ -10,14 +11,15 @@ namespace Abp.Specifications
         /// the given specification must be satisfied by the given object.
         /// </summary>
         /// <param name="specification">The specification</param>
-        /// <param name="other">The specification instance with which the current specification is combined.</param>
+        /// <param name="andSpecification">The specification instance with which the current specification is combined.</param>
         /// <returns>The combined specification instance.</returns>
-        public static ISpecification<T> And<T>([NotNull] this ISpecification<T> specification, [NotNull] ISpecification<T> other)
+        public static Specification<T> And<T>([NotNull] this Specification<T> specification, [NotNull] Specification<T> andSpecification)
+            where T : class
         {
             Check.NotNull(specification, nameof(specification));
-            Check.NotNull(other, nameof(other));
+            Check.NotNull(andSpecification, nameof(andSpecification));
 
-            return new AndSpecification<T>(specification, other);
+            return new AndSpecification<T>(specification, andSpecification);
         }
 
         /// <summary>
@@ -26,32 +28,16 @@ namespace Abp.Specifications
         /// the given specification should be satisfied by the given object.
         /// </summary>
         /// <param name="specification">The specification</param>
-        /// <param name="other">The specification instance with which the current specification
+        /// <param name="orSpecification">The specification instance with which the current specification
         /// is combined.</param>
         /// <returns>The combined specification instance.</returns>
-        public static ISpecification<T> Or<T>([NotNull] this ISpecification<T> specification, [NotNull] ISpecification<T> other)
+        public static Specification<T> Or<T>([NotNull] this Specification<T> specification, [NotNull] Specification<T> orSpecification)
+            where T : class
         {
             Check.NotNull(specification, nameof(specification));
-            Check.NotNull(other, nameof(other));
+            Check.NotNull(orSpecification, nameof(orSpecification));
 
-            return new OrSpecification<T>(specification, other);
-        }
-
-        /// <summary>
-        /// Combines the current specification instance with another specification instance
-        /// and returns the combined specification which represents that the current specification
-        /// should be satisfied by the given object but the specified specification should not.
-        /// </summary>
-        /// <param name="specification">The specification</param>
-        /// <param name="other">The specification instance with which the current specification
-        /// is combined.</param>
-        /// <returns>The combined specification instance.</returns>
-        public static ISpecification<T> AndNot<T>([NotNull] this ISpecification<T> specification, [NotNull] ISpecification<T> other)
-        {
-            Check.NotNull(specification, nameof(specification));
-            Check.NotNull(other, nameof(other));
-
-            return new AndNotSpecification<T>(specification, other);
+            return new OrSpecification<T>(specification, orSpecification);
         }
 
         /// <summary>
@@ -59,11 +45,76 @@ namespace Abp.Specifications
         /// the semantics opposite to the current specification.
         /// </summary>
         /// <returns>The reversed specification instance.</returns>
-        public static ISpecification<T> Not<T>([NotNull] this ISpecification<T> specification)
+        public static Specification<T> Not<T>([NotNull] this Specification<T> specification)
+            where T : class
         {
             Check.NotNull(specification, nameof(specification));
 
             return new NotSpecification<T>(specification);
+        }
+
+        public static Specification<T> AndIf<T>([NotNull] this Specification<T> specification, bool condition, [NotNull] Specification<T> andSpecification)
+            where T : class
+        {
+            Check.NotNull(specification, nameof(specification));
+            Check.NotNull(andSpecification, nameof(andSpecification));
+
+            if (condition)
+            {
+                return new AndSpecification<T>(specification, andSpecification);
+            }
+            else
+            {
+                return specification;
+            }
+        }
+
+        public static Specification<T> OrIf<T>([NotNull] this Specification<T> specification, bool condition, [NotNull] Specification<T> orSpecification)
+            where T : class
+        {
+            Check.NotNull(specification, nameof(specification));
+            Check.NotNull(orSpecification, nameof(orSpecification));
+
+            if (condition)
+            {
+                return new OrSpecification<T>(specification, orSpecification);
+            }
+            else
+            {
+                return specification;
+            }
+        }
+
+        public static Specification<T> AndIf<T>([NotNull] this Specification<T> specification, bool condition, [NotNull] Func<Specification<T>> andSpecificationFunc)
+            where T : class
+        {
+            Check.NotNull(specification, nameof(specification));
+            Check.NotNull(andSpecificationFunc, nameof(andSpecificationFunc));
+
+            if (condition)
+            {
+                return new AndSpecification<T>(specification, andSpecificationFunc());
+            }
+            else
+            {
+                return specification;
+            }
+        }
+
+        public static Specification<T> OrIf<T>([NotNull] this Specification<T> specification, bool condition, [NotNull] Func<Specification<T>> orSpecificationFunc)
+            where T : class
+        {
+            Check.NotNull(specification, nameof(specification));
+            Check.NotNull(orSpecificationFunc, nameof(orSpecificationFunc));
+
+            if (condition)
+            {
+                return new OrSpecification<T>(specification, orSpecificationFunc());
+            }
+            else
+            {
+                return specification;
+            }
         }
     }
 }

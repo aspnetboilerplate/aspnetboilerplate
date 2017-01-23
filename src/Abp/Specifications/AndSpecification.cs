@@ -1,29 +1,75 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 
 namespace Abp.Specifications
 {
     /// <summary>
-    /// Represents the combined specification which indicates that both of the given
-    /// specifications should be satisfied by the given object.
+    /// A logic AND Specification
     /// </summary>
-    /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public class AndSpecification<T> : CompositeSpecification<T>
+    /// <typeparam name="T">Type of entity that check this specification</typeparam>
+    public sealed class AndSpecification<T>
+       : CompositeSpecification<T>
+       where T : class
     {
-        /// <summary>
-        /// Constructs a new instance of <see cref="AndSpecification{T}"/> class.
-        /// </summary>
-        /// <param name="left">The first specification.</param>
-        /// <param name="right">The second specification.</param>
-        public AndSpecification(ISpecification<T> left, ISpecification<T> right) : base(left, right) { }
+        #region Members
+
+        private ISpecification<T> _RightSideSpecification = null;
+        private ISpecification<T> _LeftSideSpecification = null;
+
+        #endregion
+
+        #region Public Constructor
 
         /// <summary>
-        /// Gets the LINQ expression which represents the current specification.
+        /// Default constructor for AndSpecification
         /// </summary>
-        /// <returns>The LINQ expression.</returns>
-        public override Expression<Func<T, bool>> ToExpression()
+        /// <param name="leftSide">Left side specification</param>
+        /// <param name="rightSide">Right side specification</param>
+        public AndSpecification(ISpecification<T> leftSide, ISpecification<T> rightSide)
         {
-            return Left.ToExpression().And(Right.ToExpression());
+            if (leftSide == (ISpecification<T>)null)
+                throw new ArgumentNullException("leftSide");
+
+            if (rightSide == (ISpecification<T>)null)
+                throw new ArgumentNullException("rightSide");
+
+            this._LeftSideSpecification = leftSide;
+            this._RightSideSpecification = rightSide;
         }
+
+        #endregion
+
+        #region Composite Specification overrides
+
+        /// <summary>
+        /// Left side specification
+        /// </summary>
+        public override ISpecification<T> LeftSideSpecification
+        {
+            get { return _LeftSideSpecification; }
+        }
+
+        /// <summary>
+        /// Right side specification
+        /// </summary>
+        public override ISpecification<T> RightSideSpecification
+        {
+            get { return _RightSideSpecification; }
+        }
+
+        /// <summary>
+        /// <see cref="ISpecification{T}"/>
+        /// </summary>
+        /// <returns><see cref="ISpecification{T}"/></returns>
+        public override Expression<Func<T, bool>> SatisfiedBy()
+        {
+            Expression<Func<T, bool>> left = _LeftSideSpecification.SatisfiedBy();
+            Expression<Func<T, bool>> right = _RightSideSpecification.SatisfiedBy();
+
+            return (left.And(right));
+
+        }
+
+        #endregion
     }
 }

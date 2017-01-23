@@ -1,36 +1,66 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Abp.Specifications
 {
     /// <summary>
-    /// Represents the specification which indicates the semantics opposite to the given specification.
+    /// NotEspecification convert a original
+    /// specification with NOT logic operator
     /// </summary>
-    /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public class NotSpecification<T> : Specification<T>
+    /// <typeparam name="TEntity">Type of element for this specificaiton</typeparam>
+    public sealed class NotSpecification<TEntity>
+        : Specification<TEntity>
+        where TEntity : class
     {
-        private readonly ISpecification<T> _specification;
+        #region Members
+
+        Expression<Func<TEntity, bool>> _OriginalCriteria;
+
+        #endregion
+
+        #region Constructor
+
+        ///// <summary>
+        ///// Constructor for NotSpecificaiton
+        ///// </summary>
+        ///// <param name="originalSpecification">Original specification</param>
+        //public NotSpecification(ISpecification<TEntity> originalSpecification)
+        //{
+
+        //    if (originalSpecification == (ISpecification<TEntity>)null)
+        //        throw new ArgumentNullException("originalSpecification");
+
+        //    _OriginalCriteria = originalSpecification.SatisfiedBy();
+        //}
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NotSpecification{T}"/> class.
+        /// Constructor for NotSpecification
         /// </summary>
-        /// <param name="specification">The specification to be reversed.</param>
-        public NotSpecification(ISpecification<T> specification)
+        /// <param name="originalSpecification">Original specificaiton</param>
+        public NotSpecification(Expression<Func<TEntity, bool>> originalSpecification)
         {
-            _specification = specification;
+            if (originalSpecification == (Expression<Func<TEntity, bool>>)null)
+                throw new ArgumentNullException("originalSpecification");
+
+            _OriginalCriteria = originalSpecification;
         }
 
+        #endregion
+
+        #region Override Specification methods
+
         /// <summary>
-        /// Gets the LINQ expression which represents the current specification.
+        /// <see cref="ISpecification{TEntity}"/>
         /// </summary>
-        /// <returns>The LINQ expression.</returns>
-        public override Expression<Func<T, bool>> ToExpression()
+        /// <returns><see cref="ISpecification{TEntity}"/></returns>
+        public override Expression<Func<TEntity, bool>> SatisfiedBy()
         {
-            var expression = _specification.ToExpression();
-            return Expression.Lambda<Func<T, bool>>(
-                Expression.Not(expression.Body),
-                expression.Parameters
-            );
+
+            return Expression.Lambda<Func<TEntity, bool>>(Expression.Not(_OriginalCriteria.Body),
+                                                         _OriginalCriteria.Parameters.Single());
         }
+
+        #endregion
     }
 }
