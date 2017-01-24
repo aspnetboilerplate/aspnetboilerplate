@@ -26,8 +26,7 @@
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "BundlerMinifier.Core": "2.2.306",
-    "AbpAspNetCoreDemo.PlugIn": "1.0.0-*"
+    "BundlerMinifier.Core": "2.2.306"
   },
 
   "tools": {
