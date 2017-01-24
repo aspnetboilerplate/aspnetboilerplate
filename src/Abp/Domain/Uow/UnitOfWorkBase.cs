@@ -14,7 +14,7 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-        public string Id { get; private set; }
+        public string Id { get; }
 
         [DoNotWire]
         public IUnitOfWork Outer { get; set; }
