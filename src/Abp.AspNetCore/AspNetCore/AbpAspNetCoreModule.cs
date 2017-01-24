@@ -2,6 +2,7 @@
 using System.Reflection;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Auditing;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
 using Abp.Auditing;
@@ -23,6 +24,7 @@ namespace Abp.AspNetCore
     {
         public override void PreInitialize()
         {
+            IocManager.Register<IEmbeddedViewsConfiguration, EmbeddedViewsConfiguration>();
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
 
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);

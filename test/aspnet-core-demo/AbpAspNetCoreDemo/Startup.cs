@@ -1,11 +1,13 @@
 ﻿using System;
 using Abp.AspNetCore;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.Castle.Logging.Log4Net;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

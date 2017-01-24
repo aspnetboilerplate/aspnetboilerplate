@@ -7,6 +7,7 @@ using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
 using AbpAspNetCoreDemo.Core;
 using AbpAspNetCoreDemo.Db;
+using AbpAspNetCoreDemo.PlugIn;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -16,7 +17,8 @@ namespace AbpAspNetCoreDemo
         typeof(AbpAspNetCoreModule), 
         typeof(AbpAspNetCoreDemoCoreModule),
         typeof(AbpEntityFrameworkCoreModule),
-        typeof(AbpCastleLog4NetModule)
+        typeof(AbpCastleLog4NetModule),
+        typeof(AbpAspNetCoreDemoPlugInModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {

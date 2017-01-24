@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.Json;
 using Abp.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 
 namespace Abp.AspNetCore
 {
@@ -76,6 +79,18 @@ namespace Abp.AspNetCore
             {
                 mvcOptions.AddAbp(services);
             });
+
+            //Configure Razor
+            services.Insert(0,
+                ServiceDescriptor.Singleton<IConfigureOptions<RazorViewEngineOptions>>(
+                    new ConfigureOptions<RazorViewEngineOptions>(
+                        (options) =>
+                        {
+                            options.FileProviders.Add(new EmbeddedViewFileProvider(iocResolver));
+                        }
+                    )
+                )
+            );
         }
 
         private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services, IIocManager iocManager)
