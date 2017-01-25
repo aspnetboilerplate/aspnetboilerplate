@@ -13,7 +13,7 @@ namespace Abp.AspNetCore.Mvc.Views
 
         public string PhysicalPath => null;
 
-        public string Name => _resourceItem.Name;
+        public string Name => _resourceItem.FileName;
 
         public DateTimeOffset LastModified => _resourceItem.LastModifiedUtc;
 

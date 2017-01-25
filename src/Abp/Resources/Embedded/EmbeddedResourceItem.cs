@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace Abp.Resources.Embedded
 {
@@ -9,7 +10,10 @@ namespace Abp.Resources.Embedded
     /// </summary>
     public class EmbeddedResourceItem
     {
-        public string Name { get; }
+        public string FileName { get; }
+
+        [CanBeNull]
+        public string FileExtension { get; }
 
         /// <summary>
         /// Content of the resource file.
@@ -23,14 +27,25 @@ namespace Abp.Resources.Embedded
 
         public DateTime LastModifiedUtc { get; }
 
-        internal EmbeddedResourceItem(string name, byte[] content, Assembly assembly)
+        internal EmbeddedResourceItem(string fileName, byte[] content, Assembly assembly)
         {
-            Name = name;
+            FileName = fileName;
             Content = content;
             Assembly = assembly;
+            FileExtension = CalculateFileExtension(FileName);
             LastModifiedUtc = Assembly.Location != null
                 ? new FileInfo(Assembly.Location).LastWriteTimeUtc
                 : DateTime.UtcNow;
+        }
+
+        private static string CalculateFileExtension(string fileName)
+        {
+            if (!fileName.Contains("."))
+            {
+                return null;
+            }
+
+            return fileName.Substring(fileName.LastIndexOf(".", StringComparison.Ordinal) + 1);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Resources.Embedded;
 using Abp.Web.Mvc.Resources.Embedded.Handlers;
 
@@ -33,7 +34,7 @@ namespace Abp.Web.Mvc.Resources
              */
             RouteTable.Routes.MapRoute(
                 name: "EmbeddedResource:" + rootPath,
-                url: rootPath + "/{*pathInfo}",
+                url: rootPath.EnsureEndsWith('/') + "{*pathInfo}",
                 defaults: new
                 {
                     controller = "AbpNoController",
