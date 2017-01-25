@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 
@@ -14,8 +13,6 @@ namespace Abp.AspNetCore.Configuration
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
         List<Type> FormBodyBindingIgnoredTypes { get; }
-
-        IEmbeddedViewsConfiguration EmbeddedViews { get; }
 
         /// <summary>
         /// Default: true.

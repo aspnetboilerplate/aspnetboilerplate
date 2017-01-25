@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 
@@ -23,12 +22,8 @@ namespace Abp.AspNetCore.Configuration
 
         public bool SetNoCacheForAjaxResponses { get; set; }
 
-        public IEmbeddedViewsConfiguration EmbeddedViews { get; }
-
-        public AbpAspNetCoreConfiguration(IEmbeddedViewsConfiguration embeddedViews)
+        public AbpAspNetCoreConfiguration()
         {
-            EmbeddedViews = embeddedViews;
-
             DefaultWrapResultAttribute = new WrapResultAttribute();
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
