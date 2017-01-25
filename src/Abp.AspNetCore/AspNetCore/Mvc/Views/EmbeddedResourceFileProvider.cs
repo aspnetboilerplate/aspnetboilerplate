@@ -6,19 +6,23 @@ using Microsoft.Extensions.Primitives;
 
 namespace Abp.AspNetCore.Mvc.Views
 {
-    public class EmbeddedViewFileProvider : IFileProvider
+    public class EmbeddedResourceFileProvider : IFileProvider
     {
         private IEmbeddedResourceManager EmbeddedResourceManager => _embeddedResourceManager.Value;
         private readonly Lazy<IEmbeddedResourceManager> _embeddedResourceManager;
 
-        public EmbeddedViewFileProvider(IIocResolver iocResolver)
+        public EmbeddedResourceFileProvider(IIocResolver iocResolver)
         {
-            _embeddedResourceManager = new Lazy<IEmbeddedResourceManager>(() => iocResolver.Resolve<IEmbeddedResourceManager>(), true);
+            _embeddedResourceManager = new Lazy<IEmbeddedResourceManager>(
+                () => iocResolver.Resolve<IEmbeddedResourceManager>(),
+                true
+            );
         }
 
         public IFileInfo GetFileInfo(string subpath)
         {
             var resource = EmbeddedResourceManager.GetResource(subpath);
+
             if (resource == null)
             {
                 return new NotFoundFileInfo(subpath);

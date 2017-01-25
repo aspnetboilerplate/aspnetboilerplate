@@ -16,10 +16,12 @@ namespace Abp.Resources.Embedded
         public EmbeddedResourceManager(IEmbeddedResourcesConfiguration configuration)
         {
             _configuration = configuration;
-            _resources = new Lazy<Dictionary<string, EmbeddedResourceItem>>(CreateResourcesDictionary, true);
+            _resources = new Lazy<Dictionary<string, EmbeddedResourceItem>>(
+                CreateResourcesDictionary,
+                true
+            );
         }
 
-        /// <inheritdoc/>
         /// <inheritdoc/>
         public EmbeddedResourceItem GetResource(string fullPath)
         {

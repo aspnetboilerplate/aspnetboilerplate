@@ -3,13 +3,13 @@ using System.IO;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc.Views;
 using Abp.Castle.Logging.Log4Net;
+using Abp.Dependency;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -85,6 +85,7 @@ namespace AbpAspNetCoreDemo
             }
 
             app.UseStaticFiles();
+            app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
             app.UseMvc(routes =>
             {

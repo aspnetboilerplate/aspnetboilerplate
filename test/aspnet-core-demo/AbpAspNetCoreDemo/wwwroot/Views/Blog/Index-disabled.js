@@ -1,0 +1,1 @@
+﻿console.log('blog module script overrided by application.');

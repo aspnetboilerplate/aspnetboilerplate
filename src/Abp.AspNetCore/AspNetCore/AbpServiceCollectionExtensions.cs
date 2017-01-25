@@ -86,7 +86,7 @@ namespace Abp.AspNetCore
                     new ConfigureOptions<RazorViewEngineOptions>(
                         (options) =>
                         {
-                            options.FileProviders.Add(new EmbeddedViewFileProvider(iocResolver));
+                            options.FileProviders.Add(new EmbeddedResourceFileProvider(iocResolver));
                         }
                     )
                 )

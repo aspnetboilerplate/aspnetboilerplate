@@ -22,7 +22,7 @@
   "buildOptions": {
     "embed": {
       "include": [
-        "Views/Blog/*.cshtml"
+        "Views/**/*.*"
       ]
     }
   }
