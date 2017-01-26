@@ -22,6 +22,7 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Web.Common")]
 [assembly: InternalsVisibleTo("Abp.AspNetCore")]
+[assembly: InternalsVisibleTo("Abp.Owin")]
 [assembly: InternalsVisibleTo("Abp.Web")]
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]

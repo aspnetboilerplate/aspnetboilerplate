@@ -4,7 +4,8 @@
   "dependencies": {
     "Abp": "1.3.2.0-*",
     "Owin": "1.0.0",
-    "Microsoft.Owin": "3.0.1" 
+    "Microsoft.Owin": "3.0.1",
+    "Microsoft.Owin.StaticFiles": "3.0.1"
   },
 
   "frameworks": {

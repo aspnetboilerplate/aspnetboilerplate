@@ -1,4 +1,5 @@
-﻿using Abp.Modules;
+﻿using System.Reflection;
+using Abp.Modules;
 
 namespace Abp.Owin
 {
@@ -8,6 +9,9 @@ namespace Abp.Owin
     [DependsOn(typeof (AbpKernelModule))]
     public class AbpOwinModule : AbpModule
     {
-        //nothing to do...
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        }
     }
 }
