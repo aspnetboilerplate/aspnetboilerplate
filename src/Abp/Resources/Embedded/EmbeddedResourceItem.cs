@@ -10,6 +10,9 @@ namespace Abp.Resources.Embedded
     /// </summary>
     public class EmbeddedResourceItem
     {
+        /// <summary>
+        /// File name including extension.
+        /// </summary>
         public string FileName { get; }
 
         [CanBeNull]

@@ -4,7 +4,7 @@ using Abp.Resources.Embedded;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
-namespace Abp.AspNetCore.Mvc.Views
+namespace Abp.AspNetCore.EmbeddedResources
 {
     public class EmbeddedResourceFileProvider : IFileProvider
     {

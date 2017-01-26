@@ -17,8 +17,9 @@ namespace Abp.Owin
         public static void UseAbp(this IAppBuilder app)
         {
             ThreadCultureSanitizer.Sanitize();
+            app.UseEmbeddedFiles();
         }
-
+        
         /// <summary>
         /// Use this extension method if you don't initialize ABP in other way.
         /// Otherwise, use <see cref="UseAbp"/>.

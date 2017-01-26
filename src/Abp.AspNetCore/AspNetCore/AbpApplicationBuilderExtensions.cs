@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
 using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;

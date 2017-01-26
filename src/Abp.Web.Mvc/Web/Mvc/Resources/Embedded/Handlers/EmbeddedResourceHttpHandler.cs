@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
 using Abp.Extensions;
 
 namespace Abp.Web.Mvc.Resources.Embedded.Handlers
 {
+    [Obsolete]
     internal class EmbeddedResourceHttpHandler : IHttpHandler
     {
         private static readonly HashSet<string> IgnoredFileExtensions = new HashSet<string>

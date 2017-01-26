@@ -1,4 +1,5 @@
 using System;
+using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Mvc;
 using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Json;
 using Abp.Modules;
 using Microsoft.AspNetCore.Mvc;

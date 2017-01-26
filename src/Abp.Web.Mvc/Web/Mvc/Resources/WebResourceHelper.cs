@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Abp.Dependency;
@@ -11,6 +12,7 @@ namespace Abp.Web.Mvc.Resources
     /// <summary>
     /// A helper class to simplify expose web resources.
     /// </summary>
+    [Obsolete("No need to use WebResourceHelper anymore. Use Configuration.EmbeddedResources.Sources.Add(...) in PreInitialize of your module.")]
     public static class WebResourceHelper
     {
         /// <summary>

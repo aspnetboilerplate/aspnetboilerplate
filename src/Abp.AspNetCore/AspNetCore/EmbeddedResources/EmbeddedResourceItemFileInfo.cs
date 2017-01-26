@@ -3,7 +3,7 @@ using System.IO;
 using Abp.Resources.Embedded;
 using Microsoft.Extensions.FileProviders;
 
-namespace Abp.AspNetCore.Mvc.Views
+namespace Abp.AspNetCore.EmbeddedResources
 {
     public class EmbeddedResourceItemFileInfo : IFileInfo
     {

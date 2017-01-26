@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Abp.Configuration.Startup;
 using Abp.Modules;
@@ -8,6 +9,7 @@ using Abp.Web.Mvc.Authorization;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers;
 using Abp.Web.Mvc.ModelBinding.Binders;
+using Abp.Web.Mvc.Resources.Embedded;
 using Abp.Web.Mvc.Security.AntiForgery;
 using Abp.Web.Mvc.Uow;
 using Abp.Web.Mvc.Validation;
@@ -37,6 +39,7 @@ namespace Abp.Web.Mvc
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager));
+            HostingEnvironment.RegisterVirtualPathProvider(IocManager.Resolve<EmbeddedResourceVirtualPathProvider>());
         }
 
         /// <inheritdoc/>
