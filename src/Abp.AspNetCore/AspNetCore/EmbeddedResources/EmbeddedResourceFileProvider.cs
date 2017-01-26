@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Resources.Embedded;
+using Abp.Web.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
@@ -8,8 +9,8 @@ namespace Abp.AspNetCore.EmbeddedResources
 {
     public class EmbeddedResourceFileProvider : IFileProvider
     {
-        private IEmbeddedResourceManager EmbeddedResourceManager => _embeddedResourceManager.Value;
         private readonly Lazy<IEmbeddedResourceManager> _embeddedResourceManager;
+        private readonly Lazy<IWebEmbeddedResourcesConfiguration> _configuration;
 
         public EmbeddedResourceFileProvider(IIocResolver iocResolver)
         {
@@ -17,13 +18,18 @@ namespace Abp.AspNetCore.EmbeddedResources
                 () => iocResolver.Resolve<IEmbeddedResourceManager>(),
                 true
             );
+
+            _configuration = new Lazy<IWebEmbeddedResourcesConfiguration>(
+                () => iocResolver.Resolve<IWebEmbeddedResourcesConfiguration>(),
+                true
+            );
         }
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            var resource = EmbeddedResourceManager.GetResource(subpath);
+            var resource = _embeddedResourceManager.Value.GetResource(subpath);
 
-            if (resource == null)
+            if (resource == null || IsIgnoredFile(resource))
             {
                 return new NotFoundFileInfo(subpath);
             }
@@ -34,12 +40,18 @@ namespace Abp.AspNetCore.EmbeddedResources
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
             //TODO: Implement...?
+
             return new NotFoundDirectoryContents();
         }
 
         public IChangeToken Watch(string filter)
         {
             return NullChangeToken.Singleton;
+        }
+
+        protected virtual bool IsIgnoredFile(EmbeddedResourceItem resource)
+        {
+            return resource.FileExtension != null && _configuration.Value.IgnoredFileExtensions.Contains(resource.FileExtension);
         }
     }
 }

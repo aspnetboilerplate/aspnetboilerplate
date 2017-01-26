@@ -53,7 +53,7 @@ namespace AbpAspNetCoreDemo
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 options.PlugInSources.Add(
-                    new FileListPlugInSource(
+                    new AssemblyFileListPlugInSource(
                         Path.Combine(_env.ContentRootPath,
                             @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net461\AbpAspNetCoreDemo.PlugIn.dll")
                     )

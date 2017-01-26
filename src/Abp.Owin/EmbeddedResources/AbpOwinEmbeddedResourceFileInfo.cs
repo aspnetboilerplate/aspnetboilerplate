@@ -3,7 +3,7 @@ using System.IO;
 using Abp.Resources.Embedded;
 using Microsoft.Owin.FileSystems;
 
-namespace Abp.Owin
+namespace Abp.Owin.EmbeddedResources
 {
     public class AbpOwinEmbeddedResourceFileInfo : IFileInfo
     {

@@ -1,8 +1,10 @@
 ﻿using System;
 using Abp.Dependency;
 using Abp.Modules;
+using Abp.Owin.EmbeddedResources;
 using Abp.Resources.Embedded;
 using Abp.Threading;
+using Abp.Web.Configuration;
 using JetBrains.Annotations;
 using Microsoft.Owin.StaticFiles;
 using Owin;
@@ -37,7 +39,8 @@ namespace Abp.Owin
                 app.UseStaticFiles(new StaticFileOptions
                 {
                     FileSystem = new AbpOwinEmbeddedResourceFileSystem(
-                        IocManager.Instance.Resolve<IEmbeddedResourceManager>()
+                        IocManager.Instance.Resolve<IEmbeddedResourceManager>(),
+                        IocManager.Instance.Resolve<IWebEmbeddedResourcesConfiguration>()
                     )
                 });
             }

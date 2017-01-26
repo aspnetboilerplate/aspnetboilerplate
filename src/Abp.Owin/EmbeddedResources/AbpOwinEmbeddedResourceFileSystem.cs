@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Web;
+using Abp.Dependency;
 using Abp.Resources.Embedded;
+using Abp.Web.Configuration;
 using Microsoft.Owin.FileSystems;
 
-namespace Abp.Owin
+namespace Abp.Owin.EmbeddedResources
 {
-    public class AbpOwinEmbeddedResourceFileSystem : IFileSystem
+    public class AbpOwinEmbeddedResourceFileSystem : IFileSystem, ITransientDependency
     {
-        public static HashSet<string> IgnoredFileExtensions { get; } = new HashSet<string>
-        {
-            "cshtml",
-            "config"
-        };
-
         private readonly IEmbeddedResourceManager _embeddedResourceManager;
+        private readonly IWebEmbeddedResourcesConfiguration _configuration;
         private readonly IFileSystem _physicalFileSystem;
 
-        public AbpOwinEmbeddedResourceFileSystem(IEmbeddedResourceManager embeddedResourceManager)
+        public AbpOwinEmbeddedResourceFileSystem(
+            IEmbeddedResourceManager embeddedResourceManager,
+            IWebEmbeddedResourcesConfiguration configuration)
         {
             _embeddedResourceManager = embeddedResourceManager;
+            _configuration = configuration;
             _physicalFileSystem = new PhysicalFileSystem(HttpContext.Current.Server.MapPath("~/"));
         }
 
@@ -30,13 +30,8 @@ namespace Abp.Owin
             }
 
             var resource = _embeddedResourceManager.GetResource(subpath);
-            if (resource == null)
-            {
-                fileInfo = null;
-                return false;
-            }
 
-            if (IsIgnoredFile(resource))
+            if (resource == null || IsIgnoredFile(resource))
             {
                 fileInfo = null;
                 return false;
@@ -53,14 +48,15 @@ namespace Abp.Owin
                 return true;
             }
 
-            //TODO: Implement!
+            //TODO: Implement..?
+
             contents = null;
             return false;
         }
 
-        private static bool IsIgnoredFile(EmbeddedResourceItem resource)
+        private bool IsIgnoredFile(EmbeddedResourceItem resource)
         {
-            return resource.FileExtension != null && IgnoredFileExtensions.Contains(resource.FileExtension);
+            return resource.FileExtension != null && _configuration.IgnoredFileExtensions.Contains(resource.FileExtension);
         }
     }
 }

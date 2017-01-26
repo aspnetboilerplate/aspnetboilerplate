@@ -11,10 +11,16 @@ namespace Abp.Web.Configuration
 
         public IAbpAntiForgeryConfiguration AntiForgery { get; }
 
-        public AbpWebCommonModuleConfiguration(IApiProxyScriptingConfiguration apiProxyScripting, IAbpAntiForgeryConfiguration abpAntiForgery)
+        public IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
+
+        public AbpWebCommonModuleConfiguration(
+            IApiProxyScriptingConfiguration apiProxyScripting, 
+            IAbpAntiForgeryConfiguration abpAntiForgery,
+            IWebEmbeddedResourcesConfiguration embeddedResources)
         {
             ApiProxyScripting = apiProxyScripting;
             AntiForgery = abpAntiForgery;
+            EmbeddedResources = embeddedResources;
         }
     }
 }

@@ -6,11 +6,11 @@ using Abp.Modules;
 
 namespace Abp.PlugIns
 {
-    public class FileListPlugInSource : IPlugInSource
+    public class AssemblyFileListPlugInSource : IPlugInSource
     {
         public string[] FilePaths { get; }
 
-        public FileListPlugInSource(params string[] filePaths)
+        public AssemblyFileListPlugInSource(params string[] filePaths)
         {
             FilePaths = filePaths ?? new string[0];
         }
