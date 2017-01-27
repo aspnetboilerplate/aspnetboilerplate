@@ -6,7 +6,10 @@ before_build:
 build:
   verbosity: minimal
 after_build:
-- cmd: echo abp build finished
+- ps: >-
+    $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
+
+    .\nupkg\pack.ps1 -slnPath ".\" -targetPath ".\nupkg" -versionSuffix "$versionSuffix"
 test:
   assemblies:
   - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
