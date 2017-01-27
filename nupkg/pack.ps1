@@ -4,6 +4,8 @@ param (
     $targetPath
 )
 
+if($slnPath -eq $null) { $slnPath = "..\" }
+if($targetPath -eq $null) { $targetPath = "." }
 
 $srcPath = $slnPath + "src\"
 
