@@ -1,8 +1,12 @@
 version: 1.0.{build}
+nuget:
+  disable_publish_on_pr: true
 before_build:
 - cmd: dotnet.exe restore
 build:
   verbosity: minimal
+after_build:
+- cmd: echo abp build finished
 test:
   assemblies:
   - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
@@ -17,3 +21,6 @@ test:
   - test\Abp.Web.Tests\bin\Debug\net452\win7-x64\Abp.Web.Tests.dll
   - test\Abp.EntityFrameworkCore.Tests\bin\Debug\net461\win7-x64\Abp.EntityFrameworkCore.Tests.dll
   - test\Abp.AspNetCore.Tests\bin\Debug\net461\win7-x64\Abp.AspNetCore.Tests.dll
+artifacts:
+- path: nupkg
+  name: nuget-packages
