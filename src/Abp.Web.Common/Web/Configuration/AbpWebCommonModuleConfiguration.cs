@@ -1,4 +1,5 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
+using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration
@@ -13,14 +14,18 @@ namespace Abp.Web.Configuration
 
         public IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
+        public IWebMultiTenancyConfiguration MultiTenancy { get; }
+
         public AbpWebCommonModuleConfiguration(
             IApiProxyScriptingConfiguration apiProxyScripting, 
             IAbpAntiForgeryConfiguration abpAntiForgery,
-            IWebEmbeddedResourcesConfiguration embeddedResources)
+            IWebEmbeddedResourcesConfiguration embeddedResources, 
+            IWebMultiTenancyConfiguration multiTenancy)
         {
             ApiProxyScripting = apiProxyScripting;
             AntiForgery = abpAntiForgery;
             EmbeddedResources = embeddedResources;
+            MultiTenancy = multiTenancy;
         }
     }
 }

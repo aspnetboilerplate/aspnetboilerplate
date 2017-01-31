@@ -3,7 +3,6 @@
 namespace Abp.Runtime
 {
     public interface IAmbientScopeProvider<T>
-        where T:class
     {
         T GetValue(string contextKey);
 

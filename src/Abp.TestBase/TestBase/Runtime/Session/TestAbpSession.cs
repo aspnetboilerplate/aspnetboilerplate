@@ -36,7 +36,13 @@ namespace Abp.TestBase.Runtime.Session
                 {
                     return _sessionOverrideScopeProvider.GetValue(AbpSessionBase.SessionOverrideContextKey).TenantId;
                 }
-                
+
+                var resolvedValue = _tenantResolver.ResolveTenantId();
+                if (resolvedValue != null)
+                {
+                    return resolvedValue;
+                }
+
                 return _tenantId;
             }
             set
@@ -58,13 +64,18 @@ namespace Abp.TestBase.Runtime.Session
 
         private readonly IMultiTenancyConfig _multiTenancy;
         private readonly IAmbientScopeProvider<SessionOverride> _sessionOverrideScopeProvider;
+        private readonly ITenantResolver _tenantResolver;
         private int? _tenantId;
         private long? _userId;
 
-        public TestAbpSession(IMultiTenancyConfig multiTenancy, IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider)
+        public TestAbpSession(
+            IMultiTenancyConfig multiTenancy, 
+            IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider,
+            ITenantResolver tenantResolver)
         {
             _multiTenancy = multiTenancy;
             _sessionOverrideScopeProvider = sessionOverrideScopeProvider;
+            _tenantResolver = tenantResolver;
         }
 
         private MultiTenancySides GetCurrentMultiTenancySide()

@@ -6,6 +6,7 @@ using Abp.Modules;
 using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 using Abp.Web.Configuration;
+using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web
@@ -19,6 +20,7 @@ namespace Abp.Web
         /// <inheritdoc/>
         public override void PreInitialize()
         {
+            IocManager.Register<IWebMultiTenancyConfiguration, WebMultiTenancyConfiguration>();
             IocManager.Register<IApiProxyScriptingConfiguration, ApiProxyScriptingConfiguration>();
             IocManager.Register<IAbpAntiForgeryConfiguration, AbpAntiForgeryConfiguration>();
             IocManager.Register<IWebEmbeddedResourcesConfiguration, WebEmbeddedResourcesConfiguration>();

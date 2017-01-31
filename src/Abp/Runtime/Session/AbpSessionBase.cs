@@ -29,7 +29,6 @@ namespace Abp.Runtime.Session
         }
 
         protected SessionOverride OverridedValue => SessionOverrideScopeProvider.GetValue(SessionOverrideContextKey);
-
         protected IAmbientScopeProvider<SessionOverride> SessionOverrideScopeProvider { get; }
 
         protected AbpSessionBase(IMultiTenancyConfig multiTenancy, IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider)

@@ -54,12 +54,18 @@ namespace Abp.Runtime.Session
                 }
 
                 var tenantIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
-                if (string.IsNullOrEmpty(tenantIdClaim?.Value))
+                if (!string.IsNullOrEmpty(tenantIdClaim?.Value))
                 {
-                    return null;
+                    return Convert.ToInt32(tenantIdClaim.Value);
                 }
 
-                return Convert.ToInt32(tenantIdClaim.Value);
+                if (UserId == null)
+                {
+                    //Resolve tenant id from request only if user has not logged in!
+                    return TenantResolver.ResolveTenantId();
+                }
+                
+                return null;
             }
         }
 
@@ -97,13 +103,18 @@ namespace Abp.Runtime.Session
         }
 
         protected IPrincipalAccessor PrincipalAccessor { get; }
+        protected ITenantResolver TenantResolver { get; }
 
         public ClaimsAbpSession(
             IPrincipalAccessor principalAccessor,
-            IMultiTenancyConfig multiTenancy, 
+            IMultiTenancyConfig multiTenancy,
+            ITenantResolver tenantResolver,
             IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider)
-            :base(multiTenancy, sessionOverrideScopeProvider)
+            : base(
+                  multiTenancy, 
+                  sessionOverrideScopeProvider)
         {
+            TenantResolver = tenantResolver;
             PrincipalAccessor = principalAccessor;
         }
     }

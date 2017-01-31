@@ -1,4 +1,5 @@
 ﻿using Abp.Web.Api.ProxyScripting.Configuration;
+using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration
@@ -28,5 +29,7 @@ namespace Abp.Web.Configuration
         /// Used to configure embedded resource system for web applications.
         /// </summary>
         IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
+
+        IWebMultiTenancyConfiguration MultiTenancy { get; }
     }
 }

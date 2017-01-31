@@ -12,7 +12,6 @@ namespace Abp.Runtime.Remoting
     /// This is the default implementation.
     /// </summary>
     public class DataContextAmbientScopeProvider<T> : IAmbientScopeProvider<T>
-        where T : class
     {
         public ILogger Logger { get; set; }
 
@@ -31,7 +30,12 @@ namespace Abp.Runtime.Remoting
 
         public T GetValue(string contextKey)
         {
-            return GetCurrentItem(contextKey)?.Value;
+            var item = GetCurrentItem(contextKey);
+            if (item == null)
+            {
+                return default(T);
+            }
+            return item.Value;
         }
 
         public IDisposable BeginScope(string contextKey, T value)
