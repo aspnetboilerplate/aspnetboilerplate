@@ -161,7 +161,11 @@ namespace Abp
 
         private void AddIgnoredTypes()
         {
-            var commonIgnoredTypes = new[] { typeof(Stream), typeof(Expression) };
+            var commonIgnoredTypes = new[]
+            {
+                typeof(Stream),
+                typeof(Expression)
+            };
 
             foreach (var ignoredType in commonIgnoredTypes)
             {
