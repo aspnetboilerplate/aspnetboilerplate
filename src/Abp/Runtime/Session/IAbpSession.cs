@@ -1,4 +1,5 @@
-﻿using Abp.MultiTenancy;
+﻿using System;
+using Abp.MultiTenancy;
 
 namespace Abp.Runtime.Session
 {
@@ -36,5 +37,7 @@ namespace Abp.Runtime.Session
         /// This is filled if a user with <see cref="ImpersonatorUserId"/> performing actions behalf of the <see cref="UserId"/>.
         /// </summary>
         int? ImpersonatorTenantId { get; }
+
+        IDisposable Use(int? tenantId, long? userId);
     }
 }

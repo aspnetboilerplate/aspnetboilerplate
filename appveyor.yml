@@ -7,8 +7,7 @@ build:
   verbosity: minimal
 after_build:
 - ps: >-
-    $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
-
+    $versionSuffix=$env:APPVEYOR_BUILD_NUMBER
     .\nupkg\pack.ps1 -slnPath ".\" -targetPath ".\nupkg" -versionSuffix "$versionSuffix"
 test:
   assemblies:

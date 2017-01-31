@@ -20,7 +20,9 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.Runtime;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Remoting;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
@@ -40,35 +42,14 @@ namespace Abp
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             IocManager.Register<IScopedIocResolver, ScopedIocResolver>(DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>), DependencyLifeStyle.Transient);
 
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            InitializeInterceptors();
 
-            Configuration.Auditing.Selectors.Add(
-                new NamedTypeSelector(
-                    "Abp.ApplicationServices",
-                    type => typeof(IApplicationService).IsAssignableFrom(type)
-                    )
-                );
-
-            Configuration.Localization.Sources.Add(
-                new DictionaryBasedLocalizationSource(
-                    AbpConsts.LocalizationSourceName,
-                    new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
-                        )));
-
-            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
-            Configuration.Settings.Providers.Add<EmailSettingProvider>();
-            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
-            Configuration.Settings.Providers.Add<TimingSettingProvider>();
-
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
-
+            AddAuditingSelectors();
+            AddLocalizationSources();
+            AddSettingProviders();
+            AddUnitOfWorkFilters();
             ConfigureCaches();
             AddIgnoredTypes();
         }
@@ -114,6 +95,49 @@ namespace Abp
             {
                 IocManager.Resolve<IBackgroundWorkerManager>().StopAndWaitToStop();
             }
+        }
+
+        private void InitializeInterceptors()
+        {
+            ValidationInterceptorRegistrar.Initialize(IocManager);
+            AuditingInterceptorRegistrar.Initialize(IocManager);
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
+        }
+
+        private void AddUnitOfWorkFilters()
+        {
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+        }
+
+        private void AddSettingProviders()
+        {
+            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
+            Configuration.Settings.Providers.Add<EmailSettingProvider>();
+            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
+            Configuration.Settings.Providers.Add<TimingSettingProvider>();
+        }
+
+        private void AddAuditingSelectors()
+        {
+            Configuration.Auditing.Selectors.Add(
+                new NamedTypeSelector(
+                    "Abp.ApplicationServices",
+                    type => typeof(IApplicationService).IsAssignableFrom(type)
+                )
+            );
+        }
+
+        private void AddLocalizationSources()
+        {
+            Configuration.Localization.Sources.Add(
+                new DictionaryBasedLocalizationSource(
+                    AbpConsts.LocalizationSourceName,
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                    )));
         }
 
         private void ConfigureCaches()
