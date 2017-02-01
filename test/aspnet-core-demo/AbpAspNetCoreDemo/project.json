@@ -13,7 +13,6 @@
       "type": "build"
     },
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
-    "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
     "Microsoft.AspNetCore.StaticFiles": "1.1.0",
@@ -26,7 +25,8 @@
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "BundlerMinifier.Core": "2.2.306"
+    "BundlerMinifier.Core": "2.2.306",
+    "Microsoft.AspNetCore.Mvc": "1.1.1"
   },
 
   "tools": {
