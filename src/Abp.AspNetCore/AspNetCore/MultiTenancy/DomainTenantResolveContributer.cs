@@ -1,3 +1,4 @@
+using System;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
@@ -49,6 +50,11 @@ namespace Abp.AspNetCore.MultiTenancy
                 return null;
             }
 
+            if (string.Equals(tenancyName, "www", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+            
             var tenantInfo = _tenantStore.Find(tenancyName);
             if (tenantInfo == null)
             {

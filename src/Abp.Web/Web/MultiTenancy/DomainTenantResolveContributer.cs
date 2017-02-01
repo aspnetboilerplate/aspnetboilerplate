@@ -1,3 +1,4 @@
+using System;
 using System.Web;
 using Abp.Dependency;
 using Abp.Extensions;
@@ -41,6 +42,11 @@ namespace Abp.Web.MultiTenancy
 
             var tenancyName = result.Matches[0].Value;
             if (tenancyName.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (string.Equals(tenancyName, "www", StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
