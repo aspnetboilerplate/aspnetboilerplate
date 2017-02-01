@@ -171,6 +171,10 @@ information on the session.</p>
 			extensible. You can add resolvers to <strong>
 			Configuration.MultiTenancy.Resolvers</strong> collection, or remove 
 			an existing resolver.</p>
+			<p>One last thing on resolvers is that; resolved tenant id is cached 
+			during the same request for performance reasons. So, resolvers are 
+			executed once in a request (and only if current user has not already 
+			logged in).</p>
 			<h5>Tenant Store</h5>
 			<p><strong>DomainTenantResolveContributer </strong>uses ITenantStore 
 			to find tenant id by tenancy name. Default implementation of <strong>

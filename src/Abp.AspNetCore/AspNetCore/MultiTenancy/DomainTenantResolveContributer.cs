@@ -1,4 +1,3 @@
-using Abp.AspNetCore.Configuration;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
@@ -12,13 +11,16 @@ namespace Abp.AspNetCore.MultiTenancy
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+        private readonly ITenantStore _tenantStore;
 
         public DomainTenantResolveContributer(
             IHttpContextAccessor httpContextAccessor, 
-            IWebMultiTenancyConfiguration multiTenancyConfiguration)
+            IWebMultiTenancyConfiguration multiTenancyConfiguration,
+            ITenantStore tenantStore)
         {
             _httpContextAccessor = httpContextAccessor;
             _multiTenancyConfiguration = multiTenancyConfiguration;
+            _tenantStore = tenantStore;
         }
 
         public int? ResolveTenantId()
@@ -41,14 +43,19 @@ namespace Abp.AspNetCore.MultiTenancy
                 return null;
             }
 
-            var tenantIdValue = result.Matches[0].Value;
-            if (tenantIdValue.IsNullOrEmpty())
+            var tenancyName = result.Matches[0].Value;
+            if (tenancyName.IsNullOrEmpty())
             {
                 return null;
             }
 
-            int tenantId;
-            return !int.TryParse(tenantIdValue, out tenantId) ? (int?)null : tenantId;
+            var tenantInfo = _tenantStore.Find(tenancyName);
+            if (tenantInfo == null)
+            {
+                return null;
+            }
+
+            return tenantInfo.Id;
         }
     }
 }

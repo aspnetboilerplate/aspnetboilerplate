@@ -9,11 +9,14 @@ namespace Abp.Web.MultiTenancy
     public class DomainTenantResolveContributer : ITenantResolveContributer, ITransientDependency
     {
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+        private readonly ITenantStore _tenantStore;
 
         public DomainTenantResolveContributer(
-            IWebMultiTenancyConfiguration multiTenancyConfiguration)
+            IWebMultiTenancyConfiguration multiTenancyConfiguration,
+            ITenantStore tenantStore)
         {
             _multiTenancyConfiguration = multiTenancyConfiguration;
+            _tenantStore = tenantStore;
         }
 
         public int? ResolveTenantId()
@@ -36,14 +39,19 @@ namespace Abp.Web.MultiTenancy
                 return null;
             }
 
-            var tenantIdValue = result.Matches[0].Value;
-            if (tenantIdValue.IsNullOrEmpty())
+            var tenancyName = result.Matches[0].Value;
+            if (tenancyName.IsNullOrEmpty())
             {
                 return null;
             }
 
-            int tenantId;
-            return !int.TryParse(tenantIdValue, out tenantId) ? (int?)null : tenantId;
+            var tenantInfo = _tenantStore.Find(tenancyName);
+            if (tenantInfo == null)
+            {
+                return null;
+            }
+
+            return tenantInfo.Id;
         }
     }
 }
