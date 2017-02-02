@@ -3,8 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
+using Abp.MultiTenancy;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
+using Abp.Runtime.Remoting;
+using Abp.Runtime.Session;
+using Abp.TestBase.Runtime.Session;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -50,7 +54,7 @@ namespace Abp.Tests.Configuration
         [Fact]
         public async Task Should_Get_Correct_Values()
         {
-            var session = new MyChangableSession();
+            var session = CreateTestAbpSession();
 
             var settingManager = CreateSettingManager();
             settingManager.SettingStore = new MemorySettingStore();
@@ -105,7 +109,7 @@ namespace Abp.Tests.Configuration
         [Fact]
         public async Task Should_Change_Setting_Values()
         {
-            var session = new MyChangableSession();
+            var session = CreateTestAbpSession();
 
             var settingManager = CreateSettingManager();
             settingManager.SettingStore = new MemorySettingStore();
@@ -135,10 +139,19 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 changed value");
         }
 
+        private static TestAbpSession CreateTestAbpSession()
+        {
+            return new TestAbpSession(
+                new MultiTenancyConfig {IsEnabled = true},
+                new DataContextAmbientScopeProvider<SessionOverride>(new CallContextAmbientDataContext()),
+                Substitute.For<ITenantResolver>()
+            );
+        }
+
         [Fact]
         public async Task Should_Delete_Setting_Values_On_Default_Value()
         {
-            var session = new MyChangableSession();
+            var session = CreateTestAbpSession();
             var store = new MemorySettingStore();
 
             var settingManager = CreateSettingManager();

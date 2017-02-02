@@ -10,6 +10,7 @@ using Abp.Web.Configuration;
 using Abp.Web.Security.AntiForgery;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using Abp.Web.MultiTenancy;
 
 namespace Abp.Web
 {
@@ -28,6 +29,10 @@ namespace Abp.Web
             
             Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, WebClientInfoProvider>(DependencyLifeStyle.Transient);
+
+            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributer>();
 
             AddIgnoredTypes();
         }

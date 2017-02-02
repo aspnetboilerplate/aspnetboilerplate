@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
@@ -10,6 +11,7 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
 using Abp.Web;
+using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +32,10 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
 
             Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
+
+            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributer>();
         }
 
         public override void Initialize()

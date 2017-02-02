@@ -30,5 +30,5 @@ Links
 How To Build
 -----
 
-Use Visual Studio 2015 with Update 3 and .NET Core 1.0 installed.
+Use Visual Studio 2015 with Update 3 and .NET Core 1.1+ installed.
 Download from Microsoft's official website: https://www.microsoft.com/net/core

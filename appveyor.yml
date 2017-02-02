@@ -1,12 +1,20 @@
-version: 1.0.{build}
+version: 1.3.2.{build}
+nuget:
+  disable_publish_on_pr: true
 before_build:
 - cmd: dotnet.exe restore
 build:
   verbosity: minimal
+after_build:
+- ps: >-
+    $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
+
+    .\nupkg\pack.ps1 -slnPath ".\" -targetPath ".\nupkg" -versionSuffix "$versionSuffix"
 test:
   assemblies:
   - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
   - test\Abp.EntityFramework.Tests\bin\Debug\net452\win7-x64\Abp.EntityFramework.Tests.dll
+  - test\Abp.EntityFramework.GraphDiff.Tests\bin\Debug\net452\win7-x64\Abp.EntityFramework.GraphDiff.Tests.dll
   - test\Abp.MemoryDb.Tests\bin\Debug\net452\win7-x64\Abp.MemoryDb.Tests.dll
   - test\Abp.NHibernate.Tests\bin\Debug\net452\win7-x64\Abp.NHibernate.Tests.dll
   - test\Abp.TestBase.SampleApplication.Tests\bin\Debug\net452\win7-x64\Abp.TestBase.SampleApplication.Tests.dll
@@ -17,3 +25,9 @@ test:
   - test\Abp.Web.Tests\bin\Debug\net452\win7-x64\Abp.Web.Tests.dll
   - test\Abp.EntityFrameworkCore.Tests\bin\Debug\net461\win7-x64\Abp.EntityFrameworkCore.Tests.dll
   - test\Abp.AspNetCore.Tests\bin\Debug\net461\win7-x64\Abp.AspNetCore.Tests.dll
+  - test\Abp.Quartz.Tests\bin\Debug\net461\win7-x64\Abp.Quartz.Tests.dll
+  - test\Abp.Web.Common.Tests\bin\Debug\net461\win7-x64\Abp.Web.Common.Tests.dll
+
+artifacts:
+- path: nupkg
+  name: nuget-packages

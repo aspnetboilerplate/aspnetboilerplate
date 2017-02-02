@@ -23,15 +23,18 @@ namespace Abp.Auditing
         private readonly IAuditInfoProvider _auditInfoProvider;
         private readonly IAuditingConfiguration _configuration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAuditSerializer _auditSerializer;
 
         public AuditingHelper(
             IAuditInfoProvider auditInfoProvider, 
             IAuditingConfiguration configuration, 
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IAuditSerializer auditSerializer)
         {
             _auditInfoProvider = auditInfoProvider;
             _configuration = configuration;
             _unitOfWorkManager = unitOfWorkManager;
+            _auditSerializer = auditSerializer;
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
@@ -159,7 +162,7 @@ namespace Abp.Auditing
                     }
                 }
 
-                return Serialize(dictionary);
+                return _auditSerializer.Serialize(dictionary);
             }
             catch (Exception ex)
             {
@@ -179,16 +182,6 @@ namespace Abp.Auditing
             }
 
             return dictionary;
-        }
-
-        internal static string Serialize(object obj)
-        {
-            var options = new JsonSerializerSettings
-            {
-                ContractResolver = new AuditingContractResolver()
-            };
-
-            return JsonConvert.SerializeObject(obj, options);
         }
     }
 }

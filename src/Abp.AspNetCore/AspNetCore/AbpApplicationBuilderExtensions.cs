@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
-using Abp.Configuration;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.LoggingFacility.MsLogging;
@@ -21,6 +22,19 @@ namespace Abp.AspNetCore
             InitializeAbp(app);
 
             ConfigureRequestLocalization(app);
+        }
+
+        public static void UseEmbeddedFiles(this IApplicationBuilder app)
+        {
+            //TODO: Can improve it or create a custom middleware?
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new EmbeddedResourceFileProvider(
+                        app.ApplicationServices.GetRequiredService<IIocResolver>()
+                    )
+                }
+            );
         }
 
         private static void InitializeAbp(IApplicationBuilder app)
