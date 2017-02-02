@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using Abp.AspNetCore;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Castle.Logging.Log4Net;
-using Abp.Dependency;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;

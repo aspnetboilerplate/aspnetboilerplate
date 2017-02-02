@@ -1,6 +1,7 @@
 using System;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Mvc;
+using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.Dependency;
 using Castle.Windsor.MsDependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,7 @@ using Abp.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Options;
 
 namespace Abp.AspNetCore
@@ -63,6 +65,10 @@ namespace Abp.AspNetCore
             
             //Use DI to create controllers
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+
+            //Change anti forgery filters (to work proper with non-browser clients)
+            services.Replace(ServiceDescriptor.Transient<AutoValidateAntiforgeryTokenAuthorizationFilter, AbpAutoValidateAntiforgeryTokenAuthorizationFilter>());
+            services.Replace(ServiceDescriptor.Transient<ValidateAntiforgeryTokenAuthorizationFilter, AbpValidateAntiforgeryTokenAuthorizationFilter>());
 
             //Add feature providers
             var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
