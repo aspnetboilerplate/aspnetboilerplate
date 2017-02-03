@@ -15,11 +15,12 @@ namespace Abp.Owin.EmbeddedResources
 
         public AbpOwinEmbeddedResourceFileSystem(
             IEmbeddedResourceManager embeddedResourceManager,
-            IWebEmbeddedResourcesConfiguration configuration)
+            IWebEmbeddedResourcesConfiguration configuration,
+            string rootFolder)
         {
             _embeddedResourceManager = embeddedResourceManager;
             _configuration = configuration;
-            _physicalFileSystem = new PhysicalFileSystem(HttpContext.Current.Server.MapPath("~/"));
+            _physicalFileSystem = new PhysicalFileSystem(rootFolder);
         }
 
         public bool TryGetFileInfo(string subpath, out IFileInfo fileInfo)
