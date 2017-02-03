@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Owin.EmbeddedResources;
@@ -23,24 +24,32 @@ namespace Abp.Owin
         public static void UseAbp(this IAppBuilder app)
         {
             app.UseAbp(null);
-            
         }
 
         public static void UseAbp(this IAppBuilder app, [CanBeNull] Action<AbpOwinOptions> optionsAction)
         {
             ThreadCultureSanitizer.Sanitize();
 
-            var options = new AbpOwinOptions();
+            var options = new AbpOwinOptions
+            {
+                UseEmbeddedFiles = HttpContext.Current?.Server != null
+            };
 
             optionsAction?.Invoke(options);
 
             if (options.UseEmbeddedFiles)
             {
+                if (HttpContext.Current?.Server == null)
+                {
+                    throw new AbpInitializationException("Can not enable UseEmbeddedFiles for OWIN since HttpContext.Current is null! If you are using ASP.NET Core, serve embedded resources through ASP.NET Core middleware instead of OWIN. See http://www.aspnetboilerplate.com/Pages/Documents/Embedded-Resource-Files#aspnet-core-configuration");
+                }
+
                 app.UseStaticFiles(new StaticFileOptions
                 {
                     FileSystem = new AbpOwinEmbeddedResourceFileSystem(
                         IocManager.Instance.Resolve<IEmbeddedResourceManager>(),
-                        IocManager.Instance.Resolve<IWebEmbeddedResourcesConfiguration>()
+                        IocManager.Instance.Resolve<IWebEmbeddedResourcesConfiguration>(),
+                        HttpContext.Current.Server.MapPath("~/")
                     )
                 });
             }
