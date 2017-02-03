@@ -88,10 +88,10 @@
 
     Expression&lt;Func&lt;T, bool&gt;&gt; ToExpression();
 }</pre>
-	<p>Adds a <strong>ToExpression()</strong> method which is returns an 
+	<p>Adds a <strong>ToExpression()</strong> method which returns an 
 	expression and used to better integrate with <strong>IQueryable</strong> and
 	<strong>Expression trees</strong>. Thus, we can easily pass a specification 
-	to repository to apply filter in the database level.</p>
+	to a repository to apply a filter in the database level.</p>
 	<p>We generally inherit from <strong>Specification&lt;T&gt; class</strong> instead 
 	of directly implementing ISpecification&lt;T&gt; interface. Specification class 
 	automatically implements IsSatisfiedBy method. So, we only need to define 
