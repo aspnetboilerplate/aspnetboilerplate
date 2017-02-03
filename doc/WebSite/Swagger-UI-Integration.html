@@ -43,7 +43,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
     app.UseSwaggerUi(); //URL: /swagger/ui
 </strong>}
 </pre>
-<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.htmlhttps://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
+<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
 Then you need to change <strong>onComplete </strong>method of swagger ui definition like this in 
 <strong>index.html</strong>.</p>
 <pre lang="js">
