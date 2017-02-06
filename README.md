@@ -2,7 +2,7 @@
 ASP.NET Boilerplate
 ===================
 
-AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9lbimxh4?svg=true)](https://ci.appveyor.com/project/hikalkan/aspnetboilerplate)
+AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9lbimxh4?svg=true)](https://ci.appveyor.com/project/hikalkan/aspnetboilerplate) Gitter chat: [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/aspnetboilerplate/aspnetboilerplate)
 
 What is ABP?
 ------------
