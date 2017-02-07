@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Abp": "1.4.1.0-*",
-    "mongocsharpdriver": "2.4.0"
+    "mongocsharpdriver": "2.4.2"
   },
 
   "frameworks": {

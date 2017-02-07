@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Abp": "1.4.1.0-*",
-    "StackExchange.Redis": "1.1.608"
+    "StackExchange.Redis": "1.2.0"
   },
 
   "frameworks": {

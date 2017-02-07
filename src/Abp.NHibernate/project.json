@@ -4,7 +4,7 @@
   "dependencies": {
     "Abp": "1.4.1.0-*",
     "FluentNHibernate": "2.0.3",
-    "NHibernate": "4.1.0.4000"
+    "NHibernate": "4.1.1.4000"
   },
 
   "frameworks": {
