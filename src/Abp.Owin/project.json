@@ -1,12 +1,12 @@
 {
-  "version": "1.4.1.0-*",
+  "version": "1.4.2.0-*",
 
   "dependencies": {
-    "Abp": "1.4.1.0-*",
+    "Abp": "1.4.2.0-*",
     "Owin": "1.0.0",
     "Microsoft.Owin": "3.0.1",
     "Microsoft.Owin.StaticFiles": "3.0.1",
-    "Abp.Web.Common": "1.4.1.0-*"
+    "Abp.Web.Common": "1.4.2.0-*"
   },
 
   "frameworks": {
