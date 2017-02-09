@@ -35,6 +35,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public bool? IsApiExplorerEnabled { get; set; }
 
         /// <summary>
+        /// Is proxy scripting enabled.
+        /// Default: true.
+        /// </summary>
+        public bool IsProxyScriptingEnabled { get; set; } = true;
+
+        /// <summary>
         /// True, if using conventional verbs for this dynamic controller.
         /// </summary>
         public bool ConventionalVerbs { get; set; }
@@ -134,6 +140,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return this;
         }
 
+        public IApiControllerBuilder<T> WithProxyScripts(bool isEnabled)
+        {
+            IsProxyScriptingEnabled = isEnabled;
+            return this;
+        }
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
@@ -146,7 +158,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 typeof(DynamicApiController<T>),
                 typeof(AbpDynamicApiControllerInterceptor<T>),
                 Filters,
-                IsApiExplorerEnabled
+                IsApiExplorerEnabled,
+                IsProxyScriptingEnabled
                 );
             
             foreach (var actionBuilder in _actionBuilders.Values)

@@ -1,8 +1,10 @@
-﻿using System.Web;
+﻿using System.Security.Policy;
+using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Configuration;
 using Abp.Localization;
+using Abp.Net;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Configuration;
@@ -48,7 +50,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Request.Url != null && AbpUrlHelper.IsLocalUrl(Request.Url, returnUrl))
             {
                 return Redirect(returnUrl);
             }

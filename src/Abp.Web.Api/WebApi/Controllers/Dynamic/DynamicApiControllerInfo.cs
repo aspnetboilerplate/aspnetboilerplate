@@ -45,6 +45,11 @@ namespace Abp.WebApi.Controllers.Dynamic
         public IDictionary<string, DynamicApiActionInfo> Actions { get; private set; }
 
         /// <summary>
+        /// Is proxy scripting enabled.
+        /// </summary>
+        public bool IsProxyScriptingEnabled { get; private set; }
+
+        /// <summary>
         /// Creates a new <see cref="DynamicApiControllerInfo"/> instance.
         /// </summary>
         /// <param name="serviceName">Name of the service</param>
@@ -53,19 +58,22 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="interceptorType">Interceptor type</param>
         /// <param name="filters">Filters</param>
         /// <param name="isApiExplorerEnabled">Is API explorer enabled</param>
+        /// <param name="isProxyScriptingEnabled">Is proxy scripting enabled</param>
         public DynamicApiControllerInfo(
             string serviceName, 
             Type serviceInterfaceType, 
             Type apiControllerType, 
             Type interceptorType, 
             IFilter[] filters = null,
-            bool? isApiExplorerEnabled = null)
+            bool? isApiExplorerEnabled = null,
+            bool isProxyScriptingEnabled = true)
         {
             ServiceName = serviceName;
             ServiceInterfaceType = serviceInterfaceType;
             ApiControllerType = apiControllerType;
             InterceptorType = interceptorType;
             IsApiExplorerEnabled = isApiExplorerEnabled;
+            IsProxyScriptingEnabled = isProxyScriptingEnabled;
             Filters = filters ?? new IFilter[] { }; //Assigning or initialzing the action filters.
 
             Actions = new Dictionary<string, DynamicApiActionInfo>(StringComparer.InvariantCultureIgnoreCase);
