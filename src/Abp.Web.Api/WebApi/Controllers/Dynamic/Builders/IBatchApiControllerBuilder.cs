@@ -29,6 +29,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IBatchApiControllerBuilder<T> WithApiExplorer(bool isEnabled);
 
         /// <summary>
+        /// Enables/Disables proxy scripting for dynamic controllers.
+        /// It's enabled by default.
+        /// </summary>
+        IBatchApiControllerBuilder<T> WithProxyScripts(bool isEnabled);
+
+        /// <summary>
         /// Sets service name for controllers.
         /// </summary>
         /// <param name="serviceNameSelector">Service name selector</param>

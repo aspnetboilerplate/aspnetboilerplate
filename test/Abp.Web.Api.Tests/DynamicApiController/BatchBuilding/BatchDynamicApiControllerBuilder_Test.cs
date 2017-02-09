@@ -17,6 +17,7 @@ namespace Abp.Web.Api.Tests.DynamicApiController.BatchBuilding
                 services[0].ServiceName.ShouldBe("myapp/myFirst");
                 services[0].Actions.Count.ShouldBe(1);
                 services[0].Actions.ContainsKey("GetStr").ShouldBe(true);
+                services[0].IsProxyScriptingEnabled.ShouldBeFalse();
             }
         }
     }

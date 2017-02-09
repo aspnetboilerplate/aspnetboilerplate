@@ -33,6 +33,7 @@ namespace Abp.Web.Api.Tests
                         builder.DontCreate = true;
                     }
                 })
+                .WithProxyScripts(false)
                 .Build();
         }
     }
