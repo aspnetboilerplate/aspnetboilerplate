@@ -12,8 +12,7 @@ namespace Abp.Runtime.Security
     /// </summary>
     public class SimpleStringCipher
     {
-        public static SimpleStringCipher Instance { get { return _instance; } }
-        private static SimpleStringCipher _instance = new SimpleStringCipher();
+        public static SimpleStringCipher Instance { get; } = new SimpleStringCipher();
 
         /// <summary>
         /// This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
@@ -24,8 +23,15 @@ namespace Abp.Runtime.Security
 
         /// <summary>
         /// Default password to encrypt/decrypt texts.
+        /// It's recommented to set to another value for security.
+        /// Default value: "gsKnGZ041HLL4IM8"
         /// </summary>
-        public const string DefaultPassPhrase = "gsKnGZ041HLL4IM8";
+        public static string DefaultPassPhrase { get; set; } = "gsKnGZ041HLL4IM8";
+
+        /// <summary>
+        /// Default value: Encoding.ASCII.GetBytes("jkE49230Tf093b42")
+        /// </summary>
+        public static byte[] DefaultInitVectorBytes { get; set; } = Encoding.ASCII.GetBytes("jkE49230Tf093b42");
 
         /// <summary>
         /// This constant is used to determine the keysize of the encryption algorithm.
@@ -34,14 +40,19 @@ namespace Abp.Runtime.Security
 
         public SimpleStringCipher()
         {
-            InitVectorBytes = Encoding.ASCII.GetBytes("jkE49230Tf093b42");
+            InitVectorBytes = DefaultInitVectorBytes;
         }
 
-        public string Encrypt(string plainText, string passPhrase = DefaultPassPhrase)
+        public string Encrypt(string plainText, string passPhrase = null)
         {
             if (plainText == null)
             {
                 return null;
+            }
+
+            if (passPhrase == null)
+            {
+                passPhrase = DefaultPassPhrase;
             }
 
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -68,11 +79,16 @@ namespace Abp.Runtime.Security
             }
         }
 
-        public string Decrypt(string cipherText, string passPhrase = DefaultPassPhrase)
+        public string Decrypt(string cipherText, string passPhrase = null)
         {
             if (string.IsNullOrEmpty(cipherText))
             {
                 return null;
+            }
+
+            if (passPhrase == null)
+            {
+                passPhrase = DefaultPassPhrase;
             }
 
             byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
