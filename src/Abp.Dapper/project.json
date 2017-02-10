@@ -12,5 +12,24 @@
     "net452": {
 
     }
+  },
+
+  "packOptions": {
+    "summary": "Dapper integration package for ASP.NET Boilerplate, depends on Abp.EntityFramework package.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "Dapper", "ORM" ],
+    "owners": [ "Halil İbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/aspnetboilerplate"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.Dapper.pdb"
+      }
+    }
   }
 }
