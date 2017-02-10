@@ -47,7 +47,7 @@ namespace Abp.Dapper
                     typeof(AbpDbContext).IsAssignableFrom(type)
                 );
 
-            using (IDisposableDependencyObjectWrapper<IDapperGenericRepositoryRegistrar> repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
             {
                 foreach (Type dbContextType in dbContextTypes)
                 {
