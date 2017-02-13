@@ -91,8 +91,16 @@ namespace Abp.Runtime.Validation.Interception
 
             if (ValidationErrors.Any())
             {
+                var message = "";
+                for (var index = 0; index < ValidationErrors.Count; index++)
+                {
+                    message += ValidationErrors[index].ErrorMessage;
+
+                    message += (index + 1 != ValidationErrors.Count) ? "; " : ".";
+                }
+                
                 throw new AbpValidationException(
-                    "Method arguments are not valid! See ValidationErrors for details.",
+                    message,//"Method arguments are not valid! See ValidationErrors for details.",
                     ValidationErrors
                     );
             }
