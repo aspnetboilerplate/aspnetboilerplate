@@ -10,7 +10,6 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
-using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -116,7 +115,14 @@ namespace Abp.Auditing
                 ExecutionTime = Clock.Now
             };
 
-            _auditInfoProvider.Fill(auditInfo);
+            try
+            {
+                _auditInfoProvider.Fill(auditInfo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+            }
 
             return auditInfo;
         }
