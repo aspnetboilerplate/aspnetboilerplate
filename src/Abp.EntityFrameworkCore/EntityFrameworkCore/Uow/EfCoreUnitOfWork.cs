@@ -5,6 +5,7 @@ using Abp.MultiTenancy;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace Abp.EntityFrameworkCore.Uow
@@ -34,8 +35,8 @@ namespace Abp.EntityFrameworkCore.Uow
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfCoreTransactionStrategy transactionStrategy)
             : base(
-                  connectionStringResolver, 
-                  defaultOptions, 
+                  connectionStringResolver,
+                  defaultOptions,
                   filterExecuter)
         {
             IocResolver = iocResolver;
@@ -56,7 +57,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public override void SaveChanges()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 SaveChangesInDbContext(dbContext);
             }
@@ -64,7 +65,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -90,7 +91,12 @@ namespace Abp.EntityFrameworkCore.Uow
             CommitTransaction();
         }
 
-       public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
+        public IReadOnlyList<DbContext> GetAllActiveDbContexts()
+        {
+            return ActiveDbContexts.Values.ToImmutableList();
+        }
+
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
@@ -131,7 +137,7 @@ namespace Abp.EntityFrameworkCore.Uow
             }
             else
             {
-                ActiveDbContexts.Values.ForEach(Release);
+                GetAllActiveDbContexts().ForEach(Release);
             }
 
             ActiveDbContexts.Clear();

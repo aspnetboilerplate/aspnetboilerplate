@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -59,12 +60,12 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
+            GetAllActiveDbContexts().ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -140,7 +141,7 @@ namespace Abp.EntityFramework.Uow
             }
             else
             {
-                foreach (var activeDbContext in ActiveDbContexts.Values)
+                foreach (var activeDbContext in GetAllActiveDbContexts())
                 {
                     Release(activeDbContext);
                 }

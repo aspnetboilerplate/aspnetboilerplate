@@ -1,9 +1,9 @@
 {
-  "version": "1.4.1.0-*",
+  "version": "1.4.2.0-*",
 
   "dependencies": {
-    "Abp": "1.4.1.0-*",
-    "log4net": "2.0.6"
+    "Abp": "1.4.2.0-*",
+    "log4net": "2.0.7"
   },
 
   "frameworks": {

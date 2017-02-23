@@ -27,7 +27,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("name is null or empty!", "name");
+                throw new ArgumentException("name is null or empty!", nameof(name));
             }
 
             var cacheKey = type + "_" + name;
@@ -37,7 +37,10 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 var cachedScript = CachedScripts.GetOrDefault(cacheKey);
                 if (cachedScript == null)
                 {
-                    var dynamicController = _dynamicApiControllerManager.GetAll().FirstOrDefault(ci => ci.ServiceName == name);
+                    var dynamicController = _dynamicApiControllerManager
+                        .GetAll()
+                        .FirstOrDefault(ci => ci.ServiceName == name && ci.IsProxyScriptingEnabled);
+
                     if (dynamicController == null)
                     {
                         throw new HttpException((int)HttpStatusCode.NotFound, "There is no such a service: " + cacheKey);
@@ -60,7 +63,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 {
                     var script = new StringBuilder();
 
-                    var dynamicControllers = _dynamicApiControllerManager.GetAll();
+                    var dynamicControllers = _dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
                     foreach (var dynamicController in dynamicControllers)
                     {
                         var proxyGenerator = CreateProxyGenerator(type, dynamicController, false);
