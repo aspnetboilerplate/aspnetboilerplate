@@ -106,7 +106,13 @@ namespace Abp.TestBase.Tests.Application.Services
         }
 
         [Fact]
-        public void Should_Work_If_Array_Is_Null_But_DisabledValidation()
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation_For_Method()
+        {
+            _myAppService.MyMethod4_2(new MyMethod4Input());
+        }
+
+        [Fact]
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation_For_Property()
         {
             _myAppService.MyMethod5(new MyMethod5Input());
         }
@@ -147,6 +153,7 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod2(MyMethod2Input input);
             MyMethodOutput MyMethod3(MyMethod3Input input);
             MyMethodOutput MyMethod4(MyMethod4Input input);
+            MyMethodOutput MyMethod4_2(MyMethod4Input input);
             MyMethodOutput MyMethod5(MyMethod5Input input);
             MyMethodOutput MyMethod6(MyMethod6Input input);
             MyMethodOutput MyMethod7(MyMethod7Input input);
@@ -170,6 +177,12 @@ namespace Abp.TestBase.Tests.Application.Services
             }
 
             public MyMethodOutput MyMethod4(MyMethod4Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            [DisableValidation]
+            public MyMethodOutput MyMethod4_2(MyMethod4Input input)
             {
                 return new MyMethodOutput { Result = 42 };
             }
