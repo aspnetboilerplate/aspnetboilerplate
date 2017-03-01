@@ -123,7 +123,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
 
-                if (Options.Timeout.HasValue)
+                if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
                 }
