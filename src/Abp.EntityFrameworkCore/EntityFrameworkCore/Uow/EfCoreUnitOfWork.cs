@@ -6,6 +6,7 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.EntityFrameworkCore.Extensions;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Transactions.Extensions;
 using Castle.Core.Internal;
@@ -121,6 +122,11 @@ namespace Abp.EntityFrameworkCore.Uow
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+
+                if (Options.Timeout.HasValue)
+                {
+                    dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
+                }
 
                 //TODO: Object materialize event
                 //TODO: Apply current filters to this dbcontext
