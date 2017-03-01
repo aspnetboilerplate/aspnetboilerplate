@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "Abp.AspNetCore": "1.4.2.0-*",
-    "Abp.EntityFrameworkCore": "1.4.2.0-*",
-    "Abp.Castle.Log4Net": "1.4.2.0-*",
-    "AbpAspNetCoreDemo.Core": "1.4.2.0-*",
+    "Abp.AspNetCore": "1.4.3.0-*",
+    "Abp.EntityFrameworkCore": "1.4.3.0-*",
+    "Abp.Castle.Log4Net": "1.4.3.0-*",
+    "AbpAspNetCoreDemo.Core": "1.4.3.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.1.0-preview4-final",
       "type": "build"
@@ -25,8 +25,8 @@
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "BundlerMinifier.Core": "2.2.306",
-    "Microsoft.AspNetCore.Mvc": "1.1.1"
+    "Microsoft.AspNetCore.Mvc": "1.1.1",
+    "BundlerMinifier.Core": "2.3.327"
   },
 
   "tools": {

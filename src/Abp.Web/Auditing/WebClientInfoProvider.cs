@@ -16,20 +16,17 @@ namespace Abp.Auditing
 
         public ILogger Logger { get; set; }
 
-        private readonly HttpContext _httpContext;
-
         /// <summary>
         /// Creates a new <see cref="WebClientInfoProvider"/>.
         /// </summary>
         public WebClientInfoProvider()
         {
-            _httpContext = HttpContext.Current;
             Logger = NullLogger.Instance;
         }
 
         protected virtual string GetBrowserInfo()
         {
-            var httpContext = HttpContext.Current ?? _httpContext;
+            var httpContext = HttpContext.Current;
             if (httpContext?.Request.Browser == null)
             {
                 return null;
@@ -42,7 +39,7 @@ namespace Abp.Auditing
 
         protected virtual string GetClientIpAddress()
         {
-            var httpContext = HttpContext.Current ?? _httpContext;
+            var httpContext = HttpContext.Current;
             if (httpContext?.Request.ServerVariables == null)
             {
                 return null;
@@ -79,7 +76,7 @@ namespace Abp.Auditing
 
         protected virtual string GetComputerName()
         {
-            var httpContext = HttpContext.Current ?? _httpContext;
+            var httpContext = HttpContext.Current;
             if (httpContext == null || !httpContext.Request.IsLocal)
             {
                 return null;

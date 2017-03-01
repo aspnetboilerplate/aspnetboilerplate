@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using Abp.Extensions;
 using Abp.Web;
+using Abp.Web.Api.ProxyScripting.Generators;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
 {
@@ -18,7 +19,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
 
         public virtual void WriteTo(StringBuilder script)
         {
-            script.AppendLine("                this." + _actionInfo.ActionName.ToCamelCase() + " = function (" + ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "httpParams") + ") {");
+            script.AppendLine("                this" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(_actionInfo.ActionName.ToCamelCase()) + " = function (" + ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "httpParams") + ") {");
             script.AppendLine("                    return $http(angular.extend({");
             script.AppendLine("                        url: abp.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
             script.AppendLine("                        method: '" + _actionInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");

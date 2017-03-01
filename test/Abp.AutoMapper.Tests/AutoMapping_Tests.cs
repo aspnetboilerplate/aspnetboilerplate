@@ -80,6 +80,15 @@ namespace Abp.AutoMapper.Tests
         }
 
         [Fact]
+        public void IgnoreMap_Tests()
+        {
+            var obj2 = new MyClass2 {TestProp = "Test value", AnotherValue = 42};
+            var obj3 = _mapper.Map<MyClass3>(obj2);
+            obj3.TestProp.ShouldBe("Test value");
+            obj3.AnotherValue.ShouldBe(0); //Ignored because of IgnoreMap attribute!
+        }
+
+        [Fact]
         public void MapTo_Collection_Tests()
         {
             var list1 = new List<MyClass1>
@@ -133,11 +142,16 @@ namespace Abp.AutoMapper.Tests
             public string TestProp { get; set; }
 
             public long? NullableValue { get; set; }
+
+            public int AnotherValue { get; set; }
         }
 
         private class MyClass3
         {
             public string TestProp { get; set; }
+
+            [IgnoreMap]
+            public int AnotherValue { get; set; }
         }
     }
 }

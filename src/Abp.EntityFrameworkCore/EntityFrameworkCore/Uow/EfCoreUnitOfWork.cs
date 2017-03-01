@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.EntityFrameworkCore.Extensions;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Transactions.Extensions;
 using Castle.Core.Internal;
@@ -35,11 +37,11 @@ namespace Abp.EntityFrameworkCore.Uow
             IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkFilterExecuter filterExecuter,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions, 
+            IUnitOfWorkDefaultOptions defaultOptions,
             IDbContextTypeMatcher dbContextTypeMatcher)
             : base(
-                  connectionStringResolver, 
-                  defaultOptions, 
+                  connectionStringResolver,
+                  defaultOptions,
                   filterExecuter)
         {
             IocResolver = iocResolver;
@@ -51,7 +53,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public override void SaveChanges()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 SaveChangesInDbContext(dbContext);
             }
@@ -59,7 +61,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -80,7 +82,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
             SharedTransaction?.Commit();
 
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 if (dbContext.HasRelationalTransactionManager())
                 {
@@ -98,7 +100,12 @@ namespace Abp.EntityFrameworkCore.Uow
             CommitTransaction();
         }
 
-       public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
+        public IReadOnlyList<DbContext> GetAllActiveDbContexts()
+        {
+            return ActiveDbContexts.Values.ToImmutableList();
+        }
+
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
@@ -115,6 +122,11 @@ namespace Abp.EntityFrameworkCore.Uow
             {
 
                 dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+
+                if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
+                {
+                    dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
+                }
 
                 //TODO: Object materialize event
                 //TODO: Apply current filters to this dbcontext
@@ -159,7 +171,7 @@ namespace Abp.EntityFrameworkCore.Uow
                 SharedTransaction = null;
             }
 
-            ActiveDbContexts.Values.ForEach(Release);
+            GetAllActiveDbContexts().ForEach(Release);
             ActiveDbContexts.Clear();
         }
 
