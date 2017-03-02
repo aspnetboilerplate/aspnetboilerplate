@@ -25,12 +25,12 @@ namespace Abp.Resources.Embedded
         /// <inheritdoc/>
         public EmbeddedResourceItem GetResource(string fullPath)
         {
-            return _resources.Value.GetOrDefault(fullPath);
+            return _resources.Value.GetOrDefault(EmbeddedResourcePathHelper.NormalizePath(fullPath));
         }
 
         private Dictionary<string, EmbeddedResourceItem> CreateResourcesDictionary()
         {
-            var resources = new Dictionary<string, EmbeddedResourceItem>();
+            var resources = new Dictionary<string, EmbeddedResourceItem>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var source in _configuration.Sources)
             {
