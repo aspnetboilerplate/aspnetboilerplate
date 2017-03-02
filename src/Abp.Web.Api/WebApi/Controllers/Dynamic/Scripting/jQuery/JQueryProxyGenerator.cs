@@ -1,5 +1,6 @@
 using System.Text;
 using Abp.Extensions;
+using Abp.Web.Api.ProxyScripting.Generators;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
@@ -40,7 +41,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
                 var methodNo = 0;
                 foreach (var methodInfo in _controllerInfo.Actions.Values)
                 {
-                    script.AppendLine("                " + methodInfo.ActionName.ToCamelCase() + ": serviceNamespace." + methodInfo.ActionName.ToCamelCase() + ((methodNo++) < (_controllerInfo.Actions.Count - 1) ? "," : ""));
+                    script.AppendLine("                '" + methodInfo.ActionName.ToCamelCase() + "' : serviceNamespace" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(methodInfo.ActionName.ToCamelCase()) + ((methodNo++) < (_controllerInfo.Actions.Count - 1) ? "," : ""));
                 }
 
                 script.AppendLine("            };");

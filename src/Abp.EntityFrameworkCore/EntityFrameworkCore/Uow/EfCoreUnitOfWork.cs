@@ -1,6 +1,8 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
+using Abp.EntityFrameworkCore.Extensions;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +120,11 @@ namespace Abp.EntityFrameworkCore.Uow
                 else
                 {
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                }
+                
+                if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
+                {
+                    dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
                 }
                 
                 //TODO: Object materialize event

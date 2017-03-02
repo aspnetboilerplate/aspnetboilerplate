@@ -1,9 +1,9 @@
 {
-  "version": "1.4.2.0-*",
+  "version": "1.4.3.0-*",
 
   "dependencies": {
-    "Abp": "1.4.2.0-*",
-    "StackExchange.Redis": "1.2.0"
+    "Abp": "1.4.3.0-*",
+    "StackExchange.Redis": "1.2.1"
   },
 
   "frameworks": {

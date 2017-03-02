@@ -70,7 +70,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             var parameterList = ProxyScriptingJsFuncHelper.GenerateJsFuncParameterList(action, "ajaxParams");
 
             script.AppendLine($"    // action '{action.Name.ToCamelCase()}'");
-            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}.{action.Name.ToCamelCase()} = function({parameterList}) {{");
+            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}{ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(action.Name.ToCamelCase())} = function({parameterList}) {{");
             script.AppendLine("      return abp.ajax($.extend(true, {");
 
             AddAjaxCallParameters(script, controller, action);
