@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
 using Abp.Configuration.Startup;
 using Abp.MultiTenancy;
 using Abp.Web.Models;
+using Abp.Web.MultiTenancy;
 using Microsoft.Net.Http.Headers;
 using Shouldly;
 using Xunit;
@@ -11,9 +13,12 @@ namespace Abp.AspNetCore.Tests
 {
     public class MultiTenancy_Tests : AppTestBase
     {
+        private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+
         public MultiTenancy_Tests()
         {
             IocManager.Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            _multiTenancyConfiguration = Resolve<IWebMultiTenancyConfiguration>();
         }
 
         [Fact]
@@ -63,6 +68,25 @@ namespace Abp.AspNetCore.Tests
 
             //Assert
             response.Result.ShouldBe(42);
+        }
+
+        [Theory]
+        [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com")]
+        [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080")]
+        public async Task DomainTenantResolveContributer_Test(string domainFormat, string domain)
+        {
+            _multiTenancyConfiguration.DomainFormat = domainFormat;
+            Client.BaseAddress = new Uri(domain);
+
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+                GetUrl<MultiTenancyTestController>(
+                    nameof(MultiTenancyTestController.GetTenantId)
+                )
+            );
+
+            //Assert
+            response.Result.ShouldBe(1);
         }
     }
 }

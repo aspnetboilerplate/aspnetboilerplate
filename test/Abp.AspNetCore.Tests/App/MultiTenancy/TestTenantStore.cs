@@ -20,7 +20,7 @@ namespace Abp.AspNetCore.App.MultiTenancy
 
         public TenantInfo Find(string tenancyName)
         {
-            return _tenants.FirstOrDefault(t => t.TenancyName == tenancyName);
+            return _tenants.FirstOrDefault(t => t.TenancyName.ToLower() == tenancyName.ToLower());
         }
     }
 }
