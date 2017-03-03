@@ -1,17 +1,14 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.EntityFrameworkCore.Extensions;
 using Abp.Extensions;
 using Abp.MultiTenancy;
-using Abp.Transactions.Extensions;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
@@ -23,11 +20,10 @@ namespace Abp.EntityFrameworkCore.Uow
         protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
 
         protected IIocResolver IocResolver { get; private set; }
-
-        protected IDbContextTransaction SharedTransaction;
-
+        
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
+        private readonly IEfCoreTransactionStrategy _transactionStrategy;
 
         /// <summary>
         /// Creates a new <see cref="EfCoreUnitOfWork"/>.
@@ -37,8 +33,9 @@ namespace Abp.EntityFrameworkCore.Uow
             IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkFilterExecuter filterExecuter,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions,
-            IDbContextTypeMatcher dbContextTypeMatcher)
+            IUnitOfWorkDefaultOptions defaultOptions, 
+            IDbContextTypeMatcher dbContextTypeMatcher,
+            IEfCoreTransactionStrategy transactionStrategy)
             : base(
                   connectionStringResolver,
                   defaultOptions,
@@ -47,8 +44,17 @@ namespace Abp.EntityFrameworkCore.Uow
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
             _dbContextTypeMatcher = dbContextTypeMatcher;
+            _transactionStrategy = transactionStrategy;
 
             ActiveDbContexts = new Dictionary<string, DbContext>();
+        }
+
+        protected override void BeginUow()
+        {
+            if (Options.IsTransactional == true)
+            {
+                _transactionStrategy.InitOptions(Options);
+            }
         }
 
         public override void SaveChanges()
@@ -75,22 +81,9 @@ namespace Abp.EntityFrameworkCore.Uow
 
         private void CommitTransaction()
         {
-            if (Options.IsTransactional != true)
+            if (Options.IsTransactional == true)
             {
-                return;
-            }
-
-            SharedTransaction?.Commit();
-
-            foreach (var dbContext in GetAllActiveDbContexts())
-            {
-                if (dbContext.HasRelationalTransactionManager())
-                {
-                    //Relational databases use the SharedTransaction
-                    continue;
-                }
-
-                dbContext.Database.CommitTransaction();
+                _transactionStrategy.Commit();
             }
         }
 
@@ -120,21 +113,22 @@ namespace Abp.EntityFrameworkCore.Uow
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
-
-                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-
+                if (Options.IsTransactional == true)
+                {
+                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+                }
+                else
+                {
+                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                }
+                
                 if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
                 }
-
+                
                 //TODO: Object materialize event
                 //TODO: Apply current filters to this dbcontext
-
-                if (Options.IsTransactional == true)
-                {
-                    BeginTransaction(dbContext);
-                }
 
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
@@ -142,36 +136,17 @@ namespace Abp.EntityFrameworkCore.Uow
             return (TDbContext)dbContext;
         }
 
-        private void BeginTransaction(DbContext dbContext)
+        protected override void DisposeUow()
         {
-            if (dbContext.HasRelationalTransactionManager())
+            if (Options.IsTransactional == true)
             {
-                if (SharedTransaction == null)
-                {
-                    SharedTransaction = dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
-                    );
-                }
-                else
-                {
-                    dbContext.Database.UseTransaction(SharedTransaction.GetDbTransaction());
-                }
+                _transactionStrategy.Dispose(IocResolver);
             }
             else
             {
-                dbContext.Database.BeginTransaction();
-            }
-        }
-
-        protected override void DisposeUow()
-        {
-            if (SharedTransaction != null)
-            {
-                SharedTransaction.Dispose();
-                SharedTransaction = null;
+                GetAllActiveDbContexts().ForEach(Release);
             }
 
-            GetAllActiveDbContexts().ForEach(Release);
             ActiveDbContexts.Clear();
         }
 
