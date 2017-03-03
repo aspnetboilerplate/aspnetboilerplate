@@ -8,7 +8,7 @@ namespace Abp.EntityFrameworkCore.Configuration
     {
         public string ConnectionString {get; internal set; }
 
-        public DbConnection Connection { get; internal set; }
+        public DbConnection ExistingConnection { get; internal set; }
 
         public DbContextOptionsBuilder<TDbContext> DbContextOptions { get; }
 
@@ -18,9 +18,9 @@ namespace Abp.EntityFrameworkCore.Configuration
             DbContextOptions = new DbContextOptionsBuilder<TDbContext>();
         }
 
-        public AbpDbContextConfiguration(DbConnection connection)
+        public AbpDbContextConfiguration(DbConnection existingConnection)
         {
-            Connection = connection;
+            ExistingConnection = existingConnection;
             DbContextOptions = new DbContextOptionsBuilder<TDbContext>();
         }
     }

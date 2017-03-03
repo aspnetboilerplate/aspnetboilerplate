@@ -1,7 +1,6 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
-using Abp.EntityFrameworkCore.Extensions;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Castle.Core.Internal;
@@ -17,9 +16,8 @@ namespace Abp.EntityFrameworkCore.Uow
     /// </summary>
     public class EfCoreUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        protected IDictionary<string, DbContext> ActiveDbContexts { get; private set; }
-
-        protected IIocResolver IocResolver { get; private set; }
+        protected IDictionary<string, DbContext> ActiveDbContexts { get; }
+        protected IIocResolver IocResolver { get; }
         
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
@@ -79,18 +77,18 @@ namespace Abp.EntityFrameworkCore.Uow
             CommitTransaction();
         }
 
+        protected override async Task CompleteUowAsync()
+        {
+            await SaveChangesAsync();
+            CommitTransaction();
+        }
+
         private void CommitTransaction()
         {
             if (Options.IsTransactional == true)
             {
                 _transactionStrategy.Commit();
             }
-        }
-
-        protected override async Task CompleteUowAsync()
-        {
-            await SaveChangesAsync();
-            CommitTransaction();
         }
 
         public IReadOnlyList<DbContext> GetAllActiveDbContexts()
