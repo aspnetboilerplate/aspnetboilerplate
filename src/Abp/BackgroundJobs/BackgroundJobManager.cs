@@ -122,7 +122,8 @@ namespace Abp.BackgroundJobs
                                     ex
                                     )
                                 {
-                                    BackgroundJob = jobInfo
+                                    BackgroundJob = jobInfo,
+                                    JobObject = job.Object
                                 }
                             )
                         );
