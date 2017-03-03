@@ -37,7 +37,7 @@ namespace Abp.TestBase
 
         protected void InitializeAbp()
         {
-            LocalIocManager.Register<IAbpSession, TestAbpSession>();
+            LocalIocManager.RegisterIfNot<IAbpSession, TestAbpSession>();
 
             PreInitialize();
 
