@@ -22,7 +22,7 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
-        public async Task HttpHeaderTenantResolveContributer_Test()
+        public async Task HttpHeaderTenantResolveContributor_Test()
         {
             Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveKey, "42");
 
@@ -38,7 +38,7 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
-        public async Task HttpCookieTenantResolveContributer_Test()
+        public async Task HttpCookieTenantResolveContributor_Test()
         {
             Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(MultiTenancyConsts.TenantIdResolveKey, "42").ToString());
 
@@ -73,7 +73,7 @@ namespace Abp.AspNetCore.Tests
         [Theory]
         [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com")]
         [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080")]
-        public async Task DomainTenantResolveContributer_Test(string domainFormat, string domain)
+        public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain)
         {
             _multiTenancyConfiguration.DomainFormat = domainFormat;
             Client.BaseAddress = new Uri(domain);

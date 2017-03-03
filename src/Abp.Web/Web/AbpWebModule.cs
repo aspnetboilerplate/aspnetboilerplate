@@ -30,9 +30,9 @@ namespace Abp.Web
             Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, WebClientInfoProvider>(DependencyLifeStyle.Transient);
 
-            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributer>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributer>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
 
             AddIgnoredTypes();
         }

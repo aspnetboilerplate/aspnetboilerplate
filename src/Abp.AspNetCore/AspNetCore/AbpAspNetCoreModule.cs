@@ -33,9 +33,9 @@ namespace Abp.AspNetCore
 
             Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
 
-            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributer>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributer>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributer>();
+            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
+            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
         }
 
         public override void Initialize()

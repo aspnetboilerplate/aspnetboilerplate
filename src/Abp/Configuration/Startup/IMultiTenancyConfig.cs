@@ -16,8 +16,8 @@ namespace Abp.Configuration.Startup
         bool IsEnabled { get; set; }
 
         /// <summary>
-        /// A list of contributers for tenant resolve process.
+        /// A list of contributors for tenant resolve process.
         /// </summary>
-        ITypeList<ITenantResolveContributer> Resolvers { get; }
+        ITypeList<ITenantResolveContributor> Resolvers { get; }
     }
 }

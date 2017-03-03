@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.MultiTenancy
 {
-    public class DomainTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
         private readonly ITenantStore _tenantStore;
 
-        public DomainTenantResolveContributer(
+        public DomainTenantResolveContributor(
             IHttpContextAccessor httpContextAccessor,
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)

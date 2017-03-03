@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.MultiTenancy
 {
-    public class HttpCookieTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpCookieTenantResolveContributer(IHttpContextAccessor httpContextAccessor)
+        public HttpCookieTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
