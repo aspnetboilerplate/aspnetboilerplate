@@ -1,9 +1,9 @@
 ﻿{
-  "version": "1.4.2.0-*",
+  "version": "1.4.3.0-*",
 
   "dependencies": {
-    "Abp": "1.4.2.0-*",
-    "Abp.EntityFramework": "1.4.2.0-*",
+    "Abp": "1.4.3.0-*",
+    "Abp.EntityFramework": "1.4.3.0-*",
     "Dapper": "1.50.2",
     "DapperExtensions": "1.5.0"
   },
