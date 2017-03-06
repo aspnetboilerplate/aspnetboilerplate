@@ -11,16 +11,12 @@ namespace Abp.EntityFrameworkCore.Configuration
         public DbConnection ExistingConnection { get; internal set; }
 
         public DbContextOptionsBuilder<TDbContext> DbContextOptions { get; }
-
-        public AbpDbContextConfiguration(string connectionString)
+        
+        public AbpDbContextConfiguration(string connectionString, DbConnection existingConnection)
         {
             ConnectionString = connectionString;
-            DbContextOptions = new DbContextOptionsBuilder<TDbContext>();
-        }
-
-        public AbpDbContextConfiguration(DbConnection existingConnection)
-        {
             ExistingConnection = existingConnection;
+
             DbContextOptions = new DbContextOptionsBuilder<TDbContext>();
         }
     }

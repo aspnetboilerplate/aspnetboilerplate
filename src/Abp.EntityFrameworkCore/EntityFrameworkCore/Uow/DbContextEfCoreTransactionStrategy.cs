@@ -42,18 +42,12 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
-            DbContext dbContext;
-
             var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
 
-            if (activeTransaction == null)
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-            }
-            else
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.GetDbTransaction().Connection);
-            }
+            var dbContext = dbContextResolver.Resolve<TDbContext>(
+                connectionString,
+                activeTransaction?.DbContextTransaction.GetDbTransaction().Connection
+            );
 
             if (dbContext.HasRelationalTransactionManager())
             {

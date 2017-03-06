@@ -117,7 +117,7 @@ namespace Abp.EntityFrameworkCore.Uow
                 }
                 else
                 {
-                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
                 }
                 
                 if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
