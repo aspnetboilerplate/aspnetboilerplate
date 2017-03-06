@@ -7,11 +7,8 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abp.EntityFramework.Common")]
+[assembly: AssemblyProduct("Abp.Dapper.Tests")]
 [assembly: AssemblyTrademark("")]
-[assembly: InternalsVisibleTo("Abp.EntityFramework")]
-[assembly: InternalsVisibleTo("Abp.EntityFrameworkCore")]
-[assembly: InternalsVisibleTo("Abp.Dapper")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -19,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a776fdce-fdd0-46af-b2ae-55cf7d3315ff")]
+[assembly: Guid("91103ad5-286a-45c6-8901-400269b1f939")]
