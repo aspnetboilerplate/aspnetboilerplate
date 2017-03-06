@@ -19,7 +19,7 @@ namespace Abp.Dapper.Tests
             _productRepository = Resolve<IRepository<Product>>();
         }
 
-        [Fact(Skip = "Effort does not support Dapper queries.")]
+        //[Fact(Skip = "Effort does not support Dapper queries.")]
         public void DapperRepositories_Should_Work_Within_A_UnitOfWorkScope()
         {
             _productDapperRepository.Insert(new Product("TShirt", "Red", 5) { Id = 1 });

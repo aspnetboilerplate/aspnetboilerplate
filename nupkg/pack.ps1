@@ -19,6 +19,7 @@ $projects = (
     "Abp.EntityFramework",
     "Abp.EntityFramework.GraphDiff",
     "Abp.EntityFrameworkCore",
+    "Abp.Dapper",
     "Abp.FluentMigrator",
     "Abp.MemoryDb",
     "Abp.MongoDB",
