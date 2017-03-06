@@ -22,7 +22,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
         }
 
-        [Fact(Skip = "Skipped, since Effort.DbConnection does not provide Sql Text while interception time.")]
+        //[Fact(Skip = "Skipped, since Effort.DbConnection does not provide Sql Text while interception time.")]
         public void Should_Nolocking_Work()
         {
             using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
